@@ -1,0 +1,68 @@
+<div class="column-24 start-01 typecho-list">
+    <div class="typecho-list-operate">
+        <p class="operate">操作：<a href="#">全选</a>，<a href="#">反选</a>，<a href="#">删除选中项</a></p>
+        <p class="search">
+        <input type="text" value="请输入关键字"/>
+        <select>
+            <option value="">所有分类</option>
+            <option value="">所有分类</option>
+            <option value="">所有分类</option>
+            <option value="">所有分类</option>
+        </select>
+
+        <select>
+            <option value="">所有分类</option>
+            <option value="">所有分类</option>
+            <option value="">所有分类</option>
+            <option value="">所有分类</option>
+        </select>
+        <button>筛选</button>
+        </p>
+    </div>
+
+    <table class="typecho-list-table">
+        <colgroup>
+            <col width="25"/>
+            <col width="400"/>
+            <col width="100"/>
+            <col width="125"/>
+            <col width="150"/>
+            <col width="100"/>
+            <col width="100"/>
+        </colgroup>
+        <thead>
+            <tr>
+                <th> </th>
+                <th>标题</th>
+                <th>作者</th>
+                <th>发布日期</th>
+                <th>分类</th>
+                <th>评论</th>
+                <th>状态</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php for($i = 0; $i < 10; $i++) { ?>
+            <tr>
+                <td><input type="checkbox" value="13" name="cid[]"/></td>
+                <td><a href="http://www.typecho.net/admin/edit.php?cid=13">Typecho杭州研究院成立</a></td>
+                <td>sluke</td>
+                <td>8月7日</td>
+                <td><a href="http://www.typecho.net/category/develop/">开发相关</a></td>
+                <td><a href="http://www.typecho.net/archives/13/#comments">5条评论</a></td>
+                <td><a target="_blank" title="在新页面打开" href="#">已发布</a></td>
+            </tr>
+            <tr class="even">
+                <td><input type="checkbox" value="12" name="cid[]"/></td>
+                <td><a href="http://www.typecho.net/admin/edit.php?cid=12">欢迎Fen回归</a></td>
+                <td>混蛋70</td>
+                <td>8月2日</td>
+                <td><a href="http://www.typecho.net/category/develop/">开发相关</a></td>
+                <td><a href="http://www.typecho.net/archives/12/#comments">9条评论</a></td>
+                <td><a target="_blank" title="在新页面打开" href="#">已发布</a></td>
+            </tr>
+            <?php } ?>
+        </tbody>
+    </table>
+    <?php include 'slice/typecho-pager.inc.html'; ?>
+</div>

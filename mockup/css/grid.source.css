@@ -1,0 +1,261 @@
+/* vim: set et sw=4 ts=4 sts=4 fdm=marker ff=unix fenc=utf8 */
+/**
+ * 格栅系统
+ *
+ * 根据 Taobao 栅格系统规范制定
+ *
+ * @change
+ * 2008-09-19
+ *      初始化版本，使用“浮动定位布局”
+ *
+ * @author  i.feelinglucky@gmail.com
+ * @since   2008-09-19
+ * @link    http://www.gracecode.com/
+ * @version $Id: grid.source.css 470 2008-09-26 15:23:38Z i.feelinglucky $
+ */
+
+.body {
+    clear:both;
+    overflow:hidden;
+    position:relative;
+    width:100%;
+}
+
+.container {
+    float:left;
+    position:relative;
+    width:100%;
+    left:100%;
+}
+
+.container:after {
+    content: "."; 
+    display: block;
+    height: 0; 
+    clear: both; 
+    visibility: hidden;
+}
+
+/**
+ * 目前制定的是 950px 宽度
+ */
+.body-950 {
+    width: 950px;
+    margin: 0px auto;
+}
+
+.body-950 .container {
+    left: 950px;
+}
+
+/**
+ * 将页面分成了 24 份，同时指定每个栅格的基本样式
+ */
+.column-01, .column-02, .column-03, .column-04, .column-05,
+.column-06, .column-07, .column-08, .column-09, .column-10,
+.column-11, .column-12, .column-13, .column-14, .column-15,
+.column-16, .column-17, .column-18, .column-19, .column-20,
+.column-21, .column-22, .column-23, .column-24 {
+    float:left;
+    overflow:hidden;
+    position:relative;
+    width: 100%;
+}
+
+/**
+ * 950 宽度的格栅
+ *
+ * 公式：(40 x N) - 10 = 950
+ */
+.body-950 .column-01 {
+    width: 30px;
+}
+
+.body-950 .column-02 {
+    width: 70px;
+}
+
+.body-950 .column-03 {
+    width: 110px;
+}
+
+.body-950 .column-04 {
+    width: 150px;
+}
+
+.body-950 .column-05 {
+    width: 190px;
+}
+
+.body-950 .column-06 {
+    width: 230px;
+}
+
+.body-950 .column-07 {
+    width: 270px;
+}
+
+.body-950 .column-08 {
+    width: 310px;
+}
+
+.body-950 .column-09 {
+    width: 350px;
+}
+
+.body-950 .column-10 {
+    width: 390px;
+}
+
+.body-950 .column-11 {
+    width: 430px;
+}
+
+.body-950 .column-12 {
+    width: 470px;
+}
+
+.body-950 .column-13 {
+    width: 510px;
+}
+
+.body-950 .column-14 {
+    width: 550px;
+}
+
+.body-950 .column-15 {
+    width: 590px;
+}
+
+.body-950 .column-16 {
+    width: 630px;
+}
+
+.body-950 .column-17 {
+    width: 670px;
+}
+
+.body-950 .column-18 {
+    width: 710px;
+}
+
+.body-950 .column-19 {
+    width: 750px;
+}
+
+.body-950 .column-20 {
+    width: 790px;
+}
+
+.body-950 .column-21 {
+    width: 830px;
+}
+
+.body-950 .column-22 {
+    width: 870px;
+}
+
+.body-950 .column-23 {
+    width: 910px;
+}
+
+.body-950 .column-24 {
+    width: 950px;
+}
+
+/**
+ * 对比栅格，设置偏移位置
+ */
+.body-950 .column, .body-950 .start-01 {
+    margin-left: -950px;
+}
+
+.body-950 .start-02 {
+    margin-left: -910px;
+}
+
+.body-950 .start-03 {
+    margin-left: -870px;
+}
+
+.body-950 .start-04 {
+    margin-left: -830px;
+}
+
+.body-950 .start-05 {
+    margin-left: -790px;
+}
+
+.body-950 .start-06 {
+    margin-left: -750px;
+}
+
+.body-950 .start-07 {
+    margin-left: -710px;
+}
+
+.body-950 .start-08 {
+    margin-left: -670px;
+}
+
+.body-950 .start-09 {
+    margin-left: -630px;
+}
+
+.body-950 .start-10 {
+    margin-left: -590px;
+}
+
+.body-950 .start-11 {
+    margin-left: -550px;
+}
+
+.body-950 .start-12 {
+    margin-left: -510px;
+}
+
+.body-950 .start-13 {
+    margin-left: -470px;
+}
+
+.body-950 .start-14 {
+    margin-left: -430px;
+}
+
+.body-950 .start-15 {
+    margin-left: -390px;
+}
+
+.body-950 .start-16 {
+    margin-left: -350px;
+}
+
+.body-950 .start-17 {
+    margin-left: -310px;
+}
+.body-950 .start-18 {
+    margin-left: -270px;
+}
+.body-950 .start-19 {
+    margin-left: -230px;
+}
+
+.body-950 .start-20 {
+    margin-left: -190px;
+}
+
+.body-950 .start-21 {
+    margin-left: -150px;
+}
+
+.body-950 .start-22 {
+    margin-left: -110px;
+}
+
+.body-950 .start-23 {
+    margin-left: -70px;
+}
+
+.body-950 .start-24 {
+    margin-left: -30px;
+}

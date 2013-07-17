@@ -1,0 +1,2425 @@
+/* vim: set et sw=4 ts=4 sts=4 fdm=marker ff=unix fenc=utf8 */
+/**
+ * Typecho 后台样式
+ *
+ * @author  i.feelinglucky@gmail.com
+ * @since   2008-09-26
+ * @link    http://www.typecho.net/
+ * @version $Id: grid.source.css 470 2008-09-26 15:23:38Z i.feelinglucky $
+ */
+
+/**
+ * Typecho 全局样式
+ */
+ 
+html {
+    height: 100%;
+}
+ 
+body {
+    /*
+    background: #f7fbe9;
+    color: #333;
+    */
+    font-family: "Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana;
+    background: #333;
+    color: #f7fbe9;
+    /*
+    overflow-x: hidden;
+    */
+}
+
+/*
+body > div {
+    background: #f7fbe9;
+    color: #333;
+}
+*/
+
+body.bright, .main {
+    background: #f7fbe9;
+    color: #333;
+}
+
+.main:after {
+    content: "."; 
+    display: block;
+    height: 0; 
+    clear: both; 
+    visibility: hidden;
+}
+
+body.no-overflow {
+    overflow: hidden;
+}
+
+body.dark {
+    background: #333;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+    color: #333;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    /*font-family: Georgia, serif;*/
+}
+
+h1 {
+    font-size: 18px;
+}
+
+h2 {
+    font-size: 16px;
+}
+
+ul, ol {
+    list-style: none;
+}
+
+p {
+    font-size: 12px;
+}
+
+a {
+    color: #BD6800;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a.button, /*span.balloon,*/ a.balloon-button, .typecho-pager a {
+    background: #BD6800;
+    color: #FFF;
+    padding: 2px 4px;
+    text-decoration: none;
+    font-weight: bold;
+    
+    /** 修正ie中文不对齐 */
+    zoom:1;
+    
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -khtml-border-radius: 2px;
+    
+    /* hope IE support border radius, God save me! */
+    border-radius: 2px;
+}
+span.balloon {
+    font-size: 12px;
+    font-weight: normal;
+    color: #666;
+}
+
+a.size-1 {
+    background: #C4CD9C;
+}
+
+a.size-10 {
+    background: #AFBA7C;
+}
+
+a.size-20 {
+    background: #9AA859;
+}
+
+a.size-50 {
+    background: #717B40;
+}
+
+a.size-100 {
+    background: #545C30;
+}
+
+a.size-0 {
+    background: #373D1F;
+}
+
+span.balloon, a.balloon-button {
+    /*padding: 0 4px;*/
+}
+
+a.button:hover, a.balloon-button:hover {
+    background: #D29B51;
+    text-decoration: none;
+}
+
+a.size-1:hover {
+    background: #AFBA7C;
+}
+
+a.size-10:hover {
+    background: #9AA859;
+}
+
+a.size-20:hover {
+    background: #717B40;
+}
+
+a.size-50:hover {
+    background: #545C30;
+}
+
+a.size-100:hover {
+    background: #373D1F;
+}
+
+a.size-0:hover {
+    background: #2C3018;
+}
+
+a.important {
+    color: #fff;
+}
+
+em {
+    color: #e47e00;
+    font-weight: normal;
+}
+
+form {
+    padding: 0;
+    margin: 0;
+}
+
+input, textarea {
+    font-size: 13px;
+    padding: 2px;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    input, textarea { padding: 1px; }
+}
+
+textarea {
+    overflow: auto;
+	line-height: 150%;
+	resize: none;
+}
+
+em {
+    font-style: normal;
+}
+
+input:hover {
+    /*
+    cursor: pointer;
+     */
+}
+
+input, select, textarea {
+    font-family: "Lucida Grande",Verdana,Arial,"Bitstream Vera Sans",sans-serif;
+    vertical-align: middle;
+}
+
+input[type=text], input[type=password],
+input.text, input.title,
+textarea {
+    background: #fff;
+    padding: 3px;
+    border: 1px solid #a0a0a0;
+    border-bottom-color: #c4c4c4;
+    border-right-color: #c4c4c4;
+    box-shadow: inset 1px 1px #dedede, inset 2px 2px #f4f4f4; 
+	-o-box-shadow: inset 1px 1px #dedede, inset 2px 2px #f4f4f4; 
+	-moz-box-shadow: inset 1px 1px #dedede, inset 2px 2px #f4f4f4; 
+    -webkit-box-shadow: inset 1px 1px #dedede, inset 2px 2px #f4f4f4;
+}
+
+/** hack webkit border by 70 */
+input:focus, textarea:focus, select:focus {
+    outline: 0 !important;
+}
+
+select {
+    font-size: 13px;
+    padding: 1px;
+}
+
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    select { padding: 0; }
+}
+
+button {
+    line-height: 22px; height: 26px; vertical-align: middle;
+    background-color: #f4f4f4;
+    font-size: 13px;
+    padding: 0 10px;
+    *padding: 0 5px;
+    -moz-border-radius: 13px;
+    -webkit-border-radius: 13px;
+    -khtml-border-radius: 13px;
+    border-radius: 13px;
+    cursor: pointer;
+    margin: 0;
+    border: 1px solid #AAA;
+    color: #333;
+    text-shadow: 0 1px #fff;
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(#FFFFFF), to(#DDDDDD));
+    background: -moz-linear-gradient(top, #FFFFFF, #DDDDDD);
+    background: -o-linear-gradient(top, #FFFFFF, #DDDDDD);
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#dddddd'); /* IE6,IE7 */
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#dddddd')";
+}
+
+button:hover { border-color: #666 }
+
+img.avatar {
+	padding: 2px;
+	background: #FFF;
+	float: right;
+	
+	border-bottom: 1px solid #DEE4C5;
+	border-right: 1px solid #DEE4C5;
+}
+
+/**
+ * clearfix
+ */
+.clearfix:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
+* html>body .clearfix { display: inline-block; width: 100%; }
+* html .clearfix { height: 1%; /* End hide from IE-mac */ }
+/* ie7 hack*/
+*+html .clearfix { min-height: 1%; }
+/*]]>*/
+
+/**
+ * 圆角
+ */
+.typecho-radius-topleft {
+    -moz-border-radius-topleft: 4px;
+    -webkit-border-top-left-radius: 4px;
+    border-top-left-radius: 4px;
+}
+
+.typecho-radius-topright {
+    -moz-border-radius-topright: 4px;
+    -webkit-border-top-right-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.typecho-radius-bottomleft {
+    -moz-border-radius-bottomleft: 4px;
+    -webkit-border-bottom-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.typecho-radius-bottomright {
+    -moz-border-radius-bottomright: 4px;
+    -webkit-border-bottom-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+/**
+ * logo 的样式
+ */
+.logo {
+    display: block;
+    height: 20px;
+    width: 92px;
+    overflow: hidden;
+    text-indent: -9999px;
+    background: url(../images/sprite.png) no-repeat scroll 0px -78px;
+}
+
+.logo-dark {
+    display: block;
+    height: 21px;
+    width: 92px;
+    overflow: hidden;
+    text-indent: -9999px;
+    background: url(../images/sprite.png) no-repeat scroll 0px -150px;
+}
+
+.loading {
+    background-image: url(../images/ajax-loader.gif);
+	background-position: left center;
+	background-repeat: no-repeat;
+}
+
+
+/**
+ * 典型配置选项
+ */
+/*
+.typecho-option {
+
+}
+ */
+
+.typecho-option li {
+    padding-left: 110px;
+}
+
+.typecho-option label.typecho-label {
+    float: left;
+    width: 110px;
+    text-align: right;
+    margin: 1px 5px 0 -120px;
+    font-size: 13px;
+}
+
+.typecho-option .description {
+    color: #555;
+}
+
+/** 增加配置面板内部的错误样式 by 70 */
+.typecho-option .message {
+    padding: 2px 4px;
+    font-size: 12px;
+    width: 325px;
+    margin-top: 5px;
+    
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -khtml-border-radius: 4px;
+    
+    /* hope IE support border radius, God save me! */
+    border-radius: 4px;
+}
+
+.typecho-mini-panel .typecho-option .message {
+    width: 250px;
+}
+
+
+/**
+ * 提示信息框
+ */
+.message {
+    padding: 5px 10px;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.message a {
+    color: #333;
+    border-bottom: 1px dashed #aaa;
+    line-height: 20px;
+}
+
+.message a:hover {
+    text-decoration: none;
+    border-style: solid;
+}
+
+.message blockquote {
+    margin: 5px 10px;
+    padding: 0 5px;
+    font-size: 13px;
+}
+
+.error {
+    border: 1px solid #fbc2c4;
+    background: #fbe3e4;
+    color: #8A1F11;
+}
+
+.error a {
+    color: #8A1F11;
+    border-color:#8A1F11;
+}
+
+.notice {
+    background: #fff6bf;
+    border: 1px solid  #ffd324;
+    color: #514721;
+}
+
+.notice a {
+    color: #514721;
+    border-color:#514721;
+}
+
+.success {
+    background: #e6efc2;
+    border: 1px solid #c6d880;
+    color: #264409;
+}
+
+.success a {
+    color: #264409;
+    border-color:#264409;
+}
+
+/** 增加顶部消息样式 by 70 */
+.popup {
+    margin-top: 30px;
+    margin-bottom: -10px;
+	width: 928px;
+}
+
+/** 
+ * 安装样式
+ * 
+ * @author mingcheng
+ * @date   2008-09-06
+ */
+/**
+ * 安装向导
+ */
+.typecho-install-patch {
+    height: 30px;
+    line-height: 30px;
+    background: #333;
+}
+
+.typecho-install-patch ol {
+    position: relative;
+    overflow: hidden;
+    margin-left: 20px; /* 给第一个位置流出 20px */
+    zoom: 1;
+}
+
+.typecho-install-patch li {
+    font-weight: 600;
+    float: left;
+    color: #999;
+    font-size: 12px;
+    height: 30px;
+    line-height: 30px;
+    padding-left: 20px;
+    left: -20px;
+    position: relative;
+    margin-right: 15px;
+    background: #333 url(../images/sprite.png) no-repeat scroll 0px 0px; 
+}
+
+.typecho-install-patch li.current {
+    color: #fff;
+}
+
+
+/**
+ * 安装主体内容
+ */
+.typecho-install {
+    margin: 30px auto;
+    *padding-bottom: 30px;
+}
+
+.typecho-install .typecho-install-title, .typecho-install .typecho-install-body {
+    padding: 0px 0px 10px 0px;;
+    margin: 0px 0px 10px 0px;
+    border-bottom: 1px solid #dee4c5;
+}
+
+.typecho-install .typecho-install-title {
+    line-height: 25px;
+    height: 25px;
+    padding-left: 100px;
+    background: url(../images/sprite.png) no-repeat scroll 0px -75px; 
+}
+
+/*
+.typecho-install .typecho-install-body {
+
+}
+ */
+
+.typecho-install .typecho-install-body h2 {
+    margin-top: 10px;
+    color: #e47e00;
+}
+
+.typecho-install .typecho-install-body p {
+    line-height: 18px;
+    margin-top: 5px;
+    text-align: justify;
+}
+
+.typecho-install .session {
+    margin-bottom: 20px;
+}
+
+.typecho-install .session ul {
+    font-size: 13px;
+    margin: 15px 0px 0px 20px;
+}
+
+.typecho-install .session a:link, .typecho-install .session a:hover {
+}
+
+.typecho-install .typecho-option {
+    margin: 10px 0px;
+}
+
+.typecho-install .typecho-option li {
+    margin-bottom: 5px;
+}
+
+.typecho-install .typecho-option .message {
+    margin: 2px 0px;
+    overflow: hidden;
+}
+
+.typecho-install .typecho-option .message,
+.typecho-install .typecho-option input {
+    width: 325px;
+}
+
+.typecho-install .typecho-option input.mini {
+    width: 125px;
+}
+
+/*
+.typecho-install .submit {
+margin-top: 25px;
+}
+ */
+
+/**
+ * @安装样式结束
+ */
+
+/**
+ * 后台分页
+ */
+.typecho-pager {
+    text-align: center;
+    height: 20px;
+}
+
+.typecho-pager .typecho-pager-content {
+    display: inline-block;
+             *display: inline;
+             *zoom: 1;
+}
+
+.typecho-pager h5 {
+    font-size: 12px;
+    line-height: 15px;
+    font-weight: normal;
+    float: left;
+}
+
+.typecho-pager ul {
+    line-height: 20px;
+    height: 20px;
+    overflow: hidden;
+    float: left;
+    zoom: 1;
+}
+
+.typecho-pager li {
+    font-family: arial,sans-serif;
+    margin-right: 3px;
+    font-size: 13px;
+    float: left;
+    height: 20px;
+    line-height: 20px;
+}
+
+.typecho-pager a {
+    color: #333;
+    display: block;
+    height: 20px;
+    outline: none;
+    padding: 0 8px;
+    float: left;
+    background: #dee4c5;
+}
+
+.typecho-pager a:hover {
+    color: #333;
+    text-decoration: none;
+    background: #C4CD9C;
+}
+
+.typecho-pager li.current a {
+    background: #e47e00;
+}
+
+.typecho-pager li.current a {
+    color: #fff;
+}
+
+
+/**
+ * 登录框
+ */
+.typecho-login {
+    position: relative;
+    margin: 15% auto;
+}
+
+.typecho-login .logo, .typecho-login .logo-dark {
+    margin: 0px auto 15px;
+}
+
+.typecho-login form {
+    background: #e5ead1;
+    margin: 0 10px;
+    padding: 25px 20px;
+    font-size: 12px;
+}
+
+.typecho-login legend {
+    display: none;
+}
+
+.typecho-login label {
+    display: block;
+    font-weight: bold;
+}
+
+.typecho-login input.text {
+    width: 205px;
+    font-size: 18px;
+}
+
+.typecho-login form p {
+    margin-bottom:15px;
+}
+
+.typecho-login form p.submit {
+    margin: 5px 0px 0px 0px;
+    position: relative;
+}
+
+.typecho-login form p.submit button {
+    position: absolute;
+    right: 0px;
+	top: 0px;
+}
+
+.typecho-login .more-link {
+    font-size: 12px;
+    margin: 10px auto;
+    padding: 0 10px;
+    clear: both;
+    overflow: hidden;
+}
+
+.typecho-login .more-link .back-to-site {
+    float: left;
+	width: 120px;
+	text-align: left;
+}
+
+.typecho-login .more-link .forgot-password {
+    float: right;
+	width: 120px;
+	text-align: right;
+}
+
+
+/**
+ * 后台头部导航
+ */
+.typecho-head-guid {
+    height: 30px;
+    background: #333;
+    color: #fff;
+    position: relative;
+    z-index: 250; /* IE 是个 250 */
+    /*border-bottom: 1px solid #DCE2C0;*/
+}
+
+.typecho-head-guid dl {
+    overflow: hidden;
+    /*margin-left:10px;*/
+    zoom: 1;
+}
+
+.typecho-head-guid dt {
+    float: left;
+    margin: 0;
+    font-size: 13px;
+    overflow: hidden;
+}
+
+.typecho-head-guid dt a:link, .typecho-head-guid dt a:visited {
+    float: left;
+    color: #fff;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 30px;
+    background: #333;
+    display: block;
+    outline: none;
+}
+
+/** 增加focus类用来标示当前的菜单项 by 70 */
+.typecho-head-guid dt.focus a:link, .typecho-head-guid dt.focus a:visited,
+.typecho-head-guid dt.current a:link, .typecho-head-guid dt.current a:visited,
+.typecho-head-guid dt a:hover {
+    background: #444 /*url(../images/sprite.png) 0 -360px repeat-x*/;
+    /*text-decoration: underline;*/
+}
+
+.typecho-head-guid dd {
+    display:none;
+    position:absolute;
+    /* 替换下拉菜单背景 by fen (2008-11-12) */
+    /* background: url(../images/typecho-head-guid-shadow.png) bottom no-repeat;
+    border: 1px solid #E5EAD1;
+    border-top: none;*/
+    border: 1px solid #CED7A8;
+    border-top: none;
+    background: #DCE2C0;
+    font-size: 13px;
+    overflow: hidden;
+    z-index:100;
+    padding: 10px;
+    z-index: 250;
+    top: 30px;
+    min-width: 140px;
+    _width: 140px; /* IE6需要这个宽度 */
+    -moz-border-radius-bottomleft: 3px;
+    -moz-border-radius-bottomright: 3px;
+    -webkit-border-bottom-left-radius: 3px;
+    -webkit-border-bottom-right-radius: 3px;
+    
+    /* hope IE support border radius, God save me! */
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+.typecho-head-guid ul {
+    position: relative;
+    top: 0;
+    padding: 0;
+    overflow: hidden;
+    min-width: 140px;
+}
+
+.typecho-head-guid li {
+    /*margin-bottom: 1px;*/
+    border-top: 1px solid #EFEFDE;
+    border-bottom: 1px solid #CED6A5;
+}
+
+.typecho-head-guid dd li.first {
+    background: none;
+    padding-top: 0;
+}
+
+.typecho-head-guid dd li.focus a, .typecho-head-guid dd li.focus a:hover {
+    /*background: #E68A17;
+    color: #fff;*/
+    background: #EDF0DF url(../images/sprite.png) right -412px no-repeat;
+}
+
+.typecho-head-guid dd a:link, .typecho-head-guid dd a:visited {
+    text-decoration: none;
+    color: #333;
+    display: block;
+    padding: 5px 37px 5px 7px;
+    zoom: 1;
+}
+
+.typecho-head-guid dd a:hover {
+    background: #EDF0DF;
+}
+
+.typecho-head-guid .operate {
+    color: #ccc;
+    position:absolute;
+    font-size: 12px;
+    top: 0px;
+    right: -5px;
+    /* review IE */
+           *right: 25px;
+           height: 30px;
+           line-height: 30px;
+}
+
+.typecho-head-guid .operate a.exit {
+    display: inline-block;
+    background: url(../images/sprite.png) no-repeat scroll 0px -223px;
+    width: 20px;
+    height: 20px;
+    text-indent: -999px;
+    outline: none;
+    overflow: hidden;
+    position:relative;
+             *position:absolute;
+             top: 5px;
+}
+
+.typecho-head-guid .operate .author {
+    margin-right: 8px;
+    text-decoration: underline;
+}
+
+
+/**
+ * 注脚
+ */
+.typecho-foot {
+    background: #333333;
+    padding: 15px 25px 80px 25px;
+    font-size: 12px;
+    text-align: center;
+    color: #999;
+    /*
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    */
+}
+
+.typecho-foot h4 {
+    margin: 5px auto;
+}
+
+.typecho-foot h4 a {
+    margin: 0px auto;
+}
+
+.typecho-foot em {
+    color: #fff;
+}
+
+/*
+.typecho-foot .copyright {
+
+}
+
+    .typecho-foot .resource {
+
+}
+ */
+
+.typecho-foot .resource ul {
+    margin: 5px auto;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+             *display: inline;
+             *zoom: 1;
+}
+
+.typecho-foot .resource li {
+    font-size: 12px;
+    left: -6px;
+    position: relative;
+    float: left;
+    padding: 0px 5px;
+    line-height: 16px;
+    border-left: 1px solid #505050;
+}
+
+.typecho-foot .resource li a:link, .typecho-foot .resource li a:visited {
+    color: #999;
+}
+
+.typecho-foot .resource li a:hover, .typecho-foot .resource li a:active {
+    color: #fff;
+}
+
+.typecho-foot-v2 {
+    text-align: left;
+}
+
+.typecho-foot-v2 h4 {
+    float: left;
+    margin-right: 10px;
+}
+
+.typecho-foot-v2 h4 a {
+    margin: 0px;
+}
+
+.typecho-foot-v2 .resource ul {
+    text-align: left;
+}
+
+/**
+ * 标题
+ */
+.typecho-page-title {
+    margin-top: 30px;
+}
+
+.typecho-page-title div {
+    height: 30px;
+    background: url(../images/sprite.png) repeat-x scroll 0px -1483px;
+}
+
+.typecho-page-title div a {
+    color: #E47E00;
+}
+
+.typecho-page-title h2 {
+    background: #f7fbe9;
+    padding-right: 10px;
+    font-size: 16px;
+    line-height: 30px;
+    height: 30px;
+    float: left;
+}
+
+.typecho-page-title p {
+    height: 30px;
+    float: right;
+    background: #f7fbe9;
+    padding-left: 10px;
+}
+
+.typecho-page-title a {
+    font-size: 13px;
+    line-height: 30px;
+    font-weight: bold;
+}
+
+.typecho-page-title a:hover {
+    text-decoration: underline;
+}
+
+.typecho-page-title h2 a {
+    font-size: 14px;
+	margin-left: 12px;
+}
+
+
+/**
+ * 后台页面主体
+ */
+.typecho-page-main {
+    margin: 10px auto;
+    padding-bottom: 10px;
+}
+
+.typecho-page-main .typecho-option-tabs {
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/**
+ * 后台主页左侧导航列表
+ */
+.typecho-dashboard-nav h3 {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.typecho-dashboard-nav h3.intro {
+    font-size: 13px;
+    font-weight: normal;
+}
+
+.typecho-dashboard-nav .intro-link {
+    background: none;
+    padding: 0px;
+    font-size: 13px;
+    margin-bottom: 20px;
+}
+
+.typecho-dashboard-nav .intro-link ul {
+}
+
+.typecho-dashboard-nav .intro-link li {
+    border: none;
+    margin: 2px 0px;
+}
+
+.typecho-dashboard-nav .balloon,
+.typecho-option-tabs .balloon {
+    margin-left: 5px;
+    padding: 1px 5px;
+    background: #BD6800;
+    color: #FFF;
+    font-size: 12px;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+}
+
+.typecho-dashboard-nav .dashboard-status {
+    font-size: 12px;
+}
+
+.typecho-dashboard-nav .status p {
+    margin-bottom: 5px;
+}
+
+.typecho-dashboard-nav .update-check {
+    background: #dee4c5;
+    color:#e47e00;
+    margin-bottom: 25px;
+    padding: 10px;
+    font-size: 12px;
+    text-align: center;
+}
+
+.typecho-dashboard-nav .update-check p {
+
+}
+
+.typecho-dashboard-nav .update-check .current {
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.typecho-dashboard-nav .update-check .current em {
+    font-weight: bold;
+}
+
+.typecho-dashboard-nav .update-check .latest {
+    font-size: 12px;
+}
+
+.typecho-dashboard-nav .update-check .latest a,
+.typecho-dashboard-nav .update-check .latest em {
+    color: #666;
+}
+
+/**
+ * 主页主体
+ */
+.typecho-dashboard-main {
+
+}
+
+.typecho-dashboard-main .section {
+    font-size: 13px;
+    margin-bottom: 20px;
+}
+
+.typecho-dashboard-main .section h4 {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.typecho-dashboard-main .section ul {
+}
+
+.typecho-dashboard-main .section li {
+    text-align: justify;
+    line-height: 22px;
+}
+
+.typecho-dashboard-main .section .tags {
+    margin: 0px 5px;
+}
+
+.typecho-dashboard-main .section .title {
+
+}
+
+.typecho-dashboard-main .section .date {
+
+}
+
+.typecho-dashboard-main .section .category {
+
+}
+
+
+/**
+ * 标签页
+ */
+.typecho-option-tabs, .typecho-editor-tab {
+    background: #dee4c5;
+    height: 30px;
+    overflow: hidden;
+    zoom: 1;
+}
+
+.typecho-editor-tab {
+    background: none;
+}
+
+.typecho-option-tabs li, .typecho-editor-tab li {
+    float: left;
+    margin: 4px 0px 0px 5px;
+    height: 26px;
+    
+    -moz-border-radius-topleft: 3px;
+    -moz-border-radius-topright: 3px;
+    -webkit-border-top-left-radius: 3px;
+    -webkit-border-top-right-radius: 3px;
+    
+    /* hope IE support border radius, God save me! */
+    border-bottom-top-radius: 3px;
+    border-bottom-top-radius: 3px;
+}
+
+.typecho-option-tabs li.right {
+    float: right;
+    margin: 4px 5px 0px 0;
+}
+
+.typecho-editor-tab li {
+    float: right;
+    font-size: 12px;
+    font-weight: bold;
+    margin: 4px 0 0px 2px;
+    cursor: pointer;
+    padding: 0 15px;
+    border: 1px solid #F7FBE9;
+    border-bottom: none;
+    line-height: 24px;
+    color: #333;
+}
+
+.typecho-editor-tab li.current {
+    border: 1px solid #C1CD94;
+    border-bottom: none;
+    background: #D3DBB3;
+}
+
+.typecho-editor-tab li.loading {
+    padding-left: 32px;
+    background-image: url(../images/ajax-loader.gif);
+    background-position: 8px 4px;
+    background-repeat: no-repeat;
+}
+
+.typecho-option-tabs li:hover, .typecho-option-tabs li.current {
+    background: #f7fbe9;
+}
+
+.typecho-option-tabs li a:link, .typecho-option-tabs li a:visited {
+    display: block;
+    outline: none;
+    color: #333;
+    text-decoration: none;
+    padding: 3px 15px;
+}
+
+/**
+ * 表格列表页
+ */
+.typecho-article-list {
+    margin-top: 25px;
+}
+
+/**
+ * 列表页选项
+ */
+.typecho-list .typecho-pager {
+    margin: 10px 0px;
+}
+
+.typecho-list-operate {
+    height: 30px;
+    overflow: hidden;
+    font-size: 12px;
+    zoom: 1;
+}
+
+.typecho-list-operate input {
+    font-size: 13px;
+}
+
+.typecho-list-operate button {
+    height: 24px;
+    line-height: 24px;
+}
+
+.typecho-list-operate p.operate {
+    float: left;
+    line-height:24px;
+    height: 24px;
+}
+
+.typecho-list-operate p.search {
+    float: right;
+    line-height:24px;
+    height: 24px;
+}
+
+.typecho-list-operate p.search a.button {
+    float: right;
+    font-size: 13px;
+    padding: 2px 6px;
+    line-height: 20px;
+}
+
+.typecho-list-operate p.operate a.button {
+    float: left;
+	padding: 2px 6px;
+	font-size: 13px;
+	line-height: 20px;
+	margin-right: 10px;
+}
+
+.typecho-list-operate span.operate-button {
+    cursor: pointer;
+    color: #BD6800;
+}
+
+.typecho-list-operate span.operate-delete, a.operate-delete {
+    color: #CC0000;
+    font-weight: bold;
+}
+
+a.operate-edit {
+    color: #007700;
+}
+
+a.operate-reply {
+    color: #545c30;
+}
+
+.typecho-list-operate span.operate-button-delete, a.operate-button-delete {
+    background: #CC0000;
+}
+
+.typecho-list-operate a:hover {
+    text-decoration: none;
+}
+
+/**
+ * 列表表格
+ */
+/** 增加表格标题 by 70 */
+.typecho-list-table-title {
+    font-size:14px;
+    font-weight: normal;
+    color: #777;
+    text-align: center;
+}
+
+.typecho-list-table  {
+    width: 100%;
+    margin: 10px 0 20px 0;
+    font-size: 13px;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.typecho-list-table-border {
+    border-collapse: separate;
+    border: 1px solid #DCE2C0;
+    border-bottom: none;
+}
+
+.typecho-list-table-border td {
+    border-bottom: 1px solid #DCE2C0;
+}
+
+.typecho-list-table input {
+    border: none; /* 重置 input */
+}
+
+.typecho-list-table thead {
+}
+
+.typecho-list-table th {
+    text-align: left;
+    padding: 0 5px;
+    height: 32px;
+    line-height: 20px;
+    font-weight: bold;
+    border-bottom: 1px solid #F7FBE9;
+    background: #D3DBB3;
+}
+
+.typecho-list-table td {
+    height: 32px;
+    line-height: 20px;
+    padding: 0 5px;
+    overflow: hidden;
+}
+
+.typecho-list-table td .thumb-box {
+    background: #FFF;
+    margin: 5px;
+    height: 32px;
+    width: 32px;
+    display: block;
+    overflow: hidden;
+    border: 1px solid #C1CD94;
+    text-align: center;
+}
+
+.typecho-list-table td img.tiny {
+	width: 16px;
+	height: 16px;
+	margin-bottom: -2px;
+}
+
+.typecho-list-table td .thumb-box img {
+    max-height: 32px;
+    max-width: 32px;
+    _height: 32px;
+}
+
+.typecho-list-table tbody tr.even, ul.typecho-list-notable li.even {
+    background: #eff5d9;
+}
+
+.typecho-list-table tbody tr.hover, .typecho-list-table tbody tr:hover {
+
+}
+
+.typecho-list-table tbody tr.hover td, .typecho-list-table tbody tr:hover td, ul.typecho-list-notable li:hover, ul.typecho-list-notable li.hover {
+    background: #E3EEBD;
+}
+
+.typecho-list-table tbody tr.checked td, ul.typecho-list-notable li.checked {
+    background: #DBE9AB;
+}
+
+.typecho-list-table tbody tr.checked-even td, ul.typecho-list-notable li.checked-even {
+    background: #CCE087;
+}
+
+.typecho-list-table h4 {
+    font-weight: normal;
+}
+
+.typecho-list-table .important {
+    color: #e47e00;
+}
+
+.typecho-list-table .description, ul.typecho-list-notable .description {
+    color: #aaa;
+}
+
+.typecho-list-table .warning, ul.typecho-list-notable .warning {
+    color: #ff0000;
+	font-weight: bold;
+}
+
+.typecho-list-table img.inline {
+    margin-bottom: -3px;
+}
+
+.typecho-list-table tr td .hidden-by-mouse, ul.typecho-list-notable li .hidden-by-mouse {
+    display: none;
+}
+
+.typecho-list-table tr:hover td .hidden-by-mouse, ul.typecho-list-notable li:hover .hidden-by-mouse,
+.typecho-list-table tr.hover td .hidden-by-mouse, ul.typecho-list-notable li.hover .hidden-by-mouse {
+    display: inline;
+}
+
+.deactivate tbody, tr.deactivate td {
+    color: #999;
+}
+
+.deactivate tbody tr:hover, .deactivate tbody tr.hover {
+    color: #333;
+}
+
+.deactivate tbody a {
+    color: #FFC177;
+}
+
+.deactivate tbody tr:hover a, .deactivate tbody tr.hover a {
+    color: #BD6800;
+}
+
+/**
+ * 不使用表格的列表
+ */
+ul.typecho-list-notable {
+    margin: 0;
+    padding: 0;
+    line-height: 20px;
+    font-size: 12px;
+}
+
+ul.typecho-list-notable .big {
+    font-size: 13px;
+}
+
+ul.typecho-list-notable .avatar img {
+    background: #FFF;
+    padding: 2px;
+}
+
+ul.typecho-list-notable img.inline {
+    margin-bottom: -5px;
+}
+
+ul.typecho-list-notable p {
+    padding: 5px 0;
+    font-size: 13px;
+}
+
+ul.typecho-list-notable .line {
+    height: 20px;
+    line-height: 20px;
+	padding-left: 5px;
+}
+
+ul.typecho-list-notable .content {
+	padding-left: 5px;
+}
+
+ul.typecho-list-notable .big-line {
+    height: 32px;
+    line-height: 32px;
+}
+
+ul.typecho-list-notable .weak {
+    color: #777;
+}
+
+ul.typecho-list-notable .left, .typecho-list-table .left {
+    float: left;
+}
+
+ul.typecho-list-notable .right, .typecho-list-table .right {
+    float: right;
+}
+
+ul.typecho-list-notable .center, .typecho-list-table .center {
+    text-align: center;
+}
+
+ul.typecho-list-notable .center {
+    text-align: center;
+}
+
+ul.typecho-list-notable li {
+    margin: 0 0 5px 0;
+    list-style: none;
+    padding: 5px 0;
+}
+
+ul.typecho-list-notable li span.comment,
+ul.typecho-list-notable li span.pingback,
+ul.typecho-list-notable li span.trackback {
+    background: url(../images/comment.gif) top no-repeat;
+    width: 16px;
+    height: 16px;
+    display: block;
+    float: left;
+    margin: 4px 3px -4px 0;
+    _margin-right: 0;
+}
+
+ul.typecho-list-notable li span.pingback {
+    background-position: center;
+}
+
+ul.typecho-list-notable li span.trackback {
+    background-position: bottom;
+}
+
+ul.typecho-list-notable li .comment-body {
+	overflow: visible;
+}
+
+ul.typecho-list-notable li .comment-avatar img {
+	margin-top: 5px;
+}
+
+ul.typecho-list-notable li code, ul.typecho-list-notable li pre {
+    display: block;
+    background: #fff;
+    margin: 10px;
+    padding: 10px;
+    font-family: 'andale mono','lucida console',monospace;
+    overflow: auto;
+    border: 1px solid #E8EDD6;
+}
+
+ul.typecho-list-notable li .comment-form, ul.typecho-list-notable li .reply-form {
+	padding: 5px 0 10px 0;
+}
+
+ul.typecho-list-notable li .comment-form label, ul.typecho-list-notable li .reply-form label {
+	padding: 0 10px 0 0;
+	line-height: 20px;
+}
+
+ul.typecho-list-notable li .comment-form input, ul.typecho-list-notable li .reply-form input {
+	margin: 0 10px 0 0;
+	width: 155px;
+}
+
+ul.typecho-list-notable li .comment-form textarea, ul.typecho-list-notable li .reply-form textarea {
+	margin: 10px 0;
+	width: 800px;
+	height: 150px;
+}
+
+ul.typecho-list-notable li .comment-form p, ul.typecho-list-notable li .reply-form p {
+	margin: 0;
+	padding: 0;
+}
+
+ul.typecho-list-notable li .reply-message {
+	margin: 10px;
+	background: #FBFDF2;
+	padding: 0 10px;
+	
+	border: 1px solid #DEE4C5;
+	
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -khtml-border-radius: 4px;
+    
+    /* hope IE support border radius, God save me! */
+    border-radius: 4px;
+}
+
+ul.typecho-list-notable li .loading {
+	background-position: center top;
+}
+
+/**
+ * 评论回复
+ */
+#typecho-respond {
+    padding: 10px;
+    display: none;
+}
+
+ul.typecho-list-notable li #typecho-respond {
+    display: inline;
+}
+
+#typecho-respond textarea {
+    width: 450px;
+    height: 150px;
+}
+
+/**
+ * 模板列表
+ */
+.typecho-theme-list {
+    border-collapse: separate;
+    border-spacing: 0;
+    border-top: 1px solid #CAD7A2;
+    border-bottom: 1px solid #CAD7A2;
+} 
+
+.typecho-theme-list td {
+    line-height: 20px;
+    vertical-align: top;
+    padding: 10px 5px;
+}
+
+.typecho-theme-list td.border-right {
+    border-right: 1px solid #CAD7A2;
+}
+
+.typecho-theme-list td.border-bottom {
+    border-bottom: 1px solid #CAD7A2;
+}
+
+.typecho-theme-list img {
+    background: #FFF;
+    padding: 2px;
+    margin: 0 15px 0 5px;
+    float: left;
+}
+
+.typecho-theme-list p {
+    padding: 5px 0;
+    font-size: 12px;
+}
+
+.typecho-theme-list .activate, .typecho-theme-list .edit {
+    display: none;
+}
+
+.typecho-theme-list h4 {
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.typecho-theme-list tbody tr.hover td, .typecho-theme-list tbody tr:hover td {
+    background: none;
+}
+
+.typecho-theme-list tbody tr td.current, .typecho-theme-list tbody tr td.hover {
+    background: #e3eebd;
+}
+
+.typecho-theme-list tbody tr td.hover .activate, .typecho-theme-list tbody tr td.hover .edit {
+    display: block;
+    position: absolute;
+    background: #BD6800;
+    color: #fff;
+    height: 24px;
+    line-height: 24px;
+    padding: 0 5px;
+    font-weight: bold;
+    white-space: nowrap;
+    opacity:0.8;
+    -ms-filter:'alpha(opacity=80)';
+    filter:alpha(opacity=80);
+}
+
+.typecho-theme-list tbody tr td.hover a.activate:hover, .typecho-theme-list tbody tr td.hover a.edit:hover {
+    background: #D29B51;
+    text-decoration: none;
+}
+
+/**
+ * 后台配置项
+ */
+.typecho-page-main .typecho-option {
+    position: relative;
+    top: -1px;
+    font-size: 13px;
+    border-bottom: 1px solid #EBEFDA;
+    border-top: 1px solid #fff;
+}
+
+.typecho-page-main .typecho-option-clear {
+	border-bottom: 1px solid #F7FBE9;
+    border-top: 1px solid #F7FBE9;
+	margin: -1px 0;
+	top: -1px;
+	bottom: -1px;
+	z-index: 100;
+}
+
+.typecho-page-main .typecho-mini-panel {
+    background: #DEE4C5;
+}
+
+.typecho-page-main .typecho-option label.typecho-label {
+    width: 190px;
+    margin-left: -200px;
+    font-weight: bold;
+}
+
+.typecho-page-main .typecho-mini-panel .typecho-option label.typecho-label {
+    float: none;
+    margin: 0;
+    width: auto;
+    display: block;
+    text-align:left;
+}
+
+.typecho-page-main .typecho-option li {
+    margin: 15px 0px;
+    _padding-bottom: 5px;
+    display: block;
+    padding-left: 200px;
+}
+
+.typecho-page-main .typecho-mini-panel .typecho-option {
+    border: none;
+    padding: 0 10px;
+}
+
+.typecho-page-main .typecho-mini-panel .typecho-option li {
+    padding-left: 0;
+}
+
+.typecho-page-main .typecho-option input.text {
+    width: 475px;
+}
+
+.typecho-page-main .typecho-option input.password {
+    width: 300px;
+}
+
+.typecho-page-main .typecho-mini-panel .typecho-option input.text {
+    width: 280px;
+}
+
+.typecho-page-main .typecho-mini-panel .typecho-option input.password {
+    width: 200px;
+}
+
+.typecho-page-main .typecho-option input.mini {
+    width: 115px;
+}
+
+.typecho-page-main .typecho-option input.num {
+	width: 30px;
+}
+
+.typecho-page-main .typecho-option textarea {
+    width: 475px;
+    height: 150px;
+}
+
+.typecho-page-main .typecho-option span.multiline {
+    *float: left;
+    display: block;
+    line-height: 26px;
+    *width: 100%;
+}
+
+.typecho-page-main .typecho-mini-panel .typecho-option textarea {
+    width: 280px;
+    height: 70px;
+}
+
+.typecho-page-main .typecho-option .description {
+    line-height:18px;
+    margin-top:5px;
+    text-align:justify;
+}
+
+.typecho-page-main .typecho-option-submit {
+    border-bottom: none;
+}
+
+
+.typecho-page-main .typecho-option li.typecho-option-title {
+	padding: 10px;
+	background: #DEE4C5;
+	
+	-moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -khtml-border-radius: 4px;
+    
+    /* hope IE support border radius, God save me! */
+    border-radius: 4px;
+}
+
+.typecho-page-main .typecho-option li.typecho-option-title h3 {
+    font-size: 18px;
+    color: #e47e00;
+}
+
+.typecho-page-main .typecho-option li.typecho-option-title p {
+    font-size: 12px;
+    color: #555555;
+	padding: 0;
+	margin: 5px 0 0 0;
+	padding-left: 2px;
+}
+
+.typecho-page-main .typecho-content-panel .typecho-option label.typecho-label {
+    width: 100px;
+    margin-left: -110px;
+    position: absolute;
+}
+
+.typecho-page-main .typecho-content-panel ul.typecho-option {
+    border: none;
+}
+
+.typecho-page-main .typecho-content-panel ul.typecho-option-focus li {
+    margin: 10px 0 0 0;
+}
+
+.typecho-page-main .typecho-content-panel .typecho-option li {
+    padding-left: 110px;
+}
+
+.typecho-page-main .typecho-content-panel .typecho-option-submit li {
+    padding-top: 15px;
+}
+
+.typecho-page-main .typecho-content-panel h3 {
+    font-size: 18px;
+    padding: 10px 0;
+    margin: 20px 0;
+    color: #e47e00;
+    border-bottom: 1px solid #E8EDD6;
+}
+
+.typecho-page-main .typecho-content-panel h4 cite {
+    color: #777;
+    font-style: normal;
+    font-size: 13px;
+    font-weight: normal;
+    margin-left: 5px;
+}
+
+.typecho-page-main .typecho-content-panel h4 img {
+    margin-right: 10px;
+	margin-top: 10px;
+}
+
+/**
+ * 编辑模板
+ */
+.typecho-select-theme {
+    height: 25px;
+    line-height: 25px;
+    margin: 15px 0px;
+}
+
+.typecho-select-theme h5 {
+    color: #E47E00;
+    font-weight: bold;
+    float: left;
+    font-size: 14px;
+    width: 120px;
+    margin-right: 10px;
+}
+
+.typecho-select-theme select {
+    width: 150px;
+}
+
+/**
+ * 编辑模板（编辑详情）
+ */
+.typecho-edit-theme {
+    overflow: hidden;
+}
+
+.typecho-edit-theme ul {
+    width: 150px;
+    float: left;
+    overflow: hidden;
+    padding: 10px 0px 10px 10px;
+}
+
+.typecho-edit-theme li {
+    line-height: 25px;
+	height: 25px;
+    margin-bottom: 5px;
+    font-size: 11px;
+	text-align: right;
+    padding: 0px 10px 0px 0px;
+}
+
+.typecho-edit-theme li a:link, .typecho-edit-theme li a:visited {
+    color: #333;
+    display: block;
+}
+
+.typecho-edit-theme li a:hover {
+    text-decoration: none;
+}
+
+.typecho-edit-theme .current {
+    background: #DEE4C5;
+    -moz-border-radius-topleft: 3px;
+    -moz-border-radius-bottomleft: 3px;
+    -webkit-border-top-left-radius: 3px;
+    -webkit-border-bottom-left-radius: 3px;
+    
+    /* hope IE support border radius, God save me! */
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.typecho-edit-theme .content {
+    width: 780px;
+    float: left;
+    overflow: hidden;
+    padding: 10px 10px 10px 0px;
+}
+
+.typecho-edit-theme .submit {
+    margin: 20px 0 20px 0;
+    text-align: center;
+}
+
+.typecho-edit-theme textarea {
+    width: 770px;
+    height: 500px;
+    font-family: "Courier New",Courier,monospace;
+}
+
+/**
+ * 编写页面
+ */
+
+.typecho-post-area {
+    margin-bottom: 15px;
+}
+
+.typecho-post-area label.typecho-label {
+    font-size: 13px;
+    font-weight: bold;
+    margin: 5px 0px;
+    display: block;
+}
+
+/*.typecho-post-area .typecho-preview-label {
+    position: relative;
+    display: none;
+}
+
+.typecho-post-area .typecho-preview-label span {
+    position: absolute;
+    right: 0;
+    top: -25px;
+    font-weight: bold;
+    font-size: 13px;
+}*/
+
+.typecho-post-area .typecho-preview-label {
+    margin-right: 10px;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+#typecho-preview-box {
+    padding: 10px;
+    border: 2px dashed #DEE4C5;
+    background: #FFF;
+    display: none;
+    float: left;
+    width: 686px;
+    margin-top: 10px;
+}
+
+#typecho-preview-box h1 { font-size: 23px; }
+#typecho-preview-box h2 { font-size: 21px; }
+#typecho-preview-box h3 { font-size: 19px; }
+#typecho-preview-box h4 { font-size: 17px; }
+#typecho-preview-box h5 { font-size: 15px; }
+#typecho-preview-box h6,
+#typecho-preview-box p,
+#typecho-preview-box ol,
+#typecho-preview-box ul,
+#typecho-preview-box dl,
+#typecho-preview-box pre,
+#typecho-preview-box blockquote {
+    font-size: 13px;
+}
+
+#typecho-preview-box p,
+#typecho-preview-box ol,
+#typecho-preview-box ul,
+#typecho-preview-box dl,
+#typecho-preview-box pre,
+#typecho-preview-box blockquote {
+    margin-bottom: 20px;
+}
+
+#typecho-preview-box ul, 
+#typecho-preview-box ol {
+    list-style-type: disc;
+    margin-left: 30px;
+}
+#typecho-preview-box ol {
+    list-style-type: decimal;
+}
+
+#typecho-preview-box pre,
+#typecho-preview-box blockquote {
+    padding: 20px;
+    background: #eee;
+}
+
+.typecho-post-area label.typecho-label cite {
+	font-weight: normal;
+	color: #777;
+	margin-left: 10px;
+	background: #ffffdd;
+}
+
+.typecho-post-area .submit {
+    height: 24px;
+    line-height: 24px;
+    margin: 15px 0px 20px;
+}
+
+.typecho-post-area .right {
+    float: right;
+    padding-left: 24px;
+}
+
+.typecho-post-area .left {
+    float: left;
+}
+
+.typecho-post-area input.text {
+    font-size: 13px;
+    width: 700px;
+}
+
+.typecho-post-area .out-date {
+    border: 1px solid #D3DBB3;
+    padding: 3px;
+    background: #fff;
+}
+
+.typecho-post-area p.title {
+    margin-bottom: 10px;
+}
+
+.typecho-post-area input#year,
+.typecho-post-area select#month,
+.typecho-post-area input#day,
+.typecho-post-area input#hour,
+.typecho-post-area input#min {
+    width: 30px;
+    font-size: 8pt;
+    font-family: "Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana;
+    padding: 1px;
+}
+
+.typecho-post-area input#day,
+.typecho-post-area input#hour,
+.typecho-post-area input#min {
+    width: 16px;
+}
+
+.typecho-post-area select#month {
+    width: 64px;
+}
+
+.typecho-post-area input.time {
+    width: 20px;
+}
+
+.typecho-post-area input.mini {
+    width: 200px;
+}
+
+.typecho-post-area input.title {
+    font-size: 20px; /* 撰写页面标题input */
+}
+
+.typecho-post-area textarea#text {
+    font-size: 13px;
+    line-height: 18px;
+    width: 700px;
+    margin: 0;
+    *margin: -1px 0 -1px 0;
+    display: block;
+}
+
+.typecho-post-area button#btn-submit {
+	font-weight: bold;
+}
+
+.typecho-post-area button#btn-save {
+	font-style: italic;
+}
+
+.typecho-post-area span.size-btn {
+    height: 20px;
+    width: 708px;
+    line-height: 20px;
+    background: url(../images/size-btn.gif) top no-repeat;
+    position: relative;
+    display: block;
+    cursor: row-resize;
+}
+
+.typecho-post-area textarea#trackback {
+    font-size: 13px;
+    width: 430px;
+    height: 70px;
+}
+
+.typecho-post-area br {
+    height: 10px;
+    line-height: 10px;
+}
+
+.typecho-post-area #advance-panel, .typecho-post-area #upload-panel {
+    margin: 0;
+    display: none;
+}
+
+.typecho-post-area .is-draft {
+	background: #FFF1A8;
+}
+
+ul.typecho-post-option {
+    border: 0px;
+    margin: -1px 0px -1px 10px;
+}
+
+ul.typecho-post-option li {
+    list-style: none;
+    border-bottom: 1px solid #EBEFDA;
+    border-top: 1px solid #fff;
+    padding: 5px 0 10px 0;
+}
+
+#advance-panel li, #upload-panel li {
+    border: none;
+}
+
+ul.typecho-post-option li ul {
+    border: none;
+    margin: 0;
+    overflow: auto;
+}
+
+ul.typecho-post-option li ul.related {
+    margin: 10px 0 0 0;
+}
+
+ul.typecho-post-option li ul li {
+    /*height: 20px;
+    line-height: 20px;*/
+    border: none;
+    font-size: 12px;
+    padding: 4px;
+    margin-bottom: 5px;
+    background: #EFF5D9;
+}
+
+ul.typecho-post-option li ul.related li {
+    background: none;
+    list-style-type: square;
+    padding: 0;
+    margin: 0 0 0 20px;
+    height: auto;
+}
+
+ul.typecho-post-option li ul li:hover {
+    background: #E3EEBD
+}
+
+ul.typecho-post-option li ul.related li:hover {
+    background: none;
+}
+
+ul.typecho-post-option .description {
+    color: #999;
+    margin-top: 5px;
+}
+
+ul.autocompleter-choices {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    background-color: #fff;
+    text-align: left;
+    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    z-index: 50;
+    border: 1px solid #CED7A8;
+    border-top: none;
+    background: #DCE2C0;
+    color: #000;
+    font-size: 13px;
+    
+    -moz-border-radius-bottomleft: 3px;
+    -moz-border-radius-bottomright: 3px;
+    -webkit-border-bottom-left-radius: 3px;
+    -webkit-border-bottom-right-radius: 3px;
+    
+    /* hope IE support border radius, God save me! */
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+ul.autocompleter-choices li {
+    position: relative;
+    margin: 0;
+    padding: 0.3em 1.5em 0.3em 1em;
+    display: block;
+    float: none !important; 
+    cursor: pointer;
+    font-weight: normal;
+    white-space: nowrap;
+    font-size: 1em;
+    line-height: 1.5em;
+}
+
+ul.autocompleter-choices li.autocompleter-selected, ul.autocompleter-choices li.autocompleter-hover {
+    background-color: #EDF0DF;
+    color: #000;
+}
+
+ul.autocompleter-choices span.autocompleter-queried {
+    display: inline;
+    float: none;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    color: #E47E00;
+}
+
+.typecho-post-area .advance, .typecho-post-area .attach, .typecho-post-area .media {
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+    padding: 0 0 0 16px;
+    height: 16px;
+    line-height: 16px;
+    text-decoration: underline;
+    background-image: url(../images/arrow.gif);
+    background-repeat: no-repeat;
+    *background-position: 0 -2px;
+}
+
+.typecho-post-area .attach {
+    background-image: url(../images/attach.gif);
+    margin-left: 10px;
+    padding-left: 20px;
+}
+
+.typecho-list-operate #swfu {
+    position: absolute;
+    left: 0;
+}
+
+.typecho-post-area .close {
+    background-position: 0 -16px;
+    *background-position: 0 -18px;
+}
+
+/**
+ * 标签列表
+ */
+.typecho-page-main ul.tag-list {
+    padding: 5px 10px;
+    background: #EFF5D9;
+}
+
+.typecho-page-main ul.tag-list li {
+    padding: 2px 4px;
+    list-style: none;
+    margin: 0;
+    line-height: 28px;
+    white-space:nowrap;
+    float: left;
+    display: block;
+    cursor: pointer;
+}
+
+.typecho-page-main ul.tag-list li input {
+    display: none;
+}
+
+.typecho-page-main ul.tag-list li:hover, .typecho-page-main ul.tag-list li.hover {
+    background: none;
+}
+
+.typecho-page-main ul.tag-list li.checked, .typecho-page-main ul.tag-list li.checked-even {
+    background: none;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.typecho-page-main ul.tag-list li.size-5 {
+    font-size: 12px;
+    color: #777;
+}
+
+.typecho-page-main ul.tag-list li.size-10 {
+    font-size: 16px;
+    color: #666;
+}
+
+.typecho-page-main ul.tag-list li.size-20 {
+    font-size: 18px;
+    color: #555;
+}
+
+.typecho-page-main ul.tag-list li.size-30 {
+    font-size: 22px;
+    color: #444;
+}
+
+.typecho-page-main ul.tag-list li.size-0 {
+    font-size: 28px;
+    color: #333;
+}
+
+.typecho-page-main .typecho-mini-panel .tag-selection {
+    margin: 10px;
+    font-size: 13px;
+}
+
+.typecho-page-main .typecho-mini-panel .tag-selection a {
+    margin: 0 5px 5px 0;
+    display: block;
+    float: left;
+    white-space:nowrap;
+}
+
+.typecho-attachment-photo-box .description {
+    color: #999;
+    margin: 10px 0;
+    font-size: 14px;
+}
+
+.typecho-attachment-photo-box .description ul li {
+    border-bottom: 1px dashed #E8EDD6;
+    line-height: 28px;
+	height: 28px;
+}
+
+.typecho-attachment-photo-box .description strong {
+    color: #444;
+    font-weight: normal;
+}
+
+.typecho-attachment-photo-box .description input {
+    width: 500px;
+    border: 1px solid #aaa;
+    background-color: #eee;
+	background-image: url(../images/progress.gif);
+	background-repeat: repeat-y;
+	background-position: -1000px 0;
+}
+
+.typecho-attachment-photo-box .description button {
+	font-weight: bold;
+	margin-left: 5px;
+}
+
+.typecho-attachment-photo-box .description ul li #swfu {
+	display: block;
+	_display: inline;
+	position: relative;
+}
+
+.typecho-attachment-photo-box img {
+    border: 1px solid #E8EDD6;
+    background: #fff;
+    padding: 3px;
+    max-width: 610px;
+}
+
+.typecho-mime {
+    background-image: url(../images/mime.gif);
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    font-size: 12px;
+    display: block;
+    float: right;
+    position: relative;
+    padding: 0;
+    margin-right: -3px;
+}
+
+.typecho-mime-office {
+    background-position: 0 -160px;
+}
+
+.typecho-mime-text {
+    background-position: 0 -176px;
+}
+
+.typecho-mime-image {
+    background-position: 0 -192px;
+}
+
+.typecho-mime-html {
+    background-position: 0 -208px;
+}
+
+.typecho-mime-archive {
+    background-position: 0 -224px;
+}
+
+.typecho-mime-application {
+    background-position: 0 -240px;
+}
+
+.typecho-mime-audio {
+    background-position: 0 -256px;
+}
+
+.typecho-mime-script {
+    background-position: 0 -272px;
+}
+
+.typecho-mime-video {
+    background-position: 0 -288px;
+}
+
+.typecho-mime-unknow {
+    background-position: 0 -304px;
+}
+
+.typecho-attachment-photo-box .typecho-mime {
+    bottom: -6px;
+    margin-right: 3px;
+    float: left;
+}
