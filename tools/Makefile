@@ -6,11 +6,10 @@ TINYMCE=3_2_2
 
 
 #update subversion
-svnup:
-	@echo 'subversion update'
+update:
+	@echo 'git update'
 	rm -Rf build/
-	svn up ../
-	svn export ../ build
+	git clone https://github.com/typecho/typecho-replica.git build
 	for i in `find build/ -name '*.source.css'`; do echo $$i && java -Xmx32m -jar yuicompressor-2.4.2.jar $$i --charset UTF-8 -o $$i; done;
 	for i in `find build/admin/javascript/ -name '*.js'`; do echo $$i && java -Xmx32m -jar yuicompressor-2.4.2.jar $$i --charset UTF-8 -o $$i; done;
 	for i in `find build/ -name '*.php'`; do php -l $$i; done;
@@ -46,7 +45,7 @@ clear:
 
 
 upgrade:
-	make svnup
+	make update
 	rm -Rf ${DIR}/admin/
 	cp -Rf build/admin/ ${DIR}
 	rm -Rf ${DIR}/var/
@@ -89,7 +88,7 @@ upgrade:
 
 
 theme:
-	make svnup
+	make update
 	rm -Rf ${DIR}/usr/themes/default/
 	cp -Rf build/usr/themes/default/ ${DIR}/usr/themes/
 	make clear
@@ -101,7 +100,7 @@ typecho:
 
 
 install:
-	make svnup
+	make update
 	rm -Rf build/mockup/
 	rm -Rf build/tools/
 	rm -Rf build/todo.txt
@@ -135,6 +134,6 @@ tinymce:
 
 
 all:
-	make svnup
+	make update
 	make package
 	make clear
