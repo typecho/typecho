@@ -1,70 +1,7 @@
-2008.10.10 by qining
-再来测试
-测试邮件系统
+0.9 版
 
-2008.9.27 by qining
-plugin缓存机制改进
+1. 干掉mootools，上jquery
+2. 后台UI更新
+3. 撰写页面更新，加入markdown支持
+4. 增加bae支持
 
-2008.8.21 by qining
-
-改进数据库抽象机制(改进abstract widget的抽象方法中的过滤器为静态方法)
-改进修饰器的使用
-
-2008.8.19 by qining
-
-更新分段处理函数
-以及表单构建器的修饰器
-测试pgsql和sqlite的sql92兼容性问题
-修复install脚本安装问题,新增变量支持
-Q3需要完成的路线图
-Archive中widget方法更改为load
-
-2008.8.14 by qining
-
-测试pgsql和sqlite的sql92兼容性问题
-
-2008.7.4 by qining
-
-增加了一些变量需要实现
-对已注册用户的评论作者名保护
-
-2008.6.21 by qining
-
-在set_include_path时对get_include_path和PATH_SEPARATOR的支持
-
-2008.5.28 by qining
-
-保留xmlrpc
-去掉邮件提示
-去掉附件管理
-去掉静态链接
-重新设计Plugin系统
-去掉options存储目录
-去掉options模板目录
-改options中template为theme
-增加评论关闭选项
-
-2008.5.22 by qining
-
-改DoEditCategory为DoCategory
-增加tag管理,过滤
-
-2008.5.21 by qining
-
-增加DoEditPage
-增加多重关键词条件
-增加Tag管理
-修改数据库meta和tags字段
-干掉contents表uri字段
-修改widget结构,增加重用度
-
-2008.5.20 by qining
-
-增加DoEditPage
-分离DoEditMeta为DoEditCategory和DoEditTag
-分离AdminMetas为Categories和Tags
-为Meta增加条件判断以及提示信息
-判断meta slug是否重复
-增加多重关键词条件
-增加Meta的合并
-增加自定义错误页面

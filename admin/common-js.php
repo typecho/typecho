@@ -1,5 +1,5 @@
 <?php if(!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
-<script type="text/javascript" src="<?php $options->adminUrl('javascript/mootools.js?v=' . $suffixVersion); ?>"></script> 
+<script type="text/javascript" src="<?php $options->adminUrl('javascript/jquery.js?v=' . $suffixVersion); ?>"></script> 
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/typecho.js?v=' . $suffixVersion); ?>"></script>
 <script type="text/javascript">
     (function () {
