@@ -79,7 +79,7 @@ ul, ol {
 }
 
 p {
-    font-size: 12px;
+    font-size: 13px;
 }
 
 a {
@@ -597,28 +597,27 @@ margin-top: 25px;
 }
 
 .typecho-pager ul {
-    line-height: 20px;
-    height: 20px;
-    overflow: hidden;
+    line-height: 28px;
+    height: 28px;
     float: left;
     zoom: 1;
 }
 
 .typecho-pager li {
     font-family: arial,sans-serif;
-    margin-right: 3px;
-    font-size: 13px;
+    margin-right: 4px;
+    font-size: 15px;
     float: left;
-    height: 20px;
-    line-height: 20px;
+    height: 28px;
+    line-height: 28px;
 }
 
 .typecho-pager a {
     color: #333;
     display: block;
-    height: 20px;
+    height: 28px;
     outline: none;
-    padding: 0 8px;
+    padding: 0 15px;
     float: left;
     background: #dee4c5;
 }
@@ -1118,10 +1117,10 @@ margin-top: 25px;
  * 标签页
  */
 .typecho-option-tabs, .typecho-editor-tab {
-    background: #dee4c5;
     height: 30px;
     overflow: hidden;
     zoom: 1;
+    border-bottom: 2px solid #C5D19D;
 }
 
 .typecho-editor-tab {
@@ -1132,6 +1131,7 @@ margin-top: 25px;
     float: left;
     margin: 4px 0px 0px 5px;
     height: 26px;
+    background: #e8eccd;
     
     -moz-border-radius-topleft: 3px;
     -moz-border-radius-topright: 3px;
@@ -1175,7 +1175,7 @@ margin-top: 25px;
 }
 
 .typecho-option-tabs li:hover, .typecho-option-tabs li.current {
-    background: #f7fbe9;
+    background: #C5D19D;
 }
 
 .typecho-option-tabs li a:link, .typecho-option-tabs li a:visited {
@@ -1245,7 +1245,15 @@ margin-top: 25px;
 
 .typecho-list-operate span.operate-button {
     cursor: pointer;
-    color: #BD6800;
+    background: #BD6800;
+    color: #fff;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -khtml-border-radius: 2px;
+    
+    /* hope IE support border radius, God save me! */
+    border-radius: 2px;
+    padding: 3px;
 }
 
 .typecho-list-operate span.operate-delete, a.operate-delete {
@@ -1308,18 +1316,20 @@ a.operate-reply {
 .typecho-list-table th {
     text-align: left;
     padding: 0 5px;
-    height: 32px;
+    height: 40px;
+    font-size: 15px;
     line-height: 20px;
     font-weight: bold;
-    border-bottom: 1px solid #CED7A8;
+    border-top: 3px solid #C5D19D;
     background: #D3DBB3;
 }
 
 .typecho-list-table td {
-    height: 32px;
+    height: 40px;
     line-height: 20px;
     padding: 0 5px;
     overflow: hidden;
+    border-top: 1px solid #fff;
 }
 
 .typecho-list-table td .thumb-box {

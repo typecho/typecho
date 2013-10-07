@@ -42,14 +42,14 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     </colgroup>
                     <thead>
                         <tr>
-                            <th class="typecho-radius-topleft"> </th>
+                            <th> </th>
                             <th> </th>
                             <th><?php _e('标题'); ?></th>
                             <th> </th>
                             <th> </th>
                             <th><?php _e('缩略名'); ?></th>
                             <th><?php _e('作者'); ?></th>
-                            <th class="typecho-radius-topright"><?php _e('日期'); ?></th>
+                            <th><?php _e('日期'); ?></th>
                         </tr>
                     </thead>
                     <tbody>

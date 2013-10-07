@@ -42,12 +42,12 @@ include 'menu.php';
                         </colgroup>
                         <thead>
                             <tr>
-                                <th class="typecho-radius-topleft"> </th>
+                                <th> </th>
                                 <th><?php _e('名称'); ?></th>
                                 <th> </th>
                                 <th><?php _e('缩略名'); ?></th>
                                 <th> </th>
-                                <th class="typecho-radius-topright"><?php _e('文章数'); ?></th>
+                                <th><?php _e('文章数'); ?></th>
                             </tr>
                         </thead>
                         <tbody>

@@ -40,13 +40,13 @@ include 'menu.php';
                     </colgroup>
                     <thead>
                         <tr>
-                            <th class="typecho-radius-topleft"> </th>
+                            <th> </th>
                             <th><?php _e('用户名'); ?></th>
                             <th><?php _e('昵称'); ?></th>
                             <th> </th>
                             <th><?php _e('电子邮件'); ?></th>
                             <th><?php _e('用户组'); ?></th>
-                            <th class="typecho-radius-topright"><?php _e('文章'); ?></th>
+                            <th><?php _e('文章'); ?></th>
                         </tr>
                     </thead>
                     <tbody>

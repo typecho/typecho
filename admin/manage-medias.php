@@ -45,14 +45,14 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     </colgroup>
                     <thead>
                         <tr>
-                            <th class="typecho-radius-topleft"> </th>
+                            <th> </th>
                             <th> </th>
                             <th> </th>
                             <th><?php _e('文件名'); ?></th>
                             <th> </th>
                             <th><?php _e('上传者'); ?></th>
                             <th><?php _e('所属文章'); ?></th>
-                            <th class="typecho-radius-topright"><?php _e('发布日期'); ?></th>
+                            <th><?php _e('发布日期'); ?></th>
                         </tr>
                     </thead>
                     <tbody>
