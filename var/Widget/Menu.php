@@ -281,13 +281,29 @@ class Widget_Menu extends Typecho_Widget
             echo "<ul class=\"root" . ($key == $this->_currentParent ? ' ' . $class : NULL) 
                 . "\"><li class=\"parent\"><a href=\"{$node[2]}\" title=\"{$node[0]}\">{$node[0]}</a></dt>"
                 . "</li><ul class=\"child\">";
+
+            $last = 0;
+            foreach ($node[3] as $inKey => $inNode) {
+                if (!$inNode[4]) {
+                    $last = $inKey;
+                }
+            }
             
             foreach ($node[3] as $inKey => $inNode) {
                 if ($inNode[4]) {
                     continue;
                 }
 
-                echo "<li" . ($key == $this->_currentParent && $inKey == $this->_currentChild ? ' class="' . $childClass . '"' : NULL) .
+                $classes = array();
+                if ($key == $this->_currentParent && $inKey == $this->_currentChild) {
+                    $classes[] = $childClass;
+                }
+
+                if ($inKey == $last) {
+                    $classes[] = 'last';
+                }
+
+                echo "<li" . (!empty($classes) ? ' class="' . implode(' ', $classes) . '"' : NULL) .
                     "><a href=\"" . ($key == $this->_currentParent && $inKey == $this->_currentChild ? $this->_currentUrl : $inNode[2]) . "\" title=\"{$inNode[0]}\">{$inNode[0]}</a></li>";
             }
 

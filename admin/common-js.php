@@ -5,7 +5,6 @@
     (function () {
         window.addEvent('domready', function() {
             var _d = $(document);
-            var handle = new Typecho.guid('typecho:guid', {offset: 1, type: 'mouse'});
             
             //增加高亮效果
             (function () {
