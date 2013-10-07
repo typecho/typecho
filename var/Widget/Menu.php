@@ -278,9 +278,9 @@ class Widget_Menu extends Typecho_Widget
                 continue;
             }
 
-            echo "<dt" . ($key == $this->_currentParent ? ' class="' . $class . '"' : NULL) 
-                . "><a href=\"{$node[2]}\" title=\"{$node[0]}\">{$node[0]}</a></dt>"
-                . "<dd><ul>";
+            echo "<ul class=\"root" . ($key == $this->_currentParent ? ' ' . $class : NULL) 
+                . "\"><li class=\"parent\"><a href=\"{$node[2]}\" title=\"{$node[0]}\">{$node[0]}</a></dt>"
+                . "</li><ul class=\"child\">";
             
             foreach ($node[3] as $inKey => $inNode) {
                 if ($inNode[4]) {
@@ -291,7 +291,7 @@ class Widget_Menu extends Typecho_Widget
                     "><a href=\"" . ($key == $this->_currentParent && $inKey == $this->_currentChild ? $this->_currentUrl : $inNode[2]) . "\" title=\"{$inNode[0]}\">{$inNode[0]}</a></li>";
             }
 
-            echo "</ul></dd>";
+            echo "</ul></ul>";
         }
     }
 }

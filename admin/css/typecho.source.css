@@ -713,65 +713,57 @@ margin-top: 25px;
 /**
  * 后台头部导航
  */
-.typecho-head-guid {
+.typecho-head-nav {
+    position: relative;
     height: 30px;
+    font-size: 13px;
     background: #333;
     color: #fff;
-    position: relative;
     z-index: 250; /* IE 是个 250 */
     /*border-bottom: 1px solid #DCE2C0;*/
 }
 
-.typecho-head-guid dl {
-    overflow: hidden;
+.typecho-nav-list {
     /*margin-left:10px;*/
     zoom: 1;
 }
 
-.typecho-head-guid dt {
+#typecho-nav-list .root {
+    position: relative;
     float: left;
-    margin: 0;
-    font-size: 13px;
-    overflow: hidden;
 }
 
-.typecho-head-guid dt a:link, .typecho-head-guid dt a:visited {
+#typecho-nav-list .parent {
     float: left;
+}
+
+#typecho-nav-list .parent a {
     color: #fff;
     height: 30px;
     line-height: 30px;
-    padding: 0 30px;
-    background: #333;
     display: block;
     outline: none;
+    padding: 0 30px;
+    float: left;
+    font-size: 14px;
 }
 
-/** 增加focus类用来标示当前的菜单项 by 70 */
-.typecho-head-guid dt.focus a:link, .typecho-head-guid dt.focus a:visited,
-.typecho-head-guid dt.current a:link, .typecho-head-guid dt.current a:visited,
-.typecho-head-guid dt a:hover {
-    background: #444 /*url(../images/sprite.png) 0 -360px repeat-x*/;
-    /*text-decoration: underline;*/
+#typecho-nav-list .parent a:hover, #typecho-nav-list .focus .parent a, #typecho-nav-list .root:hover .parent a {
+    background: #444;
 }
 
-.typecho-head-guid dd {
-    display:none;
+#typecho-nav-list .child {
+    display: none;
     position:absolute;
-    /* 替换下拉菜单背景 by fen (2008-11-12) */
-    /* background: url(../images/typecho-head-guid-shadow.png) bottom no-repeat;
-    border: 1px solid #E5EAD1;
-    border-top: none;*/
     border: 1px solid #CED7A8;
     border-top: none;
     background: #DCE2C0;
     font-size: 13px;
     overflow: hidden;
-    z-index:100;
     padding: 10px;
     z-index: 250;
     top: 30px;
-    min-width: 140px;
-    _width: 140px; /* IE6需要这个宽度 */
+    width: 140px; 
     -moz-border-radius-bottomleft: 3px;
     -moz-border-radius-bottomright: 3px;
     -webkit-border-bottom-left-radius: 3px;
@@ -782,44 +774,48 @@ margin-top: 25px;
     border-bottom-right-radius: 3px;
 }
 
-.typecho-head-guid ul {
-    position: relative;
-    top: 0;
-    padding: 0;
-    overflow: hidden;
-    min-width: 140px;
+#typecho-nav-list .root:hover .child {
+    display: block;
 }
 
-.typecho-head-guid li {
+#typecho-nav-list .child li {
     /*margin-bottom: 1px;*/
     border-top: 1px solid #EFEFDE;
     border-bottom: 1px solid #CED6A5;
 }
 
-.typecho-head-guid dd li.first {
-    background: none;
-    padding-top: 0;
+#typecho-nav-list .child li:first-child {
+    border-top: none;
 }
 
-.typecho-head-guid dd li.focus a, .typecho-head-guid dd li.focus a:hover {
+#typecho-nav-list .child li:last-child {
+    border-bottom: none;
+}
+
+#typecho-nav-list .child li a:hover {
+    background: #EDF0DF;
+}
+
+#typecho-nav-list .child li.focus a, #typecho-nav-list .child li.focus a:hover {
     /*background: #E68A17;
     color: #fff;*/
     background: #EDF0DF url(../images/sprite.png) right -412px no-repeat;
 }
 
-.typecho-head-guid dd a:link, .typecho-head-guid dd a:visited {
+#typecho-nav-list .child li a {
     text-decoration: none;
     color: #333;
     display: block;
-    padding: 5px 37px 5px 7px;
+    padding: 0 37px 0 7px;
     zoom: 1;
+    overflow: hidden;
+    text-overflow : ellipsis;
+    white-space:nowrap;
+    height: 29px;
+    line-height: 29px;
 }
 
-.typecho-head-guid dd a:hover {
-    background: #EDF0DF;
-}
-
-.typecho-head-guid .operate {
+.typecho-head-nav .operate {
     color: #ccc;
     position:absolute;
     font-size: 12px;
@@ -831,7 +827,7 @@ margin-top: 25px;
            line-height: 30px;
 }
 
-.typecho-head-guid .operate a.exit {
+.typecho-head-nav .operate a.exit {
     display: inline-block;
     background: url(../images/sprite.png) no-repeat scroll 0px -223px;
     width: 20px;
@@ -844,7 +840,7 @@ margin-top: 25px;
              top: 5px;
 }
 
-.typecho-head-guid .operate .author {
+.typecho-head-nav .operate .author {
     margin-right: 8px;
     text-decoration: underline;
 }
