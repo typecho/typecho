@@ -191,7 +191,9 @@ input, textarea {
 }
 
 @media screen and (-webkit-min-device-pixel-ratio:0) {
-    input, textarea { padding: 1px; }
+    input, textarea { padding: 1px; margin: 0; }
+    button { padding: 0 6px; }
+    select { padding: 0; }
 }
 
 textarea {
@@ -224,17 +226,14 @@ textarea {
     -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.5);
     -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.5);
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.5);
+    font-family: Menlo,Monaco,Consolas,"Lucida Console","Courier New",monospace;
 }
 
 /** hack webkit border by 70 */
 select {
     font-size: 13px;
     padding: 1px;
-}
-
-
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-    select { padding: 0; }
+    font-family: Menlo,Monaco,Consolas,"Lucida Console","Courier New",monospace;
 }
 
 button {
@@ -442,9 +441,15 @@ img.avatar {
 
 /** 增加顶部消息样式 by 70 */
 .popup {
-    margin-top: 30px;
-    margin-bottom: -10px;
 	width: 928px;
+    border-top: none;
+    position: absolute;
+    z-index: 10;
+    text-align: center;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 3px 10px;
+    display: none;
 }
 
 /** 
@@ -744,6 +749,10 @@ margin-top: 25px;
     background: #444;
 }
 
+#typecho-nav-list .focus .parent a {
+    font-weight: bold;
+}
+
 #typecho-nav-list .child {
     display: none;
     position:absolute;
@@ -755,7 +764,7 @@ margin-top: 25px;
     padding: 10px;
     z-index: 250;
     top: 30px;
-    width: 140px; 
+    width: 160px; 
     -moz-border-radius-bottomleft: 3px;
     -moz-border-radius-bottomright: 3px;
     -webkit-border-bottom-left-radius: 3px;
@@ -812,7 +821,7 @@ margin-top: 25px;
     position:absolute;
     font-size: 12px;
     top: 0px;
-    right: -5px;
+    right: 0;
     /* review IE */
            *right: 25px;
            height: 30px;
@@ -1281,12 +1290,12 @@ a.operate-reply {
 
 .typecho-list-table-border {
     border-collapse: separate;
-    border: 1px solid #DCE2C0;
+    border: 1px solid #CED7A8;
     border-bottom: none;
 }
 
 .typecho-list-table-border td {
-    border-bottom: 1px solid #DCE2C0;
+    border-bottom: 1px solid #CED7A8;
 }
 
 .typecho-list-table input {
@@ -1302,7 +1311,7 @@ a.operate-reply {
     height: 32px;
     line-height: 20px;
     font-weight: bold;
-    border-bottom: 1px solid #F7FBE9;
+    border-bottom: 1px solid #CED7A8;
     background: #D3DBB3;
 }
 
@@ -1890,7 +1899,6 @@ ul.typecho-list-notable li #typecho-respond {
 .typecho-edit-theme .content {
     width: 780px;
     float: left;
-    overflow: hidden;
     padding: 10px 10px 10px 0px;
 }
 
@@ -1902,7 +1910,6 @@ ul.typecho-list-notable li #typecho-respond {
 .typecho-edit-theme textarea {
     width: 770px;
     height: 500px;
-    font-family: "Courier New",Courier,monospace;
 }
 
 /**
@@ -2115,6 +2122,14 @@ ul.typecho-post-option li {
     border-bottom: 1px solid #EBEFDA;
     border-top: 1px solid #fff;
     padding: 5px 0 10px 0;
+}
+
+ul.typecho-post-option li:first-child {
+    border-top: none;
+}
+
+ul.typecho-post-option li:last-child {
+    border-bottom: none;
 }
 
 #advance-panel li, #upload-panel li {

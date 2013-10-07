@@ -1,50 +1,31 @@
 <?php if(!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/jquery.js?v=' . $suffixVersion); ?>"></script> 
+<script type="text/javascript" src="<?php $options->adminUrl('javascript/jquery-ui.js?v=' . $suffixVersion); ?>"></script> 
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/typecho.js?v=' . $suffixVersion); ?>"></script>
 <script type="text/javascript">
     (function () {
-        window.addEvent('domready', function() {
+        $(document).ready(function() {
             var _d = $(document);
             
             //增加高亮效果
-            (function () {
-                var _hlId = '<?php echo $notice->highlight; ?>';
-                
-                if (_hlId) {
-                    var _hl = _d.getElement('#' + _hlId);
-                    
-                    if (_hl) {
-                        _hl.set('tween', {duration: 1500});
-            
-                        var _bg = _hl.getStyle('background-color');
-                        if (!_bg || 'transparent' == _bg) {
-                            _bg = '#F7FBE9';
-                        }
-
-                        _hl.tween('background-color', '#AACB36', _bg);
-                    }
-                }
-            })();
+            <?php if ($notice->highlight): ?>                
+            $('#<?php echo $notice->highlight; ?>').effect('highlight', '#AACB36', 1000);
+            <?php endif; ?>
 
             //增加淡出效果
             (function () {
-                var _msg = _d.getElement('.popup');
-            
-                if (_msg) {
-                    (function () {
+                var p = $('.popup');
 
-                        var _messageEffect = new Fx.Morph(this, {
-                            duration: 'short', 
-                            transition: Fx.Transitions.Sine.easeOut
-                        });
-
-                        _messageEffect.addEvent('complete', function () {
-                            this.element.setStyle('display', 'none');
-                        });
-
-                        _messageEffect.start({'margin-top': [30, 0], 'height': [21, 0], 'opacity': [1, 0]});
-
-                    }).delay(5000, _msg);
+                if (p.length > 0) {
+                    if (p.hasClass('notice')) {
+                        p.effect('bounce');
+                    } else if (p.hasClass('error')) {
+                        p.effect('shake');
+                    } else {
+                        p.slideDown();
+                    }
+                    
+                    p.delay(5000).fadeOut();
                 }
             })();
             
