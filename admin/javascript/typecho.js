@@ -41,6 +41,10 @@
             $(s.checkEl, this).click(function (e) {
                 clickRow($(this).parents(s.rowEl));
             });
+
+            $('input[type=text],input[type=password],textarea,input[type=submit],input[type=button],a,button').click(function (e) {
+                e.stopPropagation();
+            });
         }).click(function () {
             clickRow(this);
         });

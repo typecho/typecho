@@ -856,10 +856,6 @@ margin-top: 25px;
     background: #444;
 }
 
-#typecho-nav-list .focus .parent a {
-    font-weight: bold;
-}
-
 #typecho-nav-list .child {
     display: none;
     position:absolute;
@@ -1526,7 +1522,7 @@ a.operate-reply {
  * 不使用表格的列表
  */
 ul.typecho-list-notable {
-    margin: 0;
+    margin: 10px 0 0 0;
     padding: 0;
     line-height: 20px;
     font-size: 13px;

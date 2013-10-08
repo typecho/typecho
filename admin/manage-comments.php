@@ -42,18 +42,22 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
             
                 <div class="typecho-list-operate">
                 <form method="get">
-                    <p class="operate"><?php _e('操作'); ?>: 
-                    <span class="operate-button typecho-table-select-all"><?php _e('全选'); ?></span>, 
-                    <span class="operate-button typecho-table-select-none"><?php _e('不选'); ?></span>&nbsp;&nbsp;&nbsp;
-                    <?php _e('选中项') ?>:
-                    <span rel="approved" class="operate-button typecho-table-select-submit"><?php _e('通过'); ?></span>, 
-                    <span rel="waiting" class="operate-button typecho-table-select-submit"><?php _e('待审核'); ?></span>, 
-                    <span rel="spam" class="operate-button typecho-table-select-submit"><?php _e('标记垃圾'); ?></span>, 
-                    <span rel="delete" lang="<?php _e('你确认要删除这些评论吗?'); ?>" class="operate-button operate-delete typecho-table-select-submit"><?php _e('删除'); ?></span><?php if('spam' == $request->get('status')): ?>, 
-                    <span rel="delete-spam" lang="<?php _e('你确认要删除所有垃圾评论吗?'); ?>" class="operate-button operate-delete typecho-table-select-submit"><?php _e('删除所有垃圾评论'); ?></span>
-                    <?php endif; ?>
-                    </p>
-                    <p class="search">
+                    <div class="operate">
+                        <input type="checkbox" class="typecho-table-select-all" />
+                    <div class="btn-group btn-drop">
+                    <button class="dropdown-toggle" type="button" href="">选中项 &nbsp;<i class="icon-caret-down"></i></button>
+                    <ul class="dropdown-menu">
+                        <li><a href="<?php $options->index('/action/comments-edit?do=approved'); ?>"><?php _e('通过'); ?></a></li>
+                        <li><a href="<?php $options->index('/action/comments-edit?do=waiting'); ?>"><?php _e('待审核'); ?></a></li>
+                        <li><a href="<?php $options->index('/action/comments-edit?do=spam'); ?>"><?php _e('标记垃圾'); ?></a></li>
+                        <li><a lang="<?php _e('你确认要删除这些评论吗?'); ?>" href="<?php $options->index('/action/comments-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
+                        <?php if('spam' == $request->get('status')): ?>
+                        <li><a lang="<?php _e('你确认要删除所有垃圾评论吗?'); ?>" href="<?php $options->index('/action/comments-edit?do=delete-spam'); ?>"><?php _e('删除所有垃圾评论'); ?></a></li>
+                        <?php endif; ?>
+                    </ul>
+                    </div>
+                    </div>
+                    <div class="search">
                     <?php if ('' != $request->keywords || '' != $request->category): ?>
                     <a href="<?php $options->adminUrl('manage-comments.php' 
                     . (isset($request->status) || isset($request->cid) ? '?' .
@@ -68,11 +72,11 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                         <input type="hidden" value="<?php echo htmlspecialchars($request->get('cid')); ?>" name="cid" />
                     <?php endif; ?>
                     <button type="submit"><?php _e('筛选'); ?></button>
-                    </p>
+                    </div>
                 </form>
                 </div>
 
-                <form method="post" name="manage_comments" class="operate-form" action="<?php $options->index('/action/comments-edit'); ?>">
+                <form method="post" name="manage_comments" class="operate-form">
                     <ul class="typecho-list-notable clearfix">
                     <?php if($comments->have()): ?>
                     <?php while($comments->next()): ?>
@@ -147,7 +151,6 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                     </li>
                     <?php endif; ?>
                     </ul>
-                    <input type="hidden" name="do" value="delete" />
                     <?php if(isset($request->cid)): ?>
                         <input type="hidden" value="<?php echo htmlspecialchars($request->get('cid')); ?>" name="cid" />
                     <?php endif; ?>
@@ -172,6 +175,22 @@ include 'copyright.php';
 include 'common-js.php';
 ?>
 <script type="text/javascript">
+(function () {
+    $(document).ready(function () {
+        $('.typecho-list-notable').tableSelectable({
+            checkEl     :   'input[type=checkbox]',
+            rowEl       :   'li',
+            selectAllEl :   '.typecho-table-select-all',
+            actionEl    :   '.dropdown-menu a'
+        });
+
+        $('.btn-drop').dropdownMenu({
+            btnEl       :   '.dropdown-toggle',
+            menuEl      :   '.dropdown-menu'
+        });
+    });
+})();
+/*
     (function () {
         window.addEvent('domready', function() {
         
@@ -408,6 +427,7 @@ include 'common-js.php';
         
         });
     })();
+    */
 </script>
 <?php
 include 'footer.php';

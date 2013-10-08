@@ -19,7 +19,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     <ul class="dropdown-menu">
                         <li><a lang="<?php _e('你确认要删除这些文章吗?'); ?>" href="<?php $options->index('/action/contents-post-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
                     </ul>
-                </div>  
+                    </div>  
                     </div>
                     <div class="search">
                     <?php if ('' != $request->keywords || '' != $request->category): ?>

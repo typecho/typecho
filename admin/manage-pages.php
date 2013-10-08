@@ -17,7 +17,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     <div class="btn-group btn-drop">
                     <button class="dropdown-toggle" type="button" href="">选中项 &nbsp;<i class="icon-caret-down"></i></button>
                     <ul class="dropdown-menu">
-                        <li><a lang="<?php _e('你确认要删除这些页面吗?'); ?>" href="<?php $options->index('/action/contents-post-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
+                        <li><a lang="<?php _e('你确认要删除这些页面吗?'); ?>" href="<?php $options->index('/action/contents-page-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
                     </ul>
                     </div>
                     </div>
@@ -31,7 +31,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 </form>
                 </div>
             
-                <form method="post" name="manage_pages" class="operate-form" action="<?php $options->index('/action/contents-page-edit'); ?>">
+                <form method="post" name="manage_pages" class="operate-form">
                 <table class="typecho-list-table draggable">
                     <colgroup>
                         <col width="25"/>
@@ -95,7 +95,6 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <?php endif; ?>
                     </tbody>
                 </table>
-                <input type="hidden" name="do" value="delete" />
                 </form>
             
             </div>

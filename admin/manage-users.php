@@ -10,24 +10,26 @@ include 'menu.php';
             <div class="column-24 start-01 typecho-list">
                 <div class="typecho-list-operate">
                 <form method="get">
-                    <p class="operate">
-                    <?php _e('操作'); ?>: 
-                    <span class="operate-button typecho-table-select-all"><?php _e('全选'); ?></span>, 
-                    <span class="operate-button typecho-table-select-none"><?php _e('不选'); ?></span>,&nbsp;&nbsp;&nbsp;
-                    <?php _e('选中项'); ?>: 
-                    <span rel="delete" lang="<?php _e('你确认要删除这些用户吗?'); ?>" class="operate-button operate-delete typecho-table-select-submit"><?php _e('删除'); ?></span>
-                    </p>
-                    <p class="search">
+                    <div class="operate">
+                        <input type="checkbox" class="typecho-table-select-all" />
+                    <div class="btn-group btn-drop">
+                    <button class="dropdown-toggle" type="button" href="">选中项 &nbsp;<i class="icon-caret-down"></i></button>
+                    <ul class="dropdown-menu">
+                        <li><a lang="<?php _e('你确认要删除这些用户吗?'); ?>" href="<?php $options->index('/action/users-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
+                    </ul>
+                    </div>  
+                    </div>
+                    <div class="search">
                     <?php if ('' != $request->keywords): ?>
                     <a href="<?php $options->adminUrl('manage-users.php'); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
                     <?php endif; ?>
                     <input type="text" placeholder="<?php _e('请输入关键字'); ?>" value="<?php echo htmlspecialchars($request->keywords); ?>" name="keywords" />
                     <button type="submit"><?php _e('筛选'); ?></button>
-                    </p>
+                    </div>
                 </form>
                 </div>
             
-                <form method="post" name="manage_users" class="operate-form" action="<?php $options->index('/action/users-edit'); ?>">
+                <form method="post" name="manage_users" class="operate-form">
                 <table class="typecho-list-table">
                     <colgroup>
                         <col width="25"/>
@@ -84,7 +86,6 @@ include 'menu.php';
                         <?php endwhile; ?>
                     </tbody>
                 </table>
-                <input type="hidden" name="do" value="delete" />
                 </form>
                 
             <?php if($users->have()): ?>
