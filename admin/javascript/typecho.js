@@ -22,7 +22,8 @@
         var table = this, s = $.extend({
             checkEl     :   null,
             rowEl       :   null,
-            selectAllEl :   null
+            selectAllEl :   null,
+            actionEl    :   null
         }, options);
 
         function clickRow (t) {
@@ -56,6 +57,16 @@
                     $(s.checkEl, this).prop('checked', false);
                 }).removeClass('checked');
             }
+        });
+
+        $(s.actionEl).click(function () {
+            var t = $(this), lang = t.attr('lang');
+
+            if (!lang || confirm(lang)) {
+                table.parents('form').attr('action', t.attr('href')).submit();
+            }
+
+            return false;
         });
     };
 })($);

@@ -21,7 +21,7 @@ include 'menu.php';
                     <?php if ('' != $request->keywords): ?>
                     <a href="<?php $options->adminUrl('manage-users.php'); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
                     <?php endif; ?>
-                    <input type="text" value="<?php '' != $request->keywords ? print(htmlspecialchars($request->keywords)) : _e('请输入关键字'); ?>"<?php if ('' == $request->keywords): ?> onclick="value='';name='keywords';" <?php else: ?> name="keywords"<?php endif; ?>/>
+                    <input type="text" placeholder="<?php _e('请输入关键字'); ?>" value="<?php echo htmlspecialchars($request->keywords); ?>" name="keywords" />
                     <button type="submit"><?php _e('筛选'); ?></button>
                     </p>
                 </form>

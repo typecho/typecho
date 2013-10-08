@@ -15,7 +15,8 @@
             $('.typecho-list-table').tableSelectable({
                 checkEl     :   'input[type=checkbox]',
                 rowEl       :   'tr',
-                selectAllEl :   '.typecho-table-select-all'
+                selectAllEl :   '.typecho-table-select-all',
+                actionEl    :   '.dropdown-menu a'
             });
 
             $('.btn-drop').dropdownMenu({

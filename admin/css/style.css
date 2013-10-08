@@ -241,7 +241,9 @@ select {
 }
 
 button {
-    line-height: 22px; height: 26px; vertical-align: middle;
+    height: 28px;
+    vertical-align: middle;
+    zoom: 1;
     display: inline-block;
     color: #666;
     font-size: 13px;
@@ -1317,7 +1319,7 @@ margin-top: 25px;
 
 .typecho-list-operate button {
     height: 24px;
-    line-height: 24px;
+    zoom: 1;
 }
 
 .typecho-list-operate .operate {
