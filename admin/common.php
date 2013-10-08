@@ -45,11 +45,11 @@ if (!$user->logged && !Typecho_Cookie::get('__typecho_first_run') && !empty($cur
         $mustUpgrade = (!defined('Typecho_Common::VERSION') || version_compare(str_replace('/', '.', Typecho_Common::VERSION),
         str_replace('/', '.', $options->version), '>'));
 
-        if ($mustUpgrade && 'upgrade.php' != $currentMenu[2]) {
+        if ($mustUpgrade && 'upgrade.php' != $adminFile) {
             $response->redirect(Typecho_Common::url('upgrade.php', $options->adminUrl));
-        } else if (!$mustUpgrade && 'upgrade.php' == $currentMenu[2]) {
+        } else if (!$mustUpgrade && 'upgrade.php' == $adminFile) {
             $response->redirect(Typecho_Common::url('index.php', $options->adminUrl));
-        } else if (!$mustUpgrade && 'welcome.php' == $currentMenu[2] && $user->logged) {
+        } else if (!$mustUpgrade && 'welcome.php' == $adminFile && $user->logged) {
             $response->redirect(Typecho_Common::url('index.php', $options->adminUrl));
         }
     }

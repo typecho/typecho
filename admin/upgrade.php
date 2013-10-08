@@ -21,7 +21,7 @@ include 'menu.php';
                     </ul>
                     </blockquote>
                     <br />
-                    <p><button type="submit"><?php _e('完成升级 &raquo;'); ?></button></p>
+                    <p><button class="primary" type="submit"><?php _e('完成升级 &raquo;'); ?></button></p>
                     </form>
                 </div>
             </div>

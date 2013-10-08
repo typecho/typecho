@@ -34,7 +34,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                                 <input type="hidden" name="cid" value="<?php $post->cid(); ?>" />
                                 <input type="hidden" name="do" value="publish" />
                                 <button type="button" id="btn-save"><?php _e('保存草稿'); ?></button>
-                                <button type="button" id="btn-submit"><?php _e('发布文章 &raquo;'); ?></button>
+                                <button type="button" class="primary" id="btn-submit"><?php _e('发布文章 &raquo;'); ?></button>
                             </span>
                         </p>
                     </div>

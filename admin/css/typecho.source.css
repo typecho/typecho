@@ -109,7 +109,7 @@ a.button, /*span.balloon,*/ a.balloon-button, .typecho-pager a {
     border-radius: 2px;
 }
 span.balloon {
-    font-size: 12px;
+    font-size: 13px;
     font-weight: normal;
     color: #666;
 }
@@ -229,6 +229,10 @@ textarea {
     font-family: Menlo,Monaco,Consolas,"Lucida Console","Courier New",monospace;
 }
 
+input[type=checkbox] {
+    margin: 3px;
+}
+
 /** hack webkit border by 70 */
 select {
     font-size: 13px;
@@ -238,26 +242,130 @@ select {
 
 button {
     line-height: 22px; height: 26px; vertical-align: middle;
-  display: inline-block;
-  color: #666;
-  cursor: pointer;
-  text-decoration: none !important;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fcfcfc), color-stop(100%, #eeeeee));
-  background-image: -webkit-linear-gradient(#fcfcfc, #eeeeee);
-  background-image: -moz-linear-gradient(#fcfcfc, #eeeeee);
-  background-image: -o-linear-gradient(#fcfcfc, #eeeeee);
-  background-image: linear-gradient(#fcfcfc, #eeeeee);
-  border: 1px solid #bbbbbb;
-  border-bottom-color: #AAA;
-  -webkit-box-shadow: rgba(0, 0, 0, 0.12) 0 1px 2px, inset white 0 1px 0;
-  -moz-box-shadow: rgba(0, 0, 0, 0.12) 0 1px 2px, inset white 0 1px 0;
-  box-shadow: rgba(0, 0, 0, 0.12) 0 1px 2px, inset white 0 1px 0;
+    display: inline-block;
+    color: #666;
+    font-size: 13px;
+    cursor: pointer;
+    text-decoration: none !important;
+    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fcfcfc), color-stop(100%, #eeeeee));
+    background-image: -webkit-linear-gradient(#fcfcfc, #eeeeee);
+    background-image: -moz-linear-gradient(#fcfcfc, #eeeeee);
+    background-image: -o-linear-gradient(#fcfcfc, #eeeeee);
+    background-image: linear-gradient(#fcfcfc, #eeeeee); 
+}
+
+button, .dropdown-menu {
+    border: 1px solid #bbbbbb;
+    border-bottom-color: #AAA;
+    -webkit-box-shadow: rgba(0, 0, 0, 0.12) 0 1px 2px, inset white 0 1px 0;
+    -moz-box-shadow: rgba(0, 0, 0, 0.12) 0 1px 2px, inset white 0 1px 0;
+    box-shadow: rgba(0, 0, 0, 0.12) 0 1px 2px, inset white 0 1px 0;
+}
+
+button:disabled, button:active {
+    background: #EEE;
+    -webkit-box-shadow: inset rgba(0, 0, 0, 0.2) 0 0 4px;
+    -moz-box-shadow: inset rgba(0, 0, 0, 0.2) 0 0 4px;
+    box-shadow: inset rgba(0, 0, 0, 0.2) 0 0 4px; }
+}
+
+button:disabled {
+    color: #AAA;
+    border-color: #CCC;
+    cursor: default;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
 }
 
 button:hover { 
     background: #F6F6F6;
     color: #777;
 }
+
+button.primary {
+    border-color: #8ABAD7;
+    border-bottom-color: #64a4ca;
+    color: #467b96;
+    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #e8f2f8), color-stop(100%, #d9eaf2));
+    background-image: -webkit-linear-gradient(#e8f2f8, #d9eaf2);
+    background-image: -moz-linear-gradient(#e8f2f8, #d9eaf2);
+    background-image: -o-linear-gradient(#e8f2f8, #d9eaf2);
+    background-image: linear-gradient(#e8f2f8, #d9eaf2);
+}
+
+button.primary:hover {
+    background: #e0eef6;
+    color: #5591b0;
+}
+
+button.primary:active {
+    background: #dcebf4;
+}
+
+.btn-group {
+    display: inline-block; 
+}
+
+.btn-group > a, .btn-group > span {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    -ms-border-radius: 0;
+    -o-border-radius: 0;
+    border-radius: 0;
+    margin-left: -1px;
+}
+
+.btn-group > a:first-child, .btn-group > span:first-child {
+    -moz-border-radius-topleft: 2px;
+    -webkit-border-top-left-radius: 2px;
+    border-top-left-radius: 2px;
+    -moz-border-radius-bottomleft: 2px;
+    -webkit-border-bottom-left-radius: 2px;
+    border-bottom-left-radius: 2px; 
+}
+
+.btn-group > a:last-child, .btn-group > a.dropdown-toggle, .btn-group > span:last-child, .btn-group > span.dropdown-toggle {
+    -moz-border-radius-topright: 2px;
+    -webkit-border-top-right-radius: 2px;
+    border-top-right-radius: 2px;
+    -moz-border-radius-bottomright: 2px;
+    -webkit-border-bottom-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+}
+
+.btn-drop {
+    position: relative;
+}
+
+.dropdown-menu {
+    list-style: none;
+    position: absolute;
+    z-index: 2;
+    left: 2px;
+    margin: 0;
+    padding: 0;
+    background: #f9f9f7;
+    text-align: left;
+    min-width: 108px;
+}
+
+.dropdown-menu li {
+    white-space: nowrap;
+}
+
+.dropdown-menu li a {
+    display: block;
+    padding: 3px 15px;
+    color: #666;
+}
+
+.dropdown-menu li a:hover {
+    background: #e9e9e9;
+    text-decoration: none !important;
+}
+
+
 
 img.avatar {
 	padding: 2px;
@@ -361,7 +469,7 @@ img.avatar {
 /** 增加配置面板内部的错误样式 by 70 */
 .typecho-option .message {
     padding: 2px 4px;
-    font-size: 12px;
+    font-size: 13px;
     width: 325px;
     margin-top: 5px;
     
@@ -386,7 +494,6 @@ img.avatar {
     font-size: 14px;
     color: #333;
     margin-bottom: 10px;
-    overflow: hidden;
 }
 
 .message a {
@@ -469,7 +576,6 @@ img.avatar {
 
 .typecho-install-patch ol {
     position: relative;
-    overflow: hidden;
     margin-left: 20px; /* 给第一个位置流出 20px */
     zoom: 1;
 }
@@ -478,7 +584,7 @@ img.avatar {
     font-weight: 600;
     float: left;
     color: #999;
-    font-size: 12px;
+    font-size: 13px;
     height: 30px;
     line-height: 30px;
     padding-left: 20px;
@@ -553,7 +659,6 @@ img.avatar {
 
 .typecho-install .typecho-option .message {
     margin: 2px 0px;
-    overflow: hidden;
 }
 
 .typecho-install .typecho-option .message,
@@ -590,7 +695,7 @@ margin-top: 25px;
 }
 
 .typecho-pager h5 {
-    font-size: 12px;
+    font-size: 13px;
     line-height: 15px;
     font-weight: normal;
     float: left;
@@ -653,7 +758,7 @@ margin-top: 25px;
     background: #e5ead1;
     margin: 0 10px;
     padding: 25px 20px;
-    font-size: 12px;
+    font-size: 13px;
 }
 
 .typecho-login legend {
@@ -686,7 +791,7 @@ margin-top: 25px;
 }
 
 .typecho-login .more-link {
-    font-size: 12px;
+    font-size: 13px;
     margin: 10px auto;
     padding: 0 10px;
     clear: both;
@@ -799,7 +904,7 @@ margin-top: 25px;
 #typecho-nav-list .child li.focus a, #typecho-nav-list .child li.focus a:hover {
     /*background: #E68A17;
     color: #fff;*/
-    background: #EDF0DF url(../images/sprite.png) right -412px no-repeat;
+    background: #EDF0DF url(../images/sprite.png) right -413px no-repeat;
 }
 
 #typecho-nav-list .child li a {
@@ -818,7 +923,7 @@ margin-top: 25px;
 .typecho-head-nav .operate {
     color: #ccc;
     position:absolute;
-    font-size: 12px;
+    font-size: 13px;
     top: 0px;
     right: 0;
     /* review IE */
@@ -852,7 +957,7 @@ margin-top: 25px;
 .typecho-foot {
     background: #333333;
     padding: 15px 25px 80px 25px;
-    font-size: 12px;
+    font-size: 13px;
     text-align: center;
     color: #999;
     /*
@@ -895,7 +1000,7 @@ margin-top: 25px;
 }
 
 .typecho-foot .resource li {
-    font-size: 12px;
+    font-size: 13px;
     left: -6px;
     position: relative;
     float: left;
@@ -973,7 +1078,7 @@ margin-top: 25px;
 
 .typecho-page-title h2 a {
     font-size: 14px;
-	margin-left: 12px;
+	margin-left: 13px;
 }
 
 
@@ -1026,14 +1131,14 @@ margin-top: 25px;
     padding: 1px 5px;
     background: #BD6800;
     color: #FFF;
-    font-size: 12px;
+    font-size: 13px;
     border-radius: 10px;
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
 }
 
 .typecho-dashboard-nav .dashboard-status {
-    font-size: 12px;
+    font-size: 13px;
 }
 
 .typecho-dashboard-nav .status p {
@@ -1045,7 +1150,7 @@ margin-top: 25px;
     color:#e47e00;
     margin-bottom: 25px;
     padding: 10px;
-    font-size: 12px;
+    font-size: 13px;
     text-align: center;
 }
 
@@ -1063,7 +1168,7 @@ margin-top: 25px;
 }
 
 .typecho-dashboard-nav .update-check .latest {
-    font-size: 12px;
+    font-size: 13px;
 }
 
 .typecho-dashboard-nav .update-check .latest a,
@@ -1118,7 +1223,6 @@ margin-top: 25px;
  */
 .typecho-option-tabs, .typecho-editor-tab {
     height: 30px;
-    overflow: hidden;
     zoom: 1;
     border-bottom: 2px solid #C5D19D;
 }
@@ -1150,7 +1254,7 @@ margin-top: 25px;
 
 .typecho-editor-tab li {
     float: right;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: bold;
     margin: 4px 0 0px 2px;
     cursor: pointer;
@@ -1202,8 +1306,7 @@ margin-top: 25px;
 
 .typecho-list-operate {
     height: 30px;
-    overflow: hidden;
-    font-size: 12px;
+    font-size: 13px;
     zoom: 1;
 }
 
@@ -1216,26 +1319,26 @@ margin-top: 25px;
     line-height: 24px;
 }
 
-.typecho-list-operate p.operate {
+.typecho-list-operate .operate {
     float: left;
     line-height:24px;
     height: 24px;
 }
 
-.typecho-list-operate p.search {
+.typecho-list-operate .search {
     float: right;
     line-height:24px;
     height: 24px;
 }
 
-.typecho-list-operate p.search a.button {
+.typecho-list-operate .search a.button {
     float: right;
     font-size: 13px;
     padding: 2px 6px;
     line-height: 20px;
 }
 
-.typecho-list-operate p.operate a.button {
+.typecho-list-operate .operate a.button {
     float: left;
 	padding: 2px 6px;
 	font-size: 13px;
@@ -1316,8 +1419,8 @@ a.operate-reply {
 .typecho-list-table th {
     text-align: left;
     padding: 0 5px;
-    height: 40px;
-    font-size: 15px;
+    height: 32px;
+    font-size: 14px;
     line-height: 20px;
     font-weight: bold;
     border-top: 3px solid #C5D19D;
@@ -1325,7 +1428,7 @@ a.operate-reply {
 }
 
 .typecho-list-table td {
-    height: 40px;
+    height: 32px;
     line-height: 20px;
     padding: 0 5px;
     overflow: hidden;
@@ -1428,7 +1531,7 @@ ul.typecho-list-notable {
     margin: 0;
     padding: 0;
     line-height: 20px;
-    font-size: 12px;
+    font-size: 13px;
 }
 
 ul.typecho-list-notable .big {
@@ -1622,7 +1725,7 @@ ul.typecho-list-notable li #typecho-respond {
 
 .typecho-theme-list p {
     padding: 5px 0;
-    font-size: 12px;
+    font-size: 13px;
 }
 
 .typecho-theme-list .activate, .typecho-theme-list .edit {
@@ -1790,7 +1893,7 @@ ul.typecho-list-notable li #typecho-respond {
 }
 
 .typecho-page-main .typecho-option li.typecho-option-title p {
-    font-size: 12px;
+    font-size: 13px;
     color: #555555;
 	padding: 0;
 	margin: 5px 0 0 0;
@@ -1865,14 +1968,10 @@ ul.typecho-list-notable li #typecho-respond {
 /**
  * 编辑模板（编辑详情）
  */
-.typecho-edit-theme {
-    overflow: hidden;
-}
 
 .typecho-edit-theme ul {
     width: 150px;
     float: left;
-    overflow: hidden;
     padding: 10px 0px 10px 10px;
 }
 
@@ -2149,7 +2248,6 @@ ul.typecho-post-option li:last-child {
 ul.typecho-post-option li ul {
     border: none;
     margin: 0;
-    overflow: auto;
 }
 
 ul.typecho-post-option li ul.related {
@@ -2160,7 +2258,7 @@ ul.typecho-post-option li ul li {
     /*height: 20px;
     line-height: 20px;*/
     border: none;
-    font-size: 12px;
+    font-size: 13px;
     padding: 4px;
     margin-bottom: 5px;
     background: #EFF5D9;
@@ -2302,7 +2400,7 @@ ul.autocompleter-choices span.autocompleter-queried {
 }
 
 .typecho-page-main ul.tag-list li.size-5 {
-    font-size: 12px;
+    font-size: 13px;
     color: #777;
 }
 
@@ -2387,7 +2485,7 @@ ul.autocompleter-choices span.autocompleter-queried {
     width: 16px;
     height: 16px;
     line-height: 16px;
-    font-size: 12px;
+    font-size: 13px;
     display: block;
     float: right;
     position: relative;

@@ -12,12 +12,15 @@ $stat = Typecho_Widget::widget('Widget_Stat');
             <div class="column-24 start-01 typecho-list">
                 <div class="typecho-list-operate">
                 <form method="get">
-                    <p class="operate"><?php _e('操作'); ?>: 
-                        <span class="operate-button typecho-table-select-all"><?php _e('全选'); ?></span>, 
-                        <span class="operate-button typecho-table-select-none"><?php _e('不选'); ?></span>&nbsp;&nbsp;&nbsp;
-                        <?php _e('选中项'); ?>: 
-                        <span rel="delete" lang="<?php _e('你确认要删除这些文章吗?'); ?>" class="operate-button operate-delete typecho-table-select-submit"><?php _e('删除'); ?></span>
-                    </p>
+                    <div class="operate">
+                        <input type="checkbox" class="typecho-table-select-all" />
+                    <div class="btn-group btn-drop">
+                    <button class="dropdown-toggle" href="">选中项 &nbsp;<i class="icon-caret-down"></i></button>
+                    <ul class="dropdown-menu">
+                        <li><a href=""><?php _e('删除'); ?></a></li>
+                    </ul>
+                </div>  
+                    </div>
                     <p class="search">
                     <?php if ('' != $request->keywords || '' != $request->category): ?>
                     <a href="<?php $options->adminUrl('manage-posts.php' . (isset($request->uid) ? '?uid=' . htmlspecialchars($request->get('uid')) : '')); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
