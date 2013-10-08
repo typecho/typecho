@@ -705,8 +705,8 @@ margin-top: 25px;
 }
 
 .typecho-pager ul {
-    line-height: 28px;
-    height: 28px;
+    line-height: 24px;
+    height: 24px;
     float: left;
     zoom: 1;
 }
@@ -716,14 +716,14 @@ margin-top: 25px;
     margin-right: 4px;
     font-size: 15px;
     float: left;
-    height: 28px;
-    line-height: 28px;
+    height: 24px;
+    line-height: 24px;
 }
 
 .typecho-pager a {
     color: #333;
     display: block;
-    height: 28px;
+    height: 24px;
     outline: none;
     padding: 0 15px;
     float: left;

@@ -18,5 +18,6 @@ include 'menu.php';
 <?php
 include 'copyright.php';
 include 'common-js.php';
+include 'form-js.php';
 include 'footer.php';
 ?>

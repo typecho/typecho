@@ -41,6 +41,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
 <?php
 include 'copyright.php';
 include 'common-js.php';
+include 'form-js.php';
 Typecho_Plugin::factory('admin/profile.php')->bottom();
 include 'footer.php';
 ?>

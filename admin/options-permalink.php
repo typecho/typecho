@@ -18,22 +18,7 @@ include 'menu.php';
 <?php
 include 'copyright.php';
 include 'common-js.php';
+include 'form-js.php';
 ?>
-
-<script type="text/javascript">
-    (function () {
-        window.addEvent('domready', function() {
-
-            $(document)
-            .getElement('input[name=customPattern]')
-            .addEvent('click', function (event) {
-                $('postPattern-custom').set('checked', true);
-                this.focus();
-                event.stop();
-            });
-
-        });
-    })();
-</script>
 
 <?php include 'footer.php'; ?>

@@ -5,24 +5,10 @@
 <script type="text/javascript">
     (function () {
         $(document).ready(function() {
-            var _d = $(document);
-            
             <?php if ($notice->highlight): ?>                
             //增加高亮效果
             $('#<?php echo $notice->highlight; ?>').effect('highlight', '#AACB36', 1000);
             <?php endif; ?>
-
-            $('.typecho-list-table').tableSelectable({
-                checkEl     :   'input[type=checkbox]',
-                rowEl       :   'tr',
-                selectAllEl :   '.typecho-table-select-all',
-                actionEl    :   '.dropdown-menu a'
-            });
-
-            $('.btn-drop').dropdownMenu({
-                btnEl       :   '.dropdown-toggle',
-                menuEl      :   '.dropdown-menu'
-            });
 
             //增加淡出效果
             (function () {
@@ -40,35 +26,19 @@
                     p.delay(5000).fadeOut();
                 }
             })();
+
+            $('a').each(function () {
+                var t = $(this), href = t.attr('href');
+
+                if (/^<?php echo preg_quote($options->adminUrl, '/'); ?>.*$/.exec(href) 
+                        || /^<?php echo substr(preg_quote(Typecho_Common::url('s', $options->index), '/'), 0, -1); ?>action\/[_a-zA-Z0-9\/]+.*$/.exec(href)) {
+                    return;
+                }
+
+                t.attr('target', '_blank');
+            });
             
             /*
-            //增加滚动效果,滚动到上面的一条error
-            (function () {
-                var _firstError = _d.getElement('.typecho-option .error');
-    
-                if (_firstError) {
-                    var _errorFx = new Fx.Scroll(window).toElement(_firstError.getParent('.typecho-option'));
-                }
-            })();
-
-            //禁用重复提交
-            (function () {
-                _d.getElements('input[type=submit]').removeProperty('disabled');
-                _d.getElements('button[type=submit]').removeProperty('disabled');
-    
-                var _disable = function (e) {
-                    e.stopPropagation();
-                    
-                    this.setProperty('disabled', true);
-                    this.getParent('form').submit();
-                    
-                    return false;
-                };
-
-                _d.getElements('input[type=submit]').addEvent('click', _disable);
-                _d.getElements('button[type=submit]').addEvent('click', _disable);
-            })();
-
             //打开链接
             (function () {
                 

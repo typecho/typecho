@@ -106,5 +106,6 @@ $stat = Typecho_Widget::widget('Widget_Stat');
 <?php
 include 'copyright.php';
 include 'common-js.php';
+include 'table-js.php';
 include 'footer.php';
 ?>

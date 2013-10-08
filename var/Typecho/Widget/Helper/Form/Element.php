@@ -143,6 +143,22 @@ abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_
     }
 
     /**
+     * filterValue  
+     * 
+     * @param mixed $value 
+     * @access protected
+     * @return string
+     */
+    protected function filterValue($value)
+    {
+        if (preg_match_all('/[_0-9a-z-]+/i', $value, $matches)) {
+            return implode('-', $matches[0]);
+        }
+
+        return '';
+    }
+
+    /**
      * 自定义初始函数
      *
      * @access public

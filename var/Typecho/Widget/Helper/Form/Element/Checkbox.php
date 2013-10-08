@@ -43,14 +43,15 @@ class Typecho_Widget_Helper_Form_Element_Checkbox extends Typecho_Widget_Helper_
         foreach ($options as $value => $label) {
             $this->_options[$value] = new Typecho_Widget_Helper_Layout('input');
             $item = $this->multiline();
+            $id = $this->name . '-' . $this->filterValue($value);
 
             $item->addItem($this->_options[$value]->setAttribute('name', $this->name . '[]')
             ->setAttribute('type', 'checkbox')
             ->setAttribute('value', $value)
-            ->setAttribute('id', $this->name . '-' . $value));
+            ->setAttribute('id', $id));
 
             $labelItem = new Typecho_Widget_Helper_Layout('label');
-            $item->addItem($labelItem->setAttribute('for', $this->name . '-' . $value)->html($label));
+            $item->addItem($labelItem->setAttribute('for', $id)->html($label));
             $this->container($item);
         }
 
