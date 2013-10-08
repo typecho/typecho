@@ -159,6 +159,10 @@ class Widget_Menu extends Typecho_Widget
             parse_str($currentUrlParts['query'], $currentUrlParams);
         }
 
+        if ('/' == $currentUrlParts['path'][strlen($currentUrlParts['path']) - 1]) {
+            $currentUrlParts['path'] .= 'index.php';
+        }
+
         foreach ($extendingParentMenu as $key => $val) {
             $parentNodes[10 + $key] = $val;
         }
