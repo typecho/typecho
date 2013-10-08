@@ -262,7 +262,7 @@ button, .dropdown-menu {
     box-shadow: rgba(0, 0, 0, 0.12) 0 1px 2px, inset white 0 1px 0;
 }
 
-button:disabled, button:active {
+button:disabled, button:active, button.active {
     background: #EEE;
     -webkit-box-shadow: inset rgba(0, 0, 0, 0.2) 0 0 4px;
     -moz-box-shadow: inset rgba(0, 0, 0, 0.2) 0 0 4px;
@@ -299,7 +299,7 @@ button.primary:hover {
     color: #5591b0;
 }
 
-button.primary:active {
+button.primary:active, button.primary.active {
     background: #dcebf4;
 }
 
@@ -348,6 +348,7 @@ button.primary:active {
     background: #f9f9f7;
     text-align: left;
     min-width: 108px;
+    display: none;
 }
 
 .dropdown-menu li {
@@ -1462,11 +1463,7 @@ a.operate-reply {
     background: #eff5d9;
 }
 
-.typecho-list-table tbody tr.hover, .typecho-list-table tbody tr:hover {
-
-}
-
-.typecho-list-table tbody tr.hover td, .typecho-list-table tbody tr:hover td, ul.typecho-list-notable li:hover, ul.typecho-list-notable li.hover {
+.typecho-list-table tbody tr:hover td, ul.typecho-list-notable li:hover {
     background: #E3EEBD;
 }
 
@@ -1474,7 +1471,7 @@ a.operate-reply {
     background: #DBE9AB;
 }
 
-.typecho-list-table tbody tr.checked-even td, ul.typecho-list-notable li.checked-even {
+.typecho-list-table tbody tr.even.checked td, ul.typecho-list-notable li.even.checked {
     background: #CCE087;
 }
 
@@ -1503,8 +1500,7 @@ a.operate-reply {
     display: none;
 }
 
-.typecho-list-table tr:hover td .hidden-by-mouse, ul.typecho-list-notable li:hover .hidden-by-mouse,
-.typecho-list-table tr.hover td .hidden-by-mouse, ul.typecho-list-notable li.hover .hidden-by-mouse {
+.typecho-list-table tr:hover td .hidden-by-mouse, ul.typecho-list-notable li:hover .hidden-by-mouse {
     display: inline;
 }
 
@@ -1512,7 +1508,7 @@ a.operate-reply {
     color: #999;
 }
 
-.deactivate tbody tr:hover, .deactivate tbody tr.hover {
+.deactivate tbody tr:hover {
     color: #333;
 }
 
@@ -1520,7 +1516,7 @@ a.operate-reply {
     color: #FFC177;
 }
 
-.deactivate tbody tr:hover a, .deactivate tbody tr.hover a {
+.deactivate tbody tr:hover a {
     color: #BD6800;
 }
 
@@ -1737,15 +1733,15 @@ ul.typecho-list-notable li #typecho-respond {
     font-weight: bold;
 }
 
-.typecho-theme-list tbody tr.hover td, .typecho-theme-list tbody tr:hover td {
+.typecho-theme-list tbody tr:hover td {
     background: none;
 }
 
-.typecho-theme-list tbody tr td.current, .typecho-theme-list tbody tr td.hover {
+.typecho-theme-list tbody tr td.current, .typecho-theme-list tbody tr td:hover {
     background: #e3eebd;
 }
 
-.typecho-theme-list tbody tr td.hover .activate, .typecho-theme-list tbody tr td.hover .edit {
+.typecho-theme-list tbody tr td:hover .activate, .typecho-theme-list tbody tr td:hover .edit {
     display: block;
     position: absolute;
     background: #BD6800;
@@ -1760,7 +1756,7 @@ ul.typecho-list-notable li #typecho-respond {
     filter:alpha(opacity=80);
 }
 
-.typecho-theme-list tbody tr td.hover a.activate:hover, .typecho-theme-list tbody tr td.hover a.edit:hover {
+.typecho-theme-list tbody tr td:hover a.activate:hover, .typecho-theme-list tbody tr td:hover a.edit:hover {
     background: #D29B51;
     text-decoration: none;
 }
@@ -2389,11 +2385,11 @@ ul.autocompleter-choices span.autocompleter-queried {
     display: none;
 }
 
-.typecho-page-main ul.tag-list li:hover, .typecho-page-main ul.tag-list li.hover {
+.typecho-page-main ul.tag-list li:hover {
     background: none;
 }
 
-.typecho-page-main ul.tag-list li.checked, .typecho-page-main ul.tag-list li.checked-even {
+.typecho-page-main ul.tag-list li.checked, .typecho-page-main ul.tag-list li.even.checked {
     background: none;
     font-weight: bold;
     text-decoration: underline;

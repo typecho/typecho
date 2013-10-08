@@ -7,10 +7,21 @@
         $(document).ready(function() {
             var _d = $(document);
             
-            //增加高亮效果
             <?php if ($notice->highlight): ?>                
+            //增加高亮效果
             $('#<?php echo $notice->highlight; ?>').effect('highlight', '#AACB36', 1000);
             <?php endif; ?>
+
+            $('.typecho-list-table').tableSelectable({
+                checkEl     :   'input[type=checkbox]',
+                rowEl       :   'tr',
+                selectAllEl :   '.typecho-table-select-all'
+            });
+
+            $('.btn-drop').dropdownMenu({
+                btnEl       :   '.dropdown-toggle',
+                menuEl      :   '.dropdown-menu'
+            });
 
             //增加淡出效果
             (function () {
@@ -29,6 +40,7 @@
                 }
             })();
             
+            /*
             //增加滚动效果,滚动到上面的一条error
             (function () {
                 var _firstError = _d.getElement('.typecho-option .error');
@@ -73,7 +85,6 @@
                             }
                         });
         
-                        /** 如果匹配则继续 */
                         if (/^<?php echo preg_quote($options->adminUrl, '/'); ?>.*$/.exec(_href) 
                             || /^<?php echo substr(preg_quote(Typecho_Common::url('s', $options->index), '/'), 0, -1); ?>action\/[_a-zA-Z0-9\/]+.*$/.exec(_href)) {
                             return;
@@ -86,6 +97,7 @@
             
             Typecho.Table.init('.typecho-list-table');
             Typecho.Table.init('.typecho-list-notable');
+            */
         });
     })();
 </script>

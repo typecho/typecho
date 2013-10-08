@@ -1,3 +1,66 @@
+(function ($) {
+    // 下拉菜单插件
+    $.fn.dropdownMenu = function (options) {
+        this.each(function () {
+            var menu = this, s = $.extend({
+                menuEl      :   null,
+                btnEl       :   null
+            }, options);
+
+            $(s.btnEl, menu).click(function () {
+                var t = $(this);
+
+                t.toggleClass('active');
+                $(s.menuEl, menu).toggle();
+                return false;
+            });
+        });
+    };
+
+    // 表格选择插件
+    $.fn.tableSelectable = function (options) {
+        var table = this, s = $.extend({
+            checkEl     :   null,
+            rowEl       :   null,
+            selectAllEl :   null
+        }, options);
+
+        function clickRow (t) {
+            var t = $(t), check = $(s.checkEl, t), checked = check.prop('checked');
+            check.prop('checked', !checked);
+            
+            if (checked) {
+                t.removeClass('checked');
+            } else {
+                t.addClass('checked');
+            }
+        }
+
+        $(s.rowEl, this).each(function () {
+            $(s.checkEl, this).click(function (e) {
+                clickRow($(this).parents(s.rowEl));
+            });
+        }).click(function () {
+            clickRow(this);
+        });
+
+        $(s.selectAllEl).click(function () {
+            var t = $(this), checked = t.prop('checked');
+            
+            if (checked) {
+                $(s.rowEl, table).each(function () {
+                    $(s.checkEl, this).prop('checked', true);
+                }).addClass('checked');
+            } else {
+                $(s.rowEl, table).each(function () {
+                    $(s.checkEl, this).prop('checked', false);
+                }).removeClass('checked');
+            }
+        });
+    };
+})($);
+
+
 /** 初始化全局对象 */
 var Typecho = {};
 
@@ -297,6 +360,7 @@ Typecho.toggle = function (sel, btn, showWord, hideWord) {
 };
 
 /** 自动保存组件 */
+/*
 Typecho.autoSave = new Class({
 
     //继承自Options
@@ -376,8 +440,10 @@ Typecho.autoSave = new Class({
         }
     }
 });
+*/
 
 /** 文本编辑器插入文字 */
+/*
 Typecho.textarea = new Class({
 
     //继承自Options
@@ -532,6 +598,7 @@ Typecho.textarea = new Class({
         this.textarea.selectRange(range.start, range.end + before.length + after.length);
     }
 });
+*/
 
 /** 自动完成 */
 Typecho.autoComplete = function (match, token) {

@@ -15,7 +15,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     <div class="operate">
                         <input type="checkbox" class="typecho-table-select-all" />
                     <div class="btn-group btn-drop">
-                    <button class="dropdown-toggle" href="">选中项 &nbsp;<i class="icon-caret-down"></i></button>
+                    <button class="dropdown-toggle" type="button" href="">选中项 &nbsp;<i class="icon-caret-down"></i></button>
                     <ul class="dropdown-menu">
                         <li><a href=""><?php _e('删除'); ?></a></li>
                     </ul>

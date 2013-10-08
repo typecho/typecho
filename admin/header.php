@@ -3,9 +3,9 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
 }
 
-$header = '<link rel="stylesheet" type="text/css" href="' . Typecho_Common::url('css/reset.source.css?v=' . $suffixVersion, $options->adminUrl) . '" /> 
-<link rel="stylesheet" type="text/css" href="' . Typecho_Common::url('css/grid.source.css?v=' . $suffixVersion, $options->adminUrl) . '" /> 
-<link rel="stylesheet" type="text/css" href="' . Typecho_Common::url('css/typecho.source.css?v=' . $suffixVersion, $options->adminUrl) . '" />';
+$header = '<link rel="stylesheet" type="text/css" href="' . Typecho_Common::url('css/reset.css?v=' . $suffixVersion, $options->adminUrl) . '" /> 
+<link rel="stylesheet" type="text/css" href="' . Typecho_Common::url('css/grid.css?v=' . $suffixVersion, $options->adminUrl) . '" /> 
+<link rel="stylesheet" type="text/css" href="' . Typecho_Common::url('css/style.css?v=' . $suffixVersion, $options->adminUrl) . '" />';
 
 /** 注册一个初始化插件 */
 $header = Typecho_Plugin::factory('admin/header.php')->header($header);
