@@ -242,6 +242,7 @@ select {
 
 button {
     height: 28px;
+    margin: 0;
     vertical-align: middle;
     zoom: 1;
     display: inline-block;
@@ -344,7 +345,7 @@ button.primary:active, button.primary.active {
     list-style: none;
     position: absolute;
     z-index: 2;
-    left: 2px;
+    left: 0;
     margin: 0;
     padding: 0;
     background: #f9f9f7;
@@ -358,7 +359,7 @@ button.primary:active, button.primary.active {
 }
 
 .dropdown-menu li p {
-    padding: 5px 13px;
+    padding: 5px 15px;
 }
 
 .dropdown-menu li a {
