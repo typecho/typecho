@@ -110,15 +110,30 @@ include 'table-js.php';
 
 <?php if(!isset($request->status) || 'publish' == $request->get('status')): ?>
 <script type="text/javascript">
-    (function () {
-        window.addEvent('domready', function() {
-            Typecho.Table.dragStop = function (item, result) {
-                var _r = new Request.JSON({
-                    url: '<?php $options->index('/action/contents-page-edit'); ?>'
-                }).send(result + '&do=sort');
-            };
+(function () {
+    $(document).ready(function () {
+        var table = $('.typecho-list-table').tableDnD({
+            onDrop : function () {
+                var ids = [];
+
+                $('input[type=checkbox]', table).each(function () {
+                    ids.push($(this).val());
+                });
+
+                $.post('<?php $options->index('/action/contents-page-edit?do=sort'); ?>', 
+                    $.param({cid : ids}));
+
+                $('tr', table).each(function (i) {
+                    if (i % 2) {
+                        $(this).addClass('even');
+                    } else {
+                        $(this).removeClass('even');
+                    }
+                });
+            }
         });
-    })();
+    });
+})();
 </script>
 <?php endif; ?>
 

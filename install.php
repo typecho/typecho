@@ -154,9 +154,9 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php _e('UTF-8'); ?>" />
 	<title><?php _e('Typecho安装程序'); ?></title>
-    <link rel="stylesheet" type="text/css" href="admin/css/reset.source.css" />
-    <link rel="stylesheet" type="text/css" href="admin/css/grid.source.css" />
-    <link rel="stylesheet" type="text/css" href="admin/css/typecho.source.css" />
+    <link rel="stylesheet" type="text/css" href="admin/css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="admin/css/grid.css" />
+    <link rel="stylesheet" type="text/css" href="admin/css/style.css" />
 </head>
 <body>
 <div class="typecho-install-patch">
@@ -175,13 +175,13 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                 <h1 class="typecho-install-title"><?php _e('安装失败!'); ?></h1>
                 <div class="typecho-install-body">
                     <form method="post" action="?config" name="config">
-                    <p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright"><?php _e('您没有上传 config.inc.php 文件，请您重新安装！'); ?> <button type="submit"><?php _e('重新安装 &raquo;'); ?></button></p>
+                    <p class="message error"><?php _e('您没有上传 config.inc.php 文件，请您重新安装！'); ?> <button type="submit"><?php _e('重新安装 &raquo;'); ?></button></p>
                     </form>
                 </div>
                 <?php else : ?>
                 <h1 class="typecho-install-title"><?php _e('安装成功!'); ?></h1>
                 <div class="typecho-install-body">
-                    <div class="message success typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
+                    <div class="message success">
                     <?php if(isset($_GET['use_old']) ) : ?>
                     <?php _e('您选择了使用原有的数据, 您的用户名和密码和原来的一致'); ?>
                     <?php else : ?>
@@ -194,7 +194,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                     <?php endif;?>
                     </div>
 
-                    <div class="message notice typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
+                    <div class="message notice">
                     <a target="_blank" href="http://spreadsheets.google.com/viewform?key=pd1Gl4Ur_pbniqgebs5JRIg&hl=en">参与用户调查, 帮助我们完善产品</a>
                     </div>
 
@@ -230,36 +230,48 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                         <?php
                             if ('config' == _r('action')) {
                                 $success = true;
-
-                                if (NULL == _r('userUrl')) {
-                                    $success = false;
-                                    echo '<p class="message error">' . _t('请填写您的网站地址') . '</p>';
-                                } else if (NULL == _r('userName')) {
-                                    $success = false;
-                                    echo '<p class="message error">' . _t('请填写您的用户名') . '</p>';
-                                } else if (NULL == _r('userMail')) {
-                                    $success = false;
-                                    echo '<p class="message error">' . _t('请填写您的邮箱地址') . '</p>';
-                                } else if (32 < strlen(_r('userName'))) {
-                                    $success = false;
-                                    echo '<p class="message error">' . _t('用户名长度超过限制, 请不要超过32个字符') . '</p>';
-                                } else if (200 < strlen(_r('userMail'))) {
-                                    $success = false;
-                                    echo '<p class="message error">' . _t('邮箱长度超过限制, 请不要超过200个字符') . '</p>';
+                                
+                                if (_r('created')) {
+                                    if (file_exists('./config.inc.php')) {
+                                        require_once './config.inc.php';
+                                        $installDb = Typecho_Db::get();
+                                    } else {
+                                        echo '<p class="message error">' . _t('没有检测到您手动创建的配置文件, 请检查后再次创建') . '</p>';
+                                        $success = false;
+                                    }
+                                } else {
+                                    if (NULL == _r('userUrl')) {
+                                        $success = false;
+                                        echo '<p class="message error">' . _t('请填写您的网站地址') . '</p>';
+                                    } else if (NULL == _r('userName')) {
+                                        $success = false;
+                                        echo '<p class="message error">' . _t('请填写您的用户名') . '</p>';
+                                    } else if (NULL == _r('userMail')) {
+                                        $success = false;
+                                        echo '<p class="message error">' . _t('请填写您的邮箱地址') . '</p>';
+                                    } else if (32 < strlen(_r('userName'))) {
+                                        $success = false;
+                                        echo '<p class="message error">' . _t('用户名长度超过限制, 请不要超过32个字符') . '</p>';
+                                    } else if (200 < strlen(_r('userMail'))) {
+                                        $success = false;
+                                        echo '<p class="message error">' . _t('邮箱长度超过限制, 请不要超过200个字符') . '</p>';
+                                    }
                                 }
 
 
                                 if ($success) {
-                                    $installDb = new Typecho_Db ($adapter, _r('dbPrefix'));
-                                    $_dbConfig = _rFrom('dbHost', 'dbUser', 'dbPassword', 'dbCharset', 'dbPort', 'dbDatabase', 'dbFile', 'dbDsn');
+                                    if (!isset($installDb)) {
+                                        $installDb = new Typecho_Db ($adapter, _r('dbPrefix'));
+                                        $_dbConfig = _rFrom('dbHost', 'dbUser', 'dbPassword', 'dbCharset', 'dbPort', 'dbDatabase', 'dbFile', 'dbDsn');
 
-                                    $_dbConfig = array_filter($_dbConfig);
-                                    $dbConfig = array();
-                                    foreach ($_dbConfig as $key => $val) {
-                                        $dbConfig[strtolower (substr($key, 2))] = $val;
+                                        $_dbConfig = array_filter($_dbConfig);
+                                        $dbConfig = array();
+                                        foreach ($_dbConfig as $key => $val) {
+                                            $dbConfig[strtolower (substr($key, 2))] = $val;
+                                        }
+
+                                        $installDb->addServer($dbConfig, Typecho_Db::READ | Typecho_Db::WRITE);
                                     }
-
-                                    $installDb->addServer($dbConfig, Typecho_Db::READ | Typecho_Db::WRITE);
 
 
                                     /** 检测数据库配置 */
@@ -267,18 +279,22 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                                         $installDb->query('SELECT 1=1');
                                     } catch (Typecho_Db_Adapter_Exception $e) {
                                         $success = false;
-                                        echo '<p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">' 
+                                        echo '<p class="message error">' 
                                         . _t('对不起，无法连接数据库，请先检查数据库配置再继续进行安装') . '</p>';
                                     } catch (Typecho_Db_Exception $e) {
                                         $success = false;
-                                        echo '<p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">' 
+                                        echo '<p class="message error">' 
                                         . _t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.',$e->getMessage()) . '</p>';
                                     }
 
                                 }
 
-                                if($success)
-                                {
+                                if($success) {
+                                    if (_r('created')) {
+                                        header('Location: ./install.php?finish');
+                                        exit;
+                                    }
+
                                     /** 初始化配置文件 */
                                     $lines = array_slice(file(__FILE__), 0, 52);
                                     $lines[] = "
@@ -287,148 +303,18 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
 \$db->addServer(" . var_export($dbConfig, true) . ", Typecho_Db::READ | Typecho_Db::WRITE);
 Typecho_Db::set(\$db);
 ";
+                                    $contents = implode('', $lines);
 
-if (false === ($handle = @file_put_contents('./config.inc.php', implode('', $lines)))) {
-    $creatConfigFile = false;
-}
-                                    try {
-                                        /** 初始化数据库结构 */
-                                        $scripts = file_get_contents ('./install/' . $type . '.sql');
-                                        $scripts = str_replace('typecho_', _r('dbPrefix'), $scripts);
-
-                                        if (isset($dbConfig['charset'])) {
-                                            $scripts = str_replace('%charset%', $dbConfig['charset'], $scripts);
-                                        }
-
-                                        $scripts = explode(';', $scripts);
-                                        foreach ($scripts as $script) {
-                                            $script = trim($script);
-                                            if ($script) {
-                                                $installDb->query($script, Typecho_Db::WRITE);
-                                            }
-                                        }
-
-                                        /** 全局变量 */
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'theme', 'user' => 0, 'value' => 'default')));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'timezone', 'user' => 0, 'value' => _t('28800'))));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'charset', 'user' => 0, 'value' => 'UTF-8')));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'contentType', 'user' => 0, 'value' => 'text/html')));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'gzip', 'user' => 0, 'value' => 0)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'generator', 'user' => 0, 'value' => $options->generator)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'title', 'user' => 0, 'value' => 'Hello World')));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'description', 'user' => 0, 'value' => 'Just So So ...')));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'keywords', 'user' => 0, 'value' => 'typecho,php,blog')));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'rewrite', 'user' => 0, 'value' => 0)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'frontPage', 'user' => 0, 'value' => 'recent')));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsRequireMail', 'user' => 0, 'value' => 1)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsWhitelist', 'user' => 0, 'value' => 1)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsRequireURL', 'user' => 0, 'value' => 0)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsRequireModeration', 'user' => 0, 'value' => 0)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'plugins', 'user' => 0, 'value' => 'a:0:{}')));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentDateFormat', 'user' => 0, 'value' => 'F jS, Y \a\t h:i a')));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'siteUrl', 'user' => 0, 'value' => _r('userUrl'))));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'defaultCategory', 'user' => 0, 'value' => 1)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'allowRegister', 'user' => 0, 'value' => 0)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'defaultAllowComment', 'user' => 0, 'value' => 1)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'defaultAllowPing', 'user' => 0, 'value' => 1)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'defaultAllowFeed', 'user' => 0, 'value' => 1)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'pageSize', 'user' => 0, 'value' => 5)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'postsListSize', 'user' => 0, 'value' => 10)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsListSize', 'user' => 0, 'value' => 10)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsHTMLTagAllowed', 'user' => 0, 'value' => NULL)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'postDateFormat', 'user' => 0, 'value' => 'Y-m-d')));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'feedFullText', 'user' => 0, 'value' => 1)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'editorSize', 'user' => 0, 'value' => 350)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'autoSave', 'user' => 0, 'value' => 0)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsMaxNestingLevels', 'user' => 0, 'value' => 5)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsPostTimeout', 'user' => 0, 'value' => 24 * 3600 * 30)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsUrlNofollow', 'user' => 0, 'value' => 1)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsShowUrl', 'user' => 0, 'value' => 1)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsPageBreak', 'user' => 0, 'value' => 0)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsThreaded', 'user' => 0, 'value' => 1)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsPageSize', 'user' => 0, 'value' => 20)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsPageDisplay', 'user' => 0, 'value' => 'last')));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsOrder', 'user' => 0, 'value' => 'ASC')));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsCheckReferer', 'user' => 0, 'value' => 1)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsAutoClose', 'user' => 0, 'value' => 0)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsPostIntervalEnable', 'user' => 0, 'value' => 1)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsPostInterval', 'user' => 0, 'value' => 60)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsShowCommentOnly', 'user' => 0, 'value' => 0)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsAvatar', 'user' => 0, 'value' => 1)));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsAvatarRating', 'user' => 0, 'value' => 'G')));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'routingTable', 'user' => 0, 'value' => 'a:23:{s:5:"index";a:3:{s:3:"url";s:1:"/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:2:"do";a:3:{s:3:"url";s:22:"/action/[action:alpha]";s:6:"widget";s:9:"Widget_Do";s:6:"action";s:6:"action";}s:4:"post";a:3:{s:3:"url";s:24:"/archives/[cid:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:10:"attachment";a:3:{s:3:"url";s:26:"/attachment/[cid:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:8:"category";a:3:{s:3:"url";s:17:"/category/[slug]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:3:"tag";a:3:{s:3:"url";s:12:"/tag/[slug]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:6:"author";a:3:{s:3:"url";s:22:"/author/[uid:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:6:"search";a:3:{s:3:"url";s:19:"/search/[keywords]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:10:"index_page";a:3:{s:3:"url";s:21:"/page/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:13:"category_page";a:3:{s:3:"url";s:32:"/category/[slug]/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:8:"tag_page";a:3:{s:3:"url";s:27:"/tag/[slug]/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:11:"author_page";a:3:{s:3:"url";s:37:"/author/[uid:digital]/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:11:"search_page";a:3:{s:3:"url";s:34:"/search/[keywords]/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:12:"archive_year";a:3:{s:3:"url";s:18:"/[year:digital:4]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:13:"archive_month";a:3:{s:3:"url";s:36:"/[year:digital:4]/[month:digital:2]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:11:"archive_day";a:3:{s:3:"url";s:52:"/[year:digital:4]/[month:digital:2]/[day:digital:2]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:17:"archive_year_page";a:3:{s:3:"url";s:38:"/[year:digital:4]/page/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:18:"archive_month_page";a:3:{s:3:"url";s:56:"/[year:digital:4]/[month:digital:2]/page/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:16:"archive_day_page";a:3:{s:3:"url";s:72:"/[year:digital:4]/[month:digital:2]/[day:digital:2]/page/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:12:"comment_page";a:3:{s:3:"url";s:53:"[permalink:string]/comment-page-[commentPage:digital]";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:4:"feed";a:3:{s:3:"url";s:20:"/feed[feed:string:0]";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:4:"feed";}s:8:"feedback";a:3:{s:3:"url";s:31:"[permalink:string]/[type:alpha]";s:6:"widget";s:15:"Widget_Feedback";s:6:"action";s:6:"action";}s:4:"page";a:3:{s:3:"url";s:12:"/[slug].html";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}}')));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'actionTable', 'user' => 0, 'value' => 'a:0:{}')));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'panelTable', 'user' => 0, 'value' => 'a:0:{}')));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'attachmentTypes', 'user' => 0, 'value' => '@image@')));
-
-                                        /** 初始分类 */
-                                        $installDb->query($installDb->insert('table.metas')->rows(array('name' => _t('默认分类'), 'slug' => 'default', 'type' => 'category', 'description' => _t('只是一个默认分类'),
-                                        'count' => 1, 'order' => 1)));
-
-                                        /** 初始关系 */
-                                        $installDb->query($installDb->insert('table.relationships')->rows(array('cid' => 1, 'mid' => 1)));
-
-                                        /** 初始内容 */
-                                        $installDb->query($installDb->insert('table.contents')->rows(array('title' => _t('欢迎使用Typecho'), 'slug' => 'start', 'created' => Typecho_Date::gmtTime(), 'modified' => Typecho_Date::gmtTime(),
-                                        'text' => _t('如果您看到这篇文章,表示您的blog已经安装成功.'), 'authorId' => 1, 'type' => 'post', 'status' => 'publish', 'commentsNum' => 1, 'allowComment' => 1,
-                                        'allowPing' => 1, 'allowFeed' => 1, 'parent' => 0)));
-
-                                        $installDb->query($installDb->insert('table.contents')->rows(array('title' => _t('关于'), 'slug' => 'start-page', 'created' => Typecho_Date::gmtTime(), 'modified' => Typecho_Date::gmtTime(),
-                                        'text' => _t('本页面由Typecho创建, 这只是个测试页面.'), 'authorId' => 1, 'order' => 0, 'type' => 'page', 'status' => 'publish', 'commentsNum' => 0, 'allowComment' => 1,
-                                        'allowPing' => 1, 'allowFeed' => 1, 'parent' => 0)));
-
-                                        /** 初始评论 */
-                                        $installDb->query($installDb->insert('table.comments')->rows(array('cid' => 1, 'created' => Typecho_Date::gmtTime(), 'author' => 'Typecho', 'ownerId' => 1, 'url' => 'http://typecho.org',
-                                        'ip' => '127.0.0.1', 'agent' => $options->generator, 'text' => '欢迎加入Typecho大家族', 'type' => 'comment', 'status' => 'approved', 'parent' => 0)));
-
-                                        /** 初始用户 */
-                                        $password = substr(uniqid(), 7);
-                                        
-                                        $installDb->query($installDb->insert('table.users')->rows(array('name' => _r('userName'), 'password' => Typecho_Common::hash($password), 'mail' => _r('userMail'),
-                                        'url' => 'http://www.typecho.org', 'screenName' => _r('userName'), 'group' => 'administrator', 'created' => Typecho_Date::gmtTime())));
-                                        echo '<p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">抱歉，无法写入 config.inc.php 文件。<br />您可手动创建 config.inc.php，并复制如下代码至其中。</p>';
-                                        echo '<textarea cols="66" rows="15" class="code">';
-                                        foreach( $lines as $line ) {
-                                            echo htmlentities($line, ENT_COMPAT, 'UTF-8');
-                                        }
-                                        echo '</textarea>';
-                                        echo '<p class="message notice typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">上传完成之后，请点击<button type="submit" onclick="window.location.href=\''.'install.php?finish&user=' . _r('userName') . '&password=' . $password.'\';return false;" >上传完毕 &raquo;</button></p>';
-                                        exit;
-                                    } catch (Typecho_Db_Exception $e) {
-                                        $success = false;
-                                        $code = $e->getCode();
-                                        
-                                        if(('Mysql' == $type && 1050 == $code) ||
-                                        ('SQLite' == $type && ('HY000' == $code || 1 == $code)) ||
-                                        ('Pgsql' == $type && '42P07' == $code)) {
-                                            if(_r('delete')) {
-                                                //删除原有数据
-                                                $dbPrefix = _r('dbPrefix');
-                                                $tableArray = array($dbPrefix . 'comments', $dbPrefix . 'contents', $dbPrefix . 'metas', $dbPrefix . 'options', $dbPrefix . 'relationships', $dbPrefix . 'users',);
-                                                foreach($tableArray as $table) {
-                                                    if($type == 'Mysql') {
-                                                        $installDb->query("DROP TABLE IF EXISTS `{$table}`");
-                                                    } elseif($type == 'Pgsql') {
-                                                        $installDb->query("DROP TABLE {$table}");
-                                                    } elseif($type == 'SQLite') {
-                                                        $installDb->query("DROP TABLE {$table}");
-                                                    }
-                                                }
-                                                echo '<p class="message success typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">已经删除完原有数据，请点击继续安装<button type="submit">下一步</button></p>';
-                                            } elseif (_r('goahead')) {
-                                                //使用原有数据
-                                                //但是要更新用户网站
-                                                $installDb->query($installDb->update('table.options')->rows(array('value' => _r('userUrl')))->where('name = ?', 'siteUrl'));
-                                                header('Location: install.php?finish&use_old');
-                                                exit;
-                                            } else {
-                                                 echo '<p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">' . _t('安装程序检查到原有数据表已经存在,请先删除该表然后再继续进行安装.') . '您可以选择<button type="submit" name="delete" value="1">删除数据原有数据</button>或者直接<button type="submit" name="goahead" value="1">使用原有数据</button>安装</p>';
-                                            }
-                                        } else {
-                                            echo '<p class="message error typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">' . _t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.',$e->getMessage()) . '</p>';
-                                        }
+                                    if (true !== @file_put_contents('./config.inc.php', $contents)) {
+                                    ?>
+<p class="message notice"><?php _e('安装程序无法自动创建 config.inc.php 文件'); ?><br /><?php _e('您可以在网站根目录下手动创建 config.inc.php 文件, 并复制如下代码至其中'); ?><br/><br />
+<textarea style="width: 520px; height: 100px" onmouseover="this.select();" readonly><?php echo htmlspecialchars($contents); ?></textarea><br /><br />
+<button name="created" value="1" type="submit">创建完毕, 继续安装 &raquo;</button></p>
+                                    <?php
                                     }
                                 }
+
+                                // 安装不成功删除配置文件
                                 if($success != true && file_exists(__TYPECHO_ROOT_DIR__ . '/config.inc.php')) {
                                     unlink(__TYPECHO_ROOT_DIR__ . '/config.inc.php');
                                 }
