@@ -357,6 +357,10 @@ button.primary:active, button.primary.active {
     white-space: nowrap;
 }
 
+.dropdown-menu li p {
+    padding: 5px 13px;
+}
+
 .dropdown-menu li a {
     display: block;
     padding: 3px 15px;
@@ -2389,7 +2393,6 @@ ul.autocompleter-choices span.autocompleter-queried {
 
 .typecho-page-main ul.tag-list li.checked, .typecho-page-main ul.tag-list li.even.checked {
     background: none;
-    font-weight: bold;
     text-decoration: underline;
 }
 

@@ -16,22 +16,25 @@ include 'menu.php';
                     
                     <?php if(!isset($request->type) || 'category' == $request->get('type')): ?>
                     <?php Typecho_Widget::widget('Widget_Metas_Category_List')->to($categories); ?>
-                    <form method="post" name="manage_categories" class="operate-form" action="<?php $options->index('/action/metas-category-edit'); ?>">
+                    <form method="post" name="manage_categories" class="operate-form">
                     <div class="typecho-list-operate">
-                        <p class="operate"><?php _e('操作'); ?>: 
-                            <span class="operate-button typecho-table-select-all"><?php _e('全选'); ?></span>, 
-                            <span class="operate-button typecho-table-select-none"><?php _e('不选'); ?></span>&nbsp;&nbsp;&nbsp;
-                            <?php _e('选中项'); ?>: 
-                            <span rel="delete" lang="<?php _e('此分类下的所有内容将被删除, 你确认要删除这些分类吗?'); ?>" class="operate-button operate-delete typecho-table-select-submit"><?php _e('删除'); ?></span>, 
-                            <span rel="refresh" lang="<?php _e('刷新分类可能需要等待较长时间, 你确认要刷新这些分类吗?'); ?>" class="operate-button typecho-table-select-submit"><?php _e('刷新'); ?></span>, 
-                            <span rel="merge" class="operate-button typecho-table-select-submit"><?php _e('合并到'); ?></span>
+                        <div class="operate">
+                        <input type="checkbox" class="typecho-table-select-all" />
+                        <div class="btn-group btn-drop">
+                        <button class="dropdown-toggle" type="button" href="">选中项 &nbsp;<i class="icon-caret-down"></i></button>
+                        <ul class="dropdown-menu">
+                            <li><a lang="<?php _e('此分类下的所有内容将被删除, 你确认要删除这些分类吗?'); ?>" href="<?php $options->index('/action/metas-category-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
+                            <li><a lang="<?php _e('刷新分类可能需要等待较长时间, 你确认要刷新这些分类吗?'); ?>" href="<?php $options->index('/action/metas-category-edit?do=refresh'); ?>"><?php _e('刷新'); ?></a></li>
+                            <li><p><button type="button" class="merge" rel="<?php $options->index('/action/metas-category-edit?do=merge'); ?>"><?php _e('合并到'); ?></button>
                             <select name="merge">
                                 <?php $categories->parse('<option value="{mid}">{name}</option>'); ?>
-                            </select>
-                        </p>
+                            </select></p></li>
+                        </ul>
+                        </div>
+                        </div>
                     </div>
                     
-                    <table class="typecho-list-table draggable">
+                    <table class="typecho-list-table">
                         <colgroup>
                             <col width="25"/>
                             <col width="230"/>
@@ -53,7 +56,7 @@ include 'menu.php';
                         <tbody>
                             <?php if($categories->have()): ?>
                             <?php while ($categories->next()): ?>
-                            <tr<?php $categories->alt(' class="even"', ''); ?> id="<?php $categories->theId(); ?>">
+                            <tr<?php $categories->alt(' class="even"', ''); ?> id="mid-<?php $categories->theId(); ?>">
                                 <td><input type="checkbox" value="<?php $categories->mid(); ?>" name="mid[]"/></td>
                                 <td><a href="<?php echo $request->makeUriByRequest('mid=' . $categories->mid); ?>"><?php $categories->name(); ?></a></td>
                                 <td>
@@ -77,24 +80,26 @@ include 'menu.php';
                             <?php endif; ?>
                         </tbody>
                     </table>
-                    <input type="hidden" name="do" value="delete" />
                     </form>
                     <?php else: ?>
                     <?php Typecho_Widget::widget('Widget_Metas_Tag_Cloud', 'sort=mid&desc=0')->to($tags); ?>
-                    <form method="post" name="manage_tags" class="operate-form" action="<?php $options->index('/action/metas-tag-edit'); ?>">
+                    <form method="post" name="manage_tags" class="operate-form">
                     <div class="typecho-list-operate">
-                        <p class="operate"><?php _e('操作'); ?>: 
-                            <span class="operate-button typecho-table-select-all"><?php _e('全选'); ?></span>, 
-                            <span class="operate-button typecho-table-select-none"><?php _e('不选'); ?></span>&nbsp;&nbsp;&nbsp;
-                            <?php _e('选中项'); ?>: 
-                            <span rel="delete" lang="<?php _e('此标签下的所有内容将被删除, 你确认要删除这些标签吗?'); ?>" class="operate-button operate-delete typecho-table-select-submit"><?php _e('删除'); ?></span>, 
-                            <span rel="refresh" lang="<?php _e('刷新标签可能需要等待较长时间, 你确认要刷新这些分类吗?'); ?>" class="operate-button typecho-table-select-submit"><?php _e('刷新'); ?></span>, 
-                            <span rel="merge" class="operate-button typecho-table-select-submit"><?php _e('合并到'); ?></span> 
-                            <input type="text" name="merge" />
-                        </p>
+                        <div class="operate">
+                        <input type="checkbox" class="typecho-table-select-all" />
+                        <div class="btn-group btn-drop">
+                        <button class="dropdown-toggle" type="button" href="">选中项 &nbsp;<i class="icon-caret-down"></i></button>
+                        <ul class="dropdown-menu">
+                            <li><a lang="<?php _e('此标签下的所有内容将被删除, 你确认要删除这些标签吗?'); ?>" href="<?php $options->index('/action/metas-tag-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
+                            <li><a lang="<?php _e('刷新标签可能需要等待较长时间, 你确认要刷新这些标签吗?'); ?>" href="<?php $options->index('/action/metas-tag-edit?do=refresh'); ?>"><?php _e('刷新'); ?></a></li>
+                            <li><p><button type="button" class="merge" rel="<?php $options->index('/action/metas-tag-edit?do=merge'); ?>"><?php _e('合并到'); ?></button>
+                            <input type="text" name="merge" /></p></li>
+                        </ul>
+                        </div>
+                        </div>
                     </div>
                     
-                    <ul class="typecho-list-notable tag-list clearfix typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
+                    <ul class="typecho-list-notable tag-list clearfix">
                         <?php if($tags->have()): ?>
                         <?php while ($tags->next()): ?>
                         <li class="size-<?php $tags->split(5, 10, 20, 30); ?>" id="<?php $tags->theId(); ?>">
@@ -125,66 +130,99 @@ include 'menu.php';
 <?php
 include 'copyright.php';
 include 'common-js.php';
-include 'table-js.php';
 ?>
 
 <script type="text/javascript">
-    (function () {
-        window.addEvent('domready', function() {
-            var _selection;
-            
-            <?php if (isset($request->mid)): ?>
-            var _hl = $(document).getElement('.typecho-mini-panel');
-            if (_hl) {
-                _hl.set('tween', {duration: 1500});
-    
-                var _bg = _hl.getStyle('background-color');
-                if (!_bg || 'transparent' == _bg) {
-                    _bg = '#F7FBE9';
-                }
+(function () {
+    $(document).ready(function () {
+        var table = $('.typecho-list-table').tableDnD({
+            onDrop : function () {
+                var ids = [];
 
-                _hl.tween('background-color', '#AACB36', _bg);
-            }
-            <?php endif; ?>
-            
-            if ('tr' == Typecho.Table.table._childTag) {
-                Typecho.Table.dragStop = function (obj, result) {
-                    var _r = new Request.JSON({
-                        url: '<?php $options->index('/action/metas-category-edit'); ?>'
-                    }).send(result + '&do=sort');
-                };
-            } else {
-                Typecho.Table.checked = function (input, item) {
-                    if (!_selection) {
-                        _selection = document.createElement('div');
-                        $(_selection).addClass('tag-selection');
-                        $(_selection).addClass('clearfix');
-                        $(document).getElement('.typecho-mini-panel form')
-                        .insertBefore(_selection, $(document).getElement('.typecho-mini-panel form #typecho-option-item-name-0'));
+                $('input[type=checkbox]', table).each(function () {
+                    ids.push($(this).val());
+                });
+
+                $.post('<?php $options->index('/action/metas-category-edit?do=sort'); ?>', 
+                    $.param({mid : ids}));
+
+                $('tr', table).each(function (i) {
+                    if (i % 2) {
+                        $(this).addClass('even');
+                    } else {
+                        $(this).removeClass('even');
                     }
-                    
-                    var _href = item.getElement('span').getProperty('rel');
-                    var _text = item.getElement('span').get('text');
-                    var _a = document.createElement('a');
-                    $(_a).addClass('button');
-                    $(_a).setProperty('href', _href);
-                    $(_a).set('text', _text);
-                    _selection.appendChild(_a);
-                    item.checkedElement = _a;
-                };
-                
-                Typecho.Table.unchecked = function (input, item) {
-                    if (item.checkedElement) {
-                        $(item.checkedElement).destroy();
-                    }
-                    
-                    if (!$(_selection).getElement('a')) {
-                        _selection.destroy();
-                        _selection = null;
-                    }
-                };
+                });
             }
         });
-    })();
+
+        if (table.length > 0) {
+            table.tableSelectable({
+                checkEl     :   'input[type=checkbox]',
+                rowEl       :   'tr',
+                selectAllEl :   '.typecho-table-select-all',
+                actionEl    :   '.dropdown-menu a'
+            });
+        } else {
+            $('.typecho-list-notable').tableSelectable({
+                checkEl     :   'input[type=checkbox]',
+                rowEl       :   'li',
+                selectAllEl :   '.typecho-table-select-all',
+                actionEl    :   '.dropdown-menu a'
+            });
+
+            $('.typecho-table-select-all').click(function () {
+                var selection = $('.tag-selection');
+
+                if (0 == selection.length) {
+                    selection = $('<div class="tag-selection clearfix" />').prependTo('.typecho-mini-panel');
+                }
+
+                selection.html('');
+
+                if ($(this).prop('checked')) {
+                    $('.typecho-list-notable li').each(function () {
+                        var span = $('span', this),
+                            a = $('<a class="button" href="' + span.attr('rel') + '">' + span.text() + '</a>');
+                        
+                        this.aHref = a;
+                        selection.append(a);
+                    });
+                }
+            });
+        }
+
+        $('.btn-drop').dropdownMenu({
+            btnEl       :   '.dropdown-toggle',
+            menuEl      :   '.dropdown-menu'
+        });
+
+        $('.dropdown-menu button.merge').click(function () {
+            var btn = $(this);
+            btn.parents('form').attr('action', btn.attr('rel')).submit();
+        });
+
+        $('.typecho-list-notable li').click(function () {
+            var selection = $('.tag-selection'), span = $('span', this),
+                a = $('<a class="button" href="' + span.attr('rel') + '">' + span.text() + '</a>'),
+                li = $(this);
+
+            if (0 == selection.length) {
+                selection = $('<div class="tag-selection clearfix" />').prependTo('.typecho-mini-panel');
+            }
+
+            if (li.hasClass('checked')) {
+                this.aHref = a;
+                a.appendTo(selection);
+            } else {
+                this.aHref.remove();
+            }
+        });
+
+        <?php if (isset($request->mid)): ?>
+        $('.typecho-mini-panel').effect('highlight', '#AACB36');
+        <?php endif; ?>
+    });
+})();
 </script>
 <?php include 'footer.php'; ?>

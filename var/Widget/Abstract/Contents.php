@@ -462,7 +462,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
 
         /** 处理附件 */
         if ('attachment' == $type) {
-            $content = unserialize($value['text']);
+            $content = @unserialize($value['text']);
 
             //增加数据信息
             $value['attachment'] = new Typecho_Config($content);

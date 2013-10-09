@@ -32,7 +32,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 </div>
             
                 <form method="post" name="manage_pages" class="operate-form">
-                <table class="typecho-list-table draggable">
+                <table class="typecho-list-table">
                     <colgroup>
                         <col width="25"/>
                         <col width="50"/>
