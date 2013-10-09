@@ -470,7 +470,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
 Typecho_Db::set(\$db);
 ";
                                     $contents = implode('', $lines);
-                                    file_put_contents('./config.inc.php', $contents);
+                                    @file_put_contents('./config.inc.php', $contents);
 
                                     // 创建一个用于标识的临时文件
                                     file_put_contents(sys_get_temp_dir() . '/install-typecho', '');
