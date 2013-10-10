@@ -7,7 +7,7 @@ include 'menu.php';
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="col-group typecho-page-main">
-            <div class="column-24 start-01 typecho-list">
+            <div class="col-12 start-01 typecho-list">
                 <div class="typecho-list-operate">
                 <form method="get">
                     <div class="operate">

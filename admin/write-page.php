@@ -9,8 +9,8 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
         <?php include 'page-title.php'; ?>
         <div class="col-group typecho-page-main typecho-post-option typecho-post-area">
             <form action="<?php $options->index('/action/contents-page-edit'); ?>" method="post" name="write_page">
-                <div class="column-18 suffix">
-                    <div class="column-18">
+                <div class="col-18 suffix">
+                    <div class="col-18">
                         <label for="title" class="typecho-label"><?php _e('标题'); ?>
                         <?php if ($page->draft && $page->draft['cid'] != $page->cid): ?>
                         <?php $pageModifyDate = new Typecho_Date($page->draft['modified']); ?>
@@ -37,9 +37,9 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                         </p>
                     </div>
                         
-                    <ul id="advance-panel" class="typecho-post-option column-18">
-                        <li class="column-18">
-                            <div class="column-12">
+                    <ul id="advance-panel" class="typecho-post-option col-18">
+                        <li class="col-18">
+                            <div class="col-12">
                                 <label for="order" class="typecho-label"><?php _e('页面顺序'); ?></label>
                                 <p><input type="text" id="order" name="order" value="<?php $page->order(); ?>" class="mini" /></p>
                                 <p class="description"><?php _e('为你的自定义页面设定一个序列值以后, 能够使得它们按此值从小到大排列'); ?></p>
@@ -56,7 +56,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                                 <p class="description"><?php _e('如果你为此页面选择了一个自定义模板, 系统将按照你选择的模板文件展现它'); ?></p>
                                 <?php Typecho_Plugin::factory('admin/write-page.php')->advanceOptionLeft($page); ?>
                             </div>
-                            <div class="column-06">
+                            <div class="col-3">
                                 <label class="typecho-label"><?php _e('权限控制'); ?></label>
                                 <ul>
                                     <li><input id="allowComment" name="allowComment" type="checkbox" value="1" <?php if($page->allow('comment')): ?>checked="true"<?php endif; ?> />
@@ -70,14 +70,14 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                             </div>
                         </li>
                     </ul>
-                    <ul id="upload-panel" class="column-18">
-                        <li class="column-18">
+                    <ul id="upload-panel" class="col-18">
+                        <li class="col-18">
                             <?php include 'file-upload.php'; ?>
                         </li>
                     </ul>
                     <div id="typecho-preview-box"></div>
                 </div>
-                <div class="column-06">
+                <div class="col-3">
                     <ul class="typecho-post-option">
                         <li>
                             <label for="date" class="typecho-label"><?php _e('日期'); ?></label>

@@ -7,7 +7,7 @@ Typecho_Cookie::delete('__typecho_remember_name');
 ?>
 <div class="body container">
     <div class="col-group">
-        <div class="column-07 start-09 typecho-login">
+        <div class="col-3 start-09 typecho-login">
             <h2 class="logo-dark">typecho</h2>
             <form action="<?php $options->loginAction(); ?>" method="post" name="login">
                 <fieldset>

@@ -10,7 +10,7 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="col-group typecho-page-main">
-            <div class="column-24 start-01 typecho-list">
+            <div class="col-12 start-01 typecho-list">
                 <ul class="typecho-option-tabs">
                     <li<?php if(!isset($request->status) || 'approved' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php'
                     . (isset($request->cid) ? '?cid=' . $request->cid : '')); ?>"><?php _e('已通过'); ?></a></li>
@@ -80,11 +80,11 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                     <ul class="typecho-list-notable clearfix">
                     <?php if($comments->have()): ?>
                     <?php while($comments->next()): ?>
-                    <li class="column-24<?php $comments->alt(' even', ''); ?>" id="<?php $comments->theId(); ?>">
-                        <div class="column-01 center">
+                    <li class="col-12<?php $comments->alt(' even', ''); ?>" id="<?php $comments->theId(); ?>">
+                        <div class="col-1 center">
                             <input type="checkbox" value="<?php $comments->coid(); ?>" name="coid[]"/>
                         </div>
-                        <div class="column-23 comment-body">
+                        <div class="col-13 comment-body">
                             <div class="content">
                                 <div class="comment-avatar">
                                     <?php $comments->gravatar(); ?>

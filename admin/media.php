@@ -10,7 +10,7 @@ Typecho_Widget::widget('Widget_Contents_Attachment_Edit')->to($attachment);
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="col-group typecho-page-main">
-            <div class="column-16 suffix">
+            <div class="col-16 suffix">
                 <div class="typecho-attachment-photo-box">
                     <?php if ($attachment->attachment->isImage): ?>
                     <img src="<?php $attachment->attachment->url(); ?>" alt="<?php $attachment->attachment->name(); ?>" />
@@ -27,7 +27,7 @@ Typecho_Widget::widget('Widget_Contents_Attachment_Edit')->to($attachment);
                     </div>
                 </div>
             </div>
-            <div class="column-08 typecho-mini-panel typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
+            <div class="col-4 typecho-mini-panel typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
                 <?php $attachment->form()->render(); ?>
             </div>
         </div>

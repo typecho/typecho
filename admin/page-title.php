@@ -7,7 +7,7 @@
 </div>
 <?php endif; ?>
 <div class="col-group typecho-page-title">
-    <div class="column-24">
+    <div class="col-12">
         <h2><?php echo $menu->title; ?><?php 
         if (!empty($menu->addLink)) {
             echo "<a href=\"{$menu->addLink}\">" . _t("新增") . "</a>";

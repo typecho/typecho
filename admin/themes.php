@@ -8,7 +8,7 @@ include 'menu.php';
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="col-group typecho-page-main">
-            <div class="column-24">
+            <div class="col-12">
                 <ul class="typecho-option-tabs">
                     <li class="current"><a href="<?php $options->adminUrl('themes.php'); ?>"><?php _e('可以使用的外观'); ?></a></li>
                     <li><a href="<?php $options->adminUrl('theme-editor.php'); ?>"><?php _e('编辑当前外观'); ?></a></li>
@@ -29,10 +29,10 @@ include 'menu.php';
                     $borderBottom = ($themes->length - $themes->sequence >= ($themes->length % 2 ? 1 : 2));
                     ?>
                     <td id="theme-<?php $themes->name(); ?>" class="<?php if($themes->activated): ?>current <?php endif; $themes->alt('border-right', ''); if ($borderBottom): echo ' border-bottom'; endif; ?>">
-                        <div class="column-04">
+                        <div class="col-2">
                             <img src="<?php $themes->screen(); ?>" width="120" height="90" align="left" />
                         </div>
-                        <div class="column-08">
+                        <div class="col-4">
                         <h4><?php '' != $themes->title ? $themes->title() : $themes->name(); ?></h4>
                         <cite><?php if($themes->author): ?><?php _e('作者'); ?>: <?php if($themes->homepage): ?><a href="<?php $themes->homepage() ?>"><?php endif; ?><?php $themes->author(); ?><?php if($themes->homepage): ?></a><?php endif; ?>&nbsp;&nbsp;&nbsp;<?php endif; ?>
                         <?php if($themes->version): ?><?php _e('版本'); ?>: <?php $themes->version() ?><?php endif; ?>
@@ -79,7 +79,7 @@ include 'common-js.php';
                                 
                                     'right': _a.getParent('td').getNext('td').getSize().x + 1,
                                     
-                                    'top': _a.getParent('td').getPosition(_a.getParent('.column-24')).y
+                                    'top': _a.getParent('td').getPosition(_a.getParent('.col-12')).y
                                 
                                 });
                                 
@@ -89,7 +89,7 @@ include 'common-js.php';
                                 
                                     'right': _e.getParent('td').getNext('td').getSize().x + 1,
                                     
-                                    'top': _e.getParent('td').getPosition(_e.getParent('.column-24')).y + _e.getParent('td').getSize().y - _e.getSize().y - 1
+                                    'top': _e.getParent('td').getPosition(_e.getParent('.col-12')).y + _e.getParent('td').getSize().y - _e.getSize().y - 1
                                 
                                 });
                                 
@@ -97,9 +97,9 @@ include 'common-js.php';
                             } else {
                                 _a.setStyles({
                                 
-                                    'left': _a.getParent('td').getPosition(_a.getParent('.column-24')).x,
+                                    'left': _a.getParent('td').getPosition(_a.getParent('.col-12')).x,
                                     
-                                    'top': _a.getParent('td').getPosition(_a.getParent('.column-24')).y
+                                    'top': _a.getParent('td').getPosition(_a.getParent('.col-12')).y
                                 
                                 });
                                 
@@ -107,9 +107,9 @@ include 'common-js.php';
                                 
                                 _e.setStyles({
                                 
-                                    'left': _e.getParent('td').getPosition(_e.getParent('.column-24')).x,
+                                    'left': _e.getParent('td').getPosition(_e.getParent('.col-12')).x,
                                     
-                                    'top': _e.getParent('td').getPosition(_e.getParent('.column-24')).y + _e.getParent('td').getSize().y - _e.getSize().y - 1
+                                    'top': _e.getParent('td').getPosition(_e.getParent('.col-12')).y + _e.getParent('td').getSize().y - _e.getSize().y - 1
                                 
                                 });
                                 

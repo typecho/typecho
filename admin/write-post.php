@@ -9,8 +9,8 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
         <?php include 'page-title.php'; ?>
         <div class="col-group typecho-page-main typecho-post-option typecho-post-area">
             <form action="<?php $options->index('/action/contents-post-edit'); ?>" method="post" name="write_post">
-                <div class="column-18 suffix" id="test">
-                    <div class="column-18">
+                <div class="col-18 suffix" id="test">
+                    <div class="col-18">
                         <label for="title" class="typecho-label"><?php _e('标题'); ?>
                         <?php if ($post->draft && $post->draft['cid'] != $post->cid): ?>
                         <?php $postModifyDate = new Typecho_Date($post->draft['modified']); ?>
@@ -38,9 +38,9 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                             </span>
                         </p>
                     </div>
-                    <ul id="advance-panel" class="typecho-post-option column-18">
-                        <li class="column-18">
-                            <div class="column-12 suffix">
+                    <ul id="advance-panel" class="typecho-post-option col-18">
+                        <li class="col-18">
+                            <div class="col-12 suffix">
                                     <?php if($user->pass('editor', true)): ?>
                                     <label class="typecho-label"><?php _e('公开度'); ?></label>
                                     <ul>
@@ -56,7 +56,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                                     <p class="description"><?php _e('每一行一个引用地址, 用回车隔开'); ?></p>
                                     <?php Typecho_Plugin::factory('admin/write-post.php')->advanceOptionLeft($post); ?>
                             </div>
-                            <div class="column-06">
+                            <div class="col-3">
                                 <label class="typecho-label"><?php _e('权限控制'); ?></label>
                                 <ul>
                                     <li><input id="allowComment" name="allowComment" type="checkbox" value="1" <?php if($post->allow('comment')): ?>checked="true"<?php endif; ?> />
@@ -71,14 +71,14 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                             </div>
                         </li>
                     </ul>
-                    <ul id="upload-panel" class="column-18">
-                        <li class="column-18">
+                    <ul id="upload-panel" class="col-18">
+                        <li class="col-18">
                             <?php include 'file-upload.php'; ?>
                         </li>
                     </ul>
                     <div id="typecho-preview-box"></div>
                 </div>
-                <div class="column-06">
+                <div class="col-3">
                     <ul class="typecho-post-option">
                         <li>
                             <label for="date" class="typecho-label"><?php _e('日期'); ?></label>

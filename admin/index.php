@@ -6,10 +6,10 @@ include 'menu.php';
 $stat = Typecho_Widget::widget('Widget_Stat');
 ?>
 <div class="main">
-    <div class="body col-group">
+    <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="col-group typecho-page-main">
-            <div class="column-06 typecho-dashboard-nav suffix">
+            <div class="col-3 typecho-dashboard-nav suffix">
                 <h3 class="intro"><?php _e('欢迎使用 Typecho, 您可以使用下面的链接开始您的 Blog 之旅:'); ?></h3>
             
                 <div class="intro-link">
@@ -59,7 +59,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 </div>
             </div>
 
-            <div class="column-12 typecho-dashboard-main">
+            <div class="col-6 typecho-dashboard-main">
                 <div class="section">
                     <h4><?php _e('最近发表的文章'); ?></h4>
                     <?php Typecho_Widget::widget('Widget_Contents_Post_Recent', 'pageSize=5')->to($posts); ?>
@@ -89,7 +89,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 </div>
             </div>
 
-            <div class="column-06 typecho-dashboard-nav prefix">
+            <div class="col-3 typecho-dashboard-nav prefix">
                 <?php $version = Typecho_Cookie::get('__typecho_check_version'); ?>
                 <?php if ($version && $version['available']): ?>
                 <div class="update-check typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
