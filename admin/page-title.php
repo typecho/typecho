@@ -1,6 +1,6 @@
 <?php if(!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <?php if($notice->have() && in_array($notice->noticeType, array('success', 'notice', 'error'))): ?>
-<div class="container message <?php $notice->noticeType(); ?> popup typecho-radius-bottomleft typecho-radius-bottomright">
+<div class="container message <?php $notice->noticeType(); ?> popup">
 <ul>
     <?php $notice->lists(); ?>
 </ul>
