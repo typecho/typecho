@@ -4,9 +4,9 @@ include 'header.php';
 include 'menu.php';
 ?>
 <div class="main">
-    <div class="body body-950">
+    <div class="body container">
         <?php include 'page-title.php'; ?>
-        <div class="container typecho-page-main">
+        <div class="col-group typecho-page-main">
             <div class="column-24 start-01 typecho-list">
                 <div class="typecho-list-operate">
                 <form method="get">

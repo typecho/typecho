@@ -6,9 +6,9 @@ include 'menu.php';
 $stat = Typecho_Widget::widget('Widget_Stat');
 ?>
 <div class="main">
-    <div class="body body-950">
+    <div class="body col-group">
         <?php include 'page-title.php'; ?>
-        <div class="container typecho-page-main">
+        <div class="col-group typecho-page-main">
             <div class="column-06 typecho-dashboard-nav suffix">
                 <h3 class="intro"><?php _e('欢迎使用 Typecho, 您可以使用下面的链接开始您的 Blog 之旅:'); ?></h3>
             
@@ -125,7 +125,7 @@ include 'copyright.php';
 include 'common-js.php';
 ?>
 
-<script type="text/javascript">
+<script>
     (function () {
         window.addEvent('domready', function() {
             <?php if (!Typecho_Cookie::get('__typecho_feed')): ?>

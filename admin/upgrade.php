@@ -5,9 +5,9 @@ include 'menu.php';
 ?>
 
 <div class="main">
-    <div class="body body-950">
+    <div class="body container">
         <?php include 'page-title.php'; ?>
-        <div class="container typecho-page-main">
+        <div class="col-group typecho-page-main">
             <div class="column-22 start-02">
                 <div class="message notice typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
                     <form action="<?php echo Typecho_Router::url('do', array('action' => 'upgrade', 'widget' => 'Upgrade'), 

@@ -7,8 +7,8 @@ $rememberMail = Typecho_Cookie::get('__typecho_remember_mail');
 Typecho_Cookie::delete('__typecho_remember_name');
 Typecho_Cookie::delete('__typecho_remember_mail');
 ?>
-<div class="body body-950">
-    <div class="container">
+<div class="body container">
+    <div class="col-group">
         <div class="column-07 start-09 typecho-login">
             <h2 class="logo-dark">typecho</h2>
             <form action="<?php $options->registerAction(); ?>" method="post" name="register">

@@ -4,9 +4,9 @@ include 'header.php';
 include 'menu.php';
 ?>
 <div class="main">
-    <div class="body body-950">
+    <div class="body container">
         <?php include 'page-title.php'; ?>
-        <div class="container typecho-page-main">
+        <div class="col-group typecho-page-main">
             <div class="column-24 typecho-list">
                 <?php Typecho_Widget::widget('Widget_Plugins_List_Activated')->to($activatedPlugins); ?>
                 <?php if ($activatedPlugins->have()): ?>

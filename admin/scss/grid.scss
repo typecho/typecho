@@ -1,0 +1,149 @@
+/*
+ * Bento Grid System
+ * Source: https://github.com/fenbox/bento
+ * Version: 1.0
+ * Update: 10.10.2013
+ */
+
+//
+// Config
+//
+$columns: 12;
+$column-width: 100% / $columns;
+$gutter-width: 20px;
+
+
+// Break point
+$screen-tablet:  768px;
+$screen-desktop: 992px; // Not implemented yet
+
+// Column group
+.col-group {
+  @extend .clearfix;
+}
+
+.col-group [class*="col-"] {
+  float: left;
+  min-height: 1px;
+  padding-right: $gutter-width / 2;
+  padding-left: $gutter-width / 2;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.col-group [class*="push-"],
+.col-group [class*="pull-"] {
+  position: relative;
+}
+
+
+/*
+ * Mobile and up
+ */
+
+@for $index from 1 through $columns {
+  .col-mb-#{$index} {
+    width: $column-width * $index;
+  }
+}
+
+
+/*
+ * Tablet and up
+ */
+
+@media (min-width: $screen-tablet) {
+  .container {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: $screen-tablet - ($gutter-width * 2);
+    @extend .center-block;
+  }
+
+  // Colunms
+  @for $index from 1 through $columns {
+    .col-tb-#{$index} {
+      width: $column-width * $index;
+    }
+  }
+
+  // Offset
+  @for $index from 0 through $columns {
+    .col-offset-#{$index} {
+      margin-left: $column-width * $index;
+    }
+  }
+
+  // Pull
+  @for $index from 0 through $columns {
+    .col-pull-#{$index} {
+      right: $column-width * $index;
+    }
+  }
+
+  // Push
+  @for $index from 0 through $columns {
+    .col-push-#{$index} {
+      left: $column-width * $index;
+    }
+  }
+
+  // Groups
+  .col-group {
+    margin-right: $gutter-width / -2;
+    margin-left: $gutter-width / -2;
+  }
+}
+
+
+/*
+ * Desktop and up
+ */
+
+@media (min-width: $screen-desktop) {
+  .container {
+    max-width: $screen-desktop - ($gutter-width * 2);
+  }
+
+  // Colunms
+  @for $index from 1 through $columns {
+    .col-#{$index} {
+      width: $column-width * $index;
+    }
+  }
+
+  // Offset
+  @for $index from 0 through $columns {
+    .col-offset-#{$index} {
+      margin-left: $column-width * $index;
+    }
+  }
+
+  // Pull
+  @for $index from 0 through $columns {
+    .col-pull-#{$index} {
+      right: $column-width * $index;
+    }
+  }
+
+  // Push
+  @for $index from 0 through $columns {
+    .col-push-#{$index} {
+      left: $column-width * $index;
+    }
+  }
+}
+
+
+// Clearfix
+.clearfix {
+  zoom: 1;
+  &:before, &:after {
+    content: " ";
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
+}

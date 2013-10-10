@@ -1,12 +1,12 @@
 <?php if(!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <?php if($notice->have() && in_array($notice->noticeType, array('success', 'notice', 'error'))): ?>
-<div class="container message <?php $notice->noticeType(); ?> popup typecho-radius-bottomleft typecho-radius-bottomright">
+<div class="col-group message <?php $notice->noticeType(); ?> popup typecho-radius-bottomleft typecho-radius-bottomright">
 <ul>
     <?php $notice->lists(); ?>
 </ul>
 </div>
 <?php endif; ?>
-<div class="container typecho-page-title">
+<div class="col-group typecho-page-title">
     <div class="column-24">
         <h2><?php echo $menu->title; ?><?php 
         if (!empty($menu->addLink)) {

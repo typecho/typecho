@@ -5,9 +5,9 @@ include 'menu.php';
 ?>
 
 <div class="main">
-    <div class="body body-950">
+    <div class="body container">
         <?php include 'page-title.php'; ?>
-        <div class="container typecho-page-main">
+        <div class="col-group typecho-page-main">
             <div class="column-24">
                 <ul class="typecho-option-tabs">
                     <li class="current"><a href="<?php $options->adminUrl('themes.php'); ?>"><?php _e('可以使用的外观'); ?></a></li>

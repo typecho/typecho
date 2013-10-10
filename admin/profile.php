@@ -7,9 +7,9 @@ $stat = Typecho_Widget::widget('Widget_Stat');
 ?>
 
 <div class="main">
-    <div class="body body-950">
+    <div class="body container">
         <?php include 'page-title.php'; ?>
-        <div class="container typecho-page-main">
+        <div class="col-group typecho-page-main">
             <div class="column-16 suffix typecho-content-panel">
                 <h4>
                 <?php echo '<img class="avatar" src="http://www.gravatar.com/avatar/' . md5($user->mail) . '?s=50&r=X' .

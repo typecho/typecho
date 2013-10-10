@@ -7,9 +7,9 @@ Typecho_Widget::widget('Widget_Contents_Attachment_Edit')->to($attachment);
 ?>
 
 <div class="main">
-    <div class="body body-950">
+    <div class="body container">
         <?php include 'page-title.php'; ?>
-        <div class="container typecho-page-main">
+        <div class="col-group typecho-page-main">
             <div class="column-16 suffix">
                 <div class="typecho-attachment-photo-box">
                     <?php if ($attachment->attachment->isImage): ?>

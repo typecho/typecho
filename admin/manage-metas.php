@@ -5,9 +5,9 @@ include 'menu.php';
 ?>
 
 <div class="main">
-    <div class="body body-950">
+    <div class="body container">
         <?php include 'page-title.php'; ?>
-        <div class="container typecho-page-main manage-metas">
+        <div class="col-group typecho-page-main manage-metas">
                 <div class="column-16 suffix">
                     <ul class="typecho-option-tabs">
                         <li<?php if(!isset($request->type) || 'category' == $request->get('type')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-metas.php'); ?>"><?php _e('分类'); ?></a></li>
