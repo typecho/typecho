@@ -9,8 +9,8 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
         <?php include 'page-title.php'; ?>
         <div class="col-group typecho-page-main typecho-post-option typecho-post-area">
             <form action="<?php $options->index('/action/contents-page-edit'); ?>" method="post" name="write_page">
-                <div class="col-18 suffix">
-                    <div class="col-18">
+                <div class="col-9 suffix">
+                    <div>
                         <label for="title" class="typecho-label"><?php _e('标题'); ?>
                         <?php if ($page->draft && $page->draft['cid'] != $page->cid): ?>
                         <?php $pageModifyDate = new Typecho_Date($page->draft['modified']); ?>
@@ -37,8 +37,8 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                         </p>
                     </div>
                         
-                    <ul id="advance-panel" class="typecho-post-option col-18">
-                        <li class="col-18">
+                    <ul id="advance-panel" class="typecho-post-option col-9">
+                        <li class="col-9">
                             <div class="col-12">
                                 <label for="order" class="typecho-label"><?php _e('页面顺序'); ?></label>
                                 <p><input type="text" id="order" name="order" value="<?php $page->order(); ?>" class="mini" /></p>
@@ -70,8 +70,8 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                             </div>
                         </li>
                     </ul>
-                    <ul id="upload-panel" class="col-18">
-                        <li class="col-18">
+                    <ul id="upload-panel" class="col-9">
+                        <li class="col-9">
                             <?php include 'file-upload.php'; ?>
                         </li>
                     </ul>

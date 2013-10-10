@@ -9,8 +9,8 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
         <?php include 'page-title.php'; ?>
         <div class="col-group typecho-page-main typecho-post-option typecho-post-area">
             <form action="<?php $options->index('/action/contents-post-edit'); ?>" method="post" name="write_post">
-                <div class="col-18 suffix" id="test">
-                    <div class="col-18">
+                <div class="col-9 suffix" id="test">
+                    <div>
                         <label for="title" class="typecho-label"><?php _e('标题'); ?>
                         <?php if ($post->draft && $post->draft['cid'] != $post->cid): ?>
                         <?php $postModifyDate = new Typecho_Date($post->draft['modified']); ?>
@@ -38,8 +38,8 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                             </span>
                         </p>
                     </div>
-                    <ul id="advance-panel" class="typecho-post-option col-18">
-                        <li class="col-18">
+                    <ul id="advance-panel" class="typecho-post-option col-9">
+                        <li class="col-9">
                             <div class="col-12 suffix">
                                     <?php if($user->pass('editor', true)): ?>
                                     <label class="typecho-label"><?php _e('公开度'); ?></label>
@@ -71,8 +71,8 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                             </div>
                         </li>
                     </ul>
-                    <ul id="upload-panel" class="col-18">
-                        <li class="col-18">
+                    <ul id="upload-panel" class="col-9">
+                        <li class="col-9">
                             <?php include 'file-upload.php'; ?>
                         </li>
                     </ul>

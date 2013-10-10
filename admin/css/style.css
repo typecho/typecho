@@ -17,16 +17,10 @@ html {
 }
  
 body {
-    /*
-    background: #f7fbe9;
-    color: #333;
-    */
-    font-family: "Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana;
-    background: #333;
-    color: #f7fbe9;
-    /*
-    overflow-x: hidden;
-    */
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background: #F9F9F7;
+    color: #444;
+    font-size: 87.5%;
 }
 
 /*
@@ -37,8 +31,6 @@ body > div {
 */
 
 body.bright, .main {
-    background: #f7fbe9;
-    color: #333;
 }
 
 .main:after {
@@ -83,11 +75,12 @@ p {
 }
 
 a {
-    color: #BD6800;
+    color: #467B96;
     text-decoration: none;
 }
 
 a:hover {
+    color: #6DA1BB;
     text-decoration: underline;
 }
 
@@ -832,18 +825,18 @@ margin-top: 25px;
  * 后台头部导航
  */
 .typecho-head-nav {
-    position: relative;
-    height: 30px;
-    font-size: 13px;
-    background: #333;
-    color: #fff;
-    z-index: 250; /* IE 是个 250 */
-    /*border-bottom: 1px solid #DCE2C0;*/
+    height: 40px;
+    background: #363636;
 }
 
 .typecho-nav-list {
-    /*margin-left:10px;*/
     zoom: 1;
+}
+
+#typecho-nav-list ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 #typecho-nav-list .root {
@@ -856,9 +849,9 @@ margin-top: 25px;
 }
 
 #typecho-nav-list .parent a {
-    color: #fff;
-    height: 30px;
-    line-height: 30px;
+    color: #CCC;
+    height: 40px;
+    line-height: 40px;
     display: block;
     outline: none;
     padding: 0 30px;
@@ -876,11 +869,10 @@ margin-top: 25px;
     border: 1px solid #CED7A8;
     border-top: none;
     background: #DCE2C0;
-    font-size: 13px;
     overflow: hidden;
     padding: 10px;
     z-index: 250;
-    top: 30px;
+    top: 40px;
     width: 160px; 
     -moz-border-radius-bottomleft: 3px;
     -moz-border-radius-bottomright: 3px;
@@ -968,16 +960,9 @@ margin-top: 25px;
  * 注脚
  */
 .typecho-foot {
-    background: #333333;
     padding: 15px 25px 80px 25px;
-    font-size: 13px;
     text-align: center;
     color: #999;
-    /*
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    */
 }
 
 .typecho-foot h4 {
@@ -1051,47 +1036,6 @@ margin-top: 25px;
  * 标题
  */
 .typecho-page-title {
-    margin-top: 30px;
-}
-
-.typecho-page-title div {
-    height: 30px;
-    background: url(../images/sprite.png) repeat-x scroll 0px -1483px;
-}
-
-.typecho-page-title div a {
-    color: #E47E00;
-}
-
-.typecho-page-title h2 {
-    background: #f7fbe9;
-    padding-right: 10px;
-    font-size: 16px;
-    line-height: 30px;
-    height: 30px;
-    float: left;
-}
-
-.typecho-page-title p {
-    height: 30px;
-    float: right;
-    background: #f7fbe9;
-    padding-left: 10px;
-}
-
-.typecho-page-title a {
-    font-size: 13px;
-    line-height: 30px;
-    font-weight: bold;
-}
-
-.typecho-page-title a:hover {
-    text-decoration: underline;
-}
-
-.typecho-page-title h2 a {
-    font-size: 14px;
-	margin-left: 13px;
 }
 
 

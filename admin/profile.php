@@ -10,7 +10,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="col-group typecho-page-main">
-            <div class="col-16 suffix typecho-content-panel">
+            <div class="col-8 suffix typecho-content-panel">
                 <h4>
                 <?php echo '<img class="avatar" src="http://www.gravatar.com/avatar/' . md5($user->mail) . '?s=50&r=X' .
                 '&d=" alt="' . $user->screenName . '" width="50" height="50" />'; ?>
