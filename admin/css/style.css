@@ -770,20 +770,20 @@ margin-top: 25px;
  * 注脚
  */
 .typecho-foot {
-    padding: 50px 0 80px;
+    padding: 4em 0;
+    color: #999;
+    line-height: 1.8;
     text-align: center;
+}
+
+.typecho-foot .resource {
+    color: #CCC;
+}
+
+.typecho-foot .resource a {
+    margin: 0 2px;
     color: #999;
 }
-
-/*
-.typecho-foot .copyright {
-
-}
-
-    .typecho-foot .resource {
-
-}
- */
 
 
 
@@ -2033,11 +2033,4 @@ ul.autocompleter-choices span.autocompleter-queried {
     bottom: -6px;
     margin-right: 3px;
     float: left;
-}
-
-
-/* plugin css */
-
-.tDnD_whileDrag {
-    opacity: .5;
 }
