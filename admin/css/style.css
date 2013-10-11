@@ -18,7 +18,7 @@ html {
  
 body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    background: #F9F9F7;
+    background: #F6F6F3;
     color: #444;
     font-size: 87.5%;
     line-height: 1.5;
@@ -596,11 +596,11 @@ margin-top: 25px;
 
 .typecho-pager a:hover {
     text-decoration: none;
-    background: #EEE;
+    background: #E9E9E6;
 }
 
 .typecho-pager li.current a {
-    background: #EEE;
+    background: #E6E6E3;
     color: #444;
 }
 
@@ -1091,10 +1091,6 @@ a.operate-reply {
     border: 30px solid #FFF;
     width: 100%;
     background: #FFF;
-
-    -moz-box-shadow: 0 1px 3px #CCC;
-    -webkit-box-shadow: 0 1px 3px #CCC;
-    box-shadow: 0 1px 3px #CCC;
 }
 
 .typecho-list-table-border {
@@ -1112,13 +1108,13 @@ a.operate-reply {
 
 .typecho-list-table th {
     padding: 0 10px 10px;
-    border-bottom: 2px solid #EEE;
+    border-bottom: 2px solid #F0F0EC;
     text-align: left;
 }
 
 .typecho-list-table td {
     padding: 10px;
-    border-top: 1px solid #EEE;
+    border-top: 1px solid #F0F0EC;
 }
 
 .typecho-list-table td .thumb-box {
@@ -1134,7 +1130,7 @@ a.operate-reply {
 }
 
 .typecho-list-table tbody tr:hover td, ul.typecho-list-notable li:hover {
-    background-color: #F6F6F4;
+    background-color: #F6F6F3;
 }
 
 .typecho-list-table tbody tr.checked td, ul.typecho-list-notable li.checked {
@@ -2053,4 +2049,11 @@ ul.autocompleter-choices span.autocompleter-queried {
     bottom: -6px;
     margin-right: 3px;
     float: left;
+}
+
+
+/* plugin css */
+
+.tDnD_whileDrag {
+    opacity: .5;
 }

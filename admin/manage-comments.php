@@ -10,7 +10,7 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="col-group typecho-page-main">
-            <div class="col-12 start-01 typecho-list">
+            <div class="col-12 typecho-list">
                 <ul class="typecho-option-tabs">
                     <li<?php if(!isset($request->status) || 'approved' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php'
                     . (isset($request->cid) ? '?cid=' . $request->cid : '')); ?>"><?php _e('已通过'); ?></a></li>
@@ -40,7 +40,7 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                     <?php endif; ?>
                 </ul>
             
-                <div class="typecho-list-operate">
+                <div class="typecho-list-operate clearfix">
                 <form method="get">
                     <div class="operate">
                         <input type="checkbox" class="typecho-table-select-all" />
@@ -64,7 +64,7 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                     (isset($request->status) ? 'status=' . htmlspecialchars($request->get('status')) : '') .
                     (isset($request->cid) ? (isset($request->status) ? '&' : '') . 'cid=' . htmlspecialchars($request->get('cid')) : '') : '')); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
                     <?php endif; ?>
-                    <input type="text" value="<?php '' != $request->keywords ? print(htmlspecialchars($request->keywords)) : _e('请输入关键字'); ?>"<?php if ('' == $request->keywords): ?> onclick="value='';name='keywords';" <?php else: ?> name="keywords"<?php endif; ?>/>
+                    <input type="text" class="text-s" placeholder="<?php _e('请输入关键字'); ?>" value="<?php echo htmlspecialchars($request->keywords); ?>"<?php if ('' == $request->keywords): ?> onclick="value='';name='keywords';" <?php else: ?> name="keywords"<?php endif; ?>/>
                     <?php if(isset($request->status)): ?>
                         <input type="hidden" value="<?php echo htmlspecialchars($request->get('status')); ?>" name="status" />
                     <?php endif; ?>

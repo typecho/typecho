@@ -9,8 +9,8 @@ $stat = Typecho_Widget::widget('Widget_Stat');
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="col-group typecho-page-main">
-            <div class="col-12 start-01 typecho-list">
-                <div class="typecho-list-operate">
+            <div class="col-12 typecho-list">
+                <div class="typecho-list-operate clearfix">
                 <form method="get">
                     <div class="operate">
                         <input type="checkbox" class="typecho-table-select-all" />
@@ -25,7 +25,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     <?php if ('' != $request->keywords): ?>
                     <a href="<?php $options->adminUrl('manage-pages.php'); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
                     <?php endif; ?>
-                    <input type="text" placeholder="<?php _e('请输入关键字'); ?>" value="<?php echo htmlspecialchars($request->keywords); ?>" name="keywords" />
+                    <input type="text" class="text-s" placeholder="<?php _e('请输入关键字'); ?>" value="<?php echo htmlspecialchars($request->keywords); ?>" name="keywords" />
                     <button type="submit"><?php _e('筛选'); ?></button>
                     </div>
                 </form>
@@ -34,14 +34,14 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 <form method="post" name="manage_pages" class="operate-form">
                 <table class="typecho-list-table">
                     <colgroup>
-                        <col width="25"/>
-                        <col width="50"/>
-                        <col width="295"/>
-                        <col width="60"/>
-                        <col width="30"/>
-                        <col width="180"/>
-                        <col width="120"/>
-                        <col width="150"/>
+                        <col width="10"/>
+                        <col width="5%"/>
+                        <col width="35%"/>
+                        <col width=""/>
+                        <col width="20"/>
+                        <col width="20%"/>
+                        <col width="15%"/>
+                        <col width="18%"/>
                     </colgroup>
                     <thead>
                         <tr>

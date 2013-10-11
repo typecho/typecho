@@ -49,7 +49,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <col width="35%"/>
                         <col width=""/>
                         <col width="20"/>
-                        <col width="8%"/>
+                        <col width="10%"/>
                         <col width="15%"/>
                         <col width="18%"/>
                     </colgroup>
