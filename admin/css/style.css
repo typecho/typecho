@@ -34,34 +34,25 @@ a:hover {
     text-decoration: underline;
 }
 
-a.button, /*span.balloon,*/ a.balloon-button, .typecho-pager a {
-    background: #BD6800;
+a.balloon-button {
+    padding: 0 5px;
+    background: #467B96;
     color: #FFF;
-    padding: 2px 4px;
     text-decoration: none;
-    font-weight: bold;
     
     /** 修正ie中文不对齐 */
     zoom:1;
     
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
-    -khtml-border-radius: 2px;
-    
-    /* hope IE support border radius, God save me! */
-    border-radius: 2px;
-}
-span.balloon {
-    font-size: 13px;
-    font-weight: normal;
-    color: #666;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    border-radius: 20px;
 }
 
 code, pre, .mono { 
     font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
-a.size-1 {
+/*a.size-1 {
     background: #C4CD9C;
 }
 
@@ -83,18 +74,13 @@ a.size-100 {
 
 a.size-0 {
     background: #373D1F;
-}
-
-span.balloon, a.balloon-button {
-    /*padding: 0 4px;*/
-}
+}*/
 
 a.button:hover, a.balloon-button:hover {
-    background: #D29B51;
     text-decoration: none;
 }
 
-a.size-1:hover {
+/*a.size-1:hover {
     background: #AFBA7C;
 }
 
@@ -120,7 +106,7 @@ a.size-0:hover {
 
 a.important {
     color: #fff;
-}
+}*/
 
 /*
  * Forms
@@ -158,9 +144,8 @@ input.text-s { padding: 5px; }
 
 /** hack webkit border by 70 */
 select {
-    font-size: 13px;
-    padding: 1px;
-    font-family: Menlo,Monaco,Consolas,"Lucida Console","Courier New",monospace;
+    border: 1px solid #CCC;
+    height: 28px;
 }
 
 button {
@@ -321,6 +306,7 @@ button.primary:active, button.primary.active {
  */
 .typecho-option {
     list-style: none;
+    margin: 1.5em 0;
     padding: 0;
 }
 
@@ -338,7 +324,6 @@ button.primary:active, button.primary.active {
     text-align: right;
 }
 .typecho-option label.typecho-label+input {
-    margin-top: -7px;
 }
 
 .typecho-option .description {
@@ -1117,28 +1102,22 @@ a.operate-reply {
  */
 /** 增加表格标题 by 70 */
 .typecho-list-table-title {
-    font-size:14px;
     font-weight: normal;
     color: #777;
     text-align: center;
 }
 
 .typecho-list-table  {
+    border: 1px solid #EEE;
     width: 100%;
-    margin: 10px 0 20px 0;
-    font-size: 13px;
-    border-collapse: collapse;
-    table-layout: fixed;
+    background: #FFF;
 }
 
 .typecho-list-table-border {
     border-collapse: separate;
-    border: 1px solid #CED7A8;
-    border-bottom: none;
 }
 
 .typecho-list-table-border td {
-    border-bottom: 1px solid #CED7A8;
 }
 
 .typecho-list-table input {
@@ -1148,106 +1127,65 @@ a.operate-reply {
 }
 
 .typecho-list-table th {
-    text-align: left;
-    padding: 0 5px;
-    height: 32px;
-    font-size: 14px;
-    line-height: 20px;
-    font-weight: bold;
-    border-top: 3px solid #C5D19D;
-    background: #D3DBB3;
 }
 
 .typecho-list-table td {
-    height: 32px;
-    line-height: 20px;
-    padding: 0 5px;
-    overflow: hidden;
-    border-top: 1px solid #fff;
+    padding: 8px;
+    border-bottom: 1px solid #EEE;
 }
 
 .typecho-list-table td .thumb-box {
-    background: #FFF;
-    margin: 5px;
-    height: 32px;
-    width: 32px;
-    display: block;
-    overflow: hidden;
-    border: 1px solid #C1CD94;
-    text-align: center;
 }
 
 .typecho-list-table td img.tiny {
-	width: 16px;
-	height: 16px;
-	margin-bottom: -2px;
 }
 
 .typecho-list-table td .thumb-box img {
-    max-height: 32px;
-    max-width: 32px;
-    _height: 32px;
 }
 
 .typecho-list-table tbody tr.even, ul.typecho-list-notable li.even {
-    background: #eff5d9;
 }
 
 .typecho-list-table tbody tr:hover td, ul.typecho-list-notable li:hover {
-    background: #E3EEBD;
 }
 
 .typecho-list-table tbody tr.checked td, ul.typecho-list-notable li.checked {
-    background: #DBE9AB;
 }
 
 .typecho-list-table tbody tr.even.checked td, ul.typecho-list-notable li.even.checked {
-    background: #CCE087;
 }
 
 .typecho-list-table h4 {
-    font-weight: normal;
 }
 
 .typecho-list-table .important {
-    color: #e47e00;
 }
 
 .typecho-list-table .description, ul.typecho-list-notable .description {
-    color: #aaa;
 }
 
 .typecho-list-table .warning, ul.typecho-list-notable .warning {
-    color: #ff0000;
-	font-weight: bold;
 }
 
 .typecho-list-table img.inline {
-    margin-bottom: -3px;
 }
 
 .typecho-list-table tr td .hidden-by-mouse, ul.typecho-list-notable li .hidden-by-mouse {
-    display: none;
 }
 
 .typecho-list-table tr:hover td .hidden-by-mouse, ul.typecho-list-notable li:hover .hidden-by-mouse {
-    display: inline;
 }
 
 .deactivate tbody, tr.deactivate td {
-    color: #999;
 }
 
 .deactivate tbody tr:hover {
-    color: #333;
 }
 
 .deactivate tbody a {
-    color: #FFC177;
 }
 
 .deactivate tbody tr:hover a {
-    color: #BD6800;
 }
 
 /**

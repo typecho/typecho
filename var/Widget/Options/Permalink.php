@@ -228,10 +228,10 @@ RewriteRule . {$basePath}index.php [L]
         $pageSuffixValue = false !== ($pos = strrpos($this->options->routingTable['page']['url'], '.')) ?
         substr($this->options->routingTable['page']['url'], $pos) : '/';
         $pageSuffix = new Typecho_Widget_Helper_Form_Element_Radio('pageSuffix',
-        array('/' => '<strong>' . _t('无') . '</strong>', '.html' => '<code>html</code>',
+        array('/' => '<code>' . _t('无') . '</code>', '.html' => '<code>html</code>',
         '.htm' => '<code>htm</code>', '.php' => '<code>php</code>'), $pageSuffixValue,
         _t('独立页面后缀名'), _t('给独立页面设置一种文件后缀名, 使得它看起来像
-        <br /><strong>%s</strong>',
+        <br /><code>%s</code>',
         Typecho_Common::url('example.html', $this->options->index)));
         $form->addInput($pageSuffix);
 
