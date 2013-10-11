@@ -34,22 +34,32 @@ a:hover {
     text-decoration: underline;
 }
 
+code, pre, .mono { 
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
 a.balloon-button {
     padding: 0 5px;
-    background: #467B96;
-    color: #FFF;
+    min-width: 14px;
+    height: 18px;
+    line-height: 18px;
+    background: #D8E7EE;
+    font-size: 12px;
+    text-align: center;
     text-decoration: none;
     
     /** 修正ie中文不对齐 */
     zoom:1;
     
-    -moz-border-radius: 20px;
-    -webkit-border-radius: 20px;
-    border-radius: 20px;
+    -moz-border-radius: 30px;
+    -webkit-border-radius: 30px;
+    border-radius: 30px;
 }
 
-code, pre, .mono { 
-    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+a.button:hover, a.balloon-button:hover {
+    background-color: #467B96;
+    color: #FFF;
+    text-decoration: none;
 }
 
 /*a.size-1 {
@@ -75,10 +85,6 @@ a.size-100 {
 a.size-0 {
     background: #373D1F;
 }*/
-
-a.button:hover, a.balloon-button:hover {
-    text-decoration: none;
-}
 
 /*a.size-1:hover {
     background: #AFBA7C;
@@ -318,10 +324,9 @@ button.primary:active, button.primary.active {
 }
 
 .typecho-option label.typecho-label {
-    position: absolute;
-    left: -200px;
-    width: 180px;
-    text-align: right;
+    display: block;
+    margin-bottom: .5em;
+    font-weight: bold;
 }
 .typecho-option label.typecho-label+input {
 }
@@ -557,61 +562,46 @@ margin-top: 25px;
  * 后台分页
  */
 .typecho-pager {
+    margin-top: 20px;
+    font-size: 1.14286em;
     text-align: center;
-    height: 20px;
 }
 
 .typecho-pager .typecho-pager-content {
     display: inline-block;
-             *display: inline;
-             *zoom: 1;
 }
 
 .typecho-pager h5 {
-    font-size: 13px;
-    line-height: 15px;
-    font-weight: normal;
-    float: left;
 }
 
 .typecho-pager ul {
-    line-height: 24px;
-    height: 24px;
+    list-style: none;
     float: left;
+    padding: 0;
     zoom: 1;
 }
 
 .typecho-pager li {
-    font-family: arial,sans-serif;
-    margin-right: 4px;
-    font-size: 15px;
     float: left;
-    height: 24px;
-    line-height: 24px;
+    margin: 0 2px;
+    height: 32px;
+    line-height: 32px;
 }
 
 .typecho-pager a {
-    color: #333;
     display: block;
-    height: 24px;
-    outline: none;
-    padding: 0 15px;
     float: left;
-    background: #dee4c5;
+    padding: 0 15px;
 }
 
 .typecho-pager a:hover {
-    color: #333;
     text-decoration: none;
-    background: #C4CD9C;
+    background: #EEE;
 }
 
 .typecho-pager li.current a {
-    background: #e47e00;
-}
-
-.typecho-pager li.current a {
-    color: #fff;
+    background: #EEE;
+    color: #444;
 }
 
 
@@ -1019,13 +1009,10 @@ margin-top: 25px;
  * 列表页选项
  */
 .typecho-list .typecho-pager {
-    margin: 10px 0px;
 }
 
 .typecho-list-operate {
-    height: 30px;
-    font-size: 13px;
-    zoom: 1;
+    margin-bottom: 20px;
 }
 
 .typecho-list-operate input {
@@ -1033,19 +1020,14 @@ margin-top: 25px;
 
 .typecho-list-operate button {
     height: 24px;
-    zoom: 1;
 }
 
 .typecho-list-operate .operate {
     float: left;
-    line-height:24px;
-    height: 24px;
 }
 
 .typecho-list-operate .search {
     float: right;
-    line-height:24px;
-    height: 24px;
 }
 
 .typecho-list-operate .search a.button {
@@ -1102,15 +1084,17 @@ a.operate-reply {
  */
 /** 增加表格标题 by 70 */
 .typecho-list-table-title {
-    font-weight: normal;
-    color: #777;
-    text-align: center;
+    color: #999;
 }
 
 .typecho-list-table  {
-    border: 1px solid #EEE;
+    border: 30px solid #FFF;
     width: 100%;
     background: #FFF;
+
+    -moz-box-shadow: 0 1px 3px #CCC;
+    -webkit-box-shadow: 0 1px 3px #CCC;
+    box-shadow: 0 1px 3px #CCC;
 }
 
 .typecho-list-table-border {
@@ -1127,11 +1111,14 @@ a.operate-reply {
 }
 
 .typecho-list-table th {
+    padding: 0 10px 10px;
+    border-bottom: 2px solid #EEE;
+    text-align: left;
 }
 
 .typecho-list-table td {
-    padding: 8px;
-    border-bottom: 1px solid #EEE;
+    padding: 10px;
+    border-top: 1px solid #EEE;
 }
 
 .typecho-list-table td .thumb-box {
@@ -1147,9 +1134,11 @@ a.operate-reply {
 }
 
 .typecho-list-table tbody tr:hover td, ul.typecho-list-notable li:hover {
+    background-color: #F6F6F4;
 }
 
 .typecho-list-table tbody tr.checked td, ul.typecho-list-notable li.checked {
+    background-color: #FFF9E8;
 }
 
 .typecho-list-table tbody tr.even.checked td, ul.typecho-list-notable li.even.checked {
@@ -1165,6 +1154,7 @@ a.operate-reply {
 }
 
 .typecho-list-table .warning, ul.typecho-list-notable .warning {
+    color: #B94A48;
 }
 
 .typecho-list-table img.inline {
@@ -1425,7 +1415,6 @@ ul.typecho-list-notable li #typecho-respond {
  * 后台配置项
  */
 .typecho-page-main .typecho-option {
-    position: relative;
     margin-left: auto;
     margin-right: auto;
     max-width: 600px;
@@ -1780,8 +1769,6 @@ ul.typecho-list-notable li #typecho-respond {
 }
 
 .typecho-post-area #advance-panel, .typecho-post-area #upload-panel {
-    margin: 0;
-    display: none;
 }
 
 .typecho-post-area .is-draft {

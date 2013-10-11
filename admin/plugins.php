@@ -10,15 +10,15 @@ include 'menu.php';
             <div class="col-12 typecho-list">
                 <?php Typecho_Widget::widget('Widget_Plugins_List_Activated')->to($activatedPlugins); ?>
                 <?php if ($activatedPlugins->have()): ?>
-                <h6 class="typecho-list-table-title"><?php _e('激活的插件'); ?></h6>
+                <h4 class="typecho-list-table-title"><?php _e('激活的插件'); ?></h4>
                 <table class="typecho-list-table">
                     <colgroup>
                         <col width="10"/>
-                        <col width="200"/>
-                        <col width="360"/>
-                        <col width="90"/>
-                        <col width="105"/>
-                        <col width="125"/>
+                        <col width="20%"/>
+                        <col width="45%"/>
+                        <col width="8%"/>
+                        <col width="10%"/>
+                        <col width=""/>
                     </colgroup>
                     <thead>
                         <tr>
@@ -78,15 +78,15 @@ include 'menu.php';
                 
                 <?php Typecho_Widget::widget('Widget_Plugins_List_Deactivated')->to($deactivatedPlugins); ?>
                 <?php if ($deactivatedPlugins->have() || !$activatedPlugins->have()): ?>
-                <h6 class="typecho-list-table-title"><?php _e('禁用的插件'); ?></h6>
+                <h4 class="typecho-list-table-title"><?php _e('禁用的插件'); ?></h4>
                 <table class="typecho-list-table deactivate">
                     <colgroup>
                         <col width="10"/>
-                        <col width="200"/>
-                        <col width="360"/>
-                        <col width="90"/>
-                        <col width="105"/>
-                        <col width="125"/>
+                        <col width="20%"/>
+                        <col width="45%"/>
+                        <col width="8%"/>
+                        <col width="10%"/>
+                        <col width=""/>
                     </colgroup>
                     <thead>
                         <tr>
