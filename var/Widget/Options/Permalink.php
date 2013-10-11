@@ -198,10 +198,10 @@ RewriteRule . {$basePath}index.php [L]
         $errorStr .= _t('<br />如果你仍然想启用此功能, <a href="%s">请点击这里</a>', Typecho_Common::url('index.php/action/options-permalink?do=enableRewriteAnyway', $this->options->siteUrl));
 
         $form->addInput($rewrite->addRule(array($this, 'checkRewrite'), $errorStr));
-        $patterns = array('/archives/[cid:digital]/' => _t('默认风格') . ' <strong><small>/archives/{cid}/</small></strong>',
-        '/archives/[slug].html' => _t('wordpress风格') . ' <strong><small>/archives/{slug}.html</small></strong>',
-        '/[year:digital:4]/[month:digital:2]/[day:digital:2]/[slug].html' => _t('按日期归档') . ' <strong><small>/archives/{year}/{month}/{day}/{slug}.html</small></strong>',
-        '/[category]/[slug].html' => _t('按分类归档') . ' <strong><small>/{category}/{slug}.html</small></strong>');
+        $patterns = array('/archives/[cid:digital]/' => _t('默认风格') . ' <code>/archives/{cid}/</code>',
+        '/archives/[slug].html' => _t('wordpress风格') . ' <code>/archives/{slug}.html</code>',
+        '/[year:digital:4]/[month:digital:2]/[day:digital:2]/[slug].html' => _t('按日期归档') . ' <code>/archives/{year}/{month}/{day}/{slug}.html</code>',
+        '/[category]/[slug].html' => _t('按分类归档') . ' <code>/{category}/{slug}.html</code>');
 
         /** 自定义文章路径 */
         $postPatternValue = $this->options->routingTable['post']['url'];
@@ -214,7 +214,7 @@ RewriteRule . {$basePath}index.php [L]
         } else if (!isset($patterns[$postPatternValue])) {
             $customPatternValue = $this->decodeRule($postPatternValue);
         }
-        $patterns['custom'] = _t('个性化定义') . ' <input type="text" style="width: 250px;" name="customPattern" value="' . $customPatternValue . '" />';
+        $patterns['custom'] = _t('个性化定义') . ' <input type="text" class="w-40 text-s" name="customPattern" value="' . $customPatternValue . '" />';
 
         $postPattern = new Typecho_Widget_Helper_Form_Element_Radio('postPattern', $patterns,
         $postPatternValue, _t('自定义文章路径'), _t('可用参数：{cid} 日志ID、{slug} 日志缩略名、{category} 分类、{year} 年、{month} 月、{day} 日<br />选择一种合适的文章静态路径风格, 使得你的网站链接更加友好.<br />
@@ -228,8 +228,8 @@ RewriteRule . {$basePath}index.php [L]
         $pageSuffixValue = false !== ($pos = strrpos($this->options->routingTable['page']['url'], '.')) ?
         substr($this->options->routingTable['page']['url'], $pos) : '/';
         $pageSuffix = new Typecho_Widget_Helper_Form_Element_Radio('pageSuffix',
-        array('/' => '<strong>' . _t('无') . '</strong>', '.html' => '<strong>html</strong>',
-        '.htm' => '<strong>htm</strong>', '.php' => '<strong>php</strong>'), $pageSuffixValue,
+        array('/' => '<strong>' . _t('无') . '</strong>', '.html' => '<code>html</code>',
+        '.htm' => '<code>htm</code>', '.php' => '<code>php</code>'), $pageSuffixValue,
         _t('独立页面后缀名'), _t('给独立页面设置一种文件后缀名, 使得它看起来像
         <br /><strong>%s</strong>',
         Typecho_Common::url('example.html', $this->options->index)));

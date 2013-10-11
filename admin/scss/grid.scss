@@ -15,7 +15,8 @@ $gutter-width: 20px;
 
 // Break point
 $screen-tablet:  768px;
-$screen-desktop: 992px; // Not implemented yet
+$screen-desktop: 992px;
+$screen-wide: 1200px;
 
 // Column group
 .col-group {
@@ -109,6 +110,45 @@ $screen-desktop: 992px; // Not implemented yet
   // Colunms
   @for $index from 1 through $columns {
     .col-#{$index} {
+      width: $column-width * $index;
+    }
+  }
+
+  // Offset
+  @for $index from 0 through $columns {
+    .col-offset-#{$index} {
+      margin-left: $column-width * $index;
+    }
+  }
+
+  // Pull
+  @for $index from 0 through $columns {
+    .col-pull-#{$index} {
+      right: $column-width * $index;
+    }
+  }
+
+  // Push
+  @for $index from 0 through $columns {
+    .col-push-#{$index} {
+      left: $column-width * $index;
+    }
+  }
+}
+
+
+/*
+ * Widescreen and up
+ */
+
+@media (min-width: $screen-wide) {
+  .container {
+    max-width: $screen-wide - ($gutter-width * 2);
+  }
+
+  // Colunms
+  @for $index from 1 through $columns {
+    .col-wd-#{$index} {
       width: $column-width * $index;
     }
   }

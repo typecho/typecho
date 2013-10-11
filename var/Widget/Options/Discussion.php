@@ -57,13 +57,13 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
             <label for="commentsShow-commentsAvatarRating">'),
             'commentsPageBreak'     =>  _t('启用分页, 并且每页显示 %s 篇评论, 在列出时将 %s 作为默认显示',
             '</label><input type="text" value="' . $this->options->commentsPageSize
-            . '" class="text num" id="commentsShow-commentsPageSize" name="commentsPageSize" /><label for="commentsShow-commentsPageSize">',
+            . '" class="text num text-s" id="commentsShow-commentsPageSize" name="commentsPageSize" /><label for="commentsShow-commentsPageSize">',
             '</label><select id="commentsShow-commentsPageDisplay" name="commentsPageDisplay">
             <option value="first"' . ('first' == $this->options->commentsPageDisplay ? ' selected="true"' : '') . '>' . _t('第一页') . '</option>
             <option value="last"' . ('last' == $this->options->commentsPageDisplay ? ' selected="true"' : '') . '>' . _t('最后一页') . '</option></select>'
             . '<label for="commentsShow-commentsPageDisplay">'),
             'commentsThreaded'      =>  _t('启用评论回复, 以 %s 层作为每个评论最多的回复层数',
-            '</label><input name="commentsMaxNestingLevels" type="text" class="text num" value="' . $this->options->commentsMaxNestingLevels . '" id="commentsShow-commentsMaxNestingLevels" />
+            '</label><input name="commentsMaxNestingLevels" type="text" class="text num text-s" value="' . $this->options->commentsMaxNestingLevels . '" id="commentsShow-commentsMaxNestingLevels" />
             <label for="commentsShow-commentsMaxNestingLevels">') . '</label></span><span class="multiline">'
             . _t('将 %s 的评论显示在前面', '<select id="commentsShow-commentsOrder" name="commentsOrder">
             <option value="DESC"' . ('DESC' == $this->options->commentsOrder ? ' selected="true"' : '') . '>' . _t('较新的') . '</option>
@@ -107,10 +107,10 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
             'commentsRequireURL'            =>  _t('必须填写网址'),
             'commentsCheckReferer'          =>  _t('检查评论来源页URL是否与文章链接一致'),
             'commentsAutoClose'             =>  _t('在文章发布 %s 天以后自动关闭评论',
-            '</label><input name="commentsPostTimeout" type="text" class="text num" value="' . intval($this->options->commentsPostTimeout / (24 * 3600)) . '" id="commentsPost-commentsPostTimeout" />
+            '</label><input name="commentsPostTimeout" type="text" class="text num text-s" value="' . intval($this->options->commentsPostTimeout / (24 * 3600)) . '" id="commentsPost-commentsPostTimeout" />
             <label for="commentsPost-commentsPostTimeout">'),
             'commentsPostIntervalEnable'    =>  _t('同一IP发布评论的时间间隔限制为 %s 分钟',
-            '</label><input name="commentsPostInterval" type="text" class="text num" value="' . round($this->options->commentsPostInterval / (60), 1) . '" id="commentsPost-commentsPostInterval" />
+            '</label><input name="commentsPostInterval" type="text" class="text num text-s" value="' . round($this->options->commentsPostInterval / (60), 1) . '" id="commentsPost-commentsPostInterval" />
             <label for="commentsPost-commentsPostInterval">')
         );
 
@@ -151,7 +151,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         $commentsHTMLTagAllowed = new Typecho_Widget_Helper_Form_Element_Textarea('commentsHTMLTagAllowed', NULL,
         htmlspecialchars($this->options->commentsHTMLTagAllowed),
         _t('允许使用的HTML标签和属性'), _t('默认的用户评论不允许填写任何的HTML标签, 你可以在这里填写允许使用的HTML标签.<br />
-        比如: &lt;a href=&quot;&quot;&gt; &lt;img src=&quot;&quot;&gt; &lt;blockquote&gt;'));
+        比如: <code>&lt;a href=&quot;&quot;&gt; &lt;img src=&quot;&quot;&gt; &lt;blockquote&gt;</code>'));
         $form->addInput($commentsHTMLTagAllowed);
 
         /** 提交按钮 */

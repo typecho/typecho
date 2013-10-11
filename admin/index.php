@@ -10,7 +10,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
         <?php include 'page-title.php'; ?>
         <div class="col-group typecho-page-main">
             <div class="col-3 typecho-dashboard-nav suffix">
-                <h3 class="intro"><?php _e('欢迎使用 Typecho, 您可以使用下面的链接开始您的 Blog 之旅:'); ?></h3>
+                <p class="intro"><?php _e('欢迎使用 Typecho, 您可以使用下面的链接开始您的 Blog 之旅:'); ?></p>
             
                 <div class="intro-link">
                     <ul>
@@ -61,7 +61,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
 
             <div class="col-6 typecho-dashboard-main">
                 <div class="section">
-                    <h4><?php _e('最近发表的文章'); ?></h4>
+                    <h3><?php _e('最近发表的文章'); ?></h3>
                     <?php Typecho_Widget::widget('Widget_Contents_Post_Recent', 'pageSize=5')->to($posts); ?>
                     <ul>
                     <?php if($posts->have()): ?>
@@ -75,7 +75,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     </ul>
                 </div>
             	<div class="section">
-                    <h4><?php _e('最新得到的回复'); ?></h4>
+                    <h3><?php _e('最新得到的回复'); ?></h3>
                     <ul>
                         <?php Typecho_Widget::widget('Widget_Comments_Recent', 'pageSize=5')->to($comments); ?>
                         <?php if($comments->have()): ?>

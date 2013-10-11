@@ -21,57 +21,7 @@ body {
     background: #F9F9F7;
     color: #444;
     font-size: 87.5%;
-}
-
-/*
-body > div {
-    background: #f7fbe9;
-    color: #333;
-}
-*/
-
-body.bright, .main {
-}
-
-.main:after {
-    content: "."; 
-    display: block;
-    height: 0; 
-    clear: both; 
-    visibility: hidden;
-}
-
-body.no-overflow {
-    overflow: hidden;
-}
-
-body.dark {
-    background: #333;
-}
-
-h1, h2, h3, h4, h5, h6, p {
-    color: #333;
-}
-
-h1, h2, h3, h4, h5, h6 {
-    font-weight: 600;
-    /*font-family: Georgia, serif;*/
-}
-
-h1 {
-    font-size: 18px;
-}
-
-h2 {
-    font-size: 16px;
-}
-
-ul, ol {
-    list-style: none;
-}
-
-p {
-    font-size: 13px;
+    line-height: 1.5;
 }
 
 a {
@@ -105,6 +55,10 @@ span.balloon {
     font-size: 13px;
     font-weight: normal;
     color: #666;
+}
+
+code, pre, .mono { 
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
 a.size-1 {
@@ -168,63 +122,39 @@ a.important {
     color: #fff;
 }
 
-em {
-    color: #e47e00;
-    font-weight: normal;
-}
+/*
+ * Forms
+ */
 
-form {
-    padding: 0;
-    margin: 0;
-}
-
-input, textarea {
-    font-size: 13px;
-    padding: 2px;
-}
-
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-    input, textarea { padding: 1px; margin: 0; }
-    button { padding: 0 6px; }
-    select { padding: 0; }
-}
-
+input[type=text], input[type=password], input[type=email],
 textarea {
-    overflow: auto;
-	line-height: 150%;
-	resize: none;
-}
-
-em {
-    font-style: normal;
-}
-
-input:hover {
-    /*
-    cursor: pointer;
-     */
-}
-
-input, select, textarea {
-    font-family: "Lucida Grande",Verdana,Arial,"Bitstream Vera Sans",sans-serif;
-    vertical-align: middle;
-}
-
-input[type=text], input[type=password],
-input.text, input.title,
-textarea {
-    padding: 3px;
     background: #FFF;
-    border: 1px solid #C6C6C6;
-    -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.5);
-    -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.5);
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.5);
-    font-family: Menlo,Monaco,Consolas,"Lucida Console","Courier New",monospace;
+    border: 1px solid #CCC;
+    padding: 7px;
+
+    border-radius: 2px;
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
-input[type=checkbox] {
-    margin: 3px;
+textarea {
+    resize: vertical;
 }
+
+input.text-s { padding: 5px; }
+
+.w-10 { width: 10%; }
+.w-20 { width: 20%; }
+.w-30 { width: 30%; }
+.w-40 { width: 40%;}
+.w-50 { width: 50%;}
+.w-60 { width: 60%;}
+.w-70 { width: 70%;}
+.w-80 { width: 80%;}
+.w-90 { width: 90%;}
+.w-100 { width: 100%;}
 
 /** hack webkit border by 70 */
 select {
@@ -367,53 +297,6 @@ button.primary:active, button.primary.active {
 }
 
 
-
-img.avatar {
-	padding: 2px;
-	background: #FFF;
-	float: right;
-	
-	border-bottom: 1px solid #DEE4C5;
-	border-right: 1px solid #DEE4C5;
-}
-
-/**
- * clearfix
- */
-.clearfix:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
-* html>body .clearfix { display: inline-block; width: 100%; }
-* html .clearfix { height: 1%; /* End hide from IE-mac */ }
-/* ie7 hack*/
-*+html .clearfix { min-height: 1%; }
-/*]]>*/
-
-/**
- * 圆角
- */
-.typecho-radius-topleft {
-    -moz-border-radius-topleft: 4px;
-    -webkit-border-top-left-radius: 4px;
-    border-top-left-radius: 4px;
-}
-
-.typecho-radius-topright {
-    -moz-border-radius-topright: 4px;
-    -webkit-border-top-right-radius: 4px;
-    border-top-right-radius: 4px;
-}
-
-.typecho-radius-bottomleft {
-    -moz-border-radius-bottomleft: 4px;
-    -webkit-border-bottom-left-radius: 4px;
-    border-bottom-left-radius: 4px;
-}
-
-.typecho-radius-bottomright {
-    -moz-border-radius-bottomright: 4px;
-    -webkit-border-bottom-right-radius: 4px;
-    border-bottom-right-radius: 4px;
-}
-
 /**
  * logo 的样式
  */
@@ -426,15 +309,6 @@ img.avatar {
     background: url(../images/sprite.png) no-repeat scroll 0px -78px;
 }
 
-.logo-dark {
-    display: block;
-    height: 21px;
-    width: 92px;
-    overflow: hidden;
-    text-indent: -9999px;
-    background: url(../images/sprite.png) no-repeat scroll 0px -150px;
-}
-
 .loading {
     background-image: url(../images/ajax-loader.gif);
 	background-position: left center;
@@ -445,26 +319,32 @@ img.avatar {
 /**
  * 典型配置选项
  */
-/*
 .typecho-option {
-
+    list-style: none;
+    padding: 0;
 }
- */
 
 .typecho-option li {
-    padding-left: 110px;
+}
+
+.typecho-option-submit li {
+    border-bottom: none;
 }
 
 .typecho-option label.typecho-label {
-    float: left;
-    width: 110px;
+    position: absolute;
+    left: -200px;
+    width: 180px;
     text-align: right;
-    margin: 1px 5px 0 -120px;
-    font-size: 13px;
+}
+.typecho-option label.typecho-label+input {
+    margin-top: -7px;
 }
 
 .typecho-option .description {
-    color: #555;
+    margin: .5em 0 0;
+    color: #999;
+    font-size: .92857em;
 }
 
 /** 增加配置面板内部的错误样式 by 70 */
@@ -673,11 +553,9 @@ img.avatar {
 
 .typecho-install .typecho-option .message,
 .typecho-install .typecho-option input {
-    width: 325px;
 }
 
 .typecho-install .typecho-option input.mini {
-    width: 125px;
 }
 
 /*
@@ -760,10 +638,6 @@ margin-top: 25px;
     margin: 15% auto;
 }
 
-.typecho-login .logo, .typecho-login .logo-dark {
-    margin: 0px auto 15px;
-}
-
 .typecho-login form {
     background: #e5ead1;
     margin: 0 10px;
@@ -776,13 +650,9 @@ margin-top: 25px;
 }
 
 .typecho-login label {
-    display: block;
-    font-weight: bold;
 }
 
 .typecho-login input.text {
-    width: 205px;
-    font-size: 18px;
 }
 
 .typecho-login form p {
@@ -826,7 +696,7 @@ margin-top: 25px;
  */
 .typecho-head-nav {
     height: 40px;
-    background: #363636;
+    background: #2E3639;
 }
 
 .typecho-nav-list {
@@ -849,39 +719,29 @@ margin-top: 25px;
 }
 
 #typecho-nav-list .parent a {
-    color: #CCC;
+    color: #FFF;
     height: 40px;
     line-height: 40px;
     display: block;
-    outline: none;
-    padding: 0 30px;
+    padding: 0 20px;
     float: left;
-    font-size: 14px;
 }
 
 #typecho-nav-list .parent a:hover, #typecho-nav-list .focus .parent a, #typecho-nav-list .root:hover .parent a {
-    background: #444;
+    background: #62686B;
+    text-decoration: none;
 }
 
 #typecho-nav-list .child {
     display: none;
-    position:absolute;
-    border: 1px solid #CED7A8;
-    border-top: none;
-    background: #DCE2C0;
-    overflow: hidden;
-    padding: 10px;
-    z-index: 250;
+    position: absolute;
     top: 40px;
+    margin: 0;
+    border-top: none;
+    background: #2E3639;
+    overflow: hidden;
+    z-index: 250;
     width: 160px; 
-    -moz-border-radius-bottomleft: 3px;
-    -moz-border-radius-bottomright: 3px;
-    -webkit-border-bottom-left-radius: 3px;
-    -webkit-border-bottom-right-radius: 3px;
-    
-    /* hope IE support border radius, God save me! */
-    border-bottom-left-radius: 3px;
-    border-bottom-right-radius: 3px;
 }
 
 #typecho-nav-list .root:hover .child {
@@ -889,52 +749,40 @@ margin-top: 25px;
 }
 
 #typecho-nav-list .child li {
-    /*margin-bottom: 1px;*/
-    border-top: 1px solid #EFEFDE;
-    border-bottom: 1px solid #CED6A5;
 }
 
 #typecho-nav-list .child li:first-child {
-    border-top: none;
 }
 
 #typecho-nav-list .child li.last {
-    border-bottom: none;
 }
 
 #typecho-nav-list .child li a:hover {
-    background: #EDF0DF;
+    background: #62686B;
 }
 
 #typecho-nav-list .child li.focus a, #typecho-nav-list .child li.focus a:hover {
-    /*background: #E68A17;
-    color: #fff;*/
-    background: #EDF0DF url(../images/sprite.png) right -413px no-repeat;
+    background: #62686B;
 }
 
 #typecho-nav-list .child li a {
     text-decoration: none;
-    color: #333;
+    color: #FFF;
     display: block;
-    padding: 0 37px 0 7px;
-    zoom: 1;
+    padding: 0 20px;
     overflow: hidden;
     text-overflow : ellipsis;
-    white-space:nowrap;
-    height: 29px;
-    line-height: 29px;
+    white-space: nowrap;
+    height: 40px;
+    line-height: 40px;
 }
 
 .typecho-head-nav .operate {
     color: #ccc;
-    position:absolute;
+    position: absolute;
     font-size: 13px;
     top: 0px;
     right: 0;
-    /* review IE */
-           *right: 25px;
-           height: 30px;
-           line-height: 30px;
 }
 
 .typecho-head-nav .operate a.exit {
@@ -960,21 +808,9 @@ margin-top: 25px;
  * 注脚
  */
 .typecho-foot {
-    padding: 15px 25px 80px 25px;
+    padding: 50px 0 80px;
     text-align: center;
     color: #999;
-}
-
-.typecho-foot h4 {
-    margin: 5px auto;
-}
-
-.typecho-foot h4 a {
-    margin: 0px auto;
-}
-
-.typecho-foot em {
-    color: #fff;
 }
 
 /*
@@ -987,33 +823,7 @@ margin-top: 25px;
 }
  */
 
-.typecho-foot .resource ul {
-    margin: 5px auto;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    display: inline-block;
-             *display: inline;
-             *zoom: 1;
-}
 
-.typecho-foot .resource li {
-    font-size: 13px;
-    left: -6px;
-    position: relative;
-    float: left;
-    padding: 0px 5px;
-    line-height: 16px;
-    border-left: 1px solid #505050;
-}
-
-.typecho-foot .resource li a:link, .typecho-foot .resource li a:visited {
-    color: #999;
-}
-
-.typecho-foot .resource li a:hover, .typecho-foot .resource li a:active {
-    color: #fff;
-}
 
 .typecho-foot-v2 {
     text-align: left;
@@ -1036,6 +846,7 @@ margin-top: 25px;
  * 标题
  */
 .typecho-page-title {
+    margin-top: 20px;
 }
 
 
@@ -1043,43 +854,27 @@ margin-top: 25px;
  * 后台页面主体
  */
 .typecho-page-main {
-    margin: 10px auto;
-    padding-bottom: 10px;
 }
 
 .typecho-page-main .typecho-option-tabs {
-    font-size: 13px;
-    font-weight: bold;
-    margin-bottom: 15px;
 }
 
 /**
  * 后台主页左侧导航列表
  */
 .typecho-dashboard-nav h3 {
-    font-size: 14px;
-    font-weight: bold;
-    margin-bottom: 10px;
 }
 
 .typecho-dashboard-nav h3.intro {
-    font-size: 13px;
-    font-weight: normal;
 }
 
 .typecho-dashboard-nav .intro-link {
-    background: none;
-    padding: 0px;
-    font-size: 13px;
-    margin-bottom: 20px;
 }
 
 .typecho-dashboard-nav .intro-link ul {
 }
 
 .typecho-dashboard-nav .intro-link li {
-    border: none;
-    margin: 2px 0px;
 }
 
 .typecho-dashboard-nav .balloon,
@@ -1095,7 +890,6 @@ margin-top: 25px;
 }
 
 .typecho-dashboard-nav .dashboard-status {
-    font-size: 13px;
 }
 
 .typecho-dashboard-nav .status p {
@@ -1103,12 +897,6 @@ margin-top: 25px;
 }
 
 .typecho-dashboard-nav .update-check {
-    background: #dee4c5;
-    color:#e47e00;
-    margin-bottom: 25px;
-    padding: 10px;
-    font-size: 13px;
-    text-align: center;
 }
 
 .typecho-dashboard-nav .update-check p {
@@ -1116,21 +904,16 @@ margin-top: 25px;
 }
 
 .typecho-dashboard-nav .update-check .current {
-    font-size: 13px;
-    font-weight: bold;
 }
 
 .typecho-dashboard-nav .update-check .current em {
-    font-weight: bold;
 }
 
 .typecho-dashboard-nav .update-check .latest {
-    font-size: 13px;
 }
 
 .typecho-dashboard-nav .update-check .latest a,
 .typecho-dashboard-nav .update-check .latest em {
-    color: #666;
 }
 
 /**
@@ -1141,25 +924,18 @@ margin-top: 25px;
 }
 
 .typecho-dashboard-main .section {
-    font-size: 13px;
-    margin-bottom: 20px;
 }
 
 .typecho-dashboard-main .section h4 {
-    font-size: 14px;
-    margin-bottom: 10px;
 }
 
 .typecho-dashboard-main .section ul {
 }
 
 .typecho-dashboard-main .section li {
-    text-align: justify;
-    line-height: 22px;
 }
 
 .typecho-dashboard-main .section .tags {
-    margin: 0px 5px;
 }
 
 .typecho-dashboard-main .section .title {
@@ -1268,7 +1044,6 @@ margin-top: 25px;
 }
 
 .typecho-list-operate input {
-    font-size: 13px;
 }
 
 .typecho-list-operate button {
@@ -1367,7 +1142,6 @@ a.operate-reply {
 }
 
 .typecho-list-table input {
-    border: none; /* 重置 input */
 }
 
 .typecho-list-table thead {
@@ -1588,19 +1362,14 @@ ul.typecho-list-notable li .comment-form, ul.typecho-list-notable li .reply-form
 }
 
 ul.typecho-list-notable li .comment-form label, ul.typecho-list-notable li .reply-form label {
-	padding: 0 10px 0 0;
-	line-height: 20px;
 }
 
 ul.typecho-list-notable li .comment-form input, ul.typecho-list-notable li .reply-form input {
 	margin: 0 10px 0 0;
-	width: 155px;
 }
 
 ul.typecho-list-notable li .comment-form textarea, ul.typecho-list-notable li .reply-form textarea {
 	margin: 10px 0;
-	width: 800px;
-	height: 150px;
 }
 
 ul.typecho-list-notable li .comment-form p, ul.typecho-list-notable li .reply-form p {
@@ -1640,8 +1409,6 @@ ul.typecho-list-notable li #typecho-respond {
 }
 
 #typecho-respond textarea {
-    width: 450px;
-    height: 150px;
 }
 
 /**
@@ -1685,7 +1452,6 @@ ul.typecho-list-notable li #typecho-respond {
 }
 
 .typecho-theme-list h4 {
-    font-size: 13px;
     font-weight: bold;
 }
 
@@ -1722,23 +1488,15 @@ ul.typecho-list-notable li #typecho-respond {
  */
 .typecho-page-main .typecho-option {
     position: relative;
-    top: -1px;
-    font-size: 13px;
-    border-bottom: 1px solid #EBEFDA;
-    border-top: 1px solid #fff;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 600px;
 }
 
 .typecho-page-main .typecho-option:first-child {
-    border-top: none;
 }
 
 .typecho-page-main .typecho-option-clear {
-	border-bottom: 1px solid #F7FBE9;
-    border-top: 1px solid #F7FBE9;
-	margin: -1px 0;
-	top: -1px;
-	bottom: -1px;
-	z-index: 100;
 }
 
 .typecho-page-main .typecho-mini-panel {
@@ -1746,24 +1504,13 @@ ul.typecho-list-notable li #typecho-respond {
 }
 
 .typecho-page-main .typecho-option label.typecho-label {
-    width: 190px;
-    margin-left: -200px;
-    font-weight: bold;
 }
 
 .typecho-page-main .typecho-mini-panel .typecho-option label.typecho-label {
-    float: none;
-    margin: 0;
-    width: auto;
-    display: block;
-    text-align:left;
+    
 }
 
 .typecho-page-main .typecho-option li {
-    margin: 15px 0px;
-    _padding-bottom: 5px;
-    display: block;
-    padding-left: 200px;
 }
 
 .typecho-page-main .typecho-mini-panel .typecho-option {
@@ -1776,86 +1523,57 @@ ul.typecho-list-notable li #typecho-respond {
 }
 
 .typecho-page-main .typecho-option input.text {
-    width: 475px;
+    width: 100%;
 }
 
 .typecho-page-main .typecho-option input.password {
-    width: 300px;
 }
 
 .typecho-page-main .typecho-mini-panel .typecho-option input.text {
-    width: 280px;
 }
 
 .typecho-page-main .typecho-mini-panel .typecho-option input.password {
-    width: 200px;
 }
 
 .typecho-page-main .typecho-option input.mini {
-    width: 115px;
+    width: 100px;
 }
 
 .typecho-page-main .typecho-option input.num {
-	width: 30px;
+    width: 40px;
 }
 
 .typecho-page-main .typecho-option textarea {
-    width: 475px;
-    height: 150px;
+    width: 100%;
+    height: 100px;
 }
 
 .typecho-page-main .typecho-option span.multiline {
-    *float: left;
     display: block;
-    line-height: 26px;
-    *width: 100%;
+    margin: .3em 0;
 }
 
 .typecho-page-main .typecho-mini-panel .typecho-option textarea {
-    width: 280px;
-    height: 70px;
 }
 
 .typecho-page-main .typecho-option .description {
-    line-height:18px;
-    margin-top:5px;
-    text-align:justify;
 }
 
 .typecho-page-main .typecho-option-submit {
-    border-bottom: none;
 }
 
 
 .typecho-page-main .typecho-option li.typecho-option-title {
-	padding: 10px;
-	background: #DEE4C5;
-	
-	-moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    -khtml-border-radius: 4px;
-    
-    /* hope IE support border radius, God save me! */
-    border-radius: 4px;
 }
 
 .typecho-page-main .typecho-option li.typecho-option-title h3 {
-    font-size: 18px;
-    color: #e47e00;
 }
 
 .typecho-page-main .typecho-option li.typecho-option-title p {
-    font-size: 13px;
-    color: #555555;
-	padding: 0;
-	margin: 5px 0 0 0;
-	padding-left: 2px;
 }
 
 .typecho-page-main .typecho-content-panel .typecho-option label.typecho-label {
-    width: 100px;
-    margin-left: -110px;
-    position: absolute;
+    
 }
 
 .typecho-page-main .typecho-content-panel ul.typecho-option {
@@ -1969,8 +1687,6 @@ ul.typecho-list-notable li #typecho-respond {
 }
 
 .typecho-edit-theme textarea {
-    width: 770px;
-    height: 500px;
 }
 
 /**
@@ -1982,10 +1698,6 @@ ul.typecho-list-notable li #typecho-respond {
 }
 
 .typecho-post-area label.typecho-label {
-    font-size: 13px;
-    font-weight: bold;
-    margin: 5px 0px;
-    display: block;
 }
 
 /*.typecho-post-area .typecho-preview-label {
@@ -2002,9 +1714,6 @@ ul.typecho-list-notable li #typecho-respond {
 }*/
 
 .typecho-post-area .typecho-preview-label {
-    margin-right: 10px;
-    font-weight: bold;
-    text-decoration: underline;
 }
 
 #typecho-preview-box {
@@ -2057,10 +1766,6 @@ ul.typecho-list-notable li #typecho-respond {
 }
 
 .typecho-post-area label.typecho-label cite {
-	font-weight: normal;
-	color: #777;
-	margin-left: 10px;
-	background: #ffffdd;
 }
 
 .typecho-post-area .submit {
@@ -2079,8 +1784,6 @@ ul.typecho-list-notable li #typecho-respond {
 }
 
 .typecho-post-area input.text {
-    font-size: 13px;
-    width: 700px;
 }
 
 .typecho-post-area .out-date {
@@ -2090,7 +1793,6 @@ ul.typecho-list-notable li #typecho-respond {
 }
 
 .typecho-post-area p.title {
-    margin-bottom: 10px;
 }
 
 .typecho-post-area input#year,
@@ -2098,41 +1800,28 @@ ul.typecho-list-notable li #typecho-respond {
 .typecho-post-area input#day,
 .typecho-post-area input#hour,
 .typecho-post-area input#min {
-    width: 30px;
-    font-size: 8pt;
-    font-family: "Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana;
-    padding: 1px;
 }
 
 .typecho-post-area input#day,
 .typecho-post-area input#hour,
 .typecho-post-area input#min {
-    width: 16px;
 }
 
 .typecho-post-area select#month {
-    width: 64px;
 }
 
 .typecho-post-area input.time {
-    width: 20px;
 }
 
 .typecho-post-area input.mini {
-    width: 200px;
 }
 
 .typecho-post-area input.title {
-    font-size: 20px; /* 撰写页面标题input */
+    font-size: 1.17em;
+    font-weight: bold;
 }
 
 .typecho-post-area textarea#text {
-    font-size: 13px;
-    line-height: 18px;
-    width: 700px;
-    margin: 0;
-    *margin: -1px 0 -1px 0;
-    display: block;
 }
 
 .typecho-post-area button#btn-submit {
@@ -2144,24 +1833,12 @@ ul.typecho-list-notable li #typecho-respond {
 }
 
 .typecho-post-area span.size-btn {
-    height: 20px;
-    width: 708px;
-    line-height: 20px;
-    background: url(../images/size-btn.gif) top no-repeat;
-    position: relative;
-    display: block;
-    cursor: row-resize;
 }
 
 .typecho-post-area textarea#trackback {
-    font-size: 13px;
-    width: 430px;
-    height: 70px;
 }
 
 .typecho-post-area br {
-    height: 10px;
-    line-height: 10px;
 }
 
 .typecho-post-area #advance-panel, .typecho-post-area #upload-panel {
@@ -2174,23 +1851,15 @@ ul.typecho-list-notable li #typecho-respond {
 }
 
 ul.typecho-post-option {
-    border: 0px;
-    margin: -1px 0px -1px 10px;
 }
 
 ul.typecho-post-option li {
-    list-style: none;
-    border-bottom: 1px solid #EBEFDA;
-    border-top: 1px solid #fff;
-    padding: 5px 0 10px 0;
 }
 
 ul.typecho-post-option li:first-child {
-    border-top: none;
 }
 
 ul.typecho-post-option li:last-child {
-    border-bottom: none;
 }
 
 #advance-panel li, #upload-panel li {
@@ -2198,43 +1867,24 @@ ul.typecho-post-option li:last-child {
 }
 
 ul.typecho-post-option li ul {
-    border: none;
-    margin: 0;
 }
 
 ul.typecho-post-option li ul.related {
-    margin: 10px 0 0 0;
 }
 
 ul.typecho-post-option li ul li {
-    /*height: 20px;
-    line-height: 20px;*/
-    border: none;
-    font-size: 13px;
-    padding: 4px;
-    margin-bottom: 5px;
-    background: #EFF5D9;
 }
 
 ul.typecho-post-option li ul.related li {
-    background: none;
-    list-style-type: square;
-    padding: 0;
-    margin: 0 0 0 20px;
-    height: auto;
 }
 
 ul.typecho-post-option li ul li:hover {
-    background: #E3EEBD
 }
 
 ul.typecho-post-option li ul.related li:hover {
-    background: none;
 }
 
 ul.typecho-post-option .description {
-    color: #999;
-    margin-top: 5px;
 }
 
 ul.autocompleter-choices {
@@ -2388,25 +2038,15 @@ ul.autocompleter-choices span.autocompleter-queried {
 }
 
 .typecho-attachment-photo-box .description {
-    color: #999;
-    margin: 10px 0;
-    font-size: 14px;
 }
 
 .typecho-attachment-photo-box .description ul li {
-    border-bottom: 1px dashed #E8EDD6;
-    line-height: 28px;
-	height: 28px;
 }
 
 .typecho-attachment-photo-box .description strong {
-    color: #444;
-    font-weight: normal;
 }
 
 .typecho-attachment-photo-box .description input {
-    width: 500px;
-    border: 1px solid #aaa;
     background-color: #eee;
 	background-image: url(../images/progress.gif);
 	background-repeat: repeat-y;

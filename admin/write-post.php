@@ -18,11 +18,11 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         Typecho_Common::url('/action/contents-post-edit?do=deleteDraft&cid=' . $post->cid, $options->index)); ?></cite>
                         <?php endif; ?>
                         </label>
-                        <p class="title"><input type="text" id="title" name="title" value="<?php echo htmlspecialchars($post->title); ?>" class="text title" /></p>
+                        <p class="title"><input type="text" id="title" name="title" value="<?php echo htmlspecialchars($post->title); ?>" class="w-100 text title" /></p>
                         <label for="text" class="typecho-label"><?php _e('内容'); ?><cite id="auto-save-message"></cite></label>
-                        <p><textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text" name="text"><?php echo htmlspecialchars($post->text); ?></textarea></p>
+                        <p><textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text" name="text" class="w-100"><?php echo htmlspecialchars($post->text); ?></textarea></p>
                         <label for="tags" class="typecho-label"><?php _e('标签'); ?></label>
-                        <p><input id="tags" name="tags" type="text" value="<?php $post->tags(',', false); ?>" class="text" /></p>
+                        <p><input id="tags" name="tags" type="text" value="<?php $post->tags(',', false); ?>" class="w-100 text" /></p>
                         <?php Typecho_Plugin::factory('admin/write-post.php')->content($post); ?>
                         <p class="submit">
                             <span class="left">
@@ -79,8 +79,8 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                     <div id="typecho-preview-box"></div>
                 </div>
                 <div class="col-3">
-                    <ul class="typecho-post-option">
-                        <li>
+                    <div class="typecho-post-option">
+                        <section>
                             <label for="date" class="typecho-label"><?php _e('日期'); ?></label>
                             <p>
                                 <select disabled class="typecho-date" name="month" id="month">
@@ -106,8 +106,8 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                                 <input disabled class="typecho-date" size="2" maxlength="2" type="text" name="min" id="min" value="<?php $post->date('i'); ?>" />
                             </p>
                             <p class="description"><?php _e('请选择一个发布日期'); ?></p>
-                        </li>
-                        <li>
+                        </section>
+                        <section>
                             <label class="typecho-label"><?php _e('分类'); ?></label>
                             <?php Typecho_Widget::widget('Widget_Metas_Category_List')->to($category); ?>
                             <ul<?php if ($category->length > 8): ?> style="height: 264px"<?php endif; ?>>
@@ -123,22 +123,22 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                                 <label for="category-<?php $category->mid(); ?>"><?php $category->name(); ?></label></li>
                                 <?php endwhile; ?>
                             </ul>
-                        </li>
-                        <li>
+                        </section>
+                        <section>
                             <label for="slug" class="typecho-label"><?php _e('缩略名'); ?></label>
                             <p><input type="text" id="slug" name="slug" value="<?php $post->slug(); ?>" class="mini" /></p>
                             <p class="description"><?php _e('为这篇日志自定义链接地址, 有利于搜索引擎收录'); ?></p>
-                        </li>
+                        </section>
                         <?php Typecho_Plugin::factory('admin/write-post.php')->option($post); ?>
                         <?php if($post->have()): ?>
                         <?php $modified = new Typecho_Date($post->modified); ?>
-                        <li>
+                        <section>
                             <label class="typecho-label"><?php _e('本文由 <a href="%s">%s</a> 撰写',
                                 Typecho_Common::url('manage-posts.php?uid=' . $post->author->uid, $options->adminUrl), $post->author->screenName); ?></label>
                             <p class="description"><?php _e('最后修改于 %s', $modified->word()); ?></p>
-                        </li>
+                        </section>
                         <?php endif; ?>
-                    </ul>
+                    </div>
                 </div>
             </form>
         </div>

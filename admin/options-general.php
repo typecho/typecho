@@ -8,7 +8,7 @@ include 'menu.php';
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="col-group typecho-page-main">
-            <div class="col-12 start-02">
+            <div class="col-12">
                 <?php Typecho_Widget::widget('Widget_Options_General')->form()->render(); ?>
             </div>
         </div>

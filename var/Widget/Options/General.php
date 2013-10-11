@@ -106,14 +106,14 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
         }
         
         $attachmentTypesOptions = array(
-            '@image@'    =>  _t('图片文件') . ' <strong><small>gif jpg png tiff bmp</small></strong>',
-            '@media@'    =>  _t('多媒体文件') . ' <strong><small>mp3 wmv wma rmvb rm avi flv</small></strong>',
-            '@doc@'      =>  _t('常用档案文件') . ' <strong><small>txt doc docx xls xlsx ppt pptx zip rar pdf</small></strong>',
-            '@other@'    =>  _t('其他格式 %s', '<input type="text" style="width: 250px;" name="attachmentTypesOther" value="' . htmlspecialchars($attachmentTypesOtherValue) . '" />'),
+            '@image@'    =>  _t('图片文件') . ' <code>(gif jpg png tiff bmp)</code>',
+            '@media@'    =>  _t('多媒体文件') . ' <code>(mp3 wmv wma rmvb rm avi flv)</code>',
+            '@doc@'      =>  _t('常用档案文件') . ' <code>(txt doc docx xls xlsx ppt pptx zip rar pdf)</code>',
+            '@other@'    =>  _t('其他格式 %s', ' <input type="text" class="w-40 text-s mono" name="attachmentTypesOther" value="' . htmlspecialchars($attachmentTypesOtherValue) . '" />'),
         );
         
         $attachmentTypes = new Typecho_Widget_Helper_Form_Element_Checkbox('attachmentTypes', $attachmentTypesOptions,
-        $attachmentTypesOptionsValue, _t('允许上传的文件类型'), _t('用逗号 "," 将后缀名隔开, 例如: cpp,h,mak'));
+        $attachmentTypesOptionsValue, _t('允许上传的文件类型'), _t('用逗号 "," 将后缀名隔开, 例如: <code>cpp, h, mak</code>'));
         $form->addInput($attachmentTypes->multiMode());
 
         /** 提交按钮 */
