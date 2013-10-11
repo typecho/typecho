@@ -39,8 +39,9 @@ code, pre, .mono {
 }
 
 a.balloon-button {
-    padding: 0 5px;
-    min-width: 14px;
+    display: inline-block;
+    padding: 0 6px;
+    min-width: 12px;
     height: 18px;
     line-height: 18px;
     background: #D8E7EE;
@@ -57,7 +58,7 @@ a.balloon-button {
 }
 
 a.button:hover, a.balloon-button:hover {
-    background-color: #467B96;
+    background-color: #A5CADC;
     color: #FFF;
     text-decoration: none;
 }
@@ -675,7 +676,6 @@ margin-top: 25px;
 }
 
 .typecho-nav-list {
-    zoom: 1;
 }
 
 #typecho-nav-list ul {
@@ -760,19 +760,6 @@ margin-top: 25px;
     right: 0;
 }
 
-.typecho-head-nav .operate a.exit {
-    display: inline-block;
-    background: url(../images/sprite.png) no-repeat scroll 0px -223px;
-    width: 20px;
-    height: 20px;
-    text-indent: -999px;
-    outline: none;
-    overflow: hidden;
-    position:relative;
-             *position:absolute;
-             top: 5px;
-}
-
 .typecho-head-nav .operate .author {
     margin-right: 8px;
     text-decoration: underline;
@@ -854,21 +841,12 @@ margin-top: 25px;
 
 .typecho-dashboard-nav .balloon,
 .typecho-option-tabs .balloon {
-    margin-left: 5px;
-    padding: 1px 5px;
-    background: #BD6800;
-    color: #FFF;
-    font-size: 13px;
-    border-radius: 10px;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
 }
 
 .typecho-dashboard-nav .dashboard-status {
 }
 
 .typecho-dashboard-nav .status p {
-    margin-bottom: 5px;
 }
 
 .typecho-dashboard-nav .update-check {
@@ -1087,10 +1065,14 @@ a.operate-reply {
     color: #999;
 }
 
-.typecho-list-table  {
+.typecho-list-table {
     border: 30px solid #FFF;
     width: 100%;
     background: #FFF;
+}
+
+.typecho-list-table .right {
+    text-align: right;
 }
 
 .typecho-list-table-border {
@@ -1146,10 +1128,10 @@ a.operate-reply {
 .typecho-list-table .important {
 }
 
-.typecho-list-table .description, ul.typecho-list-notable .description {
+.typecho-list-table .description {
 }
 
-.typecho-list-table .warning, ul.typecho-list-notable .warning {
+.typecho-list-table .warning {
     color: #B94A48;
 }
 
@@ -1177,6 +1159,7 @@ a.operate-reply {
 /**
  * 不使用表格的列表
  */
+/*
 ul.typecho-list-notable {
     margin: 10px 0 0 0;
     padding: 0;
@@ -1312,13 +1295,14 @@ ul.typecho-list-notable li .reply-message {
     -webkit-border-radius: 4px;
     -khtml-border-radius: 4px;
     
-    /* hope IE support border radius, God save me! */
     border-radius: 4px;
 }
 
 ul.typecho-list-notable li .loading {
 	background-position: center top;
 }
+
+*/
 
 /**
  * 评论回复
@@ -1328,9 +1312,9 @@ ul.typecho-list-notable li .loading {
     display: none;
 }
 
-ul.typecho-list-notable li #typecho-respond {
+/*ul.typecho-list-notable li #typecho-respond {
     display: inline;
-}
+}*/
 
 #typecho-respond textarea {
 }

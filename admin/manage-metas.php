@@ -36,7 +36,7 @@ include 'menu.php';
                     
                     <table class="typecho-list-table">
                         <colgroup>
-                            <col width="25"/>
+                            <col width="20"/>
                             <col width="230"/>
                             <col width="30"/>
                             <col width="170"/>
@@ -67,7 +67,7 @@ include 'menu.php';
                                 <?php if ($options->defaultCategory == $categories->mid): ?>
                                 <span class="balloon right"><?php _e('默认'); ?></span>
                                 <?php else: ?>
-                                <a class="balloon-button right hidden-by-mouse" href="<?php $options->index('/action/metas-category-edit?do=default&mid=' . $categories->mid); ?>"><?php _e('默认'); ?></a>
+                                <a class="balloon-button hidden-by-mouse" href="<?php $options->index('/action/metas-category-edit?do=default&mid=' . $categories->mid); ?>"><?php _e('默认'); ?></a>
                                 <?php endif; ?>
                                 </td>
                                 <td><a class="balloon-button left size-<?php echo Typecho_Common::splitByCount($categories->count, 1, 10, 20, 50, 100); ?>" href="<?php $options->adminUrl('manage-posts.php?category=' . $categories->mid); ?>"><?php $categories->count(); ?></a></td>

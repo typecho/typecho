@@ -32,7 +32,7 @@ include 'menu.php';
                 <form method="post" name="manage_users" class="operate-form">
                 <table class="typecho-list-table">
                     <colgroup>
-                        <col width="10"/>
+                        <col width="20"/>
                         <col width="20%"/>
                         <col width="20%"/>
                         <col width="20"/>

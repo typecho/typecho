@@ -34,7 +34,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 <form method="post" name="manage_pages" class="operate-form">
                 <table class="typecho-list-table">
                     <colgroup>
-                        <col width="10"/>
+                        <col width="20"/>
                         <col width="5%"/>
                         <col width="35%"/>
                         <col width=""/>
@@ -61,12 +61,12 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <?php while($pages->next()): ?>
                         <tr<?php $pages->alt(' class="even"', ''); ?> id="<?php $pages->theId(); ?>">
                             <td><input type="checkbox" value="<?php $pages->cid(); ?>" name="cid[]"/></td>
-                            <td><a href="<?php $options->adminUrl('manage-comments.php?cid=' . $pages->cid); ?>" class="balloon-button right size-<?php echo Typecho_Common::splitByCount($pages->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $pages->commentsNum(); ?></a></td>
+                            <td><a href="<?php $options->adminUrl('manage-comments.php?cid=' . $pages->cid); ?>" class="balloon-button size-<?php echo Typecho_Common::splitByCount($pages->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $pages->commentsNum(); ?></a></td>
                             <td<?php if ('draft' != $pages->status): ?> colspan="2"<?php endif; ?>><a href="<?php $options->adminUrl('write-page.php?cid=' . $pages->cid); ?>"><?php $pages->title(); ?></a>
                             <?php if ('draft' == $pages->status): ?>
                             </td>
-                            <td>
-                            <span class="balloon right"><?php _e('草稿'); ?></span>
+                            <td class="right">
+                            <span><?php _e('草稿'); ?></span>
                             <?php endif; ?></td>
                             </td>
                             <td>

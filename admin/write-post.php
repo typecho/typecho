@@ -38,9 +38,9 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                             </span>
                         </p>
                     </div>
-                    <ul id="advance-panel" class="typecho-post-option col-9">
-                        <li class="col-9">
-                            <div class="col-12 suffix">
+                    <ul id="advance-panel" class="typecho-post-option clearfix">
+                        <li>
+                            <div class="col-9">
                                     <?php if($user->pass('editor', true)): ?>
                                     <label class="typecho-label"><?php _e('公开度'); ?></label>
                                     <ul>
@@ -71,8 +71,8 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                             </div>
                         </li>
                     </ul>
-                    <ul id="upload-panel" class="col-9">
-                        <li class="col-9">
+                    <ul id="upload-panel">
+                        <li>
                             <?php include 'file-upload.php'; ?>
                         </li>
                     </ul>

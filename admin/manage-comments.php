@@ -77,80 +77,96 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                 </div>
 
                 <form method="post" name="manage_comments" class="operate-form">
-                    <ul class="typecho-list-notable clearfix">
-                    <?php if($comments->have()): ?>
-                    <?php while($comments->next()): ?>
-                    <li class="col-12<?php $comments->alt(' even', ''); ?>" id="<?php $comments->theId(); ?>">
-                        <div class="col-1 center">
-                            <input type="checkbox" value="<?php $comments->coid(); ?>" name="coid[]"/>
-                        </div>
-                        <div class="col-13 comment-body">
-                            <div class="content">
+                    <table class="typecho-list-table">
+                        <colgroup>
+                            <col width="20"/>
+                            <col width="50" />
+                            <col width="20%"/>
+                            <col width=""/>
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th> </th>
+                                <th> </th>
+                                <th><?php _e('作者'); ?></th>
+                                <th><?php _e('内容'); ?></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php if($comments->have()): ?>
+                        <?php while($comments->next()): ?>
+                        <tr class="<?php $comments->alt(' even', ''); ?>" id="<?php $comments->theId(); ?>">
+                            <td valign="top">
+                                <input type="checkbox" value="<?php $comments->coid(); ?>" name="coid[]"/>
+                            </td>
+                            <td valign="top">
                                 <div class="comment-avatar">
-                                    <?php $comments->gravatar(); ?>
+                                    <?php $comments->gravatar(40); ?>
                                 </div>
-                            
+                            </td>
+                            <td valign="top" class="comment-head">
                                 <div class="comment-meta">
                                     <span class="<?php $comments->type(); ?>"></span>
-                                    <span class="comment-author"><?php $comments->author(true); ?></span>
+                                    <span class="comment-author"><?php $comments->author(true); ?></span><br>
                                     <?php if($comments->mail): ?>
-                                     | 
-                                    <a href="mailto:<?php $comments->mail(); ?>"><?php $comments->mail(); ?></a>
+                                    <a href="mailto:<?php $comments->mail(); ?>"><?php $comments->mail(); ?></a><br>
                                     <?php endif; ?>
                                     <?php if($comments->ip): ?>
-                                     | 
                                     <?php $comments->ip(); ?>
                                     <?php endif; ?>
                                 </div>
+                            </td>
+                            <td valign="top" class="comment-body">
+                                <div class="content">
+                                    <div class="comment-content">
+                                        <?php $comments->content(); ?>
+                                    </div>
+                                </div>
                                 
-                                <div class="comment-content">
-                                    <?php $comments->content(); ?>
+                                <div class="line">
+                                    <div class="left hidden-by-mouse">
+                                        <?php if('approved' == $comments->status): ?>
+                                        <span class="weak"><?php _e('通过'); ?></span>
+                                        <?php else: ?>
+                                        <a href="<?php $options->index('/action/comments-edit?do=approved&coid=' . $comments->coid); ?>" class="ajax"><?php _e('通过'); ?></a>
+                                        <?php endif; ?>
+                                         | 
+                                        <?php if('waiting' == $comments->status): ?>
+                                        <span class="weak"><?php _e('待审核'); ?></span>
+                                        <?php else: ?>
+                                        <a href="<?php $options->index('/action/comments-edit?do=waiting&coid=' . $comments->coid); ?>" class="ajax"><?php _e('待审核'); ?></a>
+                                        <?php endif; ?>
+                                         | 
+                                        <?php if('spam' == $comments->status): ?>
+                                        <span class="weak"><?php _e('垃圾'); ?></span>
+                                        <?php else: ?>
+                                        <a href="<?php $options->index('/action/comments-edit?do=spam&coid=' . $comments->coid); ?>" class="ajax"><?php _e('垃圾'); ?></a>
+                                        <?php endif; ?>
+                                         | 
+                                        <a href="#<?php $comments->theId(); ?>" rel="<?php $options->index('/action/comments-edit?do=get&coid=' . $comments->coid); ?>" class="ajax operate-edit"><?php _e('编辑'); ?></a>
+                                        <?php if('approved' == $comments->status && 'comment' == $comments->type): ?>
+                                         | 
+                                        <a href="#<?php $comments->theId(); ?>" rel="<?php $options->index('/action/comments-edit?do=reply&coid=' . $comments->coid); ?>" class="ajax operate-reply"><?php _e('回复'); ?></a>
+                                        <?php endif; ?>
+                                         | 
+                                        <a lang="<?php _e('你确认要删除%s的评论吗?', htmlspecialchars($comments->author)); ?>" href="<?php $options->index('/action/comments-edit?do=delete&coid=' . $comments->coid); ?>" class="ajax operate-delete"><?php _e('删除'); ?></a>
+                                    </div>
+                                    <div class="right">
+                                        <?php $comments->dateWord(); ?>
+                                        &nbsp;&nbsp;
+                                        <a href="<?php $comments->permalink(); ?>"><?php $comments->title(); ?></a>
+                                    </div>
                                 </div>
-                            </div>
-                            
-                            <div class="line">
-                                <div class="left hidden-by-mouse">
-                                    <?php if('approved' == $comments->status): ?>
-                                    <span class="weak"><?php _e('通过'); ?></span>
-                                    <?php else: ?>
-                                    <a href="<?php $options->index('/action/comments-edit?do=approved&coid=' . $comments->coid); ?>" class="ajax"><?php _e('通过'); ?></a>
-                                    <?php endif; ?>
-                                     | 
-                                    <?php if('waiting' == $comments->status): ?>
-                                    <span class="weak"><?php _e('待审核'); ?></span>
-                                    <?php else: ?>
-                                    <a href="<?php $options->index('/action/comments-edit?do=waiting&coid=' . $comments->coid); ?>" class="ajax"><?php _e('待审核'); ?></a>
-                                    <?php endif; ?>
-                                     | 
-                                    <?php if('spam' == $comments->status): ?>
-                                    <span class="weak"><?php _e('垃圾'); ?></span>
-                                    <?php else: ?>
-                                    <a href="<?php $options->index('/action/comments-edit?do=spam&coid=' . $comments->coid); ?>" class="ajax"><?php _e('垃圾'); ?></a>
-                                    <?php endif; ?>
-                                     | 
-                                    <a href="#<?php $comments->theId(); ?>" rel="<?php $options->index('/action/comments-edit?do=get&coid=' . $comments->coid); ?>" class="ajax operate-edit"><?php _e('编辑'); ?></a>
-                                    <?php if('approved' == $comments->status && 'comment' == $comments->type): ?>
-                                     | 
-                                    <a href="#<?php $comments->theId(); ?>" rel="<?php $options->index('/action/comments-edit?do=reply&coid=' . $comments->coid); ?>" class="ajax operate-reply"><?php _e('回复'); ?></a>
-                                    <?php endif; ?>
-                                     | 
-                                    <a lang="<?php _e('你确认要删除%s的评论吗?', htmlspecialchars($comments->author)); ?>" href="<?php $options->index('/action/comments-edit?do=delete&coid=' . $comments->coid); ?>" class="ajax operate-delete"><?php _e('删除'); ?></a>
-                                </div>
-                                <div class="right">
-                                    <?php $comments->dateWord(); ?>
-                                    &nbsp;&nbsp;
-                                    <a href="<?php $comments->permalink(); ?>"><?php $comments->title(); ?></a>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <?php endwhile; ?>
-                    <?php else: ?>
-                    <li class="even">
-                        <h6 class="typecho-list-table-title"><?php _e('没有评论') ?></h6>
-                    </li>
-                    <?php endif; ?>
-                    </ul>
+                            </td>
+                        </tr>
+                        <?php endwhile; ?>
+                        <?php else: ?>
+                        <tr class="even">
+                            <h6 class="typecho-list-table-title"><?php _e('没有评论') ?></h6>
+                        </tr>
+                        <?php endif; ?>
+                        </tbody>
+                    </table>
                     <?php if(isset($request->cid)): ?>
                         <input type="hidden" value="<?php echo htmlspecialchars($request->get('cid')); ?>" name="cid" />
                     <?php endif; ?>

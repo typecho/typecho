@@ -44,7 +44,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 <form method="post" name="manage_posts" class="operate-form">
                 <table class="typecho-list-table">
                     <colgroup>
-                        <col width="10"/>
+                        <col width="20"/>
                         <col width="5%"/>
                         <col width="35%"/>
                         <col width=""/>
@@ -71,13 +71,13 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <?php while($posts->next()): ?>
                         <tr<?php $posts->alt(' class="even"', ''); ?> id="<?php $posts->theId(); ?>">
                             <td><input type="checkbox" value="<?php $posts->cid(); ?>" name="cid[]"/></td>
-                            <td><a href="<?php $options->adminUrl('manage-comments.php?cid=' . $posts->cid); ?>" class="balloon-button right size-<?php echo Typecho_Common::splitByCount($posts->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $posts->commentsNum(); ?></a></td>
+                            <td><a href="<?php $options->adminUrl('manage-comments.php?cid=' . $posts->cid); ?>" class="balloon-button size-<?php echo Typecho_Common::splitByCount($posts->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $posts->commentsNum(); ?></a></td>
                             <td<?php if ('draft' != $posts->status && 'waiting' != $posts->status && 'private' != $posts->status && !$posts->password): ?> colspan="2"<?php endif; ?>>
                             <a href="<?php $options->adminUrl('write-post.php?cid=' . $posts->cid); ?>"><?php $posts->title(); ?></a>
                             <?php if ('draft' == $posts->status || 'waiting' == $posts->status || 'private' == $posts->status || $posts->password): ?>
                             </td>
-                            <td>
-                            <span class="balloon right"><?php 'draft' == $posts->status ? _e('草稿') : ('waiting' == $posts->status ? _e('待审核') : ('private' == $posts->status ? _e('私密') : _e(''))); ?> <?php $posts->password ? _e('密码') : _e(''); ?></span>
+                            <td class="right">
+                            <span><?php 'draft' == $posts->status ? _e('草稿') : ('waiting' == $posts->status ? _e('待审核') : ('private' == $posts->status ? _e('私密') : _e(''))); ?> <?php $posts->password ? _e('密码') : _e(''); ?></span>
                             <?php endif; ?></td>
                             <td>
                             <?php if ('publish' == $posts->status): ?>

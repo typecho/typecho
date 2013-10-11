@@ -13,8 +13,7 @@ include 'menu.php';
                 <h4 class="typecho-list-table-title"><?php _e('激活的插件'); ?></h4>
                 <table class="typecho-list-table">
                     <colgroup>
-                        <col width="10"/>
-                        <col width="20%"/>
+                        <col width="25%"/>
                         <col width="45%"/>
                         <col width="8%"/>
                         <col width="10%"/>
@@ -22,7 +21,6 @@ include 'menu.php';
                     </colgroup>
                     <thead>
                         <tr>
-                            <th> </th>
                             <th><?php _e('名称'); ?></th>
                             <th><?php _e('描述'); ?></th>
                             <th><?php _e('版本'); ?></th>
@@ -33,7 +31,6 @@ include 'menu.php';
                     <tbody>
                         <?php while ($activatedPlugins->next()): ?>
                         <tr<?php $activatedPlugins->alt(' class="even"', ''); ?> id="plugin-<?php $activatedPlugins->name(); ?>">
-                            <td></td>
                             <td><?php $activatedPlugins->title(); ?>
                             <?php if (!$activatedPlugins->dependence): ?>
                             <img src="<?php $options->adminUrl('images/notice.gif'); ?>" title="<?php _e('%s 无法在此版本的typecho下正常工作', $activatedPlugins->title); ?>" alt="<?php _e('%s 无法在此版本的typecho下正常工作', $activatedPlugins->title); ?>" class="tiny" />
@@ -64,7 +61,6 @@ include 'menu.php';
                         <?php if (!empty($activatedPlugins->activatedPlugins)): ?>
                         <?php foreach ($activatedPlugins->activatedPlugins as $key => $val): ?>
                         <tr>
-                        <td></td>
                         <td><?php echo $key; ?></td>
                         <td colspan="3"><span class="warning"><?php _e('此插件文件已经损坏或者被不安全移除, 强烈建议你禁用它'); ?></span></td>
                         <td><a lang="<?php _e('你确认要禁用插件 %s 吗?', $key); ?>" href="<?php $options->index('/action/plugins-edit?deactivate=' . $key); ?>"><?php _e('禁用'); ?></a></td>
@@ -81,8 +77,7 @@ include 'menu.php';
                 <h4 class="typecho-list-table-title"><?php _e('禁用的插件'); ?></h4>
                 <table class="typecho-list-table deactivate">
                     <colgroup>
-                        <col width="10"/>
-                        <col width="20%"/>
+                        <col width="25%"/>
                         <col width="45%"/>
                         <col width="8%"/>
                         <col width="10%"/>
@@ -90,7 +85,6 @@ include 'menu.php';
                     </colgroup>
                     <thead>
                         <tr>
-                            <th class="typecho-radius-topleft"> </th>
                             <th><?php _e('名称'); ?></th>
                             <th><?php _e('描述'); ?></th>
                             <th><?php _e('版本'); ?></th>
@@ -102,7 +96,6 @@ include 'menu.php';
                         <?php if ($deactivatedPlugins->have()): ?>
                         <?php while ($deactivatedPlugins->next()): ?>
                         <tr<?php $deactivatedPlugins->alt(' class="even"', ''); ?> id="plugin-<?php $deactivatedPlugins->name(); ?>">
-                            <td></td>
                             <td><?php $deactivatedPlugins->title(); ?></td>
                             <td><?php $deactivatedPlugins->description(); ?></td>
                             <td><?php $deactivatedPlugins->version(); ?></td>
@@ -125,7 +118,7 @@ include 'menu.php';
                         <?php endwhile; ?>
                         <?php else: ?>
                         <tr class="even">
-                        	<td colspan="6"><?php _e('没有安装插件'); ?></td>
+                        	<td colspan="5"><?php _e('没有安装插件'); ?></td>
                         </tr>
                         <?php endif; ?>
                     </tbody>
