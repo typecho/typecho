@@ -572,19 +572,19 @@ margin-top: 25px;
     padding-top: 30px;
     border-top: 1px solid #F0F0EC;
     font-size: 1.14286em;
+    line-height: 1;
     text-align: center;
 }
 
 .typecho-pager .typecho-pager-content {
-    display: inline-block;
 }
 
 .typecho-pager h5 {
 }
 
 .typecho-pager ul {
+    display: inline-block;
     list-style: none;
-    float: left;
     margin: 0;
     padding: 0;
     zoom: 1;

@@ -92,11 +92,9 @@ $stat = Typecho_Widget::widget('Widget_Stat');
 
                         <?php if($attachments->have()): ?>
                         <div class="typecho-pager">
-                            <div class="typecho-pager-content">
-                                <ul>
-                                    <?php $attachments->pageNav(); ?>
-                                </ul>
-                            </div>
+                            <ul class="typecho-pager-content">
+                                <?php $attachments->pageNav(); ?>
+                            </ul>
                         </div>
                         <?php endif; ?>
                     </form>

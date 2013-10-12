@@ -118,11 +118,9 @@ $stat = Typecho_Widget::widget('Widget_Stat');
 
                         <?php if($posts->have()): ?>
                         <div class="typecho-pager">
-                            <div class="typecho-pager-content">
-                                <ul>
-                                    <?php $posts->pageNav(); ?>
-                                </ul>
-                            </div>
+                            <ul class="typecho-pager-content">
+                                <?php $posts->pageNav(); ?>
+                            </ul>
                         </div>
                         <?php endif; ?>
                     </form>

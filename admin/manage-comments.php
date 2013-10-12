@@ -164,11 +164,9 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
 
                         <?php if($comments->have()): ?>
                         <div class="typecho-pager">
-                            <div class="typecho-pager-content">
-                                <ul>
-                                    <?php $comments->pageNav(); ?>
-                                </ul>
-                            </div>
+                            <ul class="typecho-pager-content">
+                                <?php $comments->pageNav(); ?>
+                            </ul>
                         </div>
                         <?php endif; ?>
                     </form>

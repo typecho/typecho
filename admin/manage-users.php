@@ -91,11 +91,9 @@ include 'menu.php';
                 
                     <?php if($users->have()): ?>
                     <div class="typecho-pager">
-                        <div class="typecho-pager-content">
-                            <ul>
-                                <?php $users->pageNav(); ?>
-                            </ul>
-                        </div>
+                        <ul class="typecho-pager-content">
+                            <?php $users->pageNav(); ?>
+                        </ul>
                     </div>
                     <?php endif; ?>
                 </div><!-- end .typecho-list-wrap -->
