@@ -59,7 +59,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     	<?php Typecho_Widget::widget('Widget_Contents_Page_Admin')->to($pages); ?>
                     	<?php if($pages->have()): ?>
                         <?php while($pages->next()): ?>
-                        <tr<?php $pages->alt(' class="even"', ''); ?> id="<?php $pages->theId(); ?>">
+                        <tr id="<?php $pages->theId(); ?>">
                             <td><input type="checkbox" value="<?php $pages->cid(); ?>" name="cid[]"/></td>
                             <td><a href="<?php $options->adminUrl('manage-comments.php?cid=' . $pages->cid); ?>" class="balloon-button size-<?php echo Typecho_Common::splitByCount($pages->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $pages->commentsNum(); ?></a></td>
                             <td<?php if ('draft' != $pages->status): ?> colspan="2"<?php endif; ?>><a href="<?php $options->adminUrl('write-page.php?cid=' . $pages->cid); ?>"><?php $pages->title(); ?></a>
@@ -122,14 +122,6 @@ include 'table-js.php';
 
                 $.post('<?php $options->index('/action/contents-page-edit?do=sort'); ?>', 
                     $.param({cid : ids}));
-
-                $('tr', table).each(function (i) {
-                    if (i % 2) {
-                        $(this).addClass('even');
-                    } else {
-                        $(this).removeClass('even');
-                    }
-                });
             }
         });
     });

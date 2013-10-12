@@ -180,23 +180,9 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
 <?php
 include 'copyright.php';
 include 'common-js.php';
+include 'table-js.php';
 ?>
 <script type="text/javascript">
-(function () {
-    $(document).ready(function () {
-        $('.typecho-list-notable').tableSelectable({
-            checkEl     :   'input[type=checkbox]',
-            rowEl       :   'li',
-            selectAllEl :   '.typecho-table-select-all',
-            actionEl    :   '.dropdown-menu a'
-        });
-
-        $('.btn-drop').dropdownMenu({
-            btnEl       :   '.dropdown-toggle',
-            menuEl      :   '.dropdown-menu'
-        });
-    });
-})();
 /*
     (function () {
         window.addEvent('domready', function() {
