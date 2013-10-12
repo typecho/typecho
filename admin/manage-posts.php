@@ -69,7 +69,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     	<?php Typecho_Widget::widget('Widget_Contents_Post_Admin')->to($posts); ?>
                     	<?php if($posts->have()): ?>
                         <?php while($posts->next()): ?>
-                        <tr<?php $posts->alt(' class="even"', ''); ?> id="<?php $posts->theId(); ?>">
+                        <tr id="<?php $posts->theId(); ?>">
                             <td><input type="checkbox" value="<?php $posts->cid(); ?>" name="cid[]"/></td>
                             <td><a href="<?php $options->adminUrl('manage-comments.php?cid=' . $posts->cid); ?>" class="balloon-button size-<?php echo Typecho_Common::splitByCount($posts->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $posts->commentsNum(); ?></a></td>
                             <td<?php if ('draft' != $posts->status && 'waiting' != $posts->status && 'private' != $posts->status && !$posts->password): ?> colspan="2"<?php endif; ?>>

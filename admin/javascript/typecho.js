@@ -28,6 +28,11 @@
 
         function clickRow (t) {
             var t = $(t), check = $(s.checkEl, t), checked = check.prop('checked');
+
+            if (!check.length) {
+                return;
+            }
+
             check.prop('checked', !checked);
             
             if (checked) {

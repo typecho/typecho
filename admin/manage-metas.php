@@ -58,7 +58,7 @@ include 'menu.php';
                         <tbody>
                             <?php if($categories->have()): ?>
                             <?php while ($categories->next()): ?>
-                            <tr<?php $categories->alt(' class="even"', ''); ?> id="mid-<?php $categories->theId(); ?>">
+                            <tr id="mid-<?php $categories->theId(); ?>">
                                 <td><input type="checkbox" value="<?php $categories->mid(); ?>" name="mid[]"/></td>
                                 <td><a href="<?php echo $request->makeUriByRequest('mid=' . $categories->mid); ?>"><?php $categories->name(); ?></a></td>
                                 <td>
