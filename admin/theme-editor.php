@@ -27,7 +27,7 @@ Typecho_Widget::widget('Widget_Themes_Files')->to($files);
             </div>
                 
             <div class="typecho-edit-theme">
-                <div class="col-mb-9 content">
+                <div class="col-mb-12 col-tb-8 col-9 content">
                     <form method="post" name="theme" id="theme" action="<?php $options->index('/action/themes-edit'); ?>">
                         <textarea name="content" id="content" class="w-100 mono" <?php if(!$files->currentIsWriteable()): ?>readonly<?php endif; ?>><?php echo $files->currentContent(); ?></textarea>
                         <p class="submit">
@@ -41,7 +41,7 @@ Typecho_Widget::widget('Widget_Themes_Files')->to($files);
                         </p>
                     </form>
                 </div>
-                <ul class="col-mb-3">
+                <ul class="col-mb-12 col-tb-4 col-3">
                     <li><strong>模板文件</strong></li>
                     <?php while($files->next()): ?>
                     <li<?php if($files->current): ?> class="current"<?php endif; ?>>
