@@ -87,8 +87,8 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                         <thead>
                             <tr>
                                 <th> </th>
-                                <th> </th>
                                 <th><?php _e('作者'); ?></th>
+                                <th> </th>
                                 <th><?php _e('内容'); ?></th>
                             </tr>
                         </thead>
@@ -107,55 +107,46 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                             <td valign="top" class="comment-head">
                                 <div class="comment-meta">
                                     <span class="<?php $comments->type(); ?>"></span>
-                                    <span class="comment-author"><?php $comments->author(true); ?></span><br>
+                                    <strong class="comment-author"><?php $comments->author(true); ?></strong>
                                     <?php if($comments->mail): ?>
-                                    <a href="mailto:<?php $comments->mail(); ?>"><?php $comments->mail(); ?></a><br>
+                                    <br><span><a href="mailto:<?php $comments->mail(); ?>"><?php $comments->mail(); ?></a></span>
                                     <?php endif; ?>
                                     <?php if($comments->ip): ?>
-                                    <?php $comments->ip(); ?>
+                                    <br><span><?php $comments->ip(); ?></span>
                                     <?php endif; ?>
                                 </div>
                             </td>
                             <td valign="top" class="comment-body">
-                                <div class="content">
-                                    <div class="comment-content">
-                                        <?php $comments->content(); ?>
-                                    </div>
+                                <div class="comment-date"><?php $comments->dateWord(); ?> 于 <a href="<?php $comments->permalink(); ?>"><?php $comments->title(); ?></a></div>
+                                <div class="comment-content">
+                                    <?php $comments->content(); ?>
                                 </div>
-                                
-                                <div class="line">
-                                    <div class="left hidden-by-mouse">
-                                        <?php if('approved' == $comments->status): ?>
-                                        <span class="weak"><?php _e('通过'); ?></span>
-                                        <?php else: ?>
-                                        <a href="<?php $options->index('/action/comments-edit?do=approved&coid=' . $comments->coid); ?>" class="ajax"><?php _e('通过'); ?></a>
-                                        <?php endif; ?>
-                                         | 
-                                        <?php if('waiting' == $comments->status): ?>
-                                        <span class="weak"><?php _e('待审核'); ?></span>
-                                        <?php else: ?>
-                                        <a href="<?php $options->index('/action/comments-edit?do=waiting&coid=' . $comments->coid); ?>" class="ajax"><?php _e('待审核'); ?></a>
-                                        <?php endif; ?>
-                                         | 
-                                        <?php if('spam' == $comments->status): ?>
-                                        <span class="weak"><?php _e('垃圾'); ?></span>
-                                        <?php else: ?>
-                                        <a href="<?php $options->index('/action/comments-edit?do=spam&coid=' . $comments->coid); ?>" class="ajax"><?php _e('垃圾'); ?></a>
-                                        <?php endif; ?>
-                                         | 
-                                        <a href="#<?php $comments->theId(); ?>" rel="<?php $options->index('/action/comments-edit?do=get&coid=' . $comments->coid); ?>" class="ajax operate-edit"><?php _e('编辑'); ?></a>
-                                        <?php if('approved' == $comments->status && 'comment' == $comments->type): ?>
-                                         | 
-                                        <a href="#<?php $comments->theId(); ?>" rel="<?php $options->index('/action/comments-edit?do=reply&coid=' . $comments->coid); ?>" class="ajax operate-reply"><?php _e('回复'); ?></a>
-                                        <?php endif; ?>
-                                         | 
-                                        <a lang="<?php _e('你确认要删除%s的评论吗?', htmlspecialchars($comments->author)); ?>" href="<?php $options->index('/action/comments-edit?do=delete&coid=' . $comments->coid); ?>" class="ajax operate-delete"><?php _e('删除'); ?></a>
-                                    </div>
-                                    <div class="right">
-                                        <?php $comments->dateWord(); ?>
-                                        &nbsp;&nbsp;
-                                        <a href="<?php $comments->permalink(); ?>"><?php $comments->title(); ?></a>
-                                    </div>
+                                <div class="comment-action">
+                                    <?php if('approved' == $comments->status): ?>
+                                    <span class="weak"><?php _e('通过'); ?></span>
+                                    <?php else: ?>
+                                    <a href="<?php $options->index('/action/comments-edit?do=approved&coid=' . $comments->coid); ?>" class="ajax"><?php _e('通过'); ?></a>
+                                    <?php endif; ?>
+                                    
+                                    <?php if('waiting' == $comments->status): ?>
+                                    <span class="weak"><?php _e('待审核'); ?></span>
+                                    <?php else: ?>
+                                    <a href="<?php $options->index('/action/comments-edit?do=waiting&coid=' . $comments->coid); ?>" class="ajax"><?php _e('待审核'); ?></a>
+                                    <?php endif; ?>
+                                    
+                                    <?php if('spam' == $comments->status): ?>
+                                    <span class="weak"><?php _e('垃圾'); ?></span>
+                                    <?php else: ?>
+                                    <a href="<?php $options->index('/action/comments-edit?do=spam&coid=' . $comments->coid); ?>" class="ajax"><?php _e('垃圾'); ?></a>
+                                    <?php endif; ?>
+                                    
+                                    <a href="#<?php $comments->theId(); ?>" rel="<?php $options->index('/action/comments-edit?do=get&coid=' . $comments->coid); ?>" class="ajax operate-edit"><?php _e('编辑'); ?></a>
+
+                                    <?php if('approved' == $comments->status && 'comment' == $comments->type): ?>
+                                    <a href="#<?php $comments->theId(); ?>" rel="<?php $options->index('/action/comments-edit?do=reply&coid=' . $comments->coid); ?>" class="ajax operate-reply"><?php _e('回复'); ?></a>
+                                    <?php endif; ?>
+                                    
+                                    <a lang="<?php _e('你确认要删除%s的评论吗?', htmlspecialchars($comments->author)); ?>" href="<?php $options->index('/action/comments-edit?do=delete&coid=' . $comments->coid); ?>" class="ajax operate-delete"><?php _e('删除'); ?></a>
                                 </div>
                             </td>
                         </tr>

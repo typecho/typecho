@@ -45,7 +45,7 @@ a.balloon-button {
     height: 18px;
     line-height: 18px;
     background: #D8E7EE;
-    font-size: 12px;
+    font-size: .85714em;
     text-align: center;
     text-decoration: none;
     
@@ -671,7 +671,7 @@ margin-top: 25px;
  * 后台头部导航
  */
 .typecho-head-nav {
-    height: 40px;
+    padding: 0 10px;
     background: #2E3639;
 }
 
@@ -695,24 +695,25 @@ margin-top: 25px;
 
 #typecho-nav-list .parent a {
     color: #FFF;
-    height: 40px;
-    line-height: 40px;
+    height: 36px;
+    line-height: 36px;
     display: block;
     padding: 0 20px;
     float: left;
 }
 
-#typecho-nav-list .parent a:hover, #typecho-nav-list .focus .parent a, #typecho-nav-list .root:hover .parent a {
-    background: #62686B;
+#typecho-nav-list .parent a:hover,
+#typecho-nav-list .focus .parent a,
+#typecho-nav-list .root:hover .parent a {
+    background: #434A4D;
     text-decoration: none;
 }
 
 #typecho-nav-list .child {
     display: none;
     position: absolute;
-    top: 40px;
+    top: 36px;
     margin: 0;
-    border-top: none;
     background: #2E3639;
     overflow: hidden;
     z-index: 250;
@@ -732,12 +733,10 @@ margin-top: 25px;
 #typecho-nav-list .child li.last {
 }
 
-#typecho-nav-list .child li a:hover {
-    background: #62686B;
-}
-
-#typecho-nav-list .child li.focus a, #typecho-nav-list .child li.focus a:hover {
-    background: #62686B;
+#typecho-nav-list .child li a:hover,
+#typecho-nav-list .child li.focus a,
+#typecho-nav-list .child li.focus a:hover {
+    background: #434A4D;
 }
 
 #typecho-nav-list .child li a {
@@ -748,21 +747,17 @@ margin-top: 25px;
     overflow: hidden;
     text-overflow : ellipsis;
     white-space: nowrap;
-    height: 40px;
-    line-height: 40px;
+    height: 36px;
+    line-height: 36px;
 }
 
 .typecho-head-nav .operate {
-    color: #ccc;
     position: absolute;
-    font-size: 13px;
     top: 0px;
     right: 0;
 }
 
 .typecho-head-nav .operate .author {
-    margin-right: 8px;
-    text-decoration: underline;
 }
 
 
@@ -1157,8 +1152,54 @@ a.operate-reply {
 }
 
 /**
- * 不使用表格的列表
+ * 评论管理
  */
+.comment-content {
+    margin: -0.5em 0;
+}
+.comment-date {
+    color: #999;
+}
+
+.comment-action a, .comment-action span { margin-right: 4px; }
+
+.comment-action { visibility: hidden; }
+.typecho-list-table tr:hover .comment-action { visibility: visible; }
+
+/* 下拉操作按钮 */
+/*.typecho-list-table tr:hover .drop-action { display: block; }
+
+.drop-action {
+    display: none;
+    position: relative;
+    list-style: none;
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #F0F0EC;
+    height: 24px;
+    overflow: hidden;
+    background-color: #FFF;
+
+    border-radius: 2px;
+}
+.drop-action:hover {
+    border-color: #E0E0DC;
+    height: auto;
+    z-index: 10;
+}
+
+.drop-action a, .drop-action span {
+    display: block;
+    padding: 0 10px;
+    height: 24px;
+    line-height: 24px;
+}
+.drop-action a:hover, .drop-action span:hover {
+    background-color: #FFF9E8;
+    text-decoration: none;
+}*/
+
 /*
 ul.typecho-list-notable {
     margin: 10px 0 0 0;

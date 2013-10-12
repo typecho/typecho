@@ -1,5 +1,5 @@
 <?php if(!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
-<div class="typecho-head-nav">
+<div class="typecho-head-nav clearfix">
     <div id="typecho-nav-list">
         <?php $menu->output(); ?>
     </div>
