@@ -10,7 +10,7 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="col-group typecho-page-main">
-            <div class="col-12 typecho-list">
+            <div class="col-mb-12 typecho-list">
                 <ul class="typecho-option-tabs clearfix">
                     <li<?php if(!isset($request->status) || 'approved' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php'
                     . (isset($request->cid) ? '?cid=' . $request->cid : '')); ?>"><?php _e('已通过'); ?></a></li>
@@ -121,7 +121,7 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                                 <div class="comment-content">
                                     <?php $comments->content(); ?>
                                 </div>
-                                <div class="comment-action">
+                                <div class="comment-action hidden-by-mouse">
                                     <?php if('approved' == $comments->status): ?>
                                     <span class="weak"><?php _e('通过'); ?></span>
                                     <?php else: ?>

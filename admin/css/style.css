@@ -316,7 +316,7 @@ button.primary:active, button.primary.active {
  */
 .typecho-option {
     list-style: none;
-    margin: 1.5em 0;
+    margin: 1em 0;
     padding: 0;
 }
 
@@ -1108,9 +1108,11 @@ a.operate-reply {
 }
 
 .typecho-list-table tr td .hidden-by-mouse, ul.typecho-list-notable li .hidden-by-mouse {
+    visibility: hidden;
 }
 
 .typecho-list-table tr:hover td .hidden-by-mouse, ul.typecho-list-notable li:hover .hidden-by-mouse {
+    visibility: visible;
 }
 
 .deactivate tbody, tr.deactivate td {
@@ -1137,8 +1139,6 @@ a.operate-reply {
 
 .comment-action a, .comment-action span { margin-right: 4px; }
 
-.comment-action { visibility: hidden; }
-.typecho-list-table tr:hover .comment-action { visibility: visible; }
 
 /* 下拉操作按钮 */
 /*.typecho-list-table tr:hover .drop-action { display: block; }
@@ -1401,7 +1401,6 @@ ul.typecho-list-notable li .loading {
 }
 
 .typecho-page-main .typecho-mini-panel {
-    background: #DEE4C5;
 }
 
 .typecho-page-main .typecho-option label.typecho-label {
@@ -1415,12 +1414,9 @@ ul.typecho-list-notable li .loading {
 }
 
 .typecho-page-main .typecho-mini-panel .typecho-option {
-    border: none;
-    padding: 0 10px;
 }
 
 .typecho-page-main .typecho-mini-panel .typecho-option li {
-    padding-left: 0;
 }
 
 .typecho-page-main .typecho-option input.text {
@@ -1478,40 +1474,24 @@ ul.typecho-list-notable li .loading {
 }
 
 .typecho-page-main .typecho-content-panel ul.typecho-option {
-    border: none;
 }
 
 .typecho-page-main .typecho-content-panel ul.typecho-option-focus li {
-    margin: 10px 0 0 0;
 }
 
 .typecho-page-main .typecho-content-panel .typecho-option li {
-    padding-left: 110px;
 }
 
 .typecho-page-main .typecho-content-panel .typecho-option-submit li {
-    padding-top: 15px;
 }
 
 .typecho-page-main .typecho-content-panel h3 {
-    font-size: 18px;
-    padding: 10px 0;
-    margin: 20px 0;
-    color: #e47e00;
-    border-bottom: 1px solid #E8EDD6;
 }
 
 .typecho-page-main .typecho-content-panel h4 cite {
-    color: #777;
-    font-style: normal;
-    font-size: 13px;
-    font-weight: normal;
-    margin-left: 5px;
 }
 
 .typecho-page-main .typecho-content-panel h4 img {
-    margin-right: 10px;
-	margin-top: 10px;
 }
 
 /**
@@ -1910,15 +1890,9 @@ ul.autocompleter-choices span.autocompleter-queried {
 }
 
 .typecho-page-main .typecho-mini-panel .tag-selection {
-    margin: 10px;
-    font-size: 13px;
 }
 
 .typecho-page-main .typecho-mini-panel .tag-selection a {
-    margin: 0 5px 5px 0;
-    display: block;
-    float: left;
-    white-space:nowrap;
 }
 
 .typecho-attachment-photo-box .description {

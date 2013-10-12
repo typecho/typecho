@@ -8,12 +8,14 @@ include 'menu.php';
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="col-group typecho-page-main manage-metas">
-                <div class="col-8 suffix">
+                <div class="col-mb-12">
                     <ul class="typecho-option-tabs clearfix">
                         <li<?php if(!isset($request->type) || 'category' == $request->get('type')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-metas.php'); ?>"><?php _e('分类'); ?></a></li>
                         <li<?php if('tag' == $request->get('type')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-metas.php?type=tag'); ?>"><?php _e('标签'); ?></a></li>
                     </ul>
-                    
+                </div>
+                
+                <div class="col-mb-12 col-tb-8">
                     <?php if(!isset($request->type) || 'category' == $request->get('type')): ?>
                     <?php Typecho_Widget::widget('Widget_Metas_Category_List')->to($categories); ?>
                     <form method="post" name="manage_categories" class="operate-form">
@@ -37,11 +39,11 @@ include 'menu.php';
                     <table class="typecho-list-table">
                         <colgroup>
                             <col width="20"/>
-                            <col width="230"/>
-                            <col width="30"/>
-                            <col width="170"/>
-                            <col width="50"/>
-                            <col width="65"/>
+                            <col width="30%"/>
+                            <col width="20"/>
+                            <col width="30%"/>
+                            <col width=""/>
+                            <col width="15%"/>
                         </colgroup>
                         <thead>
                             <tr>
@@ -67,7 +69,7 @@ include 'menu.php';
                                 <?php if ($options->defaultCategory == $categories->mid): ?>
                                 <span class="balloon right"><?php _e('默认'); ?></span>
                                 <?php else: ?>
-                                <a class="balloon-button hidden-by-mouse" href="<?php $options->index('/action/metas-category-edit?do=default&mid=' . $categories->mid); ?>"><?php _e('默认'); ?></a>
+                                <a class="hidden-by-mouse" href="<?php $options->index('/action/metas-category-edit?do=default&mid=' . $categories->mid); ?>" title="<?php _e('设为默认'); ?>"><?php _e('默认'); ?></a>
                                 <?php endif; ?>
                                 </td>
                                 <td><a class="balloon-button left size-<?php echo Typecho_Common::splitByCount($categories->count, 1, 10, 20, 50, 100); ?>" href="<?php $options->adminUrl('manage-posts.php?category=' . $categories->mid); ?>"><?php $categories->count(); ?></a></td>
@@ -116,7 +118,7 @@ include 'menu.php';
                     <?php endif; ?>
                     
                 </div>
-                <div class="col-4 typecho-mini-panel typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
+                <div class="col-mb-12 col-tb-4 typecho-mini-panel typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
                     <?php if(!isset($request->type) || 'category' == $request->get('type')): ?>
                         <?php Typecho_Widget::widget('Widget_Metas_Category_Edit')->form()->render(); ?>
                     <?php else: ?>

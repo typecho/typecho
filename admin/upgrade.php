@@ -8,7 +8,7 @@ include 'menu.php';
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="col-group typecho-page-main">
-            <div class="col-12 start-02">
+            <div class="col-mb-12">
                 <div class="message notice typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
                     <form action="<?php echo Typecho_Router::url('do', array('action' => 'upgrade', 'widget' => 'Upgrade'), 
                     Typecho_Common::url('index.php', $options->siteUrl)); ?>" method="post">

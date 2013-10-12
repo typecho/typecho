@@ -11,7 +11,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="col-group typecho-page-main">
-            <div class="col-12">
+            <div class="col-mb-12">
                 
                 <div class="typecho-list-operate clearfix">
                 <form method="get">
