@@ -54,7 +54,7 @@ include 'menu.php';
                     <tbody>
                     	<?php Typecho_Widget::widget('Widget_Users_Admin')->to($users); ?>
                         <?php while($users->next()): ?>
-                        <tr<?php $users->alt(' class="even"', ''); ?> id="user-<?php $users->uid(); ?>">
+                        <tr id="user-<?php $users->uid(); ?>">
                             <td><input type="checkbox" value="<?php $users->uid(); ?>" name="uid[]"/></td>
                             <td><a href="<?php $options->adminUrl('user.php?uid=' . $users->uid); ?>"><?php $users->name(); ?></a></td>
                             <td><?php $users->screenName(); ?></td>

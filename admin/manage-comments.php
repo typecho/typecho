@@ -95,7 +95,7 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                         <tbody>
                         <?php if($comments->have()): ?>
                         <?php while($comments->next()): ?>
-                        <tr class="<?php $comments->alt(' even', ''); ?>" id="<?php $comments->theId(); ?>">
+                        <tr id="<?php $comments->theId(); ?>">
                             <td valign="top">
                                 <input type="checkbox" value="<?php $comments->coid(); ?>" name="coid[]"/>
                             </td>

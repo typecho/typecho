@@ -30,7 +30,7 @@ include 'menu.php';
                     </thead>
                     <tbody>
                         <?php while ($activatedPlugins->next()): ?>
-                        <tr<?php $activatedPlugins->alt(' class="even"', ''); ?> id="plugin-<?php $activatedPlugins->name(); ?>">
+                        <tr id="plugin-<?php $activatedPlugins->name(); ?>">
                             <td><?php $activatedPlugins->title(); ?>
                             <?php if (!$activatedPlugins->dependence): ?>
                             <img src="<?php $options->adminUrl('images/notice.gif'); ?>" title="<?php _e('%s 无法在此版本的typecho下正常工作', $activatedPlugins->title); ?>" alt="<?php _e('%s 无法在此版本的typecho下正常工作', $activatedPlugins->title); ?>" class="tiny" />
@@ -95,7 +95,7 @@ include 'menu.php';
                     <tbody>
                         <?php if ($deactivatedPlugins->have()): ?>
                         <?php while ($deactivatedPlugins->next()): ?>
-                        <tr<?php $deactivatedPlugins->alt(' class="even"', ''); ?> id="plugin-<?php $deactivatedPlugins->name(); ?>">
+                        <tr id="plugin-<?php $deactivatedPlugins->name(); ?>">
                             <td><?php $deactivatedPlugins->title(); ?></td>
                             <td><?php $deactivatedPlugins->description(); ?></td>
                             <td><?php $deactivatedPlugins->version(); ?></td>
