@@ -127,7 +127,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         Typecho_Widget_Helper_Form::POST_METHOD);
 
         /** 分类名称 */
-        $name = new Typecho_Widget_Helper_Form_Element_Text('name', NULL, NULL, _t('分类名称*'));
+        $name = new Typecho_Widget_Helper_Form_Element_Text('name', NULL, NULL, _t('分类名称 *'));
         $form->addInput($name);
 
         /** 分类缩略名 */

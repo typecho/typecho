@@ -118,7 +118,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         $form->addInput($confirm);
 
         /** 个人主页地址 */
-        $url = new Typecho_Widget_Helper_Form_Element_Text('url', NULL, NULL, _t('个人主页地址'), _t('此用户的个人主页地址, 请用<strong>http://</strong>开头.'));
+        $url = new Typecho_Widget_Helper_Form_Element_Text('url', NULL, NULL, _t('个人主页地址'), _t('此用户的个人主页地址, 请用 <code>http://</code> 开头.'));
         $form->addInput($url);
 
         /** 用户组 */
