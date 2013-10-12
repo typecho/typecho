@@ -1,8 +1,8 @@
 /*
  * Bento Grid System
  * Source: https://github.com/fenbox/bento
- * Version: 1.0
- * Update: 10.10.2013
+ * Version: 1.1
+ * Update: 10.12.2013
  */
 .col-group [class*="col-"] {
   float: left;
@@ -101,121 +101,121 @@
   .col-tb-12 {
     width: 100%; }
 
-  .col-offset-0 {
+  .col-tb-offset-0 {
     margin-left: 0%; }
 
-  .col-offset-1 {
+  .col-tb-offset-1 {
     margin-left: 8.33333%; }
 
-  .col-offset-2 {
+  .col-tb-offset-2 {
     margin-left: 16.66667%; }
 
-  .col-offset-3 {
+  .col-tb-offset-3 {
     margin-left: 25%; }
 
-  .col-offset-4 {
+  .col-tb-offset-4 {
     margin-left: 33.33333%; }
 
-  .col-offset-5 {
+  .col-tb-offset-5 {
     margin-left: 41.66667%; }
 
-  .col-offset-6 {
+  .col-tb-offset-6 {
     margin-left: 50%; }
 
-  .col-offset-7 {
+  .col-tb-offset-7 {
     margin-left: 58.33333%; }
 
-  .col-offset-8 {
+  .col-tb-offset-8 {
     margin-left: 66.66667%; }
 
-  .col-offset-9 {
+  .col-tb-offset-9 {
     margin-left: 75%; }
 
-  .col-offset-10 {
+  .col-tb-offset-10 {
     margin-left: 83.33333%; }
 
-  .col-offset-11 {
+  .col-tb-offset-11 {
     margin-left: 91.66667%; }
 
-  .col-offset-12 {
+  .col-tb-offset-12 {
     margin-left: 100%; }
 
-  .col-pull-0 {
+  .col-tb-pull-0 {
     right: 0%; }
 
-  .col-pull-1 {
+  .col-tb-pull-1 {
     right: 8.33333%; }
 
-  .col-pull-2 {
+  .col-tb-pull-2 {
     right: 16.66667%; }
 
-  .col-pull-3 {
+  .col-tb-pull-3 {
     right: 25%; }
 
-  .col-pull-4 {
+  .col-tb-pull-4 {
     right: 33.33333%; }
 
-  .col-pull-5 {
+  .col-tb-pull-5 {
     right: 41.66667%; }
 
-  .col-pull-6 {
+  .col-tb-pull-6 {
     right: 50%; }
 
-  .col-pull-7 {
+  .col-tb-pull-7 {
     right: 58.33333%; }
 
-  .col-pull-8 {
+  .col-tb-pull-8 {
     right: 66.66667%; }
 
-  .col-pull-9 {
+  .col-tb-pull-9 {
     right: 75%; }
 
-  .col-pull-10 {
+  .col-tb-pull-10 {
     right: 83.33333%; }
 
-  .col-pull-11 {
+  .col-tb-pull-11 {
     right: 91.66667%; }
 
-  .col-pull-12 {
+  .col-tb-pull-12 {
     right: 100%; }
 
-  .col-push-0 {
+  .col-tb-push-0 {
     left: 0%; }
 
-  .col-push-1 {
+  .col-tb-push-1 {
     left: 8.33333%; }
 
-  .col-push-2 {
+  .col-tb-push-2 {
     left: 16.66667%; }
 
-  .col-push-3 {
+  .col-tb-push-3 {
     left: 25%; }
 
-  .col-push-4 {
+  .col-tb-push-4 {
     left: 33.33333%; }
 
-  .col-push-5 {
+  .col-tb-push-5 {
     left: 41.66667%; }
 
-  .col-push-6 {
+  .col-tb-push-6 {
     left: 50%; }
 
-  .col-push-7 {
+  .col-tb-push-7 {
     left: 58.33333%; }
 
-  .col-push-8 {
+  .col-tb-push-8 {
     left: 66.66667%; }
 
-  .col-push-9 {
+  .col-tb-push-9 {
     left: 75%; }
 
-  .col-push-10 {
+  .col-tb-push-10 {
     left: 83.33333%; }
 
-  .col-push-11 {
+  .col-tb-push-11 {
     left: 91.66667%; }
 
-  .col-push-12 {
+  .col-tb-push-12 {
     left: 100%; }
 
   .col-group {
@@ -423,121 +423,121 @@
   .col-wd-12 {
     width: 100%; }
 
-  .col-offset-0 {
+  .col-wd-offset-0 {
     margin-left: 0%; }
 
-  .col-offset-1 {
+  .col-wd-offset-1 {
     margin-left: 8.33333%; }
 
-  .col-offset-2 {
+  .col-wd-offset-2 {
     margin-left: 16.66667%; }
 
-  .col-offset-3 {
+  .col-wd-offset-3 {
     margin-left: 25%; }
 
-  .col-offset-4 {
+  .col-wd-offset-4 {
     margin-left: 33.33333%; }
 
-  .col-offset-5 {
+  .col-wd-offset-5 {
     margin-left: 41.66667%; }
 
-  .col-offset-6 {
+  .col-wd-offset-6 {
     margin-left: 50%; }
 
-  .col-offset-7 {
+  .col-wd-offset-7 {
     margin-left: 58.33333%; }
 
-  .col-offset-8 {
+  .col-wd-offset-8 {
     margin-left: 66.66667%; }
 
-  .col-offset-9 {
+  .col-wd-offset-9 {
     margin-left: 75%; }
 
-  .col-offset-10 {
+  .col-wd-offset-10 {
     margin-left: 83.33333%; }
 
-  .col-offset-11 {
+  .col-wd-offset-11 {
     margin-left: 91.66667%; }
 
-  .col-offset-12 {
+  .col-wd-offset-12 {
     margin-left: 100%; }
 
-  .col-pull-0 {
+  .col-wd-pull-0 {
     right: 0%; }
 
-  .col-pull-1 {
+  .col-wd-pull-1 {
     right: 8.33333%; }
 
-  .col-pull-2 {
+  .col-wd-pull-2 {
     right: 16.66667%; }
 
-  .col-pull-3 {
+  .col-wd-pull-3 {
     right: 25%; }
 
-  .col-pull-4 {
+  .col-wd-pull-4 {
     right: 33.33333%; }
 
-  .col-pull-5 {
+  .col-wd-pull-5 {
     right: 41.66667%; }
 
-  .col-pull-6 {
+  .col-wd-pull-6 {
     right: 50%; }
 
-  .col-pull-7 {
+  .col-wd-pull-7 {
     right: 58.33333%; }
 
-  .col-pull-8 {
+  .col-wd-pull-8 {
     right: 66.66667%; }
 
-  .col-pull-9 {
+  .col-wd-pull-9 {
     right: 75%; }
 
-  .col-pull-10 {
+  .col-wd-pull-10 {
     right: 83.33333%; }
 
-  .col-pull-11 {
+  .col-wd-pull-11 {
     right: 91.66667%; }
 
-  .col-pull-12 {
+  .col-wd-pull-12 {
     right: 100%; }
 
-  .col-push-0 {
+  .col-wd-push-0 {
     left: 0%; }
 
-  .col-push-1 {
+  .col-wd-push-1 {
     left: 8.33333%; }
 
-  .col-push-2 {
+  .col-wd-push-2 {
     left: 16.66667%; }
 
-  .col-push-3 {
+  .col-wd-push-3 {
     left: 25%; }
 
-  .col-push-4 {
+  .col-wd-push-4 {
     left: 33.33333%; }
 
-  .col-push-5 {
+  .col-wd-push-5 {
     left: 41.66667%; }
 
-  .col-push-6 {
+  .col-wd-push-6 {
     left: 50%; }
 
-  .col-push-7 {
+  .col-wd-push-7 {
     left: 58.33333%; }
 
-  .col-push-8 {
+  .col-wd-push-8 {
     left: 66.66667%; }
 
-  .col-push-9 {
+  .col-wd-push-9 {
     left: 75%; }
 
-  .col-push-10 {
+  .col-wd-push-10 {
     left: 83.33333%; }
 
-  .col-push-11 {
+  .col-wd-push-11 {
     left: 91.66667%; }
 
-  .col-push-12 {
+  .col-wd-push-12 {
     left: 100%; } }
 .clearfix, .col-group {
   zoom: 1; }

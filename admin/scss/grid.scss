@@ -1,8 +1,8 @@
 /*
  * Bento Grid System
  * Source: https://github.com/fenbox/bento
- * Version: 1.0
- * Update: 10.10.2013
+ * Version: 1.1
+ * Update: 10.12.2013
  */
 
 //
@@ -71,21 +71,21 @@ $screen-wide: 1200px;
 
   // Offset
   @for $index from 0 through $columns {
-    .col-offset-#{$index} {
+    .col-tb-offset-#{$index} {
       margin-left: $column-width * $index;
     }
   }
 
   // Pull
   @for $index from 0 through $columns {
-    .col-pull-#{$index} {
+    .col-tb-pull-#{$index} {
       right: $column-width * $index;
     }
   }
 
   // Push
   @for $index from 0 through $columns {
-    .col-push-#{$index} {
+    .col-tb-push-#{$index} {
       left: $column-width * $index;
     }
   }
@@ -155,21 +155,21 @@ $screen-wide: 1200px;
 
   // Offset
   @for $index from 0 through $columns {
-    .col-offset-#{$index} {
+    .col-wd-offset-#{$index} {
       margin-left: $column-width * $index;
     }
   }
 
   // Pull
   @for $index from 0 through $columns {
-    .col-pull-#{$index} {
+    .col-wd-pull-#{$index} {
       right: $column-width * $index;
     }
   }
 
   // Push
   @for $index from 0 through $columns {
-    .col-push-#{$index} {
+    .col-wd-push-#{$index} {
       left: $column-width * $index;
     }
   }

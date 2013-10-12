@@ -157,15 +157,15 @@ select {
 }
 
 button {
-    height: 28px;
-    margin: 0;
-    vertical-align: middle;
-    zoom: 1;
     display: inline-block;
+    margin: 0;
+    padding: 0 12px;
+    height: 32px;
     color: #666;
-    font-size: 13px;
+    vertical-align: middle;
     cursor: pointer;
-    text-decoration: none !important;
+    zoom: 1;
+
     background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fcfcfc), color-stop(100%, #eeeeee));
     background-image: -webkit-linear-gradient(#fcfcfc, #eeeeee);
     background-image: -moz-linear-gradient(#fcfcfc, #eeeeee);
@@ -179,13 +179,15 @@ button, .dropdown-menu {
     -webkit-box-shadow: rgba(0, 0, 0, 0.12) 0 1px 2px, inset white 0 1px 0;
     -moz-box-shadow: rgba(0, 0, 0, 0.12) 0 1px 2px, inset white 0 1px 0;
     box-shadow: rgba(0, 0, 0, 0.12) 0 1px 2px, inset white 0 1px 0;
+
+    border-radius: 2px;
 }
 
 button:disabled, button:active, button.active {
     background: #EEE;
-    -webkit-box-shadow: inset rgba(0, 0, 0, 0.2) 0 0 4px;
-    -moz-box-shadow: inset rgba(0, 0, 0, 0.2) 0 0 4px;
-    box-shadow: inset rgba(0, 0, 0, 0.2) 0 0 4px; }
+    -webkit-box-shadow: inset rgba(0, 0, 0, 0.12) 0 0 4px;
+    -moz-box-shadow: inset rgba(0, 0, 0, 0.12) 0 0 4px;
+    box-shadow: inset rgba(0, 0, 0, 0.12) 0 0 4px; }
 }
 
 button:disabled {
@@ -804,7 +806,7 @@ margin-top: 25px;
  * 标题
  */
 .typecho-page-title {
-    margin-top: 20px;
+    margin-top: 1em;
 }
 
 
@@ -1390,9 +1392,6 @@ ul.typecho-list-notable li .loading {
  * 后台配置项
  */
 .typecho-page-main .typecho-option {
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 600px;
 }
 
 .typecho-page-main .typecho-option:first-child {
