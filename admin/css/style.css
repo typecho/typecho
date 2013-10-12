@@ -423,21 +423,21 @@ button.primary:active, button.primary.active {
 
 /** 增加顶部消息样式 by 70 */
 .popup {
-    border-top: none;
+    border-width: 0 0 1px 0;
     position: relative;
     z-index: 10;
     text-align: center;
     font-weight: bold;
     display: none;
 
-    -moz-border-radius-topleft: 0;
-    -moz-border-radius-topright: 0;
-    -webkit-border-top-left-radius: 0;
-    -webkit-border-top-right-radius: 0;
+    -moz-border-radius: 0;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    -webkit-border-radius: 0;
     
     /* hope IE support border radius, God save me! */
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
+    border-radius: 0;
+    border-radius: 0;
 }
 
 .popup ul {

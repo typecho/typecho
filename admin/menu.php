@@ -11,3 +11,10 @@
         <a class="exit" href="<?php $options->logoutUrl(); ?>"><?php _e('登出'); ?></a>
     </div>
 </div>
+<?php if($notice->have() && in_array($notice->noticeType, array('success', 'notice', 'error'))): ?>
+<div class="message <?php $notice->noticeType(); ?> popup">
+<ul>
+    <?php $notice->lists(); ?>
+</ul>
+</div>
+<?php endif; ?>
