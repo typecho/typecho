@@ -10,8 +10,8 @@ Typecho_Widget::widget('Widget_Themes_Files')->to($files);
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="col-group typecho-page-main">
-            <div class="col-12">
-                <ul class="typecho-option-tabs">
+            <div class="col-12 col-mb-12">
+                <ul class="typecho-option-tabs clearfix">
                     <li><a href="<?php $options->adminUrl('themes.php'); ?>"><?php _e('可以使用的外观'); ?></a></li>
                     <li class="current"><a href="<?php $options->adminUrl('theme-editor.php'); ?>">
                     <?php if ($options->theme == $files->theme): ?>
@@ -24,31 +24,30 @@ Typecho_Widget::widget('Widget_Themes_Files')->to($files);
                     <li><a href="<?php $options->adminUrl('options-theme.php'); ?>"><?php _e('设置外观'); ?></a></li>
                     <?php endif; ?>
                 </ul>
+            </div>
                 
-                <div class="typecho-edit-theme">
-                    <div>
-                        <ul>
-                            <?php while($files->next()): ?>
-                            <li<?php if($files->current): ?> class="current"<?php endif; ?>>
-                            <a href="<?php $options->adminUrl('theme-editor.php?theme=' . $files->currentTheme() . '&file=' . $files->file); ?>"><?php $files->file(); ?></a></li>
-                            <?php endwhile; ?>
-                        </ul>
-                        <div class="content">
-                        <form method="post" name="theme" id="theme" action="<?php $options->index('/action/themes-edit'); ?>">
-                            <textarea name="content" id="content" <?php if(!$files->currentIsWriteable()): ?>readonly<?php endif; ?>><?php echo $files->currentContent(); ?></textarea>
-                            <div class="submit">
-                                <?php if($files->currentIsWriteable()): ?>
-                                <input type="hidden" name="theme" value="<?php echo $files->currentTheme(); ?>" />
-                                <input type="hidden" name="edit" value="<?php echo $files->currentFile(); ?>" />
-                                <button type="submit"><?php _e('保存文件'); ?></button>
-                                <?php else: ?>
-                                    <h6 class="typecho-list-table-title"><?php _e('此文件无法写入'); ?></h6>
-                                <?php endif; ?>
-                            </div>
-                        </form>
-                        </div>
-                    </div>
+            <div class="typecho-edit-theme">
+                <div class="col-9 content">
+                    <form method="post" name="theme" id="theme" action="<?php $options->index('/action/themes-edit'); ?>">
+                        <textarea name="content" id="content" class="w-100 mono" <?php if(!$files->currentIsWriteable()): ?>readonly<?php endif; ?>><?php echo $files->currentContent(); ?></textarea>
+                        <p class="submit">
+                            <?php if($files->currentIsWriteable()): ?>
+                            <input type="hidden" name="theme" value="<?php echo $files->currentTheme(); ?>" />
+                            <input type="hidden" name="edit" value="<?php echo $files->currentFile(); ?>" />
+                            <button type="submit"><?php _e('保存文件'); ?></button>
+                            <?php else: ?>
+                                <em><?php _e('此文件无法写入'); ?></em>
+                            <?php endif; ?>
+                        </p>
+                    </form>
                 </div>
+                <ul class="col-3">
+                    <li><strong>模板文件</strong></li>
+                    <?php while($files->next()): ?>
+                    <li<?php if($files->current): ?> class="current"<?php endif; ?>>
+                    <a href="<?php $options->adminUrl('theme-editor.php?theme=' . $files->currentTheme() . '&file=' . $files->file); ?>"><?php $files->file(); ?></a></li>
+                    <?php endwhile; ?>
+                </ul>
             </div>
         </div>
     </div>

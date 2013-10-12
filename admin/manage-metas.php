@@ -9,7 +9,7 @@ include 'menu.php';
         <?php include 'page-title.php'; ?>
         <div class="col-group typecho-page-main manage-metas">
                 <div class="col-8 suffix">
-                    <ul class="typecho-option-tabs">
+                    <ul class="typecho-option-tabs clearfix">
                         <li<?php if(!isset($request->type) || 'category' == $request->get('type')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-metas.php'); ?>"><?php _e('分类'); ?></a></li>
                         <li<?php if('tag' == $request->get('type')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-metas.php?type=tag'); ?>"><?php _e('标签'); ?></a></li>
                     </ul>
@@ -17,7 +17,7 @@ include 'menu.php';
                     <?php if(!isset($request->type) || 'category' == $request->get('type')): ?>
                     <?php Typecho_Widget::widget('Widget_Metas_Category_List')->to($categories); ?>
                     <form method="post" name="manage_categories" class="operate-form">
-                    <div class="typecho-list-operate">
+                    <div class="typecho-list-operate clearfix">
                         <div class="operate">
                         <input type="checkbox" class="typecho-table-select-all" />
                         <div class="btn-group btn-drop">
@@ -84,7 +84,7 @@ include 'menu.php';
                     <?php else: ?>
                     <?php Typecho_Widget::widget('Widget_Metas_Tag_Cloud', 'sort=mid&desc=0')->to($tags); ?>
                     <form method="post" name="manage_tags" class="operate-form">
-                    <div class="typecho-list-operate">
+                    <div class="typecho-list-operate clearfix">
                         <div class="operate">
                         <input type="checkbox" class="typecho-table-select-all" />
                         <div class="btn-group btn-drop">

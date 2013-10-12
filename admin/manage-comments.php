@@ -11,7 +11,7 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
         <?php include 'page-title.php'; ?>
         <div class="col-group typecho-page-main">
             <div class="col-12 typecho-list">
-                <ul class="typecho-option-tabs">
+                <ul class="typecho-option-tabs clearfix">
                     <li<?php if(!isset($request->status) || 'approved' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php'
                     . (isset($request->cid) ? '?cid=' . $request->cid : '')); ?>"><?php _e('已通过'); ?></a></li>
                     <li<?php if('waiting' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=waiting'

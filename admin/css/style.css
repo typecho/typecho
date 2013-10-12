@@ -134,6 +134,7 @@ textarea {
 
 textarea {
     resize: vertical;
+    line-height: 1.5;
 }
 
 input.text-s { padding: 5px; }
@@ -563,7 +564,7 @@ margin-top: 25px;
  * 后台分页
  */
 .typecho-pager {
-    margin-top: 20px;
+    margin-top: 30px;
     font-size: 1.14286em;
     text-align: center;
 }
@@ -578,6 +579,7 @@ margin-top: 25px;
 .typecho-pager ul {
     list-style: none;
     float: left;
+    margin: 0;
     padding: 0;
     zoom: 1;
 }
@@ -902,81 +904,48 @@ margin-top: 25px;
 /**
  * 标签页
  */
-.typecho-option-tabs, .typecho-editor-tab {
-    height: 30px;
-    zoom: 1;
-    border-bottom: 2px solid #C5D19D;
+.typecho-option-tabs {
+    list-style: none;
+    margin: 0 0 20px;
+    padding: 0;
 }
 
-.typecho-editor-tab {
-    background: none;
-}
-
-.typecho-option-tabs li, .typecho-editor-tab li {
-    float: left;
-    margin: 4px 0px 0px 5px;
+.typecho-option-tabs a {
+    display: block;
+    padding: 0 10px;
     height: 26px;
-    background: #e8eccd;
-    
-    -moz-border-radius-topleft: 3px;
-    -moz-border-radius-topright: 3px;
-    -webkit-border-top-left-radius: 3px;
-    -webkit-border-top-right-radius: 3px;
-    
-    /* hope IE support border radius, God save me! */
-    border-bottom-top-radius: 3px;
-    border-bottom-top-radius: 3px;
+    line-height: 26px;
+    border-radius: 3px;
+}
+.typecho-option-tabs a:hover {
+    background-color: #E9E9E6;
+    text-decoration: none;
+}
+
+.typecho-option-tabs li {
+    float: left;
+    margin-right: 10px;
 }
 
 .typecho-option-tabs li.right {
     float: right;
-    margin: 4px 5px 0px 0;
+    margin: 0 0 0 10px;
 }
 
-.typecho-editor-tab li {
-    float: right;
-    font-size: 13px;
-    font-weight: bold;
-    margin: 4px 0 0px 2px;
-    cursor: pointer;
-    padding: 0 15px;
-    border: 1px solid #F7FBE9;
-    border-bottom: none;
-    line-height: 24px;
-    color: #333;
-}
-
-.typecho-editor-tab li.current {
-    border: 1px solid #C1CD94;
-    border-bottom: none;
-    background: #D3DBB3;
-}
-
-.typecho-editor-tab li.loading {
-    padding-left: 32px;
-    background-image: url(../images/ajax-loader.gif);
-    background-position: 8px 4px;
-    background-repeat: no-repeat;
+.typecho-option-tabs li.current a {
+    background-color: #E6E6E3;
+    color: #666;
 }
 
 .typecho-option-tabs li:hover, .typecho-option-tabs li.current {
-    background: #C5D19D;
 }
 
 .typecho-option-tabs li a:link, .typecho-option-tabs li a:visited {
-    display: block;
-    outline: none;
-    color: #333;
-    text-decoration: none;
-    padding: 3px 15px;
 }
 
 /**
  * 表格列表页
  */
-.typecho-article-list {
-    margin-top: 25px;
-}
 
 /**
  * 列表页选项
@@ -1033,7 +1002,6 @@ margin-top: 25px;
 
 .typecho-list-operate span.operate-delete, a.operate-delete {
     color: #CC0000;
-    font-weight: bold;
 }
 
 a.operate-edit {
@@ -1058,12 +1026,17 @@ a.operate-reply {
 /** 增加表格标题 by 70 */
 .typecho-list-table-title {
     color: #999;
+    text-align: center;
 }
 
 .typecho-list-table {
     border: 30px solid #FFF;
     width: 100%;
     background: #FFF;
+}
+
+.typecho-list-table.deactivate {
+    color: #999;
 }
 
 .typecho-list-table .right {
@@ -1364,72 +1337,54 @@ ul.typecho-list-notable li .loading {
  * 模板列表
  */
 .typecho-theme-list {
-    border-collapse: separate;
-    border-spacing: 0;
-    border-top: 1px solid #CAD7A2;
-    border-bottom: 1px solid #CAD7A2;
-} 
+}
+
+.typecho-theme-list .theme-item {
+}
 
 .typecho-theme-list td {
-    line-height: 20px;
-    vertical-align: top;
-    padding: 10px 5px;
 }
 
 .typecho-theme-list td.border-right {
-    border-right: 1px solid #CAD7A2;
 }
 
 .typecho-theme-list td.border-bottom {
-    border-bottom: 1px solid #CAD7A2;
 }
 
 .typecho-theme-list img {
-    background: #FFF;
-    padding: 2px;
-    margin: 0 15px 0 5px;
-    float: left;
+    margin: 1em 0;
+    max-width: 100%;
+    max-height: 240px;
+}
+
+.typecho-theme-list cite {
+    font-style: normal;
+    color: #999;
 }
 
 .typecho-theme-list p {
-    padding: 5px 0;
-    font-size: 13px;
+}
+
+.typecho-theme-list .theme-action {
 }
 
 .typecho-theme-list .activate, .typecho-theme-list .edit {
-    display: none;
 }
 
 .typecho-theme-list h4 {
-    font-weight: bold;
 }
 
 .typecho-theme-list tbody tr:hover td {
-    background: none;
 }
 
-.typecho-theme-list tbody tr td.current, .typecho-theme-list tbody tr td:hover {
-    background: #e3eebd;
+.typecho-theme-list tbody tr.current td {
+    background-color: #FFF9E8;
 }
 
 .typecho-theme-list tbody tr td:hover .activate, .typecho-theme-list tbody tr td:hover .edit {
-    display: block;
-    position: absolute;
-    background: #BD6800;
-    color: #fff;
-    height: 24px;
-    line-height: 24px;
-    padding: 0 5px;
-    font-weight: bold;
-    white-space: nowrap;
-    opacity:0.8;
-    -ms-filter:'alpha(opacity=80)';
-    filter:alpha(opacity=80);
 }
 
 .typecho-theme-list tbody tr td:hover a.activate:hover, .typecho-theme-list tbody tr td:hover a.edit:hover {
-    background: #D29B51;
-    text-decoration: none;
 }
 
 /**
@@ -1588,53 +1543,39 @@ ul.typecho-list-notable li .loading {
  */
 
 .typecho-edit-theme ul {
-    width: 150px;
-    float: left;
-    padding: 10px 0px 10px 10px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 .typecho-edit-theme li {
-    line-height: 25px;
-	height: 25px;
-    margin-bottom: 5px;
-    font-size: 11px;
-	text-align: right;
-    padding: 0px 10px 0px 0px;
+    padding: 3px 10px;
 }
 
 .typecho-edit-theme li a:link, .typecho-edit-theme li a:visited {
-    color: #333;
-    display: block;
 }
 
 .typecho-edit-theme li a:hover {
-    text-decoration: none;
 }
 
 .typecho-edit-theme .current {
-    background: #DEE4C5;
-    -moz-border-radius-topleft: 3px;
-    -moz-border-radius-bottomleft: 3px;
-    -webkit-border-top-left-radius: 3px;
-    -webkit-border-bottom-left-radius: 3px;
-    
-    /* hope IE support border radius, God save me! */
-    border-top-left-radius: 3px;
-    border-bottom-left-radius: 3px;
+    background-color: #E6E6E3;
+}
+.typecho-edit-theme .current a {
+    color: #444;
 }
 
 .typecho-edit-theme .content {
-    width: 780px;
-    float: left;
-    padding: 10px 10px 10px 0px;
 }
 
 .typecho-edit-theme .submit {
-    margin: 20px 0 20px 0;
     text-align: center;
 }
 
 .typecho-edit-theme textarea {
+    font-size: .92857em;
+    line-height: 1.2;
+    height: 500px;
 }
 
 /**
@@ -1642,7 +1583,6 @@ ul.typecho-list-notable li .loading {
  */
 
 .typecho-post-area {
-    margin-bottom: 15px;
 }
 
 .typecho-post-area label.typecho-label {
