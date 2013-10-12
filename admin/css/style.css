@@ -468,6 +468,7 @@ button.primary:active, button.primary.active {
 }
 
 .typecho-install-patch li {
+    list-style: none;
     font-weight: 600;
     float: left;
     color: #999;
@@ -522,6 +523,10 @@ button.primary:active, button.primary.active {
     line-height: 18px;
     margin-top: 5px;
     text-align: justify;
+}
+
+.typecho-install .success ul {
+    list-style: none;
 }
 
 .typecho-install .session {
