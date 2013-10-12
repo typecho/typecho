@@ -120,7 +120,7 @@ include 'menu.php';
                             </tr>
                             <?php endwhile; ?>
                             <?php else: ?>
-                            <tr class="even">
+                            <tr>
                             	<td colspan="5"><?php _e('没有安装插件'); ?></td>
                             </tr>
                             <?php endif; ?>

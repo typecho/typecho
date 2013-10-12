@@ -83,7 +83,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                                 </tr>
                                 <?php endwhile; ?>
                                 <?php else: ?>
-                                <tr class="even">
+                                <tr>
                                 	<td colspan="8"><h6 class="typecho-list-table-title"><?php _e('没有任何附件'); ?></h6></td>
                                 </tr>
                                 <?php endif; ?>

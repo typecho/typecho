@@ -76,7 +76,7 @@ include 'menu.php';
                                     </tr>
                                     <?php endwhile; ?>
                                     <?php else: ?>
-                                    <tr class="even">
+                                    <tr>
                                         <td colspan="6"><h6 class="typecho-list-table-title"><?php _e('没有任何分类'); ?></h6></td>
                                     </tr>
                                     <?php endif; ?>
