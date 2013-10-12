@@ -83,7 +83,7 @@ class Widget_Plugins_Config extends Widget_Abstract_Options
         /** 获取插件名称 */
         $pluginName = $this->request->config;
 
-        /** 获取已激活插件 */
+        /** 获取已启用插件 */
         $plugins = Typecho_Plugin::export();
         $activatedPlugins = $plugins['activated'];
 

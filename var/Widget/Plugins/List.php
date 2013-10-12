@@ -19,7 +19,7 @@
 class Widget_Plugins_List extends Typecho_Widget
 {
     /**
-     * 已激活插件
+     * 已启用插件
      *
      * @access public
      * @var array
@@ -38,7 +38,7 @@ class Widget_Plugins_List extends Typecho_Widget
         $pluginDirs = glob(__TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__ . '/*');
         $this->parameter->setDefault(array('activated' => NULL));
 
-        /** 获取已激活插件 */
+        /** 获取已启用插件 */
         $plugins = Typecho_Plugin::export();
         $this->activatedPlugins = $plugins['activated'];
 

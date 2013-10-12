@@ -18,7 +18,7 @@
 class Typecho_Plugin
 {
     /**
-     * 所有激活的插件
+     * 所有启用的插件
      *
      * @access private
      * @var array
@@ -135,7 +135,7 @@ class Typecho_Plugin
     }
 
     /**
-     * 激活插件
+     * 启用插件
      *
      * @access public
      * @param string $pluginName 插件名称

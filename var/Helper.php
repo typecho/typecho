@@ -34,7 +34,7 @@ class Helper
             /** 获取插件入口 */
             list($pluginFileName, $className) = Typecho_Plugin::portal($pluginName, __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
 
-            /** 获取已激活插件 */
+            /** 获取已启用插件 */
             $plugins = Typecho_Plugin::export();
             $activatedPlugins = $plugins['activated'];
 

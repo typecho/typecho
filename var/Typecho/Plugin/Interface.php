@@ -18,7 +18,7 @@
 interface Typecho_Plugin_Interface
 {
     /**
-     * 激活插件方法,如果激活失败,直接抛出异常
+     * 启用插件方法,如果启用失败,直接抛出异常
      *
      * @static
      * @access public

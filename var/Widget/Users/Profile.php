@@ -338,7 +338,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         /** 获取插件名称 */
         $pluginName = $this->request->plugin;
 
-        /** 获取已激活插件 */
+        /** 获取已启用插件 */
         $plugins = Typecho_Plugin::export();
         $activatedPlugins = $plugins['activated'];
 

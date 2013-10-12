@@ -357,20 +357,17 @@ button.primary:active, button.primary.active {
  */
 .message {
     padding: 5px 10px;
-    font-size: 14px;
-    color: #333;
     margin-bottom: 10px;
 
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    -khtml-border-radius: 4px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -khtml-border-radius: 3px;
     
     /* hope IE support border radius, God save me! */
-    border-radius: 4px;
+    border-radius: 3px;
 }
 
 .message a {
-    color: #333;
     border-bottom: 1px dashed #aaa;
     line-height: 20px;
 }
@@ -383,7 +380,6 @@ button.primary:active, button.primary.active {
 .message blockquote {
     margin: 5px 10px;
     padding: 0 5px;
-    font-size: 13px;
 }
 
 .error {
@@ -421,14 +417,11 @@ button.primary:active, button.primary.active {
 
 /** 增加顶部消息样式 by 70 */
 .popup {
-	width: 928px;
     border-top: none;
-    position: absolute;
+    position: relative;
     z-index: 10;
     text-align: center;
-    font-size: 13px;
     font-weight: bold;
-    padding: 3px 10px;
     display: none;
 
     -moz-border-radius-topleft: 0;
@@ -439,6 +432,12 @@ button.primary:active, button.primary.active {
     /* hope IE support border radius, God save me! */
     border-top-left-radius: 0;
     border-top-right-radius: 0;
+}
+
+.popup ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 /** 

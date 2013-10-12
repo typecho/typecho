@@ -10,7 +10,7 @@ include 'menu.php';
             <div class="col-12 typecho-list">
                 <?php Typecho_Widget::widget('Widget_Plugins_List_Activated')->to($activatedPlugins); ?>
                 <?php if ($activatedPlugins->have()): ?>
-                <!--<h4 class="typecho-list-table-title"><?php _e('激活的插件'); ?></h4>-->
+                <!--<h4 class="typecho-list-table-title"><?php _e('启用的插件'); ?></h4>-->
                 <table class="typecho-list-table">
                     <colgroup>
                         <col width="25%"/>
@@ -49,7 +49,7 @@ include 'menu.php';
                                         <?php endif; ?>
                                         <a lang="<?php _e('你确认要禁用插件 %s 吗?', $activatedPlugins->name); ?>" href="<?php $options->index('/action/plugins-edit?deactivate=' . $activatedPlugins->name); ?>"><?php _e('禁用'); ?></a>
                                     <?php else: ?>
-                                        <a href="<?php $options->index('/action/plugins-edit?activate=' . $activatedPlugins->name); ?>"><?php _e('激活'); ?></a>
+                                        <a href="<?php $options->index('/action/plugins-edit?activate=' . $activatedPlugins->name); ?>"><?php _e('启用'); ?></a>
                                     <?php endif; ?>
                                 <?php else: ?>
                                     <span class="important"><?php _e('即插即用'); ?></span>
@@ -110,7 +110,7 @@ include 'menu.php';
                                         <?php endif; ?>
                                         <a href="<?php $options->index('/action/plugins-edit?deactivate=' . $deactivatedPlugins->name); ?>"><?php _e('禁用'); ?></a>
                                     <?php else: ?>
-                                        <a href="<?php $options->index('/action/plugins-edit?activate=' . $deactivatedPlugins->name); ?>"><?php _e('激活'); ?></a>
+                                        <a href="<?php $options->index('/action/plugins-edit?activate=' . $deactivatedPlugins->name); ?>"><?php _e('启用'); ?></a>
                                     <?php endif; ?>
                                 <?php endif; ?>
                             </td>

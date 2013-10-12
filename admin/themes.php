@@ -43,7 +43,7 @@ include 'menu.php';
                                 <?php if($options->theme != $themes->name): ?>
                                     <p>
                                         <a class="edit" href="<?php $options->adminUrl('theme-editor.php?theme=' . $themes->name); ?>"><?php _e('编辑'); ?></a> &nbsp;
-                                        <a class="activate" href="<?php $options->index('/action/themes-edit?change=' . $themes->name); ?>"><?php _e('激活'); ?></a>
+                                        <a class="activate" href="<?php $options->index('/action/themes-edit?change=' . $themes->name); ?>"><?php _e('启用'); ?></a>
                                     </p>
                                 <?php endif; ?>
                             </td>

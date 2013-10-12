@@ -67,7 +67,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
     }
 
     /**
-     * 激活插件
+     * 启用插件
      *
      * @access public
      * @return void
@@ -82,7 +82,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
         list ($version, $build) = explode('/', Typecho_Common::VERSION);
         if (Typecho_Plugin::checkDependence($build, $info['dependence'])) {
 
-            /** 获取已激活插件 */
+            /** 获取已启用插件 */
             $plugins = Typecho_Plugin::export();
             $activatedPlugins = $plugins['activated'];
 
@@ -92,7 +92,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
             /** 判断实例化是否成功 */
             if (isset($activatedPlugins[$pluginName]) || !class_exists($className)
             || !method_exists($className, 'activate')) {
-                throw new Typecho_Widget_Exception(_t('无法激活插件'), 500);
+                throw new Typecho_Widget_Exception(_t('无法启用插件'), 500);
             }
 
             try {
@@ -135,7 +135,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
         if (isset($result) && is_string($result)) {
             $this->widget('Widget_Notice')->set($result, NULL, 'notice');
         } else {
-            $this->widget('Widget_Notice')->set(_t('插件已经被激活'), NULL, 'success');
+            $this->widget('Widget_Notice')->set(_t('插件已经被启用'), NULL, 'success');
         }
         $this->response->goBack();
     }
@@ -148,7 +148,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
      */
     public function deactivate($pluginName)
     {
-        /** 获取已激活插件 */
+        /** 获取已启用插件 */
         $plugins = Typecho_Plugin::export();
         $activatedPlugins = $plugins['activated'];
         $pluginFileExist = true;

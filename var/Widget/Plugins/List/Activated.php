@@ -8,7 +8,7 @@
  */
 
 /**
- * 激活插件列表组件
+ * 启用插件列表组件
  *
  * @author qining
  * @category typecho
