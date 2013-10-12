@@ -332,6 +332,10 @@ button.primary:active, button.primary.active {
     margin-bottom: .5em;
     font-weight: bold;
 }
+.typecho-option label.required:after {
+    content: " *";
+    color: #B94A48;
+}
 .typecho-option label.typecho-label+input {
 }
 
@@ -808,6 +812,9 @@ margin-top: 25px;
 .typecho-page-title {
     margin-top: 1em;
 }
+.typecho-page-title h2 {
+    font-size: 1.28571em;
+}
 
 
 /**
@@ -1002,7 +1009,7 @@ margin-top: 25px;
 }
 
 .typecho-list-operate span.operate-delete, a.operate-delete {
-    color: #CC0000;
+    color: #B94A48;
 }
 
 a.operate-edit {
@@ -1014,7 +1021,7 @@ a.operate-reply {
 }
 
 .typecho-list-operate span.operate-button-delete, a.operate-button-delete {
-    background: #CC0000;
+    background: #B94A48;
 }
 
 .typecho-list-operate a:hover {
