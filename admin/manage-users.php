@@ -29,74 +29,76 @@ include 'menu.php';
                 </form>
                 </div>
             
-                <form method="post" name="manage_users" class="operate-form">
-                <table class="typecho-list-table">
-                    <colgroup>
-                        <col width="20"/>
-                        <col width="20%"/>
-                        <col width="20%"/>
-                        <col width="20"/>
-                        <col width="30%"/>
-                        <col width=""/>
-                        <col width="10%"/>
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th> </th>
-                            <th><?php _e('用户名'); ?></th>
-                            <th><?php _e('昵称'); ?></th>
-                            <th> </th>
-                            <th><?php _e('电子邮件'); ?></th>
-                            <th><?php _e('用户组'); ?></th>
-                            <th><?php _e('文章'); ?></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    	<?php Typecho_Widget::widget('Widget_Users_Admin')->to($users); ?>
-                        <?php while($users->next()): ?>
-                        <tr id="user-<?php $users->uid(); ?>">
-                            <td><input type="checkbox" value="<?php $users->uid(); ?>" name="uid[]"/></td>
-                            <td><a href="<?php $options->adminUrl('user.php?uid=' . $users->uid); ?>"><?php $users->name(); ?></a></td>
-                            <td><?php $users->screenName(); ?></td>
-                            <td>
-                            <a class="right hidden-by-mouse" href="<?php $users->permalink(); ?>"><img src="<?php $options->adminUrl('images/link.png'); ?>" title="<?php _e('浏览 %s', $users->screenName); ?>" width="16" height="16" alt="view" /></a>
-                            </td>
-                            <td><?php if($users->mail): ?><a href="mailto:<?php $users->mail(); ?>"><?php $users->mail(); ?></a><?php else: _e('暂无'); endif; ?></td>
-                            <td><?php switch ($users->group) {
-                                case 'administrator':
-                                    _e('管理员');
-                                    break;
-                                case 'editor':
-                                    _e('编辑');
-                                    break;
-                                case 'contributor':
-                                    _e('贡献者');
-                                    break;
-                                case 'subscriber':
-                                    _e('关注者');
-                                    break;
-                                case 'visitor':
-                                    _e('访问者');
-                                    break;
-                                default:
-                                    break;
-                            } ?></td>
-                            <td><a href="<?php $options->adminUrl('manage-posts.php?uid=' . $users->uid); ?>" class="balloon-button left size-<?php echo Typecho_Common::splitByCount($users->postsNum, 1, 10, 20, 50, 100); ?>"><?php $users->postsNum(); ?></a></td>
-                        </tr>
-                        <?php endwhile; ?>
-                    </tbody>
-                </table>
-                </form>
+                <div class="typecho-list-wrap">
+                    <form method="post" name="manage_users" class="operate-form">
+                        <table class="typecho-list-table">
+                            <colgroup>
+                                <col width="20"/>
+                                <col width="20%"/>
+                                <col width="20%"/>
+                                <col width="20"/>
+                                <col width="30%"/>
+                                <col width=""/>
+                                <col width="10%"/>
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th> </th>
+                                    <th><?php _e('用户名'); ?></th>
+                                    <th><?php _e('昵称'); ?></th>
+                                    <th> </th>
+                                    <th><?php _e('电子邮件'); ?></th>
+                                    <th><?php _e('用户组'); ?></th>
+                                    <th><?php _e('文章'); ?></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            	<?php Typecho_Widget::widget('Widget_Users_Admin')->to($users); ?>
+                                <?php while($users->next()): ?>
+                                <tr id="user-<?php $users->uid(); ?>">
+                                    <td><input type="checkbox" value="<?php $users->uid(); ?>" name="uid[]"/></td>
+                                    <td><a href="<?php $options->adminUrl('user.php?uid=' . $users->uid); ?>"><?php $users->name(); ?></a></td>
+                                    <td><?php $users->screenName(); ?></td>
+                                    <td>
+                                    <a class="right hidden-by-mouse" href="<?php $users->permalink(); ?>"><img src="<?php $options->adminUrl('images/link.png'); ?>" title="<?php _e('浏览 %s', $users->screenName); ?>" width="16" height="16" alt="view" /></a>
+                                    </td>
+                                    <td><?php if($users->mail): ?><a href="mailto:<?php $users->mail(); ?>"><?php $users->mail(); ?></a><?php else: _e('暂无'); endif; ?></td>
+                                    <td><?php switch ($users->group) {
+                                        case 'administrator':
+                                            _e('管理员');
+                                            break;
+                                        case 'editor':
+                                            _e('编辑');
+                                            break;
+                                        case 'contributor':
+                                            _e('贡献者');
+                                            break;
+                                        case 'subscriber':
+                                            _e('关注者');
+                                            break;
+                                        case 'visitor':
+                                            _e('访问者');
+                                            break;
+                                        default:
+                                            break;
+                                    } ?></td>
+                                    <td><a href="<?php $options->adminUrl('manage-posts.php?uid=' . $users->uid); ?>" class="balloon-button left size-<?php echo Typecho_Common::splitByCount($users->postsNum, 1, 10, 20, 50, 100); ?>"><?php $users->postsNum(); ?></a></td>
+                                </tr>
+                                <?php endwhile; ?>
+                            </tbody>
+                        </table>
+                    </form>
                 
-            <?php if($users->have()): ?>
-            <div class="typecho-pager">
-                <div class="typecho-pager-content">
-                    <ul>
-                        <?php $users->pageNav(); ?>
-                    </ul>
-                </div>
-            </div>
-            <?php endif; ?>
+                    <?php if($users->have()): ?>
+                    <div class="typecho-pager">
+                        <div class="typecho-pager-content">
+                            <ul>
+                                <?php $users->pageNav(); ?>
+                            </ul>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+                </div><!-- end .typecho-list-wrap -->
             
             </div>
         </div>

@@ -569,7 +569,8 @@ margin-top: 25px;
  * 后台分页
  */
 .typecho-pager {
-    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 1px solid #F0F0EC;
     font-size: 1.14286em;
     text-align: center;
 }
@@ -1035,6 +1036,11 @@ a.operate-reply {
 .typecho-list-table-title {
     color: #999;
     text-align: center;
+}
+
+.typecho-list-wrap {
+    padding: 30px;
+    background: #FFF;
 }
 
 .typecho-list-table {
@@ -1842,8 +1848,9 @@ ul.autocompleter-choices span.autocompleter-queried {
  * 标签列表
  */
 .typecho-page-main ul.tag-list {
-    padding: 5px 10px;
-    background: #EFF5D9;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 .typecho-page-main ul.tag-list li {
