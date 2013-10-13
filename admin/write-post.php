@@ -80,31 +80,8 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                 <div class="col-mb-12 col-tb-3">
                     <div class="typecho-post-option">
                         <section>
-                            <label for="date" class="typecho-label"><?php _e('日期'); ?></label>
-                            <p>
-                                <select disabled class="typecho-date" name="month" id="month">
-                                    <option value="1" <?php if (1 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('一月'); ?></option>
-                                    <option value="2" <?php if (2 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('二月'); ?></option>
-                                    <option value="3" <?php if (3 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('三月'); ?></option>
-                                    <option value="4" <?php if (4 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('四月'); ?></option>
-                                    <option value="5" <?php if (5 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('五月'); ?></option>
-                                    <option value="6" <?php if (6 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('六月'); ?></option>
-                                    <option value="7" <?php if (7 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('七月'); ?></option>
-                                    <option value="8" <?php if (8 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('八月'); ?></option>
-                                    <option value="9" <?php if (9 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('九月'); ?></option>
-                                    <option value="10" <?php if (10 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('十月'); ?></option>
-                                    <option value="11" <?php if (11 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('十一月'); ?></option>
-                                    <option value="12" <?php if (12 == $post->date->format('n')): ?>selected="true"<?php endif; ?>><?php _e('十二月'); ?></option>
-                                </select>
-                                <input disabled class="typecho-date" size="4" maxlength="4" type="text" name="day" id="day" value="<?php $post->date('d'); ?>" />
-                                ,
-                                <input disabled class="typecho-date" size="4" maxlength="4" type="text" name="year" id="year" value="<?php $post->date('Y'); ?>" />
-                                @
-                                <input disabled class="typecho-date" size="2" maxlength="2" type="text" name="hour" id="hour" value="<?php $post->date('H'); ?>" />
-                                :
-                                <input disabled class="typecho-date" size="2" maxlength="2" type="text" name="min" id="min" value="<?php $post->date('i'); ?>" />
-                            </p>
-                            <p class="description"><?php _e('请选择一个发布日期'); ?></p>
+                            <label for="date" class="typecho-label"><?php _e('发布日期'); ?></label>
+                            <p><input class="typecho-date w-100" type="text" name="date" id="date" value="<?php $post->date(); ?>" /></p>
                         </section>
                         <section>
                             <label class="typecho-label"><?php _e('分类'); ?></label>
@@ -125,7 +102,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         </section>
                         <section>
                             <label for="slug" class="typecho-label"><?php _e('缩略名'); ?></label>
-                            <p><input type="text" id="slug" name="slug" value="<?php $post->slug(); ?>" class="mini" /></p>
+                            <p><input type="text" id="slug" name="slug" value="<?php $post->slug(); ?>" class="mini w-100" /></p>
                             <p class="description"><?php _e('为这篇日志自定义链接地址, 有利于搜索引擎收录'); ?></p>
                         </section>
                         <?php Typecho_Plugin::factory('admin/write-post.php')->option($post); ?>

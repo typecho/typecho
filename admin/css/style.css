@@ -1975,8 +1975,71 @@ ul.autocompleter-choices span.autocompleter-queried {
 }
 
 
+/* Jquery Timepicker */
+#ui-datepicker-div {
+    padding: 10px;
+    border: 1px solid #CCC;
+    background: #FFF;
+}
+.ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
+.ui-timepicker-div dl { text-align: left; }
+.ui-timepicker-div dl dt { float: left; clear:left; }
+.ui-timepicker-div dl dd { margin: 0 0 10px 40%; }
+.ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
 
-/* Tokeninput style */
+#ui-datepicker-div .ui-datepicker-header {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #EEE;
+}
+#ui-datepicker-div .ui-datepicker-prev { float: left; cursor: pointer; }
+#ui-datepicker-div .ui-datepicker-next { float: right; cursor: pointer; }
+#ui-datepicker-div .ui-datepicker-title {
+    font-weight: bold;
+    text-align: center;
+}
+#ui-datepicker-div .ui-datepicker-calendar th { line-height: 24px; }
+#ui-datepicker-div .ui-datepicker-calendar a {
+    display: block;
+    width: 30px;
+    background-color: #F3F3F0;
+    line-height: 24px;
+    text-align: center;
+}
+#ui-datepicker-div .ui-datepicker-calendar a:hover {
+    background-color: #E9E9E6;
+    text-decoration: none;
+}
+#ui-datepicker-div .ui-datepicker-today a {
+    background-color: #E9E9E6;
+    color: #444;
+}
+#ui-datepicker-div .ui-datepicker-current-day a {
+    background-color: #467B96 !important;
+    color: #FFF;
+}
+#ui-datepicker-div .ui-timepicker-div {
+    margin-top: 20px;
+    border-top: 1px solid #EEE;
+}
+#ui-datepicker-div select { height: 20px; }
+#ui-datepicker-div .ui-datepicker-buttonpane {
+    padding-top: 10px;
+    border-top: 1px solid #EEE;
+}
+#ui-datepicker-div button { height: 28px; }
+#ui-datepicker-div .ui-datepicker-current {
+    float: left;
+    border-color: #F3F3F0;
+    color: #467B96;
+    background: #F3F3F0;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+#ui-datepicker-div .ui-datepicker-close { float: right; }
+
+/* Jquery Tokeninput */
 ul.token-input-list {
     list-style: none;
     margin: 0;
