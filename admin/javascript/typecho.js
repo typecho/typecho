@@ -243,6 +243,15 @@ jQuery.tableDnD = {
             };
             // Now make the rows draggable
             jQuery.tableDnD.makeDraggable(this);
+
+            // fix chrome border bug
+            if (0 == $('tfoot', this).length
+                && 0 < $('thead', this).length) {
+                var h = $('thead', this), count = $('th', h).length;
+
+                $('<tfoot><tr><td colspan="' + count 
+                    + '"></td></tr></tfoot>').insertAfter(h);
+            }
         });
 
         // Now we need to capture the mouse up and mouse move event
