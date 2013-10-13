@@ -1053,12 +1053,6 @@ a.operate-reply {
     border-top: 1px solid #F0F0EC;
 }
 
-.typecho-list-table tfoot td {
-    border: none;
-    padding: 0;
-    height: 0;
-}
-
 .typecho-list-table td .thumb-box {
 }
 
