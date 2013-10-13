@@ -16,6 +16,17 @@
 </script>
 <?php endif; ?>
 
+<!-- jQuery Plugin: Tokenizing Autocomplete Text Entry -->
+<script src="<?php $options->adminUrl('javascript/jquery.tokeninput.js?v=' . $suffixVersion); ?>"></script>
+<script>
+$(document).ready(function() {
+    // tag 提示
+    $("#tags").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php");
+    // 修复 tag 提示宽度
+    $(".token-input-dropdown").width($(".token-input-list").css('width'));
+});
+</script>
+
 <script type="text/javascript">
     (function () {
         window.addEvent('domready', function() {

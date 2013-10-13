@@ -9,7 +9,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
         <?php include 'page-title.php'; ?>
         <div class="col-group typecho-page-main typecho-post-option typecho-post-area">
             <form action="<?php $options->index('/action/contents-post-edit'); ?>" method="post" name="write_post">
-                <div class="col-9 suffix" id="test">
+                <div class="col-mb-12 col-tb-9" id="test">
                     <div>
                         <label for="title" class="typecho-label"><?php _e('标题'); ?>
                         <?php if ($post->draft && $post->draft['cid'] != $post->cid): ?>
@@ -40,23 +40,23 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                     </div>
                     <ul id="advance-panel" class="typecho-post-option clearfix">
                         <li>
-                            <div class="col-9">
-                                    <?php if($user->pass('editor', true)): ?>
-                                    <label class="typecho-label"><?php _e('公开度'); ?></label>
-                                    <ul>
-                                        <li><input id="publish" value="publish" name="visibility" type="radio"<?php if (($post->status == 'publish' && !$post->password) || !$post->status) { ?> checked="true"<?php } ?> /> <label for="publish"><?php _e('公开'); ?></label></li>
-                                        <li><input id="password" value="password"name="visibility" type="radio"<?php if ($post->password) { ?> checked="true"<?php } ?> /> <label for="password">密码保护 <input type="text" id="password" name="password" value="<?php $post->password(); ?>" class="mini" /></label></li>
-                                        <li><input id="private" value="private" name="visibility" type="radio"<?php if ($post->status == 'private') { ?> checked="true"<?php } ?> /> <label for="private">私密</label></li>
-                                        <li><input id="waiting" value="waiting" name="visibility" type="radio"<?php if ($post->status == 'waiting') { ?> checked="true"<?php } ?> /> <label for="waiting">待审核</label></li>
-                                    </ul>
-                                    <br />
-                                    <?php endif; ?>
-                                    <label for="trackback" class="typecho-label"><?php _e('引用通告'); ?></label>
-                                    <textarea id="trackback" name="trackback"></textarea>
-                                    <p class="description"><?php _e('每一行一个引用地址, 用回车隔开'); ?></p>
-                                    <?php Typecho_Plugin::factory('admin/write-post.php')->advanceOptionLeft($post); ?>
+                            <div>
+                                <?php if($user->pass('editor', true)): ?>
+                                <label class="typecho-label"><?php _e('公开度'); ?></label>
+                                <ul>
+                                    <li><input id="publish" value="publish" name="visibility" type="radio"<?php if (($post->status == 'publish' && !$post->password) || !$post->status) { ?> checked="true"<?php } ?> /> <label for="publish"><?php _e('公开'); ?></label></li>
+                                    <li><input id="password" value="password"name="visibility" type="radio"<?php if ($post->password) { ?> checked="true"<?php } ?> /> <label for="password">密码保护 <input type="text" id="password" name="password" value="<?php $post->password(); ?>" class="mini" /></label></li>
+                                    <li><input id="private" value="private" name="visibility" type="radio"<?php if ($post->status == 'private') { ?> checked="true"<?php } ?> /> <label for="private">私密</label></li>
+                                    <li><input id="waiting" value="waiting" name="visibility" type="radio"<?php if ($post->status == 'waiting') { ?> checked="true"<?php } ?> /> <label for="waiting">待审核</label></li>
+                                </ul>
+                                <br />
+                                <?php endif; ?>
+                                <label for="trackback" class="typecho-label"><?php _e('引用通告'); ?></label>
+                                <textarea id="trackback" name="trackback"></textarea>
+                                <p class="description"><?php _e('每一行一个引用地址, 用回车隔开'); ?></p>
+                                <?php Typecho_Plugin::factory('admin/write-post.php')->advanceOptionLeft($post); ?>
                             </div>
-                            <div class="col-3">
+                            <div>
                                 <label class="typecho-label"><?php _e('权限控制'); ?></label>
                                 <ul>
                                     <li><input id="allowComment" name="allowComment" type="checkbox" value="1" <?php if($post->allow('comment')): ?>checked="true"<?php endif; ?> />
@@ -66,19 +66,18 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                                     <li><input id="allowFeed" name="allowFeed" type="checkbox" value="1" <?php if($post->allow('feed')): ?>checked="true"<?php endif; ?> />
                                     <label for="allowFeed"><?php _e('允许在聚合中出现'); ?></label></li>
                                     <?php Typecho_Plugin::factory('admin/write-post.php')->advanceOptionRight($post); ?>
-                                    
                                 </ul>
                             </div>
                         </li>
                     </ul>
-                    <ul id="upload-panel">
+                    <!-- <ul id="upload-panel">
                         <li>
                             <?php include 'file-upload.php'; ?>
                         </li>
-                    </ul>
+                    </ul> -->
                     <div id="typecho-preview-box"></div>
                 </div>
-                <div class="col-3">
+                <div class="col-mb-12 col-tb-3">
                     <div class="typecho-post-option">
                         <section>
                             <label for="date" class="typecho-label"><?php _e('日期'); ?></label>
