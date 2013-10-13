@@ -247,10 +247,15 @@ jQuery.tableDnD = {
             // fix chrome border bug
             if (0 == $('tfoot', this).length
                 && 0 < $('thead', this).length) {
-                var h = $('thead', this), count = $('th', h).length;
+                var h = $('thead', this), count = $('th', h).length,
+                    f = $('<tfoot><tr><td style="padding:0;height:0;line-height:0;border:none" colspan="' + count 
+                    + '"></td></tr></tfoot>').insertAfter(h),
+                    l = $('tr:last', this);
 
-                $('<tfoot><tr><td colspan="' + count 
-                    + '"></td></tr></tfoot>').insertAfter(h);
+                if (l.parent().prop('tagName').toLowerCase() != 'tfoot') {
+                    var td = $('td', l), dh = td.height();
+                    td.height(dh - f.outerHeight());
+                }
             }
         });
 
