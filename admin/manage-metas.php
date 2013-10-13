@@ -23,7 +23,7 @@ include 'menu.php';
                             <div class="operate">
                                 <input type="checkbox" class="typecho-table-select-all" />
                                 <div class="btn-group btn-drop">
-                                    <button class="dropdown-toggle" type="button" href="">选中项 &nbsp;<i class="icon-caret-down"></i></button>
+                                    <button class="dropdown-toggle btn-s" type="button" href="">选中项 &nbsp;<i class="icon-caret-down"></i></button>
                                     <ul class="dropdown-menu">
                                         <li><a lang="<?php _e('此分类下的所有内容将被删除, 你确认要删除这些分类吗?'); ?>" href="<?php $options->index('/action/metas-category-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
                                         <li><a lang="<?php _e('刷新分类可能需要等待较长时间, 你确认要刷新这些分类吗?'); ?>" href="<?php $options->index('/action/metas-category-edit?do=refresh'); ?>"><?php _e('刷新'); ?></a></li>
@@ -89,7 +89,7 @@ include 'menu.php';
                         <div class="operate">
                         <input type="checkbox" class="typecho-table-select-all" />
                         <div class="btn-group btn-drop">
-                        <button class="dropdown-toggle" type="button" href="">选中项 &nbsp;<i class="icon-caret-down"></i></button>
+                        <button class="dropdown-toggle btn-s" type="button" href="">选中项 &nbsp;<i class="icon-caret-down"></i></button>
                         <ul class="dropdown-menu">
                             <li><a lang="<?php _e('此标签下的所有内容将被删除, 你确认要删除这些标签吗?'); ?>" href="<?php $options->index('/action/metas-tag-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
                             <li><a lang="<?php _e('刷新标签可能需要等待较长时间, 你确认要刷新这些标签吗?'); ?>" href="<?php $options->index('/action/metas-tag-edit?do=refresh'); ?>"><?php _e('刷新'); ?></a></li>

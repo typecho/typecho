@@ -15,7 +15,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     <div class="operate">
                         <input type="checkbox" class="typecho-table-select-all" />
                     <div class="btn-group btn-drop">
-                    <button class="dropdown-toggle" type="button" href="">选中项 &nbsp;<i class="icon-caret-down"></i></button>
+                    <button class="dropdown-toggle btn-s" type="button" href="">选中项 &nbsp;<i class="icon-caret-down"></i></button>
                     <ul class="dropdown-menu">
                         <li><a lang="<?php _e('你确认要删除这些页面吗?'); ?>" href="<?php $options->index('/action/contents-page-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
                     </ul>
@@ -26,7 +26,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     <a href="<?php $options->adminUrl('manage-pages.php'); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
                     <?php endif; ?>
                     <input type="text" class="text-s" placeholder="<?php _e('请输入关键字'); ?>" value="<?php echo htmlspecialchars($request->keywords); ?>" name="keywords" />
-                    <button type="submit"><?php _e('筛选'); ?></button>
+                    <button type="submit" class="btn-s"><?php _e('筛选'); ?></button>
                     </div>
                 </form>
                 </div>

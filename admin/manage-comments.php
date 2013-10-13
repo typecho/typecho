@@ -45,7 +45,7 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                         <div class="operate">
                             <input type="checkbox" class="typecho-table-select-all" />
                         <div class="btn-group btn-drop">
-                        <button class="dropdown-toggle" type="button" href="">选中项 &nbsp;<i class="icon-caret-down"></i></button>
+                        <button class="dropdown-toggle btn-s" type="button" href="">选中项 &nbsp;<i class="icon-caret-down"></i></button>
                         <ul class="dropdown-menu">
                             <li><a href="<?php $options->index('/action/comments-edit?do=approved'); ?>"><?php _e('通过'); ?></a></li>
                             <li><a href="<?php $options->index('/action/comments-edit?do=waiting'); ?>"><?php _e('待审核'); ?></a></li>
@@ -71,7 +71,7 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                         <?php if(isset($request->cid)): ?>
                             <input type="hidden" value="<?php echo htmlspecialchars($request->get('cid')); ?>" name="cid" />
                         <?php endif; ?>
-                        <button type="submit"><?php _e('筛选'); ?></button>
+                        <button type="submit" class="btn-s"><?php _e('筛选'); ?></button>
                         </div>
                     </form>
                 </div>

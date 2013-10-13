@@ -173,6 +173,10 @@ button {
     background-image: linear-gradient(#fcfcfc, #eeeeee); 
 }
 
+.btn-s {
+    height: 28px;
+}
+
 button, .dropdown-menu {
     border: 1px solid #bbbbbb;
     border-bottom-color: #AAA;
@@ -955,11 +959,14 @@ margin-top: 25px;
     margin-bottom: 20px;
 }
 
-.typecho-list-operate input {
+.typecho-list-operate input,
+.typecho-list-operate button,
+.typecho-list-operate select {
+    vertical-align: bottom;
 }
 
-.typecho-list-operate button {
-    height: 24px;
+.typecho-list-operate input[type="checkbox"] {
+    vertical-align: text-top;
 }
 
 .typecho-list-operate .operate {
@@ -971,31 +978,12 @@ margin-top: 25px;
 }
 
 .typecho-list-operate .search a.button {
-    float: right;
-    font-size: 13px;
-    padding: 2px 6px;
-    line-height: 20px;
 }
 
 .typecho-list-operate .operate a.button {
-    float: left;
-	padding: 2px 6px;
-	font-size: 13px;
-	line-height: 20px;
-	margin-right: 10px;
 }
 
 .typecho-list-operate span.operate-button {
-    cursor: pointer;
-    background: #BD6800;
-    color: #fff;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
-    -khtml-border-radius: 2px;
-    
-    /* hope IE support border radius, God save me! */
-    border-radius: 2px;
-    padding: 3px;
 }
 
 .typecho-list-operate span.operate-delete, a.operate-delete {
@@ -1065,11 +1053,11 @@ a.operate-reply {
     border-top: 1px solid #F0F0EC;
 }
 
-/*.typecho-list-table tfoot td {
+.typecho-list-table tfoot td {
     border: none;
     padding: 0;
     height: 0;
-}*/
+}
 
 .typecho-list-table td .thumb-box {
 }
