@@ -27,7 +27,10 @@ $(document).ready(function() {
     // tag autocomplete 提示
     $("#tags").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php");
     // tag autocomplete 提示宽度设置
-    $(".token-input-dropdown").width($(".token-input-list").css('width'));
+    $("#token-input-tags").focus(function() {
+        $(".token-input-dropdown").width($(".token-input-list").css('width'));
+    });
+    
 });
 </script>
 

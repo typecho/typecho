@@ -2074,7 +2074,7 @@ li.token-input-token {
     padding: 0 6px;
     height: 24px;
     line-height: 24px; 
-    background-color: #E9E9E6;
+    background-color: #F3F3F0;
     cursor: default;
     font-size: .92857em;
     white-space: nowrap;
@@ -2093,8 +2093,7 @@ li.token-input-token span {
 }
 
 li.token-input-selected-token {
-    background-color: #467B96;
-    color: #FFF;
+    background-color: #E9E9E6;
 }
 
 li.token-input-input-token {
