@@ -34,72 +34,68 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 </form>
                 </div>
             
-                <div class="typecho-list-wrap">
-                    <form method="post" name="manage_medias" class="operate-form">
-                        <table class="typecho-list-table draggable">
-                            <colgroup>
-                                <col width="20"/>
-                                <col width="5%"/>
-                                <col width="20"/>
-                                <col width="30%"/>
-                                <col width="20"/>
-                                <col width="10%"/>
-                                <col width="30%"/>
-                                <col width="18%"/>
-                            </colgroup>
-                            <thead>
-                                <tr>
-                                    <th> </th>
-                                    <th> </th>
-                                    <th> </th>
-                                    <th><?php _e('文件名'); ?></th>
-                                    <th> </th>
-                                    <th><?php _e('上传者'); ?></th>
-                                    <th><?php _e('所属文章'); ?></th>
-                                    <th><?php _e('发布日期'); ?></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            	<?php if($attachments->have()): ?>
-                                <?php while($attachments->next()): ?>
-                                <?php $mime = Typecho_Common::mimeIconType($attachments->attachment->mime); ?>
-                                <tr id="<?php $attachments->theId(); ?>">
-                                    <td><input type="checkbox" value="<?php $attachments->cid(); ?>" name="cid[]"/></td>
-                                    <td><a href="<?php $options->adminUrl('manage-comments.php?cid=' . $attachments->cid); ?>" class="balloon-button size-<?php echo Typecho_Common::splitByCount($attachments->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $attachments->commentsNum(); ?></a></td>
-                                    <td><span class="typecho-mime typecho-mime-<?php echo $mime; ?>"></span></td>
-                                    <td><a href="<?php $options->adminUrl('media.php?cid=' . $attachments->cid); ?>"><?php $attachments->title(); ?></a></td>
-                                    <td>
-                                    <a class="right hidden-by-mouse" href="<?php $attachments->permalink(); ?>"><img src="<?php $options->adminUrl('images/link.png'); ?>" title="<?php _e('浏览 %s', $attachments->title); ?>" width="16" height="16" alt="view" /></a>
-                                    </td>
-                                    <td><?php $attachments->author(); ?></td>
-                                    <td>
-                                    <?php if ($attachments->parentPost->cid): ?>
-                                    <a href="<?php $options->adminUrl('write-' . $attachments->parentPost->type . '.php?cid=' . $attachments->parentPost->cid); ?>"><?php $attachments->parentPost->title(); ?></a>
-                                    <?php else: ?>
-                                    <span class="description"><?php _e('未归档'); ?></span>
-                                    <?php endif; ?>
-                                    </td>
-                                    <td><?php $attachments->dateWord(); ?></td>
-                                </tr>
-                                <?php endwhile; ?>
+                <form method="post" name="manage_medias" class="operate-form">
+                    <table class="typecho-list-table draggable">
+                        <colgroup>
+                            <col width="20"/>
+                            <col width="5%"/>
+                            <col width="20"/>
+                            <col width="30%"/>
+                            <col width="20"/>
+                            <col width="10%"/>
+                            <col width="30%"/>
+                            <col width="18%"/>
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th> </th>
+                                <th> </th>
+                                <th> </th>
+                                <th><?php _e('文件名'); ?></th>
+                                <th> </th>
+                                <th><?php _e('上传者'); ?></th>
+                                <th><?php _e('所属文章'); ?></th>
+                                <th><?php _e('发布日期'); ?></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        	<?php if($attachments->have()): ?>
+                            <?php while($attachments->next()): ?>
+                            <?php $mime = Typecho_Common::mimeIconType($attachments->attachment->mime); ?>
+                            <tr id="<?php $attachments->theId(); ?>">
+                                <td><input type="checkbox" value="<?php $attachments->cid(); ?>" name="cid[]"/></td>
+                                <td><a href="<?php $options->adminUrl('manage-comments.php?cid=' . $attachments->cid); ?>" class="balloon-button size-<?php echo Typecho_Common::splitByCount($attachments->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $attachments->commentsNum(); ?></a></td>
+                                <td><span class="typecho-mime typecho-mime-<?php echo $mime; ?>"></span></td>
+                                <td><a href="<?php $options->adminUrl('media.php?cid=' . $attachments->cid); ?>"><?php $attachments->title(); ?></a></td>
+                                <td>
+                                <a class="right hidden-by-mouse" href="<?php $attachments->permalink(); ?>"><img src="<?php $options->adminUrl('images/link.png'); ?>" title="<?php _e('浏览 %s', $attachments->title); ?>" width="16" height="16" alt="view" /></a>
+                                </td>
+                                <td><?php $attachments->author(); ?></td>
+                                <td>
+                                <?php if ($attachments->parentPost->cid): ?>
+                                <a href="<?php $options->adminUrl('write-' . $attachments->parentPost->type . '.php?cid=' . $attachments->parentPost->cid); ?>"><?php $attachments->parentPost->title(); ?></a>
                                 <?php else: ?>
-                                <tr>
-                                	<td colspan="8"><h6 class="typecho-list-table-title"><?php _e('没有任何附件'); ?></h6></td>
-                                </tr>
+                                <span class="description"><?php _e('未归档'); ?></span>
                                 <?php endif; ?>
-                            </tbody>
-                        </table>
-
-                        <?php if($attachments->have()): ?>
-                        <div class="typecho-pager">
-                            <ul class="typecho-pager-content">
-                                <?php $attachments->pageNav(); ?>
-                            </ul>
-                        </div>
-                        <?php endif; ?>
-                    </form>
-                </div><!-- end .typecho-list-wrap -->
+                                </td>
+                                <td><?php $attachments->dateWord(); ?></td>
+                            </tr>
+                            <?php endwhile; ?>
+                            <?php else: ?>
+                            <tr>
+                            	<td colspan="8"><h6 class="typecho-list-table-title"><?php _e('没有任何附件'); ?></h6></td>
+                            </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </form>
                 
+
+                <?php if($attachments->have()): ?>
+                <ul class="typecho-pager">
+                    <?php $attachments->pageNav(); ?>
+                </ul>
+                <?php endif; ?>
             </div>
         </div>
     </div>

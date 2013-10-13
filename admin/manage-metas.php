@@ -35,54 +35,52 @@ include 'menu.php';
                                 </div>
                             </div>
                         </div>
-                        <div class="typecho-list-wrap">
-                            <table class="typecho-list-table">
-                                <colgroup>
-                                    <col width="20"/>
-                                    <col width="30%"/>
-                                    <col width="20"/>
-                                    <col width="30%"/>
-                                    <col width=""/>
-                                    <col width="15%"/>
-                                </colgroup>
-                                <thead>
-                                    <tr>
-                                        <th> </th>
-                                        <th><?php _e('名称'); ?></th>
-                                        <th> </th>
-                                        <th><?php _e('缩略名'); ?></th>
-                                        <th> </th>
-                                        <th><?php _e('文章数'); ?></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php if($categories->have()): ?>
-                                    <?php while ($categories->next()): ?>
-                                    <tr id="mid-<?php $categories->theId(); ?>">
-                                        <td><input type="checkbox" value="<?php $categories->mid(); ?>" name="mid[]"/></td>
-                                        <td><a href="<?php echo $request->makeUriByRequest('mid=' . $categories->mid); ?>"><?php $categories->name(); ?></a></td>
-                                        <td>
-                                        <a class="right hidden-by-mouse" href="<?php $categories->permalink(); ?>"><img src="<?php $options->adminUrl('images/link.png'); ?>" title="<?php _e('浏览 %s', $categories->name); ?>" width="16" height="16" alt="view" /></a>
-                                        </td>
-                                        <td><?php $categories->slug(); ?></td>
-                                        <td>
-                                        <?php if ($options->defaultCategory == $categories->mid): ?>
-                                        <span class="balloon right"><?php _e('默认'); ?></span>
-                                        <?php else: ?>
-                                        <a class="hidden-by-mouse" href="<?php $options->index('/action/metas-category-edit?do=default&mid=' . $categories->mid); ?>" title="<?php _e('设为默认'); ?>"><?php _e('默认'); ?></a>
-                                        <?php endif; ?>
-                                        </td>
-                                        <td><a class="balloon-button left size-<?php echo Typecho_Common::splitByCount($categories->count, 1, 10, 20, 50, 100); ?>" href="<?php $options->adminUrl('manage-posts.php?category=' . $categories->mid); ?>"><?php $categories->count(); ?></a></td>
-                                    </tr>
-                                    <?php endwhile; ?>
+                        <table class="typecho-list-table">
+                            <colgroup>
+                                <col width="20"/>
+                                <col width="30%"/>
+                                <col width="20"/>
+                                <col width="30%"/>
+                                <col width=""/>
+                                <col width="15%"/>
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th> </th>
+                                    <th><?php _e('名称'); ?></th>
+                                    <th> </th>
+                                    <th><?php _e('缩略名'); ?></th>
+                                    <th> </th>
+                                    <th><?php _e('文章数'); ?></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if($categories->have()): ?>
+                                <?php while ($categories->next()): ?>
+                                <tr id="mid-<?php $categories->theId(); ?>">
+                                    <td><input type="checkbox" value="<?php $categories->mid(); ?>" name="mid[]"/></td>
+                                    <td><a href="<?php echo $request->makeUriByRequest('mid=' . $categories->mid); ?>"><?php $categories->name(); ?></a></td>
+                                    <td>
+                                    <a class="right hidden-by-mouse" href="<?php $categories->permalink(); ?>"><img src="<?php $options->adminUrl('images/link.png'); ?>" title="<?php _e('浏览 %s', $categories->name); ?>" width="16" height="16" alt="view" /></a>
+                                    </td>
+                                    <td><?php $categories->slug(); ?></td>
+                                    <td>
+                                    <?php if ($options->defaultCategory == $categories->mid): ?>
+                                    <span class="balloon right"><?php _e('默认'); ?></span>
                                     <?php else: ?>
-                                    <tr>
-                                        <td colspan="6"><h6 class="typecho-list-table-title"><?php _e('没有任何分类'); ?></h6></td>
-                                    </tr>
+                                    <a class="hidden-by-mouse" href="<?php $options->index('/action/metas-category-edit?do=default&mid=' . $categories->mid); ?>" title="<?php _e('设为默认'); ?>"><?php _e('默认'); ?></a>
                                     <?php endif; ?>
-                                </tbody>
-                            </table>
-                        </div>
+                                    </td>
+                                    <td><a class="balloon-button left size-<?php echo Typecho_Common::splitByCount($categories->count, 1, 10, 20, 50, 100); ?>" href="<?php $options->adminUrl('manage-posts.php?category=' . $categories->mid); ?>"><?php $categories->count(); ?></a></td>
+                                </tr>
+                                <?php endwhile; ?>
+                                <?php else: ?>
+                                <tr>
+                                    <td colspan="6"><h6 class="typecho-list-table-title"><?php _e('没有任何分类'); ?></h6></td>
+                                </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
                     </form>
                     <?php else: ?>
                     <?php Typecho_Widget::widget('Widget_Metas_Tag_Cloud', 'sort=mid&desc=0')->to($tags); ?>
@@ -102,20 +100,18 @@ include 'menu.php';
                         </div>
                     </div>
                     
-                    <div class="typecho-list-wrap">
-                        <ul class="typecho-list-notable tag-list clearfix">
-                            <?php if($tags->have()): ?>
-                            <?php while ($tags->next()): ?>
-                            <li class="size-<?php $tags->split(5, 10, 20, 30); ?>" id="<?php $tags->theId(); ?>">
-                            <input type="checkbox" value="<?php $tags->mid(); ?>" name="mid[]"/>
-                            <span rel="<?php echo $request->makeUriByRequest('mid=' . $tags->mid); ?>"><?php $tags->name(); ?></span>
-                            </li>
-                            <?php endwhile; ?>
-                            <?php else: ?>
-                            <h6 class="typecho-list-table-title"><?php _e('没有任何标签'); ?></h6>
-                            <?php endif; ?>
-                        </ul>
-                    </div><!-- end .typecho-list-wrap -->
+                    <ul class="typecho-list-notable tag-list clearfix">
+                        <?php if($tags->have()): ?>
+                        <?php while ($tags->next()): ?>
+                        <li class="size-<?php $tags->split(5, 10, 20, 30); ?>" id="<?php $tags->theId(); ?>">
+                        <input type="checkbox" value="<?php $tags->mid(); ?>" name="mid[]"/>
+                        <span rel="<?php echo $request->makeUriByRequest('mid=' . $tags->mid); ?>"><?php $tags->name(); ?></span>
+                        </li>
+                        <?php endwhile; ?>
+                        <?php else: ?>
+                        <h6 class="typecho-list-table-title"><?php _e('没有任何标签'); ?></h6>
+                        <?php endif; ?>
+                    </ul>
                     <input type="hidden" name="do" value="delete" />
                     </form>
                     <?php endif; ?>

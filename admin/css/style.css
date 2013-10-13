@@ -568,30 +568,19 @@ margin-top: 25px;
 /**
  * 后台分页
  */
+
 .typecho-pager {
-    padding-top: 30px;
-    border-top: 1px solid #F0F0EC;
+    list-style: none;
+    margin: 30px 0 0;
+    padding: 0;
     font-size: 1.14286em;
     line-height: 1;
     text-align: center;
-}
-
-.typecho-pager .typecho-pager-content {
-}
-
-.typecho-pager h5 {
-}
-
-.typecho-pager ul {
-    display: inline-block;
-    list-style: none;
-    margin: 0;
-    padding: 0;
     zoom: 1;
 }
 
 .typecho-pager li {
-    float: left;
+    display: inline-block;
     margin: 0 2px;
     height: 32px;
     line-height: 32px;
@@ -1038,12 +1027,8 @@ a.operate-reply {
     text-align: center;
 }
 
-.typecho-list-wrap {
-    padding: 30px;
-    background: #FFF;
-}
-
 .typecho-list-table {
+    border: 30px solid #FFF;
     width: 100%;
     background: #FFF;
 }
@@ -1079,6 +1064,12 @@ a.operate-reply {
     padding: 10px;
     border-top: 1px solid #F0F0EC;
 }
+
+/*.typecho-list-table tfoot td {
+    border: none;
+    padding: 0;
+    height: 0;
+}*/
 
 .typecho-list-table td .thumb-box {
 }
