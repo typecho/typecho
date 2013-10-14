@@ -99,6 +99,8 @@ $(document).ready(function() {
         echo ceil($val / (1024 * 1024));
         ?>,
 
+        queuefiles      :   5,
+
         error: function(err, file) {
             switch(err) {
                 case 'BrowserNotSupported':
