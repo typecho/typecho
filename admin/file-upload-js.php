@@ -38,7 +38,7 @@ $(document).ready(function() {
                 .html('<input type="hidden" name="attachment[]" value="' + data.cid + '" />'
                     + '<a class="file" target="_blank" href="<?php $options->adminUrl('media.php'); ?>?cid=' 
                     + data.cid + '">' + data.title + '</a> ' + data.bits
-                    + ' <a class="insert" href="#">' + <?php _e('插入'); ?> + '</a>'
+                    + ' <a class="insert" href="#"><?php _e('插入'); ?></a>'
                     + ' <a class="delete" href="#">&times;</a>')
                 .effect('highlight', '#AACB36', 1000);
             

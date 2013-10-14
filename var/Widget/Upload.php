@@ -318,6 +318,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                         'url'       =>  $this->attachment->url,
                         'permalink' =>  $this->permalink
                     )) . ');</script>';
+                    return;
                 }
             }
         }
@@ -377,6 +378,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                         'url'       =>  $this->attachment->url,
                         'permalink' =>  $this->permalink
                     )) . ');</script>';
+                    return;
                 }
             }
         }
