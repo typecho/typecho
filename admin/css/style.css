@@ -139,6 +139,8 @@ textarea {
     line-height: 1.5;
 }
 
+input[type="radio"], input[type="checkbox"] { margin-right: 3px; }
+
 input.text-s { padding: 5px; }
 
 .w-10 { width: 10%; }
@@ -1550,7 +1552,15 @@ ul.typecho-list-notable li .loading {
 .typecho-post-area {
 }
 
-.typecho-post-area label.typecho-label {
+.typecho-post-area .typecho-label {
+    display: block;
+    margin-bottom: -0.5em;
+    font-weight: bold;
+}
+
+.typecho-post-area #auto-save-message {
+    color: #999;
+    font-size: .92857em;
 }
 
 /*.typecho-post-area .typecho-preview-label {
@@ -1678,11 +1688,9 @@ ul.typecho-list-notable li .loading {
 }
 
 .typecho-post-area button#btn-submit {
-	font-weight: bold;
 }
 
 .typecho-post-area button#btn-save {
-	font-style: italic;
 }
 
 .typecho-post-area span.size-btn {
@@ -1694,102 +1702,41 @@ ul.typecho-list-notable li .loading {
 .typecho-post-area br {
 }
 
-.typecho-post-area #advance-panel, .typecho-post-area #upload-panel {
+.typecho-post-area #advance-panel {
 }
 
 .typecho-post-area .is-draft {
 	background: #FFF1A8;
 }
 
-ul.typecho-post-option {
+.typecho-post-option .description {
+    margin-top: -0.5em;
+    color: #999;
+    font-size: .92857em;
 }
 
-ul.typecho-post-option li {
-}
-
-ul.typecho-post-option li:first-child {
-}
-
-ul.typecho-post-option li:last-child {
-}
-
-#advance-panel li, #upload-panel li {
-}
-
-ul.typecho-post-option li ul {
-}
-
-ul.typecho-post-option li ul.related {
-}
-
-ul.typecho-post-option li ul li {
-}
-
-ul.typecho-post-option li ul.related li {
-}
-
-ul.typecho-post-option li ul li:hover {
-}
-
-ul.typecho-post-option li ul.related li:hover {
-}
-
-ul.typecho-post-option .description {
-}
-
-ul.autocompleter-choices {
-    position: absolute;
-    margin: 0;
-    padding: 0;
+.typecho-post-option .cat-list {
     list-style: none;
-    background-color: #fff;
-    text-align: left;
-    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
-    z-index: 50;
-    border: 1px solid #CED7A8;
-    border-top: none;
-    background: #DCE2C0;
-    color: #000;
-    font-size: 13px;
-    
-    -moz-border-radius-bottomleft: 3px;
-    -moz-border-radius-bottomright: 3px;
-    -webkit-border-bottom-left-radius: 3px;
-    -webkit-border-bottom-right-radius: 3px;
-    
-    /* hope IE support border radius, God save me! */
-    border-bottom-left-radius: 3px;
-    border-bottom-right-radius: 3px;
+    border: 1px solid #CCC;
+    padding: 6px 12px;
+    background-color: #FFF;
+    border-radius: 2px;
+}
+.typecho-post-option .cat-list li {
+    margin: 3px 0;
 }
 
-ul.autocompleter-choices li {
-    position: relative;
-    margin: 0;
-    padding: 0.3em 1.5em 0.3em 1em;
-    display: block;
-    float: none !important; 
-    cursor: pointer;
-    font-weight: normal;
-    white-space: nowrap;
-    font-size: 1em;
-    line-height: 1.5em;
-}
-
-ul.autocompleter-choices li.autocompleter-selected, ul.autocompleter-choices li.autocompleter-hover {
-    background-color: #EDF0DF;
-    color: #000;
-}
-
-ul.autocompleter-choices span.autocompleter-queried {
-    display: inline;
-    float: none;
-    font-weight: bold;
-    margin: 0;
+.typecho-post-option .visibility-option,
+.typecho-post-option .allow-option {
+    list-style: none;
     padding: 0;
-    color: #E47E00;
 }
 
-.typecho-post-area .advance, .typecho-post-area .attach, .typecho-post-area .media {
+.typecho-post-option .visibility-option li,
+.typecho-post-option .allow-option li {
+}
+
+/*.typecho-post-area .advance, .typecho-post-area .attach, .typecho-post-area .media {
     font-weight: bold;
     color: #333;
     cursor: pointer;
@@ -1816,7 +1763,7 @@ ul.autocompleter-choices span.autocompleter-queried {
 .typecho-post-area .close {
     background-position: 0 -16px;
     *background-position: 0 -18px;
-}
+}*/
 
 /**
  * 标签列表
