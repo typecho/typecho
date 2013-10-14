@@ -1,7 +1,7 @@
 <?php if(!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <div class="typecho-foot">
     <div class="copyright">
-        <?php _e('基于 <a href="http://typecho.org">%s</a> 构建, 版本 %s # %s ', $options->software, $prefixVersion, $suffixVersion); ?>
+        <?php _e('基于 <a href="http://typecho.org">%s</a> 构建, 版本 %s-%s ', $options->software, $prefixVersion, $suffixVersion); ?>
     </div>
     <nav class="resource">
         <a href="http://docs.typecho.org"><?php _e('帮助文档'); ?></a> &bull;
