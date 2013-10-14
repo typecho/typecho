@@ -124,7 +124,7 @@ a.important {
 input[type=text], input[type=password], input[type=email],
 textarea {
     background: #FFF;
-    border: 1px solid #CCC;
+    border: 1px solid #D9D9D6;
     padding: 7px;
 
     border-radius: 2px;
@@ -1559,6 +1559,7 @@ ul.typecho-list-notable li .loading {
 }
 
 .typecho-post-area #auto-save-message {
+    margin-top: 5px;
     color: #999;
     font-size: .92857em;
 }
@@ -1703,6 +1704,7 @@ ul.typecho-list-notable li .loading {
 }
 
 .typecho-post-area #advance-panel {
+    display: none;
 }
 
 .typecho-post-area .is-draft {
@@ -1715,25 +1717,26 @@ ul.typecho-list-notable li .loading {
     font-size: .92857em;
 }
 
-.typecho-post-option .cat-list {
+.category-option ul {
     list-style: none;
-    border: 1px solid #CCC;
+    border: 1px solid #D9D9D6;
     padding: 6px 12px;
     background-color: #FFF;
     border-radius: 2px;
 }
-.typecho-post-option .cat-list li {
+.category-option li {
     margin: 3px 0;
 }
 
-.typecho-post-option .visibility-option,
-.typecho-post-option .allow-option {
+.visibility-option ul,
+.allow-option ul {
     list-style: none;
     padding: 0;
 }
 
-.typecho-post-option .visibility-option li,
-.typecho-post-option .allow-option li {
+.visibility-option {
+    float: left;
+    width: 50%;
 }
 
 /*.typecho-post-area .advance, .typecho-post-area .attach, .typecho-post-area .media {
@@ -1996,7 +1999,7 @@ ul.typecho-list-notable li .loading {
  */
 #upload-panel {
     padding: 10px 15px;
-    border: 1px dashed #CCC;
+    border: 1px dashed #D9D9D6;
     background-color: #FFF;
     color: #999;
     font-size: .92857em;
@@ -2017,7 +2020,7 @@ ul.typecho-list-notable li .loading {
 #ui-datepicker-div {
     display: none;
     padding: 10px;
-    border: 1px solid #CCC;
+    border: 1px solid #D9D9D6;
     background: #FFF;
 }
 .ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
@@ -2086,7 +2089,7 @@ ul.token-input-list {
     list-style: none;
     margin: 0;
     padding: 4px;
-    border: 1px solid #CCC;
+    border: 1px solid #D9D9D6;
     height: 34px;
     overflow: hidden; 
     cursor: text;
@@ -2148,7 +2151,7 @@ div.token-input-dropdown {
     position: absolute;
     background-color: #FFF;
     overflow: hidden;
-    border: 1px solid #CCC;
+    border: 1px solid #D9D9D6;
     border-top-width: 0;
     cursor: default;
     z-index: 1;
