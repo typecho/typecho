@@ -12,7 +12,7 @@ if (isset($post) || isset($page)) {
 }
 ?>
 
-<style>
+<!--<style>
 .upload-progress {
     font-size: 12px;
 }
@@ -94,4 +94,14 @@ if (isset($post) || isset($page)) {
         </small>
     </li>
 <?php endwhile; ?>
-</ul>
+</ul>-->
+
+<div id="upload-panel" class="p">
+    将要上传的文件拖放到这里 或者 <a href="" class="upload-file">选择文件上传</a><input type="file" class="visuallyhidden">
+    <ul id="file-list">
+        <li class="loading">widescreen.jpg</li>
+        <li><a href="###">Sample.zip</a> 100KB <a href="###" class="delete">&times;</a></li>
+        <li><a href="###">segmentfault.profile.png</a> 60KB <a href="###" class="delete">&times;</a></li>
+    </ul>
+</div>
+

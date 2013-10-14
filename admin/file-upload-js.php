@@ -6,6 +6,20 @@ if (isset($post) && $post instanceof Typecho_Widget && $post->have()) {
     $fileParentContent = $page;
 }
 ?>
+
+<script>
+$(document).ready(function() {
+    // 文件上传控件
+    $(".upload-file").click(function() {
+        if($('input[type=file]').val()) {
+            return true;
+        }
+        $("input[type=file]").click();
+        return false;
+    });
+});
+</script>
+
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/swfupload/swfupload.js?v=' . $suffixVersion); ?>"></script>
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/swfupload/swfupload.queue.js?v=' . $suffixVersion); ?>"></script>
 <script type="text/javascript" src="<?php $options->adminUrl('javascript/swfupload/swfupload.cookies.js?v=' . $suffixVersion); ?>"></script>
