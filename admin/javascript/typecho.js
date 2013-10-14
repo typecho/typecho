@@ -84,18 +84,21 @@
             url         :   null,
             onUpload    :   null,
             onComplete  :   null,
+            types       :   null,
+            typesError  :   'file type error',
             single      :   false
         }, options), 
         p = this.parent().css('position', 'relative'),
         input = $('<input type="file" />').css({
             opacity     :   0,
+            cursor      :   'pointer',
             position    :   'absolute',
             width       :   this.outerWidth(),
             height      :   this.outerHeight,
             left        :   this.offset().left - p.offset().left,
             top         :   this.offset().top - p.offset().top
         }).insertAfter(this), queue = {}, prefix = 'queue-',
-        index = 0;
+        index = 0, types = [];
 
         window.fileUploadComplete = function (id, url) {
             if (s.single) {
@@ -112,6 +115,13 @@
             }
         };
 
+        if (!!s.types) {
+            var list = s.types.split(';');
+            for (var i = 0; i < list.length; i ++) {
+                types.push(list[i].split('.').pop());
+            }
+        }
+
         function upload (frame, id) {
             var form = $('<form action="' + s.url + '" method="post" enctype="multipart/form-data"><input type="hidden" name="_id" value="' + id + '" /></form>'),
             replace = input.clone(true).val(''),
@@ -126,6 +136,15 @@
             form.submit();
         }
 
+        function checkTypes (file) {
+            if (!types.length) {
+                return true;
+            }
+
+            var type = file.split('.').pop();
+            return $.inArray(types, type) >= 0;
+        }
+
         input.change(function () {
             var t = $(this), file = t.val();
 
@@ -135,6 +154,11 @@
                 file = file.split(/\\|\//).pop();
             }
 
+            if (!checkTypes(file)) {
+                alert(s.typesError.replace('%s', file));
+                return;
+            }
+
             if (s.single) {
                 t.prop('disabled', true);
             }
@@ -142,7 +166,7 @@
             var id = prefix + index;
             index ++;
 
-            queue[id] = $('<iframe style="display:none" id ="'
+            queue[id] = $('<iframe style="display:none" id ="upload-'
                 + id + '" src="about:blank"></iframe>').appendTo(document.body);
 
             if (s.onUpload) {
