@@ -308,7 +308,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                     $this->pluginHandle()->upload($this);
 
                     if ($this->request->isAjax()) {
-                        $this->response->throwJson(array($this->request->_id, $this->attachment->url, array(
+                        $this->response->throwJson(array($this->attachment->url, array(
                             'cid'       =>  $insertId,
                             'title'     =>  $this->attachment->name,
                             'type'      =>  $this->attachment->type,
@@ -386,7 +386,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                     $this->pluginHandle()->modify($this);
 
                     if ($this->request->isAjax()) {
-                        $this->response->throwJson(array($this->request->_id, $this->attachment->url, array(
+                        $this->response->throwJson(array($this->attachment->url, array(
                             'cid'       =>  $this->cid,
                             'title'     =>  $this->attachment->name,
                             'type'      =>  $this->attachment->type,
