@@ -108,10 +108,10 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
             if (!move_uploaded_file($file['tmp_name'], $path)) {
                 return false;
             }
-        } else if (isset($file['bits'])) {
+        } else if (isset($file['bytes'])) {
 
             //直接写入文件
-            if (!file_put_contents($path, $file['bits'])) {
+            if (!file_put_contents($path, $file['bytes'])) {
                 return false;
             }
         } else {
@@ -173,10 +173,10 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
             if (!move_uploaded_file($file['tmp_name'], $path)) {
                 return false;
             }
-        } else if (isset($file['bits'])) {
+        } else if (isset($file['bytes'])) {
 
             //直接写入文件
-            if (!file_put_contents($path, $file['bits'])) {
+            if (!file_put_contents($path, $file['bytes'])) {
                 return false;
             }
         } else {
@@ -307,23 +307,41 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                     /** 增加插件接口 */
                     $this->pluginHandle()->upload($this);
 
-                    echo "<script>parent.fileUploadComplete('" . $this->request->_id
-                        . "', '" . $this->attachment->url . "', " . json_encode(array(
-                        'cid'       =>  $insertId,
-                        'title'     =>  $this->attachment->name,
-                        'type'      =>  $this->attachment->type,
-                        'size'      =>  $this->attachment->size,
-                        'bits'      =>  number_format(ceil($this->attachment->size / 1024)) . ' Kb',
-                        'isImage'   =>  $this->attachment->isImage,
-                        'url'       =>  $this->attachment->url,
-                        'permalink' =>  $this->permalink
-                    )) . ');</script>';
-                    return;
+                    if ($this->request->isAjax()) {
+                        $this->response->throwJson(array($this->request->_id, $this->attachment->url, array(
+                            'cid'       =>  $insertId,
+                            'title'     =>  $this->attachment->name,
+                            'type'      =>  $this->attachment->type,
+                            'size'      =>  $this->attachment->size,
+                            'bytes'      =>  number_format(ceil($this->attachment->size / 1024)) . ' Kb',
+                            'isImage'   =>  $this->attachment->isImage,
+                            'url'       =>  $this->attachment->url,
+                            'permalink' =>  $this->permalink
+                        )));
+                    } else {
+                        echo "<script>parent.fileUploadComplete('" . $this->request->_id
+                            . "', '" . $this->attachment->url . "', " . json_encode(array(
+                            'cid'       =>  $insertId,
+                            'title'     =>  $this->attachment->name,
+                            'type'      =>  $this->attachment->type,
+                            'size'      =>  $this->attachment->size,
+                            'bytes'      =>  number_format(ceil($this->attachment->size / 1024)) . ' Kb',
+                            'isImage'   =>  $this->attachment->isImage,
+                            'url'       =>  $this->attachment->url,
+                            'permalink' =>  $this->permalink
+                        )) . ');</script>';
+                        
+                        return;
+                    }
                 }
             }
         }
 
-        echo "<script>parent.fileUploadError('" . $this->request->_id . "');</script>";
+        if ($this->request->isAjax()) {
+            $this->response->throwJson(false);
+        } else {
+            echo "<script>parent.fileUploadError('" . $this->request->_id . "');</script>";
+        }
     }
 
     /**
@@ -367,23 +385,41 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                     /** 增加插件接口 */
                     $this->pluginHandle()->modify($this);
 
-                    echo "<script>parent.fileUploadComplete('" . $this->request->_id
-                        . "', '" . $this->attachment->url . "', " . json_encode(array(
-                        'cid'       =>  $this->cid,
-                        'title'     =>  $this->attachment->name,
-                        'type'      =>  $this->attachment->type,
-                        'size'      =>  $this->attachment->size,
-                        'bits'      =>  number_format(ceil($this->attachment->size / 1024)) . ' Kb',
-                        'isImage'   =>  $this->attachment->isImage,
-                        'url'       =>  $this->attachment->url,
-                        'permalink' =>  $this->permalink
-                    )) . ');</script>';
-                    return;
+                    if ($this->request->isAjax()) {
+                        $this->response->throwJson(array($this->request->_id, $this->attachment->url, array(
+                            'cid'       =>  $this->cid,
+                            'title'     =>  $this->attachment->name,
+                            'type'      =>  $this->attachment->type,
+                            'size'      =>  $this->attachment->size,
+                            'bytes'      =>  number_format(ceil($this->attachment->size / 1024)) . ' Kb',
+                            'isImage'   =>  $this->attachment->isImage,
+                            'url'       =>  $this->attachment->url,
+                            'permalink' =>  $this->permalink
+                        )));
+                    } else {
+                        echo "<script>parent.fileUploadComplete('" . $this->request->_id
+                            . "', '" . $this->attachment->url . "', " . json_encode(array(
+                            'cid'       =>  $this->cid,
+                            'title'     =>  $this->attachment->name,
+                            'type'      =>  $this->attachment->type,
+                            'size'      =>  $this->attachment->size,
+                            'bytes'      =>  number_format(ceil($this->attachment->size / 1024)) . ' Kb',
+                            'isImage'   =>  $this->attachment->isImage,
+                            'url'       =>  $this->attachment->url,
+                            'permalink' =>  $this->permalink
+                        )) . ');</script>';
+                        
+                        return;
+                    }
                 }
             }
         }
 
-        echo "<script>parent.fileUploadError('" . $this->request->_id . "');</script>";
+        if ($this->request->isAjax()) {
+            $this->response->throwJson(false);
+        } else {
+            echo "<script>parent.fileUploadError('" . $this->request->_id . "');</script>";
+        }
     }
 
     /**

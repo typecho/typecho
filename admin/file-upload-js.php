@@ -29,7 +29,18 @@ $(document).ready(function() {
         },
         onError     :   function (id, word) {
             $('#' + id).remove();
-            alert('<?php _e('文件上传失败'); ?>');
+            alert('<?php $val = function_exists('ini_get') ? trim(ini_get('upload_max_filesize')) : 0;
+        $last = strtolower($val[strlen($val)-1]);
+        switch($last) {
+            // The 'G' modifier is available since PHP 5.1.0
+            case 'g':
+                $val *= 1024;
+            case 'm':
+                $val *= 1024;
+            case 'k':
+                $val *= 1024;
+        }
+        _e('附件上传失败, 请确认附件尺寸没有超过 %s 并且服务器附件目录可以写入', "{$val} byte"); ?>');
         },
         onComplete  :   function (id, url, data) {
             var li = $('#' + id).removeClass('loading').data('cid', data.cid)
@@ -37,7 +48,7 @@ $(document).ready(function() {
                 .data('image', data.isImage)
                 .html('<input type="hidden" name="attachment[]" value="' + data.cid + '" />'
                     + '<a class="file" target="_blank" href="<?php $options->adminUrl('media.php'); ?>?cid=' 
-                    + data.cid + '">' + data.title + '</a> ' + data.bits
+                    + data.cid + '">' + data.title + '</a> ' + data.bytes
                     + ' <a class="insert" href="#"><?php _e('插入'); ?></a>'
                     + ' <a class="delete" href="#">&times;</a>')
                 .effect('highlight', '#AACB36', 1000);
@@ -45,6 +56,24 @@ $(document).ready(function() {
             attachInsertEvent(li);
             attachDeleteEvent(li);
         },
+    });
+
+    $('#upload-panel').filedrop({
+        url             :   '<?php $options->index('/action/upload' 
+            . (isset($fileParentContent) ? '?cid=' . $fileParentContent->cid : '')); ?>',
+        allowedfileextensions   :   [<?php
+    $attachmentTypes = $options->allowedAttachmentTypes;
+    $attachmentTypesCount = count($attachmentTypes);
+    for ($i = 0; $i < $attachmentTypesCount; $i ++) {
+        echo '".' . $attachmentTypes[$i] . '"';
+        if ($i < $attachmentTypesCount - 1) {
+            echo ',';
+        }
+    }
+?>],
+        uploadStarted   :   function (i, file, len) {
+            console.log(file);
+        }
     });
 
     $('#file-list li').each(function () {
