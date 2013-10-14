@@ -7,6 +7,7 @@ if (isset($post) && $post instanceof Typecho_Widget && $post->have()) {
 }
 ?>
 
+<script src="<?php $options->adminUrl('javascript/filedrop.js?v=' . $suffixVersion); ?>"></script>
 <script>
 $(document).ready(function() {
     var errorWord = '<?php $val = function_exists('ini_get') ? trim(ini_get('upload_max_filesize')) : 0;
@@ -21,8 +22,10 @@ $(document).ready(function() {
                 $val *= 1024;
         }
 
-        $val = number_format(ceil($val / 1024));
-        _e('附件上传失败, 请确认附件尺寸没有超过 %s 并且服务器附件目录可以写入', "{$val}Kb"); ?>';
+        $val = number_format(ceil($val / (1024 *1024)));
+        _e('附件上传失败, 请确认附件尺寸没有超过 %s 并且服务器附件目录可以写入', "{$val}Mb"); ?>',
+        loading = $('<img src="<?php $options->adminUrl('images/ajax-loader.gif'); ?>" style="display:none" />')
+            .appendTo(document.body);
 
     function fileUploadStart (file, id) {
         $('<li id="' + id + '" class="loading">'
@@ -79,7 +82,72 @@ $(document).ready(function() {
         }
     }
 ?>],
-        uploadStarted   :   function (i, file, len) {
+
+        maxfilesize     :   <?php 
+        $val = function_exists('ini_get') ? trim(ini_get('upload_max_filesize')) : 0;
+        $last = strtolower($val[strlen($val)-1]);
+        switch($last) {
+            // The 'G' modifier is available since PHP 5.1.0
+            case 'g':
+                $val *= 1024;
+            case 'm':
+                $val *= 1024;
+            case 'k':
+                $val *= 1024;
+        }
+
+        echo ceil($val / (1024 * 1024));
+        ?>,
+
+        error: function(err, file) {
+            switch(err) {
+                case 'BrowserNotSupported':
+                    alert('<?php _e('浏览器不支持拖拽上传'); ?>');
+                    break;
+                case 'TooManyFiles':
+                    alert('<?php _e('一次上传的文件不能多于%d个', 25); ?>');
+                    break;
+                case 'FileTooLarge':
+                    alert('<?php $val = function_exists('ini_get') ? trim(ini_get('upload_max_filesize')) : 0;
+        $last = strtolower($val[strlen($val)-1]);
+        switch($last) {
+            // The 'G' modifier is available since PHP 5.1.0
+            case 'g':
+                $val *= 1024;
+            case 'm':
+                $val *= 1024;
+            case 'k':
+                $val *= 1024;
+        }
+
+        $val = number_format(ceil($val / (1024 *1024)));
+        _e('附件尺寸不能超过 %s', "{$val}Mb"); ?>');
+                    break;
+                case 'FileTypeNotAllowed':
+                    // The file type is not in the specified list 'allowedfiletypes'
+                    break;
+                case 'FileExtensionNotAllowed':
+                    alert('<?php _e('附件 %s 的类型不被支持'); ?>'.replace('%s', file.name));
+                    break;
+                default:
+                    break;
+            }
+        },
+        
+        
+        dragOver : function () {
+            $(this).addClass('drag');
+        },
+
+        dragLeave : function () {
+            $(this).removeClass('drag');
+        },
+
+        drop : function () {
+            $(this).removeClass('drag');
+        },
+
+        uploadOpened   :   function (i, file, len) {
             fileUploadStart(file.name, 'drag-' + i);
         },
 
@@ -109,7 +177,9 @@ $(document).ready(function() {
                 $.post('<?php $options->index('/action/contents-attachment-edit'); ?>',
                     {'do' : 'delete', 'cid' : cid},
                     function () {
-                        el.remove();
+                        $(el).fadeOut(function () {
+                            $(this).remove();
+                        });
                     });
             }
 
