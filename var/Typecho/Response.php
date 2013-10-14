@@ -229,9 +229,7 @@ class Typecho_Response
         /** 设置http头信息 */
         $this->setContentType('application/json');
 
-        /** Typecho_Json */
-        require_once 'Typecho/Json.php';
-        echo Typecho_Json::encode($message);
+        echo json_encode($message);
 
         /** 终止后续输出 */
         exit;

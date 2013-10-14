@@ -1,3 +1,9 @@
+(function (w) {
+    w.Typecho = {
+        insertFileToEditor  :   function () {}
+    };
+})(window);
+
 (function ($) {
     // 下拉菜单插件
     $.fn.dropdownMenu = function (options) {
@@ -84,12 +90,14 @@
             url         :   null,
             onUpload    :   null,
             onComplete  :   null,
+            onError     :   null,
             types       :   null,
+            name        :   'file',
             typesError  :   'file type error',
             single      :   false
         }, options), 
         p = this.parent().css('position', 'relative'),
-        input = $('<input type="file" />').css({
+        input = $('<input name="' + s.name + '" type="file" />').css({
             opacity     :   0,
             cursor      :   'pointer',
             position    :   'absolute',
@@ -100,7 +108,7 @@
         }).insertAfter(this), queue = {}, prefix = 'queue-',
         index = 0, types = [];
 
-        window.fileUploadComplete = function (id, url) {
+        window.fileUploadComplete = function (id, url, data) {
             if (s.single) {
                 input.prop('disabled', false);
             }
@@ -110,7 +118,22 @@
                 delete queue[id];
 
                 if (s.onComplete) {
-                    s.onComplete.call(input.get(0), id, url);
+                    s.onComplete.call(input.get(0), id, url, data);
+                }
+            }
+        };
+
+        window.fileUploadError = function (id, word) {
+            if (s.single) {
+                input.prop('disabled', false);
+            }
+
+            if (!!id && queue[id]) {
+                queue[id].remove();
+                delete queue[id];
+
+                if (s.onError) {
+                    s.onError.call(input.get(0), id, word);
                 }
             }
         };
@@ -118,7 +141,9 @@
         if (!!s.types) {
             var list = s.types.split(';');
             for (var i = 0; i < list.length; i ++) {
-                types.push(list[i].split('.').pop());
+                var parts = list[i].split('.');
+                parts.shift();
+                types.push('.' + parts.join('.'));
             }
         }
 
@@ -141,8 +166,19 @@
                 return true;
             }
 
-            var type = file.split('.').pop();
-            return $.inArray(types, type) >= 0;
+            for (var i = 0; i < types.length; i ++) {
+                var ext = types[i];
+
+                if (file.length <= ext.length) {
+                    continue;
+                }
+
+                if (ext == file.substring(file.length - ext.length)) {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         input.change(function () {

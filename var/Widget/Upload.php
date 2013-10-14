@@ -307,20 +307,22 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                     /** 增加插件接口 */
                     $this->pluginHandle()->upload($this);
 
-                    $this->response->throwJson(array(
+                    echo "<script>parent.fileUploadComplete('" . $this->request->_id
+                        . "', '" . $this->attachment->url . "', " . json_encode(array(
                         'cid'       =>  $insertId,
                         'title'     =>  $this->attachment->name,
                         'type'      =>  $this->attachment->type,
                         'size'      =>  $this->attachment->size,
+                        'bits'      =>  number_format(ceil($this->attachment->size / 1024)) . ' Kb',
                         'isImage'   =>  $this->attachment->isImage,
                         'url'       =>  $this->attachment->url,
                         'permalink' =>  $this->permalink
-                    ));
+                    )) . ');</script>';
                 }
             }
         }
 
-        $this->response->setStatus(500);
+        echo "<script>parent.fileUploadError('" . $this->request->_id . "');</script>";
     }
 
     /**
@@ -364,20 +366,22 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                     /** 增加插件接口 */
                     $this->pluginHandle()->modify($this);
 
-                    $this->response->throwJson(array(
+                    echo "<script>parent.fileUploadComplete('" . $this->request->_id
+                        . "', '" . $this->attachment->url . "', " . json_encode(array(
                         'cid'       =>  $this->cid,
                         'title'     =>  $this->attachment->name,
                         'type'      =>  $this->attachment->type,
                         'size'      =>  $this->attachment->size,
+                        'bits'      =>  number_format(ceil($this->attachment->size / 1024)) . ' Kb',
                         'isImage'   =>  $this->attachment->isImage,
                         'url'       =>  $this->attachment->url,
                         'permalink' =>  $this->permalink
-                    ));
+                    )) . ');</script>';
                 }
             }
         }
 
-        $this->response->setStatus(500);
+        echo "<script>parent.fileUploadError('" . $this->request->_id . "');</script>";
     }
 
     /**
