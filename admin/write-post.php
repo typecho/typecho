@@ -37,9 +37,9 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                     <p>
                         <textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text" name="text" class="w-100 mono"><?php echo htmlspecialchars($post->text); ?></textarea>
                     </p>
+
                     <?php include 'file-upload.php'; ?>
-                    <label for="tags" class="typecho-label"><?php _e('标签'); ?></label>
-                    <p><input id="tags" name="tags" type="text" value="<?php $post->tags(',', false); ?>" class="w-100 text" /></p>
+
                     <?php Typecho_Plugin::factory('admin/write-post.php')->content($post); ?>
                     <p class="submit">
                         <span class="left">
@@ -77,6 +77,11 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                             <label for="category-<?php $category->mid(); ?>"><?php $category->name(); ?></label></li>
                             <?php endwhile; ?>
                         </ul>
+                    </section>
+
+                    <section class="typecho-post-option">
+                        <label for="tags" class="typecho-label"><?php _e('标签'); ?></label>
+                        <p><input id="tags" name="tags" type="text" value="<?php $post->tags(',', false); ?>" class="w-100 text" /></p>
                     </section>
 
                     <section class="typecho-post-option">
