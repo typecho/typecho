@@ -1561,7 +1561,7 @@ ul.typecho-list-notable li .loading {
 
 .typecho-post-area .typecho-label {
     display: block;
-    margin-bottom: -0.5em;
+    margin: 1em 0 -0.5em;
     font-weight: bold;
 }
 
@@ -1688,6 +1688,17 @@ ul.typecho-list-notable li .loading {
     font-size: 1.17em;
     font-weight: bold;
 }
+.typecho-post-area .url-slug {
+    margin-top: -0.5em;
+    color: #AAA;
+    font-size: .92857em;
+}
+.typecho-post-area #slug {
+    padding: 2px;
+    border: none;
+    background: #FFFBCC;
+    color: #666;
+}
 
 .typecho-post-area textarea#text {
 }
@@ -1736,11 +1747,6 @@ ul.typecho-list-notable li .loading {
 .allow-option ul {
     list-style: none;
     padding: 0;
-}
-
-.visibility-option {
-    float: left;
-    width: 50%;
 }
 
 /*.typecho-post-area .advance, .typecho-post-area .attach, .typecho-post-area .media {
@@ -2007,8 +2013,8 @@ ul.typecho-list-notable li .loading {
     font-size: .92857em;
 }
 
-#upload-panel.drag {
-    background-color: #FFF9E8;
+#upload-panel.drag, .tDnD_whileDrag {
+    background-color: #FFFBCC;
 }
 
 #file-list {
@@ -2095,12 +2101,6 @@ ul.typecho-list-notable li .loading {
 #ui-datepicker-div button { height: 28px; }
 #ui-datepicker-div .ui-datepicker-current {
     float: left;
-    border-color: #F3F3F0;
-    color: #467B96;
-    background: #F3F3F0;
-    -moz-box-shadow: none;
-    -webkit-box-shadow: none;
-    box-shadow: none;
 }
 #ui-datepicker-div .ui-datepicker-close { float: right; }
 
