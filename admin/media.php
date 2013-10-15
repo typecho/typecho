@@ -13,7 +13,7 @@ Typecho_Widget::widget('Widget_Contents_Attachment_Edit')->to($attachment);
             <div class="col-mb-12 col-tb-8">
                 <div class="typecho-attachment-photo-box">
                     <?php if ($attachment->attachment->isImage): ?>
-                    <img src="<?php $attachment->attachment->url(); ?>" alt="<?php $attachment->attachment->name(); ?>" />
+                    <p><img src="<?php $attachment->attachment->url(); ?>" alt="<?php $attachment->attachment->name(); ?>" /></p>
                     <?php endif; ?>
                     
                     <div class="description">

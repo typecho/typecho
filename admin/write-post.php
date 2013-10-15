@@ -42,9 +42,12 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                     <p><input id="tags" name="tags" type="text" value="<?php $post->tags(',', false); ?>" class="w-100 text" /></p>
                     <?php Typecho_Plugin::factory('admin/write-post.php')->content($post); ?>
                     <p class="submit">
-                        <a href="###" id="advance-panel-btn" class="left"><?php _e('高级选项'); ?></a>
-                        <span class="right">
+                        <span class="left">
+                            <a href="###" id="advance-panel-btn"><?php _e('高级选项'); ?></a>
                             <span id="auto-save-message">保存于 1 分钟前</span>
+                        </span>
+                        
+                        <span class="right">
                             <input type="hidden" name="cid" value="<?php $post->cid(); ?>" />
                             <input type="hidden" name="do" value="publish" />
                             <button type="button" id="btn-preview"><?php _e('预览'); ?></button>
