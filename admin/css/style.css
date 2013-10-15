@@ -725,7 +725,8 @@ margin-top: 25px;
     position: absolute;
     top: 36px;
     margin: 0;
-    width: 160px; 
+    min-width: 160px; 
+    max-width: 240px;
     background: #202328;
     overflow: hidden;
     z-index: 250;
@@ -997,7 +998,8 @@ margin-top: 25px;
 .typecho-list-operate span.operate-button {
 }
 
-.typecho-list-operate span.operate-delete, a.operate-delete {
+.typecho-list-operate span.operate-delete, a.operate-delete,
+.typecho-list-operate span.operate-button-delete, a.operate-button-delete {
     color: #B94A48;
 }
 
@@ -1007,10 +1009,6 @@ a.operate-edit {
 
 a.operate-reply {
     color: #545c30;
-}
-
-.typecho-list-operate span.operate-button-delete, a.operate-button-delete {
-    background: #B94A48;
 }
 
 .typecho-list-operate a:hover {
@@ -1556,8 +1554,8 @@ ul.typecho-list-notable li .loading {
  * 编写页面
  */
 
-.typecho-post-area {
-}
+.typecho-post-area .edit-draft-notice { color: #999; }
+.typecho-post-area .edit-draft-notice a { color: #B94A48; }
 
 .typecho-post-area .typecho-label {
     display: block;
@@ -1715,7 +1713,8 @@ ul.typecho-list-notable li .loading {
 .typecho-post-area textarea#trackback {
 }
 
-.typecho-post-area br {
+.typecho-post-area #advance-panel-btn {
+    color: #999;
 }
 
 .typecho-post-area #advance-panel {
@@ -2032,6 +2031,7 @@ ul.typecho-list-notable li .loading {
  */
 #ui-datepicker-div {
     display: none;
+    margin-top: -1px;
     padding: 10px;
     border: 1px solid #D9D9D6;
     background: #FFF;

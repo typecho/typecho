@@ -44,12 +44,12 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 <form method="post" name="manage_posts" class="operate-form">
                 <table class="typecho-list-table">
                     <colgroup>
-                        <col width="3%"/>
+                        <col width="20"/>
                         <col width="5%"/>
-                        <col width="47%"/>
+                        <col width=""/>
                         <col width="10%"/>
-                        <col width="20%"/>
-                        <col width="15%"/>
+                        <col width="18%"/>
+                        <col width="18%"/>
                     </colgroup>
                     <thead>
                         <tr>

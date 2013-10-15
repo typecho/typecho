@@ -94,12 +94,12 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         Typecho_Widget_Helper_Form::POST_METHOD);
 
         /** 用户名称 */
-        $name = new Typecho_Widget_Helper_Form_Element_Text('name', NULL, NULL, _t('用户名*'), _t('此用户名将作为用户登录时所用的名称.<br />
+        $name = new Typecho_Widget_Helper_Form_Element_Text('name', NULL, NULL, _t('用户名 *'), _t('此用户名将作为用户登录时所用的名称.<br />
         请不要与系统中现有的用户名重复.'));
         $form->addInput($name);
 
         /** 电子邮箱地址 */
-        $mail = new Typecho_Widget_Helper_Form_Element_Text('mail', NULL, NULL, _t('电子邮箱地址*'), _t('电子邮箱地址将作为此用户的主要联系方式.<br />
+        $mail = new Typecho_Widget_Helper_Form_Element_Text('mail', NULL, NULL, _t('电子邮箱地址 *'), _t('电子邮箱地址将作为此用户的主要联系方式.<br />
         请不要与系统中现有的电子邮箱地址重复.'));
         $form->addInput($mail);
 
@@ -175,8 +175,8 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
             $name->addRule('required', _t('必须填写用户名称'));
             $name->addRule('xssCheck', _t('请不要在用户名中使用特殊字符'));
             $name->addRule(array($this, 'nameExists'), _t('用户名已经存在'));
-            $password->label(_t('用户密码*'));
-            $confirm->label(_t('用户密码确认*'));
+            $password->label(_t('用户密码 *'));
+            $confirm->label(_t('用户密码确认 *'));
             $password->addRule('required', _t('必须填写密码'));
         }
 
