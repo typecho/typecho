@@ -9,7 +9,7 @@ include 'menu.php';
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="col-group typecho-page-main">
-            <div class="col-mb-12">
+            <div class="col-mb-12 col-tb-8 col-tb-offset-2">
                 <?php Typecho_Widget::widget('Widget_Users_Edit')->form()->render(); ?>
             </div>
         </div>

@@ -1559,9 +1559,6 @@ ul.typecho-list-notable li .loading {
 }
 
 .typecho-post-area #auto-save-message {
-    margin-top: 5px;
-    color: #999;
-    font-size: .92857em;
 }
 
 /*.typecho-post-area .typecho-preview-label {
@@ -1860,10 +1857,8 @@ ul.typecho-list-notable li .loading {
 }
 
 .typecho-attachment-photo-box img {
-    border: 1px solid #E8EDD6;
-    background: #fff;
-    padding: 3px;
-    max-width: 610px;
+    border: 1px solid #E6E6E3;
+    max-width: 100%;
 }
 
 .typecho-mime {

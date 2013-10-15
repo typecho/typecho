@@ -10,7 +10,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="col-group typecho-page-main">
-            <div class="col-mb-12 col-tb-9 typecho-content-panel">
+            <div class="col-mb-12 col-tb-8 typecho-content-panel">
                 <fieldset>
                     <legend><?php _e('个人资料'); ?></legend>
                     <?php Typecho_Widget::widget('Widget_Users_Profile')->profileForm()->render(); ?>
@@ -30,7 +30,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 </fieldset>
                 
             </div>
-            <div class="col-tb-3">
+            <div class="col-tb-3 col-tb-offset-1">
                 <?php echo '<img class="avatar" src="http://www.gravatar.com/avatar/' . md5($user->mail) . '?s=128&r=X' .
                 '&d=" alt="' . $user->screenName . '" />'; ?>
                 <h2><?php $user->screenName(); ?><br><small><?php $user->name(); ?></small></h2>
