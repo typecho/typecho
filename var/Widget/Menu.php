@@ -182,6 +182,9 @@ class Widget_Menu extends Typecho_Widget
                 $childNode += $defaultChildeNode;
                 list ($name, $title, $url, $access, $hidden, $addLink) = $childNode;
 
+                // 保存最原始的hidden信息
+                $orgHidden = $hidden;
+
                 // parse url
                 $url = Typecho_Common::url($url, $adminUrl);
 
@@ -247,7 +250,8 @@ class Widget_Menu extends Typecho_Widget
                     $url,
                     $access,
                     $hidden,
-                    $addLink
+                    $addLink,
+                    $orgHidden
                 );
             }
 
@@ -301,6 +305,8 @@ class Widget_Menu extends Typecho_Widget
                 $classes = array();
                 if ($key == $this->_currentParent && $inKey == $this->_currentChild) {
                     $classes[] = $childClass;
+                } else if ($inNode[6]) {
+                    continue;
                 }
 
                 if ($inKey == $last) {
