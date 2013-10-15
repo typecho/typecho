@@ -37,18 +37,16 @@ include 'menu.php';
                         </div>
                         <table class="typecho-list-table">
                             <colgroup>
-                                <col width="20"/>
+                                <col width="5%"/>
+                                <col width="40%"/>
                                 <col width="30%"/>
-                                <col width="20"/>
-                                <col width="30%"/>
-                                <col width=""/>
+                                <col width="10%"/>
                                 <col width="15%"/>
                             </colgroup>
                             <thead>
                                 <tr>
                                     <th> </th>
                                     <th><?php _e('名称'); ?></th>
-                                    <th> </th>
                                     <th><?php _e('缩略名'); ?></th>
                                     <th> </th>
                                     <th><?php _e('文章数'); ?></th>
@@ -59,9 +57,8 @@ include 'menu.php';
                                 <?php while ($categories->next()): ?>
                                 <tr id="mid-<?php $categories->theId(); ?>">
                                     <td><input type="checkbox" value="<?php $categories->mid(); ?>" name="mid[]"/></td>
-                                    <td><a href="<?php echo $request->makeUriByRequest('mid=' . $categories->mid); ?>"><?php $categories->name(); ?></a></td>
-                                    <td>
-                                    <a class="right hidden-by-mouse" href="<?php $categories->permalink(); ?>"><img src="<?php $options->adminUrl('images/link.png'); ?>" title="<?php _e('浏览 %s', $categories->name); ?>" width="16" height="16" alt="view" /></a>
+                                    <td><a href="<?php echo $request->makeUriByRequest('mid=' . $categories->mid); ?>"><?php $categories->name(); ?></a>
+                                    <a class="right" href="<?php $categories->permalink(); ?>"><img src="<?php $options->adminUrl('images/link.png'); ?>" title="<?php _e('浏览 %s', $categories->name); ?>" width="16" height="16" alt="view" /></a>
                                     </td>
                                     <td><?php $categories->slug(); ?></td>
                                     <td>

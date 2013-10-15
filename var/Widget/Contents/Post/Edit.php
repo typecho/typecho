@@ -227,7 +227,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
 
             /** 插入标签 */
             if (array_key_exists('tags', $contents)) {
-                $this->setTags($realId, $contents['tags'], !$isDraftToPublish, true);
+                $this->setTags($realId, $contents['tags'], !$isDraftToPublish && $isBeforePublish, $isAfterPublish);
             }
 
             /** 同步附件 */
@@ -568,7 +568,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             $this->widget('Widget_Service')->sendPing($this->cid, $trackback);
 
             /** 设置提示信息 */
-            $this->widget('Widget_Notice')->set('publish' == $this->status ?
+            $this->widget('Widget_Notice')->set('post' == $this->type ?
             _t('文章 "<a href="%s">%s</a>" 已经发布', $this->permalink, $this->title) :
             _t('文章 "%s" 等待审核', $this->title), NULL, 'success');
 
@@ -619,17 +619,20 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             foreach ($posts as $post) {
 
                 $condition = $this->db->sql()->where('cid = ?', $post);
+                $postObject = $this->db->fetchObject($this->db->select('status', 'type')
+                    ->from('table.contents')->where('cid = ? AND type = ?', $post, 'post'));
 
                 if ($this->isWriteable($condition) &&
-                ($status = $this->db->fetchObject($this->db->select('status')
-                    ->from('table.contents')->where('cid = ? AND type = ?', $post, 'post'))->status) &&
+                $postObject &&
                 $this->delete($condition)) {
 
                     /** 删除分类 */
-                    $this->setCategories($post, array(), 'publish' == $status);
+                    $this->setCategories($post, array(), 'publish' == $postObject->status
+                        && 'post' == $postObject->type);
 
                     /** 删除标签 */
-                    $this->setTags($post, NULL, 'publish' == $status);
+                    $this->setTags($post, NULL, 'publish' == $postObject->status
+                        && 'post' == $postObject->type);
 
                     /** 删除评论 */
                     $this->db->query($this->db->delete('table.comments')

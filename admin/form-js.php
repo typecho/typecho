@@ -8,7 +8,11 @@
         }
 
         $('form').submit(function () {
-            $('*[type=submit]', this).prop('disabled', true);
+            if (this.submitted) {
+                return false;
+            } else {
+                this.submitted = true;
+            }
         });
 
         $('label input[type=text]').click(function (e) {

@@ -37,22 +37,18 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 <form method="post" name="manage_medias" class="operate-form">
                     <table class="typecho-list-table draggable">
                         <colgroup>
-                            <col width="20"/>
+                            <col width="3%"/>
                             <col width="5%"/>
-                            <col width="20"/>
-                            <col width="30%"/>
-                            <col width="20"/>
+                            <col width="37%"/>
                             <col width="10%"/>
                             <col width="30%"/>
-                            <col width="18%"/>
+                            <col width="15%"/>
                         </colgroup>
                         <thead>
                             <tr>
                                 <th> </th>
                                 <th> </th>
-                                <th> </th>
                                 <th><?php _e('文件名'); ?></th>
-                                <th> </th>
                                 <th><?php _e('上传者'); ?></th>
                                 <th><?php _e('所属文章'); ?></th>
                                 <th><?php _e('发布日期'); ?></th>
@@ -65,10 +61,9 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <tr id="<?php $attachments->theId(); ?>">
                                 <td><input type="checkbox" value="<?php $attachments->cid(); ?>" name="cid[]"/></td>
                                 <td><a href="<?php $options->adminUrl('manage-comments.php?cid=' . $attachments->cid); ?>" class="balloon-button size-<?php echo Typecho_Common::splitByCount($attachments->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $attachments->commentsNum(); ?></a></td>
-                                <td><span class="typecho-mime typecho-mime-<?php echo $mime; ?>"></span></td>
-                                <td><a href="<?php $options->adminUrl('media.php?cid=' . $attachments->cid); ?>"><?php $attachments->title(); ?></a></td>
                                 <td>
-                                <a class="right hidden-by-mouse" href="<?php $attachments->permalink(); ?>"><img src="<?php $options->adminUrl('images/link.png'); ?>" title="<?php _e('浏览 %s', $attachments->title); ?>" width="16" height="16" alt="view" /></a>
+                                <a class="typecho-mime typecho-mime-<?php echo $mime; ?>" href="<?php $options->adminUrl('media.php?cid=' . $attachments->cid); ?>"><?php $attachments->title(); ?></a>
+                                <a class="right" href="<?php $attachments->permalink(); ?>"><img src="<?php $options->adminUrl('images/link.png'); ?>" title="<?php _e('浏览 %s', $attachments->title); ?>" width="16" height="16" alt="view" /></a>
                                 </td>
                                 <td><?php $attachments->author(); ?></td>
                                 <td>

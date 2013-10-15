@@ -1863,55 +1863,50 @@ ul.typecho-list-notable li .loading {
 
 .typecho-mime {
     background-image: url(../images/mime.gif);
-    width: 16px;
+    background-repeat: no-repeat;
+    padding-left: 24px;
     height: 16px;
     line-height: 16px;
-    font-size: 13px;
-    display: block;
-    float: right;
-    position: relative;
-    padding: 0;
-    margin-right: -3px;
 }
 
 .typecho-mime-office {
-    background-position: 0 -160px;
+    background-position: 0 0;
 }
 
 .typecho-mime-text {
-    background-position: 0 -176px;
+    background-position: 0 -16px;
 }
 
 .typecho-mime-image {
-    background-position: 0 -192px;
+    background-position: 0 -32px;
 }
 
 .typecho-mime-html {
-    background-position: 0 -208px;
+    background-position: 0 -48px;
 }
 
 .typecho-mime-archive {
-    background-position: 0 -224px;
+    background-position: 0 -64px;
 }
 
 .typecho-mime-application {
-    background-position: 0 -240px;
+    background-position: 0 -80px;
 }
 
 .typecho-mime-audio {
-    background-position: 0 -256px;
+    background-position: 0 -96px;
 }
 
 .typecho-mime-script {
-    background-position: 0 -272px;
+    background-position: 0 -112px;
 }
 
 .typecho-mime-video {
-    background-position: 0 -288px;
+    background-position: 0 -128px;
 }
 
 .typecho-mime-unknow {
-    background-position: 0 -304px;
+    background-position: 0 -144px;
 }
 
 .typecho-attachment-photo-box .typecho-mime {

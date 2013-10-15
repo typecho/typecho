@@ -35,22 +35,18 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 
                     <table class="typecho-list-table">
                         <colgroup>
-                            <col width="20"/>
+                            <col width="3%"/>
                             <col width="5%"/>
-                            <col width="35%"/>
-                            <col width=""/>
-                            <col width="20"/>
+                            <col width="47%"/>
                             <col width="20%"/>
+                            <col width="10%"/>
                             <col width="15%"/>
-                            <col width="18%"/>
                         </colgroup>
                         <thead>
                             <tr>
                                 <th> </th>
                                 <th> </th>
                                 <th><?php _e('标题'); ?></th>
-                                <th> </th>
-                                <th> </th>
                                 <th><?php _e('缩略名'); ?></th>
                                 <th><?php _e('作者'); ?></th>
                                 <th><?php _e('日期'); ?></th>
@@ -63,16 +59,21 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <tr id="<?php $pages->theId(); ?>">
                                 <td><input type="checkbox" value="<?php $pages->cid(); ?>" name="cid[]"/></td>
                                 <td><a href="<?php $options->adminUrl('manage-comments.php?cid=' . $pages->cid); ?>" class="balloon-button size-<?php echo Typecho_Common::splitByCount($pages->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $pages->commentsNum(); ?></a></td>
-                                <td<?php if ('draft' != $pages->status): ?> colspan="2"<?php endif; ?>><a href="<?php $options->adminUrl('write-page.php?cid=' . $pages->cid); ?>"><?php $pages->title(); ?></a>
-                                <?php if ('draft' == $pages->status): ?>
-                                </td>
-                                <td class="right">
-                                <span><?php _e('草稿'); ?></span>
-                                <?php endif; ?></td>
-                                </td>
                                 <td>
-                                <?php if ('publish' == $pages->status): ?>
-                                <a class="right hidden-by-mouse" href="<?php $pages->permalink(); ?>"><img src="<?php $options->adminUrl('images/link.png'); ?>" title="<?php _e('浏览 %s', $pages->title); ?>" width="16" height="16" alt="view" /></a>
+                                <a href="<?php $options->adminUrl('write-page.php?cid=' . $pages->cid); ?>"><?php $pages->title(); ?></a>
+                                <?php 
+                                if ($pages->hasSaved || 'page_draft' == $pages->type) {
+                                    echo '<em>(' . _t('草稿') . ')</em>';
+                                } else if ('waiting' == $pages->status) {
+                                    echo '<em>(' . _t('待审核') . ')</em>';
+                                } else if ('private' == $pages->status) {
+                                    echo '<em>(' . _t('私密') . ')</em>';
+                                } else if ($pages->password) {
+                                    echo '<em>(' . _t('密码保护') . ')</em>';
+                                }
+                                ?>
+                                <?php if ('#' != $pages->permalink): ?>
+                                <a class="right" href="<?php $pages->permalink(); ?>"><img src="<?php $options->adminUrl('images/link.png'); ?>" title="<?php _e('浏览 %s', htmlspecialchars($pages->title)); ?>" width="16" height="16" alt="view" /></a>
                                 <?php endif; ?>
                                 </td>
                                 <td><?php $pages->slug(); ?></td>
