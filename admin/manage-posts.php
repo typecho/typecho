@@ -71,7 +71,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <td>
                             <a href="<?php $options->adminUrl('write-post.php?cid=' . $posts->cid); ?>"><?php $posts->title(); ?></a>
                             <?php 
-                            if ($posts->hasSaved() || 'post_draft' == $posts->type) {
+                            if ($posts->hasSaved || 'post_draft' == $posts->type) {
                                 echo '<em>(' . _t('草稿') . ')</em>';
                             } else if ('waiting' == $posts->status) {
                                 echo '<em>(' . _t('待审核') . ')</em>';

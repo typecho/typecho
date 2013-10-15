@@ -128,6 +128,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
 <?php
 include 'copyright.php';
 include 'common-js.php';
+include 'form-js.php';
 include 'write-js.php';
 include 'file-upload-js.php';
 

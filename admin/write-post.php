@@ -57,7 +57,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                 <div class="col-mb-12 col-tb-3">
                     <section class="typecho-post-option">
                         <label for="date" class="typecho-label"><?php _e('发布日期'); ?></label>
-                        <p><input class="typecho-date w-100" type="text" name="date" id="date" value="<?php $post->date(); ?>" /></p>
+                        <p><input class="typecho-date w-100" type="text" name="date" id="date" value="<?php $post->have() ? $post->date('Y-m-d H:i') : ''; ?>" /></p>
                     </section>
 
                     <section class="typecho-post-option category-option">
@@ -139,6 +139,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
 <?php
 include 'copyright.php';
 include 'common-js.php';
+include 'form-js.php';
 include 'write-js.php';
 include 'file-upload-js.php';
 

@@ -35,11 +35,11 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
         if (!empty($this->request->cid) && 'delete' != $this->request->do 
             && 'sort' != $this->request->do) {
             $this->db->fetchRow($this->select()
-            ->where('table.contents.type = ?', 'page')
+            ->where('table.contents.type = ? OR table.contents.type = ?', 'page', 'page_draft')
             ->where('table.contents.cid = ?', $this->request->filter('int')->cid)
             ->limit(1), array($this, 'push'));
 
-            if ('draft' == $this->status && $this->parent) {
+            if ('page_draft' == $this->status && $this->parent) {
                 $this->response->redirect(Typecho_Common::url('write-page.php?cid=' . $this->parent, $this->options->adminUrl));
             }
 
@@ -61,14 +61,14 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
     {
         $contents = $this->request->from('text', 'template', 'allowComment',
             'allowPing', 'allowFeed', 'slug', 'order');
-        $contents['type'] = 'page';
 
         $contents['title'] = $this->request->get('title', _t('未命名页面'));
         $contents['created'] = $this->getCreated();
         $contents = $this->pluginHandle()->write($contents, $this);
 
-        if ($this->request->is('do=publish')) {
+        if ($this->request->is('do=publish')) { 
             /** 重新发布已经存在的文章 */
+            $contents['type'] = 'page';
             $this->publish($contents);
 
             /** 发送ping */
@@ -85,6 +85,7 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
             $this->response->redirect(Typecho_Common::url('manage-pages.php?', $this->options->adminUrl));
         } else {
             /** 保存文章 */
+            $contents['type'] = 'page_draft';
             $this->save($contents);
 
             if ($this->request->isAjax()) {
@@ -137,8 +138,8 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
                     /** 删除草稿 */
                     $draft = $this->db->fetchRow($this->db->select('cid')
                     ->from('table.contents')
-                    ->where('table.contents.parent = ? AND table.contents.type = ? AND table.contents.status = ?',
-                        $page, 'page', 'draft')
+                    ->where('table.contents.parent = ? AND table.contents.type = ?',
+                        $page, 'page_draft')
                     ->limit(1));
 
                     if ($draft) {
@@ -177,8 +178,8 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
                 /** 删除草稿 */
                 $draft = $this->db->fetchRow($this->db->select('cid')
                 ->from('table.contents')
-                ->where('table.contents.parent = ? AND table.contents.type = ? AND table.contents.status = ?',
-                    $page, 'page', 'draft')
+                ->where('table.contents.parent = ? AND table.contents.type = ?',
+                    $page, 'page_draft')
                 ->limit(1));
 
                 if ($draft) {

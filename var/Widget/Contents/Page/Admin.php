@@ -27,12 +27,8 @@ class Widget_Contents_Page_Admin extends Widget_Contents_Post_Admin
      */
     public function execute()
     {
-        /** 构建基础查询 */
-        $select = $this->select()->where('table.contents.type = ?', 'page');
-
         /** 过滤状态 */
-        $select->where('table.contents.status = ? OR table.contents.status = ? OR (table.contents.status = ? AND table.contents.parent = 0)',
-            'publish', 'waiting', 'draft');
+        $select = $this->select()->where('table.contents.type = ? OR (table.contents.type = ? AND table.contents.parent = ?)', 'page', 'page_draft', 0);
 
         /** 过滤标题 */
         if (NULL != ($keywords = $this->request->keywords)) {
