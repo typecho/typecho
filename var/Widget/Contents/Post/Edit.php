@@ -343,15 +343,15 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      */
     public function filter(array $value)
     {
-        if ('post' == $value['type']) {
+        if ('post' == $value['type'] || 'page' == $value['type']) {
             $draft = $this->db->fetchRow($this->widget('Widget_Abstract_Contents')->select()
-            ->where('table.contents.parent = ? AND table.contents.type = ? AND table.contents.status = ?',
-                $value['cid'], 'post_draft', $value['status'])
+            ->where('table.contents.parent = ? AND table.contents.type = ?',
+                $value['cid'], $value['type'] . '_draft')
             ->limit(1));
 
             if (!empty($draft)) {
                 $draft['slug'] = ltrim($draft['slug'], '@');
-                $draft['status'] = $value['status'];
+                $draft['type'] = $value['type'];
 
                 $draft = parent::filter($draft);
 
@@ -641,8 +641,8 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                     /** 删除草稿 */
                     $draft = $this->db->fetchRow($this->db->select('cid')
                     ->from('table.contents')
-                    ->where('table.contents.parent = ? AND table.contents.type = ? AND table.contents.status = ?',
-                        $post, 'post', 'draft')
+                    ->where('table.contents.parent = ? AND table.contents.type = ?',
+                        $post, 'post_draft')
                     ->limit(1));
 
                     if ($draft) {

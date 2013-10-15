@@ -345,10 +345,10 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $result = $slug;
 
         /** 对草稿的slug做特殊处理 */
-        $draft = $this->db->fetchObject($this->db->select('status', 'parent')
+        $draft = $this->db->fetchObject($this->db->select('type', 'parent')
             ->from('table.contents')->where('cid = ?', $cid));
 
-        if ('draft' == $draft->status && $draft->parent) {
+        if ('_draft' == substr($draft->type, -6) && $draft->parent) {
             $result = '@' . $result;
         }
 
