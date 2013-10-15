@@ -2119,6 +2119,8 @@ ul.typecho-list-notable li .loading {
 }
 #ui-datepicker-div .ui-datepicker-close { float: right; }
 
+.ui-effects-transfer { border: 2px dotted #ccc; }
+
 
 /* 
  * Jquery Tokeninput

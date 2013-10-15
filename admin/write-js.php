@@ -77,6 +77,7 @@ $(document).ready(function() {
         t.width($('.token-input-list').outerWidth() - offset);
     });
 
+    // 缩略名自适应宽度
     var slug = $('#slug'), sw = slug.width();
 
     if (slug.val().length > 0) {
@@ -92,6 +93,52 @@ $(document).ready(function() {
             t.css('width', sw).removeAttr('size');
         }
     }).width();
+
+    // 自动保存
+<?php if ($options->autoSave): ?>
+    var savedData = null, locked = false,
+        form = $('form[name=write_post],form[name=write_page]'),
+        formAction = form.attr('action'),
+        idInput = $('input[name=cid]'),
+        autoSave = $('#auto-save-message'),
+        autoSaveOnce = !!idInput.val(),
+        lastSaveTime = null;
+
+    function autoSaveListener () {
+        setInterval(function () {
+            var data = form.serialize();
+                
+            if (savedData != data) {
+                savedData = data;
+                locked = true;
+
+                autoSave.text('<?php _e('正在保存'); ?>');
+                $.post(formAction + '?do=save', data, function (o) {
+                    lastSaveTime = o.time;
+                    idInput.val(o.cid);
+                    autoSave.text('<?php _e('内容已经保存'); ?>' + ' (' + o.time + ')').effect('highlight', '#AACB36', 1000);
+                    locked = false;
+                });
+            }
+        }, 10000);
+    }
+
+    if (autoSaveOnce) {
+        savedData = form.serialize();
+        autoSaveListener();
+    }
+
+    $('#text').bind('input propertychange', function () {
+        if (!locked) {
+            autoSave.text('<?php _e('内容尚未保存'); ?>' + (lastSaveTime ? ' (<?php _e('上次保存时间'); ?>: ' + lastSaveTime + ')' : ''));
+        }
+
+        if (!autoSaveOnce) {
+            autoSaveOnce = true;
+            autoSaveListener();
+        }
+    });
+<?php endif; ?>
 
     // 高级选项控制
     $('#advance-panel-btn').click(function() {

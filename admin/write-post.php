@@ -51,7 +51,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                     <?php Typecho_Plugin::factory('admin/write-post.php')->content($post); ?>
                     <p class="submit">
                         <span class="left">
-                            <span id="auto-save-message">保存于 1 分钟前</span>
+                            <span id="auto-save-message"></span>
                         </span>
                         
                         <span class="right">

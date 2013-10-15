@@ -588,9 +588,9 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             if ($this->request->isAjax()) {
                 $created = new Typecho_Date($this->options->gmtTime);
                 $this->response->throwJson(array(
-                    'success'  =>  1,
-                    'message'  =>  _t('文章保存于 %s', $created->format('H:i A')),
-                    'cid'      =>  $this->cid
+                    'success'   =>  1,
+                    'time'      =>  $created->format('H:i:s A'),
+                    'cid'       =>  $this->cid
                 ));
             } else {
                 /** 设置提示信息 */
