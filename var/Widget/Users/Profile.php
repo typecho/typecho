@@ -54,7 +54,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         $form->addInput($url);
 
         /** 电子邮箱地址 */
-        $mail = new Typecho_Widget_Helper_Form_Element_Text('mail', NULL, NULL, _t('电子邮箱地址*'), _t('电子邮箱地址将作为此用户的主要联系方式.<br />
+        $mail = new Typecho_Widget_Helper_Form_Element_Text('mail', NULL, NULL, _t('电子邮箱地址 *'), _t('电子邮箱地址将作为此用户的主要联系方式.<br />
         请不要与系统中现有的电子邮箱地址重复.'));
         $form->addInput($mail);
 

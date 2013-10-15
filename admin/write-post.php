@@ -12,9 +12,10 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                 <div class="col-mb-12 col-tb-9">
                     <?php if ($post->draft && $post->draft['cid'] != $post->cid): ?>
                     <?php $postModifyDate = new Typecho_Date($post->draft['modified']); ?>
-                    <cite><?php _e('当前正在编辑的是保存于%s的草稿, 你可以<a href="%s">删除它</a>', $postModifyDate->word(), 
+                    <cite class="edit-draft-notice"><?php _e('你正在编辑的是保存于 %s 的草稿, 你也可以 <a href="%s">删除它</a>', $postModifyDate->word(), 
                     Typecho_Common::url('/action/contents-post-edit?do=deleteDraft&cid=' . $post->cid, $options->index)); ?></cite>
                     <?php endif; ?>
+                    
                     <p class="title"><input type="text" id="title" name="title" value="<?php echo htmlspecialchars($post->title); ?>" placeholder="<?php _e('标题'); ?>" class="w-100 text title" /></p>
                     <?php $permalink = Typecho_Common::url($options->routingTable['post']['url'], $options->index);
                     list ($scheme, $permalink) = explode(':', $permalink, 2);

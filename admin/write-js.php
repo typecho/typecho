@@ -19,7 +19,7 @@ $(document).ready(function() {
             '<?php _e('周四'); ?>', '<?php _e('周五'); ?>', '<?php _e('周六'); ?>'],
         dayNamesMin     :   ['<?php _e('日'); ?>', '<?php _e('一'); ?>', '<?php _e('二'); ?>', '<?php _e('三'); ?>',
             '<?php _e('四'); ?>', '<?php _e('五'); ?>', '<?php _e('六'); ?>'],
-        closeText       :   '<?php _e('关闭'); ?>',
+        closeText       :   '<?php _e('完成'); ?>',
         timeOnlyTitle   :   '<?php _e('选择时间'); ?>',
         timeText        :   '<?php _e('时间'); ?>',
         hourText        :   '<?php _e('时'); ?>',
