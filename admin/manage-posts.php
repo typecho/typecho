@@ -44,22 +44,18 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 <form method="post" name="manage_posts" class="operate-form">
                 <table class="typecho-list-table">
                     <colgroup>
-                        <col width="20"/>
+                        <col width="3%"/>
                         <col width="5%"/>
-                        <col width="35%"/>
-                        <col width=""/>
-                        <col width="20"/>
+                        <col width="47%"/>
                         <col width="10%"/>
+                        <col width="20%"/>
                         <col width="15%"/>
-                        <col width="18%"/>
                     </colgroup>
                     <thead>
                         <tr>
                             <th> </th>
                             <th> </th>
                             <th><?php _e('标题'); ?></th>
-                            <th> </th>
-                            <th> </th>
                             <th><?php _e('作者'); ?></th>
                             <th><?php _e('分类'); ?></th>
                             <th><?php _e('日期'); ?></th>
@@ -72,16 +68,21 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <tr id="<?php $posts->theId(); ?>">
                             <td><input type="checkbox" value="<?php $posts->cid(); ?>" name="cid[]"/></td>
                             <td><a href="<?php $options->adminUrl('manage-comments.php?cid=' . $posts->cid); ?>" class="balloon-button size-<?php echo Typecho_Common::splitByCount($posts->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $posts->commentsNum(); ?></a></td>
-                            <td<?php if ('draft' != $posts->status && 'waiting' != $posts->status && 'private' != $posts->status && !$posts->password): ?> colspan="2"<?php endif; ?>>
-                            <a href="<?php $options->adminUrl('write-post.php?cid=' . $posts->cid); ?>"><?php $posts->title(); ?></a>
-                            <?php if ('draft' == $posts->status || 'waiting' == $posts->status || 'private' == $posts->status || $posts->password): ?>
-                            </td>
-                            <td class="right">
-                            <span><?php 'draft' == $posts->status ? _e('草稿') : ('waiting' == $posts->status ? _e('待审核') : ('private' == $posts->status ? _e('私密') : _e(''))); ?> <?php $posts->password ? _e('密码') : _e(''); ?></span>
-                            <?php endif; ?></td>
                             <td>
-                            <?php if ('publish' == $posts->status): ?>
-                            <a class="right hidden-by-mouse" href="<?php $posts->permalink(); ?>"><img src="<?php $options->adminUrl('images/link.png'); ?>" title="<?php _e('浏览 %s', htmlspecialchars($posts->title)); ?>" width="16" height="16" alt="view" /></a>
+                            <a href="<?php $options->adminUrl('write-post.php?cid=' . $posts->cid); ?>"><?php $posts->title(); ?></a>
+                            <?php 
+                            if ($posts->hasSaved() || 'post_draft' == $posts->type) {
+                                echo '<em>(' . _t('草稿') . ')</em>';
+                            } else if ('waiting' == $posts->status) {
+                                echo '<em>(' . _t('待审核') . ')</em>';
+                            } else if ('private' == $posts->status) {
+                                echo '<em>(' . _t('私密') . ')</em>';
+                            } else if ($posts->password) {
+                                echo '<em>(' . _t('密码保护') . ')</em>';
+                            }
+                            ?>
+                            <?php if ('#' != $posts->permalink): ?>
+                            <a class="right" href="<?php $posts->permalink(); ?>"><img src="<?php $options->adminUrl('images/link.png'); ?>" title="<?php _e('浏览 %s', htmlspecialchars($posts->title)); ?>" width="16" height="16" alt="view" /></a>
                             <?php endif; ?>
                             </td>
                             <td><a href="<?php $options->adminUrl('manage-posts.php?uid=' . $posts->author->uid); ?>"><?php $posts->author(); ?></a></td>

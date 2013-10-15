@@ -34,10 +34,27 @@ $(document).ready(function() {
     });
 
     // tag autocomplete 提示
-    $('#tags').tokenInput(<?php 
+    var tags = $('#tags'), tagsPre = [];
+    
+    var items = tags.val().split(','), result = [];
+    for (var i = 0; i < items.length; i ++) {
+        var tag = items[i];
+
+        if (!tag) {
+            continue;
+        }
+
+        tagsPre.push({
+            id      :   tag,
+            tags    :   tag
+        });
+    }
+
+    tags.tokenInput(<?php 
     $data = array();
     while ($tags->next()) {
         $data[] = array(
+            'id'    =>  $tags->name,
             'tags'  =>  $tags->name
         );
     }
@@ -46,9 +63,11 @@ $(document).ready(function() {
         propertyToSearch:   'tags',
         tokenValue      :   'tags',
         searchDelay     :   0,
+        preventDuplicates   :   true,
         animateDropdown :   false,
         hintText        :   '<?php _e('请输入标签名'); ?>',
-        noResultsText   :   '此标签不存在, 按回车创建'
+        noResultsText   :   '此标签不存在, 按回车创建',
+        prePopulate     :   tagsPre
     });
 
     // tag autocomplete 提示宽度设置

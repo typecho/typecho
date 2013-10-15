@@ -272,6 +272,7 @@ $.TokenList = function (input, url_or_data, settings) {
                     hidden_input.change();
                     return false;
                   }
+                    
                   break;
 
                 case KEY.ESCAPE:
@@ -488,6 +489,15 @@ $.TokenList = function (input, url_or_data, settings) {
     // Add a token to the token list based on user input
     function add_token (item) {
         var callback = settings.onAdd;
+
+        // fix null bug
+        if (!item) {
+            item = {
+                id  :   input_box.val()
+            };
+
+            item[settings.propertyToSearch] = input_box.val();
+        }
 
         // See if the token already exists and select it if we don't want duplicates
         if(token_count > 0 && settings.preventDuplicates) {

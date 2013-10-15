@@ -30,9 +30,8 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                             </span>
                             <span class="right">
                                 <input type="hidden" name="cid" value="<?php $page->cid(); ?>" />
-                                <input type="hidden" name="do" value="publish" />
-                                <button type="button" id="btn-save"><?php _e('保存草稿'); ?></button>
-                                <button type="button" id="btn-submit"><?php _e('发布页面 &raquo;'); ?></button>
+                                <button type="submit" name="do" value="save" id="btn-save"><?php _e('保存草稿'); ?></button>
+                                <button type="submit" name="do" value="publish" class="primary" id="btn-submit"><?php _e('发布页面'); ?></button>
                             </span>
                         </p>
                     </div>
