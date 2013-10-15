@@ -49,10 +49,8 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         
                         <span class="right">
                             <input type="hidden" name="cid" value="<?php $post->cid(); ?>" />
-                            <input type="hidden" name="do" value="publish" />
-                            <button type="button" id="btn-preview"><?php _e('预览'); ?></button>
-                            <button type="button" id="btn-save"><?php _e('保存草稿'); ?></button>
-                            <button type="button" class="primary" id="btn-submit"><?php _e('发布文章'); ?></button>
+                            <button type="submit" name="do" value="save" id="btn-save"><?php _e('保存草稿'); ?></button>
+                            <button type="submit" name="do" value="publish" class="primary" id="btn-submit"><?php _e('发布文章'); ?></button>
                         </span>
                     </p>
                     <div id="typecho-preview-box">预览</div>

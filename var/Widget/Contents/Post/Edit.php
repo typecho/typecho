@@ -318,11 +318,11 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         /** 获取文章内容 */
         if (!empty($this->request->cid) && 'delete' != $this->request->do) {
             $this->db->fetchRow($this->select()
-            ->where('table.contents.type = ?', 'post')
+            ->where('table.contents.type = ? OR table.contents.type = ?', 'post', 'post_draft')
             ->where('table.contents.cid = ?', $this->request->filter('int')->cid)
             ->limit(1), array($this, 'push'));
 
-            if ('draft' == $this->status && $this->parent) {
+            if ('post_draft' == $this->type && $this->parent) {
                 $this->response->redirect(Typecho_Common::url('write-post.php?cid=' . $this->parent, $this->options->adminUrl));
             }
 
@@ -343,10 +343,10 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      */
     public function filter(array $value)
     {
-        if ('draft' != $value['status']) {
+        if ('post' == $value['type']) {
             $draft = $this->db->fetchRow($this->widget('Widget_Abstract_Contents')->select()
             ->where('table.contents.parent = ? AND table.contents.type = ? AND table.contents.status = ?',
-                $value['cid'], $value['type'], 'draft')
+                $value['cid'], 'post_draft', $value['status'])
             ->limit(1));
 
             if (!empty($draft)) {
