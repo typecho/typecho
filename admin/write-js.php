@@ -77,6 +77,22 @@ $(document).ready(function() {
         t.width($('.token-input-list').outerWidth() - offset);
     });
 
+    var slug = $('#slug'), sw = slug.width();
+
+    if (slug.val().length > 0) {
+        slug.css('width', 'auto').attr('size', slug.val().length);
+    }
+    
+    slug.bind('input propertychange', function () {
+        var t = $(this), l = t.val().length;
+
+        if (l > 0) {
+            t.css('width', 'auto').attr('size', l);
+        } else {
+            t.css('width', sw).removeAttr('size');
+        }
+    }).width();
+
     // 高级选项控制
     $('#advance-panel-btn').click(function() {
         $('#advance-panel').toggle();

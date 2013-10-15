@@ -32,23 +32,21 @@ include 'menu.php';
                 <form method="post" name="manage_users" class="operate-form">
                     <table class="typecho-list-table">
                         <colgroup>
-                            <col width="20"/>
-                            <col width="20%"/>
-                            <col width="20%"/>
-                            <col width="20"/>
+                            <col width="3%"/>
+                            <col width="5%"/>
                             <col width="30%"/>
-                            <col width=""/>
-                            <col width="10%"/>
+                            <col width="25%"/>
+                            <col width="25%"/>
+                            <col width="12%"/>
                         </colgroup>
                         <thead>
                             <tr>
                                 <th> </th>
+                                <th> </th>
                                 <th><?php _e('用户名'); ?></th>
                                 <th><?php _e('昵称'); ?></th>
-                                <th> </th>
                                 <th><?php _e('电子邮件'); ?></th>
                                 <th><?php _e('用户组'); ?></th>
-                                <th><?php _e('文章'); ?></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -56,11 +54,11 @@ include 'menu.php';
                             <?php while($users->next()): ?>
                             <tr id="user-<?php $users->uid(); ?>">
                                 <td><input type="checkbox" value="<?php $users->uid(); ?>" name="uid[]"/></td>
-                                <td><a href="<?php $options->adminUrl('user.php?uid=' . $users->uid); ?>"><?php $users->name(); ?></a></td>
-                                <td><?php $users->screenName(); ?></td>
-                                <td>
-                                <a class="right hidden-by-mouse" href="<?php $users->permalink(); ?>"><img src="<?php $options->adminUrl('images/link.png'); ?>" title="<?php _e('浏览 %s', $users->screenName); ?>" width="16" height="16" alt="view" /></a>
+                                <td><a href="<?php $options->adminUrl('manage-posts.php?uid=' . $users->uid); ?>" class="balloon-button left size-<?php echo Typecho_Common::splitByCount($users->postsNum, 1, 10, 20, 50, 100); ?>"><?php $users->postsNum(); ?></a></td>
+                                <td><a href="<?php $options->adminUrl('user.php?uid=' . $users->uid); ?>"><?php $users->name(); ?></a>
+                                <a class="right" href="<?php $users->permalink(); ?>"><img src="<?php $options->adminUrl('images/link.png'); ?>" title="<?php _e('浏览 %s', $users->screenName); ?>" width="16" height="16" alt="view" /></a>
                                 </td>
+                                <td><?php $users->screenName(); ?></td>
                                 <td><?php if($users->mail): ?><a href="mailto:<?php $users->mail(); ?>"><?php $users->mail(); ?></a><?php else: _e('暂无'); endif; ?></td>
                                 <td><?php switch ($users->group) {
                                     case 'administrator':
@@ -81,7 +79,6 @@ include 'menu.php';
                                     default:
                                         break;
                                 } ?></td>
-                                <td><a href="<?php $options->adminUrl('manage-posts.php?uid=' . $users->uid); ?>" class="balloon-button left size-<?php echo Typecho_Common::splitByCount($users->postsNum, 1, 10, 20, 50, 100); ?>"><?php $users->postsNum(); ?></a></td>
                             </tr>
                             <?php endwhile; ?>
                         </tbody>

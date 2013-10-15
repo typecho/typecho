@@ -16,8 +16,15 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                     Typecho_Common::url('/action/contents-post-edit?do=deleteDraft&cid=' . $post->cid, $options->index)); ?></cite>
                     <?php endif; ?>
                     <p class="title"><input type="text" id="title" name="title" value="<?php echo htmlspecialchars($post->title); ?>" placeholder="<?php _e('标题'); ?>" class="w-100 text title" /></p>
-
-                    <p class="mono url-slug"><?php _e('缩略名'); ?> http://xxxxxxxxxxxx.com/2011/08/29/<input type="text" id="slug" name="slug" value="<?php $post->slug(); ?>" class="mono" />/</p>
+                    <?php $permalink = Typecho_Common::url($options->routingTable['post']['url'], $options->index);
+                    list ($scheme, $permalink) = explode(':', $permalink, 2);
+                    $permalink = ltrim($permalink, '/');
+                    ?>
+                    <?php if (preg_match("/\[slug:?[_0-9a-z-:]*\]/i", $permalink)): 
+                    $input = '<input type="text" id="slug" name="slug" value="' . htmlspecialchars($post->slug) . '" class="mono" />';
+                    ?>
+                    <p class="mono url-slug"><?php echo preg_replace("/\[slug:?[_0-9a-z-:]*\]/i", $input, $permalink); ?></p>
+                    <?php endif; ?>
 
                     <p class="editor">
                         <span class="btnBold">bold</span><!--
