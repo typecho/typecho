@@ -186,9 +186,9 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Create a new text input an attach keyup events
     var input_box = $("<input type=\"text\"  autocomplete=\"off\">")
-        .css({
-            outline: "none"
-        })
+    //    .css({
+    //        outline: "none"
+    //    })
         .attr("id", settings.idPrefix + input.id)
         .focus(function () {
             if (settings.tokenLimit === null || settings.tokenLimit !== token_count) {
@@ -199,7 +199,7 @@ $.TokenList = function (input, url_or_data, settings) {
             hide_dropdown();
             $(this).val("");
         })
-        .bind("keyup keydown blur update", resize_input)
+    //    .bind("keyup keydown blur update", resize_input)
         .keydown(function (event) {
             var previous_token;
             var next_token;

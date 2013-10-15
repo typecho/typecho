@@ -130,12 +130,8 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
 include 'copyright.php';
 include 'common-js.php';
 include 'write-js.php';
-
-Typecho_Plugin::factory('admin/write-page.php')->trigger($plugged)->richEditor($page);
-if (!$plugged) {
-    include 'editor-js.php';
-}
-Typecho_Plugin::factory('admin/write-page.php')->bottom($page);
 include 'file-upload-js.php';
+
+Typecho_Plugin::factory('admin/write-page.php')->bottom($page);
 include 'footer.php';
 ?>
