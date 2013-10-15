@@ -15,7 +15,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                     <cite class="edit-draft-notice"><?php _e('你正在编辑的是保存于 %s 的草稿, 你也可以 <a href="%s">删除它</a>', $postModifyDate->word(), 
                     Typecho_Common::url('/action/contents-post-edit?do=deleteDraft&cid=' . $post->cid, $options->index)); ?></cite>
                     <?php endif; ?>
-                    
+
                     <p class="title"><input type="text" id="title" name="title" value="<?php echo htmlspecialchars($post->title); ?>" placeholder="<?php _e('标题'); ?>" class="w-100 text title" /></p>
 
                     <p class="mono url-slug"><?php _e('缩略名'); ?> http://xxxxxxxxxxxx.com/2011/08/29/<input type="text" id="slug" name="slug" value="<?php $post->slug(); ?>" class="mono" />/</p>

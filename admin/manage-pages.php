@@ -35,12 +35,12 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 
                     <table class="typecho-list-table">
                         <colgroup>
-                            <col width="3%"/>
+                            <col width="20"/>
                             <col width="5%"/>
-                            <col width="47%"/>
-                            <col width="20%"/>
-                            <col width="10%"/>
-                            <col width="15%"/>
+                            <col width="30%"/>
+                            <col width="30%"/>
+                            <col width=""/>
+                            <col width="16%"/>
                         </colgroup>
                         <thead>
                             <tr>
