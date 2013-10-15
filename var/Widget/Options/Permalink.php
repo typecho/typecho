@@ -214,7 +214,7 @@ RewriteRule . {$basePath}index.php [L]
         } else if (!isset($patterns[$postPatternValue])) {
             $customPatternValue = $this->decodeRule($postPatternValue);
         }
-        $patterns['custom'] = _t('个性化定义') . ' <input type="text" class="w-40 text-s" name="customPattern" value="' . $customPatternValue . '" />';
+        $patterns['custom'] = _t('个性化定义') . ' <input type="text" class="w-40 text-s mono" name="customPattern" value="' . $customPatternValue . '" />';
 
         $postPattern = new Typecho_Widget_Helper_Form_Element_Radio('postPattern', $patterns,
         $postPatternValue, _t('自定义文章路径'), _t('可用参数：{cid} 日志ID、{slug} 日志缩略名、{category} 分类、{year} 年、{month} 月、{day} 日<br />选择一种合适的文章静态路径风格, 使得你的网站链接更加友好.<br />

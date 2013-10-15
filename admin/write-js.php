@@ -96,6 +96,7 @@ $(document).ready(function() {
     // 高级选项控制
     $('#advance-panel-btn').click(function() {
         $('#advance-panel').toggle();
+        $(this).toggleClass('fold');
         return false;
     });
     

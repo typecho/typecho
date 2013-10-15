@@ -11,23 +11,29 @@ Typecho_Widget::widget('Widget_Contents_Attachment_Edit')->to($attachment);
         <?php include 'page-title.php'; ?>
         <div class="col-group typecho-page-main">
             <div class="col-mb-12 col-tb-8">
-                <div class="typecho-attachment-photo-box">
-                    <?php if ($attachment->attachment->isImage): ?>
-                    <p><img src="<?php $attachment->attachment->url(); ?>" alt="<?php $attachment->attachment->name(); ?>" /></p>
-                    <?php endif; ?>
-                    
-                    <div class="description">
-                        <ul>
-                            <?php $mime = Typecho_Common::mimeIconType($attachment->attachment->mime); ?>
-                            <li><span class="typecho-mime typecho-mime-<?php echo $mime; ?>"></span><strong><?php $attachment->attachment->name(); ?></strong> <small><?php echo number_format(ceil($attachment->attachment->size / 1024)); ?> Kb</small></li>
-                            <li><input id="attachment-url" type="text" readonly class="text" value="<?php $attachment->attachment->url(); ?>" />
-                            <button id="exchange" disabled><?php _e('替换'); ?></button>
-                            <span id="swfu"><span id="swfu-placeholder"></span></span></li>
-                        </ul>
-                    </div>
+                <?php if ($attachment->attachment->isImage): ?>
+                <p><img src="<?php $attachment->attachment->url(); ?>" alt="<?php $attachment->attachment->name(); ?>" class="typecho-attachment-photo" /></p>
+                <?php endif; ?>
+                
+                <p>
+                    <?php $mime = Typecho_Common::mimeIconType($attachment->attachment->mime); ?>
+                    <span class="typecho-mime typecho-mime-<?php echo $mime; ?>"></span>
+                    <a href=""><strong><?php $attachment->attachment->name(); ?></strong></a>
+                    <span><?php echo number_format(ceil($attachment->attachment->size / 1024)); ?> Kb</span>
+                </p>
+
+                <p>
+                    <input id="attachment-url" type="text" class="mono w-100" value="<?php $attachment->attachment->url(); ?>" readonly />
+                </p>
+
+                <div id="upload-panel" class="p">
+                    将要替换的文件拖放到这里 或者 <a href="" class="upload-file">选择替换文件</a><input type="file" class="visuallyhidden">
+                    <ul id="file-list">
+                        <li class="loading">上传中</li>
+                    </ul>
                 </div>
             </div>
-            <div class="col-mb-12 col-tb-4 typecho-mini-panel typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
+            <div class="col-mb-12 col-tb-4">
                 <?php $attachment->form()->render(); ?>
             </div>
         </div>

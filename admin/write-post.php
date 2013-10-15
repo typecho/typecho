@@ -91,7 +91,6 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         <p><input id="tags" name="tags" type="text" value="<?php $post->tags(',', false); ?>" class="w-100 text" /></p>
                     </section>
 
-                    <a href="###" id="advance-panel-btn"><?php _e('高级选项'); ?></a>
                     <div id="advance-panel">
                         <?php if($user->pass('editor', true)): ?>
                         <section class="typecho-post-option visibility-option">
@@ -125,6 +124,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                             </ul>
                         </section>
                     </div><!-- end #advance-panel -->
+                    <a href="###" id="advance-panel-btn"><?php _e('高级选项'); ?></a>
 
                     <?php Typecho_Plugin::factory('admin/write-post.php')->option($post); ?>
                     <?php if($post->have()): ?>

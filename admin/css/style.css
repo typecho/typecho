@@ -313,9 +313,8 @@ button.primary:active, button.primary.active {
 }
 
 .loading {
-    background-image: url(../images/ajax-loader.gif);
-	background-position: left center;
-	background-repeat: no-repeat;
+    padding-left: 20px;
+    background: transparent url(../images/ajax-loader.gif) no-repeat left center;
 }
 
 
@@ -1851,7 +1850,7 @@ ul.typecho-list-notable li .loading {
 
 .typecho-page-main .typecho-mini-panel .tag-selection a {
 }
-
+/*
 .typecho-attachment-photo-box .description {
 }
 
@@ -1878,8 +1877,8 @@ ul.typecho-list-notable li .loading {
 	_display: inline;
 	position: relative;
 }
-
-.typecho-attachment-photo-box img {
+*/
+.typecho-attachment-photo {
     border: 1px solid #E6E6E3;
     max-width: 100%;
 }
@@ -1932,11 +1931,11 @@ ul.typecho-list-notable li .loading {
     background-position: 0 -144px;
 }
 
-.typecho-attachment-photo-box .typecho-mime {
+/*.typecho-attachment-photo-box .typecho-mime {
     bottom: -6px;
     margin-right: 3px;
     float: left;
-}
+}*/
 
 /*
  * Hide from both screenreaders and browsers: h5bp.com/u
@@ -2021,14 +2020,24 @@ ul.typecho-list-notable li .loading {
 #upload-panel.drag, .tDnD_whileDrag {
     background-color: #FFFBCC;
 }
+.tDnD_whileDrag {
+    -ms-transform-origin: 0 0;
+    -moz-transform-origin: 0 0;
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+
+    -ms-transform: rotate(2deg);
+    -moz-transform: rotate(2deg);
+    -webkit-transform: rotate(2deg);
+    webkit-transform: rotate(2deg);
+}
 
 #file-list {
     list-style: none;
     margin: 0;
     padding: 0;
 }
-#file-list li { padding-top: 5px; }
-#file-list .loading { padding-left: 20px; }
+#file-list li { margin-top: 5px; }
 #file-list .delete { margin-left: 5px; color: #B94A48; }
 
 
