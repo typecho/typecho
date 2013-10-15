@@ -64,7 +64,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                     </section>
 
                     <section class="typecho-post-option category-option">
-                        <label class="typecho-label"><?php _e('所属分类'); ?></label>
+                        <label class="typecho-label"><?php _e('分类'); ?></label>
                         <?php Typecho_Widget::widget('Widget_Metas_Category_List')->to($category); ?>
                         <ul>
                             <?php
@@ -82,7 +82,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                     </section>
 
                     <section class="typecho-post-option">
-                        <label for="tags" class="typecho-label"><?php _e('标签'); ?></label>
+                        <label for="token-input-tags" class="typecho-label"><?php _e('标签'); ?></label>
                         <p><input id="tags" name="tags" type="text" value="<?php $post->tags(',', false); ?>" class="w-100 text" /></p>
                     </section>
 
