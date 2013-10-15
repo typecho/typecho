@@ -676,7 +676,7 @@ margin-top: 25px;
  */
 .typecho-head-nav {
     padding: 0 10px;
-    background: #2E3639;
+    background: #292D33;
 }
 
 .typecho-nav-list {
@@ -709,7 +709,7 @@ margin-top: 25px;
 #typecho-nav-list .parent a:hover,
 #typecho-nav-list .focus .parent a,
 #typecho-nav-list .root:hover .parent a {
-    background: #434A4D;
+    background: #202328;
     text-decoration: none;
 }
 
@@ -718,7 +718,7 @@ margin-top: 25px;
     position: absolute;
     top: 36px;
     margin: 0;
-    background: #2E3639;
+    background: #202328;
     overflow: hidden;
     z-index: 250;
     width: 160px; 
@@ -740,7 +740,10 @@ margin-top: 25px;
 #typecho-nav-list .child li a:hover,
 #typecho-nav-list .child li.focus a,
 #typecho-nav-list .child li.focus a:hover {
-    background: #434A4D;
+    background: #292D33;
+}
+#typecho-nav-list .child li.focus a {
+    color: #6DA1BB;
 }
 
 #typecho-nav-list .child li a {
@@ -912,30 +915,27 @@ margin-top: 25px;
 .typecho-option-tabs {
     list-style: none;
     margin: 0 0 20px;
-    padding: 10px;
-    background: #FFF;
+    padding: 0;
 }
 
 .typecho-option-tabs a {
     display: block;
     padding: 0 15px;
-    height: 24px;
-    line-height: 24px;
-    border-radius: 24px;
+    height: 30px;
+    line-height: 30px;
 }
 .typecho-option-tabs a:hover {
-    background-color: #ECF3F7;
+    background-color: #E9E9E6;
+    color: #666;
     text-decoration: none;
 }
 
 .typecho-option-tabs li {
     float: left;
-    margin-right: 10px;
 }
 
 .typecho-option-tabs li.right {
     float: right;
-    margin: 0 0 0 10px;
 }
 
 .typecho-option-tabs li.current a {
@@ -2001,8 +2001,7 @@ ul.typecho-list-notable li .loading {
 }
 
 #upload-panel.drag {
-    border-color: #ccc;
-    background-color: #e3e3e3;
+    background-color: #FFF9E8;
 }
 
 #file-list {
@@ -2065,7 +2064,23 @@ ul.typecho-list-notable li .loading {
     margin-top: 20px;
     border-top: 1px solid #EEE;
 }
-#ui-datepicker-div select { height: 20px; }
+#ui-datepicker-div .ui-slider {
+    position: relative;
+    margin-top: 18px;
+    border: 1px solid #E9E9E6;
+    background-color: #F6F6F3;
+    height: 4px;
+}
+#ui-datepicker-div .ui-slider .ui-slider-handle {
+    position: absolute;
+    top: -7px;
+    margin-left: -5px;
+    z-index: 2;
+    width: 10px;
+    height: 16px;
+    background-color: #467B96;
+}
+
 #ui-datepicker-div .ui-datepicker-buttonpane {
     padding-top: 10px;
     border-top: 1px solid #EEE;
