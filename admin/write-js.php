@@ -22,7 +22,32 @@
 <script>
 $(document).ready(function() {
     // 日期时间控件
-    $('#date').datetimepicker();
+    $('#date').datetimepicker({
+        currentText     :   '<?php _e('现在'); ?>',
+        prevText        :   '<?php _e('上一月'); ?>',
+        nextText        :   '<?php _e('下一月'); ?>',
+        monthNames      :   ['<?php _e('一月'); ?>', '<?php _e('二月'); ?>', '<?php _e('三月'); ?>', '<?php _e('四月'); ?>',
+            '<?php _e('五月'); ?>', '<?php _e('六月'); ?>', '<?php _e('七月'); ?>', '<?php _e('八月'); ?>',
+            '<?php _e('九月'); ?>', '<?php _e('十月'); ?>', '<?php _e('十一月'); ?>', '<?php _e('十二月'); ?>'],
+        dayNames        :   ['<?php _e('星期日'); ?>', '<?php _e('星期一'); ?>', '<?php _e('星期二'); ?>',
+            '<?php _e('星期三'); ?>', '<?php _e('星期四'); ?>', '<?php _e('星期五'); ?>', '<?php _e('星期六'); ?>'],
+        dayNamesShort   :   ['<?php _e('周日'); ?>', '<?php _e('周一'); ?>', '<?php _e('周二'); ?>', '<?php _e('周三'); ?>',
+            '<?php _e('周四'); ?>', '<?php _e('周五'); ?>', '<?php _e('周六'); ?>'],
+        dayNamesMin     :   ['<?php _e('日'); ?>', '<?php _e('一'); ?>', '<?php _e('二'); ?>', '<?php _e('三'); ?>',
+            '<?php _e('四'); ?>', '<?php _e('五'); ?>', '<?php _e('六'); ?>'],
+        closeText       :   '<?php _e('关闭'); ?>',
+        timeOnlyTitle   :   '<?php _e('选择时间'); ?>',
+        timeText        :   '<?php _e('时间'); ?>',
+        hourText        :   '<?php _e('时'); ?>',
+        amNames         :   ['<?php _e('上午'); ?>', 'A'],
+        pmNames         :   ['<?php _e('下午'); ?>', 'P'],
+        minuteText      :   '<?php _e('分'); ?>',
+        secondText      :   '<?php _e('秒'); ?>',
+
+        dateFormat      :   'yy-mm-dd',
+        hour            :   (new Date()).getHours(),
+        minute          :   (new Date()).getMinutes()
+    });
 
     // tag autocomplete 提示
     $('#tags').tokenInput('http://shell.loopj.com/tokeninput/tvshows.php');
