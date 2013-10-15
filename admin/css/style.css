@@ -679,13 +679,14 @@ margin-top: 25px;
     background: #292D33;
 }
 
-.typecho-nav-list {
-}
-
 #typecho-nav-list ul {
     list-style: none;
     margin: 0;
     padding: 0;
+}
+
+#typecho-nav-list ul:first-child {
+    border-left: 1px solid #383D45;
 }
 
 #typecho-nav-list .root {
@@ -698,19 +699,25 @@ margin-top: 25px;
 }
 
 #typecho-nav-list .parent a {
-    color: #FFF;
+    display: block;
+    float: left;
+    padding: 0 20px;
+    border-right: 1px solid #383D45;
     height: 36px;
     line-height: 36px;
-    display: block;
-    padding: 0 20px;
-    float: left;
+    color: #BBB;
 }
 
 #typecho-nav-list .parent a:hover,
 #typecho-nav-list .focus .parent a,
 #typecho-nav-list .root:hover .parent a {
     background: #202328;
+    color: #FFF;
     text-decoration: none;
+}
+
+#typecho-nav-list .focus .parent a {
+    font-weight: bold;
 }
 
 #typecho-nav-list .child {
@@ -718,10 +725,10 @@ margin-top: 25px;
     position: absolute;
     top: 36px;
     margin: 0;
+    width: 160px; 
     background: #202328;
     overflow: hidden;
     z-index: 250;
-    width: 160px; 
 }
 
 #typecho-nav-list .root:hover .child {
@@ -737,18 +744,9 @@ margin-top: 25px;
 #typecho-nav-list .child li.last {
 }
 
-#typecho-nav-list .child li a:hover,
-#typecho-nav-list .child li.focus a,
-#typecho-nav-list .child li.focus a:hover {
-    background: #292D33;
-}
-#typecho-nav-list .child li.focus a {
-    color: #6DA1BB;
-}
-
 #typecho-nav-list .child li a {
     text-decoration: none;
-    color: #FFF;
+    color: #BBB;
     display: block;
     padding: 0 20px;
     overflow: hidden;
@@ -756,6 +754,15 @@ margin-top: 25px;
     white-space: nowrap;
     height: 36px;
     line-height: 36px;
+}
+
+#typecho-nav-list .child li a:hover {
+    background: #292D33;
+    color: #FFF;
+}
+#typecho-nav-list .child li.focus a {
+    color: #6DA1BB;
+    font-weight: bold;
 }
 
 .typecho-head-nav .operate {
@@ -1554,7 +1561,7 @@ ul.typecho-list-notable li .loading {
 
 .typecho-post-area .typecho-label {
     display: block;
-    margin-bottom: -0.5em;
+    margin: 1em 0 -0.5em;
     font-weight: bold;
 }
 
@@ -1681,6 +1688,17 @@ ul.typecho-list-notable li .loading {
     font-size: 1.17em;
     font-weight: bold;
 }
+.typecho-post-area .url-slug {
+    margin-top: -0.5em;
+    color: #AAA;
+    font-size: .92857em;
+}
+.typecho-post-area #slug {
+    padding: 2px;
+    border: none;
+    background: #FFFBCC;
+    color: #666;
+}
 
 .typecho-post-area textarea#text {
 }
@@ -1729,11 +1747,6 @@ ul.typecho-list-notable li .loading {
 .allow-option ul {
     list-style: none;
     padding: 0;
-}
-
-.visibility-option {
-    float: left;
-    width: 50%;
 }
 
 /*.typecho-post-area .advance, .typecho-post-area .attach, .typecho-post-area .media {
@@ -1988,15 +2001,15 @@ ul.typecho-list-notable li .loading {
  * Upload
  */
 #upload-panel {
-    padding: 10px 15px;
+    padding: 15px;
     border: 1px dashed #D9D9D6;
     background-color: #FFF;
     color: #999;
     font-size: .92857em;
 }
 
-#upload-panel.drag {
-    background-color: #FFF9E8;
+#upload-panel.drag, .tDnD_whileDrag {
+    background-color: #FFFBCC;
 }
 
 #file-list {
@@ -2083,12 +2096,6 @@ ul.typecho-list-notable li .loading {
 #ui-datepicker-div button { height: 28px; }
 #ui-datepicker-div .ui-datepicker-current {
     float: left;
-    border-color: #F3F3F0;
-    color: #467B96;
-    background: #F3F3F0;
-    -moz-box-shadow: none;
-    -webkit-box-shadow: none;
-    box-shadow: none;
 }
 #ui-datepicker-div .ui-datepicker-close { float: right; }
 
