@@ -1198,8 +1198,13 @@ class Widget_Archive extends Widget_Abstract_Contents
 
         /** 定时发布功能 */
         if (!$selectPlugged) {
-            $select = $this->select()->where('table.contents.status = ?', 'publish')
-                ->where('table.contents.created < ?', $this->options->gmtTime);
+            if ($this->user->hasLogin()) {
+                $select = $this->select()->where('table.contents.status = ? OR
+                    (table.contents.status = ? AND table.contents.authorId = ?)', 'publish', 'private', $this->user->uid);
+            } else {
+                $select = $this->select()->where('table.contents.status = ?', 'publish');
+            }
+            $select->where('table.contents.created < ?', $this->options->gmtTime);
         }
 
         /** handle初始化 */
