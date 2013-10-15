@@ -823,7 +823,19 @@ margin-top: 25px;
 .typecho-page-title h2 {
     font-size: 1.28571em;
 }
+.typecho-page-title h2 a {
+    margin-left: 10px;
+    padding: 3px 6px;
+    background: #E9E9E6;
+    font-size: .8em;
 
+    border-radius: 2px;
+}
+.typecho-page-title h2 a:hover {
+    background: #E6E6E3;
+    color: #666;
+    text-decoration: none;
+}
 
 /**
  * 后台页面主体
@@ -1564,6 +1576,8 @@ ul.typecho-list-notable li .loading {
 }
 
 .typecho-post-area #auto-save-message {
+    color: #999;
+    line-height: 32px;
 }
 
 /*.typecho-post-area .typecho-preview-label {
@@ -1635,9 +1649,6 @@ ul.typecho-list-notable li .loading {
 }
 
 .typecho-post-area .submit {
-    height: 24px;
-    line-height: 24px;
-    margin: 15px 0px 20px;
 }
 
 .typecho-post-area .right {
