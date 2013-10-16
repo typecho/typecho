@@ -81,7 +81,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                                 echo '<em>(' . _t('密码保护') . ')</em>';
                             }
                             ?>
-                            <?php if ('#' != $posts->permalink): ?>
+                            <?php if ('post_draft' != $posts->type): ?>
                             <a class="right" href="<?php $posts->permalink(); ?>"><img src="<?php $options->adminUrl('images/link.png'); ?>" title="<?php _e('浏览 %s', htmlspecialchars($posts->title)); ?>" width="16" height="16" alt="view" /></a>
                             <?php endif; ?>
                             </td>
