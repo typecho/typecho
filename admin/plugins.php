@@ -10,7 +10,7 @@ include 'menu.php';
             <div class="col-mb-12 typecho-list">
                 <?php Typecho_Widget::widget('Widget_Plugins_List_Activated')->to($activatedPlugins); ?>
                 <?php if ($activatedPlugins->have()): ?>
-                <!--<h4 class="typecho-list-table-title"><?php _e('启用的插件'); ?></h4>-->
+                <h4 class="typecho-list-table-title"><?php _e('启用的插件'); ?></h4>
                 <table class="typecho-list-table">
                     <colgroup>
                         <col width="25%"/>

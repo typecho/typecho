@@ -45,16 +45,15 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                     <p>
                         <textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text" name="text" class="w-100 mono"><?php echo htmlspecialchars($post->text); ?></textarea>
                     </p>
-
                     <?php include 'file-upload.php'; ?>
 
                     <?php Typecho_Plugin::factory('admin/write-post.php')->content($post); ?>
                     <p class="submit">
                         <span class="left">
-                            <span id="auto-save-message">保存于 1 分钟前</span>
                         </span>
                         
                         <span class="right">
+                            <span id="auto-save-message">1 分钟前保存 </span>
                             <input type="hidden" name="cid" value="<?php $post->cid(); ?>" />
                             <button type="submit" name="do" value="save" id="btn-save"><?php _e('保存草稿'); ?></button>
                             <button type="submit" name="do" value="publish" class="primary" id="btn-submit"><?php _e('发布文章'); ?></button>
