@@ -93,6 +93,39 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                             </tr>
                         </thead>
                         <tbody>
+                        <!-- 编辑评论 -->
+                        <tr class="comment-edit">
+                            <td></td>
+                            <td colspan="2" valign="top">
+                                <p>
+                                    <label for="">用户名</label>
+                                    <input class="text-s w-100" type="text">
+                                </p>
+                                <p>
+                                    <label for="">Email</label>
+                                    <input class="text-s w-100" type="email">
+                                </p>
+                                <p>
+                                    <label for="">IP 地址</label>
+                                    <input class="text-s w-100" type="text">
+                                </p>
+                            </td>
+                            <td valign="top">
+                                <p>
+                                    <label for="">发布时间</label>
+                                    <input class="text-s w-40" type="text">
+                                </p>
+                                <p>
+                                    <label for="">内容</label>
+                                    <textarea name="" id="" rows="4" class="w-90"></textarea>
+                                </p>
+                                <p>
+                                    <button type="submit" class="btn-s primary">提交</button>
+                                    <button type="button" class="btn-s">取消</button>
+                                </p>
+                            </td>
+                        </tr><!-- end .comment-edit -->
+
                         <?php if($comments->have()): ?>
                         <?php while($comments->next()): ?>
                         <tr id="<?php $comments->theId(); ?>">
@@ -123,7 +156,7 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                                 </div>
                                 <form action="post" class="comment-reply">
                                     <p><textarea name="" id="" class="w-90" rows="3"></textarea></p>
-                                    <p><button type="submit" class="btn-s">提交回复</button></p>
+                                    <p><button type="submit" class="btn-s">回复</button></p>
                                 </form>
                                 <div class="comment-action hidden-by-mouse">
                                     <?php if('approved' == $comments->status): ?>

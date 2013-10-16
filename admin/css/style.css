@@ -181,8 +181,20 @@ button {
     height: 28px;
 }
 
+button.primary {
+    border-color: #8ABAD7;
+    border-bottom-color: #64a4ca;
+    color: #467b96;
+    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #e8f2f8), color-stop(100%, #d9eaf2));
+    background-image: -webkit-linear-gradient(#e8f2f8, #d9eaf2);
+    background-image: -moz-linear-gradient(#e8f2f8, #d9eaf2);
+    background-image: -o-linear-gradient(#e8f2f8, #d9eaf2);
+    background-image: linear-gradient(#e8f2f8, #d9eaf2);
+}
+
+
 button, .dropdown-menu {
-    border: 1px solid #bbbbbb;
+    border: 1px solid #BBB;
     border-bottom-color: #AAA;
     -webkit-box-shadow: rgba(0, 0, 0, 0.12) 0 1px 2px, inset white 0 1px 0;
     -moz-box-shadow: rgba(0, 0, 0, 0.12) 0 1px 2px, inset white 0 1px 0;
@@ -191,8 +203,13 @@ button, .dropdown-menu {
     border-radius: 2px;
 }
 
+button:hover { 
+    background: #F6F6F6;
+    color: #777;
+}
+
 button:disabled, button:active, button.active {
-    background: #EEE;
+    background: #DDD;
     -webkit-box-shadow: inset rgba(0, 0, 0, 0.12) 0 0 4px;
     -moz-box-shadow: inset rgba(0, 0, 0, 0.12) 0 0 4px;
     box-shadow: inset rgba(0, 0, 0, 0.12) 0 0 4px; }
@@ -205,22 +222,6 @@ button:disabled {
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
     box-shadow: none;
-}
-
-button:hover { 
-    background: #F6F6F6;
-    color: #777;
-}
-
-button.primary {
-    border-color: #8ABAD7;
-    border-bottom-color: #64a4ca;
-    color: #467b96;
-    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #e8f2f8), color-stop(100%, #d9eaf2));
-    background-image: -webkit-linear-gradient(#e8f2f8, #d9eaf2);
-    background-image: -moz-linear-gradient(#e8f2f8, #d9eaf2);
-    background-image: -o-linear-gradient(#e8f2f8, #d9eaf2);
-    background-image: linear-gradient(#e8f2f8, #d9eaf2);
 }
 
 button.primary:hover {
@@ -1093,6 +1094,7 @@ a.operate-reply {
 .typecho-list-table td {
     padding: 10px;
     border-top: 1px solid #F0F0EC;
+    word-break: break-all;
 }
 
 .typecho-list-table td .thumb-box {
@@ -1168,6 +1170,10 @@ a.operate-reply {
 }
 
 .comment-action a, .comment-action span { margin-right: 4px; }
+
+.comment-edit label {
+    display: block;
+}
 
 
 /* 下拉操作按钮 */
@@ -1359,10 +1365,10 @@ ul.typecho-list-notable li .loading {
 
 /*ul.typecho-list-notable li #typecho-respond {
     display: inline;
-}*/
+}
 
 #typecho-respond textarea {
-}
+}*/
 
 /**
  * 模板列表
@@ -1374,12 +1380,6 @@ ul.typecho-list-notable li .loading {
 }
 
 .typecho-theme-list td {
-}
-
-.typecho-theme-list td.border-right {
-}
-
-.typecho-theme-list td.border-bottom {
 }
 
 .typecho-theme-list img {
