@@ -101,6 +101,8 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                             'author'    =>  $comments->author,
                             'mail'      =>  $comments->mail,
                             'url'       =>  $comments->url,
+                            'ip'        =>  $comments->ip,
+                            'type'        =>  $comments->type,
                             'text'      =>  $comments->text
                         );
 
@@ -111,18 +113,22 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                             </td>
                             <td valign="top">
                                 <div class="comment-avatar">
+                                    <?php if ('comment' == $comments->type): ?>
                                     <?php $comments->gravatar(40); ?>
+                                    <?php endif; ?>
                                 </div>
                             </td>
                             <td valign="top" class="comment-head">
                                 <div class="comment-meta">
-                                    <span class="<?php $comments->type(); ?>"></span>
                                     <strong class="comment-author"><?php $comments->author(true); ?></strong>
+                                    <?php if ('comment' != $comments->type): ?>
+                                    <small>(<?php _e('引用'); ?>)</small>
+                                    <?php endif; ?>
                                     <?php if($comments->mail): ?>
-                                    <br><span><a href="mailto:<?php $comments->mail(); ?>"><?php $comments->mail(); ?></a></span>
+                                    <br /><span><a href="mailto:<?php $comments->mail(); ?>"><?php $comments->mail(); ?></a></span>
                                     <?php endif; ?>
                                     <?php if($comments->ip): ?>
-                                    <br><span><?php $comments->ip(); ?></span>
+                                    <br /><span><?php $comments->ip(); ?></span>
                                     <?php endif; ?>
                                 </div>
                             </td>
@@ -150,7 +156,7 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                                     <a href="<?php $options->index('/action/comments-edit?do=spam&coid=' . $comments->coid); ?>"><?php _e('垃圾'); ?></a>
                                     <?php endif; ?>
                                     
-                                    <a href="#<?php $comments->theId(); ?>" rel="<?php $options->index('/action/comments-edit?do=get&coid=' . $comments->coid); ?>" class="operate-edit"><?php _e('编辑'); ?></a>
+                                    <a href="#<?php $comments->theId(); ?>" rel="<?php $options->index('/action/comments-edit?do=edit&coid=' . $comments->coid); ?>" class="operate-edit"><?php _e('编辑'); ?></a>
 
                                     <?php if('approved' == $comments->status && 'comment' == $comments->type): ?>
                                     <a href="#<?php $comments->theId(); ?>" rel="<?php $options->index('/action/comments-edit?do=reply&coid=' . $comments->coid); ?>" class="operate-reply"><?php _e('回复'); ?></a>
@@ -226,7 +232,7 @@ $(document).ready(function () {
         if ($('.comment-reply', td).length > 0) {
             $('.comment-reply').remove();
         } else {
-            var form = $('<form action="post" action="'
+            var form = $('<form method="post" action="'
                 + t.attr('rel') + '" class="comment-reply">'
                 + '<p><textarea name="text" class="w-90" rows="3"></textarea></p>'
                 + '<p><button type="submit" class="btn-s primary"><?php _e('回复'); ?></button> <button type="button" class="btn-s cancel"><?php _e('取消'); ?></button></p>'
@@ -239,7 +245,10 @@ $(document).ready(function () {
             $('textarea', form).focus();
 
             form.submit(function () {
-                var t = $(this);
+                var t = $(this), tr = t.parents('tr');
+                
+                $.post
+
                 return false;
             });
         }
@@ -248,22 +257,24 @@ $(document).ready(function () {
     });
 
     $('.operate-edit').click(function () {
-        var tr = $(this).parents('tr'), id = tr.attr('id'), comment = tr.data('comment');
+        var tr = $(this).parents('tr'), t = $(this), id = tr.attr('id'), comment = tr.data('comment');
         tr.hide();
 
         var edit = $('<tr class="comment-edit"><td> </td>'
-                        + '<td colspan="2" valign="top">'
+                        + '<td colspan="2" valign="top"><form method="post" action="'
+                        + t.attr('rel') + '" class="comment-edit-info">'
                         + '<p><label for="' + id + '-author"><?php _e('用户名'); ?></label><input class="text-s w-100" id="'
                         + id + '-author" name="author" type="text"></p>'
                         + '<p><label for="' + id + '-mail"><?php _e('电子邮箱'); ?></label>'
                         + '<input class="text-s w-100" type="email" name="mail" id="' + id + '-mail"></p>'
                         + '<p><label for="' + id + '-url"><?php _e('个人主页'); ?></label>'
-                        + '<input class="text-s w-100" type="text" name="url" id="' + id + '-url"></p></td>'
-                        + '<td valign="top"><p><label for="' + id + '-text"><?php _e('内容'); ?></label>'
+                        + '<input class="text-s w-100" type="text" name="url" id="' + id + '-url"></p></form></td>'
+                        + '<td valign="top"><form method="post" action="'
+                        + t.attr('rel') + '" class="comment-edit-content"><p><label for="' + id + '-text"><?php _e('内容'); ?></label>'
                         + '<textarea name="text" id="' + id + '-text" rows="6" class="w-90"></textarea></p>'
                         + '<p><button type="submit" class="btn-s primary"><?php _e('提交'); ?></button> '
-                        + '<button type="button" class="btn-s cancel"><?php _e('取消'); ?></button></p></td></tr>')
-                        .data('id', id).insertAfter(tr);
+                        + '<button type="button" class="btn-s cancel"><?php _e('取消'); ?></button></p></form></td></tr>')
+                        .data('id', id).data('comment', comment).insertAfter(tr);
 
         $('input[name=author]', edit).val(comment.author);
         $('input[name=mail]', edit).val(comment.mail);
@@ -273,11 +284,45 @@ $(document).ready(function () {
         $('.cancel', edit).click(function () {
             var tr = $(this).parents('tr');
 
-            $('#' + tr.data('id')).show().effect('highlight', '#AACB36');
+            $('#' + tr.data('id')).show();
             tr.remove();
         });
 
-        $('form', edit
+        $('form', edit).submit(function () {
+            var t = $(this), tr = t.parents('tr'),
+                oldTr = $('#' + tr.data('id')),
+                comment = oldTr.data('comment');
+
+            $('form', tr).each(function () {
+                var items  = $(this).serializeArray();
+
+                for (var i = 0; i < items.length; i ++) {
+                    var item = items[i];
+                    comment[item.name] = item.value;
+                }
+            });
+
+            var html = '<strong class="comment-author">'
+                + (comment.url ? '<a target="_blank" href="' + comment.url + '">'
+                + comment.author + '</a>' : comment.author) + '</strong>'
+                + ('comment' != comment.type ? '<small><?php _e('引用'); ?></small>' : '')
+                + (comment.mail ? '<br /><span><a href="mailto:' + comment.mail + '">'
+                + comment.mail + '</a></span>' : '')
+                + (comment.ip ? '<br /><span>' + comment.ip + '</span>' : '');
+
+            $('.comment-meta', oldTr).html(html);
+            $('.comment-content', oldTr).html('<p>' + comment.text + '</p>');
+            oldTr.data('comment', comment);
+
+            $.post(t.attr('action'), comment, function (o) {
+                $('.comment-content', oldTr).html(o.comment.content);
+            });
+            
+            oldTr.show().effect('highlight', '#AACB36');
+            tr.remove();
+
+            return false;
+        });
 
         return false;
     });
