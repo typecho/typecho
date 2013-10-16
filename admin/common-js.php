@@ -31,7 +31,7 @@
                 var t = $(this), href = t.attr('href');
 
                 if ((href.length > 1 && href[0] == '#')
-                    /^<?php echo preg_quote($options->adminUrl, '/'); ?>.*$/.exec(href) 
+                    || /^<?php echo preg_quote($options->adminUrl, '/'); ?>.*$/.exec(href) 
                         || /^<?php echo substr(preg_quote(Typecho_Common::url('s', $options->index), '/'), 0, -1); ?>action\/[_a-zA-Z0-9\/]+.*$/.exec(href)) {
                     return;
                 }
