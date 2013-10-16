@@ -959,9 +959,12 @@ margin-top: 25px;
 
 .typecho-option-tabs a {
     display: block;
+    margin-right: -1px;
+    border: 1px solid #D9D9D6;
     padding: 0 15px;
-    height: 30px;
-    line-height: 30px;
+    height: 24px;
+    line-height: 24px;
+    color: #666;
 }
 .typecho-option-tabs a:hover {
     background-color: #E9E9E6;
@@ -978,8 +981,7 @@ margin-top: 25px;
 }
 
 .typecho-option-tabs li.current a {
-    background-color: #467B96;
-    color: #FFF;
+    background-color: #E9E9E6;
 }
 
 .typecho-option-tabs li:hover, .typecho-option-tabs li.current {
@@ -1155,10 +1157,13 @@ a.operate-reply {
 /**
  * 评论管理
  */
+
 .comment-content {
     margin: -0.5em 0;
 }
+.comment-meta span,
 .comment-date {
+    font-size: .92857em;
     color: #999;
 }
 
