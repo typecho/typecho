@@ -91,22 +91,22 @@
             onUpload    :   null,
             onComplete  :   null,
             onError     :   null,
-            types       :   null,
+            types       :   [],
             name        :   'file',
             typesError  :   'file type error',
             single      :   false
         }, options), 
         p = this.parent().css('position', 'relative'),
-        input = $('<input name="' + s.name + '" type="file" />').css({
+        input = $('<input class="visuallyhidden" name="' + s.name + '" type="file" />').css({
             opacity     :   0,
             cursor      :   'pointer',
             position    :   'absolute',
             width       :   this.outerWidth(),
-            height      :   this.outerHeight,
+            height      :   this.outerHeight(),
             left        :   this.offset().left - p.offset().left,
             top         :   this.offset().top - p.offset().top
         }).insertAfter(this), queue = {}, prefix = 'queue-',
-        index = 0, types = [];
+        index = 0;
 
         window.fileUploadComplete = function (id, url, data) {
             if (s.single) {
@@ -138,15 +138,6 @@
             }
         };
 
-        if (!!s.types) {
-            var list = s.types.split(';');
-            for (var i = 0; i < list.length; i ++) {
-                var parts = list[i].split('.');
-                parts.shift();
-                types.push('.' + parts.join('.'));
-            }
-        }
-
         function upload (frame, id) {
             var form = $('<form action="' + s.url + '" method="post" enctype="multipart/form-data"><input type="hidden" name="_id" value="' + id + '" /></form>'),
             replace = input.clone(true).val(''),
@@ -162,12 +153,12 @@
         }
 
         function checkTypes (file) {
-            if (!types.length) {
+            if (!s.types.length) {
                 return true;
             }
 
-            for (var i = 0; i < types.length; i ++) {
-                var ext = types[i];
+            for (var i = 0; i < s.types.length; i ++) {
+                var ext = s.types[i];
 
                 if (file.length <= ext.length) {
                     continue;

@@ -27,10 +27,8 @@ Typecho_Widget::widget('Widget_Contents_Attachment_Edit')->to($attachment);
                 </p>
 
                 <div id="upload-panel" class="p">
-                    将要替换的文件拖放到这里 或者 <a href="" class="upload-file">选择替换文件</a><input type="file" class="visuallyhidden">
-                    <ul id="file-list">
-                        <li class="loading">上传中</li>
-                    </ul>
+                    将要替换的文件拖放到这里 或者 <a href="###" class="upload-file">选择替换文件</a>
+                    <ul id="file-list"></ul>
                 </div>
             </div>
             <div class="col-mb-12 col-tb-4">
@@ -44,148 +42,144 @@ Typecho_Widget::widget('Widget_Contents_Attachment_Edit')->to($attachment);
 include 'copyright.php';
 include 'common-js.php';
 ?>
-<script type="text/javascript" src="<?php $options->adminUrl('javascript/swfupload/swfupload.js?v=' . $suffixVersion); ?>"></script>
-<script type="text/javascript" src="<?php $options->adminUrl('javascript/swfupload/swfupload.queue.js?v=' . $suffixVersion); ?>"></script>
+<script src="<?php $options->adminUrl('javascript/filedrop.js?v=' . $suffixVersion); ?>"></script>
 <script type="text/javascript">
-    (function () {
-        window.addEvent('domready', function() {
-            
-            $(document).getElement('.typecho-attachment-photo-box .description input').addEvent('click', function () {
-                this.select();
-            });
-            
-            var swfuploadLoaded = function () {
-                var btn = $(document)
-                .getElement('.typecho-attachment-photo-box button#exchange');
-                
-                var obj = $(document)
-                .getElement('.typecho-attachment-photo-box .description ul li #swfu');
-                
-                offset = obj.getCoordinates(btn);
-                obj.setStyles({
-                    'width': btn.getSize().x,
-                    'height': btn.getSize().y,
-                    'left': 0 - offset.left,
-                    'top': 0 - offset.top
-                });
-                
-                btn.removeAttribute('disabled');
-            };
-        
-            var fileDialogComplete = function (numFilesSelected, numFilesQueued) {
-                try {
-                    this.startUpload();
-                } catch (ex)  {
-                    this.debug(ex);
-                }
-            };
-        
-            var uploadStart = function (file) {
-                $(document)
-                .getElement('.typecho-attachment-photo-box button#exchange')
-                .set('html', '<?php _e('上传中'); ?>')
-                .setAttribute('disabled', '');
-            };
-            
-            var uploadSuccess = function (file, serverData) {
-                var _el = $(document).getElement('#attachment-url');
-                var _result = JSON.decode(serverData);
-                
-                _el.set('tween', {duration: 1500});
-                
-                _el.setStyles({
-                    'background-position' : '-1000px 0',
-                    'background-color' : '#D3DBB3'
-                });
-                
-                <?php if ($attachment->attachment->isImage): ?>
-                var _img = new Image(), _date = new Date();
-                
-                _img.src = _result.url + (_result.url.indexOf('?') > 0 ? '&' : '?') + '__rds=' + _date.toUTCString();
-                _img.alt = _result.title;
-                
-                $(document).getElement('.typecho-attachment-photo-box img').destroy();
-                $(_img).inject($(document).getElement('.typecho-attachment-photo-box'), 'top');
-                <?php endif; ?>
-                
-                $(document).getElement('.typecho-attachment-photo-box .description small')
-                .set('html', Math.ceil(_result.size / 1024) + ' Kb');
-                
-                _el.tween('background-color', '#D3DBB3', '#EEEEEE');
-            };
-            
-            var uploadComplete = function (file) {
-                $(document)
-                .getElement('.typecho-attachment-photo-box button#exchange')
-                .set('html', '<?php _e('替换'); ?>')
-                .removeAttribute('disabled');
-            };
-            
-            var uploadError = function (file, errorCode, message) {
-                var _el = $(document).getElement('#attachment-url');
-                var _fx = new Fx.Tween(_el, {duration: 3000});
-                
-                _fx.start('background-color', '#CC0000', '#EEEEEE');
-            };
-            
-            var uploadProgress = function (file, bytesLoaded, bytesTotal) {
-                var _el = $(document).getElement('#attachment-url');
-                var percent = Math.ceil((1 - (bytesLoaded / bytesTotal)) * _el.getSize().x);
-                _el.setStyle('background-position', '-' + percent + 'px 0');
-            };
-            
-            var swfu, _size = $(document).getElement('.typecho-attachment-photo-box button#exchange').getCoordinates(),
-            settings = {
-                flash_url : "<?php $options->adminUrl('javascript/swfupload/swfupload.swf'); ?>",
-                upload_url: "<?php $options->index('/action/upload?do=modify&cid=' . $attachment->cid); ?>",
-                post_params: {"__typecho_uid" : "<?php echo Typecho_Cookie::get('__typecho_uid'); ?>", 
-                "__typecho_authCode" : "<?php echo addslashes(Typecho_Cookie::get('__typecho_authCode')); ?>"},
-                file_size_limit : "<?php $val = function_exists('ini_get') ? trim(ini_get('upload_max_filesize')) : 0;
-    $last = strtolower($val[strlen($val)-1]);
-    switch($last) {
-        // The 'G' modifier is available since PHP 5.1.0
-        case 'g':
-            $val *= 1024;
-        case 'm':
-            $val *= 1024;
-        case 'k':
-            $val *= 1024;
+$(document).ready(function() {
+    var errorWord = '<?php $val = function_exists('ini_get') ? trim(ini_get('upload_max_filesize')) : 0;
+        $last = strtolower($val[strlen($val)-1]);
+        switch($last) {
+            // The 'G' modifier is available since PHP 5.1.0
+            case 'g':
+                $val *= 1024;
+            case 'm':
+                $val *= 1024;
+            case 'k':
+                $val *= 1024;
+        }
+
+        $val = number_format(ceil($val / (1024 *1024)));
+        _e('附件上传失败, 请确认附件尺寸没有超过 %s 并且服务器附件目录可以写入', "{$val}Mb"); ?>',
+        loading = $('<img src="<?php $options->adminUrl('images/ajax-loader.gif'); ?>" style="display:none" />')
+            .appendTo(document.body);
+
+    $('#attachment-url').click(function () {
+        $(this).select();
+    });
+    
+    $('.operate-delete').click(function () {
+        var t = $(this), href = t.attr('href');
+
+        if (confirm(t.attr('lang'))) {
+            window.location.href = href;
+        }
+
+        return false;
+    });
+
+    function fileUploadStart (file, id) {
+        $('<li id="' + id + '" class="loading">'
+            + file + '</li>').prependTo('#file-list');
     }
 
-    echo $val;
-                ?> byte",
-                file_types : "<?php echo '' == $attachment->attachment->type ? $attachment->attachment->name :
-                '*.' . $attachment->attachment->type; ?>",
-                file_types_description : "<?php _e('所有文件'); ?>",
-                file_upload_limit : 0,
-                file_queue_limit : 1,
-                debug: false,
-                
-                //Handle Settings
-                file_dialog_complete_handler : fileDialogComplete,
-                upload_start_handler : uploadStart,
-                upload_progress_handler : uploadProgress,
-                upload_success_handler : uploadSuccess,
-                queue_complete_handler : uploadComplete,
-                upload_error_handler : uploadError,
-                swfupload_loaded_handler : swfuploadLoaded,
-                
-                // Button Settings
-                button_placeholder_id : "swfu-placeholder",
-                button_height: _size.height,
-                button_text: '',
-                button_text_style: '',
-                button_text_left_padding: 14,
-                button_text_top_padding: 0,
-                button_width: _size.width,
-                button_window_mode: SWFUpload.WINDOW_MODE.TRANSPARENT,
-                button_cursor: SWFUpload.CURSOR.HAND
-            };
-
-            swfu = new SWFUpload(settings);
-        
+    function fileUploadComplete (id, url, data) {
+        $('#' + id).html('<?php _e('附件 %s 已经替换'); ?>'.replace('%s', data.title))
+        .effect('highlight', '#AACB36', 1000, function () {
+            $(this).remove();
         });
-    })();
+    }
+
+    $('.upload-file').fileUpload({
+        url         :   '<?php $options->index('/action/upload?do=modify&cid=' . $attachment->cid); ?>',
+        types       :   ['.<?php $attachment->attachment->type(); ?>'],
+        typesError  :   '<?php _e('附件 %s 的类型与要替换的原文件不一致'); ?>',
+        onUpload    :   fileUploadStart,
+        onError     :   function (id) {
+            $('#' + id).remove();
+            alert(errorWord);
+        },
+        onComplete  :   fileUploadComplete
+    });
+
+    $('#upload-panel').filedrop({
+        url             :   '<?php $options->index('/action/upload' 
+            . (isset($fileParentContent) ? '?cid=' . $fileParentContent->cid : '')); ?>',
+        allowedfileextensions   :   ['.<?php $attachment->attachment->type(); ?>'],
+
+        maxfilesize     :   <?php 
+        $val = function_exists('ini_get') ? trim(ini_get('upload_max_filesize')) : 0;
+        $last = strtolower($val[strlen($val)-1]);
+        switch($last) {
+            // The 'G' modifier is available since PHP 5.1.0
+            case 'g':
+                $val *= 1024;
+            case 'm':
+                $val *= 1024;
+            case 'k':
+                $val *= 1024;
+        }
+
+        echo ceil($val / (1024 * 1024));
+        ?>,
+
+        maxfiles        :   1,
+
+        error: function(err, file) {
+            switch(err) {
+                case 'BrowserNotSupported':
+                    alert('<?php _e('浏览器不支持拖拽上传'); ?>');
+                    break;
+                case 'TooManyFiles':
+                    alert('<?php _e('一次只能上传一个文件'); ?>');
+                    break;
+                case 'FileTooLarge':
+                    alert('<?php $val = function_exists('ini_get') ? trim(ini_get('upload_max_filesize')) : 0;
+        $last = strtolower($val[strlen($val)-1]);
+        switch($last) {
+            // The 'G' modifier is available since PHP 5.1.0
+            case 'g':
+                $val *= 1024;
+            case 'm':
+                $val *= 1024;
+            case 'k':
+                $val *= 1024;
+        }
+
+        $val = number_format(ceil($val / (1024 *1024)));
+        _e('附件尺寸不能超过 %s', "{$val}Mb"); ?>');
+                    break;
+                case 'FileTypeNotAllowed':
+                    // The file type is not in the specified list 'allowedfiletypes'
+                    break;
+                case 'FileExtensionNotAllowed':
+                    alert('<?php _e('附件 %s 的类型不被支持'); ?>'.replace('%s', file.name));
+                    break;
+                default:
+                    break;
+            }
+        },
+        
+        
+        dragOver : function () {
+            $(this).addClass('drag');
+        },
+
+        dragLeave : function () {
+            $(this).removeClass('drag');
+        },
+
+        drop : function () {
+            $(this).removeClass('drag');
+        },
+
+        uploadOpened   :   function (i, file, len) {
+            fileUploadStart(file.name, 'drag-' + i);
+        },
+
+        uploadFinished  :   function (i, file, response) {
+            fileUploadComplete('drag-' + i, response[0], response[1]);
+        }
+    });
+});
 </script>
 <?php
 include 'footer.php';

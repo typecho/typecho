@@ -275,11 +275,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
             if (0 == $file['error'] && is_uploaded_file($file['tmp_name'])) {
                 $result = self::uploadHandle($file);
 
-                if (false === $result) {
-                    $this->response->setStatus(502);
-                    exit;
-                } else {
-
+                if (false !== $result) {
                     $struct = array(
                         'title'     =>  $result['name'],
                         'slug'      =>  $result['name'],
@@ -370,11 +366,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
 
                 $result = self::modifyHandle($this->row, $file);
 
-                if (false === $result) {
-                    $this->response->setStatus(502);
-                    exit;
-                } else {
-
+                if (false !== $result) {
                     $this->update(array(
                         'text'      =>  serialize($result)
                     ), $this->db->sql()->where('cid = ?', $this->cid));
