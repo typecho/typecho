@@ -50,16 +50,17 @@ $(document).ready(function() {
     $('.upload-file').fileUpload({
         url         :   '<?php $options->index('/action/upload' 
             . (isset($fileParentContent) ? '?cid=' . $fileParentContent->cid : '')); ?>',
-        types       :   '<?php
-    $attachmentTypes = $options->allowedAttachmentTypes;
-    $attachmentTypesCount = count($attachmentTypes);
-    for ($i = 0; $i < $attachmentTypesCount; $i ++) {
-        echo '*.' . $attachmentTypes[$i];
-        if ($i < $attachmentTypesCount - 1) {
-            echo ';';
-        }
+        types       :   <?php
+    $attachmenttypes = $options->allowedattachmenttypes;
+    $attachmenttypescount = count($attachmenttypes);
+    $types = array();
+
+    for ($i = 0; $i < $attachmenttypescount; $i ++) {
+        $types[] = '.' . $attachmenttypes[$i];
     }
-?>',
+
+    echo json_encode($types);
+?>,
         typesError  :   '<?php _e('附件 %s 的类型不被支持'); ?>',
         onUpload    :   fileUploadStart,
         onError     :   function (id) {
@@ -72,16 +73,17 @@ $(document).ready(function() {
     $('#upload-panel').filedrop({
         url             :   '<?php $options->index('/action/upload' 
             . (isset($fileParentContent) ? '?cid=' . $fileParentContent->cid : '')); ?>',
-        allowedfileextensions   :   [<?php
-    $attachmentTypes = $options->allowedAttachmentTypes;
-    $attachmentTypesCount = count($attachmentTypes);
-    for ($i = 0; $i < $attachmentTypesCount; $i ++) {
-        echo '".' . $attachmentTypes[$i] . '"';
-        if ($i < $attachmentTypesCount - 1) {
-            echo ',';
-        }
+        allowedfileextensions   :   <?php
+    $attachmenttypes = $options->allowedattachmenttypes;
+    $attachmenttypescount = count($attachmenttypes);
+    $types = array();
+
+    for ($i = 0; $i < $attachmenttypescount; $i ++) {
+        $types[] = '.' . $attachmenttypes[$i];
     }
-?>],
+
+    echo json_encode($types);
+?>,
 
         maxfilesize     :   <?php 
         $val = function_exists('ini_get') ? trim(ini_get('upload_max_filesize')) : 0;
