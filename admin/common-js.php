@@ -7,7 +7,10 @@
         $(document).ready(function() {
             <?php if ($notice->highlight): ?>                
             //增加高亮效果
-            $('#<?php echo $notice->highlight; ?>').effect('highlight', '#AACB36', 1000);
+            $('#<?php echo $notice->highlight; ?>').addClass('nohover')
+                .effect('highlight', '#AACB36', 1000, function () {
+                    $(this).removeClass('nohover');
+                });
             <?php endif; ?>
 
             //增加淡出效果

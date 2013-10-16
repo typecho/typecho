@@ -242,12 +242,14 @@ $(document).ready(function () {
                 $(this).parents('.comment-reply').remove();
             });
 
-            $('textarea', form).focus();
+            var textarea = $('textarea', form).focus();
 
             form.submit(function () {
                 var t = $(this), tr = t.parents('tr');
                 
-                $.post
+                $.post(t.attr('action'), t.serialize(), function (o) {
+                    t.remove();
+                });
 
                 return false;
             });
@@ -310,15 +312,17 @@ $(document).ready(function () {
                 + comment.mail + '</a></span>' : '')
                 + (comment.ip ? '<br /><span>' + comment.ip + '</span>' : '');
 
-            $('.comment-meta', oldTr).html(html);
+            $('.comment-meta', oldTr).html(html)
+                .effect('highlight', '#AACB36');
             $('.comment-content', oldTr).html('<p>' + comment.text + '</p>');
             oldTr.data('comment', comment);
 
             $.post(t.attr('action'), comment, function (o) {
-                $('.comment-content', oldTr).html(o.comment.content);
+                $('.comment-content', oldTr).html(o.comment.content)
+                    .effect('highlight', '#AACB36');
             });
             
-            oldTr.show().effect('highlight', '#AACB36');
+            oldTr.show();
             tr.remove();
 
             return false;
