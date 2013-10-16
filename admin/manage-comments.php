@@ -136,7 +136,10 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                                 <div class="comment-date"><?php $comments->dateWord(); ?> 于 <a href="<?php $comments->permalink(); ?>"><?php $comments->title(); ?></a></div>
                                 <div class="comment-content">
                                     <?php $comments->content(); ?>
-                                </div> 
+                                </div>
+                                <div class="comment-reply-content">
+                                    <p>some replys here ...</p>
+                                </div>
                                 <div class="comment-action hidden-by-mouse">
                                     <?php if('approved' == $comments->status): ?>
                                     <span class="weak"><?php _e('通过'); ?></span>

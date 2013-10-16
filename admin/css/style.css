@@ -307,14 +307,14 @@ button.primary:active, button.primary.active {
 /**
  * logo 的样式
  */
-.logo {
+/*.logo {
     display: block;
     height: 20px;
     width: 92px;
     overflow: hidden;
     text-indent: -9999px;
     background: url(../images/sprite.png) no-repeat scroll 0px -78px;
-}
+}*/
 
 .loading {
     padding-left: 20px;
@@ -467,33 +467,18 @@ button.primary:active, button.primary.active {
  * 安装向导
  */
 .typecho-install-patch {
-    height: 30px;
-    line-height: 30px;
-    background: #333;
+    
 }
 
 .typecho-install-patch ol {
-    position: relative;
-    margin-left: 20px; /* 给第一个位置流出 20px */
-    zoom: 1;
+    
 }
 
 .typecho-install-patch li {
-    font-weight: 600;
-    float: left;
-    color: #999;
-    font-size: 13px;
-    height: 30px;
-    line-height: 30px;
-    padding-left: 20px;
-    left: -20px;
-    position: relative;
-    margin-right: 15px;
-    background: #333 url(../images/sprite.png) no-repeat scroll 0px 0px; 
+    
 }
 
 .typecho-install-patch li.current {
-    color: #fff;
 }
 
 
@@ -501,62 +486,41 @@ button.primary:active, button.primary.active {
  * 安装主体内容
  */
 .typecho-install {
-    margin: 30px auto;
-    *padding-bottom: 30px;
 }
 
 .typecho-install .typecho-install-title, .typecho-install .typecho-install-body {
-    padding: 0px 0px 10px 0px;;
-    margin: 0px 0px 10px 0px;
-    border-bottom: 1px solid #dee4c5;
 }
 
 .typecho-install .typecho-install-title {
-    line-height: 25px;
-    height: 25px;
-    padding-left: 100px;
-    background: url(../images/sprite.png) no-repeat scroll 0px -75px; 
 }
 
-/*
 .typecho-install .typecho-install-body {
 
 }
- */
 
 .typecho-install .typecho-install-body h2 {
-    margin-top: 10px;
-    color: #e47e00;
 }
 
-.typecho-install .typecho-install-body p {
-    line-height: 18px;
-    margin-top: 5px;
-    text-align: justify;
+.typecho-install .typecho-install-body input {
+    width: 100%;
 }
 
 .typecho-install .session {
-    margin-bottom: 20px;
 }
 
 .typecho-install .session ul {
-    font-size: 13px;
-    margin: 15px 0px 0px 20px;
 }
 
 .typecho-install .session a:link, .typecho-install .session a:hover {
 }
 
 .typecho-install .typecho-option {
-    margin: 10px 0px;
 }
 
 .typecho-install .typecho-option li {
-    margin-bottom: 5px;
 }
 
 .typecho-install .typecho-option .message {
-    margin: 2px 0px;
 }
 
 .typecho-install .typecho-option .message,
@@ -685,12 +649,12 @@ margin-top: 25px;
 #typecho-nav-list .focus .parent a,
 #typecho-nav-list .root:hover .parent a {
     background: #202328;
+    color: #FFF;
     text-decoration: none;
 }
 
 #typecho-nav-list .focus .parent a {
     font-weight: bold;
-    color: #FFF;
 }
 
 #typecho-nav-list .child {
@@ -1120,9 +1084,21 @@ a.operate-reply {
  * 评论管理
  */
 
-.comment-content {
-    margin: -0.5em 0;
+.comment-reply-content {
+    position: relative;
+    margin: 1em 0;
+    padding: 0 1em;
+    border: 1px solid transparent;
+    background-color: #F0F0EC;
 }
+.comment-reply-content:after {
+    position: absolute;
+    right: 1em;
+    border: 8px solid #F0F0EC;
+    border-color: #F0F0EC #F0F0EC transparent transparent;
+    content: " ";
+}
+
 .comment-meta span,
 .comment-date {
     font-size: .92857em;
