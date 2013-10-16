@@ -142,6 +142,10 @@ textarea {
 input[type="radio"], input[type="checkbox"] { margin-right: 3px; }
 
 input.text-s { padding: 5px; }
+input.text-l {
+    padding: 10px;
+    font-size: 1.14286em;
+}
 
 .w-10 { width: 10%; }
 .w-20 { width: 20%; }
@@ -177,9 +181,8 @@ button {
     background-image: linear-gradient(#fcfcfc, #eeeeee); 
 }
 
-.btn-s {
-    height: 28px;
-}
+.btn-s { height: 28px; }
+.btn-l { height: 40px; font-size: 1.14286em; font-weight: bold; }
 
 button.primary {
     border-color: #8ABAD7;
@@ -614,61 +617,18 @@ margin-top: 25px;
  * 登录框
  */
 .typecho-login {
-    position: relative;
-    margin: 15% auto;
-}
-
-.typecho-login form {
-    background: #e5ead1;
-    margin: 0 10px;
-    padding: 25px 20px;
-    font-size: 13px;
-}
-
-.typecho-login legend {
-    display: none;
-}
-
-.typecho-login label {
-}
-
-.typecho-login input.text {
-}
-
-.typecho-login form p {
-    margin-bottom:15px;
-}
-
-.typecho-login form p.submit {
-    margin: 5px 0px 0px 0px;
-    position: relative;
-}
-
-.typecho-login form p.submit button {
-    position: absolute;
-    right: 0px;
-	top: 0px;
+    margin: 150px auto 0;
+    width: 280px;
+    height: 100%;
+    text-align: center;
 }
 
 .typecho-login .more-link {
-    font-size: 13px;
-    margin: 10px auto;
-    padding: 0 10px;
-    clear: both;
-    overflow: hidden;
+    margin-top: 2em;
+    color: #CCC;
 }
+.typecho-login .more-link a { margin: 0 3px; }
 
-.typecho-login .more-link .back-to-site {
-    float: left;
-	width: 120px;
-	text-align: left;
-}
-
-.typecho-login .more-link .forgot-password {
-    float: right;
-	width: 120px;
-	text-align: right;
-}
 
 
 /**
@@ -811,7 +771,7 @@ margin-top: 25px;
 }
 
 .typecho-foot .resource a {
-    margin: 0 2px;
+    margin: 0 3px;
     color: #999;
 }
 
