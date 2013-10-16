@@ -93,42 +93,19 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                             </tr>
                         </thead>
                         <tbody>
-                        <!-- 编辑评论 -->
-                        <tr class="comment-edit">
-                            <td></td>
-                            <td colspan="2" valign="top">
-                                <p>
-                                    <label for="">用户名</label>
-                                    <input class="text-s w-100" type="text">
-                                </p>
-                                <p>
-                                    <label for="">Email</label>
-                                    <input class="text-s w-100" type="email">
-                                </p>
-                                <p>
-                                    <label for="">IP 地址</label>
-                                    <input class="text-s w-100" type="text">
-                                </p>
-                            </td>
-                            <td valign="top">
-                                <p>
-                                    <label for="">发布时间</label>
-                                    <input class="text-s w-40" type="text">
-                                </p>
-                                <p>
-                                    <label for="">内容</label>
-                                    <textarea name="" id="" rows="4" class="w-90"></textarea>
-                                </p>
-                                <p>
-                                    <button type="submit" class="btn-s primary">提交</button>
-                                    <button type="button" class="btn-s">取消</button>
-                                </p>
-                            </td>
-                        </tr><!-- end .comment-edit -->
 
                         <?php if($comments->have()): ?>
                         <?php while($comments->next()): ?>
-                        <tr id="<?php $comments->theId(); ?>">
+                        <tr id="<?php $comments->theId(); ?>" data-comment="<?php
+                        $comment = array(
+                            'author'    =>  $comments->author,
+                            'mail'      =>  $comments->mail,
+                            'url'       =>  $comments->url,
+                            'text'      =>  $comments->text
+                        );
+
+                        echo htmlspecialchars(json_encode($comment));
+                        ?>">
                             <td valign="top">
                                 <input type="checkbox" value="<?php $comments->coid(); ?>" name="coid[]"/>
                             </td>
@@ -266,6 +243,41 @@ $(document).ready(function () {
                 return false;
             });
         }
+
+        return false;
+    });
+
+    $('.operate-edit').click(function () {
+        var tr = $(this).parents('tr'), id = tr.attr('id'), comment = tr.data('comment');
+        tr.hide();
+
+        var edit = $('<tr class="comment-edit"><td> </td>'
+                        + '<td colspan="2" valign="top">'
+                        + '<p><label for="' + id + '-author"><?php _e('用户名'); ?></label><input class="text-s w-100" id="'
+                        + id + '-author" name="author" type="text"></p>'
+                        + '<p><label for="' + id + '-mail"><?php _e('电子邮箱'); ?></label>'
+                        + '<input class="text-s w-100" type="email" name="mail" id="' + id + '-mail"></p>'
+                        + '<p><label for="' + id + '-url"><?php _e('个人主页'); ?></label>'
+                        + '<input class="text-s w-100" type="text" name="url" id="' + id + '-url"></p></td>'
+                        + '<td valign="top"><p><label for="' + id + '-text"><?php _e('内容'); ?></label>'
+                        + '<textarea name="text" id="' + id + '-text" rows="6" class="w-90"></textarea></p>'
+                        + '<p><button type="submit" class="btn-s primary"><?php _e('提交'); ?></button> '
+                        + '<button type="button" class="btn-s cancel"><?php _e('取消'); ?></button></p></td></tr>')
+                        .data('id', id).insertAfter(tr);
+
+        $('input[name=author]', edit).val(comment.author);
+        $('input[name=mail]', edit).val(comment.mail);
+        $('input[name=url]', edit).val(comment.url);
+        $('textarea[name=text]', edit).val(comment.text).focus();
+
+        $('.cancel', edit).click(function () {
+            var tr = $(this).parents('tr');
+
+            $('#' + tr.data('id')).show().effect('highlight', '#AACB36');
+            tr.remove();
+        });
+
+        $('form', edit
 
         return false;
     });
