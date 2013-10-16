@@ -11,8 +11,8 @@ $stat = Typecho_Widget::widget('Widget_Stat');
         <?php include 'page-title.php'; ?>
         <div class="col-group typecho-page-main">
             <div class="col-mb-12 col-tb-3">
-                <p><?php echo '<img class="avatar" src="http://www.gravatar.com/avatar/' . md5($user->mail) . '?s=128&r=X' .
-                '&d=" alt="' . $user->screenName . '" />'; ?></p>
+                <p><a href="http://gravatar.com/emails/" title="<?php _e('在 Gravatar 上修改头像'); ?>"><?php echo '<img class="avatar" src="http://www.gravatar.com/avatar/' . md5($user->mail) . '?s=220&r=X' .
+                '&d=" alt="' . $user->screenName . '" />'; ?></a></p>
                 <h2><?php $user->screenName(); ?><br><small><?php $user->name(); ?></small></h2>
                 <p><?php _e('目前有 <em>%s</em> 篇 Blog,并有 <em>%s</em> 条关于你的评论在已设定的 <em>%s</em> 个分类中.', 
                 $stat->myPublishedPostsNum, $stat->myPublishedCommentsNum, $stat->categoriesNum); ?></p>

@@ -611,14 +611,14 @@ margin-top: 25px;
     text-decoration: none;
 }
 
-.typecho-head-nav .site-name {
+/*.typecho-head-nav .site-name {
     display: inline-block;
     float: left;
     padding: 0 20px 0 10px;
     height: 36px;
     line-height: 36px;
     font-weight: bold;
-}
+}*/
 
 #typecho-nav-list ul {
     list-style: none;
