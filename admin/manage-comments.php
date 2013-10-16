@@ -79,10 +79,10 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                 <form method="post" name="manage_comments" class="operate-form">
                     <table class="typecho-list-table">
                         <colgroup>
-                            <col width="20"/>
-                            <col width="50" />
+                            <col width="3%"/>
+                            <col width="6%" />
                             <col width="20%"/>
-                            <col width=""/>
+                            <col width="71%"/>
                         </colgroup>
                         <thead>
                             <tr>
@@ -120,37 +120,33 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                                 <div class="comment-date"><?php $comments->dateWord(); ?> 于 <a href="<?php $comments->permalink(); ?>"><?php $comments->title(); ?></a></div>
                                 <div class="comment-content">
                                     <?php $comments->content(); ?>
-                                </div>
-                                <form action="post" class="comment-reply">
-                                    <p><textarea name="" id="" class="w-90" rows="3"></textarea></p>
-                                    <p><button type="submit" class="btn-s">提交回复</button></p>
-                                </form>
+                                </div> 
                                 <div class="comment-action hidden-by-mouse">
                                     <?php if('approved' == $comments->status): ?>
                                     <span class="weak"><?php _e('通过'); ?></span>
                                     <?php else: ?>
-                                    <a href="<?php $options->index('/action/comments-edit?do=approved&coid=' . $comments->coid); ?>" class="ajax"><?php _e('通过'); ?></a>
+                                    <a href="<?php $options->index('/action/comments-edit?do=approved&coid=' . $comments->coid); ?>"><?php _e('通过'); ?></a>
                                     <?php endif; ?>
                                     
                                     <?php if('waiting' == $comments->status): ?>
                                     <span class="weak"><?php _e('待审核'); ?></span>
                                     <?php else: ?>
-                                    <a href="<?php $options->index('/action/comments-edit?do=waiting&coid=' . $comments->coid); ?>" class="ajax"><?php _e('待审核'); ?></a>
+                                    <a href="<?php $options->index('/action/comments-edit?do=waiting&coid=' . $comments->coid); ?>"><?php _e('待审核'); ?></a>
                                     <?php endif; ?>
                                     
                                     <?php if('spam' == $comments->status): ?>
                                     <span class="weak"><?php _e('垃圾'); ?></span>
                                     <?php else: ?>
-                                    <a href="<?php $options->index('/action/comments-edit?do=spam&coid=' . $comments->coid); ?>" class="ajax"><?php _e('垃圾'); ?></a>
+                                    <a href="<?php $options->index('/action/comments-edit?do=spam&coid=' . $comments->coid); ?>"><?php _e('垃圾'); ?></a>
                                     <?php endif; ?>
                                     
-                                    <a href="#<?php $comments->theId(); ?>" rel="<?php $options->index('/action/comments-edit?do=get&coid=' . $comments->coid); ?>" class="ajax operate-edit"><?php _e('编辑'); ?></a>
+                                    <a href="#<?php $comments->theId(); ?>" rel="<?php $options->index('/action/comments-edit?do=get&coid=' . $comments->coid); ?>" class="operate-edit"><?php _e('编辑'); ?></a>
 
                                     <?php if('approved' == $comments->status && 'comment' == $comments->type): ?>
-                                    <a href="#<?php $comments->theId(); ?>" rel="<?php $options->index('/action/comments-edit?do=reply&coid=' . $comments->coid); ?>" class="ajax operate-reply"><?php _e('回复'); ?></a>
+                                    <a href="#<?php $comments->theId(); ?>" rel="<?php $options->index('/action/comments-edit?do=reply&coid=' . $comments->coid); ?>" class="operate-reply"><?php _e('回复'); ?></a>
                                     <?php endif; ?>
                                     
-                                    <a lang="<?php _e('你确认要删除%s的评论吗?', htmlspecialchars($comments->author)); ?>" href="<?php $options->index('/action/comments-edit?do=delete&coid=' . $comments->coid); ?>" class="ajax operate-delete"><?php _e('删除'); ?></a>
+                                    <a lang="<?php _e('你确认要删除%s的评论吗?', htmlspecialchars($comments->author)); ?>" href="<?php $options->index('/action/comments-edit?do=delete&coid=' . $comments->coid); ?>" class="operate-delete"><?php _e('删除'); ?></a>
                                 </div>
                             </td>
                         </tr>
@@ -183,244 +179,64 @@ include 'common-js.php';
 include 'table-js.php';
 ?>
 <script type="text/javascript">
-/*
-    (function () {
-        window.addEvent('domready', function() {
-        
-            $(document).getElements('.typecho-list-notable li .operate-edit').addEvent('click', function () {
-                
-                var form = this.getParent('li').getElement('.comment-form');
-                var request;
-                
-                if (form) {
-                    
-                    if (request) {
-                        request.cancel();
-                    }
-                    
-                    form.destroy();
-                    this.getParent('li').getElement('.content').setStyle('display', '');
-                    this.clicked = false;
-                    
-                } else {
-                    if ('undefined' == typeof(this.clicked) || !this.clicked) {
-                        this.clicked = true;
-                        this.getParent('.line').addClass('loading');
-                        
-                        request = new Request.JSON({
-                            url: this.getProperty('rel'),
-                            
-                            onComplete: (function () {
-                                this.clicked = false;
-                            }).bind(this),
-                            
-                            onSuccess: (function (json) {
-                            
-                                if (json.success) {
-                                    var coid = this.getParent('li').getElement('input[type=checkbox]').get('value');
-                                    
-                                    var form = new Element('div', {
-                                        'class': 'comment-form',
-                                    
-                                        'html': '<label for="author-' + coid + '"><?php _e('名称'); ?></label>' +
-                                        '<input type="text" class="text" name="author" id="author-' + coid + '" />' +
-                                        '<label for="mail"><?php _e('电子邮件'); ?></label>' +
-                                        '<input type="text" class="text" name="mail" id="mail-' + coid + '" />' +
-                                        '<label for="url"><?php _e('个人主页'); ?></label>' +
-                                        '<input type="text" class="text" name="url" id="url-' + coid + '" />' +
-                                        '<textarea name="text" id="text-' + coid + '"></textarea>' +
-                                        '<p><button id="submit-' + coid + '"><?php _e('保存评论'); ?></button>' +
-                                        '<input type="hidden" name="coid" id="coid-' + coid + '" /></p>'
-                                    
-                                    });
-                                    
-                                    form.getElement('input[name=author]').set('value', json.comment.author);
-                                    form.getElement('input[name=mail]').set('value', json.comment.mail);
-                                    form.getElement('input[name=url]').set('value', json.comment.url);
-                                    form.getElement('input[name=coid]').set('value', coid);
-                                    form.getElement('textarea[name=text]').set('value', json.comment.text);
-                                    
-                                    this.getParent('li').getElement('.content').setStyle('display', 'none');
-                                    form.inject(this.getParent('li').getElement('.line'), 'before');
-                                    form.getElement('#submit-' + coid).addEvent('click', (function () {
-                                        var query = this.getParent('li').getElement('.comment-form').toQueryString();
-                                        
-                                        var sRequest = new Request.JSON({
-                                            url: this.getProperty('rel').replace('do=get', 'do=edit'),
-                                            
-                                            onComplete: (function () {
-                                                var li = this.getParent('li');
-                                            
-                                                li.getElement('.content').setStyle('display', '');
-                                                li.getElement('.comment-form').destroy();
-                                                var myFx = new Fx.Tween(li);
-                                                
-                                                var bg = li.getStyle('background-color');
-                                                if (!bg || 'transparent' == bg) {
-                                                    bg = '#F7FBE9';
-                                                }
-                                                
-                                                myFx.addEvent('complete', (function () {
-                                                    this.setStyle('background-color', '');
-                                                }).bind(li));
-                                                
-                                                myFx.start('background-color', '#AACB36', bg);
-                                            }).bind(this),
-                                            
-                                            onSuccess: (function (json) {
-                                                if (json.success) {
-                                                    
-                                                    var commentMeta = '';
-                                                    commentMeta += '<span class="' + json.comment.type + '"></span> ';
-                                                    
-                                                    if (json.comment.url) {
-                                                        commentMeta += '<a target="_blank" href="' + json.comment.url + '">' + json.comment.author + '</a> | ';
-                                                    } else {
-                                                        commentMeta += json.comment.author + ' | ';
-                                                    }
-                                                    
-                                                    if (json.comment.mail) {
-                                                        commentMeta += '<a href="mailto:' + json.comment.mail + '">' + json.comment.mail + '</a> | ';
-                                                    }
-                                                    
-                                                    commentMeta += json.comment.ip;
-                                                    
-                                                    this.getParent('li').getElement('.comment-meta').set('html', commentMeta);
-                                                    this.getParent('li').getElement('.comment-content').set('html', json.comment.content);
-                                                }
-                                            }).bind(this)
-                                        }).send(query + '&do=edit');
-                                        
-                                        return false;
-                                        
-                                    }).bind(this));
-                                    
-                                    this.getParent('.line').removeClass('loading');
-                                } else {
-                                    alert(json.message);
-                                }
-                                
-                            }).bind(this)
-                        }).send();
-                    }
-                    
-                }
-                
-                return false;
-            });
-            
-            $(document).getElements('.typecho-list-notable li .operate-reply').addEvent('click', function () {
-            
-                var form = this.getParent('li').getElement('.reply-form');
-                var request;
-                
-                if (form) {
-                    
-                    if (request) {
-                        request.cancel();
-                    }
-                    
-                    form.destroy();
-                    this.clicked = false;
-                    
-                } else {
-                    if (('undefined' == typeof(this.clicked) || !this.clicked)
-                        && ('undefined' == typeof(this.replied) || !this.replied)) {
-                        this.clicked = true;
-                        
-                        var coid = this.getParent('li').getElement('input[type=checkbox]').get('value');
-
-                        var form = new Element('div', {
-                            'class': 'reply-form',
-                        
-                            'html': '<textarea name="text"></textarea>' +
-                            '<p><button id="reply-' + coid + '"><?php _e('回复评论'); ?></button></p>'
-                        
-                        });
-                        
-                        form.inject(this.getParent('li').getElement('.line'), 'after');
-                        
-                        var ta = form.getElement('textarea'), rg = ta.getSelectedRange(),
-                        instStr = '<a href="#' + this.getParent('li').get('id') + '">@' 
-                            + this.getParent('li').getElement('.comment-author').get('text') + "</a>\n";
-                        
-                        ta.set('value', instStr);
-                        ta.focus();
-                        ta.selectRange(instStr.length + 1, instStr.length + 1);
-                        
-                        form.getElement('#reply-' + coid).addEvent('click', (function () {
-                            if ('' == this.getParent('li').getElement('.reply-form textarea[name=text]').get('value')) {
-                                alert('<?php _e('必须填写内容'); ?>');
-                                return false;
-                            }
-                        
-                            var query = this.getParent('li').getElement('.reply-form').toQueryString();
-                            
-                            var sRequest = new Request.JSON({
-                                url: this.getProperty('rel'),
-                                
-                                onComplete: (function () {
-                                    var li = this.getParent('li');
-                                    li.getElement('.reply-form').destroy();
-                                    li.removeClass('hover');
-                                    li.getElement('.operate-reply').clicked = false;
-                                }).bind(this),
-                                
-                                onSuccess: (function (json) {
-                                    if (json.success) {
-                                        var li = this.getParent('li');
-                                        
-                                        var msg = new Element('div', {
-                                            'class': 'reply-message',
-                                        
-                                            'html': json.comment.content
-                                        
-                                        });
-                                        
-                                        li.getElement('.operate-reply').set('html', '<?php _e('取消回复'); ?>');
-                                        li.getElement('.operate-reply').replied = true;
-                                        li.getElement('.operate-reply').child = json.comment.coid;
-                                        msg.inject(li.getElement('.line'), 'after');
-                                    }
-                                }).bind(this)
-                            }).send(query);
-                            
-                            return false;
-                            
-                        }).bind(this));
-                    } else if (this.replied) {
-                        this.getParent('.line').addClass('loading');
-                    
-                        var sRequest = new Request.JSON({
-                            url: '<?php $options->index('/action/comments-edit?do=delete'); ?>',
-                            
-                            onComplete: (function () {
-                                var li = this.getParent('li');
-                                li.getElement('.operate-reply').clicked = false;
-                                this.getParent('.line').removeClass('loading');
-                            }).bind(this),
-                            
-                            onSuccess: (function (json) {
-                                if (json.success) {
-                                    var li = this.getParent('li');
-                                    
-                                    li.getElement('.operate-reply').set('html', '<?php _e('回复'); ?>');
-                                    li.getElement('.operate-reply').replied = false;
-                                    li.getElement('.operate-reply').set('child', 0);
-                                    li.getElement('.reply-message').destroy();
-                                }
-                            }).bind(this)
-                        }).send('coid=' + this.child);
-                    }
-                    
-                }
-                
-                return false;
-            });
-        
+$(document).ready(function () {
+    // 记住滚动条
+    function rememberScroll () {
+        $(window).bind('beforeunload', function () {
+            $.cookie('__typecho_comments_scroll', $('body').scrollTop());
         });
+    }
+
+    // 自动滚动
+    (function () {
+        var scroll = $.cookie('__typecho_comments_scroll');
+
+        if (scroll) {
+            $.cookie('__typecho_comments_scroll', null);
+            $('html, body').scrollTop(scroll);
+        }
     })();
-    */
+
+    $('.operate-delete').click(function () {
+        var t = $(this), href = t.attr('href'), tr = t.parents('tr');
+
+        if (confirm(t.attr('lang'))) {
+            tr.fadeOut(function () {
+                rememberScroll();
+                window.location.href = href;
+            });
+        }
+
+        return false;
+    });
+
+    $('.operate-reply').click(function () {
+        var td = $(this).parents('td'), t = $(this);
+
+        if ($('.comment-reply', td).length > 0) {
+            $('.comment-reply').remove();
+        } else {
+            var form = $('<form action="post" action="'
+                + t.attr('rel') + '" class="comment-reply">'
+                + '<p><textarea name="text" class="w-90" rows="3"></textarea></p>'
+                + '<p><button type="submit" class="btn-s primary"><?php _e('提交回复'); ?></button> <button type="button" class="btn-s cancel"><?php _e('取消'); ?></button></p>'
+                + '</form>').insertBefore($('.comment-action', td));
+
+            $('.cancel', form).click(function () {
+                $(this).parents('.comment-reply').remove();
+            });
+
+            $('textarea', form).focus();
+
+            form.submit(function () {
+                var t = $(this);
+                return false;
+            });
+        }
+
+        return false;
+    });
+});
 </script>
 <?php
 include 'footer.php';
