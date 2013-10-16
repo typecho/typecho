@@ -67,7 +67,11 @@ $(document).ready(function() {
         animateDropdown :   false,
         hintText        :   '<?php _e('请输入标签名'); ?>',
         noResultsText   :   '此标签不存在, 按回车创建',
-        prePopulate     :   tagsPre
+        prePopulate     :   tagsPre,
+
+        onResult        :   function (result) {
+            return result.slice(0, 5);
+        }
     });
 
     // tag autocomplete 提示宽度设置
