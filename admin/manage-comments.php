@@ -156,7 +156,10 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                                 </div>
                                 <form action="post" class="comment-reply">
                                     <p><textarea name="" id="" class="w-90" rows="3"></textarea></p>
-                                    <p><button type="submit" class="btn-s">回复</button></p>
+                                    <p>
+                                        <button type="submit" class="btn-s primary">回复</button>
+                                        <button type="button" class="btn-s">取消</button>
+                                    </p>
                                 </form>
                                 <div class="comment-action hidden-by-mouse">
                                     <?php if('approved' == $comments->status): ?>
