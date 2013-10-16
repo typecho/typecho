@@ -136,10 +136,7 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                                 <div class="comment-date"><?php $comments->dateWord(); ?> 于 <a href="<?php $comments->permalink(); ?>"><?php $comments->title(); ?></a></div>
                                 <div class="comment-content">
                                     <?php $comments->content(); ?>
-                                </div>
-                                <div class="comment-reply-content">
-                                    <p>some replys here ...</p>
-                                </div>
+                                </div> 
                                 <div class="comment-action hidden-by-mouse">
                                     <?php if('approved' == $comments->status): ?>
                                     <span class="weak"><?php _e('通过'); ?></span>
@@ -248,12 +245,16 @@ $(document).ready(function () {
             var textarea = $('textarea', form).focus();
 
             form.submit(function () {
-                var t = $(this), tr = t.parents('tr');
+                var t = $(this), tr = t.parents('tr'), 
+                    reply = $('<div class="comment-reply-content"></div>').insertAfter($('.comment-content', tr));
                 
+                reply.html('<p>' + textarea.val() + '</p>');
                 $.post(t.attr('action'), t.serialize(), function (o) {
-                    t.remove();
+                    reply.html(o.comment.content)
+                        .effect('highlight', '#AACB36');
                 });
 
+                t.remove();
                 return false;
             });
         }
