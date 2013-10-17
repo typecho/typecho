@@ -129,12 +129,12 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
 
         /** 标签名称 */
         $name = new Typecho_Widget_Helper_Form_Element_Text('name', NULL, NULL,
-        _t('标签名称*'), _t('这是标签在站点中显示的名称.可以使用中文,如"地球".'));
+        _t('标签名称 *'), _t('这是标签在站点中显示的名称.可以使用中文,如 "地球".'));
         $form->addInput($name);
 
         /** 标签缩略名 */
         $slug = new Typecho_Widget_Helper_Form_Element_Text('slug', NULL, NULL,
-        _t('标签缩略名'), _t('标签缩略名用于创建友好的链接形式,如果留空则默认使用标签名称.'));
+        _t('标签缩略名'), _t('标签缩略名用于创建友好的链接形式, 如果留空则默认使用标签名称.'));
         $form->addInput($slug);
 
         /** 标签动作 */

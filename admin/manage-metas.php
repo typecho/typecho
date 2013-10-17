@@ -103,6 +103,7 @@ include 'menu.php';
                         <li class="size-<?php $tags->split(5, 10, 20, 30); ?>" id="<?php $tags->theId(); ?>">
                         <input type="checkbox" value="<?php $tags->mid(); ?>" name="mid[]"/>
                         <span rel="<?php echo $request->makeUriByRequest('mid=' . $tags->mid); ?>"><?php $tags->name(); ?></span>
+                        <a class="tag-edit-link" href="<?php echo $request->makeUriByRequest('mid=' . $tags->mid); ?>">&#9998;</a>
                         </li>
                         <?php endwhile; ?>
                         <?php else: ?>
@@ -169,25 +170,25 @@ include 'common-js.php';
                 actionEl    :   '.dropdown-menu a'
             });
 
-            $('.typecho-table-select-all').click(function () {
-                var selection = $('.tag-selection');
+            // $('.typecho-table-select-all').click(function () {
+            //     var selection = $('.tag-selection');
 
-                if (0 == selection.length) {
-                    selection = $('<div class="tag-selection clearfix" />').prependTo('.typecho-mini-panel');
-                }
+            //     if (0 == selection.length) {
+            //         selection = $('<div class="tag-selection clearfix" />').prependTo('.typecho-mini-panel');
+            //     }
 
-                selection.html('');
+            //     selection.html('');
 
-                if ($(this).prop('checked')) {
-                    $('.typecho-list-notable li').each(function () {
-                        var span = $('span', this),
-                            a = $('<a class="button" href="' + span.attr('rel') + '">' + span.text() + '</a>');
+            //     if ($(this).prop('checked')) {
+            //         $('.typecho-list-notable li').each(function () {
+            //             var span = $('span', this),
+            //                 a = $('<a class="button" href="' + span.attr('rel') + '">' + span.text() + '</a>');
                         
-                        this.aHref = a;
-                        selection.append(a);
-                    });
-                }
-            });
+            //             this.aHref = a;
+            //             selection.append(a);
+            //         });
+            //     }
+            // });
         }
 
         $('.btn-drop').dropdownMenu({
@@ -200,22 +201,22 @@ include 'common-js.php';
             btn.parents('form').attr('action', btn.attr('rel')).submit();
         });
 
-        $('.typecho-list-notable li').click(function () {
-            var selection = $('.tag-selection'), span = $('span', this),
-                a = $('<a class="button" href="' + span.attr('rel') + '">' + span.text() + '</a>'),
-                li = $(this);
+        // $('.typecho-list-notable li').click(function () {
+        //     var selection = $('.tag-selection'), span = $('span', this),
+        //         a = $('<a class="button" href="' + span.attr('rel') + '">' + span.text() + '</a>'),
+        //         li = $(this);
 
-            if (0 == selection.length) {
-                selection = $('<div class="tag-selection clearfix" />').prependTo('.typecho-mini-panel');
-            }
+        //     if (0 == selection.length) {
+        //         selection = $('<div class="tag-selection clearfix" />').prependTo('.typecho-mini-panel');
+        //     }
 
-            if (li.hasClass('checked')) {
-                this.aHref = a;
-                a.appendTo(selection);
-            } else {
-                this.aHref.remove();
-            }
-        });
+        //     if (li.hasClass('checked')) {
+        //         this.aHref = a;
+        //         a.appendTo(selection);
+        //     } else {
+        //         this.aHref.remove();
+        //     }
+        // });
 
         <?php if (isset($request->mid)): ?>
         $('.typecho-mini-panel').effect('highlight', '#AACB36');
