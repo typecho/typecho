@@ -41,7 +41,7 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
         $form->addInput($description);
 
         /** 关键词 */
-        $keywords = new Typecho_Widget_Helper_Form_Element_Text('keywords', NULL, $this->options->keywords, _t('关键词'), _t('请以半角逗号","分割多个关键字.'));
+        $keywords = new Typecho_Widget_Helper_Form_Element_Text('keywords', NULL, $this->options->keywords, _t('关键词'), _t('请以半角逗号 "," 分割多个关键字.'));
         $form->addInput($keywords);
 
         /** 注册 */

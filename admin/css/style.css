@@ -316,14 +316,10 @@ button.primary:active, button.primary.active {
  * 提示信息框
  */
 .message {
-    padding: 5px 10px;
-    margin-bottom: 10px;
+    padding: 10px;
 
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
-    -khtml-border-radius: 3px;
-    
-    /* hope IE support border radius, God save me! */
     border-radius: 3px;
 }
 
@@ -332,62 +328,49 @@ button.primary:active, button.primary.active {
     text-decoration: underline;
 }
 
-.message blockquote {
-    margin: 5px 10px;
-    padding: 0 5px;
-}
-
 .error {
-    border: 1px solid #fbc2c4;
-    background: #fbe3e4;
+    border: 1px solid #FBC2C4;
+    background: #FBE3E4;
     color: #8A1F11;
 }
-
-.error a {
-    color: #8A1F11;
-}
+.error a { color: #8A1F11; }
 
 .notice {
-    background: #fff6bf;
-    border: 1px solid  #ffd324;
+    background: #FFF6BF;
+    border: 1px solid  #FFD324;
     color: #514721;
 }
-
-.notice a {
-    color: #514721;
-}
+.notice a { color: #514721; }
 
 .success {
-    background: #e6efc2;
-    border: 1px solid #c6d880;
+    background: #E6EFC2;
+    border: 1px solid #C6D880;
     color: #264409;
+}
+.success a { color: #264409; }
+
+/* 低版本浏览器升级提示 */
+.browsehappy {
+    border: none;
+    text-align: center;
 }
 
-.success a {
-    color: #264409;
-}
 
 /** 增加顶部消息样式 by 70 */
 .popup {
-    border-width: 0 0 1px 0;
+    display: none;
     position: absolute;
     top: 0;
     left: 0;
+    margin: 0;
+    padding: 10px 0;
+    border: none;
     width: 100%;
     z-index: 10;
     text-align: center;
-    font-weight: bold;
-    display: none;
-    margin: 0;
-    padding: 10px 0;
 
     -moz-border-radius: 0;
-    -moz-border-radius: 0;
     -webkit-border-radius: 0;
-    -webkit-border-radius: 0;
-    
-    /* hope IE support border radius, God save me! */
-    border-radius: 0;
     border-radius: 0;
 }
 
