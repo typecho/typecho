@@ -41,38 +41,6 @@ upgrade:
 	cp -Rf build/var/ ${DIR}
 	rm -Rf ${DIR}/index.php
 	cp build/index.php ${DIR}
-	rm -Rf ${DIR}/usr/plugins/HelloWorld/
-	rm -Rf ${DIR}/usr/plugins/Akismet/
-	rm -Rf ${DIR}/usr/plugins/MagikeToTypecho/
-	rm -Rf ${DIR}/usr/plugins/WordpressToTypecho/
-	rm -Rf ${DIR}/usr/plugins/Textile2/
-	rm -Rf ${DIR}/usr/plugins/PostToQzone/
-	rm -Rf ${DIR}/usr/plugins/SimpleCode.php
-	rm -Rf ${DIR}/usr/plugins/PageToLinks.php
-	rm -Rf ${DIR}/usr/plugins/Creole/
-	rm -Rf ${DIR}/usr/plugins/TinyMCE/
-	rm -Rf ${DIR}/usr/plugins/FlashMp3Player/
-	rm -Rf ${DIR}/usr/plugins/ConnectToTwitter/
-	rm -Rf ${DIR}/usr/plugins/ShareCode/
-	rm -Rf ${DIR}/usr/plugins/ZenCoding/
-	rm -Rf ${DIR}/usr/plugins/GoogleCodePrettify/
-	rm -Rf ${DIR}/usr/plugins/GoogleCodeSVN/
-	cp -Rf build/usr/plugins/HelloWorld/ ${DIR}/usr/plugins/
-	cp -Rf build/usr/plugins/Akismet/ ${DIR}/usr/plugins/
-	cp -Rf build/usr/plugins/MagikeToTypecho/ ${DIR}/usr/plugins/
-	cp -Rf build/usr/plugins/WordpressToTypecho/ ${DIR}/usr/plugins/
-	cp -Rf build/usr/plugins/Textile2/ ${DIR}/usr/plugins/
-	cp -Rf build/usr/plugins/PostToQzone/ ${DIR}/usr/plugins/
-	cp build/usr/plugins/SimpleCode.php ${DIR}/usr/plugins/
-	cp build/usr/plugins/PageToLinks.php ${DIR}/usr/plugins/
-	cp -Rf build/usr/plugins/Creole/ ${DIR}/usr/plugins/
-	cp -Rf build/usr/plugins/TinyMCE/ ${DIR}/usr/plugins/
-	cp -Rf build/usr/plugins/FlashMp3Player/ ${DIR}/usr/plugins/
-	cp -Rf build/usr/plugins/ConnectToTwitter/ ${DIR}/usr/plugins/
-	cp -Rf build/usr/plugins/ShareCode/ ${DIR}/usr/plugins/
-	cp -Rf build/usr/plugins/ZenCoding/ ${DIR}/usr/plugins/
-	cp -Rf build/usr/plugins/GoogleCodePrettify/ ${DIR}/usr/plugins/
-	cp -Rf build/usr/plugins/GoogleCodeSVN/ ${DIR}/usr/plugins/
 	make clear
 
 
