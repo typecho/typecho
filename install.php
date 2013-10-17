@@ -160,11 +160,12 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
 </head>
 <body>
 <div class="typecho-install-patch">
+    <h1>Typecho</h1>
     <ol class="path">
-        <li<?php if (!isset($_GET['finish']) && !isset($_GET['config'])) : ?> class="current"<?php endif; ?>><?php _e('欢迎使用'); ?></li>
-        <li<?php if (isset($_GET['config'])) : ?> class="current"<?php endif; ?>><?php _e('初始化您的配置'); ?></li>
-        <li<?php if (isset($_GET['start'])) : ?> class="current"<?php endif; ?>><?php _e('开始安装'); ?></li>
-        <li<?php if (isset($_GET['finish'])) : ?> class="current"<?php endif; ?>><?php _e('安装成功'); ?></li>
+        <li<?php if (!isset($_GET['finish']) && !isset($_GET['config'])) : ?> class="current"<?php endif; ?>><span>1</span><?php _e('欢迎使用'); ?></li>
+        <li<?php if (isset($_GET['config'])) : ?> class="current"<?php endif; ?>><span>2</span><?php _e('初始化配置'); ?></li>
+        <li<?php if (isset($_GET['start'])) : ?> class="current"<?php endif; ?>><span>3</span><?php _e('开始安装'); ?></li>
+        <li<?php if (isset($_GET['finish'])) : ?> class="current"<?php endif; ?>><span>4</span><?php _e('安装成功'); ?></li>
     </ol>
 </div>
 <div class="container">
@@ -188,8 +189,8 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                     <?php else : ?>
                         <ul>
                         <?php if (isset($_REQUEST['user']) && isset($_REQUEST['password'])): ?>
-                            <li><?php _e('您的用户名是'); ?>:<strong><?php echo htmlspecialchars(_r('user')); ?></strong></li>
-                            <li><?php _e('您的密码是'); ?>:<strong><?php echo htmlspecialchars(_r('password')); ?></strong></li>
+                            <li><?php _e('您的用户名是'); ?>: <strong class="mono"><?php echo htmlspecialchars(_r('user')); ?></strong></li>
+                            <li><?php _e('您的密码是'); ?>: <strong class="mono"><?php echo htmlspecialchars(_r('password')); ?></strong></li>
                         <?php endif;?>
                     </ul>
                     <?php endif;?>

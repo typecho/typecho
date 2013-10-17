@@ -385,13 +385,8 @@ button.primary:active, button.primary.active {
 }
 
 .message a {
-    border-bottom: 1px dashed #aaa;
-    line-height: 20px;
-}
-
-.message a:hover {
-    text-decoration: none;
-    border-style: solid;
+    font-weight: bold;
+    text-decoration: underline;
 }
 
 .message blockquote {
@@ -407,7 +402,6 @@ button.primary:active, button.primary.active {
 
 .error a {
     color: #8A1F11;
-    border-color:#8A1F11;
 }
 
 .notice {
@@ -418,7 +412,6 @@ button.primary:active, button.primary.active {
 
 .notice a {
     color: #514721;
-    border-color:#514721;
 }
 
 .success {
@@ -429,7 +422,6 @@ button.primary:active, button.primary.active {
 
 .success a {
     color: #264409;
-    border-color:#264409;
 }
 
 /** 增加顶部消息样式 by 70 */
@@ -467,18 +459,39 @@ button.primary:active, button.primary.active {
  * 安装向导
  */
 .typecho-install-patch {
-    
+    margin-bottom: 2em;
+    padding: 2em 0;
+    background-color: #292D33;
+    color: #FFF;
+    text-align: center;
 }
 
 .typecho-install-patch ol {
-    
+    list-style: none;
+    margin: 3em 0 1em;
+    padding: 0;
+    color: #999;
 }
-
 .typecho-install-patch li {
-    
+    display: inline-block;
+    margin: 0 .8em;
 }
-
+.typecho-install-patch span {
+    display: inline-block;
+    margin-right: 5px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    border: 2px solid #999;
+    text-align: center;
+    border-radius: 2em;
+}
 .typecho-install-patch li.current {
+    color: #FFF;
+    font-weight: bold;
+}
+.typecho-install-patch li.current span {
+    border-color: #FFF;
 }
 
 
@@ -537,8 +550,14 @@ margin-top: 25px;
  */
 
 /**
- * @安装样式结束
+ * 欢迎界面
  */
+
+#typecho-welcome {
+    margin: 1em 0;
+    padding: 1em 2em;
+    background-color: #E9E9E6;
+}
 
 /**
  * 后台分页
