@@ -871,35 +871,18 @@ margin-top: 25px;
 /**
  * 主页主体
  */
-.typecho-dashboard-main {
-
+.typecho-dashboard {
 }
-
-.typecho-dashboard-main .section {
+.typecho-dashboard ul {
+    list-style: none;
+    padding: 0;
 }
-
-.typecho-dashboard-main .section h4 {
+.typecho-dashboard span {
+    font-size: .92857em;
+    color: #999;
 }
-
-.typecho-dashboard-main .section ul {
-}
-
-.typecho-dashboard-main .section li {
-}
-
-.typecho-dashboard-main .section .tags {
-}
-
-.typecho-dashboard-main .section .title {
-
-}
-
-.typecho-dashboard-main .section .date {
-
-}
-
-.typecho-dashboard-main .section .category {
-
+.typecho-dashboard li {
+    margin-bottom: 5px;
 }
 
 
