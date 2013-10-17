@@ -210,10 +210,12 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         /** 用户密码 */
         $password = new Typecho_Widget_Helper_Form_Element_Password('password', NULL, NULL, _t('用户密码'), _t('为此用户分配一个密码.<br />
         建议使用特殊字符与字母的混编样式,以增加系统安全性.'));
+        $password->input->setAttribute('class', 'w-60');
         $form->addInput($password);
 
         /** 用户密码确认 */
         $confirm = new Typecho_Widget_Helper_Form_Element_Password('confirm', NULL, NULL, _t('用户密码确认'), _t('请确认你的密码, 与上面输入的密码保持一致.'));
+        $confirm->input->setAttribute('class', 'w-60');
         $form->addInput($confirm);
 
         /** 用户动作 */

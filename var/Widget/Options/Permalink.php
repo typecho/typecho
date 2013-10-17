@@ -226,10 +226,10 @@ RewriteRule . {$basePath}index.php [L]
         } else if (!isset($patterns[$postPatternValue])) {
             $customPatternValue = $this->decodeRule($postPatternValue);
         }
-        $patterns['custom'] = _t('个性化定义') . ' <input type="text" class="w-40 text-s mono" name="customPattern" value="' . $customPatternValue . '" />';
+        $patterns['custom'] = _t('个性化定义') . ' <input type="text" class="w-50 text-s mono" name="customPattern" value="' . $customPatternValue . '" />';
 
         $postPattern = new Typecho_Widget_Helper_Form_Element_Radio('postPattern', $patterns,
-        $postPatternValue, _t('自定义文章路径'), _t('可用参数：{cid} 日志ID、{slug} 日志缩略名、{category} 分类、{year} 年、{month} 月、{day} 日<br />选择一种合适的文章静态路径风格, 使得你的网站链接更加友好.<br />
+        $postPatternValue, _t('自定义文章路径'), _t('可用参数：{cid} 日志 ID、{slug} 日志缩略名、{category} 分类、{year} 年、{month} 月、{day} 日<br />选择一种合适的文章静态路径风格, 使得你的网站链接更加友好.<br />
         一旦你选择了某种链接风格请不要轻易修改它.'));
         if ($customPatternValue) {
             $postPattern->value('custom');
@@ -237,9 +237,9 @@ RewriteRule . {$basePath}index.php [L]
         $form->addInput($postPattern->multiMode());
 
         /** 独立页面后缀名 */
-        $pagePattern = new Typecho_Widget_Helper_Form_Element_Text('pagePattern', NULL, $this->decodeRule($this->options->routingTable['page']['url']), _t('独立页面路径'), _t('可用参数：{cid} 页面ID、{slug} 页面缩略名<br />请在路径中至少包含上述的一项参数.'));
-        $pagePattern->input->setAttribute('class', 'text mono');
-        $form->addInput($pagePattern->addRule(array($this, 'checkPagePattern'), _t('独立页面路径中没有包含{cid}或者{slug}')));
+        $pagePattern = new Typecho_Widget_Helper_Form_Element_Text('pagePattern', NULL, $this->decodeRule($this->options->routingTable['page']['url']), _t('独立页面路径'), _t('可用参数：<code>{cid}</code> 页面 ID、<code>{slug}</code> 页面缩略名<br />请在路径中至少包含上述的一项参数.'));
+        $pagePattern->input->setAttribute('class', 'mono w-60');
+        $form->addInput($pagePattern->addRule(array($this, 'checkPagePattern'), _t('独立页面路径中没有包含 {cid} 或者 {slug} ')));
 
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Element_Submit('submit', NULL, _t('保存设置'));

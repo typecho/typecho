@@ -792,9 +792,9 @@ margin-top: 25px;
  * 标题
  */
 .typecho-page-title {
-    margin-top: 1em;
 }
 .typecho-page-title h2 {
+    margin: 25px 0 10px;
     font-size: 1.28571em;
 }
 .typecho-page-title h2 a {
@@ -891,7 +891,7 @@ margin-top: 25px;
  */
 .typecho-option-tabs {
     list-style: none;
-    margin: 0;
+    margin: 1em 0;
     padding: 0;
 }
 
@@ -1303,6 +1303,7 @@ ul.typecho-list-notable li .loading {
  * 模板列表
  */
 .typecho-theme-list {
+    margin-top: 2em;
 }
 
 .typecho-theme-list .theme-item {

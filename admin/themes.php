@@ -16,6 +16,7 @@ include 'menu.php';
                     <li><a href="<?php $options->adminUrl('options-theme.php'); ?>"><?php _e('设置外观'); ?></a></li>
                     <?php endif; ?>
                 </ul>
+                
                 <table class="typecho-list-table typecho-theme-list">
                     <colgroup>
                         <col width="35%" />

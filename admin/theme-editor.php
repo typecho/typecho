@@ -29,7 +29,9 @@ Typecho_Widget::widget('Widget_Themes_Files')->to($files);
             <div class="typecho-edit-theme">
                 <div class="col-mb-12 col-tb-8 col-9 content">
                     <form method="post" name="theme" id="theme" action="<?php $options->index('/action/themes-edit'); ?>">
-                        <textarea name="content" id="content" class="w-100 mono" <?php if(!$files->currentIsWriteable()): ?>readonly<?php endif; ?>><?php echo $files->currentContent(); ?></textarea>
+                        <p>
+                            <textarea name="content" id="content" class="w-100 mono" <?php if(!$files->currentIsWriteable()): ?>readonly<?php endif; ?>><?php echo $files->currentContent(); ?></textarea>
+                        </p>
                         <p class="submit">
                             <?php if($files->currentIsWriteable()): ?>
                             <input type="hidden" name="theme" value="<?php echo $files->currentTheme(); ?>" />

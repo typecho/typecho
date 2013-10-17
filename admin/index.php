@@ -38,7 +38,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     <li><a href="<?php $options->adminUrl('options-general.php'); ?>"><?php _e('修改系统设置'); ?></a></li>
                     <?php endif; ?>
                     <?php endif; ?>
-                    <li><a href="<?php $options->adminUrl('profile.php'); ?>"><?php _e('更新我的资料'); ?></a></li>
+                    <!--<li><a href="<?php $options->adminUrl('profile.php'); ?>"><?php _e('更新我的资料'); ?></a></li>-->
                 </ul>
             
                 <h3><?php _e('统计信息'); ?></h3>
@@ -93,10 +93,10 @@ $stat = Typecho_Widget::widget('Widget_Stat');
             <div class="col-mb-12 col-tb-3 typecho-dashboard-nav">
                 <?php $version = Typecho_Cookie::get('__typecho_check_version'); ?>
                 <?php if ($version && $version['available']): ?>
-                <div class="update-check typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
-                    <p class="current"><?php _e('您当前使用的版本是'); ?> <em><?php echo $version['current']; ?></em></p>
-                    <p class="latest">
-                    <a href="<?php echo $version['link']; ?>"><?php _e('官方最新版本是'); ?> <em><?php echo $version['latest']; ?></em></a>
+                <div class="update-check">
+                    <p>
+                        <?php _e('您当前使用的版本是'); ?> <?php echo $version['current']; ?><br>
+                        <strong><a href="<?php echo $version['link']; ?>"><?php _e('官方最新版本是'); ?> <?php echo $version['latest']; ?></a></strong>
                     </p>
                 </div>
                 <?php endif; ?>
