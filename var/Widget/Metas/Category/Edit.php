@@ -159,7 +159,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
             ->where('type = ?', 'category')->limit(1));
 
             if (!$meta) {
-                throw new Typecho_Widget_Exception(_t('分类不存在'), 404);
+                $this->response->redirect(Typecho_Common::url('manage-metas.php', $this->options->adminUrl));
             }
 
             $name->value($meta['name']);
@@ -340,7 +340,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
 
         if (!$this->request->isAjax()) {
             /** 转向原页 */
-            $this->response->redirect(Typecho_Common::url('manage-cat.php', $this->options->adminUrl));
+            $this->response->redirect(Typecho_Common::url('manage-metas.php', $this->options->adminUrl));
         } else {
             $this->response->throwJson(array('success' => 1, 'message' => _t('分类排序已经完成')));
         }

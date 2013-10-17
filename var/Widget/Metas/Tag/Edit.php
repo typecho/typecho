@@ -156,7 +156,7 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
             ->where('type = ?', 'tag')->limit(1));
 
             if (!$meta) {
-                throw new Typecho_Widget_Exception(_t('标签不存在'), 404);
+                $this->response->redirect(Typecho_Common::url('manage-metas.php?type=tag', $this->options->adminUrl));
             }
 
             $name->value($meta['name']);
