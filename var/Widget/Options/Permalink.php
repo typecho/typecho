@@ -82,6 +82,18 @@ class Widget_Options_Permalink extends Widget_Abstract_Options implements Widget
     }
 
     /**
+     * 检查pagePattern里是否含有必要参数
+     * 
+     * @param mixed $value 
+     * @access public
+     * @return void
+     */
+    public function checkPagePattern($value)
+    {
+        return strpos($value, '{slug}') !== false || strpos($value, '{cid}') !== false;
+    }
+
+    /**
      * 检测是否可以rewrite
      *
      * @access public
@@ -225,15 +237,9 @@ RewriteRule . {$basePath}index.php [L]
         $form->addInput($postPattern->multiMode());
 
         /** 独立页面后缀名 */
-        $pageSuffixValue = false !== ($pos = strrpos($this->options->routingTable['page']['url'], '.')) ?
-        substr($this->options->routingTable['page']['url'], $pos) : '/';
-        $pageSuffix = new Typecho_Widget_Helper_Form_Element_Radio('pageSuffix',
-        array('/' => '<code>' . _t('无') . '</code>', '.html' => '<code>html</code>',
-        '.htm' => '<code>htm</code>', '.php' => '<code>php</code>'), $pageSuffixValue,
-        _t('独立页面后缀名'), _t('给独立页面设置一种文件后缀名, 使得它看起来像
-        <br /><code>%s</code>',
-        Typecho_Common::url('example.html', $this->options->index)));
-        $form->addInput($pageSuffix);
+        $pagePattern = new Typecho_Widget_Helper_Form_Element_Text('pagePattern', NULL, $this->decodeRule($this->options->routingTable['page']['url']), _t('独立页面路径'), _t('可用参数：{cid} 页面ID、{slug} 页面缩略名<br />请在路径中至少包含上述的一项参数.'));
+        $pagePattern->input->setAttribute('class', 'text mono');
+        $form->addInput($pagePattern->addRule(array($this, 'checkPagePattern'), _t('独立页面路径中没有包含{cid}或者{slug}')));
 
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Element_Submit('submit', NULL, _t('保存设置'));
@@ -264,13 +270,10 @@ RewriteRule . {$basePath}index.php [L]
         }
 
         $settings = $this->request->from('rewrite');
-        if (isset($this->request->postPattern) && isset($this->request->pageSuffix)) {
+        if (isset($this->request->postPattern) && isset($this->request->pagePattern)) {
             $routingTable = $this->options->routingTable;
             $routingTable['post']['url'] = $this->request->postPattern;
-
-            $pageValue = false !== ($pos = strrpos($routingTable['page']['url'], '.')) ?
-            substr($routingTable['page']['url'], 0, $pos) : rtrim($routingTable['page']['url'], '/');
-            $routingTable['page']['url'] = $pageValue . $this->request->pageSuffix;
+            $routingTable['page']['url'] = '/' . ltrim($this->encodeRule($this->request->pagePattern), '/');
 
             if (isset($routingTable[0])) {
                 unset($routingTable[0]);
