@@ -26,7 +26,9 @@
                         p.slideDown();
                     }
                     
-                    p.delay(5000).fadeOut();
+                    p.sticky({
+                        getWidthFrom    :   document.body
+                    }).delay(5000).fadeOut();
                 }
             })();
 

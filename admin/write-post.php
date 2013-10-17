@@ -88,6 +88,8 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         <p><input id="tags" name="tags" type="text" value="<?php $post->tags(',', false); ?>" class="w-100 text" /></p>
                     </section>
 
+                    <?php Typecho_Plugin::factory('admin/write-post.php')->option($post); ?>
+
                     <div id="advance-panel">
                         <?php if($user->pass('editor', true)): ?>
                         <section class="typecho-post-option visibility-option">
@@ -105,7 +107,6 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                             <label for="trackback" class="typecho-label"><?php _e('引用通告'); ?></label>
                             <p><textarea id="trackback" class="w-100 mono" name="trackback" rows="3"></textarea></p>
                             <p class="description"><?php _e('每一行一个引用地址, 用回车隔开'); ?></p>
-                            <?php Typecho_Plugin::factory('admin/write-post.php')->advanceOptionLeft($post); ?>
                         </section>
 
                         <section class="typecho-post-option allow-option">
@@ -117,13 +118,12 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                                 <label for="allowPing"><?php _e('允许被引用'); ?></label></li>
                                 <li><input id="allowFeed" name="allowFeed" type="checkbox" value="1" <?php if($post->allow('feed')): ?>checked="true"<?php endif; ?> />
                                 <label for="allowFeed"><?php _e('允许在聚合中出现'); ?></label></li>
-                                <?php Typecho_Plugin::factory('admin/write-post.php')->advanceOptionRight($post); ?>
                             </ul>
                         </section>
+                        <?php Typecho_Plugin::factory('admin/write-post.php')->advanceOption($post); ?>
                     </div><!-- end #advance-panel -->
                     <a href="###" id="advance-panel-btn"><?php _e('高级选项'); ?></a>
 
-                    <?php Typecho_Plugin::factory('admin/write-post.php')->option($post); ?>
                     <?php if($post->have()): ?>
                     <?php $modified = new Typecho_Date($post->modified); ?>
                     <section class="typecho-post-option">

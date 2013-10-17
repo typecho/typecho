@@ -36,50 +36,52 @@ $(document).ready(function() {
     // tag autocomplete 提示
     var tags = $('#tags'), tagsPre = [];
     
-    var items = tags.val().split(','), result = [];
-    for (var i = 0; i < items.length; i ++) {
-        var tag = items[i];
+    if (tags.length > 0) {
+        var items = tags.val().split(','), result = [];
+        for (var i = 0; i < items.length; i ++) {
+            var tag = items[i];
 
-        if (!tag) {
-            continue;
+            if (!tag) {
+                continue;
+            }
+
+            tagsPre.push({
+                id      :   tag,
+                tags    :   tag
+            });
         }
 
-        tagsPre.push({
-            id      :   tag,
-            tags    :   tag
+        tags.tokenInput(<?php 
+        $data = array();
+        while ($tags->next()) {
+            $data[] = array(
+                'id'    =>  $tags->name,
+                'tags'  =>  $tags->name
+            );
+        }
+        echo json_encode($data);
+        ?>, {
+            propertyToSearch:   'tags',
+            tokenValue      :   'tags',
+            searchDelay     :   0,
+            preventDuplicates   :   true,
+            animateDropdown :   false,
+            hintText        :   '<?php _e('请输入标签名'); ?>',
+            noResultsText   :   '此标签不存在, 按回车创建',
+            prePopulate     :   tagsPre,
+
+            onResult        :   function (result) {
+                return result.slice(0, 5);
+            }
+        });
+
+        // tag autocomplete 提示宽度设置
+        $('#token-input-tags').focus(function() {
+            var t = $('.token-input-dropdown'),
+                offset = t.outerWidth() - t.width();
+            t.width($('.token-input-list').outerWidth() - offset);
         });
     }
-
-    tags.tokenInput(<?php 
-    $data = array();
-    while ($tags->next()) {
-        $data[] = array(
-            'id'    =>  $tags->name,
-            'tags'  =>  $tags->name
-        );
-    }
-    echo json_encode($data);
-    ?>, {
-        propertyToSearch:   'tags',
-        tokenValue      :   'tags',
-        searchDelay     :   0,
-        preventDuplicates   :   true,
-        animateDropdown :   false,
-        hintText        :   '<?php _e('请输入标签名'); ?>',
-        noResultsText   :   '此标签不存在, 按回车创建',
-        prePopulate     :   tagsPre,
-
-        onResult        :   function (result) {
-            return result.slice(0, 5);
-        }
-    });
-
-    // tag autocomplete 提示宽度设置
-    $('#token-input-tags').focus(function() {
-        var t = $('.token-input-dropdown'),
-            offset = t.outerWidth() - t.width();
-        t.width($('.token-input-list').outerWidth() - offset);
-    });
 
     // 缩略名自适应宽度
     var slug = $('#slug'), sw = slug.width();
