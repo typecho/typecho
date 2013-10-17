@@ -53,8 +53,10 @@ Typecho_Common::init();
 
 ob_start();
 
+session_start();
+
 //判断是否已经安装
-if (!isset($_GET['finish']) && file_exists(__TYPECHO_ROOT_DIR__ . '/config.inc.php') && !file_exists(sys_get_temp_dir() . '/install-typecho')) {
+if (!isset($_GET['finish']) && file_exists(__TYPECHO_ROOT_DIR__ . '/config.inc.php') && empty($_SESSION['typecho'])) {
     exit;
 }
 
@@ -332,7 +334,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                                         $installDb->query($installDb->insert('table.users')->rows(array('name' => $config['userName'], 'password' => Typecho_Common::hash($password), 'mail' => $config['userMail'],
                                         'url' => 'http://www.typecho.org', 'screenName' => $config['userName'], 'group' => 'administrator', 'created' => Typecho_Date::gmtTime())));
 
-                                        unlink(sys_get_temp_dir() . '/install-typecho');
+                                        unset($_SESSION['typecho']);
                                         Typecho_Cookie::delete('__typecho_config');
                                         header('Location: ./install.php?finish&user=' . urlencode($config['userName']) 
                                             . '&password=' . $password);
@@ -366,7 +368,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                                                 //使用原有数据
                                                 //但是要更新用户网站
                                                 $installDb->query($installDb->update('table.options')->rows(array('value' => $config['siteUrl']))->where('name = ?', 'siteUrl'));
-                                                unlink(sys_get_temp_dir() . '/install-typecho');
+                                                unset($_SESSION['typecho']);
                                                 Typecho_Cookie::delete('__typecho_config');
                                                 header('Location: ./install.php?finish&use_old');
                                                 exit;
@@ -429,7 +431,17 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                                     $dbConfig[strtolower (substr($key, 2))] = $val;
                                 }
 
-                                if ($success && !_r('created')) {
+                                // 在特殊服务器上的特殊安装过程处理
+                                if (_r('config')) {
+                                    $replace = array_keys($dbConfig);
+                                    foreach ($replace as &$key) {
+                                        $key = '{' . $key . '}';
+                                    } 
+
+                                    $config = str_replace($replace, array_values($dbConfig), _r('config'));
+                                }
+
+                                if (!isset($config) && $success && !_r('created')) {
                                     $installDb = new Typecho_Db ($adapter, _r('dbPrefix'));
                                     $installDb->addServer($dbConfig, Typecho_Db::READ | Typecho_Db::WRITE);
 
@@ -467,14 +479,14 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                                     $lines[] = "
 /** 定义数据库参数 */
 \$db = new Typecho_Db('{$adapter}', '" . _r('dbPrefix') . "');
-\$db->addServer(" . var_export($dbConfig, true) . ", Typecho_Db::READ | Typecho_Db::WRITE);
+\$db->addServer(" . (!isset($config) ? var_export($dbConfig, true) : $config) . ", Typecho_Db::READ | Typecho_Db::WRITE);
 Typecho_Db::set(\$db);
 ";
                                     $contents = implode('', $lines);
                                     @file_put_contents('./config.inc.php', $contents);
 
                                     // 创建一个用于标识的临时文件
-                                    file_put_contents(sys_get_temp_dir() . '/install-typecho', '');
+                                    $_SESSION['typecho'] = 1;
                                     
                                     if (!file_exists('./config.inc.php')) {
                                     ?>
