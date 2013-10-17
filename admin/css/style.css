@@ -440,6 +440,7 @@ button.primary:active, button.primary.active {
     text-align: center;
     font-weight: bold;
     display: none;
+    margin: 0;
 
     -moz-border-radius: 0;
     -moz-border-radius: 0;
