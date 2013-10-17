@@ -1233,26 +1233,6 @@ ul.typecho-list-notable li {
     padding: 5px 0;
 }
 
-ul.typecho-list-notable li span.comment,
-ul.typecho-list-notable li span.pingback,
-ul.typecho-list-notable li span.trackback {
-    background: url(../images/comment.gif) top no-repeat;
-    width: 16px;
-    height: 16px;
-    display: block;
-    float: left;
-    margin: 4px 3px -4px 0;
-    _margin-right: 0;
-}
-
-ul.typecho-list-notable li span.pingback {
-    background-position: center;
-}
-
-ul.typecho-list-notable li span.trackback {
-    background-position: bottom;
-}
-
 ul.typecho-list-notable li .comment-body {
 	overflow: visible;
 }
