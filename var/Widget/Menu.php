@@ -100,7 +100,7 @@ class Widget_Menu extends Typecho_Widget
      */
     public function execute()
     {
-        $parentNodes = array(NULL, _t('控制台'), _t('创建'), _t('管理'), _t('设置'));
+        $parentNodes = array(NULL, _t('控制台'), _t('撰写'), _t('管理'), _t('设置'));
 
         $childNodes =  array(
         array(
