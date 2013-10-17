@@ -787,6 +787,7 @@ a.operate-reply {
 .typecho-list-table-title {
     margin: 1em 0;
     color: #999;
+    text-align: center;
 }
 
 .typecho-list-table {
