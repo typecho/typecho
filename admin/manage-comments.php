@@ -169,7 +169,7 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                         <?php endwhile; ?>
                         <?php else: ?>
                         <tr>
-                            <h6 class="typecho-list-table-title"><?php _e('没有评论') ?></h6>
+                            <td colspan="4"><h6 class="typecho-list-table-title"><?php _e('没有评论') ?></h6></td>
                         </tr>
                         <?php endif; ?>
                         </tbody>
