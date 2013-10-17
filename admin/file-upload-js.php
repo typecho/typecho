@@ -41,7 +41,7 @@ $(document).ready(function() {
                 + data.cid + '">' + data.title + '</a> ' + data.bytes
                 + ' <a class="insert" href="#"><?php _e('插入'); ?></a>'
                 + ' <a class="delete" href="#">&times;</a>')
-            .effect('highlight', '#AACB36', 1000);
+            .effect('highlight', 1000);
             
         attachInsertEvent(li);
         attachDeleteEvent(li);

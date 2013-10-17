@@ -83,7 +83,7 @@ $(document).ready(function() {
 
     function fileUploadComplete (id, url, data) {
         $('#' + id).html('<?php _e('附件 %s 已经替换'); ?>'.replace('%s', data.title))
-        .effect('highlight', '#AACB36', 1000, function () {
+        .effect('highlight', 1000, function () {
             $(this).remove();
         });
     }

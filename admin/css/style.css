@@ -427,12 +427,16 @@ button.primary:active, button.primary.active {
 /** 增加顶部消息样式 by 70 */
 .popup {
     border-width: 0 0 1px 0;
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
     z-index: 10;
     text-align: center;
     font-weight: bold;
     display: none;
     margin: 0;
+    padding: 5px 0;
 
     -moz-border-radius: 0;
     -moz-border-radius: 0;
@@ -448,6 +452,12 @@ button.primary:active, button.primary.active {
     list-style: none;
     margin: 0;
     padding: 0;
+    text-align: center;
+}
+
+.popup ul li {
+    display: inline-block;
+    margin-right: 10px;
 }
 
 /** 
