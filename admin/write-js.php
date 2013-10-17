@@ -122,7 +122,7 @@ $(document).ready(function() {
                 $.post(formAction + '?do=save', data, function (o) {
                     lastSaveTime = o.time;
                     idInput.val(o.cid);
-                    autoSave.text('<?php _e('内容已经保存'); ?>' + ' (' + o.time + ')').effect('highlight', '#AACB36', 1000);
+                    autoSave.text('<?php _e('内容已经保存'); ?>' + ' (' + o.time + ')').effect('highlight', 1000);
                     locked = false;
                 });
             }

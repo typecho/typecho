@@ -251,7 +251,7 @@ $(document).ready(function () {
                 reply.html('<p>' + textarea.val() + '</p>');
                 $.post(t.attr('action'), t.serialize(), function (o) {
                     reply.html(o.comment.content)
-                        .effect('highlight', '#AACB36');
+                        .effect('highlight');
                 });
 
                 t.remove();
@@ -317,13 +317,13 @@ $(document).ready(function () {
                 + (comment.ip ? '<br /><span>' + comment.ip + '</span>' : '');
 
             $('.comment-meta', oldTr).html(html)
-                .effect('highlight', '#AACB36');
+                .effect('highlight');
             $('.comment-content', oldTr).html('<p>' + comment.text + '</p>');
             oldTr.data('comment', comment);
 
             $.post(t.attr('action'), comment, function (o) {
                 $('.comment-content', oldTr).html(o.comment.content)
-                    .effect('highlight', '#AACB36');
+                    .effect('highlight');
             });
             
             oldTr.show();

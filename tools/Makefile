@@ -12,7 +12,7 @@ update:
 	git clone https://github.com/typecho/typecho-replica.git build
 	rm -Rf build/.git
 	rm -Rf build/.gitignore
-	for i in `find build/ -name '*.source.css'`; do echo $$i && java -Xmx32m -jar yuicompressor-2.4.2.jar $$i --charset UTF-8 -o $$i; done;
+	for i in `find build/ -name '*.css'`; do echo $$i && java -Xmx32m -jar yuicompressor-2.4.2.jar $$i --charset UTF-8 -o $$i; done;
 	for i in `find build/admin/javascript/ -name '*.js'`; do echo $$i && java -Xmx32m -jar yuicompressor-2.4.2.jar $$i --charset UTF-8 -o $$i; done;
 	for i in `find build/ -name '*.php'`; do php -l $$i; done;
 
@@ -22,21 +22,8 @@ package:
 	rm -Rf build/mockup/
 	rm -Rf build/tools/
 	rm -Rf build/todo.txt
-	rm -Rf build/usr/plugins/Akismet/
-	rm -Rf build/usr/plugins/MagikeToTypecho/
-	rm -Rf build/usr/plugins/WordpressToTypecho/
-	rm -Rf build/usr/plugins/Textile2/
-	rm -Rf build/usr/plugins/PostToQzone/
-	rm -Rf build/usr/plugins/SimpleCode.php
-	rm -Rf build/usr/plugins/PageToLinks.php
-	rm -Rf build/usr/plugins/Creole/
-	rm -Rf build/usr/plugins/TinyMCE/
-	rm -Rf build/usr/plugins/FlashMp3Player/
-	rm -Rf build/usr/plugins/ConnectToTwitter/
-	rm -Rf build/usr/plugins/ShareCode/
-	rm -Rf build/usr/plugins/ZenCoding/
-	rm -Rf build/usr/plugins/GoogleCodePrettify/
-	rm -Rf build/usr/plugins/GoogleCodeSVN/
+	rm -Rf build/usr/plugins/*
+	rm -Rf build/admin/scss
 	mkdir build/usr/uploads/
 	chmod 777 build/usr/uploads/
 	tar -cvvzf build.tar.gz build/
@@ -105,21 +92,7 @@ install:
 	make update
 	rm -Rf build/tools/
 	rm -Rf build/todo.txt
-	rm -Rf ${DIR}/usr/plugins/Akismet/
-	rm -Rf ${DIR}/usr/plugins/MagikeToTypecho/
-	rm -Rf ${DIR}/usr/plugins/WordpressToTypecho/
-	rm -Rf ${DIR}/usr/plugins/Textile2/
-	rm -Rf ${DIR}/usr/plugins/PostToQzone/
-	rm -Rf ${DIR}/usr/plugins/SimpleCode.php
-	rm -Rf ${DIR}/usr/plugins/PageToLinks.php
-	rm -Rf ${DIR}/usr/plugins/Creole/
-	rm -Rf ${DIR}/usr/plugins/TinyMCE/
-	rm -Rf ${DIR}/usr/plugins/FlashMp3Player/
-	rm -Rf ${DIR}/usr/plugins/ConnectToTwitter/
-	rm -Rf ${DIR}/usr/plugins/ShareCode/
-	rm -Rf ${DIR}/usr/plugins/ZenCoding/
-	rm -Rf ${DIR}/usr/plugins/GoogleCodePrettify/
-	rm -Rf ${DIR}/usr/plugins/GoogleCodeSVN/
+	rm -Rf ${DIR}/usr/plugins/*
 	cp -Rf build/* ${DIR}
 	make clear
 

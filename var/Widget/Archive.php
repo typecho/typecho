@@ -564,6 +564,14 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
+     * @return the $_currentPage
+     */
+    public function getCurrentPage()
+    {
+        return $this->_currentPage;
+    }
+
+    /**
      * @return the $_themeFile
      */
     public function getThemeFile()

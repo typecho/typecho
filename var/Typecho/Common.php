@@ -255,12 +255,6 @@ class Typecho_Common
      */
     public static function init()
     {
-        /** 输出logo */
-        if (isset($_GET['464D-E63E-9D08-97E2-16DD-6A37-BDEC-6021'])) {
-            header('content-Type: image/gif', true);
-            die(base64_decode('R0lGODlhXQAVANUAAP////Pz8+bm5tnZ2c3NzcDAwLOzs5mZmY2NjeR+ANp6A9l5A4CAgM51BsNwCsNwCbhrDXNzc61nEKxmEKFiE6JiE2ZmZpddFpZdFoxZGYtYGoFUHYBUHVlZWXZPIHVPIGtLI2pKI01NTV9GJlRBKVRBKkBAQEk8LT44MD03MDMzMwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAAHAP8ALAAAAABdABUAAAb/QJVwSCwaj8ikUgjxLJ9Gj+JELBSg2OwyodFCSYkKkUDwms3cs5E0GlYSVCFZTX+m60IpSnhKXIZzeEonI21HKIVxQlyIhkaEjkVOQg2TKhIKKggHAgIHCEMmByZEERFCHaAmEQcHp0ckDgmzCxlEKG+zCRAkiw4LtCBEIw26CbZFEIYXD0MeCSQBANMAAUMWABZjZSoHAAzS1AGvQyAJDRwjIRQJDnsoshSFGAsLVLPKIbKGz+jq7A6KjBCjAsweFSgSbJDD7Vq2bUK8ARjwKsIAAORQLHBHREKaCQlKEDmhIYWKdkNSLKCg4sTGg3nuDGm2yJGCPyoCOdQGiJu3/wGkQg0IEJQDtCEjIJwr0QdDEpkqIEBQgQGOkQkLilSIAwFZ1Kk5GwrBxpNhxIdFsDFg0oDPmwUchIxIEKkIVKlRAxrZQJdIBkNdh+ANmxat2W4AkAA4wOQBigyzMJgUEqIvkrtTB0uyLOQvE6+DdY41TBhxUCImFgupqmCXIhInSkC120Xw1Kow3SSYLGTr55kSDu+EiJhxEW8d+CRYEAmMUwgLehERdrI2k6mygxMBw5IIzZOOjgkpIECIieQmAlxBBcDntLVDGABYL8QoBGEoNtSjUqKeBxQneFCMSJgJocEuwpyQgQIN8KbCQEIYJFcC1EXQHiflqSDfAAcYIJ+NexdxeECIpwnxATC6QKBICbLo0kAIi1j31RAcoIiPg1Et890FCcAUgQAACACfChZVY8AA7nVz0URDFpFCCBp8oAgRJWigAYxDSDlMJCl8oAEHIkUxRCVDKABWFoF4I8iaUOgRkyVIdFCWCgKspyabeCLBxphtLVEAAKoYgNadeRZ6BF9wImHCku8NQaihkAqRXxasICACEalEqqkRQQAAOw=='));
-        }
-
         /** 设置自动载入函数 */
         function __autoLoad($className)
         {
@@ -387,66 +381,52 @@ class Typecho_Common
         } else {
             echo
 <<<EOF
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset={$charset}" />
-    <title>{$code}</title>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="{$charset}">
+        <title>{$code}</title>
+        <style>
+            html {
+                padding: 50px 10px;
+                font-size: 20px;
+                line-height: 1.4;
+                color: #666;
+                background: #F6F6F3;
+                -webkit-text-size-adjust: 100%;
+                -ms-text-size-adjust: 100%;
+            }
 
-    <style type="text/css">
-        body {
-            background: #f7fbe9;
-            font-family: "Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana;
-        }
-
-        #error {
-            background: #333;
-            width: 360px;
-            margin: 0 auto;
-            margin-top: 100px;
-            color: #fff;
-            padding: 10px;
-
-            -moz-border-radius-topleft: 4px;
-            -moz-border-radius-topright: 4px;
-            -moz-border-radius-bottomleft: 4px;
-            -moz-border-radius-bottomright: 4px;
-            -webkit-border-top-left-radius: 4px;
-            -webkit-border-top-right-radius: 4px;
-            -webkit-border-bottom-left-radius: 4px;
-            -webkit-border-bottom-right-radius: 4px;
-
-            border-top-left-radius: 4px;
-            border-top-right-radius: 4px;
-            border-bottom-left-radius: 4px;
-            border-bottom-right-radius: 4px;
-        }
-
-        h1 {
-            padding: 10px;
-            margin: 0;
-            font-size: 36px;
-        }
-
-        p {
-            padding: 0 20px 20px 20px;
-            margin: 0;
-            font-size: 12px;
-        }
-
-        img {
-            padding: 0 0 5px 260px;
-        }
-    </style>
-</head>
-<body>
-    <div id="error">
-        <h1>{$code}</h1>
-        <p>{$message}</p>
-        <img src="?464D-E63E-9D08-97E2-16DD-6A37-BDEC-6021" />
-    </div>
-</body>
+            html,
+            input { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+            body {
+                max-width: 500px;
+                _width: 500px;
+                padding: 30px 20px 50px;
+                margin: 0 auto;
+                background: #FFF;
+            }
+            h1 {
+                font-size: 50px;
+                text-align: center;
+            }
+            h1 span { color: #bbb; }
+            ul {
+                padding: 0 0 0 40px;
+            }
+            .container {
+                max-width: 380px;
+                _width: 380px;
+                margin: 0 auto;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>{$code}</h1>
+            {$message}
+        </div>
+    </body>
 </html>
 EOF;
         }
