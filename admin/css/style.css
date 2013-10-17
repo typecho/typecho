@@ -379,7 +379,7 @@ button.primary:active, button.primary.active {
     font-weight: bold;
     display: none;
     margin: 0;
-    padding: 5px 0;
+    padding: 10px 0;
 
     -moz-border-radius: 0;
     -moz-border-radius: 0;
@@ -668,8 +668,6 @@ button.primary:active, button.primary.active {
     border-radius: 2px;
 }
 .typecho-page-title h2 a:hover {
-    background: #E6E6E3;
-    color: #666;
     text-decoration: none;
 }
 
@@ -805,10 +803,6 @@ a.operate-reply {
     text-align: right;
 }
 
-.typecho-list-table-border {
-    border-collapse: separate;
-}
-
 .typecho-list-table th {
     padding: 0 10px 10px;
     border-bottom: 2px solid #F0F0EC;
@@ -820,7 +814,6 @@ a.operate-reply {
     border-top: 1px solid #F0F0EC;
     word-break: break-all;
 }
-
 .typecho-list-table tbody tr:hover td {
     background-color: #F6F6F3;
 }

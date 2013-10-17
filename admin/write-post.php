@@ -57,7 +57,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                             <button type="submit" name="do" value="publish" class="primary" id="btn-submit"><?php _e('发布文章'); ?></button>
                         </span>
                     </p>
-                    <div id="typecho-preview-box">预览</div>
+                    <!-- <div id="typecho-preview-box">预览</div> -->
                 </div>
                 <div class="col-mb-12 col-tb-3">
                     <section class="typecho-post-option">
