@@ -45,7 +45,7 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                         <div class="operate">
                             <input type="checkbox" class="typecho-table-select-all" />
                         <div class="btn-group btn-drop">
-                        <button class="dropdown-toggle btn-s" type="button" href="">选中项 &nbsp;<i class="icon-caret-down"></i></button>
+                        <button class="dropdown-toggle btn-s" type="button" href="">选中项 <i class="i-caret-down"></i></button>
                         <ul class="dropdown-menu">
                             <li><a href="<?php $options->index('/action/comments-edit?do=approved'); ?>"><?php _e('通过'); ?></a></li>
                             <li><a href="<?php $options->index('/action/comments-edit?do=waiting'); ?>"><?php _e('待审核'); ?></a></li>
@@ -116,14 +116,14 @@ $comments = Typecho_Widget::widget('Widget_Comments_Admin');
                                     <?php if ('comment' == $comments->type): ?>
                                     <?php $comments->gravatar(40); ?>
                                     <?php endif; ?>
+                                    <?php if ('comment' != $comments->type): ?>
+                                    <?php _e('引用'); ?>
+                                    <?php endif; ?>
                                 </div>
                             </td>
                             <td valign="top" class="comment-head">
                                 <div class="comment-meta">
                                     <strong class="comment-author"><?php $comments->author(true); ?></strong>
-                                    <?php if ('comment' != $comments->type): ?>
-                                    <small>(<?php _e('引用'); ?>)</small>
-                                    <?php endif; ?>
                                     <?php if($comments->mail): ?>
                                     <br /><span><a href="mailto:<?php $comments->mail(); ?>"><?php $comments->mail(); ?></a></span>
                                     <?php endif; ?>

@@ -1,0 +1,35 @@
+/**
+ * icons
+ */
+
+$icons: sprite-map("icons/*.png");
+
+%i-16 {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  vertical-align: text-bottom;
+  background: $icons;
+  background: url(../images/icons.png) no-repeat;
+}
+
+.i-edit {
+  @extend %i-16;
+  background-position: sprite-position($icons, icon-edit);
+}
+.i-delete {
+  @extend %i-16;
+  background-position: sprite-position($icons, icon-delete);
+}
+.i-caret-up {
+  @extend %i-16;
+  background-position: sprite-position($icons, icon-caret-up);
+}
+.i-caret-down {
+  @extend %i-16;
+  background-position: sprite-position($icons, icon-caret-down);
+}
+.i-exlink {
+  @extend %i-16;
+  background-position: sprite-position($icons, icon-exlink);
+}

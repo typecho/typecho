@@ -15,7 +15,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <div class="operate">
                             <input type="checkbox" class="typecho-table-select-all" />
                         <div class="btn-group btn-drop">
-                        <button class="dropdown-toggle btn-s" type="button" href="">选中项 &nbsp;<i class="icon-caret-down"></i></button>
+                        <button class="dropdown-toggle btn-s" type="button" href="">选中项 <i class="i-caret-down"></i></button>
                         <ul class="dropdown-menu">
                             <li><a lang="<?php _e('你确认要删除这些文章吗?'); ?>" href="<?php $options->index('/action/contents-post-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
                         </ul>
@@ -72,17 +72,17 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <a href="<?php $options->adminUrl('write-post.php?cid=' . $posts->cid); ?>"><?php $posts->title(); ?></a>
                             <?php 
                             if ($posts->hasSaved || 'post_draft' == $posts->type) {
-                                echo '<em>(' . _t('草稿') . ')</em>';
+                                echo '<em class="status">' . _t('草稿') . '</em>';
                             } else if ('waiting' == $posts->status) {
-                                echo '<em>(' . _t('待审核') . ')</em>';
+                                echo '<em class="status">' . _t('待审核') . '</em>';
                             } else if ('private' == $posts->status) {
-                                echo '<em>(' . _t('私密') . ')</em>';
+                                echo '<em class="status">' . _t('私密') . '</em>';
                             } else if ($posts->password) {
-                                echo '<em>(' . _t('密码保护') . ')</em>';
+                                echo '<em class="status">' . _t('密码保护') . '</em>';
                             }
                             ?>
                             <?php if ('post_draft' != $posts->type): ?>
-                            <a class="right" href="<?php $posts->permalink(); ?>"><img src="<?php $options->adminUrl('images/link.png'); ?>" title="<?php _e('浏览 %s', htmlspecialchars($posts->title)); ?>" width="16" height="16" alt="view" /></a>
+                            <a class="right" href="<?php $posts->permalink(); ?>"><i class="i-exlink" title="<?php _e('浏览 %s', htmlspecialchars($posts->title)); ?>" /></i></a>
                             <?php endif; ?>
                             </td>
                             <td><a href="<?php $options->adminUrl('manage-posts.php?uid=' . $posts->author->uid); ?>"><?php $posts->author(); ?></a></td>

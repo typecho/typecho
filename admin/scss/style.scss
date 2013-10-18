@@ -8,6 +8,8 @@
 * @version $Id: grid.source.css 470 2008-09-26 15:23:38Z i.feelinglucky $
 */
 
+@import "compass";
+
 /**
 * Typecho 全局样式
 */
@@ -419,6 +421,12 @@ a.operate-reply {
   border-top: 1px solid #F0F0EC;
   word-break: break-all;
 }
+.typecho-list-table .status {
+  margin-left: 5px;
+  color: #999;
+  font-size: .92857em;
+  font-style: normal;
+}
 .typecho-list-table tbody tr:hover td {
   background-color: #F6F6F3;
 }
@@ -427,7 +435,7 @@ a.operate-reply {
   background-color: #FFF9E8;
 }
 
-.typecho-list-table .warning {
+.warning {
   color: #B94A48;
 }
 
@@ -698,7 +706,7 @@ background: #FFF1A8;
 .typecho-page-main ul.tag-list li {
   display: inline-block;
   margin: 0 0 5px 0;
-  padding: 5px 10px;
+  padding: 5px 5px 5px 10px;
   cursor: pointer;
 }
 .typecho-page-main ul.tag-list li:hover {
@@ -740,19 +748,8 @@ background: #FFF1A8;
   font-size: .92857em;
 }
 
-#upload-panel.drag, .tDnD_whileDrag {
+#upload-panel.drag {
   background-color: #FFFBCC;
-}
-.tDnD_whileDrag {
-  -ms-transform-origin: 20% 0;
-  -moz-transform-origin: 20% 0;
-  -webkit-transform-origin: 20% 0;
-  transform-origin: 20% 0;
-
-  -ms-transform: rotate(2deg);
-  -moz-transform: rotate(2deg);
-  -webkit-transform: rotate(2deg);
-  webkit-transform: rotate(2deg);
 }
 
 #file-list {
@@ -764,9 +761,18 @@ background: #FFF1A8;
 #file-list .delete { margin-left: 5px; color: #B94A48; }
 
 
+/* 拖动排序 */
+.tDnD_whileDrag {
+  background-color: #FFFBCC;
+  @include transform-origin(20%, 0);
+  @include rotate(2deg);
+}
+
+
 /**
 * 导入扩展样式
 */
 
+@import "icons";
 @import "components";
 @import "hidden";

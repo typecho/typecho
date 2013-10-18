@@ -122,6 +122,11 @@ button {
   border: none;
   background-color: #e9e9e6;
   cursor: pointer;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px;
   display: inline-block;
   padding: 0 12px;
   height: 32px;
@@ -146,17 +151,15 @@ button {
   font-size: 1.14286em;
   font-weight: bold; }
 
-button, .dropdown-menu {
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  -ms-border-radius: 2px;
-  -o-border-radius: 2px;
-  border-radius: 2px; }
-
 .primary {
   border: none;
   background-color: #467b96;
   cursor: pointer;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px;
   color: #FFF; }
   .primary:hover {
     background-color: #41728c; }
@@ -169,16 +172,12 @@ button, .dropdown-menu {
 .btn-group {
   display: inline-block; }
 
-.btn-group > a, .btn-group > span {
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  -ms-border-radius: 0;
-  -o-border-radius: 0;
-  border-radius: 0;
-  margin-left: -1px; }
-
+/* 下拉菜单 */
 .btn-drop {
   position: relative; }
+
+.dropdown-toggle {
+  padding-right: 8px; }
 
 .dropdown-menu {
   list-style: none;
@@ -187,23 +186,22 @@ button, .dropdown-menu {
   left: 0;
   margin: 0;
   padding: 0;
-  background: #f9f9f7;
+  border: 1px solid #D9D9D6;
+  background: #FFF;
   text-align: left;
   min-width: 108px;
   display: none; }
   .dropdown-menu li {
     white-space: nowrap; }
-
-.dropdown-menu li p {
-  padding: 5px 15px; }
-
-.dropdown-menu li a {
-  display: block;
-  padding: 3px 15px;
-  color: #666; }
-  .dropdown-menu li a:hover {
-    background: #e9e9e9;
-    text-decoration: none !important; }
+    .dropdown-menu li.multiline {
+      padding: 5px 12px 12px; }
+  .dropdown-menu a {
+    display: block;
+    padding: 5px 12px;
+    color: #666; }
+    .dropdown-menu a:hover {
+      background: #F6F6F3;
+      text-decoration: none !important; }
 
 /**
 * 提示信息框
@@ -661,13 +659,19 @@ a.operate-reply {
   border-top: 1px solid #F0F0EC;
   word-break: break-all; }
 
+.typecho-list-table .status {
+  margin-left: 5px;
+  color: #999;
+  font-size: .92857em;
+  font-style: normal; }
+
 .typecho-list-table tbody tr:hover td {
   background-color: #F6F6F3; }
 
 .typecho-list-table tbody tr.checked td {
   background-color: #FFF9E8; }
 
-.typecho-list-table .warning {
+.warning {
   color: #B94A48; }
 
 .typecho-list-table tr td .hidden-by-mouse {
@@ -884,7 +888,7 @@ a.operate-reply {
 .typecho-page-main ul.tag-list li {
   display: inline-block;
   margin: 0 0 5px 0;
-  padding: 5px 10px;
+  padding: 5px 5px 5px 10px;
   cursor: pointer; }
 
 .typecho-page-main ul.tag-list li:hover {
@@ -931,18 +935,8 @@ a.operate-reply {
   color: #999;
   font-size: .92857em; }
 
-#upload-panel.drag, .tDnD_whileDrag {
+#upload-panel.drag {
   background-color: #FFFBCC; }
-
-.tDnD_whileDrag {
-  -ms-transform-origin: 20% 0;
-  -moz-transform-origin: 20% 0;
-  -webkit-transform-origin: 20% 0;
-  transform-origin: 20% 0;
-  -ms-transform: rotate(2deg);
-  -moz-transform: rotate(2deg);
-  -webkit-transform: rotate(2deg);
-  webkit-transform: rotate(2deg); }
 
 #file-list {
   list-style: none;
@@ -956,9 +950,49 @@ a.operate-reply {
   margin-left: 5px;
   color: #B94A48; }
 
+/* 拖动排序 */
+.tDnD_whileDrag {
+  background-color: #FFFBCC;
+  -webkit-transform-origin: 20% 0;
+  -moz-transform-origin: 20% 0;
+  -ms-transform-origin: 20% 0;
+  -o-transform-origin: 20% 0;
+  transform-origin: 20% 0;
+  -webkit-transform: rotate(2deg);
+  -moz-transform: rotate(2deg);
+  -ms-transform: rotate(2deg);
+  -o-transform: rotate(2deg);
+  transform: rotate(2deg); }
+
 /**
 * 导入扩展样式
 */
+/**
+ * icons
+ */
+.i-edit, .i-delete, .i-caret-up, .i-caret-down, .i-exlink {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  vertical-align: text-bottom;
+  background: url('../images/icons-s2ae04ce87c.png');
+  background: url(../images/icons.png) no-repeat; }
+
+.i-edit {
+  background-position: 0 -32px; }
+
+.i-delete {
+  background-position: 0 -16px; }
+
+.i-caret-up {
+  background-position: 0 -64px; }
+
+.i-caret-down {
+  background-position: 0 -48px; }
+
+.i-exlink {
+  background-position: 0 0; }
+
 .typecho-mime {
   background-image: url(../images/mime.gif);
   background-repeat: no-repeat;

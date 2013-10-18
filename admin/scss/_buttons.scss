@@ -9,6 +9,8 @@
   background-color: $color;
   cursor: pointer;
 
+  @include border-radius(2px);
+
   &:hover {
     background-color: darken($color, 3%);
     // @include background-image(linear-gradient($color, darken($color, 3%)));
@@ -40,10 +42,6 @@ button {
 .btn-s { height: 28px; }
 .btn-l { height: 40px; font-size: 1.14286em; font-weight: bold; }
 
-button, .dropdown-menu {
-  @include border-radius(2px);
-}
-
 .primary {
   @include button(#467B96);
   color: #FFF;
@@ -53,19 +51,13 @@ button, .dropdown-menu {
   display: inline-block; 
 }
 
-.btn-group > a, .btn-group > span {
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  -ms-border-radius: 0;
-  -o-border-radius: 0;
-  border-radius: 0;
-  margin-left: -1px;
-}
-
+/* 下拉菜单 */
 .btn-drop {
   position: relative;
 }
-
+.dropdown-toggle {
+  padding-right: 8px;
+}
 .dropdown-menu {
   list-style: none;
   position: absolute;
@@ -73,27 +65,26 @@ button, .dropdown-menu {
   left: 0;
   margin: 0;
   padding: 0;
-  background: #f9f9f7;
+  border: 1px solid #D9D9D6; 
+  background: #FFF;
   text-align: left;
   min-width: 108px;
   display: none;
 
   li {
     white-space: nowrap;
+    &.multiline {
+      padding: 5px 12px 12px;
+    }
+  }
+
+  a {
+    display: block;
+    padding: 5px 12px;
+    color: #666;
+    &:hover {
+      background: #F6F6F3;
+      text-decoration: none !important;
+    }
   }
 }
-
-.dropdown-menu li p {
-  padding: 5px 15px;
-}
-
-.dropdown-menu li a {
-  display: block;
-  padding: 3px 15px;
-  color: #666;
-  &:hover {
-    background: #e9e9e9;
-    text-decoration: none !important;
-  }
-}
-

@@ -15,7 +15,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     <div class="operate">
                         <input type="checkbox" class="typecho-table-select-all" />
                     <div class="btn-group btn-drop">
-                    <button class="dropdown-toggle btn-s" type="button" href="">选中项 &nbsp;<i class="icon-caret-down"></i></button>
+                    <button class="dropdown-toggle btn-s" type="button" href="">选中项 <i class="i-caret-down"></i></button>
                     <ul class="dropdown-menu">
                         <li><a lang="<?php _e('你确认要删除这些页面吗?'); ?>" href="<?php $options->index('/action/contents-page-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
                     </ul>
@@ -73,7 +73,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                                 }
                                 ?>
                                 <?php if ('page_draft' != $pages->type): ?>
-                                <a class="right" href="<?php $pages->permalink(); ?>"><img src="<?php $options->adminUrl('images/link.png'); ?>" title="<?php _e('浏览 %s', htmlspecialchars($pages->title)); ?>" width="16" height="16" alt="view" /></a>
+                                <a class="right" href="<?php $pages->permalink(); ?>"><i class="i-exlink" title="<?php _e('浏览 %s', htmlspecialchars($pages->title)); ?>"></i></a>
                                 <?php endif; ?>
                                 </td>
                                 <td><?php $pages->slug(); ?></td>

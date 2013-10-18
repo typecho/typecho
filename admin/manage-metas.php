@@ -23,14 +23,16 @@ include 'menu.php';
                             <div class="operate">
                                 <input type="checkbox" class="typecho-table-select-all" />
                                 <div class="btn-group btn-drop">
-                                    <button class="dropdown-toggle btn-s" type="button" href="">选中项 &nbsp;<i class="icon-caret-down"></i></button>
+                                    <button class="dropdown-toggle btn-s" type="button" href="">选中项 <i class="i-caret-down"></i></button>
                                     <ul class="dropdown-menu">
                                         <li><a lang="<?php _e('此分类下的所有内容将被删除, 你确认要删除这些分类吗?'); ?>" href="<?php $options->index('/action/metas-category-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
                                         <li><a lang="<?php _e('刷新分类可能需要等待较长时间, 你确认要刷新这些分类吗?'); ?>" href="<?php $options->index('/action/metas-category-edit?do=refresh'); ?>"><?php _e('刷新'); ?></a></li>
-                                        <li><p><button type="button" class="merge" rel="<?php $options->index('/action/metas-category-edit?do=merge'); ?>"><?php _e('合并到'); ?></button>
-                                        <select name="merge">
-                                            <?php $categories->parse('<option value="{mid}">{name}</option>'); ?>
-                                        </select></p></li>
+                                        <li class="multiline">
+                                            <button type="button" class="merge btn-s" rel="<?php $options->index('/action/metas-category-edit?do=merge'); ?>"><?php _e('合并到'); ?></button>
+                                            <select name="merge">
+                                                <?php $categories->parse('<option value="{mid}">{name}</option>'); ?>
+                                            </select>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -58,7 +60,7 @@ include 'menu.php';
                                 <tr id="mid-<?php $categories->theId(); ?>">
                                     <td><input type="checkbox" value="<?php $categories->mid(); ?>" name="mid[]"/></td>
                                     <td><a href="<?php echo $request->makeUriByRequest('mid=' . $categories->mid); ?>"><?php $categories->name(); ?></a>
-                                    <a class="right" href="<?php $categories->permalink(); ?>"><img src="<?php $options->adminUrl('images/link.png'); ?>" title="<?php _e('浏览 %s', $categories->name); ?>" width="16" height="16" alt="view" /></a>
+                                    <a class="right" href="<?php $categories->permalink(); ?>"><i class="i-exlink" title="<?php _e('浏览 %s', $categories->name); ?>"></i></a>
                                     </td>
                                     <td><?php $categories->slug(); ?></td>
                                     <td>
@@ -86,12 +88,14 @@ include 'menu.php';
                         <div class="operate">
                         <input type="checkbox" class="typecho-table-select-all" />
                         <div class="btn-group btn-drop">
-                        <button class="dropdown-toggle btn-s" type="button" href="">选中项 &nbsp;<i class="icon-caret-down"></i></button>
+                        <button class="dropdown-toggle btn-s" type="button" href="">选中项 <i class="i-caret-down"></i></button>
                         <ul class="dropdown-menu">
                             <li><a lang="<?php _e('此标签下的所有内容将被删除, 你确认要删除这些标签吗?'); ?>" href="<?php $options->index('/action/metas-tag-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
                             <li><a lang="<?php _e('刷新标签可能需要等待较长时间, 你确认要刷新这些标签吗?'); ?>" href="<?php $options->index('/action/metas-tag-edit?do=refresh'); ?>"><?php _e('刷新'); ?></a></li>
-                            <li><p><button type="button" class="merge" rel="<?php $options->index('/action/metas-tag-edit?do=merge'); ?>"><?php _e('合并到'); ?></button>
-                            <input type="text" name="merge" /></p></li>
+                            <li class="multiline">
+                                <button type="button" class="merge" rel="<?php $options->index('/action/metas-tag-edit?do=merge'); ?>"><?php _e('合并到'); ?></button>
+                                <input type="text" name="merge" />
+                            </li>
                         </ul>
                         </div>
                         </div>
@@ -103,7 +107,7 @@ include 'menu.php';
                         <li class="size-<?php $tags->split(5, 10, 20, 30); ?>" id="<?php $tags->theId(); ?>">
                         <input type="checkbox" value="<?php $tags->mid(); ?>" name="mid[]"/>
                         <span rel="<?php echo $request->makeUriByRequest('mid=' . $tags->mid); ?>"><?php $tags->name(); ?></span>
-                        <a class="tag-edit-link" href="<?php echo $request->makeUriByRequest('mid=' . $tags->mid); ?>">&#9998;</a>
+                        <a class="tag-edit-link" href="<?php echo $request->makeUriByRequest('mid=' . $tags->mid); ?>"><i class="i-edit"></i></a>
                         </li>
                         <?php endwhile; ?>
                         <?php else: ?>
