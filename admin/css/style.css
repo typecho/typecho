@@ -1070,11 +1070,29 @@ a.operate-reply {
   background: transparent url(../images/editor.png) no-repeat; }
 
 /* 对话框 */
+.wmd-prompt-background {
+  background-color: #000; }
+
 .wmd-prompt-dialog {
-  padding: 1px 15px 15px;
-  background: #E9E9E6; }
+  position: fixed;
+  z-index: 1001;
+  top: 50%;
+  left: 50%;
+  margin-top: -95px;
+  margin-left: -220px;
+  padding: 20px;
+  width: 400px;
+  height: 150px;
+  background: #F6F6F3; }
   .wmd-prompt-dialog p {
-    margin: 0; }
+    margin: 0 0 5px; }
+  .wmd-prompt-dialog form {
+    margin-top: 10px; }
+  .wmd-prompt-dialog input[type="text"] {
+    margin-bottom: 10px;
+    width: 100%; }
+  .wmd-prompt-dialog input[type="button"] {
+    margin-right: 10px; }
 
 /* 预览 */
 #wmd-preview {

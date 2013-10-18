@@ -3046,7 +3046,7 @@ else
 
         image: "Image <img> Ctrl+G",
         imagedescription: "enter image description here",
-        imagedialog: "<p><b>Insert Image</b></p><p>http://example.com/images/diagram.jpg \"optional title\"<br><br>Need <a href='http://www.google.com/search?q=free+image+hosting' target='_blank'>free image hosting?</a></p>",
+        imagedialog: "<p><b>Insert Image</b></p><p>http://example.com/images/diagram.jpg \"optional title\"<br>Need <a href='http://www.google.com/search?q=free+image+hosting' target='_blank'>free image hosting?</a></p>",
 
         olist: "Numbered List <ol> Ctrl+O",
         ulist: "Bulleted List <ul> Ctrl+U",
@@ -4138,7 +4138,7 @@ else
             // The dialog text.
             var question = doc.createElement("div");
             question.innerHTML = text;
-            question.style.padding = "5px";
+            // question.style.padding = "5px";
             dialog.appendChild(question);
 
             // The web form container for the text box and buttons.
