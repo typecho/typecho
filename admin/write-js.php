@@ -156,4 +156,53 @@ $(document).ready(function() {
     
 });
 </script>
+<?php $content = !empty($post) ? $post : $page; if ($options->markdown && (!$content->have() || $content->isMarkdown)): ?>
+<script src="<?php $options->adminUrl('js/markdown.js?v=' . $suffixVersion); ?>"></script>
+<script>
+$(document).ready(function () {
+    var toolbar = $('<p class="editor" id="wmd-button-bar" />').insertBefore($('#text').parent())
+        preview = $('<div id="wmd-preview" />').insertAfter('.submit');
+
+    var converter = new Showdown.converter(), options = {};
+
+    options.strings = {
+        bold: '<?php _e('加粗'); ?> <strong> Ctrl+B',
+        boldexample: '<?php _e('加粗文字'); ?>',
+            
+        italic: '<?php _e('斜体'); ?> <em> Ctrl+I',
+        italicexample: '<?php _e('斜体文字'); ?>',
+
+        link: '<?php _e('链接'); ?> <a> Ctrl+L',
+        linkdescription: '<?php _e('请输入链接描述'); ?>',
+
+        quote:  '<?php _e('引用'); ?> <blockquote> Ctrl+Q',
+        quoteexample: '<?php _e('引用文字'); ?>',
+
+        code: '<?php _e('代码'); ?> <pre><code> Ctrl+K',
+        codeexample: '<?php _e('请输入代码'); ?>',
+
+        image: '<?php _e('图片'); ?> <img> Ctrl+G',
+        imagedescription: '<?php _e('请输入图片描述'); ?>',
+
+        olist: '<?php _e('数字列表'); ?> <ol> Ctrl+O',
+        ulist: '<?php _e('普通列表'); ?> <ul> Ctrl+U',
+        litem: '<?php _e('列表项目'); ?>',
+
+        heading: '<?php _e('标题'); ?> <h1>/<h2> Ctrl+H',
+        headingexample: '<?php _e('标题文字'); ?>',
+
+        hr: '<?php _e('分割线'); ?> <hr> Ctrl+R',
+
+        undo: '<?php _e('撤销'); ?> - Ctrl+Z',
+        redo: '<?php _e('重做'); ?> - Ctrl+Y',
+        redomac: '<?php _e('重做'); ?> - Ctrl+Shift+Z',
+
+        help: '<?php _e('Markdown语法帮助'); ?>'
+    };
+
+    var editor = new Markdown.Editor(converter, '', options);
+    editor.run();
+});
+</script>
+<?php endif; ?>
 

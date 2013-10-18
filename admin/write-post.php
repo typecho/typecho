@@ -27,21 +27,6 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                     <p class="mono url-slug"><?php echo preg_replace("/\[slug:?[_0-9a-z-:]*\]/i", $input, $permalink); ?></p>
                     <?php endif; ?>
 
-                    <p class="editor">
-                        <span class="btnBold">bold</span><!--
-                        --><span class="btnItalic">italic</span><!--
-                        --><span class="btnLink">link</span><!--
-                        --><span class="btnQuote">quote</span><!--
-                        --><span class="btnDel">del</span><!--
-                        --><span class="btnImg">img</span><!--
-                        --><span class="btnUl">ul</span><!--
-                        --><span class="btnOl">ol</span><!--
-                        --><span class="btnHeading">title</span><!--
-                        --><span class="btnCode">code</span><!--
-                        --><span class="btnPre">pre</span><!--
-                        --><span class="btnMore">more</span><!--
-                        --><span class="btnHr">hr</span>
-                    </p>
                     <p>
                         <textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text" name="text" class="w-100 mono"><?php echo htmlspecialchars($post->text); ?></textarea>
                         <span id="auto-save-message"></span>
@@ -57,7 +42,6 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                             <button type="submit" name="do" value="publish" class="primary" id="btn-submit"><?php _e('发布文章'); ?></button>
                         </span>
                     </p>
-                    <!-- <div id="typecho-preview-box">预览</div> -->
                 </div>
                 <div class="col-mb-12 col-tb-3">
                     <section class="typecho-post-option">

@@ -41,8 +41,6 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                             <button type="submit" name="do" value="publish" class="primary" id="btn-submit"><?php _e('发布页面'); ?></button>
                         </span>
                     </p>
-                        
-                    <div id="typecho-preview-box"></div>
                 </div>
                 <div class="col-mb-12 col-tb-3">
                         <section  class="typecho-post-option">

@@ -3314,7 +3314,7 @@ else
     function PanelCollection(postfix) {
         this.buttonBar = doc.getElementById("wmd-button-bar" + postfix);
         this.preview = doc.getElementById("wmd-preview" + postfix);
-        this.input = doc.getElementById("wmd-input" + postfix);
+        this.input = doc.getElementById("text");
     };
 
     // Returns true if the DOM element is visible, false if it's hidden.
