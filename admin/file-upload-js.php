@@ -40,7 +40,7 @@ $(document).ready(function() {
                 + '<a class="file" target="_blank" href="<?php $options->adminUrl('media.php'); ?>?cid=' 
                 + data.cid + '">' + data.title + '</a> ' + data.bytes
                 + ' <a class="insert" href="#"><?php _e('插入'); ?></a>'
-                + ' <a class="delete" href="#">&times;</a>')
+                + ' <a class="delete" href="#"><i class="i-delete"></i></a>')
             .effect('highlight', 1000);
             
         attachInsertEvent(li);
