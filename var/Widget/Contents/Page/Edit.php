@@ -64,6 +64,11 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
 
         $contents['title'] = $this->request->get('title', _t('未命名页面'));
         $contents['created'] = $this->getCreated();
+
+        if ($this->request->markdown && $this->options->markdown) {
+            $contents['text'] = '<!--markdown-->' . $contents['text'];
+        }
+
         $contents = $this->pluginHandle()->write($contents, $this);
 
         if ($this->request->is('do=publish')) { 

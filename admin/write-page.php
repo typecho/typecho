@@ -39,6 +39,9 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                             <input type="hidden" name="cid" value="<?php $page->cid(); ?>" />
                             <button type="submit" name="do" value="save" id="btn-save"><?php _e('保存草稿'); ?></button>
                             <button type="submit" name="do" value="publish" class="primary" id="btn-submit"><?php _e('发布页面'); ?></button>
+                            <?php if ($options->markdown && (!$page->have() || $page->isMarkdown)): ?>
+                            <input type="hidden" name="markdown" value="1" />
+                            <?php endif; ?>
                         </span>
                     </p>
                 </div>
