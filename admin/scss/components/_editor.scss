@@ -1,0 +1,22 @@
+/*
+* Editor
+*/
+.editor {
+  margin-bottom: -0.5em;
+  font-size: .92857em;
+}
+.editor span {
+  display: inline-block;
+  padding: 0 12px;
+  height: 25px;
+  line-height: 25px;
+  cursor: pointer;
+
+  &:hover { background-color: #E9E9E6; }
+  &:active { background-color: #467B96; color: #FFF; }
+}
+
+.btnBold { font-weight: bold; }
+.btnItalic { font-style: italic; }
+.btnLink { text-decoration: underline; }
+.btnDel { text-decoration: line-through; }

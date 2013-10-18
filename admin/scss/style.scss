@@ -1,0 +1,768 @@
+/* vim: set et sw=2 ts=2 sts=2 fdm=marker ff=unix fenc=utf8 */
+/**
+* Typecho 后台样式
+*
+* @author  i.feelinglucky@gmail.com
+* @since   2008-09-26
+* @link    http://www.typecho.net/
+* @version $Id: grid.source.css 470 2008-09-26 15:23:38Z i.feelinglucky $
+*/
+
+/**
+* Typecho 全局样式
+*/
+
+html {
+  height: 100%;
+}
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background: #F6F6F3;
+  color: #444;
+  font-size: 87.5%;
+  line-height: 1.5;
+}
+
+a {
+  color: #467B96;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #6DA1BB;
+  text-decoration: underline;
+}
+
+code, pre, .mono { 
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+.p { margin: 1em 0; }
+
+a.balloon-button {
+  display: inline-block;
+  padding: 0 6px;
+  min-width: 12px;
+  height: 18px;
+  line-height: 18px;
+  background: #D8E7EE;
+  font-size: .85714em;
+  text-align: center;
+  text-decoration: none;
+  
+  /** 修正ie中文不对齐 */
+  zoom:1;
+  
+  -moz-border-radius: 30px;
+  -webkit-border-radius: 30px;
+  border-radius: 30px;
+}
+
+a.button:hover, a.balloon-button:hover {
+  background-color: #A5CADC;
+  color: #FFF;
+  text-decoration: none;
+}
+
+
+@import "forms";
+@import "buttons";
+@import "messages";
+@import "pagenavi";
+
+@import "header";
+@import "footer";
+
+/* 低版本浏览器升级提示 */
+.browsehappy {
+  border: none;
+  text-align: center;
+}
+
+/** 增加顶部消息样式 by 70 */
+.popup {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 10px 0;
+  border: none;
+  width: 100%;
+  z-index: 10;
+  text-align: center;
+
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+
+.popup ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.popup ul li {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+/**
+* logo 的样式
+*/
+.logo {
+}
+
+/**
+* 载入状态
+*/
+.loading {
+  padding-left: 20px;
+  background: transparent url(../images/ajax-loader.gif) no-repeat left center;
+}
+
+
+/**
+* 典型配置选项
+*/
+.typecho-option {
+  list-style: none;
+  margin: 1em 0;
+  padding: 0;
+}
+
+.typecho-option li {
+}
+
+.typecho-option-submit li {
+  border-bottom: none;
+}
+
+.typecho-option label.typecho-label {
+  display: block;
+  margin-bottom: .5em;
+  font-weight: bold;
+}
+.typecho-option label.required:after {
+  content: " *";
+  color: #B94A48;
+}
+.typecho-option label.typecho-label+input {
+}
+
+.typecho-option .description {
+  margin: .5em 0 0;
+  color: #999;
+  font-size: .92857em;
+}
+
+/** 增加配置面板内部的错误样式 by 70 */
+.typecho-option .message {
+  padding: 2px 4px;
+  font-size: 13px;
+  width: 325px;
+  margin-top: 5px;
+}
+
+.typecho-mini-panel .typecho-option .message {
+  width: 250px;
+}
+
+
+/** 
+* 安装样式
+* 
+* @author mingcheng
+* @date   2008-09-06
+*/
+
+/**
+* 安装向导
+*/
+.typecho-install-patch {
+  margin-bottom: 2em;
+  padding: 2em 0;
+  background-color: #292D33;
+  color: #FFF;
+  text-align: center;
+}
+
+.typecho-install-patch ol {
+  list-style: none;
+  margin: 3em 0 1em;
+  padding: 0;
+  color: #999;
+}
+.typecho-install-patch li {
+  display: inline-block;
+  margin: 0 .8em;
+}
+.typecho-install-patch span {
+  display: inline-block;
+  margin-right: 5px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  border: 2px solid #999;
+  text-align: center;
+  border-radius: 2em;
+}
+.typecho-install-patch li.current {
+  color: #FFF;
+  font-weight: bold;
+}
+.typecho-install-patch li.current span {
+  border-color: #FFF;
+}
+
+
+/**
+* 安装主体内容
+*/
+
+.typecho-install .typecho-install-body input {
+  width: 100%;
+}
+
+
+/**
+* 欢迎界面
+*/
+
+#typecho-welcome {
+  margin: 1em 0;
+  padding: 1em 2em;
+  background-color: #E9E9E6;
+}
+
+
+/**
+* 登录框
+*/
+.typecho-login {
+  margin: 150px auto 0;
+  width: 280px;
+  height: 100%;
+  text-align: center;
+}
+
+.typecho-login .more-link {
+  margin-top: 2em;
+  color: #CCC;
+}
+.typecho-login .more-link a { margin: 0 3px; }
+
+/**
+* 标题
+*/
+.typecho-page-title {
+}
+.typecho-page-title h2 {
+  margin: 25px 0 10px;
+  font-size: 1.28571em;
+}
+.typecho-page-title h2 a {
+  margin-left: 10px;
+  padding: 3px 8px;
+  background: #E9E9E6;
+  font-size: .8em;
+
+  border-radius: 2px;
+}
+.typecho-page-title h2 a:hover {
+  text-decoration: none;
+}
+
+/**
+* 后台页面主体
+*/
+
+
+/**
+* 主页主体
+*/
+.typecho-dashboard {
+}
+.typecho-dashboard ul {
+  list-style: none;
+  padding: 0;
+}
+.typecho-dashboard span {
+  font-size: .92857em;
+  color: #999;
+}
+.typecho-dashboard li {
+  margin-bottom: 5px;
+}
+
+
+/**
+* 标签页
+*/
+.typecho-option-tabs {
+  list-style: none;
+  margin: 1em 0;
+  padding: 0;
+}
+
+.typecho-option-tabs a {
+  display: block;
+  margin-right: -1px;
+  border: 1px solid #D9D9D6;
+  padding: 0 15px;
+  height: 24px;
+  line-height: 24px;
+  color: #666;
+}
+.typecho-option-tabs a:hover {
+  background-color: #E9E9E6;
+  color: #666;
+  text-decoration: none;
+}
+
+.typecho-option-tabs li {
+  float: left;
+}
+
+.typecho-option-tabs li.right {
+  float: right;
+}
+
+.typecho-option-tabs li.current a {
+  background-color: #E9E9E6;
+}
+
+
+/**
+* 表格列表页
+*/
+
+/**
+* 列表页选项
+*/
+.typecho-list .typecho-pager {
+}
+
+.typecho-list-operate {
+  margin: 1em 0;
+}
+
+.typecho-list-operate input,
+.typecho-list-operate button,
+.typecho-list-operate select {
+  vertical-align: bottom;
+}
+
+.typecho-list-operate input[type="checkbox"] {
+  vertical-align: text-top;
+}
+
+.typecho-list-operate .operate {
+  float: left;
+}
+
+.typecho-list-operate .search {
+  float: right;
+}
+
+.typecho-list-operate span.operate-delete, a.operate-delete,
+.typecho-list-operate span.operate-button-delete, a.operate-button-delete {
+  color: #B94A48;
+}
+
+a.operate-edit {
+  color: #007700;
+}
+
+a.operate-reply {
+  color: #545c30;
+}
+
+.typecho-list-operate a:hover {
+  text-decoration: none;
+}
+
+/**
+* 列表表格
+*/
+/** 增加表格标题 by 70 */
+.typecho-list-table-title {
+  margin: 1em 0;
+  color: #999;
+  text-align: center;
+}
+
+.typecho-list-table {
+  border: 30px solid #FFF;
+  width: 100%;
+  background: #FFF;
+}
+
+.typecho-list-table.deactivate {
+  color: #999;
+}
+
+.typecho-list-table .right {
+  text-align: right;
+}
+
+.typecho-list-table th {
+  padding: 0 10px 10px;
+  border-bottom: 2px solid #F0F0EC;
+  text-align: left;
+}
+
+.typecho-list-table td {
+  padding: 10px;
+  border-top: 1px solid #F0F0EC;
+  word-break: break-all;
+}
+.typecho-list-table tbody tr:hover td {
+  background-color: #F6F6F3;
+}
+
+.typecho-list-table tbody tr.checked td {
+  background-color: #FFF9E8;
+}
+
+.typecho-list-table .warning {
+  color: #B94A48;
+}
+
+
+.typecho-list-table tr td .hidden-by-mouse {
+  visibility: hidden;
+}
+
+.typecho-list-table tr:hover td .hidden-by-mouse {
+  visibility: visible;
+}
+
+
+/**
+* 评论管理
+*/
+
+.comment-reply-content {
+  position: relative;
+  margin: 1em 0;
+  padding: 0 1em;
+  border: 1px solid transparent;
+  background-color: #F0F0EC;
+}
+.comment-reply-content:after {
+  position: absolute;
+  right: 1em;
+  border: 8px solid #F0F0EC;
+  border-color: #F0F0EC #F0F0EC transparent transparent;
+  content: " ";
+}
+
+.comment-meta span,
+.comment-date {
+  font-size: .92857em;
+  color: #999;
+}
+
+.comment-action a, .comment-action span { margin-right: 4px; }
+
+.comment-edit label {
+  display: block;
+}
+
+
+/**
+* 评论回复
+*/
+#typecho-respond {
+  padding: 10px;
+  display: none;
+}
+
+
+/**
+* 模板列表
+*/
+.typecho-theme-list {
+  margin-top: 2em;
+}
+
+.typecho-theme-list .theme-item {
+}
+
+.typecho-theme-list td {
+}
+
+.typecho-theme-list img {
+  margin: 1em 0;
+  max-width: 100%;
+  max-height: 240px;
+}
+
+.typecho-theme-list cite {
+  font-style: normal;
+  color: #999;
+}
+
+.typecho-theme-list tbody tr.current td {
+  background-color: #FFF9E8;
+}
+
+
+/**
+* 后台配置项
+*/
+
+.typecho-page-main .typecho-option input.text {
+  width: 100%;
+}
+
+.typecho-page-main .typecho-option input.num {
+  width: 40px;
+}
+
+.typecho-page-main .typecho-option textarea {
+  width: 100%;
+  height: 100px;
+}
+
+.typecho-page-main .typecho-option span.multiline {
+  display: block;
+  margin: .3em 0;
+}
+
+
+/**
+* 编辑模板
+*/
+.typecho-select-theme {
+  height: 25px;
+  line-height: 25px;
+  margin: 15px 0px;
+}
+
+.typecho-select-theme h5 {
+  color: #E47E00;
+  font-weight: bold;
+  float: left;
+  font-size: 14px;
+  width: 120px;
+  margin-right: 10px;
+}
+
+.typecho-select-theme select {
+  width: 150px;
+}
+
+/**
+* 编辑模板（编辑详情）
+*/
+
+.typecho-edit-theme ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.typecho-edit-theme li {
+  padding: 3px 10px;
+}
+
+.typecho-edit-theme .current {
+  background-color: #E6E6E3;
+}
+.typecho-edit-theme .current a {
+  color: #444;
+}
+
+.typecho-edit-theme .submit {
+  text-align: center;
+}
+
+.typecho-edit-theme textarea {
+  font-size: .92857em;
+  line-height: 1.2;
+  height: 500px;
+}
+
+/**
+* 编写页面
+*/
+
+.typecho-post-area .edit-draft-notice { color: #999; }
+.typecho-post-area .edit-draft-notice a { color: #B94A48; }
+
+.typecho-post-area .typecho-label {
+  display: block;
+  margin: 1em 0 -0.5em;
+  font-weight: bold;
+}
+
+.typecho-post-area #auto-save-message {
+  display: block;
+  margin-top: 0.5em;
+  color: #999;
+  font-size: .92857em;
+}
+
+.typecho-post-area .submit .right button {
+  margin-left: 5px;
+}
+
+.typecho-post-area .right {
+  float: right;
+  padding-left: 24px;
+}
+
+.typecho-post-area .left {
+  float: left;
+}
+
+.typecho-post-area input.text {
+}
+
+.typecho-post-area .out-date {
+  border: 1px solid #D3DBB3;
+  padding: 3px;
+  background: #fff;
+}
+
+.typecho-post-area input.title {
+  font-size: 1.17em;
+  font-weight: bold;
+}
+.typecho-post-area .url-slug {
+  margin-top: -0.5em;
+  color: #AAA;
+  font-size: .92857em;
+}
+.typecho-post-area #slug {
+  padding: 2px;
+  border: none;
+  background: #FFFBCC;
+  color: #666;
+}
+
+.typecho-post-area #advance-panel-btn {
+  color: #999;
+}
+
+.typecho-post-area #advance-panel {
+  display: none;
+}
+
+.typecho-post-area .is-draft {
+background: #FFF1A8;
+}
+
+.typecho-post-option .description {
+  margin-top: -0.5em;
+  color: #999;
+  font-size: .92857em;
+}
+
+.category-option ul {
+  list-style: none;
+  border: 1px solid #D9D9D6;
+  padding: 6px 12px;
+  background-color: #FFF;
+  border-radius: 2px;
+}
+.category-option li {
+  margin: 3px 0;
+}
+
+.visibility-option ul,
+.allow-option ul {
+  list-style: none;
+  padding: 0;
+}
+
+/**
+* 标签列表
+*/
+.typecho-page-main ul.tag-list {
+  list-style: none;
+  margin: 0;
+  padding: 20px;
+  background-color: #FFF;
+}
+
+.typecho-page-main ul.tag-list li {
+  display: inline-block;
+  margin: 0 0 5px 0;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+.typecho-page-main ul.tag-list li:hover {
+  background-color: #E9E9E6;
+}
+
+.typecho-page-main ul.tag-list li input {
+  display: none;
+}
+
+
+.typecho-page-main ul.tag-list li.checked {
+  background-color: #FFFBCC;
+}
+
+.typecho-page-main ul.tag-list li.size-5 { font-size: 1em; }
+.typecho-page-main ul.tag-list li.size-10 { font-size: 1.2em; }
+.typecho-page-main ul.tag-list li.size-20 { font-size: 1.4em; }
+.typecho-page-main ul.tag-list li.size-30 { font-size: 1.6em; }
+.typecho-page-main ul.tag-list li.size-0 { font-size: 1.8em; }
+
+.typecho-page-main .tag-edit-link { visibility: hidden; }
+.typecho-page-main li:hover .tag-edit-link { visibility: visible; }
+
+.typecho-attachment-photo {
+  border: 1px solid #E6E6E3;
+  max-width: 100%;
+}
+
+
+/*
+* Upload
+*/
+#upload-panel {
+  padding: 15px;
+  border: 1px dashed #D9D9D6;
+  background-color: #FFF;
+  color: #999;
+  font-size: .92857em;
+}
+
+#upload-panel.drag, .tDnD_whileDrag {
+  background-color: #FFFBCC;
+}
+.tDnD_whileDrag {
+  -ms-transform-origin: 20% 0;
+  -moz-transform-origin: 20% 0;
+  -webkit-transform-origin: 20% 0;
+  transform-origin: 20% 0;
+
+  -ms-transform: rotate(2deg);
+  -moz-transform: rotate(2deg);
+  -webkit-transform: rotate(2deg);
+  webkit-transform: rotate(2deg);
+}
+
+#file-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+#file-list li { margin-top: 5px; }
+#file-list .delete { margin-left: 5px; color: #B94A48; }
+
+
+/**
+* 导入扩展样式
+*/
+
+@import "components";
+@import "hidden";

@@ -1,0 +1,105 @@
+/**
+* Jquery Tokeninput
+*/
+
+ul.token-input-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 4px;
+  min-height: 32px;
+  border: 1px solid #D9D9D6;
+  cursor: text;
+  z-index: 999;
+  background-color: #FFF;
+  clear: left;
+
+  border-radius: 2px;
+
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+
+  li {
+      margin: 4px 0;
+  }
+}
+
+
+ul.token-input-list li input {
+  padding: 0;
+  border: 0;
+  width: 100%;
+  -webkit-appearance: caret;
+}
+
+li.token-input-token {
+  padding: 0 6px;
+  height: 27px;
+  line-height: 27px; 
+  background-color: #F3F3F0;
+  cursor: default;
+  font-size: .92857em;
+  white-space: nowrap;
+  p {
+      display: inline;
+      margin: 0;
+  }
+  span {
+      float: right;
+      color: #BBB;
+      font-weight: bold;
+      cursor: pointer;
+  }
+}
+
+
+
+li.token-input-selected-token {
+  background-color: #E9E9E6;
+}
+
+li.token-input-input-token {
+  padding: 0 4px;
+}
+
+div.token-input-dropdown {
+  position: absolute;
+  background-color: #FFF;
+  overflow: hidden;
+  border: 1px solid #D9D9D6;
+  border-top-width: 0;
+  cursor: default;
+  z-index: 1;
+  font-size: .92857em;
+}
+
+div.token-input-dropdown p {
+  margin: 0;
+  padding: 5px 10px;
+  color: #777;
+  font-weight: bold;
+}
+
+div.token-input-dropdown ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+div.token-input-dropdown ul li {
+  padding: 4px 10px;
+  background-color: #FFF;
+}
+
+div.token-input-dropdown ul li.token-input-dropdown-item {
+  background-color: #FFF;
+}
+
+div.token-input-dropdown ul li em {
+  font-style: normal;
+}
+
+div.token-input-dropdown ul li.token-input-selected-dropdown-item {
+  background-color: #467B96;
+  color: #FFF;
+}

@@ -1,0 +1,37 @@
+/**
+* 提示信息框
+*/
+.message {
+  padding: 10px;
+
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+}
+
+.message a {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.error {
+  border: 1px solid #FBC2C4;
+  background: #FBE3E4;
+  color: #8A1F11;
+}
+.error a { color: #8A1F11; }
+
+.notice {
+  background: #FFF6BF;
+  border: 1px solid  #FFD324;
+  color: #514721;
+}
+.notice a { color: #514721; }
+
+.success {
+  background: #E6EFC2;
+  border: 1px solid #C6D880;
+  color: #264409;
+}
+.success a { color: #264409; }
+
