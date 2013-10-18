@@ -168,12 +168,16 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         $path = Typecho_Common::url($content['attachment']->path, __TYPECHO_ROOT_DIR__);
 
         if (isset($file['tmp_name'])) {
+            
+            @unlink($path);
 
             //移动上传文件
             if (!move_uploaded_file($file['tmp_name'], $path)) {
                 return false;
             }
         } else if (isset($file['bytes'])) {
+            
+            @unlink($path);
 
             //直接写入文件
             if (!file_put_contents($path, $file['bytes'])) {
