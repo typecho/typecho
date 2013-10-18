@@ -218,7 +218,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                     </ul>
                     </div>
 
-                    <p><?php _e('希望你能尽情享用 Typecho 带来的乐趣!'); ?></p>
+                    <p><?php _e('希望您能尽情享用 Typecho 带来的乐趣!'); ?></p>
                 </div>
                 <?php endif;?>
             <?php elseif (isset($_GET['start'])): ?>
@@ -508,8 +508,8 @@ Typecho_Db::set(\$db);
                         ?>
                         <ul class="typecho-option">
                             <li>
-                            <label class="typecho-label"><?php _e('数据库适配器'); ?></label>
-                            <select name="dbAdapter">
+                            <label for="dbAdapter" class="typecho-label"><?php _e('数据库适配器'); ?></label>
+                            <select name="dbAdapter" id="dbAdapter">
                                 <?php if (_p('Mysql')): ?><option value="Mysql"<?php if('Mysql' == $adapter): ?> selected=true<?php endif; ?>><?php _e('Mysql 原生函数适配器') ?></option><?php endif; ?>
                                 <?php if (_p('SQLite')): ?><option value="SQLite"<?php if('SQLite' == $adapter): ?> selected=true<?php endif; ?>><?php _e('SQLite 原生函数适配器 (SQLite 2.x)') ?></option><?php endif; ?>
                                 <?php if (_p('Pgsql')): ?><option value="Pgsql"<?php if('Pgsql' == $adapter): ?> selected=true<?php endif; ?>><?php _e('Pgsql 原生函数适配器') ?></option><?php endif; ?>
@@ -517,12 +517,12 @@ Typecho_Db::set(\$db);
                                 <?php if (_p('Pdo_SQLite')): ?><option value="Pdo_SQLite"<?php if('Pdo_SQLite' == $adapter): ?> selected=true<?php endif; ?>><?php _e('Pdo 驱动 SQLite 适配器 (SQLite 3.x)') ?></option><?php endif; ?>
                                 <?php if (_p('Pdo_Pgsql')): ?><option value="Pdo_Pgsql"<?php if('Pdo_Pgsql' == $adapter): ?> selected=true<?php endif; ?>><?php _e('Pdo 驱动 PostgreSql 适配器') ?></option><?php endif; ?>
                             </select>
-                            <p class="description"><?php _e('请根据你的数据库类型选择合适的适配器'); ?></p>
+                            <p class="description"><?php _e('请根据您的数据库类型选择合适的适配器'); ?></p>
                             </li>
                             <?php require_once './install/' . $type . '.php'; ?>
                             <li>
-                            <label class="typecho-label"><?php _e('数据库前缀'); ?></label>
-                            <input type="text" class="text" name="dbPrefix" value="<?php _v('dbPrefix', 'typecho_'); ?>" />
+                            <label class="typecho-label" for="dbPrefix"><?php _e('数据库前缀'); ?></label>
+                            <input type="text" class="text" name="dbPrefix" id="dbPrefix" value="<?php _v('dbPrefix', 'typecho_'); ?>" />
                             <p class="description"><?php _e('默认前缀是 "typecho_"'); ?></p>
                             </li>
                         </ul>
@@ -537,18 +537,18 @@ Typecho_Db::set(\$db);
                         <h2><?php _e('创建您的管理员帐号'); ?></h2>
                         <ul class="typecho-option">
                             <li>
-                            <label class="typecho-label"><?php _e('网站地址'); ?></label>
-                            <input type="text" name="userUrl" class="text" value="<?php _v('userUrl', _u()); ?>" />
+                            <label class="typecho-label" for="userUrl"><?php _e('网站地址'); ?></label>
+                            <input type="text" name="userUrl" id="userUrl" class="text" value="<?php _v('userUrl', _u()); ?>" />
                             <p class="description"><?php _e('这是程序自动匹配的网站路径, 如果不正确请修改它'); ?></p>
                             </li>
                             <li>
-                            <label class="typecho-label"><?php _e('用户名'); ?></label>
-                            <input type="text" name="userName" class="text" value="<?php _v('userName', 'admin'); ?>" />
+                            <label class="typecho-label" for="userName"><?php _e('用户名'); ?></label>
+                            <input type="text" name="userName" id="userName" class="text" value="<?php _v('userName', 'admin'); ?>" />
                             <p class="description"><?php _e('请填写您的用户名'); ?></p>
                             </li>
                             <li>
-                            <label class="typecho-label"><?php _e('邮件地址'); ?></label>
-                            <input type="text" name="userMail" class="text" value="<?php _v('userMail', 'webmaster@yourdomain.com'); ?>" />
+                            <label class="typecho-label" for="userMail"><?php _e('邮件地址'); ?></label>
+                            <input type="text" name="userMail" id="userMail" class="text" value="<?php _v('userMail', 'webmaster@yourdomain.com'); ?>" />
                             <p class="description"><?php _e('请填写一个您的常用邮箱'); ?></p>
                             </li>
                         </ul>
@@ -561,12 +561,12 @@ Typecho_Db::set(\$db);
                 <h1 class="typecho-install-title"><?php _e('欢迎使用 Typecho'); ?></h1>
                 <div class="typecho-install-body">
                 <h2><?php _e('安装说明'); ?></h2>
-                <p><strong><?php _e('本安装程序将自动检测服务器环境是否符合最低配置需求. 如果不符合, 将在上方出现提示信息, 请按照提示信息检查你的主机配置. 如果服务器环境符合要求, 将在下方出现 "开始下一步" 的按钮, 点击此按钮即可一步完成安装.'); ?></strong></p>
+                <p><strong><?php _e('本安装程序将自动检测服务器环境是否符合最低配置需求. 如果不符合, 将在上方出现提示信息, 请按照提示信息检查您的主机配置. 如果服务器环境符合要求, 将在下方出现 "开始下一步" 的按钮, 点击此按钮即可一步完成安装.'); ?></strong></p>
                 <h2><?php _e('许可及协议'); ?></h2>
                 <p><?php _e('Typecho 基于 <a href="http://www.gnu.org/copyleft/gpl.html">GPL</a> 协议发布,我们允许用户在 GPL 协议许可的范围内使用,拷贝,修改和分发此程序.
-你可以自由地将其用于商业以及非商业用途.'); ?></p>
-                <p><?php _e('Typecho 软件由其社区提供支持,核心开发团队负责维护程序日常开发工作以及新特性的制定.如果你遇到使用上的问题,
-程序中的 BUG,以及期许的新功能,欢迎你在社区中交流或者直接向我们贡献代码.对于贡献突出者,他的名字将出现在贡献者名单中.'); ?></p>
+您可以自由地将其用于商业以及非商业用途.'); ?></p>
+                <p><?php _e('Typecho 软件由其社区提供支持,核心开发团队负责维护程序日常开发工作以及新特性的制定.如果您遇到使用上的问题,
+程序中的 BUG,以及期许的新功能,欢迎您在社区中交流或者直接向我们贡献代码.对于贡献突出者,他的名字将出现在贡献者名单中.'); ?></p>
                 <h3><?php _e('此版本贡献者(排名不分先后)'); ?></h3>
                 <ol>
 

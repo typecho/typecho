@@ -37,7 +37,8 @@ class Typecho_Db_Adapter_Pdo_Mysql extends Typecho_Db_Adapter_Pdo
      */
     public function init(Typecho_Config $config)
     {
-        $pdo = new PDO("mysql:dbname={$config->database};host={$config->host};port={$config->port}", $config->user, $config->password);
+        $pdo = new PDO(!empty($config->dsn) ? $config->dsn :
+            "mysql:dbname={$config->database};host={$config->host};port={$config->port}", $config->user, $config->password);
         $pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
         $pdo->exec("SET NAMES '{$config->charset}'");
         return $pdo;
