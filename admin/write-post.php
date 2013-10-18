@@ -35,7 +35,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                     <?php include 'file-upload.php'; ?>
 
                     <?php Typecho_Plugin::factory('admin/write-post.php')->content($post); ?>
-                    <p class="submit">
+                    <p class="submit clearfix">
                         <span class="right">
                             <input type="hidden" name="cid" value="<?php $post->cid(); ?>" />
                             <button type="submit" name="do" value="save" id="btn-save"><?php _e('保存草稿'); ?></button>
