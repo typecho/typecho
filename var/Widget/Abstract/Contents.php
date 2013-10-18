@@ -88,7 +88,12 @@ class Widget_Abstract_Contents extends Widget_Abstract
 
         $excerpt = $this->pluginHandle(__CLASS__)->trigger($plugged)->excerpt($excerpt, $this);
         if (!$plugged) {
-            $excerpt = Typecho_Common::cutParagraph($excerpt);
+            if ($this->isMarkdown) {
+                $markdown = new Markdown();
+                $excerpt = $markdown->transform($excerpt);
+            } else {
+                $excerpt = Typecho_Common::cutParagraph($excerpt);
+            }
         }
 
         return Typecho_Common::fixHtml($this->pluginHandle(__CLASS__)->excerptEx($excerpt, $this));
@@ -105,7 +110,12 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $content = $this->pluginHandle(__CLASS__)->trigger($plugged)->content($this->text, $this);
 
         if (!$plugged) {
-            $content = Typecho_Common::cutParagraph($content);
+            if ($this->isMarkdown) {
+                $markdown = new Markdown();
+                $content = $markdown->transform($content);
+            } else {
+                $content = Typecho_Common::cutParagraph($content);
+            }
         }
 
         return $this->pluginHandle(__CLASS__)->contentEx($content, $this);
@@ -476,6 +486,12 @@ class Widget_Abstract_Contents extends Widget_Abstract
                 $value['text'] = '<a href="' . $value['attachment']->url . '" title="' .
                 $value['title'] . '">' . $value['title'] . '</a>';
             }
+        }
+
+        /** 处理Markdown **/
+        $value['isMarkdown'] = (0 === strpos('<!--markdown-->', $value['text']));
+        if ($value['isMarkdown']) {
+            $value['text'] = substr($value['text'], 15);
         }
 
         /** 生成聚合链接 */

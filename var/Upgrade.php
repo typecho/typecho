@@ -955,4 +955,37 @@ Typecho_Date::setTimezoneOffset($options->timezone);
     {
         Typecho_Widget::widget('Widget_Themes_Edit', NULL, 'change=' . $options->theme, false)->action();
     }
+
+    
+    /**
+     * 升级至13.10.18 
+     * 
+     * @param mixed $db 
+     * @param mixed $options 
+     * @static
+     * @access public
+     * @return void
+     */
+    public static function v0_9r13_10_18($db, $options)
+    {
+        // 增加markdown
+        $db->query($db->insert('table.options')
+            ->rows(array('name' => 'markdown', 'user' => 0, 'value' => 0)));
+
+        // 更新原来被搞乱的草稿
+        $db->query($db->update('table.contents')
+            ->rows(array(
+                'type'      =>  'post_draft',
+                'status'    =>  'publish'
+            ))
+            ->where('type = ? AND status = ?', 'post', 'draft'));
+
+        $db->query($db->update('table.contents')
+            ->rows(array(
+                'type'      =>  'page_draft',
+                'status'    =>  'publish'
+            ))
+            ->where('type = ? AND status = ?', 'page', 'draft'));
+    }
 }
+

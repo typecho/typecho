@@ -92,13 +92,13 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/action/users-profile', $this->options->index),
         Typecho_Widget_Helper_Form::POST_METHOD);
 
-        /** 编辑器 */
-        /*
-        $useRichEditor = new Typecho_Widget_Helper_Form_Element_Radio('useRichEditor',
-        array('0' => _t('文本编辑器'), '1' => _t('所见即所得编辑器')),
-        $this->options->useRichEditor, _t('编辑器选择'), _t('根据你的个人偏好选择合适的编辑器.'));
-        $form->addInput($useRichEditor);
-        */
+        /** 自动保存 */
+        $markdown = new Typecho_Widget_Helper_Form_Element_Radio('markdown',
+        array('0' => _t('关闭'), '1' => _t('打开')),
+        $this->options->markdown, _t('使用Markdown语法编辑和解析内容'), 
+            _t('使用Markdown语法能够使您的撰写过程更加简便直观.<br />
+此功能开启不会影响以前没有使用Markdown语法编辑的内容.'));
+        $form->addInput($markdown);
 
         /** 自动保存 */
         $autoSave = new Typecho_Widget_Helper_Form_Element_Radio('autoSave',

@@ -7,7 +7,7 @@ if (isset($post) && $post instanceof Typecho_Widget && $post->have()) {
 }
 ?>
 
-<script src="<?php $options->adminUrl('javascript/filedrop.js?v=' . $suffixVersion); ?>"></script>
+<script src="<?php $options->adminUrl('js/filedrop.js?v=' . $suffixVersion); ?>"></script>
 <script>
 $(document).ready(function() {
     var errorWord = '<?php $val = function_exists('ini_get') ? trim(ini_get('upload_max_filesize')) : 0;

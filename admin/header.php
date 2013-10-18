@@ -6,7 +6,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
 $header = '<link rel="stylesheet" href="' . Typecho_Common::url('css/normalize.css?v=' . $suffixVersion, $options->adminUrl) . '"> 
 <link rel="stylesheet" href="' . Typecho_Common::url('css/grid.css?v=' . $suffixVersion, $options->adminUrl) . '"> 
 <link rel="stylesheet" href="' . Typecho_Common::url('css/style.css?v=' . $suffixVersion, $options->adminUrl) . '">
-<script src="' . Typecho_Common::url('javascript/modernizr.min.js?v=' . $suffixVersion, $options->adminUrl) . '"></script>';
+<script src="' . Typecho_Common::url('js/modernizr.min.js?v=' . $suffixVersion, $options->adminUrl) . '"></script>';
 
 /** 注册一个初始化插件 */
 $header = Typecho_Plugin::factory('admin/header.php')->header($header);
