@@ -23,10 +23,9 @@ body {
 a {
   color: #467B96;
   text-decoration: none; }
-
-a:hover {
-  color: #6DA1BB;
-  text-decoration: underline; }
+  a:hover {
+    color: #6DA1BB;
+    text-decoration: underline; }
 
 code, pre, .mono {
   font-family: Menlo, Monaco, Consolas, "Courier New", monospace; }
@@ -120,16 +119,24 @@ select {
 * Buttons
 */
 button {
-  display: inline-block;
-  margin: 0;
-  padding: 0 12px;
   border: none;
+  background-color: #e9e9e6;
+  cursor: pointer;
+  display: inline-block;
+  padding: 0 12px;
   height: 32px;
   color: #666;
   vertical-align: middle;
-  cursor: pointer;
-  zoom: 1;
-  background-color: #E9E9E6; }
+  zoom: 1; }
+  button:hover {
+    background-color: #e2e2de; }
+  button:active, button.active {
+    background-color: #e2e2de; }
+  button:disabled {
+    background-color: #f0f0ee;
+    cursor: default; }
+  button:disabled {
+    color: #999; }
 
 .btn-s {
   height: 28px; }
@@ -139,29 +146,25 @@ button {
   font-size: 1.14286em;
   font-weight: bold; }
 
-button:hover {
-  background: #F6F6F3; }
-
-button:disabled, button:active, button.active {
-  background: #DDD; }
-
-button:disabled {
-  color: #AAA;
-  cursor: default; }
-
 button, .dropdown-menu {
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
   border-radius: 2px; }
 
-button.primary {
-  background-color: #467B96;
+.primary {
+  border: none;
+  background-color: #467b96;
+  cursor: pointer;
   color: #FFF; }
-
-button.primary:hover {
-  background: #e0eef6;
-  color: #5591b0; }
-
-button.primary:active, button.primary.active {
-  background: #dcebf4; }
+  .primary:hover {
+    background-color: #41728c; }
+  .primary:active, .primary.active {
+    background-color: #41728c; }
+  .primary:disabled {
+    background-color: #4b84a0;
+    cursor: default; }
 
 .btn-group {
   display: inline-block; }
@@ -173,22 +176,6 @@ button.primary:active, button.primary.active {
   -o-border-radius: 0;
   border-radius: 0;
   margin-left: -1px; }
-
-.btn-group > a:first-child, .btn-group > span:first-child {
-  -moz-border-radius-topleft: 2px;
-  -webkit-border-top-left-radius: 2px;
-  border-top-left-radius: 2px;
-  -moz-border-radius-bottomleft: 2px;
-  -webkit-border-bottom-left-radius: 2px;
-  border-bottom-left-radius: 2px; }
-
-.btn-group > a:last-child, .btn-group > a.dropdown-toggle, .btn-group > span:last-child, .btn-group > span.dropdown-toggle {
-  -moz-border-radius-topright: 2px;
-  -webkit-border-top-right-radius: 2px;
-  border-top-right-radius: 2px;
-  -moz-border-radius-bottomright: 2px;
-  -webkit-border-bottom-right-radius: 2px;
-  border-bottom-right-radius: 2px; }
 
 .btn-drop {
   position: relative; }
@@ -204,9 +191,8 @@ button.primary:active, button.primary.active {
   text-align: left;
   min-width: 108px;
   display: none; }
-
-.dropdown-menu li {
-  white-space: nowrap; }
+  .dropdown-menu li {
+    white-space: nowrap; }
 
 .dropdown-menu li p {
   padding: 5px 15px; }
@@ -215,10 +201,9 @@ button.primary:active, button.primary.active {
   display: block;
   padding: 3px 15px;
   color: #666; }
-
-.dropdown-menu li a:hover {
-  background: #e9e9e9;
-  text-decoration: none !important; }
+  .dropdown-menu li a:hover {
+    background: #e9e9e9;
+    text-decoration: none !important; }
 
 /**
 * 提示信息框
@@ -401,7 +386,7 @@ button.primary:active, button.primary.active {
   border: none;
   text-align: center; }
 
-/** 增加顶部消息样式 by 70 */
+/** 顶部消息样式 by 70 */
 .popup {
   display: none;
   position: absolute;
@@ -887,6 +872,9 @@ a.operate-reply {
 /**
 * 标签列表
 */
+.manage-metas .typecho-list-operate {
+  margin-top: 0; }
+
 .typecho-page-main ul.tag-list {
   list-style: none;
   margin: 0;

@@ -1,52 +1,52 @@
+@import "compass";
+
 /**
 * Buttons
 */
 
-button {
-  display: inline-block;
-  margin: 0;
-  padding: 0 12px;
+@mixin button($color) {
   border: none;
+  background-color: $color;
+  cursor: pointer;
+
+  &:hover {
+    background-color: darken($color, 3%);
+    // @include background-image(linear-gradient($color, darken($color, 3%)));
+  }
+  &:active, &.active {
+    background-color: darken($color, 3%);
+  }
+  &:disabled {
+    background-color: lighten($color, 3%);
+    cursor: default;
+  }
+}
+
+button {
+  @include button(#E9E9E6);
+
+  display: inline-block;
+  padding: 0 12px;
   height: 32px;
   color: #666;
   vertical-align: middle;
-  cursor: pointer;
   zoom: 1;
 
-  background-color: #E9E9E6;
+  &:disabled {
+    color: #999;
+  }
 }
 
 .btn-s { height: 28px; }
 .btn-l { height: 40px; font-size: 1.14286em; font-weight: bold; }
 
-button:hover { 
-  background: #F6F6F3;
-}
-
-button:disabled, button:active, button.active {
-  background: #DDD;
-}
-button:disabled {
-  color: #AAA;
-  cursor: default;
-}
-
 button, .dropdown-menu {
-  border-radius: 2px;
+  @include border-radius(2px);
 }
 
-button.primary {
-  background-color: #467B96;
+.primary {
+  @include button(#467B96);
   color: #FFF;
-}
-
-button.primary:hover {
-  background: #e0eef6;
-  color: #5591b0;
-}
-
-button.primary:active, button.primary.active {
-  background: #dcebf4;
 }
 
 .btn-group {
@@ -60,24 +60,6 @@ button.primary:active, button.primary.active {
   -o-border-radius: 0;
   border-radius: 0;
   margin-left: -1px;
-}
-
-.btn-group > a:first-child, .btn-group > span:first-child {
-  -moz-border-radius-topleft: 2px;
-  -webkit-border-top-left-radius: 2px;
-  border-top-left-radius: 2px;
-  -moz-border-radius-bottomleft: 2px;
-  -webkit-border-bottom-left-radius: 2px;
-  border-bottom-left-radius: 2px; 
-}
-
-.btn-group > a:last-child, .btn-group > a.dropdown-toggle, .btn-group > span:last-child, .btn-group > span.dropdown-toggle {
-  -moz-border-radius-topright: 2px;
-  -webkit-border-top-right-radius: 2px;
-  border-top-right-radius: 2px;
-  -moz-border-radius-bottomright: 2px;
-  -webkit-border-bottom-right-radius: 2px;
-  border-bottom-right-radius: 2px;
 }
 
 .btn-drop {
@@ -95,10 +77,10 @@ button.primary:active, button.primary.active {
   text-align: left;
   min-width: 108px;
   display: none;
-}
 
-.dropdown-menu li {
-  white-space: nowrap;
+  li {
+    white-space: nowrap;
+  }
 }
 
 .dropdown-menu li p {
@@ -109,9 +91,9 @@ button.primary:active, button.primary.active {
   display: block;
   padding: 3px 15px;
   color: #666;
+  &:hover {
+    background: #e9e9e9;
+    text-decoration: none !important;
+  }
 }
 
-.dropdown-menu li a:hover {
-  background: #e9e9e9;
-  text-decoration: none !important;
-}

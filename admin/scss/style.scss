@@ -27,11 +27,10 @@ body {
 a {
   color: #467B96;
   text-decoration: none;
-}
-
-a:hover {
-  color: #6DA1BB;
-  text-decoration: underline;
+  &:hover {
+    color: #6DA1BB;
+    text-decoration: underline;
+  }
 }
 
 code, pre, .mono { 
@@ -80,7 +79,7 @@ a.button:hover, a.balloon-button:hover {
   text-align: center;
 }
 
-/** 增加顶部消息样式 by 70 */
+/** 顶部消息样式 by 70 */
 .popup {
   display: none;
   position: absolute;
@@ -684,6 +683,11 @@ background: #FFF1A8;
 /**
 * 标签列表
 */
+
+.manage-metas .typecho-list-operate {
+  margin-top: 0;
+}
+
 .typecho-page-main ul.tag-list {
   list-style: none;
   margin: 0;
