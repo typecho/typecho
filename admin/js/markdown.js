@@ -4128,10 +4128,12 @@ else
             // The main dialog box.
             dialog = doc.createElement("div");
             dialog.className = "wmd-prompt-dialog";
+            /*
             dialog.style.padding = "10px;";
             dialog.style.position = "fixed";
             dialog.style.width = "400px";
             dialog.style.zIndex = "1001";
+            */
 
             // The dialog text.
             var question = doc.createElement("div");
@@ -4143,22 +4145,26 @@ else
             var form = doc.createElement("form"),
                 style = form.style;
             form.onsubmit = function () { return close(false); };
+            /*
             style.padding = "0";
             style.margin = "0";
             style.cssFloat = "left";
             style.width = "100%";
             style.textAlign = "center";
             style.position = "relative";
+            */
             dialog.appendChild(form);
 
             // The input text box
             input = doc.createElement("input");
             input.type = "text";
             input.value = defaultInputText;
+            /*
             style = input.style;
             style.display = "block";
             style.width = "80%";
             style.marginLeft = style.marginRight = "auto";
+            */
             form.appendChild(input);
 
             // The ok button
@@ -4166,26 +4172,30 @@ else
             okButton.type = "button";
             okButton.onclick = function () { return close(false); };
             okButton.value = "OK";
+            /*
             style = okButton.style;
             style.margin = "10px";
             style.display = "inline";
             style.width = "7em";
-
+            */
 
             // The cancel button
             var cancelButton = doc.createElement("input");
             cancelButton.type = "button";
             cancelButton.onclick = function () { return close(true); };
             cancelButton.value = "Cancel";
+            /*
             style = cancelButton.style;
             style.margin = "10px";
             style.display = "inline";
             style.width = "7em";
+            */
 
             form.appendChild(okButton);
             form.appendChild(cancelButton);
 
             util.addEvent(doc.body, "keydown", checkEscape);
+            /*
             dialog.style.top = "50%";
             dialog.style.left = "50%";
             dialog.style.display = "block";
@@ -4194,12 +4204,15 @@ else
                 dialog.style.top = doc.documentElement.scrollTop + 200 + "px";
                 dialog.style.left = "50%";
             }
+            */
             doc.body.appendChild(dialog);
 
             // This has to be done AFTER adding the dialog to the form if you
             // want it to be centered.
+            /*
             dialog.style.marginTop = -(position.getHeight(dialog) / 2) + "px";
             dialog.style.marginLeft = -(position.getWidth(dialog) / 2) + "px";
+            */
 
         };
 

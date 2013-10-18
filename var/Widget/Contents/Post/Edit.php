@@ -556,6 +556,11 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
 
         $contents['title'] = $this->request->get('title', _t('未命名文档'));
         $contents['created'] = $this->getCreated();
+
+        if ($this->request->markdown && $this->options->markdown) {
+            $contents['text'] = '<!--markdown-->' . $contents['text'];
+        }
+
         $contents = $this->pluginHandle()->write($contents, $this);
 
         if ($this->request->is('do=publish')) {

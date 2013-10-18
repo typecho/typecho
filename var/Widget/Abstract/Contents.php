@@ -489,7 +489,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
         }
 
         /** 处理Markdown **/
-        $value['isMarkdown'] = (0 === strpos('<!--markdown-->', $value['text']));
+        $value['isMarkdown'] = (0 === strpos($value['text'], '<!--markdown-->'));
         if ($value['isMarkdown']) {
             $value['text'] = substr($value['text'], 15);
         }
