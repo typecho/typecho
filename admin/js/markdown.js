@@ -4170,7 +4170,7 @@ else
             // The ok button
             var okButton = doc.createElement("button");
             okButton.type = "button";
-            okButton.className = "primary";
+            okButton.className = "btn-s primary";
             okButton.onclick = function () { return close(false); };
             okButton.innerHTML = "OK";
             /*
@@ -4183,6 +4183,7 @@ else
             // The cancel button
             var cancelButton = doc.createElement("button");
             cancelButton.type = "button";
+            cancelButton.className = "btn-s";
             cancelButton.onclick = function () { return close(true); };
             cancelButton.innerHTML = "Cancel";
             /*

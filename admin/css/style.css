@@ -1091,7 +1091,7 @@ a.operate-reply {
   .wmd-prompt-dialog input[type="text"] {
     margin-bottom: 10px;
     width: 100%; }
-  .wmd-prompt-dialog input[type="button"] {
+  .wmd-prompt-dialog button {
     margin-right: 10px; }
 
 /* 预览 */
