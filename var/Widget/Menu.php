@@ -131,7 +131,7 @@ class Widget_Menu extends Typecho_Widget
             array(_t('评论'), _t('管理评论'), 'manage-comments.php', 'contributor'),
             array(array('Widget_Comments_Admin', 'getMenuTitle'), array('Widget_Comments_Admin', 'getMenuTitle'), 'manage-comments.php?cid=', 'contributor', true),
             array(_t('标签和分类'), _t('标签和分类'), 'manage-metas.php', 'editor'),
-            array(_t('附件'), _t('管理附件'), 'manage-medias.php', 'editor'),
+            array(_t('文件'), _t('管理文件'), 'manage-medias.php', 'editor'),
             array(array('Widget_Contents_Attachment_Edit', 'getMenuTitle'), array('Widget_Contents_Attachment_Edit', 'getMenuTitle'), 'media.php?cid=', 'contributor', true),
             array(_t('用户'), _t('管理用户'), 'manage-users.php', 'administrator', false, 'user.php'),
             array(_t('新增用户'), _t('新增用户'), 'user.php', 'administrator', true),

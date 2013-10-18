@@ -1,6 +1,6 @@
 <?php
 /**
- * 附件管理列表
+ * 文件管理列表
  *
  * @category typecho
  * @package Widget
@@ -10,7 +10,7 @@
  */
 
 /**
- * 附件管理列表组件
+ * 文件管理列表组件
  *
  * @category typecho
  * @package Widget
@@ -78,7 +78,7 @@ class Widget_Contents_Attachment_Admin extends Widget_Abstract_Contents
         /** 构建基础查询 */
         $select = $this->select()->where('table.contents.type = ?', 'attachment');
 
-        /** 如果具有编辑以上权限,可以查看所有附件,反之只能查看自己的附件 */
+        /** 如果具有编辑以上权限,可以查看所有文件,反之只能查看自己的文件 */
         if (!$this->user->pass('editor', true)) {
             $select->where('table.contents.authorId = ?', $this->user->uid);
         }

@@ -24,7 +24,7 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
      * 获取页面偏移的URL Query
      *
      * @access protected
-     * @param integer $cid 附件id
+     * @param integer $cid 文件id
      * @param string $status 状态
      * @return string
      */
@@ -54,7 +54,7 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
             ->limit(1), array($this, 'push'));
 
             if (!$this->have()) {
-                throw new Typecho_Widget_Exception(_t('附件不存在'), 404);
+                throw new Typecho_Widget_Exception(_t('文件不存在'), 404);
             } else if ($this->have() && !$this->allow('edit')) {
                 throw new Typecho_Widget_Exception(_t('没有编辑权限'), 403);
             }
@@ -62,10 +62,10 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
     }
 
     /**
-     * 判断附件名转换到缩略名后是否合法
+     * 判断文件名转换到缩略名后是否合法
      *
      * @access public
-     * @param string $name 附件名
+     * @param string $name 文件名
      * @return boolean
      */
     public function nameToSlug($name)
@@ -81,7 +81,7 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
     }
 
     /**
-     * 判断附件缩略名是否存在
+     * 判断文件缩略名是否存在
      *
      * @access public
      * @param string $slug 缩略名
@@ -116,18 +116,18 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
         $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/action/contents-attachment-edit', $this->options->index),
         Typecho_Widget_Helper_Form::POST_METHOD);
 
-        /** 附件名称 */
+        /** 文件名称 */
         $name = new Typecho_Widget_Helper_Form_Element_Text('name', NULL, $this->title, _t('标题 *'));
         $form->addInput($name);
 
-        /** 附件缩略名 */
+        /** 文件缩略名 */
         $slug = new Typecho_Widget_Helper_Form_Element_Text('slug', NULL, $this->slug, _t('缩略名'),
-        _t('附件缩略名用于创建友好的链接形式,建议使用字母,数字,下划线和横杠.'));
+        _t('文件缩略名用于创建友好的链接形式,建议使用字母,数字,下划线和横杠.'));
         $form->addInput($slug);
 
-        /** 附件描述 */
+        /** 文件描述 */
         $description =  new Typecho_Widget_Helper_Form_Element_Textarea('description', NULL, $this->attachment->description,
-        _t('描述'), _t('此文字用于描述附件,在有的主题中它会被显示.'));
+        _t('描述'), _t('此文字用于描述文件,在有的主题中它会被显示.'));
         $form->addInput($description);
 
         /** 分类动作 */
@@ -143,19 +143,19 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
         $delete = new Typecho_Widget_Helper_Layout('a', array('href' =>
         Typecho_Common::url('/action/contents-attachment-edit?do=delete&cid=' . $this->cid, $this->options->index),
         'class' => 'operate-delete',
-        'lang'  => _t('你确认删除附件 %s 吗?', $this->attachment->name)));
-        $submit->container($delete->html(_t('删除附件')));
+        'lang'  => _t('你确认删除文件 %s 吗?', $this->attachment->name)));
+        $submit->container($delete->html(_t('删除文件')));
         $form->addItem($submit);
 
-        $name->addRule('required', _t('必须填写附件标题'));
-        $name->addRule(array($this, 'nameToSlug'), _t('附件标题无法被转换为缩略名'));
+        $name->addRule('required', _t('必须填写文件标题'));
+        $name->addRule(array($this, 'nameToSlug'), _t('文件标题无法被转换为缩略名'));
         $slug->addRule(array($this, 'slugExists'), _t('缩略名已经存在'));
 
         return $form;
     }
 
     /**
-     * 更新附件
+     * 更新文件
      *
      * @access public
      * @return void
@@ -194,8 +194,8 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
 
             /** 提示信息 */
             $this->widget('Widget_Notice')->set('publish' == $this->status ?
-            _t('附件 <a href="%s">%s</a> 已经被更新', $this->permalink, $this->title) :
-            _t('未归档附件 %s 已经被更新', $this->title), NULL, 'success');
+            _t('文件 <a href="%s">%s</a> 已经被更新', $this->permalink, $this->title) :
+            _t('未归档文件 %s 已经被更新', $this->title), NULL, 'success');
 
         }
 
@@ -245,11 +245,11 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
         }
 
         if ($this->request->isAjax()) {
-            $this->response->throwJson($deleteCount > 0 ? array('code' => 200, 'message' => _t('附件已经被删除'))
-            : array('code' => 500, 'message' => _t('没有附件被删除')));
+            $this->response->throwJson($deleteCount > 0 ? array('code' => 200, 'message' => _t('文件已经被删除'))
+            : array('code' => 500, 'message' => _t('没有文件被删除')));
         } else {
             /** 设置提示信息 */
-            $this->widget('Widget_Notice')->set($deleteCount > 0 ? _t('附件已经被删除') : _t('没有附件被删除'), NULL,
+            $this->widget('Widget_Notice')->set($deleteCount > 0 ? _t('文件已经被删除') : _t('没有文件被删除'), NULL,
             $deleteCount > 0 ? 'success' : 'notice');
 
             /** 返回原网页 */
