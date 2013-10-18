@@ -4168,10 +4168,11 @@ else
             form.appendChild(input);
 
             // The ok button
-            var okButton = doc.createElement("input");
+            var okButton = doc.createElement("button");
             okButton.type = "button";
+            okButton.className = "primary";
             okButton.onclick = function () { return close(false); };
-            okButton.value = "OK";
+            okButton.innerHTML = "OK";
             /*
             style = okButton.style;
             style.margin = "10px";
@@ -4180,10 +4181,10 @@ else
             */
 
             // The cancel button
-            var cancelButton = doc.createElement("input");
+            var cancelButton = doc.createElement("button");
             cancelButton.type = "button";
             cancelButton.onclick = function () { return close(true); };
-            cancelButton.value = "Cancel";
+            cancelButton.innerHTML = "Cancel";
             /*
             style = cancelButton.style;
             style.margin = "10px";
