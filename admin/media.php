@@ -85,6 +85,7 @@ $(document).ready(function() {
         $('#' + id).html('<?php _e('附件 %s 已经替换'); ?>'.replace('%s', data.title))
         .effect('highlight', 1000, function () {
             $(this).remove();
+            window.location.reload();
         });
     }
 
