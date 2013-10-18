@@ -4,13 +4,19 @@
 
 $icons: sprite-map("icons/*.png");
 
+.icon-sprite-hack {
+  background: $icons;
+}
+
 %i-16 {
   width: 16px;
   height: 16px;
   display: inline-block;
   vertical-align: text-bottom;
-  background: $icons;
   background: url(../images/icons.png) no-repeat;
+  &:hover {
+    @include opacity(0.75);
+  }
 }
 
 .i-edit {

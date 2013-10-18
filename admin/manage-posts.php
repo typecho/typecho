@@ -82,7 +82,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             }
                             ?>
                             <?php if ('post_draft' != $posts->type): ?>
-                            <a class="right" href="<?php $posts->permalink(); ?>"><i class="i-exlink" title="<?php _e('浏览 %s', htmlspecialchars($posts->title)); ?>" /></i></a>
+                            <a href="<?php $posts->permalink(); ?>"><i class="i-exlink" title="<?php _e('浏览 %s', htmlspecialchars($posts->title)); ?>" /></i></a>
                             <?php endif; ?>
                             </td>
                             <td><a href="<?php $options->adminUrl('manage-posts.php?uid=' . $posts->author->uid); ?>"><?php $posts->author(); ?></a></td>

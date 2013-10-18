@@ -2,21 +2,36 @@
 * Editor
 */
 .editor {
-  margin-bottom: -0.5em;
-  font-size: .92857em;
+  margin-bottom: -1em;
 }
+
+.wmd-button-row {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    display: inline-block;
+    margin-right: 4px;
+    padding: 3px;
+    cursor: pointer;
+    &:hover {
+      background-color: #E9E9E6;
+    }
+    &.wmd-spacer {
+      height: 20px;
+      margin: 0 10px 0 6px;
+      padding: 3px 0;
+      width: 1px;
+      background: #E9E9E6;
+      cursor: default;
+    }
+  }
+}
+
 .editor span {
-  display: inline-block;
-  padding: 0 12px;
-  height: 25px;
-  line-height: 25px;
-  cursor: pointer;
-
-  &:hover { background-color: #E9E9E6; }
-  &:active { background-color: #467B96; color: #FFF; }
+  display: block;
+  width: 20px;
+  height: 20px;
+  background: transparent url(../images/editor.png) no-repeat;
 }
-
-.btnBold { font-weight: bold; }
-.btnItalic { font-style: italic; }
-.btnLink { text-decoration: underline; }
-.btnDel { text-decoration: line-through; }

@@ -160,7 +160,7 @@ $(document).ready(function() {
 <script src="<?php $options->adminUrl('js/markdown.js?v=' . $suffixVersion); ?>"></script>
 <script>
 $(document).ready(function () {
-    var toolbar = $('<p class="editor" id="wmd-button-bar" />').insertBefore($('#text').parent())
+    var toolbar = $('<div class="editor" id="wmd-button-bar" />').insertBefore($('#text').parent())
         preview = $('<div id="wmd-preview" />').insertAfter('.submit');
 
     var converter = new Showdown.converter(), options = {};

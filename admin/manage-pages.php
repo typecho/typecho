@@ -73,7 +73,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                                 }
                                 ?>
                                 <?php if ('page_draft' != $pages->type): ?>
-                                <a class="right" href="<?php $pages->permalink(); ?>"><i class="i-exlink" title="<?php _e('浏览 %s', htmlspecialchars($pages->title)); ?>"></i></a>
+                                <a href="<?php $pages->permalink(); ?>"><i class="i-exlink" title="<?php _e('浏览 %s', htmlspecialchars($pages->title)); ?>"></i></a>
                                 <?php endif; ?>
                                 </td>
                                 <td><?php $pages->slug(); ?></td>

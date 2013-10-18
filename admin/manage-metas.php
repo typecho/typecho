@@ -60,7 +60,7 @@ include 'menu.php';
                                 <tr id="mid-<?php $categories->theId(); ?>">
                                     <td><input type="checkbox" value="<?php $categories->mid(); ?>" name="mid[]"/></td>
                                     <td><a href="<?php echo $request->makeUriByRequest('mid=' . $categories->mid); ?>"><?php $categories->name(); ?></a>
-                                    <a class="right" href="<?php $categories->permalink(); ?>"><i class="i-exlink" title="<?php _e('浏览 %s', $categories->name); ?>"></i></a>
+                                    <a href="<?php $categories->permalink(); ?>"><i class="i-exlink" title="<?php _e('浏览 %s', $categories->name); ?>"></i></a>
                                     </td>
                                     <td><?php $categories->slug(); ?></td>
                                     <td>

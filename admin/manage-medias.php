@@ -63,7 +63,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                                 <td><a href="<?php $options->adminUrl('manage-comments.php?cid=' . $attachments->cid); ?>" class="balloon-button size-<?php echo Typecho_Common::splitByCount($attachments->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $attachments->commentsNum(); ?></a></td>
                                 <td>
                                 <a class="typecho-mime typecho-mime-<?php echo $mime; ?>" href="<?php $options->adminUrl('media.php?cid=' . $attachments->cid); ?>"><?php $attachments->title(); ?></a>
-                                <a class="right" href="<?php $attachments->permalink(); ?>"><i class="i-exlink" title="<?php _e('浏览 %s', $attachments->title); ?>"></i></a>
+                                <a href="<?php $attachments->permalink(); ?>"><i class="i-exlink" title="<?php _e('浏览 %s', $attachments->title); ?>"></i></a>
                                 </td>
                                 <td><?php $attachments->author(); ?></td>
                                 <td>

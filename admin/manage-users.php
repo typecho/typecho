@@ -56,7 +56,7 @@ include 'menu.php';
                                 <td><input type="checkbox" value="<?php $users->uid(); ?>" name="uid[]"/></td>
                                 <td><a href="<?php $options->adminUrl('manage-posts.php?uid=' . $users->uid); ?>" class="balloon-button left size-<?php echo Typecho_Common::splitByCount($users->postsNum, 1, 10, 20, 50, 100); ?>"><?php $users->postsNum(); ?></a></td>
                                 <td><a href="<?php $options->adminUrl('user.php?uid=' . $users->uid); ?>"><?php $users->name(); ?></a>
-                                <a class="right" href="<?php $users->permalink(); ?>"><i class="i-exlink" title="<?php _e('浏览 %s', $users->screenName); ?>"></i></a>
+                                <a href="<?php $users->permalink(); ?>"><i class="i-exlink" title="<?php _e('浏览 %s', $users->screenName); ?>"></i></a>
                                 </td>
                                 <td><?php $users->screenName(); ?></td>
                                 <td><?php if($users->mail): ?><a href="mailto:<?php $users->mail(); ?>"><?php $users->mail(); ?></a><?php else: _e('暂无'); endif; ?></td>
