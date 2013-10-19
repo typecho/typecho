@@ -39,3 +39,52 @@ $icons: sprite-map("icons/*.png");
   @extend %i-16;
   background-position: sprite-position($icons, icon-exlink);
 }
+
+
+/* 文件类型图标 */
+
+.typecho-mime {
+  @extend %i-16;
+  padding-left: 24px;
+  width: auto;
+}
+
+.typecho-mime-office {
+  background-position: sprite-position($icons, mime-office);
+}
+
+.typecho-mime-text {
+  background-position: sprite-position($icons, mime-text);
+}
+
+.typecho-mime-image {
+  background-position: sprite-position($icons, mime-image);
+}
+
+.typecho-mime-html {
+  background-position: sprite-position($icons, mime-html);
+}
+
+.typecho-mime-archive {
+  background-position: sprite-position($icons, mime-archive);
+}
+
+.typecho-mime-application {
+  background-position: sprite-position($icons, mime-application);
+}
+
+.typecho-mime-audio {
+  background-position: sprite-position($icons, mime-audio);
+}
+
+.typecho-mime-script {
+  background-position: sprite-position($icons, mime-script);
+}
+
+.typecho-mime-video {
+  background-position: sprite-position($icons, mime-video);
+}
+
+.typecho-mime-unknow {
+  background-position: sprite-position($icons, mime-unknow);
+}

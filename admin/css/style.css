@@ -979,15 +979,15 @@ a.operate-reply {
  * icons
  */
 .icon-sprite-hack {
-  background: url('../images/icons-s2ae04ce87c.png'); }
+  background: url('../images/icons-sa0d3de9e47.png'); }
 
-.i-edit, .i-delete, .i-caret-up, .i-caret-down, .i-exlink {
+.i-edit, .i-delete, .i-caret-up, .i-caret-down, .i-exlink, .typecho-mime {
   width: 16px;
   height: 16px;
   display: inline-block;
   vertical-align: text-bottom;
   background: url(../images/icons.png) no-repeat; }
-  .i-edit:hover, .i-delete:hover, .i-caret-up:hover, .i-caret-down:hover, .i-exlink:hover {
+  .i-edit:hover, .i-delete:hover, .i-caret-up:hover, .i-caret-down:hover, .i-exlink:hover, .typecho-mime:hover {
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=75);
     opacity: 0.75; }
 
@@ -998,50 +998,48 @@ a.operate-reply {
   background-position: 0 -16px; }
 
 .i-caret-up {
-  background-position: 0 -64px; }
+  background-position: 0 -208px; }
 
 .i-caret-down {
-  background-position: 0 -48px; }
+  background-position: 0 -128px; }
 
 .i-exlink {
   background-position: 0 0; }
 
+/* 文件类型图标 */
 .typecho-mime {
-  background-image: url(../images/mime.gif);
-  background-repeat: no-repeat;
   padding-left: 24px;
-  height: 16px;
-  line-height: 16px; }
+  width: auto; }
 
 .typecho-mime-office {
-  background-position: 0 0; }
-
-.typecho-mime-text {
-  background-position: 0 -16px; }
-
-.typecho-mime-image {
-  background-position: 0 -32px; }
-
-.typecho-mime-html {
-  background-position: 0 -48px; }
-
-.typecho-mime-archive {
-  background-position: 0 -64px; }
-
-.typecho-mime-application {
   background-position: 0 -80px; }
 
-.typecho-mime-audio {
+.typecho-mime-text {
+  background-position: 0 -192px; }
+
+.typecho-mime-image {
+  background-position: 0 -48px; }
+
+.typecho-mime-html {
   background-position: 0 -96px; }
 
-.typecho-mime-script {
+.typecho-mime-archive {
+  background-position: 0 -224px; }
+
+.typecho-mime-application {
   background-position: 0 -112px; }
 
+.typecho-mime-audio {
+  background-position: 0 -176px; }
+
+.typecho-mime-script {
+  background-position: 0 -144px; }
+
 .typecho-mime-video {
-  background-position: 0 -128px; }
+  background-position: 0 -64px; }
 
 .typecho-mime-unknow {
-  background-position: 0 -144px; }
+  background-position: 0 -160px; }
 
 /*
 * Editor
