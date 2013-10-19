@@ -100,7 +100,10 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
                 if ('off' == $this->request->__typecho_all_comments) {
                     Typecho_Cookie::set('__typecho_all_comments', 'off');
                 }
-                $select->where('table.comments.ownerId = ?', $this->user->uid);
+
+                if ('on' != Typecho_Cookie::get('__typecho_all_comments')) {
+                    $select->where('table.comments.ownerId = ?', $this->user->uid);
+                }
             }
         }
 

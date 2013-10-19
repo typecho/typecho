@@ -96,6 +96,8 @@ class Typecho_Cookie
         } else {
             setcookie($key, $value, $expire, $path);
         }
+        
+        $_COOKIE[$key] = $value;
     }
 
     /**
@@ -128,5 +130,8 @@ class Typecho_Cookie
         } else {
             setcookie($key, '', time() - 2592000, $path);
         }
+
+        unset($_COOKIE[$key]);
     }
 }
+
