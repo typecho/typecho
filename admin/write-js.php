@@ -124,17 +124,14 @@ $(document).ready(function() {
     var savedData = null, locked = false,
         formAction = form.attr('action'),
         idInput = $('input[name=cid]'),
+        cid = idInput.val(),
         autoSave = $('#auto-save-message'),
-        autoSaveOnce = !!idInput.val(),
-        lastSaveTime = null,
-        cid = null;
+        autoSaveOnce = !!cid,
+        lastSaveTime = null;
 
     function autoSaveListener () {
         setInterval(function () {
-            if (cid) {
-                idInput.val(cid);
-            }
-
+            idInput.val(cid);
             var data = form.serialize();
                 
             if (savedData != data && !locked) {
