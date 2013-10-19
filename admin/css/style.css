@@ -981,7 +981,7 @@ a.operate-reply {
  * icons
  */
 .icon-sprite-hack {
-  background: url('../images/icons-sa0d3de9e47.png'); }
+  background: url('../images/icons-s2ebed63329.png'); }
 
 .i-edit, .i-delete, .i-caret-up, .i-caret-down, .i-exlink, .mime-office, .mime-text, .mime-image, .mime-html, .mime-archive, .mime-application, .mime-audio, .mime-script, .mime-video, .mime-unknow {
   width: 16px;
@@ -1013,7 +1013,7 @@ a.operate-reply {
   background-position: 0 -80px; }
 
 .mime-text {
-  background-position: 0 -192px; }
+  background-position: 0 -176px; }
 
 .mime-image {
   background-position: 0 -48px; }
@@ -1022,13 +1022,13 @@ a.operate-reply {
   background-position: 0 -96px; }
 
 .mime-archive {
-  background-position: 0 -224px; }
+  background-position: 0 -192px; }
 
 .mime-application {
   background-position: 0 -112px; }
 
 .mime-audio {
-  background-position: 0 -176px; }
+  background-position: 0 -224px; }
 
 .mime-script {
   background-position: 0 -144px; }
