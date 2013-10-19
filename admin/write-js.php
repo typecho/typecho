@@ -68,7 +68,7 @@ $(document).ready(function() {
             preventDuplicates   :   true,
             animateDropdown :   false,
             hintText        :   '<?php _e('请输入标签名'); ?>',
-            noResultsText   :   '此标签不存在, 按回车创建',
+            noResultsText   :   '<?php _e('此标签不存在, 按回车创建'); ?>',
             prePopulate     :   tagsPre,
 
             onResult        :   function (result) {
@@ -208,6 +208,22 @@ $(document).ready(function () {
 
     var editor = new Markdown.Editor(converter, '', options);
     editor.run();
+
+    var imageButton = $('#wmd-image-button'),
+        linkButton = $('#wmd-image-button');
+
+    Typecho.insertFileToEditor = function (url, isImage) {
+        var button = isImage ? imageButton : linkButton;
+
+        button.trigger('click');
+        var checkDialog = setInterval(function () {
+            if ($('.wmd-prompt-dialog').length > 0) {
+                $('.wmd-prompt-dialog input').val(url).select();
+                clearInterval(checkDialog);
+                checkDialog = null;
+            }
+        }, 10);
+    };
 });
 </script>
 <?php endif; ?>

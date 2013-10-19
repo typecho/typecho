@@ -37,10 +37,10 @@ $(document).ready(function() {
             .data('url', data.url)
             .data('image', data.isImage)
             .html('<input type="hidden" name="attachment[]" value="' + data.cid + '" />'
-                + '<a class="file" target="_blank" href="<?php $options->adminUrl('media.php'); ?>?cid=' 
-                + data.cid + '">' + data.title + '</a> ' + data.bytes
-                + ' <a class="insert" href="#"><?php _e('插入'); ?></a>'
-                + ' <a class="delete" href="#"><i class="i-delete"></i></a>')
+                + '<a class="insert" target="_blank" href="###">' + data.title + '</a> ' + data.bytes
+                + ' <a class="file" target="_blank" href="<?php $options->adminUrl('media.php'); ?>?cid=' 
+                + data.cid + '" title="<?php _e('编辑'); ?>"><i class="i-edit"></i></a>'
+                + ' <a class="delete" href="###" title="<?php _e('删除'); ?>"><i class="i-delete"></i></a>')
             .effect('highlight', 1000);
             
         attachInsertEvent(li);
