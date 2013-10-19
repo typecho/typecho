@@ -13,7 +13,7 @@ $icons: sprite-map("icons/*.png");
   height: 16px;
   display: inline-block;
   vertical-align: text-bottom;
-  background: url(../images/icons.png) no-repeat;
+  background: url(../img/icons.png) no-repeat;
   &:hover {
     @include opacity(0.75);
   }
