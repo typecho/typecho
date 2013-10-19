@@ -3061,6 +3061,9 @@ else
         redo: "Redo - Ctrl+Y",
         redomac: "Redo - Ctrl+Shift+Z",
 
+        ok: "OK",
+        cancel: "Cancel",
+
         help: "Markdown Editing Help"
     };
 
@@ -4076,7 +4079,7 @@ else
     // callback: The function which is executed when the prompt is dismissed, either via OK or Cancel.
     //      It receives a single argument; either the entered text (if OK was chosen) or null (if Cancel
     //      was chosen).
-    ui.prompt = function (text, defaultInputText, callback) {
+    ui.prompt = function (text, defaultInputText, callback, ok, cancel) {
 
         // These variables need to be declared at this level since they are used
         // in multiple functions.
@@ -4172,7 +4175,7 @@ else
             okButton.type = "button";
             okButton.className = "btn-s primary";
             okButton.onclick = function () { return close(false); };
-            okButton.innerHTML = "OK";
+            okButton.innerHTML = ok;
             /*
             style = okButton.style;
             style.margin = "10px";
@@ -4185,7 +4188,7 @@ else
             cancelButton.type = "button";
             cancelButton.className = "btn-s";
             cancelButton.onclick = function () { return close(true); };
-            cancelButton.innerHTML = "Cancel";
+            cancelButton.innerHTML = cancel;
             /*
             style = cancelButton.style;
             style.margin = "10px";
@@ -4806,11 +4809,11 @@ else
 
             if (isImage) {
                 if (!this.hooks.insertImageDialog(linkEnteredCallback))
-                    ui.prompt(this.getString("imagedialog"), imageDefaultText, linkEnteredCallback);
+                    ui.prompt(this.getString("imagedialog"), imageDefaultText, linkEnteredCallback, this.getString("ok"), this.getString("cancel"));
             }
             else {
                 if (!this.hooks.insertLinkDialog(linkEnteredCallback))
-                    ui.prompt(this.getString("linkdialog"), linkDefaultText, linkEnteredCallback);
+                    ui.prompt(this.getString("linkdialog"), linkDefaultText, linkEnteredCallback, this.getString("ok"), this.getString("cancel"));
             }
             return true;
         }

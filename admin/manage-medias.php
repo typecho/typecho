@@ -20,7 +20,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     <div class="btn-group btn-drop">
                     <button class="dropdown-toggle btn-s" type="button" href="">选中项 <i class="i-caret-down"></i></button>
                     <ul class="dropdown-menu">
-                        <li><a lang="<?php _e('你确认要删除这些附件吗?'); ?>" href="<?php $options->index('/action/contents-attachment-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
+                        <li><a lang="<?php _e('你确认要删除这些文件吗?'); ?>" href="<?php $options->index('/action/contents-attachment-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
                     </ul>
                     </div>  
                     </div>
@@ -78,7 +78,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <?php endwhile; ?>
                             <?php else: ?>
                             <tr>
-                            	<td colspan="6"><h6 class="typecho-list-table-title"><?php _e('没有任何附件'); ?></h6></td>
+                            	<td colspan="6"><h6 class="typecho-list-table-title"><?php _e('没有任何文件'); ?></h6></td>
                             </tr>
                             <?php endif; ?>
                         </tbody>

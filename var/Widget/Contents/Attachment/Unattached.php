@@ -1,6 +1,6 @@
 <?php
 /**
- * 没有关联的附件
+ * 没有关联的文件
  *
  * @category typecho
  * @package Widget
@@ -10,7 +10,7 @@
  */
 
 /**
- * 没有关联的附件组件
+ * 没有关联的文件组件
  *
  * @category typecho
  * @package Widget

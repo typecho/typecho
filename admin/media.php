@@ -58,7 +58,7 @@ $(document).ready(function() {
         }
 
         $val = number_format(ceil($val / (1024 *1024)));
-        _e('附件上传失败, 请确认附件尺寸没有超过 %s 并且服务器附件目录可以写入', "{$val}Mb"); ?>',
+        _e('文件上传失败, 请确认文件尺寸没有超过 %s 并且服务器文件目录可以写入', "{$val}Mb"); ?>',
         loading = $('<img src="<?php $options->adminUrl('images/ajax-loader.gif'); ?>" style="display:none" />')
             .appendTo(document.body);
 
@@ -82,7 +82,7 @@ $(document).ready(function() {
     }
 
     function fileUploadComplete (id, url, data) {
-        $('#' + id).html('<?php _e('附件 %s 已经替换'); ?>'.replace('%s', data.title))
+        $('#' + id).html('<?php _e('文件 %s 已经替换'); ?>'.replace('%s', data.title))
         .effect('highlight', 1000, function () {
             $(this).remove();
             window.location.reload();
@@ -92,7 +92,7 @@ $(document).ready(function() {
     $('.upload-file').fileUpload({
         url         :   '<?php $options->index('/action/upload?do=modify&cid=' . $attachment->cid); ?>',
         types       :   ['.<?php $attachment->attachment->type(); ?>'],
-        typesError  :   '<?php _e('附件 %s 的类型与要替换的原文件不一致'); ?>',
+        typesError  :   '<?php _e('文件 %s 的类型与要替换的原文件不一致'); ?>',
         onUpload    :   fileUploadStart,
         onError     :   function (id) {
             $('#' + id).remove();
@@ -146,13 +146,13 @@ $(document).ready(function() {
         }
 
         $val = number_format(ceil($val / (1024 *1024)));
-        _e('附件尺寸不能超过 %s', "{$val}Mb"); ?>');
+        _e('文件尺寸不能超过 %s', "{$val}Mb"); ?>');
                     break;
                 case 'FileTypeNotAllowed':
                     // The file type is not in the specified list 'allowedfiletypes'
                     break;
                 case 'FileExtensionNotAllowed':
-                    alert('<?php _e('附件 %s 的类型不被支持'); ?>'.replace('%s', file.name));
+                    alert('<?php _e('文件 %s 的类型不被支持'); ?>'.replace('%s', file.name));
                     break;
                 default:
                     break;

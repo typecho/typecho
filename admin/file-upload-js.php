@@ -23,7 +23,7 @@ $(document).ready(function() {
         }
 
         $val = number_format(ceil($val / (1024 *1024)));
-        _e('附件上传失败, 请确认附件尺寸没有超过 %s 并且服务器附件目录可以写入', "{$val}Mb"); ?>',
+        _e('文件上传失败, 请确认文件尺寸没有超过 %s 并且服务器文件目录可以写入', "{$val}Mb"); ?>',
         loading = $('<img src="<?php $options->adminUrl('images/ajax-loader.gif'); ?>" style="display:none" />')
             .appendTo(document.body);
 
@@ -61,7 +61,7 @@ $(document).ready(function() {
 
     echo json_encode($types);
 ?>,
-        typesError  :   '<?php _e('附件 %s 的类型不被支持'); ?>',
+        typesError  :   '<?php _e('文件 %s 的类型不被支持'); ?>',
         onUpload    :   fileUploadStart,
         onError     :   function (id) {
             $('#' + id).remove();
@@ -125,13 +125,13 @@ $(document).ready(function() {
         }
 
         $val = number_format(ceil($val / (1024 *1024)));
-        _e('附件尺寸不能超过 %s', "{$val}Mb"); ?>');
+        _e('文件尺寸不能超过 %s', "{$val}Mb"); ?>');
                     break;
                 case 'FileTypeNotAllowed':
                     // The file type is not in the specified list 'allowedfiletypes'
                     break;
                 case 'FileExtensionNotAllowed':
-                    alert('<?php _e('附件 %s 的类型不被支持'); ?>'.replace('%s', file.name));
+                    alert('<?php _e('文件 %s 的类型不被支持'); ?>'.replace('%s', file.name));
                     break;
                 default:
                     break;
@@ -176,7 +176,7 @@ $(document).ready(function() {
     function attachDeleteEvent (el) {
         var file = $('a.file', el).text();
         $('.delete', el).click(function () {
-            if (confirm('<?php _e('确认要删除附件 %s 吗?'); ?>'.replace('%s', file))) {
+            if (confirm('<?php _e('确认要删除文件 %s 吗?'); ?>'.replace('%s', file))) {
                 var cid = $(this).parents('li').data('cid');
                 $.post('<?php $options->index('/action/contents-attachment-edit'); ?>',
                     {'do' : 'delete', 'cid' : cid},
