@@ -131,7 +131,10 @@ $(document).ready(function() {
 
     function autoSaveListener () {
         setInterval(function () {
-            idInput.val(cid);
+            if (cid) {
+                idInput.val(cid);
+            }
+
             var data = form.serialize();
                 
             if (savedData != data && !locked) {
