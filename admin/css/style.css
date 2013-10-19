@@ -981,13 +981,13 @@ a.operate-reply {
 .icon-sprite-hack {
   background: url('../images/icons-sa0d3de9e47.png'); }
 
-.i-edit, .i-delete, .i-caret-up, .i-caret-down, .i-exlink, .typecho-mime {
+.i-edit, .i-delete, .i-caret-up, .i-caret-down, .i-exlink, .mime-office, .mime-text, .mime-image, .mime-html, .mime-archive, .mime-application, .mime-audio, .mime-script, .mime-video, .mime-unknow {
   width: 16px;
   height: 16px;
   display: inline-block;
   vertical-align: text-bottom;
   background: url(../images/icons.png) no-repeat; }
-  .i-edit:hover, .i-delete:hover, .i-caret-up:hover, .i-caret-down:hover, .i-exlink:hover, .typecho-mime:hover {
+  .i-edit:hover, .i-delete:hover, .i-caret-up:hover, .i-caret-down:hover, .i-exlink:hover, .mime-office:hover, .mime-text:hover, .mime-image:hover, .mime-html:hover, .mime-archive:hover, .mime-application:hover, .mime-audio:hover, .mime-script:hover, .mime-video:hover, .mime-unknow:hover {
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=75);
     opacity: 0.75; }
 
@@ -1007,38 +1007,34 @@ a.operate-reply {
   background-position: 0 0; }
 
 /* 文件类型图标 */
-.typecho-mime {
-  padding-left: 24px;
-  width: auto; }
-
-.typecho-mime-office {
+.mime-office {
   background-position: 0 -80px; }
 
-.typecho-mime-text {
+.mime-text {
   background-position: 0 -192px; }
 
-.typecho-mime-image {
+.mime-image {
   background-position: 0 -48px; }
 
-.typecho-mime-html {
+.mime-html {
   background-position: 0 -96px; }
 
-.typecho-mime-archive {
+.mime-archive {
   background-position: 0 -224px; }
 
-.typecho-mime-application {
+.mime-application {
   background-position: 0 -112px; }
 
-.typecho-mime-audio {
+.mime-audio {
   background-position: 0 -176px; }
 
-.typecho-mime-script {
+.mime-script {
   background-position: 0 -144px; }
 
-.typecho-mime-video {
+.mime-video {
   background-position: 0 -64px; }
 
-.typecho-mime-unknow {
+.mime-unknow {
   background-position: 0 -160px; }
 
 /*

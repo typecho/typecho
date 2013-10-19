@@ -17,7 +17,7 @@ Typecho_Widget::widget('Widget_Contents_Attachment_Edit')->to($attachment);
                 
                 <p>
                     <?php $mime = Typecho_Common::mimeIconType($attachment->attachment->mime); ?>
-                    <span class="typecho-mime typecho-mime-<?php echo $mime; ?>"></span>
+                    <i class="mime-<?php echo $mime; ?>"></i>
                     <a href=""><strong><?php $attachment->attachment->name(); ?></strong></a>
                     <span><?php echo number_format(ceil($attachment->attachment->size / 1024)); ?> Kb</span>
                 </p>

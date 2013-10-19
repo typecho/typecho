@@ -43,48 +43,52 @@ $icons: sprite-map("icons/*.png");
 
 /* 文件类型图标 */
 
-.typecho-mime {
+.mime-office {
   @extend %i-16;
-  padding-left: 24px;
-  width: auto;
-}
-
-.typecho-mime-office {
   background-position: sprite-position($icons, mime-office);
 }
 
-.typecho-mime-text {
+.mime-text {
+  @extend %i-16;
   background-position: sprite-position($icons, mime-text);
 }
 
-.typecho-mime-image {
+.mime-image {
+  @extend %i-16;
   background-position: sprite-position($icons, mime-image);
 }
 
-.typecho-mime-html {
+.mime-html {
+  @extend %i-16;
   background-position: sprite-position($icons, mime-html);
 }
 
-.typecho-mime-archive {
+.mime-archive {
+  @extend %i-16;
   background-position: sprite-position($icons, mime-archive);
 }
 
-.typecho-mime-application {
+.mime-application {
+  @extend %i-16;
   background-position: sprite-position($icons, mime-application);
 }
 
-.typecho-mime-audio {
+.mime-audio {
+  @extend %i-16;
   background-position: sprite-position($icons, mime-audio);
 }
 
-.typecho-mime-script {
+.mime-script {
+  @extend %i-16;
   background-position: sprite-position($icons, mime-script);
 }
 
-.typecho-mime-video {
+.mime-video {
+  @extend %i-16;
   background-position: sprite-position($icons, mime-video);
 }
 
-.typecho-mime-unknow {
+.mime-unknow {
+  @extend %i-16;
   background-position: sprite-position($icons, mime-unknow);
 }
