@@ -81,11 +81,11 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     protected function getCreated()
     {
         $created = $this->options->gmtTime;
-        if (isset($this->request->created)) {
+        if (!empty($this->request->created)) {
             $created = $this->request->created;
-        } else if (isset($this->request->date)) {
+        } else if (!empty($this->request->date)) {
             $created = strtotime($this->request->date) - $this->options->timezone + $this->options->serverTimezone;
-        } else if (isset($this->request->year) && isset($this->request->month) && isset($this->request->day)) {
+        } else if (!empty($this->request->year) && !empty($this->request->month) && !empty($this->request->day)) {
             $second = intval($this->request->get('sec', date('s')));
             $min = intval($this->request->get('min', date('i')));
             $hour = intval($this->request->get('hour', date('H')));

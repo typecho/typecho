@@ -16,13 +16,13 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                         Typecho_Common::url('/action/contents-page-edit?do=deleteDraft&cid=' . $page->cid, $options->index)); ?></cite>
                     <?php endif; ?>
 
-                    <p class="title"><input type="text" id="title" name="title" value="<?php echo htmlspecialchars($page->title); ?>" placeholder="<?php _e('标题'); ?>" class="w-100 text title" /></p>
+                    <p class="title"><input type="text" id="title" name="title" autocomplete="off" value="<?php echo htmlspecialchars($page->title); ?>" placeholder="<?php _e('标题'); ?>" class="w-100 text title" /></p>
                         <?php $permalink = Typecho_Common::url($options->routingTable['page']['url'], $options->index);
                         list ($scheme, $permalink) = explode(':', $permalink, 2);
                         $permalink = ltrim($permalink, '/');
                         ?>
                     <?php if (preg_match("/\[slug:?[_0-9a-z-:]*\]/i", $permalink)): 
-                        $input = '<input type="text" id="slug" name="slug" value="' . htmlspecialchars($page->slug) . '" class="mono" />';
+                        $input = '<input type="text" id="slug" name="slug" autocomplete="off" value="' . htmlspecialchars($page->slug) . '" class="mono" />';
                         ?>
                         <p class="mono url-slug"><?php echo preg_replace("/\[slug:?[_0-9a-z-:]*\]/i", $input, $permalink); ?></p>
                     <?php endif; ?>

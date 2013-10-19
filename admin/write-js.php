@@ -126,10 +126,12 @@ $(document).ready(function() {
         idInput = $('input[name=cid]'),
         autoSave = $('#auto-save-message'),
         autoSaveOnce = !!idInput.val(),
-        lastSaveTime = null;
+        lastSaveTime = null,
+        cid = null;
 
     function autoSaveListener () {
         setInterval(function () {
+            idInput.val(cid);
             var data = form.serialize();
                 
             if (savedData != data && !locked) {
@@ -139,7 +141,7 @@ $(document).ready(function() {
                 $.post(formAction + '?do=save', data, function (o) {
                     savedData = data;
                     lastSaveTime = o.time;
-                    idInput.val(o.cid);
+                    cid = o.cid;
                     autoSave.text('<?php _e('内容已经保存'); ?>' + ' (' + o.time + ')').effect('highlight', 1000);
                     locked = false;
                 });
