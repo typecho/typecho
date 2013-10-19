@@ -101,6 +101,18 @@ $(document).ready(function() {
         }
     }).width();
 
+    // 原始的插入图片和文件
+    Typecho.insertFileToEditor = function (url, isImage) {
+        var textarea = $('#text'), sel = textarea.getSelection(),
+            file = url.split('/').pop(),
+            html = isImage ? '<img src="' + url + '" alt="' + file + '" />'
+                : '<a href="' + url + '">' + file + '</a>',
+            offset = (sel ? sel.start : 0) + html.length;
+
+        textarea.replaceSelection(html);
+        textarea.setSelection(offset, offset);
+    };
+
     // 自动保存
 <?php if ($options->autoSave): ?>
     var savedData = null, locked = false,

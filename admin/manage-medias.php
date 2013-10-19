@@ -69,7 +69,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                                 <td><?php $attachments->author(); ?></td>
                                 <td>
                                 <?php if ($attachments->parentPost->cid): ?>
-                                <a href="<?php $options->adminUrl('write-' . $attachments->parentPost->type . '.php?cid=' . $attachments->parentPost->cid); ?>"><?php $attachments->parentPost->title(); ?></a>
+                                <a href="<?php $options->adminUrl('write-' . (0 === strpos($attachments->parentPost->type, 'post') ? 'post' : 'page') . '.php?cid=' . $attachments->parentPost->cid); ?>"><?php $attachments->parentPost->title(); ?></a>
                                 <?php else: ?>
                                 <span class="description"><?php _e('未归档'); ?></span>
                                 <?php endif; ?>
