@@ -3037,6 +3037,7 @@ else
         link: "Hyperlink <a> Ctrl+L",
         linkdescription: "enter link description here",
         linkdialog: "<p><b>Insert Hyperlink</b></p><p>http://example.com/ \"optional title\"</p>",
+        linkname: null,
 
         quote: "Blockquote <blockquote> Ctrl+Q",
         quoteexample: "Blockquote",
@@ -3047,6 +3048,7 @@ else
         image: "Image <img> Ctrl+G",
         imagedescription: "enter image description here",
         imagedialog: "<p><b>Insert Image</b></p><p>http://example.com/images/diagram.jpg \"optional title\"<br>Need <a href='http://www.google.com/search?q=free+image+hosting' target='_blank'>free image hosting?</a></p>",
+        imagename: null,
 
         olist: "Numbered List <ol> Ctrl+O",
         ulist: "Bulleted List <ul> Ctrl+U",
@@ -3113,7 +3115,15 @@ else
         if (options.helpButton) {
             options.strings.help = options.strings.help || options.helpButton.title;
         }
-        var getString = function (identifier) { return options.strings[identifier] || defaultsStrings[identifier]; }
+        var getString = function (identifier) {
+            var string = options.strings[identifier] || defaultsStrings[identifier]; 
+            
+            if ('imagename' == identifier || 'linkname' == identifier) {
+                options.strings[identifier] = null;
+            }
+
+            return string;
+        }
 
         idPostfix = idPostfix || "";
 
@@ -4795,10 +4805,10 @@ else
 
                     if (!chunk.selection) {
                         if (isImage) {
-                            chunk.selection = that.getString("imagedescription");
+                            chunk.selection = that.getString("imagename") || that.getString("imagedescription");
                         }
                         else {
-                            chunk.selection = that.getString("linkdescription");
+                            chunk.selection = that.getString("linkname") || that.getString("linkdescription");
                         }
                     }
                 }

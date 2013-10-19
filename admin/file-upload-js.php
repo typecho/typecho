@@ -167,8 +167,8 @@ $(document).ready(function() {
 
     function attachInsertEvent (el) {
         $('.insert', el).click(function () {
-            var p = $(this).parents('li');
-            Typecho.insertFileToEditor(p.data('url'), p.data('image'));
+            var t = $(this), p = t.parents('li');
+            Typecho.insertFileToEditor(t.text(), p.data('url'), p.data('image'));
             return false;
         });
     }

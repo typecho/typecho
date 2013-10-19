@@ -105,9 +105,8 @@ $(document).ready(function() {
     }
 
     // 原始的插入图片和文件
-    Typecho.insertFileToEditor = function (url, isImage) {
+    Typecho.insertFileToEditor = function (file, url, isImage) {
         var textarea = $('#text'), sel = textarea.getSelection(),
-            file = url.split('/').pop(),
             html = isImage ? '<img src="' + url + '" alt="' + file + '" />'
                 : '<a href="' + url + '">' + file + '</a>',
             offset = (sel ? sel.start : 0) + html.length;
@@ -250,10 +249,12 @@ $(document).ready(function () {
     var imageButton = $('#wmd-image-button'),
         linkButton = $('#wmd-image-button');
 
-    Typecho.insertFileToEditor = function (url, isImage) {
+    Typecho.insertFileToEditor = function (file, url, isImage) {
         var button = isImage ? imageButton : linkButton;
 
+        options.strings[isImage ? 'imagename' : 'linkname'] = file;
         button.trigger('click');
+
         var checkDialog = setInterval(function () {
             if ($('.wmd-prompt-dialog').length > 0) {
                 $('.wmd-prompt-dialog input').val(url).select();
