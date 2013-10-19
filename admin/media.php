@@ -31,7 +31,7 @@ Typecho_Widget::widget('Widget_Contents_Attachment_Edit')->to($attachment);
                     <ul id="file-list"></ul>
                 </div>
             </div>
-            <div class="col-mb-12 col-tb-4">
+            <div class="col-mb-12 col-tb-4 edit-media">
                 <?php $attachment->form()->render(); ?>
             </div>
         </div>

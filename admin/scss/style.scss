@@ -88,7 +88,7 @@ a.button:hover, a.balloon-button:hover {
   top: 0;
   left: 0;
   margin: 0;
-  padding: 10px 0;
+  padding: 8px 0;
   border: none;
   width: 100%;
   z-index: 10;
@@ -732,19 +732,26 @@ background: #FFF1A8;
   background-color: #FFF;
   color: #999;
   font-size: .92857em;
-}
-
-#upload-panel.drag {
-  background-color: #FFFBCC;
+  &.drag {
+    background-color: #FFFBCC;
+  }
 }
 
 #file-list {
   list-style: none;
   margin: 0;
   padding: 0;
+  li { margin-top: 5px; }
+  .file {
+    margin-left: 5px;
+  }
 }
-#file-list li { margin-top: 5px; }
-#file-list .delete { margin-left: 5px; color: #B94A48; }
+
+
+/**
+* 附件管理
+*/
+.edit-media button { margin-right: 6px; }
 
 
 /* 拖动排序 */
