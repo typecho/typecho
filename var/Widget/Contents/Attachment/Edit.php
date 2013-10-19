@@ -140,6 +140,7 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
 
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Element_Submit(NULL, NULL, _t('提交修改'));
+        $submit->input->setAttribute('class', 'primary');
         $delete = new Typecho_Widget_Helper_Layout('a', array('href' =>
         Typecho_Common::url('/action/contents-attachment-edit?do=delete&cid=' . $this->cid, $this->options->index),
         'class' => 'operate-delete',

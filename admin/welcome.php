@@ -21,7 +21,7 @@ include 'menu.php';
                         <li><a href="<?php $options->siteUrl(); ?>"><?php _e('查看我的站点'); ?></a></li>
                         <?php endif; ?>
                     </ol>
-                    <p><button type="submit"><?php _e('让我直接开始使用吧 &raquo;'); ?></button></p>
+                    <p><button type="submit" class="primary"><?php _e('让我直接开始使用吧 &raquo;'); ?></button></p>
                     </form>
                 </div>
             </div>

@@ -51,6 +51,11 @@ button {
   display: inline-block; 
 }
 
+.btn-warn {
+  @include button(#B94A48);
+  color: #FFF;
+}
+
 /* 下拉菜单 */
 .btn-drop {
   position: relative;

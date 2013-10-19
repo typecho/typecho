@@ -106,7 +106,9 @@ class Widget_Plugins_Config extends Widget_Abstract_Options
             }
         }
 
-        $form->addItem(new Typecho_Widget_Helper_Form_Element_Submit(NULL, NULL, _t('保存设置')));
+        $submit = new Typecho_Widget_Helper_Form_Element_Submit(NULL, NULL, _t('保存设置'));
+        $submit->input->setAttribute('class', 'primary');
+        $form->addItem($submit);
         return $form;
     }
 }

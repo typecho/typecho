@@ -172,6 +172,24 @@ button {
 .btn-group {
   display: inline-block; }
 
+.btn-warn {
+  border: none;
+  background-color: #b94a48;
+  cursor: pointer;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px;
+  color: #FFF; }
+  .btn-warn:hover {
+    background-color: #af4543; }
+  .btn-warn:active, .btn-warn.active {
+    background-color: #af4543; }
+  .btn-warn:disabled {
+    background-color: #bd5553;
+    cursor: default; }
+
 /* 下拉菜单 */
 .btn-drop {
   position: relative; }
@@ -207,17 +225,18 @@ button {
 * 提示信息框
 */
 .message {
-  padding: 10px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  border-radius: 3px; }
+  padding: 8px 10px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px; }
 
 .message a {
   font-weight: bold;
   text-decoration: underline; }
 
 .error {
-  border: 1px solid #FBC2C4;
   background: #FBE3E4;
   color: #8A1F11; }
 
@@ -226,7 +245,6 @@ button {
 
 .notice {
   background: #FFF6BF;
-  border: 1px solid  #FFD324;
   color: #514721; }
 
 .notice a {
@@ -234,7 +252,6 @@ button {
 
 .success {
   background: #E6EFC2;
-  border: 1px solid #C6D880;
   color: #264409; }
 
 .success a {
@@ -1079,10 +1096,9 @@ a.operate-reply {
   top: 50%;
   left: 50%;
   margin-top: -95px;
-  margin-left: -220px;
+  margin-left: -200px;
   padding: 20px;
-  width: 400px;
-  height: 150px;
+  width: 360px;
   background: #F6F6F3; }
   .wmd-prompt-dialog p {
     margin: 0 0 5px; }

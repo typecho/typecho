@@ -243,6 +243,7 @@ RewriteRule . {$basePath}index.php [L]
 
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Element_Submit('submit', NULL, _t('保存设置'));
+        $submit->input->setAttribute('class', 'primary');
         $form->addItem($submit);
 
         return $form;

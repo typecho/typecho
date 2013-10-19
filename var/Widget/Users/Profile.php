@@ -64,6 +64,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
 
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Element_Submit('submit', NULL, _t('更新我的档案'));
+        $submit->input->setAttribute('class', 'primary');
         $form->addItem($submit);
 
         $screenName->value($this->user->screenName);
@@ -131,6 +132,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
 
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Element_Submit('submit', NULL, _t('保存设置'));
+        $submit->input->setAttribute('class', 'primary');
         $form->addItem($submit);
 
         return $form;
@@ -224,6 +226,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
 
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Element_Submit('submit', NULL, _t('更新密码'));
+        $submit->input->setAttribute('class', 'primary');
         $form->addItem($submit);
 
         $password->addRule('required', _t('必须填写密码'));

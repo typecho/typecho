@@ -150,6 +150,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
 
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Element_Submit();
+        $submit->input->setAttribute('class', 'primary');
         $form->addItem($submit);
 
         if (isset($this->request->mid) && 'insert' != $action) {
