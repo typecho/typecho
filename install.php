@@ -489,9 +489,9 @@ Typecho_Db::set(\$db);
                                     
                                     if (!file_exists('./config.inc.php')) {
                                     ?>
-<p class="message notice"><?php _e('安装程序无法自动创建 config.inc.php 文件'); ?><br /><?php _e('您可以在网站根目录下手动创建 config.inc.php 文件, 并复制如下代码至其中'); ?><br/><br />
-<textarea style="width: 520px; height: 100px" onmouseover="this.select();" readonly><?php echo htmlspecialchars($contents); ?></textarea><br /><br />
-<button name="created" value="1" type="submit">创建完毕, 继续安装 &raquo;</button></p>
+<div class="message notice"><p><?php _e('安装程序无法自动创建 config.inc.php 文件'); ?><br /><?php _e('您可以在网站根目录下手动创建 config.inc.php 文件, 并复制如下代码至其中'); ?></p>
+<p><textarea rows="5" onmouseover="this.select();" readonly><?php echo htmlspecialchars($contents); ?></textarea></p>
+<p><button name="created" value="1" type="submit" class="primary">创建完毕, 继续安装 &raquo;</button></p></div>
                                     <?php
                                     } else { 
                                         header('Location: ./install.php?start');

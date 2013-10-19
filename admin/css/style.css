@@ -466,15 +466,6 @@ button {
   font-size: .92857em; }
 
 /** 增加配置面板内部的错误样式 by 70 */
-.typecho-option .message {
-  padding: 2px 4px;
-  font-size: 13px;
-  width: 325px;
-  margin-top: 5px; }
-
-.typecho-mini-panel .typecho-option .message {
-  width: 250px; }
-
 /** 
 * 安装样式
 * 
@@ -805,9 +796,6 @@ a.operate-reply {
 
 .typecho-edit-theme .current a {
   color: #444; }
-
-.typecho-edit-theme .submit {
-  text-align: center; }
 
 .typecho-edit-theme textarea {
   font-size: .92857em;
