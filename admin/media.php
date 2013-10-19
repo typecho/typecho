@@ -59,7 +59,7 @@ $(document).ready(function() {
 
         $val = number_format(ceil($val / (1024 *1024)));
         _e('文件上传失败, 请确认文件尺寸没有超过 %s 并且服务器文件目录可以写入', "{$val}Mb"); ?>',
-        loading = $('<img src="<?php $options->adminUrl('images/ajax-loader.gif'); ?>" style="display:none" />')
+        loading = $('<img src="<?php $options->adminUrl('img/ajax-loader.gif'); ?>" style="display:none" />')
             .appendTo(document.body);
 
     $('#attachment-url').click(function () {

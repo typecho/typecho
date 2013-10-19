@@ -435,7 +435,7 @@ button {
 */
 .loading {
   padding-left: 20px;
-  background: transparent url(../images/ajax-loader.gif) no-repeat left center; }
+  background: transparent url(../img/ajax-loader.gif) no-repeat left center; }
 
 /**
 * 典型配置选项
@@ -981,14 +981,14 @@ a.operate-reply {
  * icons
  */
 .icon-sprite-hack {
-  background: url('../images/icons-s2ebed63329.png'); }
+  background: url('../img/icons-s2ebed63329.png'); }
 
 .i-edit, .i-delete, .i-caret-up, .i-caret-down, .i-exlink, .mime-office, .mime-text, .mime-image, .mime-html, .mime-archive, .mime-application, .mime-audio, .mime-script, .mime-video, .mime-unknow {
   width: 16px;
   height: 16px;
   display: inline-block;
   vertical-align: text-bottom;
-  background: url(../images/icons.png) no-repeat; }
+  background: url(../img/icons.png) no-repeat; }
   .i-edit:hover, .i-delete:hover, .i-caret-up:hover, .i-caret-down:hover, .i-exlink:hover, .mime-office:hover, .mime-text:hover, .mime-image:hover, .mime-html:hover, .mime-archive:hover, .mime-application:hover, .mime-audio:hover, .mime-script:hover, .mime-video:hover, .mime-unknow:hover {
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=75);
     opacity: 0.75; }
@@ -1068,7 +1068,7 @@ a.operate-reply {
   display: block;
   width: 20px;
   height: 20px;
-  background: transparent url(../images/editor.png) no-repeat; }
+  background: transparent url(../img/editor.png) no-repeat; }
 
 /* 对话框 */
 .wmd-prompt-background {
