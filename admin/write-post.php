@@ -29,13 +29,13 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
 
                     <p>
                         <textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text" name="text" class="w-100 mono"><?php echo htmlspecialchars($post->text); ?></textarea>
-                        <span id="auto-save-message"></span>
                     </p>
 
                     <?php include 'file-upload.php'; ?>
 
                     <?php Typecho_Plugin::factory('admin/write-post.php')->content($post); ?>
                     <p class="submit clearfix">
+                        <span id="auto-save-message" class="left"></span>
                         <span class="right">
                             <input type="hidden" name="cid" value="<?php $post->cid(); ?>" />
                             <button type="submit" name="do" value="save" id="btn-save"><?php _e('保存草稿'); ?></button>

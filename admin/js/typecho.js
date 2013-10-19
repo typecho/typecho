@@ -1,6 +1,6 @@
 (function (w) {
     w.Typecho = {
-        insertFileToEditor  :   function () {}
+        insertFileToEditor  :   function (url, isImage) {}
     };
 })(window);
 
