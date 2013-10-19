@@ -939,10 +939,6 @@ jQuery.fn.extend({
             return;
         }
 
-        if ($.browser.opera && $.browser.version >= 9.5 && len == 0) {
-			return false;
-		}
-
         if (e.setSelectionRange) {
             e.focus();
             e.setSelectionRange(start, end);
