@@ -85,21 +85,24 @@ $(document).ready(function() {
     }
 
     // 缩略名自适应宽度
-    var slug = $('#slug'), sw = slug.width();
+    var slug = $('#slug');
 
-    if (slug.val().length > 0) {
-        slug.css('width', 'auto').attr('size', slug.val().length);
-    }
-    
-    slug.bind('input propertychange', function () {
-        var t = $(this), l = t.val().length;
-
-        if (l > 0) {
-            t.css('width', 'auto').attr('size', l);
-        } else {
-            t.css('width', sw).removeAttr('size');
+    if (slug.length > 0) {
+        var sw = slug.width();
+        if (slug.val().length > 0) {
+            slug.css('width', 'auto').attr('size', slug.val().length);
         }
-    }).width();
+
+        slug.bind('input propertychange', function () {
+            var t = $(this), l = t.val().length;
+
+            if (l > 0) {
+                t.css('width', 'auto').attr('size', l);
+            } else {
+                t.css('width', sw).removeAttr('size');
+            }
+        }).width();
+    }
 
     // 原始的插入图片和文件
     Typecho.insertFileToEditor = function (url, isImage) {
