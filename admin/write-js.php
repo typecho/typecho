@@ -113,10 +113,11 @@ $(document).ready(function() {
         textarea.setSelection(offset, offset);
     };
 
+    var form = $('form[name=write_post],form[name=write_page]');
+
     // 自动保存
 <?php if ($options->autoSave): ?>
     var savedData = null, locked = false,
-        form = $('form[name=write_post],form[name=write_page]'),
         formAction = form.attr('action'),
         idInput = $('input[name=cid]'),
         autoSave = $('#auto-save-message'),
@@ -127,12 +128,12 @@ $(document).ready(function() {
         setInterval(function () {
             var data = form.serialize();
                 
-            if (savedData != data) {
-                savedData = data;
+            if (savedData != data && !locked) {
                 locked = true;
 
                 autoSave.text('<?php _e('正在保存'); ?>');
                 $.post(formAction + '?do=save', data, function (o) {
+                    savedData = data;
                     lastSaveTime = o.time;
                     idInput.val(o.cid);
                     autoSave.text('<?php _e('内容已经保存'); ?>' + ' (' + o.time + ')').effect('highlight', 1000);
@@ -158,6 +159,19 @@ $(document).ready(function() {
         }
     });
 <?php endif; ?>
+
+    // 自动检测离开页
+    var lastData = form.serialize();
+
+    $(window).bind('beforeunload', function () {
+        if (!!savedData) {
+            lastData = savedData;
+        }
+
+        if (form.serialize() != lastData) {
+            return '<?php _e('内容已经改变尚未保存, 您确认要离开此页面吗?'); ?>';
+        }
+    });
 
     // 高级选项控制
     $('#advance-panel-btn').click(function() {
