@@ -46,7 +46,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
 
         /** 用户昵称 */
         $screenName = new Typecho_Widget_Helper_Form_Element_Text('screenName', NULL, NULL, _t('昵称'), _t('用户昵称可以与用户名不同, 用于前台显示.<br />
-        如果你将此项留空,将默认使用用户名.'));
+        如果你将此项留空, 将默认使用用户名.'));
         $form->addInput($screenName);
 
         /** 个人主页地址 */
@@ -96,9 +96,9 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         /** 自动保存 */
         $markdown = new Typecho_Widget_Helper_Form_Element_Radio('markdown',
         array('0' => _t('关闭'), '1' => _t('打开')),
-        $this->options->markdown, _t('使用Markdown语法编辑和解析内容'), 
-            _t('使用Markdown语法能够使您的撰写过程更加简便直观.<br />
-此功能开启不会影响以前没有使用Markdown语法编辑的内容.'));
+        $this->options->markdown, _t('使用 Markdown 语法编辑和解析内容'), 
+            _t('使用 <a href="http://daringfireball.net/projects/markdown/">Markdown</a> 语法能够使您的撰写过程更加简便直观.<br />
+此功能开启不会影响以前没有使用 Markdown 语法编辑的内容.'));
         $form->addInput($markdown);
 
         /** 自动保存 */

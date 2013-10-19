@@ -105,7 +105,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
 
         /** 用户昵称 */
         $screenName = new Typecho_Widget_Helper_Form_Element_Text('screenName', NULL, NULL, _t('用户昵称'), _t('用户昵称可以与用户名不同, 用于前台显示.<br />
-        如果你将此项留空,将默认使用用户名.'));
+        如果你将此项留空, 将默认使用用户名.'));
         $form->addInput($screenName);
 
         /** 用户密码 */

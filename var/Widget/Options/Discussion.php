@@ -35,7 +35,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         /** 评论日期格式 */
         $commentDateFormat = new Typecho_Widget_Helper_Form_Element_Text('commentDateFormat', NULL, $this->options->commentDateFormat,
         _t('评论日期格式'), _t('这是一个默认的格式,当你在模板中调用显示评论日期方法时, 如果没有指定日期格式, 将按照此格式输出.<br />
-        具体写法请参考<a href="http://www.php.net/manual/zh/function.date.php">PHP日期格式写法</a>.'));
+        具体写法请参考 <a href="http://www.php.net/manual/zh/function.date.php">PHP 日期格式写法</a>.'));
         $commentDateFormat->input->setAttribute('class', 'w-40 mono');
         $form->addInput($commentDateFormat);
 
@@ -46,10 +46,10 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         $form->addInput($commentsListSize->addRule('isInteger', _t('请填入一个数字')));
 
         $commentsShowOptions = array(
-            'commentsShowCommentOnly'   =>  _t('仅显示评论, 不显示Pingback和Trackback'),
+            'commentsShowCommentOnly'   =>  _t('仅显示评论, 不显示 Pingback 和 Trackback'),
             'commentsShowUrl'       =>  _t('评论者名称显示时自动加上其个人主页链接'),
-            'commentsUrlNofollow'   =>  _t('对评论者个人主页链接使用<a href="http://en.wikipedia.org/wiki/Nofollow">nofollow属性</a>'),
-            'commentsAvatar'        =>  _t('启用<a href="http://gravatar.com">Gravatar</a>头像服务, 最高显示评级为 %s 的头像',
+            'commentsUrlNofollow'   =>  _t('对评论者个人主页链接使用 <a href="http://en.wikipedia.org/wiki/Nofollow">nofollow 属性</a>'),
+            'commentsAvatar'        =>  _t('启用 <a href="http://gravatar.com">Gravatar</a> 头像服务, 最高显示评级为 %s 的头像',
             '</label><select id="commentsShow-commentsAvatarRating" name="commentsAvatarRating">
             <option value="G"' . ('G' == $this->options->commentsAvatarRating ? ' selected="true"' : '') . '>G - 普通</option>
             <option value="PG"' . ('PG' == $this->options->commentsAvatarRating ? ' selected="true"' : '') . '>PG - 13岁以上</option>
@@ -106,11 +106,11 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
             'commentsWhitelist'     =>  _t('评论者之前须有评论通过了审核'),
             'commentsRequireMail'           =>  _t('必须填写邮箱'),
             'commentsRequireURL'            =>  _t('必须填写网址'),
-            'commentsCheckReferer'          =>  _t('检查评论来源页URL是否与文章链接一致'),
+            'commentsCheckReferer'          =>  _t('检查评论来源页 URL 是否与文章链接一致'),
             'commentsAutoClose'             =>  _t('在文章发布 %s 天以后自动关闭评论',
             '</label><input name="commentsPostTimeout" type="text" class="text num text-s" value="' . intval($this->options->commentsPostTimeout / (24 * 3600)) . '" id="commentsPost-commentsPostTimeout" />
             <label for="commentsPost-commentsPostTimeout">'),
-            'commentsPostIntervalEnable'    =>  _t('同一IP发布评论的时间间隔限制为 %s 分钟',
+            'commentsPostIntervalEnable'    =>  _t('同一 IP 发布评论的时间间隔限制为 %s 分钟',
             '</label><input name="commentsPostInterval" type="text" class="text num text-s" value="' . round($this->options->commentsPostInterval / (60), 1) . '" id="commentsPost-commentsPostInterval" />
             <label for="commentsPost-commentsPostInterval">')
         );
