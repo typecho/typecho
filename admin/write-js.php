@@ -180,6 +180,13 @@ $(document).ready(function() {
         return false;
     });
     
+    $('.edit-draft-notice a').click(function () {
+        if (confirm('<?php _e('您确认要删除这份草稿吗?'); ?>')) {
+            window.location.href = $(this).attr('href');
+        }
+
+        return false;
+    });
 });
 </script>
 <?php $content = !empty($post) ? $post : $page; if ($options->markdown && (!$content->have() || $content->isMarkdown)): ?>
