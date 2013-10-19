@@ -116,7 +116,9 @@ $(document).ready(function() {
         textarea.setSelection(offset, offset);
     };
 
-    var form = $('form[name=write_post],form[name=write_page]');
+    var submitted = false, form = $('form[name=write_post],form[name=write_page]').submit(function () {
+        submitted = true;
+    });
 
     // 自动保存
 <?php if ($options->autoSave): ?>
@@ -171,7 +173,7 @@ $(document).ready(function() {
             lastData = savedData;
         }
 
-        if (form.serialize() != lastData) {
+        if (form.serialize() != lastData && !submitted) {
             return '<?php _e('内容已经改变尚未保存, 您确认要离开此页面吗?'); ?>';
         }
     });
