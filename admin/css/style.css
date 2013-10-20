@@ -1098,6 +1098,8 @@ a.operate-reply {
 #wmd-preview {
   background: #FFF;
   padding: 10px 20px; }
+  #wmd-preview img {
+    max-width: 100%; }
 
 /**
 * Jquery Timepicker
