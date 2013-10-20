@@ -47,7 +47,7 @@ border-bottom: none;
 }
 
 pre, code, tt {
-	font: 12px 'andale mono', 'lucida console', monospace; line-height: 1.5;
+	font: 12px Menlo,Monaco,Consolas,"Lucida Console","Courier New",monospace; line-height: 1.5;
 }
 code { margin-bottom: 20px; }
 pre, code {
