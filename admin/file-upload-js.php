@@ -160,11 +160,6 @@ $(document).ready(function() {
         }
     });
 
-    $('#file-list li').each(function () {
-        attachInsertEvent(this);
-        attachDeleteEvent(this);
-    });
-
     function attachInsertEvent (el) {
         $('.insert', el).click(function () {
             var t = $(this), p = t.parents('li');
@@ -190,6 +185,11 @@ $(document).ready(function() {
             return false;
         });
     }
+
+    $('#file-list li').each(function () {
+        attachInsertEvent(this);
+        attachDeleteEvent(this);
+    });
 });
 </script>
 

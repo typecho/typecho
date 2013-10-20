@@ -249,7 +249,7 @@ $(document).ready(function () {
     editor.run();
 
     var imageButton = $('#wmd-image-button'),
-        linkButton = $('#wmd-image-button');
+        linkButton = $('#wmd-link-button');
 
     Typecho.insertFileToEditor = function (file, url, isImage) {
         var button = isImage ? imageButton : linkButton;
