@@ -1236,12 +1236,13 @@ li.token-input-token {
   background-color: #F3F3F0;
   cursor: default;
   font-size: .92857em;
+  text-align: right;
   white-space: nowrap; }
   li.token-input-token p {
+    float: left;
     display: inline;
     margin: 0; }
   li.token-input-token span {
-    float: right;
     color: #BBB;
     font-weight: bold;
     cursor: pointer; }
