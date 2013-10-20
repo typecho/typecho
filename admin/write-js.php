@@ -117,11 +117,11 @@ $(document).ready(function() {
 
     var submitted = false, form = $('form[name=write_post],form[name=write_page]').submit(function () {
         submitted = true;
-    });
+    }), savedData = null;
 
     // 自动保存
 <?php if ($options->autoSave): ?>
-    var savedData = null, locked = false,
+    var locked = false,
         formAction = form.attr('action'),
         idInput = $('input[name=cid]'),
         cid = idInput.val(),
