@@ -83,18 +83,18 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     protected function ___excerpt()
     {
-        $contents = explode('<!--more-->', $this->text);
-        list($excerpt) = $contents;
-
-        $excerpt = $this->pluginHandle(__CLASS__)->trigger($plugged)->excerpt($excerpt, $this);
+        $content = $this->pluginHandle(__CLASS__)->trigger($plugged)->excerpt($this->text, $this);
         if (!$plugged) {
             if ($this->isMarkdown) {
                 $markdown = new Markdown();
-                $excerpt = $markdown->transform($excerpt);
+                $content = $markdown->transform($content);
             } else {
-                $excerpt = Typecho_Common::cutParagraph($excerpt);
+                $content = Typecho_Common::cutParagraph($content);
             }
         }
+
+        $contents = explode('<!--more-->', $content);
+        list($excerpt) = $contents;
 
         return Typecho_Common::fixHtml($this->pluginHandle(__CLASS__)->excerptEx($excerpt, $this));
     }
@@ -235,7 +235,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
     {
         /** 构建插入结构 */
         $insertStruct = array(
-            'title'         =>  empty($content['title']) ? NULL : $content['title'],
+            'title'         =>  empty($content['title']) ? NULL : htmlspecialchars($content['title']),
             'created'       =>  empty($content['created']) ? $this->options->gmtTime : $content['created'],
             'modified'      =>  $this->options->gmtTime,
             'text'          =>  empty($content['text']) ? NULL : $content['text'],
@@ -284,7 +284,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
 
         /** 构建更新结构 */
         $preUpdateStruct = array(
-            'title'         =>  empty($content['title']) ? NULL : $content['title'],
+            'title'         =>  empty($content['title']) ? NULL : htmlspecialchars($content['title']),
             'order'         =>  empty($content['order']) ? 0 : intval($content['order']),
             'text'          =>  empty($content['text']) ? NULL : $content['text'],
             'template'      =>  empty($content['template']) ? NULL : $content['template'],
