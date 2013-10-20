@@ -854,14 +854,38 @@ EOF;
      * @param integer $maxLength 缩略名最大长度
      * @return string
      */
-    public static function slugName($str, $default = NULL, $maxLength = 200)
+    public static function slugName($str, $default = NULL, $maxLength = 128)
     {
-        $str = str_replace(array("'", ":", "\\", "/", '"'), "", $str);
-        $str = str_replace(array("+", ",", ' ', '，', ' ', ".", "?", "=", "&", "!", "<", ">", "(", ")", "[", "]", "{", "}"), "-", $str);
-        $str = trim($str, '-');
-        $str = empty($str) ? $default : $str;
+        $str = trim($str);
 
-        return function_exists('mb_get_info') ? mb_strimwidth($str, 0, 128, '', self::$charset) : substr($str, 0, $maxLength);
+        if (!strlen($str)) {
+            return $default;
+        }
+        
+        if (function_exists('mb_regex_encoding')) {
+            mb_regex_encoding(self::$charset);
+            mb_ereg_search_init($str, "[\w" . preg_quote('_-') . "]+");
+            $result = mb_ereg_search();
+            $return = '';
+
+            if ($result) {
+                $regs = mb_ereg_search_getregs();
+                $pos = 0;
+                do {
+                    $return .= ($pos > 0 ? '-' : '') . $regs[0];
+                    $pos ++;
+                } while ($regs = mb_ereg_search_regs());
+            }
+
+            $str = $return;
+        } else {
+            $str = str_replace(array("'", ":", "\\", "/", '"'), "", $str);
+            $str = str_replace(array("+", ",", ' ', '，', ' ', ".", "?", "=", "&", "!", "<", ">", "(", ")", "[", "]", "{", "}"), "-", $str);
+            $str = trim($str, '-');
+        }
+
+        $str = !strlen($str) ? $default : $str;
+        return substr($str, 0, $maxLength);
     }
 
     /**
