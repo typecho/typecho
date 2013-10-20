@@ -179,12 +179,21 @@ class Markdown {
 		$this->teardown();
 
         $text = preg_replace_callback("/<\/?(\!doctype|html|head|body|link|title|input|select|button|textarea|style|script|noscript|iframe|object|embed)[^>]*>/is", 
-            function ($matches) {
-                return htmlspecialchars($matches[0]);
-            }, $text);
+            array(&$this, '_transform_callback'), $text);
 
 		return $text . "\n";
 	}
+
+    /**
+     * _transform_callback 
+     * 
+     * @param array $matches 
+     * @access protected
+     * @return string
+     */
+    protected function _transform_callback($matches) {
+        return htmlspecialchars($matches[0]);
+    }
 	
 	protected $document_gamut = array(
 		# Strip link definitions, store in hashes.
@@ -1330,6 +1339,8 @@ class Markdown {
         return $this->hashPart($link);
     }
 
+    protected $tail = '';
+
 	protected function _doAutoLinks_url_callback($matches) {
         list ($wholeMatch, $lookbehind, $protocol, $link) = $matches;
 
@@ -1356,23 +1367,25 @@ class Markdown {
             }
         }
 
-        $tail = '';
+        $this->tail = '';
         if ($level < 0) {
-            $link = preg_replace("/\){1," . (- $level) . "}$/", $link, function ($matches) use (&$tail) {
-                $tail = $matches[0];
-                return '';
-            });
+            $link = preg_replace("/\){1," . (- $level) . "}$/", $link, array(&$this, '_doAutoLinks_url_callback_callback'));
         }
 
 		$url = $this->encodeAttribute($matches[2] . $matches[3]);
 		$link = "<a rel=\"nofollow\" href=\"$url\">$url</a>";
-		return '<' . $protocol . $link . '>' . $tail;
+		return '<' . $protocol . $link . '>' . $this->tail;
 	}
 	protected function _doAutoLinks_email_callback($matches) {
 		$address = $matches[1];
 		$link = $this->encodeEmailAddress($address);
 		return $this->hashPart($link);
 	}
+
+    protected function _doAutoLinks_url_callback_callback($matches) {
+        $this->tail = $matches[0];
+        return '';
+    }
 
 	protected function doFencedCodeBlocks($text) {
 	#
