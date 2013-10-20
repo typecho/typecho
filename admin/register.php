@@ -62,10 +62,14 @@ Typecho_Cookie::delete('__typecho_remember_mail');
         <?php endif; ?>
     </p>
 </div>
-<script type="text/javascript">
-(function () {
-    var _form = document.register.name;
-    _form.focus();
-})();
+<?php 
+include 'common-js.php';
+?>
+<script>
+$(document).ready(function () {
+    $('#name').focus();
+});
 </script>
-<?php include 'footer.php'; ?>
+<?php
+include 'footer.php';
+?>
