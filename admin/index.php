@@ -101,21 +101,9 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 </div>
                 <?php endif; ?>
                 <h3><?php _e('官方消息'); ?></h3>
-                <?php $feed = Typecho_Cookie::get('__typecho_feed'); ?>
                 <div id="typecho-message" class="intro-link">
                     <ul>
-                        <?php if (empty($feed)): ?>
                         <li><?php _e('读取中...'); ?></li>
-                        <?php else: ?>
-                        <?php $feed = Typecho_Json::decode($feed);
-                        foreach ($feed as $item): ?>
-                        <?php $item = (array) $item; ?>
-                        <li>
-                            <a href="<?php echo $item['link']; ?>"><?php echo $item['title']; ?></a>
-                            <br><span><?php echo $item['date']; ?></span>
-                        </li>
-                        <?php endforeach; ?>
-                        <?php endif; ?>
                     </ul>
                 </div>
             </div>
@@ -129,41 +117,45 @@ include 'common-js.php';
 ?>
 
 <script>
-    (function () {
-        window.addEvent('domready', function() {
-            <?php if (!Typecho_Cookie::get('__typecho_feed')): ?>
-            var _feedRequest = new Request.JSON({url: '<?php $options->index('/action/ajax'); ?>'}).send("do=feed");
-            _feedRequest.addEvent('onSuccess', function (responseJSON) {
-                $(document).getElement('#typecho-message ul li').destroy();
-                
-                if (responseJSON) {
-                    responseJSON.each(function (item) {
-                        var _li = document.createElement('li');
-                        $(_li).set('html', '<a target="_blank" href="' + item.link + '">' + item.title + '</a> - <span class="date">' + item.date + '</span>');
-                        var _ul = $(document).getElement('#typecho-message ul');
-                        _ul.appendChild(_li);
-                    });
-                }
-            });
-            <?php endif; ?>
-            
-            <?php if ($user->pass('editor', true) && !Typecho_Cookie::get('__typecho_check_version')): ?>
-            var _checkVersionRequest = new Request.JSON({url: '<?php $options->index('/action/ajax'); ?>'}).send("do=checkVersion");
-            _checkVersionRequest.addEvent('onSuccess', function (responseJSON) {
-                if (responseJSON && responseJSON.available) {
-                    var _div = document.createElement('div', {
-                        'class' : 'update-check typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright',
-                        'html'  : '<p class="current"><?php _e('您当前使用的版本是'); ?> <em>' + responseJSON.current + '</em></p>' +
-                        '<p class="latest"><a target="_blank" href="' + responseJSON.link + '"><?php _e('官方最新版本是'); ?> <em>' + responseJSON.latest + '</em></a></p>'
-                    });
-                    
-                    $(_div).fade('hide');
-                    $(document).getElement('.start-19').insertBefore(_div, $(document).getElement('.start-19 h3'));
-                    $(_div).fade('in');
-                }
-            });
-            <?php endif; ?>
+$(document).ready(function () {
+    var ul = $('.intro-link ul'), html = $.cookie('__typecho_feed'), update = $.cookie('__typecho_update');
+
+    if (!!html) {
+        ul.html(html);
+    } else {
+        html = '';
+        $.get('<?php $options->index('/action/ajax?do=feed'); ?>', function (o) {
+            for (var i = 0; i < o.length; i ++) {
+                var item = o[i];
+                html += '<li><a href="' + item.link + '" target="_blank">' + item.title 
+                    + '</a> <span>' + item.date + '</span></li>';
+            }
+
+            ul.html(html);
+            $.cookie('__typecho_feed', html);
         });
-    })();
+    }
+
+    function applyUpdate(update) {
+        if (update.available) {
+            $('<div class="update-check"><p>' 
+                + '<?php _e('您当前使用的版本是 %s'); ?>'.replace('%s', update.current) + '<br />'
+                + '<strong><a href="' + update.link + '" target="_blank">' 
+                + '<?php _e('官方最新版本是 %s'); ?>'.replace('%s', update.latest) + '</a></strong></p></div>')
+            .prependTo('.typecho-dashboard-nav').effect('highlight');
+        }
+    }
+
+    if (!!update) {
+        applyUpdate($.parseJSON(update));
+    } else {
+        update = '';
+        $.get('<?php $options->index('/action/ajax?do=checkVersion'); ?>', function (o, status, resp) {
+            applyUpdate(o);
+            $.cookie('__typecho_update', resp.responseText);
+        });
+    }
+});
+
 </script>
 <?php include 'footer.php'; ?>

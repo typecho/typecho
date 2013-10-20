@@ -174,7 +174,7 @@ $(document).ready(function() {
     }
 
     function attachDeleteEvent (el) {
-        var file = $('a.file', el).text();
+        var file = $('a.insert', el).text();
         $('.delete', el).click(function () {
             if (confirm('<?php _e('确认要删除文件 %s 吗?'); ?>'.replace('%s', file))) {
                 var cid = $(this).parents('li').data('cid');

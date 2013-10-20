@@ -271,6 +271,9 @@ $.TokenList = function (input, url_or_data, settings) {
                     add_token($(selected_dropdown_item).data("tokeninput"));
                     hidden_input.change();
                     return false;
+                  } else {
+                    add_token(null);
+                    return false;
                   }
                     
                   break;
@@ -491,7 +494,7 @@ $.TokenList = function (input, url_or_data, settings) {
         var callback = settings.onAdd;
 
         // fix null bug
-        if (!item) {
+        if (!item && input_box.val().length > 0) {
             item = {
                 id  :   input_box.val()
             };
