@@ -639,6 +639,10 @@ a.operate-reply {
   color: #666;
 }
 
+.typecho-post-area textarea {
+  resize: none;
+}
+
 .typecho-post-area #advance-panel-btn {
   color: #999;
 }
@@ -753,6 +757,16 @@ background: #FFF1A8;
 */
 .edit-media button { margin-right: 6px; }
 
+/* 拖动调整 textarea 大小 */
+.resize {
+  display: block;
+  margin: 2px auto 0;
+  border: 1px solid #D9D9D6;
+  border-width: 1px 0;
+  width: 60px;
+  height: 2px;
+  cursor: row-resize;
+}
 
 /* 拖动排序 */
 .tDnD_whileDrag {
