@@ -70,7 +70,7 @@ function _engine()
 {
     return !empty($_SERVER['HTTP_APPNAME']) // SAE
         || !!getenv('HTTP_BAE_ENV_APPID')   // BAE
-        || (isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false) // GAE;
+        || (isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false); // GAE
 }
 
 /**
