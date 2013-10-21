@@ -978,17 +978,7 @@ a.operate-reply {
 
 /* 拖动排序 */
 .tDnD_whileDrag {
-  background-color: #FFFBCC;
-  -webkit-transform-origin: 20% 0;
-  -moz-transform-origin: 20% 0;
-  -ms-transform-origin: 20% 0;
-  -o-transform-origin: 20% 0;
-  transform-origin: 20% 0;
-  -webkit-transform: rotate(2deg);
-  -moz-transform: rotate(2deg);
-  -ms-transform: rotate(2deg);
-  -o-transform: rotate(2deg);
-  transform: rotate(2deg); }
+  background-color: #FFFBCC; }
 
 /**
 * 导入扩展样式

@@ -776,8 +776,6 @@ background: #FFF1A8;
 /* 拖动排序 */
 .tDnD_whileDrag {
   background-color: #FFFBCC;
-  @include transform-origin(20%, 0);
-  @include rotate(2deg);
 }
 
 
