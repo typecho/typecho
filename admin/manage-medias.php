@@ -35,10 +35,11 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 </div>
             
                 <form method="post" name="manage_medias" class="operate-form">
+                <div class="typecho-table-wrap">
                     <table class="typecho-list-table draggable">
                         <colgroup>
                             <col width="20"/>
-                            <col width="5%"/>
+                            <col width="6%"/>
                             <col width="30%"/>
                             <col width=""/>
                             <col width="30%"/>
@@ -84,6 +85,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <?php endif; ?>
                         </tbody>
                     </table>
+                </div>
                 </form>
                 
 

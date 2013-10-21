@@ -385,11 +385,12 @@ a.operate-reply {
   color: #999;
   text-align: center;
 }
-
-.typecho-list-table {
-  border: 30px solid #FFF;
-  width: 100%;
+.typecho-table-wrap {
+  padding: 30px;
   background: #FFF;
+}
+.typecho-list-table {
+  width: 100%;
 }
 
 .typecho-list-table.deactivate {
@@ -484,7 +485,6 @@ a.operate-reply {
 * 模板列表
 */
 .typecho-theme-list {
-  margin-top: 2em;
 }
 
 .typecho-theme-list .theme-item {

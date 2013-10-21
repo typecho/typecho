@@ -15,6 +15,7 @@
     margin-right: 4px;
     padding: 3px;
     cursor: pointer;
+    @include border-radius(2px);
     &:hover {
       background-color: #E9E9E6;
     }

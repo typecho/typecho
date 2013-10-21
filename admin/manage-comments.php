@@ -78,6 +78,7 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == Typ
                 </div>
                 
                 <form method="post" name="manage_comments" class="operate-form">
+                <div class="typecho-table-wrap">
                     <table class="typecho-list-table">
                         <colgroup>
                             <col width="3%"/>
@@ -175,6 +176,7 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == Typ
                         <?php endif; ?>
                         </tbody>
                     </table>
+                </div>
 
                     <?php if(isset($request->cid)): ?>
                     <input type="hidden" value="<?php echo htmlspecialchars($request->get('cid')); ?>" name="cid" />

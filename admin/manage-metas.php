@@ -18,25 +18,28 @@ include 'menu.php';
                 <div class="col-mb-12 col-tb-8">
                     <?php if(!isset($request->type) || 'category' == $request->get('type')): ?>
                     <?php Typecho_Widget::widget('Widget_Metas_Category_List')->to($categories); ?>
+                    
                     <form method="post" name="manage_categories" class="operate-form">
-                        <div class="typecho-list-operate clearfix">
-                            <div class="operate">
-                                <input type="checkbox" class="typecho-table-select-all" />
-                                <div class="btn-group btn-drop">
-                                    <button class="dropdown-toggle btn-s" type="button" href="">选中项 <i class="i-caret-down"></i></button>
-                                    <ul class="dropdown-menu">
-                                        <li><a lang="<?php _e('此分类下的所有内容将被删除, 你确认要删除这些分类吗?'); ?>" href="<?php $options->index('/action/metas-category-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
-                                        <li><a lang="<?php _e('刷新分类可能需要等待较长时间, 你确认要刷新这些分类吗?'); ?>" href="<?php $options->index('/action/metas-category-edit?do=refresh'); ?>"><?php _e('刷新'); ?></a></li>
-                                        <li class="multiline">
-                                            <button type="button" class="merge btn-s" rel="<?php $options->index('/action/metas-category-edit?do=merge'); ?>"><?php _e('合并到'); ?></button>
-                                            <select name="merge">
-                                                <?php $categories->parse('<option value="{mid}">{name}</option>'); ?>
-                                            </select>
-                                        </li>
-                                    </ul>
-                                </div>
+                    <div class="typecho-list-operate clearfix">
+                        <div class="operate">
+                            <input type="checkbox" class="typecho-table-select-all" />
+                            <div class="btn-group btn-drop">
+                                <button class="dropdown-toggle btn-s" type="button" href="">选中项 <i class="i-caret-down"></i></button>
+                                <ul class="dropdown-menu">
+                                    <li><a lang="<?php _e('此分类下的所有内容将被删除, 你确认要删除这些分类吗?'); ?>" href="<?php $options->index('/action/metas-category-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
+                                    <li><a lang="<?php _e('刷新分类可能需要等待较长时间, 你确认要刷新这些分类吗?'); ?>" href="<?php $options->index('/action/metas-category-edit?do=refresh'); ?>"><?php _e('刷新'); ?></a></li>
+                                    <li class="multiline">
+                                        <button type="button" class="merge btn-s" rel="<?php $options->index('/action/metas-category-edit?do=merge'); ?>"><?php _e('合并到'); ?></button>
+                                        <select name="merge">
+                                            <?php $categories->parse('<option value="{mid}">{name}</option>'); ?>
+                                        </select>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="typecho-table-wrap">
                         <table class="typecho-list-table">
                             <colgroup>
                                 <col width="20"/>
@@ -80,6 +83,7 @@ include 'menu.php';
                                 <?php endif; ?>
                             </tbody>
                         </table>
+                    </div>
                     </form>
                     <?php else: ?>
                     <?php Typecho_Widget::widget('Widget_Metas_Tag_Cloud', 'sort=mid&desc=0')->to($tags); ?>

@@ -649,10 +649,12 @@ a.operate-reply {
   color: #999;
   text-align: center; }
 
-.typecho-list-table {
-  border: 30px solid #FFF;
-  width: 100%;
+.typecho-table-wrap {
+  padding: 30px;
   background: #FFF; }
+
+.typecho-list-table {
+  width: 100%; }
 
 .typecho-list-table.deactivate {
   color: #999; }
@@ -729,9 +731,6 @@ a.operate-reply {
 /**
 * 模板列表
 */
-.typecho-theme-list {
-  margin-top: 2em; }
-
 .typecho-theme-list img {
   margin: 1em 0;
   max-width: 100%;
@@ -1053,7 +1052,12 @@ a.operate-reply {
     display: inline-block;
     margin-right: 4px;
     padding: 3px;
-    cursor: pointer; }
+    cursor: pointer;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -ms-border-radius: 2px;
+    -o-border-radius: 2px;
+    border-radius: 2px; }
     .wmd-button-row li:hover {
       background-color: #E9E9E6; }
     .wmd-button-row li.wmd-spacer {

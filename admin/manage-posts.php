@@ -42,78 +42,80 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 </div>
             
                 <form method="post" name="manage_posts" class="operate-form">
-                <table class="typecho-list-table">
-                    <colgroup>
-                        <col width="20"/>
-                        <col width="5%"/>
-                        <col width="45%"/>
-                        <col width=""/>
-                        <col width="18%"/>
-                        <col width="16%"/>
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th> </th>
-                            <th> </th>
-                            <th><?php _e('标题'); ?></th>
-                            <th><?php _e('作者'); ?></th>
-                            <th><?php _e('分类'); ?></th>
-                            <th><?php _e('日期'); ?></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    	<?php Typecho_Widget::widget('Widget_Contents_Post_Admin')->to($posts); ?>
-                    	<?php if($posts->have()): ?>
-                        <?php while($posts->next()): ?>
-                        <tr id="<?php $posts->theId(); ?>">
-                            <td><input type="checkbox" value="<?php $posts->cid(); ?>" name="cid[]"/></td>
-                            <td><a href="<?php $options->adminUrl('manage-comments.php?cid=' . $posts->cid); ?>" class="balloon-button size-<?php echo Typecho_Common::splitByCount($posts->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $posts->commentsNum(); ?></a></td>
-                            <td>
-                            <a href="<?php $options->adminUrl('write-post.php?cid=' . $posts->cid); ?>"><?php $posts->title(); ?></a>
-                            <?php 
-                            if ($posts->hasSaved || 'post_draft' == $posts->type) {
-                                echo '<em class="status">' . _t('草稿') . '</em>';
-                            } else if ('waiting' == $posts->status) {
-                                echo '<em class="status">' . _t('待审核') . '</em>';
-                            } else if ('private' == $posts->status) {
-                                echo '<em class="status">' . _t('私密') . '</em>';
-                            } else if ($posts->password) {
-                                echo '<em class="status">' . _t('密码保护') . '</em>';
-                            }
-                            ?>
-                            <?php if ('post_draft' != $posts->type): ?>
-                            <a href="<?php $posts->permalink(); ?>"><i class="i-exlink" title="<?php _e('浏览 %s', htmlspecialchars($posts->title)); ?>" /></i></a>
-                            <?php endif; ?>
-                            </td>
-                            <td><a href="<?php $options->adminUrl('manage-posts.php?uid=' . $posts->author->uid); ?>"><?php $posts->author(); ?></a></td>
-                            <td><?php $categories = $posts->categories; $length = count($categories); ?>
-                            <?php foreach ($categories as $key => $val): ?>
-                                <?php echo '<a href="';
-                                $options->adminUrl('manage-posts.php?category=' . $val['mid']
-                                . (isset($request->uid) ? '&uid=' . $request->uid : '')
-                                . (isset($request->status) ? '&status=' . $request->status : ''));
-                                echo '">' . $val['name'] . '</a>' . ($key < $length - 1 ? ', ' : ''); ?>
-                            <?php endforeach; ?>
-                            </td>
-                            <td>
-                            <?php if ($posts->hasSaved): ?>
-                            <span class="description">
-                            <?php $modifyDate = new Typecho_Date($posts->modified); ?>
-                            <?php _e('保存于 %s', $modifyDate->word()); ?>
-                            </span>
+                <div class="typecho-table-wrap">
+                    <table class="typecho-list-table">
+                        <colgroup>
+                            <col width="20"/>
+                            <col width="6%"/>
+                            <col width="45%"/>
+                            <col width=""/>
+                            <col width="18%"/>
+                            <col width="16%"/>
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th> </th>
+                                <th> </th>
+                                <th><?php _e('标题'); ?></th>
+                                <th><?php _e('作者'); ?></th>
+                                <th><?php _e('分类'); ?></th>
+                                <th><?php _e('日期'); ?></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        	<?php Typecho_Widget::widget('Widget_Contents_Post_Admin')->to($posts); ?>
+                        	<?php if($posts->have()): ?>
+                            <?php while($posts->next()): ?>
+                            <tr id="<?php $posts->theId(); ?>">
+                                <td><input type="checkbox" value="<?php $posts->cid(); ?>" name="cid[]"/></td>
+                                <td><a href="<?php $options->adminUrl('manage-comments.php?cid=' . $posts->cid); ?>" class="balloon-button size-<?php echo Typecho_Common::splitByCount($posts->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $posts->commentsNum(); ?></a></td>
+                                <td>
+                                <a href="<?php $options->adminUrl('write-post.php?cid=' . $posts->cid); ?>"><?php $posts->title(); ?></a>
+                                <?php 
+                                if ($posts->hasSaved || 'post_draft' == $posts->type) {
+                                    echo '<em class="status">' . _t('草稿') . '</em>';
+                                } else if ('waiting' == $posts->status) {
+                                    echo '<em class="status">' . _t('待审核') . '</em>';
+                                } else if ('private' == $posts->status) {
+                                    echo '<em class="status">' . _t('私密') . '</em>';
+                                } else if ($posts->password) {
+                                    echo '<em class="status">' . _t('密码保护') . '</em>';
+                                }
+                                ?>
+                                <?php if ('post_draft' != $posts->type): ?>
+                                <a href="<?php $posts->permalink(); ?>"><i class="i-exlink" title="<?php _e('浏览 %s', htmlspecialchars($posts->title)); ?>" /></i></a>
+                                <?php endif; ?>
+                                </td>
+                                <td><a href="<?php $options->adminUrl('manage-posts.php?uid=' . $posts->author->uid); ?>"><?php $posts->author(); ?></a></td>
+                                <td><?php $categories = $posts->categories; $length = count($categories); ?>
+                                <?php foreach ($categories as $key => $val): ?>
+                                    <?php echo '<a href="';
+                                    $options->adminUrl('manage-posts.php?category=' . $val['mid']
+                                    . (isset($request->uid) ? '&uid=' . $request->uid : '')
+                                    . (isset($request->status) ? '&status=' . $request->status : ''));
+                                    echo '">' . $val['name'] . '</a>' . ($key < $length - 1 ? ', ' : ''); ?>
+                                <?php endforeach; ?>
+                                </td>
+                                <td>
+                                <?php if ($posts->hasSaved): ?>
+                                <span class="description">
+                                <?php $modifyDate = new Typecho_Date($posts->modified); ?>
+                                <?php _e('保存于 %s', $modifyDate->word()); ?>
+                                </span>
+                                <?php else: ?>
+                                <?php $posts->dateWord(); ?>
+                                <?php endif; ?>
+                                </td>
+                            </tr>
+                            <?php endwhile; ?>
                             <?php else: ?>
-                            <?php $posts->dateWord(); ?>
+                            <tr>
+                            	<td colspan="6"><h6 class="typecho-list-table-title"><?php _e('没有任何文章'); ?></h6></td>
+                            </tr>
                             <?php endif; ?>
-                            </td>
-                        </tr>
-                        <?php endwhile; ?>
-                        <?php else: ?>
-                        <tr>
-                        	<td colspan="6"><h6 class="typecho-list-table-title"><?php _e('没有任何文章'); ?></h6></td>
-                        </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
                 </form>
 
                 <?php if($posts->have()): ?>
