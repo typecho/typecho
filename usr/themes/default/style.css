@@ -17,8 +17,8 @@ body {
 background: #fff;
 color: #444;
 font-size: 13px;
-line-height: 1.7;
-font-family: Georgia,Times,"Times New Roman",serif;
+line-height: 1.6;
+font-family: Georgia, Times, "Times New Roman", STHeiti, serif;
 }
 
 h1, h2, h3, h4, h5, h6 { font-weight: normal; }
@@ -39,15 +39,16 @@ textarea { *padding: 3px; }
 a {
 color: #3354AA;
 text-decoration: none;
-border-bottom: 1px dotted #3354AA;
+border-bottom: 1px solid #EEE;
 }
 a:hover {
 color: #444;
-border-bottom: none;
+border-bottom-color: transparent;
 }
 
-pre, code, tt {
-	font: 12px Menlo,Monaco,Consolas,"Lucida Console","Courier New",monospace; line-height: 1.5;
+pre, code {
+	font: 12px Menlo, Monaco, Consolas, "Courier New", monospace;
+	line-height: 1.5;
 }
 code { margin-bottom: 20px; }
 pre, code {
@@ -62,7 +63,12 @@ border: 1px solid #eee;
 blockquote:before, blockquote:after, q:before, q:after { content: ""; }
 blockquote, q { quotes: "" ""; }
 
-blockquote  { margin: 1.5em; color: #666; font-style: italic; }
+blockquote {
+	margin: 1.5em 0;
+	padding-left: 1.5em;
+	border-left: 4px solid #EEE;
+	color: #666; 
+}
 
 /*code {display: block; border: 1px solid #AAAAAA; background: #F1ECDD; color: #444; line-height: 16px; overflow: auto;
 	font-family: 'andale mono','lucida console',monospace; padding: 10px; margin: 10px 0;}*/
@@ -132,7 +138,6 @@ margin-top: 30px;
 #nav_box {
 	border-bottom: 1px solid #eee;
 	margin-bottom: 20px;
-	font-family: "Lucida Grande",Tahoma,"Bitstream Vera Sans",Arial,sans-serif;
 }
 
 ul#nav_menu {
@@ -192,7 +197,7 @@ h2.entry_title {
 margin-bottom: 0;
 font-size: 18px;
 font-weight: bold;
-font-family: "Lucida Grande","Lucida Sans Unicode","Lucida Sans",Helvetica,Arial,sans-serif;
+font-family: Helvetica, Arial, sans-serif;
 }
 
 h2.entry_title a {
