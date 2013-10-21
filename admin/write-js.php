@@ -34,6 +34,9 @@ $(document).ready(function() {
         minute          :   (new Date()).getMinutes()
     });
 
+    // text 自动拉伸
+    Typecho.editorResize('text', '<?php $options->index('/action/ajax?do=editorResize'); ?>');
+
     // tag autocomplete 提示
     var tags = $('#tags'), tagsPre = [];
     
