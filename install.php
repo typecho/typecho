@@ -61,6 +61,19 @@ if (!isset($_GET['finish']) && file_exists(__TYPECHO_ROOT_DIR__ . '/config.inc.p
 }
 
 /**
+ * 检测是否为应用引擎 
+ * 
+ * @access protected
+ * @return void
+ */
+function _engine()
+{
+    return !empty($_SERVER['HTTP_APPNAME']) // SAE
+        || !!getenv('HTTP_BAE_ENV_APPID')   // BAE
+        || (isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false) // GAE;
+}
+
+/**
  * 获取传递参数
  *
  * @param string $name 参数名称
@@ -483,7 +496,9 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
 Typecho_Db::set(\$db);
 ";
                                     $contents = implode('', $lines);
-                                    @file_put_contents('./config.inc.php', $contents);
+                                    if (!_engine()) {
+                                        @file_put_contents('./config.inc.php', $contents);
+                                    }
 
                                     // 创建一个用于标识的临时文件
                                     $_SESSION['typecho'] = 1;
