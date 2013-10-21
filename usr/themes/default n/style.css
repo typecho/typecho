@@ -1,0 +1,272 @@
+/* ------------------------------------
+ * Typecho Default Theme
+ *
+ * @author  fen1211@gmail.com
+ * @link  http: //typecho.net/
+ * @update  2009-03-29 14: 30
+ * --------------------------------- */
+
+
+/* ------------------
+ * gobal settings
+ * --------------- */
+html {
+  background-color: #F6F6F3;
+}
+body {
+  background-color: #FFF;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: .875em;
+}
+
+.container {
+  color: #444;
+
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+a {
+  color: #467B96;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+pre, code {
+  font-family: Menlo, Monaco, Consolas, "Lucida Console", "Courier New", monospace;
+}
+
+.serif {
+  font-family: Cambria, Georgia, "Times New Roman", Times, STHeiti, serif;
+}
+
+/* ------------------
+ * header
+ * --------------- */
+
+#header {
+  padding-top: 50px;
+  border-bottom: 1px solid #DDD;
+}
+#logo {
+  color: #333;
+  font-size: 2em;
+  font-weight: bold;
+}
+.description {
+  margin: 0;
+  color: #999;
+}
+
+/* navigation menu */
+#nav-menu {
+}
+#nav-menu a {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 20px;
+}
+#nav-menu .current {
+}
+
+/* ------------------
+ * content
+ * --------------- */
+#main {
+}
+.post {
+  padding: 20px 0;
+  border-bottom: 1px solid #E9E9E6;
+}
+.post-title {
+}
+.post-meta {
+  margin-top: -0.5em;
+  color: #999;
+}
+.post-meta a {
+}
+.post-content {
+  line-height: 1.5;
+}
+.post-content img {
+  max-width: 100%;
+}
+
+/* = pages nav */
+/* ------------------
+ * comment list
+ * --------------- */
+#comments {
+  margin-top: 20px;
+}
+#comments h4 {
+}
+ol.comment-list, ol.comment-list ol {
+  margin: 0;
+  list-style: none;
+}
+ol.comment-list ol {
+  padding-top: 10px;
+}
+ol.comment-list li {
+  margin: 0;
+  padding-bottom: 10px;
+}
+ol.comment-list li {
+  padding: 10px 15px;
+  margin-top: 10px;
+  border: 1px solid #eee;
+  background: #FAFAFA;
+  overflow: hidden;
+}
+ol.comment-list li.comment-level-odd {
+  background: #fff;
+}
+ol.comment-list li.comment-level-even {
+  background: #FAFAFA;
+}
+ol.comment-list li.comment-by-author {
+  border: 1px dashed #AAA;
+}
+ol.comment-list li .comment-reply {
+  text-align: right;
+}
+ol.comment-list li .comment-reply a {
+  border: none;
+  color: #aaa;
+}
+ol.comment-list li .comment-reply a: hover {
+  color: #444;
+}
+.comment-meta {
+  padding-bottom: 8px;
+  /*border-bottom: 1px dashed #eee;
+  */
+color: #999;
+}
+.comment-author {
+  display: block;
+  color: #444;
+}
+.comment-author cite.fn {
+}
+.comment-body {
+  overflow: hidden;
+}
+img.avatar {
+  float: left;
+  margin: 6px 10px 0 0;
+}
+.respond {
+  margin-top: 20px;
+}
+ol.comment-list li .respond {
+  border-top: 1px solid #ddd;
+  padding-top: 10px;
+}
+#comment-form {
+  padding-right: 8px;
+}
+.respond .cancel-comment-reply {
+  float: right;
+}
+.respond .cancel-comment-reply a {
+  border: none;
+  color: #aaa;
+}
+.respond .cancel-comment-reply a: hover {
+  color: #444;
+}
+#comment-form label {
+  color: #555;
+  display: block;
+}
+#comment-form label .required {
+  color: #C04E37;
+  padding-left: 5px;
+}
+#comment-form .text {
+  width: 100%;
+  margin-right: 15px;
+}
+#comment-form textarea {
+  width: 100%;
+  height: 180px;
+}
+ol#comment-list li .respond .text {
+  -width: 400px;
+}
+ol#comment-list li .respond textarea {
+  -width: 400px;
+}
+/* ------------------
+ * sidebar
+ * --------------- */
+#sidebar {
+}
+.widget {
+}
+.widget-title {
+  font-size: 1em;
+}
+.widget-list {
+  list-style: none;
+  padding: 0;
+  line-height: 1.5;
+}
+.widget-list li {
+}
+.widget-list a {
+  color: #999;
+}
+
+/* ------------------
+ * footer 
+ * --------------- */
+#footer {
+}
+#footer a {
+}
+
+/* -----------------
+ * misc
+ *--------------- */
+.aligncenter, div.aligncenter {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+.alignleft {
+  float: left;
+}
+.alignright {
+  float: right;
+}
+img.alignleft {
+  margin: 4px 15px 0 0;
+}
+img.alignright {
+  margin: 4px 0 0 15px;
+}
+.alt {
+  color: #666;
+}
+
+
+@media (min-width: 768px) {
+  .container {
+  }
+}
+
+@media (min-width: 992px) {
+  .container {
+  }
+}
+
+@media (min-width: 1200px) {
+  .container {
+  }
+}
