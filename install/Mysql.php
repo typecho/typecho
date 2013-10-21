@@ -21,8 +21,8 @@
 <h3 class="warning"><?php _e('系统将为您自动匹配 %s 环境的安装选项', 'BAE'); ?></h3>
 <li>
 <label class="typecho-label" for="dbDatabase"><?php _e('数据库名'); ?></label>
-<input type="text" class="text" id="dbDatabase" name="dbDatabase" value="<?php _v('dbDatabase', 'typecho'); ?>" />
-<p class="description"><?php _e('请您指定数据库名称'); ?></p>
+<input type="text" class="text" id="dbDatabase" name="dbDatabase" value="<?php _v('dbDatabase'); ?>" />
+<p class="description"><?php _e('可以在MySQL服务的管理页面看到您创建的数据库名称'); ?></p>
 </li>
 <input type="hidden" name="config" value="array (
     'host'      =>  getenv('HTTP_BAE_ENV_ADDR_SQL_IP'),
