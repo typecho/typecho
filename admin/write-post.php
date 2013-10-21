@@ -34,7 +34,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
 
                     <p>
                         <textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text" name="text" class="w-100 mono"><?php echo htmlspecialchars($post->text); ?></textarea>
-                        <span class="resize"></span>
+                        <span class="resize"><i></i></span>
                     </p>
 
                     <?php include 'file-upload.php'; ?>

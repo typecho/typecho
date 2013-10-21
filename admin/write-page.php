@@ -29,6 +29,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                         <p class="mono url-slug"><?php echo preg_replace("/\{slug\}/i", $input, $permalink); ?></p>
                     <p>
                         <textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text" name="text" class="w-100 mono"><?php echo htmlspecialchars($page->text); ?></textarea>
+                        <span class="resize"><i></i></span>
                     </p>
                         
                     <?php include 'file-upload.php'; ?>

@@ -966,11 +966,15 @@ a.operate-reply {
 .resize {
   display: block;
   margin: 2px auto 0;
+  padding: 2px 0;
   border: 1px solid #D9D9D6;
   border-width: 1px 0;
   width: 60px;
-  height: 2px;
   cursor: row-resize; }
+  .resize i {
+    display: block;
+    height: 1px;
+    background-color: #D9D9D6; }
 
 /* 拖动排序 */
 .tDnD_whileDrag {
