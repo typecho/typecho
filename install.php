@@ -328,7 +328,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                                         'ip' => '127.0.0.1', 'agent' => $options->generator, 'text' => '欢迎加入 Typecho 大家族', 'type' => 'comment', 'status' => 'approved', 'parent' => 0)));
 
                                         /** 初始用户 */
-                                        $password = substr(uniqid(), 7);
+                                        $password = empty($config['userPassword']) ? substr(uniqid(), 7) : $config['userPassword'];
                                         
                                         $installDb->query($installDb->insert('table.users')->rows(array('name' => $config['userName'], 'password' => Typecho_Common::hash($password), 'mail' => $config['userMail'],
                                         'url' => 'http://www.typecho.org', 'screenName' => $config['userName'], 'group' => 'administrator', 'created' => Typecho_Date::gmtTime())));
@@ -463,6 +463,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                                     Typecho_Cookie::set('__typecho_config', base64_encode(serialize(array_merge(array(
                                         'prefix'    =>  _r('dbPrefix'),
                                         'userName'  =>  _r('userName'),
+                                        'userPassword'  =>  _r('userPassword'),
                                         'userMail'  =>  _r('userMail'),
                                         'adapter'   =>  $adapter,
                                         'siteUrl'   =>  _r('userUrl')
@@ -544,6 +545,11 @@ Typecho_Db::set(\$db);
                             <label class="typecho-label" for="userName"><?php _e('用户名'); ?></label>
                             <input type="text" name="userName" id="userName" class="text" value="<?php _v('userName', 'admin'); ?>" />
                             <p class="description"><?php _e('请填写您的用户名'); ?></p>
+                            </li>
+                            <li>
+                            <label class="typecho-label" for="userPassword"><?php _e('登录密码'); ?></label>
+                            <input type="password" name="userPassword" id="userPassword" class="text" value="<?php _v('userPassword'); ?>" />
+                            <p class="description"><?php _e('请填写您的登录密码, 如果留空系统将为您随机生成一个'); ?></p>
                             </li>
                             <li>
                             <label class="typecho-label" for="userMail"><?php _e('邮件地址'); ?></label>

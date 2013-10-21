@@ -19,7 +19,6 @@ update:
 
 package:
 	@echo 'package'
-	rm -Rf build/mockup/
 	rm -Rf build/tools/
 	rm -Rf build/todo.txt
 	rm -Rf build/usr/plugins/*
@@ -62,7 +61,12 @@ install:
 	make update
 	rm -Rf build/tools/
 	rm -Rf build/todo.txt
-	rm -Rf ${DIR}/usr/plugins/*
+	rm -Rf build/usr/plugins/*
+	rm -Rf build/admin/scss
+	rm -Rf build/admin/img/editor
+	rm -Rf build/admin/img/icons
+	mkdir build/usr/uploads/
+	chmod 777 build/usr/uploads/
 	cp -Rf build/* ${DIR}
 	make clear
 
