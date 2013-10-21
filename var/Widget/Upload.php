@@ -280,6 +280,8 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                 $result = self::uploadHandle($file);
 
                 if (false !== $result) {
+                    $this->pluginHandle()->beforeUpload($result);
+
                     $struct = array(
                         'title'     =>  $result['name'],
                         'slug'      =>  $result['name'],
@@ -371,6 +373,8 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                 $result = self::modifyHandle($this->row, $file);
 
                 if (false !== $result) {
+                    $this->pluginHandle()->beforeModify($result);
+                    
                     $this->update(array(
                         'text'      =>  serialize($result)
                     ), $this->db->sql()->where('cid = ?', $this->cid));
