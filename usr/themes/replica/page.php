@@ -2,7 +2,7 @@
 
 <div class="col-mb-12 col-8" id="main">
     <article class="post">
-		<h2 class="post-title"><a href="<?php $this->permalink() ?>"><?php $this->title() ?></a></h2>
+		<h1 class="post-title"><a href="<?php $this->permalink() ?>"><?php $this->title() ?></a></h1>
         <div class="post-content">
     		<?php $this->content(); ?>
         </div>
