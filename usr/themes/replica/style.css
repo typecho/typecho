@@ -70,16 +70,17 @@ input[type="text"], input[type="email"], input[type="url"] {
 
 /* navigation menu */
 #nav-menu {
-  margin-top: 30px;
-  padding-bottom: 15px;
-  border-bottom: 3px double #E9E9E6;
+  margin-top: 20px;
+  padding: 0;
+  border-bottom: 1px solid #E9E9E6;
 }
 #nav-menu a {
   display: inline-block;
-  margin-right: 16px;
-  padding-right: 20px;
+  margin-right: -4px;
+  padding: 5px 20px 10px;
   border-right: 1px solid #E9E9E6;
 }
+#nav-menu a:hover { text-decoration: none; }
 #nav-menu .current {
   color: #444;
 }
