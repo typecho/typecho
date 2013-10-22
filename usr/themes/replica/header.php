@@ -21,12 +21,10 @@
     <?php $this->header(); ?>
 </head>
 <body>
-
-<header id="header" class="">
-    
-	<div class="container">
-        <div class="col-group">
-            <div class="col-mb-12 col-8">
+<div class="container">
+    <div class="col-group">
+        <header id="header" class="clearfix">
+            <div class="site-name col-mb-12 col-9">
                 <a id="logo" href="<?php $this->options->siteUrl(); ?>">
                     <?php if ($this->options->logoUrl): ?>
                     <img src="<?php $this->options->logoUrl() ?>" alt="<?php $this->options->title() ?>" />
@@ -35,24 +33,22 @@
                 </a>
         	    <p class="description"><?php $this->options->description() ?></p>
             </div>
-            <section class="col-mb-12 col-offset-1 col-3">
-                <form id="search" method="post" action="/">
-                    <input type="text" name="s" class="text" /> <input type="submit" class="submit" value="<?php _e('搜索'); ?>" />
+            <div class="site-search col-3">
+                <form id="search" method="post" action="./">
+                    <input type="text" name="s" class="text" placeholder="<?php _e('输入关键字搜索'); ?>" />
+                    <button type="submit" class="submit"><?php _e('搜索'); ?></button>
                 </form>
-            </section>
-            <nav id="nav-menu" class="col-mb-12">
-                <a<?php if($this->is('index')): ?> class="current"<?php endif; ?> href="<?php $this->options->siteUrl(); ?>"><?php _e('首页'); ?></a>
-                <?php $this->widget('Widget_Contents_Page_List')->to($pages); ?>
-                <?php while($pages->next()): ?>
-                <a<?php if($this->is('page', $pages->slug)): ?> class="current"<?php endif; ?> href="<?php $pages->permalink(); ?>" title="<?php $pages->title(); ?>"><?php $pages->title(); ?></a>
-                <?php endwhile; ?>
-            </nav>
-        </div>
-    </div>
-</header><!-- end #header -->
-
-<div class="container">
-    <div class="col-group">
+            </div>
+            <div class="col-mb-12">
+                <nav id="nav-menu">
+                    <a<?php if($this->is('index')): ?> class="current"<?php endif; ?> href="<?php $this->options->siteUrl(); ?>"><?php _e('首页'); ?></a>
+                    <?php $this->widget('Widget_Contents_Page_List')->to($pages); ?>
+                    <?php while($pages->next()): ?>
+                    <a<?php if($this->is('page', $pages->slug)): ?> class="current"<?php endif; ?> href="<?php $pages->permalink(); ?>" title="<?php $pages->title(); ?>"><?php $pages->title(); ?></a>
+                    <?php endwhile; ?>
+                </nav>
+            </div>
+        </header><!-- end #header -->
 
     
     

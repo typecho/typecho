@@ -9,7 +9,7 @@
     </section>
     <?php endif; ?>
 
-    <!--<?php if (empty($this->options->sidebarBlock) || in_array('ShowRecentComments', $this->options->sidebarBlock)): ?>
+    <?php if (empty($this->options->sidebarBlock) || in_array('ShowRecentComments', $this->options->sidebarBlock)): ?>
     <section class="widget">
 		<h3 class="widget-title"><?php _e('最近回复'); ?></h3>
         <ul class="widget-list">
@@ -19,7 +19,7 @@
         <?php endwhile; ?>
         </ul>
     </section>
-    <?php endif; ?>-->
+    <?php endif; ?>
 
     <?php if (empty($this->options->sidebarBlock) || in_array('ShowCategory', $this->options->sidebarBlock)): ?>
     <section class="widget">
