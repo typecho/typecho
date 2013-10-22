@@ -19,7 +19,7 @@ body {
 }
 
 .container {
-  margin: 50px auto 30px;
+  margin-bottom: 30px;
   background-color: #FFF;
 
   -webkit-box-sizing: border-box;
@@ -36,10 +36,27 @@ a:hover {
   text-decoration: underline;
 }
 pre, code {
+  padding: 2px 4px;
+  background: #F3F3F0;
   font-family: Menlo, Monaco, Consolas, "Lucida Console", "Courier New", monospace;
+  font-size: .92857em;
+}
+pre {
+  padding: 8px;
+  overflow: auto;
+  max-height: 400px;
 }
 
-input[type="text"], input[type="email"], input[type="url"],
+blockquote {
+  margin: 1em 1.5em;
+  padding-left: 1.5em;
+  border-left: 4px solid #E9E9E6;
+  color: #777;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="url"],
 textarea {
   padding: 5px;
   border: 1px solid #E3E3E0;
@@ -127,9 +144,10 @@ textarea {
   color: #999;
   font-size: .92857em;
 }
-.post-meta span {
-  margin-right: 6px;
-  padding-right: 10px;
+.post-meta i {
+  display: inline-block;
+  margin: 0 8px;
+  height: 12px;
   border-right: 1px solid #E9E9E6;
 }
 .post-content {
@@ -143,115 +161,105 @@ textarea {
 
 .page-navigator {
   list-style: none;
-  margin: 30px 0 0;
+  margin: 25px 0;
   padding: 0;
   text-align: center;
 }
 .page-navigator li {
-  display: inline;
-  margin: 0 10px;
+  display: inline-block;
+  margin: 0 8px;
 }
 .page-navigator a {
   display: inline-block;
-  padding: 0 5px;
+  padding: 0 8px;
   height: 24px;
   line-height: 24px;
+}
+.page-navigator a:hover {
+  background: #F3F3F0;
+  text-decoration: none;
 }
 
 .page-navigator .current a {
   color: #444;
+  background: #F3F3F0;
 }
 
 /* ------------------
  * comment list
  * --------------- */
 #comments {
-  margin-top: 20px;
+  margin-top: 30px;
 }
-#comments h4 {
-}
-ol.comment-list, ol.comment-list ol {
-  margin: 0;
+.comment-list, .comment-list ol {
   list-style: none;
-}
-ol.comment-list ol {
-  padding-top: 10px;
-}
-ol.comment-list li {
   margin: 0;
-  padding-bottom: 10px;
+  padding: 0;
 }
-ol.comment-list li {
-  padding: 10px 15px;
+.comment-list li {
+  padding: 14px;
   margin-top: 10px;
-  border: 1px solid #eee;
-  background: #FAFAFA;
-  overflow: hidden;
+  border: 1px solid #E9E9E6;
 }
-ol.comment-list li.comment-level-odd {
-  background: #fff;
+.comment-list li.comment-level-odd {
+  background: #F6F6F3;
 }
-ol.comment-list li.comment-level-even {
-  background: #FAFAFA;
+.comment-list li.comment-level-even {
+  background: #FFF;
 }
-ol.comment-list li.comment-by-author {
-  border: 1px dashed #AAA;
+.comment-list li.comment-by-author {
+  background: #FFF9E8;
 }
-ol.comment-list li .comment-reply {
+.comment-list li .comment-reply {
   text-align: right;
+  font-size: .92857em;
 }
-ol.comment-list li .comment-reply a {
-  border: none;
-  color: #aaa;
+.comment-list li .comment-reply a {
 }
-ol.comment-list li .comment-reply a:hover {
-  color: #444;
+.comment-list li .comment-reply a:hover {
 }
-.comment-meta {
-  padding-bottom: 8px;
-  /*border-bottom: 1px dashed #eee;
-  */
-color: #999;
+.comment-meta a {
+  color: #999;
+  font-size: .92857em;
 }
 .comment-author {
   display: block;
+  margin-bottom: 4px;
   color: #444;
 }
-.comment-author cite.fn {
-}
-.comment-body {
-  overflow: hidden;
-}
-img.avatar {
+.comment-author .avatar {
   float: left;
-  margin: 6px 10px 0 0;
+  margin-right: 10px;
 }
-.respond {
-  margin-top: 20px;
+.comment-author cite {
+  font-weight: bold;
+  font-style: normal;
 }
-ol.comment-list li .respond {
-  border-top: 1px solid #ddd;
-  padding-top: 10px;
+.comment-content img {
+  max-width: 100%;
 }
-#comment-form {
+.comment-children li {
+}
+
+.comment-list .respond {
+  margin-top: 15px;
+  border-top: 1px solid #E9E9E6;
 }
 .respond .cancel-comment-reply {
   float: right;
+  margin-top: 15px;
+  font-size: .92857em;
 }
-.respond .cancel-comment-reply a {
-  border: none;
-  color: #aaa;
-}
-.respond .cancel-comment-reply a:hover {
-  color: #444;
+#comment-form {
 }
 #comment-form label {
-  color: #555;
   display: block;
+  margin-bottom: .5em;
+  font-weight: bold;
 }
-#comment-form label .required {
-  color: #C04E37;
-  padding-left: 5px;
+#comment-form .required:after {
+  content: " *";
+  color: #C00;
 }
 
 /* ------------------
@@ -292,6 +300,13 @@ ol.comment-list li .respond {
 }
 
 /* -----------------
+ * Content format
+ *--------------- */
+.post-content, .comment-content {
+  line-height: 1.5;
+}
+
+/* -----------------
  * misc
  *--------------- */
 .aligncenter, div.aligncenter {
@@ -318,6 +333,7 @@ img.alignright {
 
 @media (min-width: 768px) {
   .container {
+    margin-top: 50px;
     padding: 60px;
   }
 }
@@ -328,6 +344,9 @@ img.alignright {
 }
 
 @media (min-width: 1200px) {
+  body {
+    font-size: 100%;
+  }
   .container {
   }
 }

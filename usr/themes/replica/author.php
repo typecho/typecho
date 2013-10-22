@@ -1,6 +1,8 @@
 <?php $this->need('header.php'); ?>
 
     <div class="col-mb-12 col-8" id="main">
+        <?php _e('%s 发布的文章', $this->author()); ?>
+
         <?php if ($this->have()): ?>
     	<?php while($this->next()): ?>
             <article class="post">
@@ -8,8 +10,7 @@
     			<div class="post-meta">
     				<?php _e('作者：'); ?><a href="<?php $this->author->permalink(); ?>"><?php $this->author(); ?></a> <i></i>
     				<?php _e('时间：'); ?><?php $this->date('F j, Y'); ?> <i></i>
-    				<?php _e('分类：'); ?><?php $this->category(','); ?> <i></i>
-                    <a href="<?php $this->permalink() ?>#comments"><?php $this->commentsNum('评论', '1 条评论', '%d 条评论'); ?></a>
+    				<?php _e('分类：'); ?><?php $this->category(','); ?>
     			</div>
                 <div class="post-content">
         			<?php $this->content('阅读剩余部分...'); ?>

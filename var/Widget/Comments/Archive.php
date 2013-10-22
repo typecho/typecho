@@ -119,15 +119,17 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
         <em class="comment-awaiting-moderation"><?php $singleCommentOptions->commentStatus(); ?></em>
         <?php } ?>
     </div>
+    <div class="comment-content">
     <?php $this->content(); ?>
+    </div>
+    <div class="comment-reply">
+        <?php $this->reply($singleCommentOptions->replyWord); ?>
+    </div>
     <?php if ($this->children) { ?>
     <div class="comment-children">
         <?php $this->threadedComments($singleCommentOptions); ?>
     </div>
     <?php } ?>
-    <div class="comment-reply">
-        <?php $this->reply($singleCommentOptions->replyWord); ?>
-    </div>
 </li>
 <?php
     }

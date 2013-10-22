@@ -4,8 +4,8 @@
     <article class="post">
 		<h1 class="post-title"><a href="<?php $this->permalink() ?>"><?php $this->title() ?></a></h1>
 		<div class="post-meta">
-			<span><?php _e('作者：'); ?><?php $this->author(); ?></span>
-			<span><?php _e('时间：'); ?><?php $this->date('F j, Y'); ?></span>
+			<?php _e('作者：'); ?><?php $this->author(); ?> <i></i>
+			<?php _e('时间：'); ?><?php $this->date('F j, Y'); ?> <i></i>
 			<?php _e('分类：'); ?><?php $this->category(','); ?>
 		</div>
 		<div class="post-content">
