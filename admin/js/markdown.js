@@ -3057,6 +3057,8 @@ else
         heading: "Heading <h1>/<h2> Ctrl+H",
         headingexample: "Heading",
 
+        fullscreen: 'FullScreen Ctrl+M',
+
         hr: "Horizontal Rule <hr> Ctrl+R",
 
         undo: "Undo - Ctrl+Z",
@@ -3565,56 +3567,77 @@ else
             refreshState();
         };
 
+        var getFullScreenAdapter = function () {
+            var selector = {
+                fullScreenChange : ['onfullscreenchange', 'onwebkitfullscreenchange', 'onmozfullscreenchange'],
+                requestFullscreen : ['requestFullscreen', 'webkitRequestFullScreen', 'mozRequestFullScreen'],
+                cancelFullscreen : ['cancelFullscreen', 'webkitCancelFullScreen', 'mozCancelFullScreen']
+            }, adapter = {};
+
+            for (var name in selector) {
+                var len = selector[name].length, found = false;
+
+                for (var i = 0; i < len; i ++) {
+                    var method = selector[name][i];
+
+                    if ('undefined' != typeof(document[method]) || 'undefined' != typeof(document.body[method])) {
+                        adapter[name] = method;
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    return false;
+                }
+            }
+
+            return adapter;
+        }
+
+        var isFullScreen = function () {
+            return document.fullScreen || 
+               document.mozFullScreen || 
+               document.webkitIsFullScreen;
+        }
+
+        var fullScreenBind = false;
+
         // fullscreen
         this.fullscreen = function () {
-            var nativeFsWebkit = document.body.webkitRequestFullScreen ? true : false;
-            var nativeFsMoz = document.body.mozRequestFullScreen ? true : false;
-            var nativeFsW3C = document.body.requestFullscreen ? true : false;
-            var nativeFs = nativeFsWebkit || nativeFsMoz || nativeFsW3C;
-            var input = panels.input, preview = panels.preview, buttonBar = panels.buttonBar, parent = buttonBar.parentNode;
-            parent.style.display = 'none';
-            var isFullScreen = parent.getAttribute('isFullScreen');
-            if (isFullScreen != 'true') {
-                parent.setAttribute('isFullScreen', true);
-                var windowHeight;
-                if (nativeFs) {
-                    if (nativeFsWebkit) {
-                        parent.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
-                    }
-                    else if (nativeFsMoz) {
-                        parent.mozRequestFullScreen();
-                    }
-                    else if (nativeFsW3C) {
-                        parent.requestFullscreen();
-                    }
-                }
+            var input = panels.input, preview = panels.preview, buttonBar = panels.buttonBar,
+                adapter = getFullScreenAdapter();
 
-                windowHeight = window.screen.height - 32;
-
-                input.style.cssText = "width:50%;background-color:#000000;color:#ffffff;position:absolute;z-index:999;top:32px;left:0;box-sizing: border-box;";
-                input.style.height = windowHeight + 'px';
-                buttonBar.style.cssText = "width:100%;background-color:#ffffff;position:absolute;z-index:1000;top:0;left:0";
-                preview.style.cssText = "width:50%;background-color:#ffffff;position:absolute;z-index:999;top:32px;right:0;box-sizing: border-box;overflow: auto;";
-                preview.style.height = windowHeight + 'px';
-
-            } else {
-                parent.setAttribute('isFullScreen', false);
-                if (nativeFs) {
-                    if (nativeFsWebkit) {
-                        document.webkitCancelFullScreen();
-                    }
-                    else if (nativeFsMoz) {
-                        document.mozCancelFullScreen();
-                    }
-                    else if (nativeFsW3C) {
-                        document.exitFullscreen();
-                    }
-                }
-                input.style.cssText = 'height:350px;';
-                preview.style.cssText = '';
-                buttonBar.style.cssText = '';
+            if (!adapter) {
+                return false;
             }
-            parent.style.display = '';
+
+            if (!fullScreenBind) {
+                util.addEvent(document, adapter.fullScreenChange.substring(2), function () {
+                    if (!isFullScreen()) {
+                        input.style.cssText = 'height:350px;';
+                        preview.style.cssText = '';
+                        buttonBar.style.cssText = '';
+                    } else {
+                        var windowHeight = window.screen.height - 32;
+
+                        input.style.cssText = "width:50%;background-color:#000000;color:#ffffff;position:absolute;z-index:999;top:32px;left:0;box-sizing: border-box;";
+                        input.style.height = windowHeight + 'px';
+                        buttonBar.style.cssText = "width:100%;background-color:#ffffff;position:absolute;z-index:1000;top:0;left:0";
+                        preview.style.cssText = "width:50%;background-color:#ffffff;position:absolute;z-index:999;top:32px;right:0;box-sizing: border-box;overflow: auto;";
+                        preview.style.height = windowHeight + 'px';
+                    }
+                });
+                
+                fullScreenBind = true;
+            }
+
+            if (!isFullScreen()) {
+                document.body[adapter.requestFullscreen]('webkitRequestFullScreen' == adapter.requestFullscreen 
+                    ? Element.ALLOW_KEYBOARD_INPUT : null);
+            } else {
+                document[adapter.cancelFullscreen]();
+            }
         };
 
         // Push the input area state to the stack.
@@ -4349,6 +4372,9 @@ else
                         break;
                     case "u":
                         doClick(buttons.ulist);
+                        break;
+                    case 'm':
+                        doClick(buttons.fullscreen);
                         break;
                     case "h":
                         doClick(buttons.heading);
