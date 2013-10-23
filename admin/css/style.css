@@ -1124,6 +1124,11 @@ a.operate-reply {
     padding-left: 1.5em;
     border-left: 4px solid #E9E9E6;
     color: #777; }
+  #wmd-preview hr {
+    margin: 2em auto;
+    width: 100px;
+    border: 1px solid #E9E9E6;
+    border-width: 2px 0 0 0; }
 
 /**
 * Jquery Timepicker

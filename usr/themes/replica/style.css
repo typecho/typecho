@@ -333,6 +333,12 @@ textarea {
 .post-content img, .comment-content img {
   max-width: 100%;
 }
+.post-content hr, .comment-content hr {
+  margin: 2em auto;
+  width: 100px;
+  border: 1px solid #E9E9E6;
+  border-width: 2px 0 0 0;
+}
 
 
 /* -----------------
