@@ -322,12 +322,12 @@ textarea {
 /* -----------------
  * Content format
  *--------------- */
-.post-content, .comment-content, #wmd-preview {
+.post-content, .comment-content {
   line-height: 1.5;
   word-break: break-all;
   word-wrap: break-word;
 }
-.post-content h2, .comment-content h2, #wmd-preview h2 {
+.post-content h2, .comment-content h2 {
   font-size: 1.28571em;
 }
 .post-content img, .comment-content img {

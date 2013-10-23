@@ -66,4 +66,15 @@
   background: #FFF;
   padding: 10px 20px;
   img { max-width: 100%; }
+  code, pre {
+    background: #F6F6F3;
+    font-size: .92857em;
+  }
+  pre { padding: 1em; }
+  blockquote {
+    margin: 1em 1.5em;
+    padding-left: 1.5em;
+    border-left: 4px solid #E9E9E6;
+    color: #777;
+  }
 }

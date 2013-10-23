@@ -1111,6 +1111,16 @@ a.operate-reply {
   padding: 10px 20px; }
   #wmd-preview img {
     max-width: 100%; }
+  #wmd-preview code, #wmd-preview pre {
+    background: #F6F6F3;
+    font-size: .92857em; }
+  #wmd-preview pre {
+    padding: 1em; }
+  #wmd-preview blockquote {
+    margin: 1em 1.5em;
+    padding-left: 1.5em;
+    border-left: 4px solid #E9E9E6;
+    color: #777; }
 
 /**
 * Jquery Timepicker
