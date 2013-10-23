@@ -1,8 +1,8 @@
 <?php $this->need('header.php'); ?>
 
     <div class="col-mb-12 col-8" id="main">
-        <h3 class="archive-title"><?php $this->archiveTitle('', '', ''); _e(' 相关的搜索结果：'); ?></h3>
-        
+        <h3 class="archive-title"><?php $this->archiveTitle('', '', ''); _e(' 标签下的文章：'); ?></h3>
+
         <?php if ($this->have()): ?>
     	<?php while($this->next()): ?>
             <article class="post">

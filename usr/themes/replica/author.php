@@ -1,7 +1,7 @@
 <?php $this->need('header.php'); ?>
 
     <div class="col-mb-12 col-8" id="main">
-        <h3 class="archive-title"><?php _e('%s 发布的文章：', $this->author()); ?></h3>
+        <h3 class="archive-title"><?php $this->archiveTitle('', '', ''); _e(' 发布的文章：'); ?></h3>
 
         <?php if ($this->have()): ?>
     	<?php while($this->next()): ?>

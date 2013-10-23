@@ -13,8 +13,8 @@
 body {
   background-color: #F6F6F3;
   color: #444;
-  /*font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;*/
-  font-family: Georgia, "Times New Roman", STHeiti, serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /*font-family: Georgia, "Times New Roman", STHeiti, serif;*/
   font-size: 87.5%;
 }
 
@@ -162,7 +162,10 @@ textarea {
 }
 
 .archive-title {
-  margin: 2em 0 -1em;
+  margin: 1em 0 -1em;
+  padding-top: 20px;
+  color: #999;
+  font-size: 1em;
 }
 
 /* Page nav */
@@ -197,7 +200,7 @@ textarea {
  * Comment list
  * --------------- */
 #comments {
-  margin-top: 30px;
+  padding-top: 15px;
 }
 .comment-list, .comment-list ol {
   list-style: none;
@@ -232,7 +235,7 @@ textarea {
 }
 .comment-author {
   display: block;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
   color: #444;
 }
 .comment-author .avatar {
@@ -272,6 +275,7 @@ textarea {
  * Sidebar
  * --------------- */
 #sidebar {
+  display: none;
   padding-top: 20px;
   word-break: break-all;
   word-wrap: break-word;
@@ -318,10 +322,13 @@ textarea {
 /* -----------------
  * Content format
  *--------------- */
-.post-content, .comment-content {
+.post-content, .comment-content, #wmd-preview {
   line-height: 1.5;
   word-break: break-all;
   word-wrap: break-word;
+}
+.post-content h2, .comment-content h2, #wmd-preview h2 {
+  font-size: 1.28571em;
 }
 .post-content img, .comment-content img {
   max-width: 100%;
@@ -366,6 +373,7 @@ img.alignright {
   }
   #header { text-align: left; }
   .site-search { display: block; }
+  #sidebar { display: block; }
 }
 
 @media (min-width: 1200px) {
