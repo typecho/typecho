@@ -3058,6 +3058,8 @@ else
         headingexample: "Heading",
 
         hr: "Horizontal Rule <hr> Ctrl+R",
+        
+        fullscreen: "FullScreen Ctrl+M",
 
         undo: "Undo - Ctrl+Z",
         redo: "Redo - Ctrl+Y",
@@ -3571,21 +3573,20 @@ else
             var nativeFsMoz = document.body.mozRequestFullScreen ? true : false;
             var nativeFsW3C = document.body.requestFullscreen ? true : false;
             var nativeFs = nativeFsWebkit || nativeFsMoz || nativeFsW3C;
-            var input = panels.input, preview = panels.preview, buttonBar = panels.buttonBar, parent = buttonBar.parentNode;
-            parent.style.display = 'none';
-            var isFullScreen = parent.getAttribute('isFullScreen');
-            if (isFullScreen != 'true') {
-                parent.setAttribute('isFullScreen', true);
+            var input = panels.input, preview = panels.preview, buttonBar = panels.buttonBar, reg ='(\\s|^)fullscreen(\\s|$)';
+
+            if (!document.body.className.match(new RegExp(reg))) {
+                document.body.className+=' fullscreen';
                 var windowHeight;
                 if (nativeFs) {
                     if (nativeFsWebkit) {
-                        parent.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+                        document.body.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
                     }
                     else if (nativeFsMoz) {
-                        parent.mozRequestFullScreen();
+                        document.body.mozRequestFullScreen();
                     }
                     else if (nativeFsW3C) {
-                        parent.requestFullscreen();
+                        document.body.requestFullscreen();
                     }
                 }
 
@@ -3598,7 +3599,7 @@ else
                 preview.style.height = windowHeight + 'px';
 
             } else {
-                parent.setAttribute('isFullScreen', false);
+                document.body.className=document.body.className.replace(new RegExp(reg),' ');
                 if (nativeFs) {
                     if (nativeFsWebkit) {
                         document.webkitCancelFullScreen();
@@ -3614,7 +3615,6 @@ else
                 preview.style.cssText = '';
                 buttonBar.style.cssText = '';
             }
-            parent.style.display = '';
         };
 
         // Push the input area state to the stack.
@@ -4352,6 +4352,9 @@ else
                         break;
                     case "h":
                         doClick(buttons.heading);
+                        break;
+                    case "m":
+                        doClick(buttons.fullscreen);
                         break;
                     case "r":
                         doClick(buttons.hr);
