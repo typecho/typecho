@@ -1504,7 +1504,7 @@ if (typeof exports === "object" && typeof require === "function") // we're in a 
     Markdown = exports;
 else
     Markdown = {};
-    
+
 // The following text is included for historical reasons, but should
 // be taken with a pinch of salt; it's not all true anymore.
 
@@ -1607,26 +1607,26 @@ else
 
     Markdown.Converter = function () {
         var pluginHooks = this.hooks = new HookCollection();
-        
+
         // given a URL that was encountered by itself (without markup), should return the link text that's to be given to this link
         pluginHooks.addNoop("plainLinkText");
-        
+
         // called with the orignal text as given to makeHtml. The result of this plugin hook is the actual markdown source that will be cooked
         pluginHooks.addNoop("preConversion");
-        
+
         // called with the text once all normalizations have been completed (tabs to spaces, line endings, etc.), but before any conversions have
         pluginHooks.addNoop("postNormalization");
-        
+
         // Called with the text before / after creating block elements like code blocks and lists. Note that this is called recursively
         // with inner content, e.g. it's called with the full text, and then only with the content of a blockquote. The inner
         // call will receive outdented text.
         pluginHooks.addNoop("preBlockGamut");
         pluginHooks.addNoop("postBlockGamut");
-        
+
         // called with the text of a single block element before / after the span-level conversions (bold, code spans, etc.) have been made
         pluginHooks.addNoop("preSpanGamut");
         pluginHooks.addNoop("postSpanGamut");
-        
+
         // called with the final cooked HTML code. The result of this plugin hook is the actual output of makeHtml
         pluginHooks.addNoop("postConversion");
 
@@ -1656,7 +1656,7 @@ else
             // Don't do that.
             if (g_urls)
                 throw new Error("Recursive call to converter.makeHtml");
-        
+
             // Create the private state objects.
             g_urls = new SaveHash();
             g_titles = new SaveHash();
@@ -1691,7 +1691,7 @@ else
             // match consecutive blank lines with /\n+/ instead of something
             // contorted like /[ \t]*\n+/ .
             text = text.replace(/^[ \t]+$/mg, "");
-            
+
             text = pluginHooks.postNormalization(text);
 
             // Turn block-level HTML blocks into hash entries
@@ -1903,7 +1903,7 @@ else
 
             return blockText;
         }
-        
+
         var blockGamutHookCallback = function (t) { return _RunBlockGamut(t); }
 
         function _RunBlockGamut(text, doNotUnhash) {
@@ -1911,9 +1911,9 @@ else
             // These are all the transformations that form block-level
             // tags like paragraphs, headers, and list items.
             //
-            
+
             text = pluginHooks.preBlockGamut(text, blockGamutHookCallback);
-            
+
             text = _DoHeaders(text);
 
             // Do Horizontal Rules:
@@ -1925,7 +1925,7 @@ else
             text = _DoLists(text);
             text = _DoCodeBlocks(text);
             text = _DoBlockQuotes(text);
-            
+
             text = pluginHooks.postBlockGamut(text, blockGamutHookCallback);
 
             // We already ran _HashHTMLBlocks() before, in Markdown(), but that
@@ -1945,7 +1945,7 @@ else
             //
 
             text = pluginHooks.preSpanGamut(text);
-            
+
             text = _DoCodeSpans(text);
             text = _EscapeSpecialCharsWithinTagAttributes(text);
             text = _EncodeBackslashEscapes(text);
@@ -1959,15 +1959,15 @@ else
             // Must come after _DoAnchors(), because you can use < and >
             // delimiters in inline links like [this](<url>).
             text = _DoAutoLinks(text);
-            
+
             text = text.replace(/~P/g, "://"); // put in place to prevent autolinking; reset now
-            
+
             text = _EncodeAmpsAndAngles(text);
             text = _DoItalicsAndBold(text);
 
             // Do hard breaks:
             text = text.replace(/  +\n/g, " <br>\n");
-            
+
             text = pluginHooks.postSpanGamut(text);
 
             return text;
@@ -2053,7 +2053,7 @@ else
                             |
                             [^()\s]
                         )*?
-                    )>?                
+                    )>?
                     [ \t]*
                     (                       // $5
                         (['"])              // quote char = $6
@@ -2192,7 +2192,7 @@ else
 
             return text;
         }
-        
+
         function attributeEncode(text) {
             // unconditionally replace angle brackets here -- what ends up in an attribute (e.g. alt or title)
             // never makes sense to have verbatim HTML in it (and the sanitizer would totally break it)
@@ -2225,7 +2225,7 @@ else
                     return whole_match;
                 }
             }
-            
+
             alt_text = escapeCharacters(attributeEncode(alt_text), "*_[]()");
             url = escapeCharacters(url, "*_");
             var result = "<img src=\"" + url + "\" alt=\"" + alt_text + "\"";
@@ -2408,7 +2408,7 @@ else
             //
             // We changed this to behave identical to MarkdownSharp. This is the constructed RegEx,
             // with {MARKER} being one of \d+[.] or [*+-], depending on list_type:
-        
+
             /*
             list_str = list_str.replace(/
                 (^[ \t]*)                       // leading whitespace = $1
@@ -2656,7 +2656,7 @@ else
 
             var grafs = text.split(/\n{2,}/g);
             var grafsOut = [];
-            
+
             var markerRe = /~K(\d+)K/;
 
             //
@@ -2730,7 +2730,7 @@ else
             text = text.replace(/\\([`*_{}\[\]()>#+-.!])/g, escapeCharacters_callback);
             return text;
         }
-        
+
         function handleTrailingParens(wholeMatch, lookbehind, protocol, link) {
             if (lookbehind)
                 return wholeMatch;
@@ -2757,7 +2757,7 @@ else
                     return "";
                 });
             }
-            
+
             return "<" + protocol + link + ">" + tail;
         }
 
@@ -2773,7 +2773,7 @@ else
             text = text.replace(/(="|<)?\b(https?|ftp)(:\/\/[-A-Z0-9+&@#\/%?=~_|\[\]\(\)!:,\.;]*[-A-Z0-9+&@#\/%=~_|\[\])])(?=$|\W)/gi, handleTrailingParens);
 
             //  autolink anything like <http://example.com>
-            
+
             var replacer = function (wholematch, m1) { return "<a href=\"" + m1 + "\">" + pluginHooks.plainLinkText(m1) + "</a>"; }
             text = text.replace(/<((https?|ftp):[^'">\s]+)>/gi, replacer);
 
@@ -2908,7 +2908,7 @@ else
         output = window.Markdown;
         Converter = output.Converter;
     }
-        
+
     output.getSanitizingConverter = function () {
         var converter = new Converter();
         converter.hooks.chain("postConversion", sanitizeHtml);
@@ -3105,7 +3105,7 @@ else
     // - run() actually starts the editor; should be called after all necessary plugins are registered. Calling this more than once is a no-op.
     // - refreshPreview() forces the preview to be updated. This method is only available after run() was called.
     Markdown.Editor = function (markdownConverter, idPostfix, options) {
-        
+
         options = options || {};
 
         if (typeof options.handler === "function") { //backwards compatible behavior
@@ -3116,8 +3116,8 @@ else
             options.strings.help = options.strings.help || options.helpButton.title;
         }
         var getString = function (identifier) {
-            var string = options.strings[identifier] || defaultsStrings[identifier]; 
-            
+            var string = options.strings[identifier] || defaultsStrings[identifier];
+
             if ('imagename' == identifier || 'linkname' == identifier) {
                 options.strings[identifier] = null;
             }
@@ -4050,9 +4050,9 @@ else
 
         var background = doc.createElement("div"),
             style = background.style;
-        
+
         background.className = "wmd-prompt-background";
-        
+
         style.position = "absolute";
         style.top = "0";
 
@@ -4267,7 +4267,6 @@ else
         }
 
         util.addEvent(inputBox, keyEvent, function (key) {
-
             // Check to see if we have a button key and, if so execute the callback.
             if ((key.ctrlKey || key.metaKey) && !key.altKey && !key.shiftKey) {
 
@@ -4325,6 +4324,17 @@ else
                     key.preventDefault();
                 }
 
+                if (window.event) {
+                    window.event.returnValue = false;
+                }
+            }else if(key.keyCode==9){
+                var tab = {};
+                tab.textOp = bindCommand("doTab");
+                doClick(tab);
+
+                if (key.preventDefault) {
+                    key.preventDefault();
+                }
                 if (window.event) {
                     window.event.returnValue = false;
                 }
@@ -4758,7 +4768,7 @@ else
 
         }
         else {
-            
+
             // We're moving start and end tag back into the selection, since (as we're in the else block) we're not
             // *removing* a link, but *adding* one, so whatever findTags() found is now back to being part of the
             // link text. linkEnteredCallback takes care of escaping any brackets.
@@ -4796,7 +4806,7 @@ else
                     // would mean a zero-width match at the start. Since zero-width matches advance the string position,
                     // the first bracket could then not act as the "not a backslash" for the second.
                     chunk.selection = (" " + chunk.selection).replace(/([^\\](?:\\\\)*)(?=[[\]])/g, "$1\\").substr(1);
-                    
+
                     var linkDef = " [999]: " + properlyEncoded(link);
 
                     var num = that.addLinkDef(chunk, linkDef);
@@ -4839,7 +4849,7 @@ else
         chunk.before = chunk.before.replace(/(\n|^)[ ]{0,3}([*+-]|\d+[.])[ \t]*\n$/, "\n\n");
         chunk.before = chunk.before.replace(/(\n|^)[ ]{0,3}>[ \t]*\n$/, "\n\n");
         chunk.before = chunk.before.replace(/(\n|^)[ \t]+\n$/, "\n\n");
-        
+
         // There's no selection, end the cursor wasn't at the end of the line:
         // The user wants to split the current list item / code line / blockquote line
         // (for the latter it doesn't really matter) in two. Temporarily select the
@@ -4867,7 +4877,7 @@ else
                 commandMgr.doCode(chunk);
             }
         }
-        
+
         if (fakeSelection) {
             chunk.after = chunk.selection + chunk.after;
             chunk.selection = "";
@@ -5251,6 +5261,8 @@ else
         chunk.skipLines(2, 1, true);
     }
 
-
+    commandProto.doTab = function (chunk, postProcessing) {
+        chunk.startTag = "    ";
+        chunk.selection = "";
+    }
 })();
-
