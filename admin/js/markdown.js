@@ -135,6 +135,9 @@ if (typeof module !== 'undefind' && typeof exports !== 'undefined' && typeof req
     }
 }
 
+this.postConversion = null;
+var self = this;
+
 this.makeHtml = function(text) {
 //
 // Main function. The order in which other subs are called here is
@@ -217,6 +220,10 @@ this.makeHtml = function(text) {
         return all;
     });
 
+    if (self.postConversion) {
+        text = self.postConversion(text);
+    }
+
     return text;
 };
 //
@@ -225,8 +232,6 @@ this.makeHtml = function(text) {
 
 // Parse extensions options into separate arrays
 if (converter_options && converter_options.extensions) {
-
-  var self = this;
 
     // Iterate over each plugin
     Showdown.forEach(converter_options.extensions, function(plugin){
@@ -1310,7 +1315,7 @@ var _handleTrailingParens = function(wholeMatch, lookbehind, protocol, link) {
                 });
     }
 
-    console.log(protocol, link, tail);
+    // console.log(protocol, link, tail);
 
     return "<" + protocol + link + ">" + tail;
 }

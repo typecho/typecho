@@ -3,7 +3,6 @@
 
 <script src="<?php $options->adminUrl('js/timepicker.js?v=' . $suffixVersion); ?>"></script>
 <script src="<?php $options->adminUrl('js/tokeninput.js?v=' . $suffixVersion); ?>"></script>
-<script src="<?php $options->adminUrl('js/markdown.js?v=' . $suffixVersion); ?>"></script>
 <script>
 $(document).ready(function() {
     // 日期时间控件
@@ -200,6 +199,7 @@ $(document).ready(function() {
 </script>
 <?php $content = !empty($post) ? $post : $page; if ($options->markdown && (!$content->have() || $content->isMarkdown)): ?>
 <script src="<?php $options->adminUrl('js/markdown.js?v=' . $suffixVersion); ?>"></script>
+<script src="<?php $options->adminUrl('js/diff.js?v=' . $suffixVersion); ?>"></script>
 <script>
 $(document).ready(function () {
     var toolbar = $('<div class="editor" id="wmd-button-bar" />').insertBefore($('#text').parent())
@@ -250,7 +250,66 @@ $(document).ready(function () {
         help: '<?php _e('Markdown语法帮助'); ?>'
     };
 
-    var editor = new Markdown.Editor(converter, '', options);
+    var editor = new Markdown.Editor(converter, '', options),
+        diffMatch = new diff_match_patch(), last = '', preview = $('#wmd-preview');
+
+    // 自动跟随
+    converter.postConversion = function (html) {
+        var diffs = diffMatch.diff_main(html, last);
+        last = html;
+
+        if (diffs.length > 0) {
+            html = '';
+            var added = false;
+
+            for (var i = 0; i < diffs.length; i ++) {
+                var diff = diffs[i];
+                
+                if (added) {
+                    var ep = diff[1].indexOf('>');
+
+                    diff[1] = diff[1].substring(0, ep + 1) 
+                        + '<span class="diff" />' + diff[1].substring(ep + 1);
+                }
+
+                added = false;
+
+                if (diff[0] != 0) {
+                    var sp = diff[1].lastIndexOf('<'), ep = diff[1].lastIndexOf('>');
+                    if (sp >= 0 && sp > ep) {
+                        if (diff[1] < 0) {
+                            diff[1] = diff[1].substring(0, sp) + '<span class="diff" />' + diff[1].substring(sp);
+                        } else {
+                            added = true;
+                        }
+                    } else {
+                        diff[1] += '<span class="diff" />';
+                    }
+                }
+
+                if (diff[0] <= 0) {
+                    html += diff[1];
+                }
+            }
+        }
+
+        return html;
+    };
+
+    editor.hooks.chain('onPreviewRefresh', function () {
+        var diff = $('.diff', preview);
+
+        if (diff.length > 0) {
+            var p = diff.position();
+
+            if (p.top < 0 || p.top > preview.height()) {
+                preview.scrollTo(diff, {
+                    offset  :   - 50
+                });
+            }
+        }
+    });
+
     editor.run();
 
     var imageButton = $('#wmd-image-button'),
