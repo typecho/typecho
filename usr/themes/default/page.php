@@ -1,6 +1,6 @@
 <?php $this->need('header.php'); ?>
 
-    <div class="grid_10" id="content">
+    <div class="grid_12" id="content">
         <div class="post">
 			<h2 class="entry_title"><a href="<?php $this->permalink() ?>"><?php $this->title() ?></a></h2>
 			<p class="entry_data">

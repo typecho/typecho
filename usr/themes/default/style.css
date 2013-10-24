@@ -94,11 +94,6 @@ legend      { font-weight: bold; }
 
 ul { list-style-type: disc; }
 
-/* -------------------------
- * reset width to 840px
- * ---------------------- */
-.container_16 { width: 840px; }
-
 /* ------------------
  * header
  * --------------- */
@@ -188,7 +183,7 @@ width: 100%;
 }
 
 .post img {
-max-width: 570px;
+max-width: 680px;
 margin: 5px;
 }
 

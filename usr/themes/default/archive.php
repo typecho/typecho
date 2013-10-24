@@ -1,6 +1,6 @@
 <?php $this->need('header.php'); ?>
 
-    <div class="grid_10" id="content">
+    <div class="grid_12" id="content">
     <?php if ($this->have()): ?>
 	<?php while($this->next()): ?>
         <div class="post">
