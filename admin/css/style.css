@@ -1163,6 +1163,7 @@ a.operate-reply {
   top: 0;
   right: 0;
   width: 50%;
+  height: 100%;
   background-color: #FFF;
   z-index: 999;
   overflow: auto;
