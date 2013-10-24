@@ -1148,6 +1148,7 @@ a.operate-reply {
   top: 38px;
   left: 0;
   width: 50%;
+  height: 100%;
   z-index: 999;
   outline: none;
   -webkit-box-sizing: border-box;
