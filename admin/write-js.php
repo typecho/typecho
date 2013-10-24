@@ -310,6 +310,16 @@ $(document).ready(function () {
         }
     });
 
+    var input = $('#text');
+
+    editor.hooks.chain('enterFullScreen', function () {
+        $(document.body).addClass('fullscreen');
+    });
+
+    editor.hooks.chain('exitFullScreen', function () {
+        $(document.body).removeClass('fullscreen');
+    });
+
     editor.run();
 
     var imageButton = $('#wmd-image-button'),

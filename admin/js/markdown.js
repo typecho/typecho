@@ -136,6 +136,7 @@ if (typeof module !== 'undefind' && typeof exports !== 'undefined' && typeof req
 }
 
 this.postConversion = null;
+this.preConversion = null;
 var self = this;
 
 this.makeHtml = function(text) {
@@ -153,6 +154,7 @@ this.makeHtml = function(text) {
     g_urls = {};
     g_titles = {};
     g_html_blocks = [];
+
 
     // attacklab: Replace ~ with ~T
     // This lets us use tilde as an escape char to avoid md5 hashes
@@ -3145,6 +3147,8 @@ else
                                                   * its own image insertion dialog, this hook should return true, and the callback should be called with the chosen
                                                   * image url (or null if the user cancelled). If this hook returns false, the default dialog will be used.
                                                   */
+        hooks.addNoop("enterFullScreen");
+        hooks.addNoop("exitFullScreen");
 
         this.getConverter = function () { return markdownConverter; }
 
@@ -3570,79 +3574,6 @@ else
             mode = "none";
             panels.input.focus();
             refreshState();
-        };
-
-        var getFullScreenAdapter = function () {
-            var selector = {
-                fullScreenChange : ['onfullscreenchange', 'onwebkitfullscreenchange', 'onmozfullscreenchange'],
-                requestFullscreen : ['requestFullscreen', 'webkitRequestFullScreen', 'mozRequestFullScreen'],
-                cancelFullscreen : ['cancelFullscreen', 'webkitCancelFullScreen', 'mozCancelFullScreen']
-            }, adapter = {};
-
-            for (var name in selector) {
-                var len = selector[name].length, found = false;
-
-                for (var i = 0; i < len; i ++) {
-                    var method = selector[name][i];
-
-                    if ('undefined' != typeof(document[method]) || 'undefined' != typeof(document.body[method])) {
-                        adapter[name] = method;
-                        found = true;
-                        break;
-                    }
-                }
-
-                if (!found) {
-                    return false;
-                }
-            }
-
-            return adapter;
-        }
-
-        var isFullScreen = function () {
-            return document.fullScreen || 
-               document.mozFullScreen || 
-               document.webkitIsFullScreen;
-        }
-
-        var fullScreenBind = false;
-
-        // fullscreen
-        this.fullscreen = function () {
-            var input = panels.input, preview = panels.preview, buttonBar = panels.buttonBar,
-                adapter = getFullScreenAdapter();
-
-            if (!adapter) {
-                return false;
-            }
-
-            if (!fullScreenBind) {
-                util.addEvent(document, adapter.fullScreenChange.substring(2), function () {
-                    if (!isFullScreen()) {
-                        input.style.cssText = 'height:350px;';
-                        preview.style.cssText = '';
-                        buttonBar.style.cssText = '';
-                    } else {
-                        var windowHeight = window.screen.height - 32;
-
-                        input.style.cssText = "width:50%;position:absolute;z-index:999;top:38px;left:0;box-sizing: border-box;outline: none";
-                        input.style.height = windowHeight + 'px';
-                        buttonBar.style.cssText = "width:50%;background-color:#ffffff;position:absolute;z-index:1000; height: 38px; padding-top:6px;top: 0;left:0; box-sizing: border-box; border-right: 1px solid #D9D9D6";
-                        preview.style.cssText = "width:50%;background-color:#ffffff;position:absolute;z-index:999;top:0;right:0;box-sizing: border-box;overflow: auto;";
-                        preview.style.height = windowHeight + 38 + 'px';
-                    }
-                });
-                
-                fullScreenBind = true;
-            }
-
-            if (!isFullScreen()) {
-                document.body[adapter.requestFullscreen]('webkitRequestFullScreen' == adapter.requestFullscreen 
-                    ? Element.ALLOW_KEYBOARD_INPUT : null);
-            } else {
-                document[adapter.cancelFullscreen]();
-            }
         };
 
         // Push the input area state to the stack.
@@ -4627,11 +4558,7 @@ else
 
             buttons.redo = makeButton("wmd-redo-button", redoTitle, "-220px", null);
             buttons.redo.execute = function (manager) { if (manager) manager.redo(); };
-
-            buttons.fullscreen = makeButton("wmd-fullscreen-button", getString("fullscreen"), "-240px", null);
-            buttons.fullscreen.execute = function (manager) {
-                if (manager) manager.fullscreen();
-            };
+            buttons.fullscreen = makeButton("wmd-fullscreen-button", getString("fullscreen"), "-240px", bindCommand("doFullScreen"));
 
             if (helpOptions) {
                 var helpButton = document.createElement("li");
@@ -5353,4 +5280,68 @@ else
         chunk.startTag = "    ";
         chunk.selection = "";
     }
+
+    var getFullScreenAdapter = function () {
+        var selector = {
+            fullScreenChange : ['onfullscreenchange', 'onwebkitfullscreenchange', 'onmozfullscreenchange'],
+            requestFullscreen : ['requestFullscreen', 'webkitRequestFullScreen', 'mozRequestFullScreen'],
+            cancelFullscreen : ['cancelFullscreen', 'webkitCancelFullScreen', 'mozCancelFullScreen']
+        }, adapter = {};
+
+        for (var name in selector) {
+            var len = selector[name].length, found = false;
+
+            for (var i = 0; i < len; i ++) {
+                var method = selector[name][i];
+
+                if ('undefined' != typeof(document[method]) || 'undefined' != typeof(document.body[method])) {
+                    adapter[name] = method;
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                return false;
+            }
+        }
+
+        return adapter;
+    };
+
+    var isFullScreen = function () {
+        return document.fullScreen || 
+            document.mozFullScreen || 
+            document.webkitIsFullScreen;
+    };
+
+    var fullScreenBind = false;
+
+     // fullscreen
+    commandProto.doFullScreen = function (chunk, postProcessing) {
+        var adapter = getFullScreenAdapter(), self = this;
+
+        if (!adapter) {
+            return false;
+        }
+
+        if (!fullScreenBind) {
+            util.addEvent(document, adapter.fullScreenChange.substring(2), function () {
+                if (!isFullScreen()) {
+                    self.hooks.exitFullScreen();
+                } else {
+                    self.hooks.enterFullScreen();
+                }
+            });
+
+            fullScreenBind = true;
+        }
+
+        if (!isFullScreen()) {
+            document.body[adapter.requestFullscreen]('webkitRequestFullScreen' == adapter.requestFullscreen 
+                    ? Element.ALLOW_KEYBOARD_INPUT : null);
+        } else {
+            document[adapter.cancelFullscreen]();
+        }
+    };
 })();
