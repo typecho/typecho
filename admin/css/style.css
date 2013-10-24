@@ -1134,7 +1134,7 @@ a.operate-reply {
   position: absolute;
   top: 0;
   left: 0;
-  padding-top: 6px;
+  padding: 6px 0 0 6px;
   width: 50%;
   background-color: #FFF;
   z-index: 1000;
