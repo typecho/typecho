@@ -3626,11 +3626,11 @@ else
                     } else {
                         var windowHeight = window.screen.height - 32;
 
-                        input.style.cssText = "width:50%;background-color:#000000;color:#ffffff;position:absolute;z-index:999;top:32px;left:0;box-sizing: border-box;";
+                        input.style.cssText = "width:50%;position:absolute;z-index:999;top:38px;left:0;box-sizing: border-box;outline: none";
                         input.style.height = windowHeight + 'px';
-                        buttonBar.style.cssText = "width:100%;background-color:#ffffff;position:absolute;z-index:1000;top:0;left:0";
-                        preview.style.cssText = "width:50%;background-color:#ffffff;position:absolute;z-index:999;top:32px;right:0;box-sizing: border-box;overflow: auto;";
-                        preview.style.height = windowHeight + 'px';
+                        buttonBar.style.cssText = "width:50%;background-color:#ffffff;position:absolute;z-index:1000; height: 38px; padding-top:6px;top: 0;left:0; box-sizing: border-box; border-right: 1px solid #D9D9D6";
+                        preview.style.cssText = "width:50%;background-color:#ffffff;position:absolute;z-index:999;top:0;right:0;box-sizing: border-box;overflow: auto;";
+                        preview.style.height = windowHeight + 38 + 'px';
                     }
                 });
                 
