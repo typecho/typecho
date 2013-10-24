@@ -4628,7 +4628,7 @@ else
             buttons.redo = makeButton("wmd-redo-button", redoTitle, "-220px", null);
             buttons.redo.execute = function (manager) { if (manager) manager.redo(); };
 
-            buttons.fullscreen = makeButton("wmd-fullscreen-button", getString("fullscreen"), "-220px", null);
+            buttons.fullscreen = makeButton("wmd-fullscreen-button", getString("fullscreen"), "-240px", null);
             buttons.fullscreen.execute = function (manager) {
                 if (manager) manager.fullscreen();
             };
