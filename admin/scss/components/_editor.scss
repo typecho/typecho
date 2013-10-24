@@ -86,3 +86,39 @@
     border-width: 2px 0 0 0;
   }
 }
+
+/* 编辑器全屏 */
+.fullscreen {
+  #wmd-button-bar {
+    position: absolute;
+    top: 38px;
+    left: 0;
+    width: 50%;
+    z-index: 999;
+    outline: none;
+    @include box-sizing(border-box);
+  }
+  #text {
+    position:absolute;
+    top: 0;
+    left: 0;
+    padding-top: 6px;
+    width: 50%;
+    background-color: #FFF;
+    z-index: 1000;
+    height: 38px;
+    border-right: 1px solid #D9D9D6;
+    @include box-sizing(border-box);
+    @include border-radius(0);
+  }
+  #wmd-preview {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width:50%;
+    background-color: #FFF;
+    z-index: 999;
+    overflow: auto;
+    @include box-sizing(border-box);
+  }
+}
