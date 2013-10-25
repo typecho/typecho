@@ -155,6 +155,9 @@ this.makeHtml = function(text) {
     g_titles = {};
     g_html_blocks = [];
 
+    if (self.preConversion) {
+        text = self.preConversion(text);
+    }
 
     // attacklab: Replace ~ with ~T
     // This lets us use tilde as an escape char to avoid md5 hashes
