@@ -251,50 +251,38 @@ $(document).ready(function () {
     };
 
     var editor = new Markdown.Editor(converter, '', options),
-        diffMatch = new diff_match_patch(), last = '', preview = $('#wmd-preview');
+        diffMatch = new diff_match_patch(), last = '', preview = $('#wmd-preview'),
+        boundary = '@boundary' + Math.ceil(Math.random() * 1000000) + '@';
 
     // 自动跟随
-    converter.postConversion = function (html) {
-        var diffs = diffMatch.diff_main(html, last);
-        last = html;
+    converter.preConversion = function (text) {
+        var diffs = diffMatch.diff_main(last, text);
+        last = text;
+
 
         if (diffs.length > 0) {
-            html = '';
-            var added = false;
+            text = '';
 
             for (var i = 0; i < diffs.length; i ++) {
                 var diff = diffs[i];
-                
-                if (added) {
-                    var ep = diff[1].indexOf('>');
 
-                    diff[1] = diff[1].substring(0, ep + 1) 
-                        + '<span class="diff" />' + diff[1].substring(ep + 1);
+                if (diff[0] >= 0) {
+                    text += diff[1];
                 }
-
-                added = false;
 
                 if (diff[0] != 0) {
-                    var sp = diff[1].lastIndexOf('<'), ep = diff[1].lastIndexOf('>');
-                    if (sp >= 0 && sp > ep) {
-                        if (diff[1] < 0) {
-                            diff[1] = diff[1].substring(0, sp) + '<span class="diff" />' + diff[1].substring(sp);
-                        } else {
-                            added = true;
-                        }
-                    } else {
-                        diff[1] += '<span class="diff" />';
-                    }
-                }
-
-                if (diff[0] <= 0) {
-                    html += diff[1];
+                    text += '\n' + boundary;
                 }
             }
         }
 
-        return html;
-    };
+        return text;
+    }
+
+    converter.postConversion = function (html) {
+        html = html.replace(boundary, '<span class="diff" />');
+        return html.replace(new RegExp(boundary, 'g'), '');
+    }
 
     editor.hooks.chain('onPreviewRefresh', function () {
         var diff = $('.diff', preview);

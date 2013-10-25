@@ -3179,8 +3179,9 @@ else
                     that.refreshPreview();
                 }
             }
-
-            uiManager = new UIManager(idPostfix, panels, undoManager, previewManager, commandManager, options.helpButton, getString);
+            
+            fullScreenManager = new FullScreenManager(hooks);
+            uiManager = new UIManager(idPostfix, panels, undoManager, previewManager, commandManager, fullScreenManager, options.helpButton, getString);
             uiManager.setUndoRedoButtonStates();
 
             var forceRefresh = that.refreshPreview = function () { previewManager.refresh(true); };
@@ -4268,7 +4269,7 @@ else
         }, 0);
     };
 
-    function UIManager(postfix, panels, undoManager, previewManager, commandManager, helpOptions, getString) {
+    function UIManager(postfix, panels, undoManager, previewManager, commandManager, fullScreenManager, helpOptions, getString) {
 
         var inputBox = panels.input,
             buttons = {}; // buttons.undo, buttons.link, etc. The actual DOM elements.
@@ -4561,7 +4562,8 @@ else
 
             buttons.redo = makeButton("wmd-redo-button", redoTitle, "-220px", null);
             buttons.redo.execute = function (manager) { if (manager) manager.redo(); };
-            buttons.fullscreen = makeButton("wmd-fullscreen-button", getString("fullscreen"), "-240px", bindCommand("doFullScreen"));
+            buttons.fullscreen = makeButton("wmd-fullscreen-button", getString("fullscreen"), "-240px", null);
+            buttons.fullscreen.execute = function () { fullScreenManager.doFullScreen(); };
 
             if (helpOptions) {
                 var helpButton = document.createElement("li");
@@ -5284,11 +5286,16 @@ else
         chunk.selection = "";
     }
 
-    var getFullScreenAdapter = function () {
+    function FullScreenManager (hooks) {
+        this.fullScreenBind = false;
+        this.hooks = hooks;
+    }
+
+    function getFullScreenAdapter () {
         var selector = {
-            fullScreenChange : ['onfullscreenchange', 'onwebkitfullscreenchange', 'onmozfullscreenchange'],
-            requestFullscreen : ['requestFullscreen', 'webkitRequestFullScreen', 'mozRequestFullScreen'],
-            cancelFullscreen : ['cancelFullscreen', 'webkitCancelFullScreen', 'mozCancelFullScreen']
+            fullScreenChange : ['onfullscreenchange', 'onwebkitfullscreenchange', 'onmozfullscreenchange', 'onmsfullscreenchange'],
+            requestFullscreen : ['requestFullscreen', 'webkitRequestFullScreen', 'mozRequestFullScreen', 'msRequestFullScreen'],
+            cancelFullscreen : ['cancelFullscreen', 'exitFullScreen', 'webkitCancelFullScreen', 'mozCancelFullScreen', 'msCancelFullScreen']
         }, adapter = {};
 
         for (var name in selector) {
@@ -5312,23 +5319,21 @@ else
         return adapter;
     };
 
-    var isFullScreen = function () {
+    function isFullScreen () {
         return document.fullScreen || 
             document.mozFullScreen || 
             document.webkitIsFullScreen;
     };
 
-    var fullScreenBind = false;
-
      // fullscreen
-    commandProto.doFullScreen = function (chunk, postProcessing) {
+    FullScreenManager.prototype.doFullScreen = function (chunk, postProcessing) {
         var adapter = getFullScreenAdapter(), self = this;
 
         if (!adapter) {
             return false;
         }
 
-        if (!fullScreenBind) {
+        if (!this.fullScreenBind) {
             util.addEvent(document, adapter.fullScreenChange.substring(2), function () {
                 if (!isFullScreen()) {
                     self.hooks.exitFullScreen();
@@ -5337,7 +5342,7 @@ else
                 }
             });
 
-            fullScreenBind = true;
+            this.fullScreenBind = true;
         }
 
         if (!isFullScreen()) {
