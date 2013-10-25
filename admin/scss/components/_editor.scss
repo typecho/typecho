@@ -2,13 +2,15 @@
 * Editor
 */
 .editor {
-  margin-bottom: -0.8em;
+  margin-bottom: -0.5em;
 }
 
 .wmd-button-row {
   list-style: none;
   margin: 0;
   padding: 0;
+  height: 26px;
+  line-height: 1;
 
   li {
     display: inline-block;
@@ -65,10 +67,11 @@
 #wmd-preview {
   background: #FFF;
   padding: 10px 20px;
+  word-break: break-all;
+  word-wrap: break-word;
   img { max-width: 100%; }
   code, pre {
     padding: 2px 4px;
-    overflow: auto;
     background: #F6F6F3;
     font-size: .92857em;
   }
@@ -89,38 +92,33 @@
 
 /* 编辑器全屏 */
 .fullscreen {
-  #wmd-button-bar {
-    position:absolute;
+  #wmd-button-bar, #text, #wmd-preview {
+    position: absolute;
     top: 0;
-    left: 0;
-    padding: 6px 0 0 6px;
+    border: 10px solid #F6F6F3;
     width: 50%;
-    background-color: #FFF;
-    z-index: 1000;
-    height: 38px;
-    border-right: 1px solid #D9D9D6;
+    background: #FFF;
+    z-index: 999;
     @include box-sizing(border-box);
   }
-  #text {
-    position: absolute;
-    top: 38px;
+  #wmd-button-bar {
     left: 0;
-    width: 50%;
+    padding: 10px;
+    z-index: 1000;
+  }
+  #text {
+    top: 66px;
+    left: 0;
+    padding: 10px;
+    border-width: 0 10px 10px 10px;
     height: 100%;
-    z-index: 999;
     outline: none;
-    @include box-sizing(border-box);
     @include border-radius(0);
   }
   #wmd-preview {
-    position: absolute;
-    top: 0;
     right: 0;
-    width:50%;
+    border-width: 10px 10px 10px 0;
     height: 100%;
-    background-color: #FFF;
-    z-index: 999;
     overflow: auto;
-    @include box-sizing(border-box);
   }
 }

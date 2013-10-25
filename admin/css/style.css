@@ -851,8 +851,9 @@ a.operate-reply {
   background: #FFFBCC;
   color: #666; }
 
-.typecho-post-area textarea {
-  resize: none; }
+.typecho-post-area #text {
+  resize: none;
+  font-size: .92857em; }
 
 .typecho-post-area #advance-panel-btn {
   color: #999; }
@@ -1049,12 +1050,14 @@ a.operate-reply {
 * Editor
 */
 .editor {
-  margin-bottom: -0.8em; }
+  margin-bottom: -0.5em; }
 
 .wmd-button-row {
   list-style: none;
   margin: 0;
-  padding: 0; }
+  padding: 0;
+  height: 26px;
+  line-height: 1; }
   .wmd-button-row li {
     display: inline-block;
     margin-right: 4px;
@@ -1108,12 +1111,13 @@ a.operate-reply {
 /* 预览 */
 #wmd-preview {
   background: #FFF;
-  padding: 10px 20px; }
+  padding: 10px 20px;
+  word-break: break-all;
+  word-wrap: break-word; }
   #wmd-preview img {
     max-width: 100%; }
   #wmd-preview code, #wmd-preview pre {
     padding: 2px 4px;
-    overflow: auto;
     background: #F6F6F3;
     font-size: .92857em; }
   #wmd-preview pre {
@@ -1130,47 +1134,37 @@ a.operate-reply {
     border-width: 2px 0 0 0; }
 
 /* 编辑器全屏 */
-.fullscreen #wmd-button-bar {
+.fullscreen #wmd-button-bar, .fullscreen #text, .fullscreen #wmd-preview {
   position: absolute;
   top: 0;
-  left: 0;
-  padding: 6px 0 0 6px;
+  border: 10px solid #F6F6F3;
   width: 50%;
-  background-color: #FFF;
-  z-index: 1000;
-  height: 38px;
-  border-right: 1px solid #D9D9D6;
+  background: #FFF;
+  z-index: 999;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box; }
-.fullscreen #text {
-  position: absolute;
-  top: 38px;
+.fullscreen #wmd-button-bar {
   left: 0;
-  width: 50%;
+  padding: 10px;
+  z-index: 1000; }
+.fullscreen #text {
+  top: 66px;
+  left: 0;
+  padding: 10px;
+  border-width: 0 10px 10px 10px;
   height: 100%;
-  z-index: 999;
   outline: none;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   -ms-border-radius: 0;
   -o-border-radius: 0;
   border-radius: 0; }
 .fullscreen #wmd-preview {
-  position: absolute;
-  top: 0;
   right: 0;
-  width: 50%;
+  border-width: 10px 10px 10px 0;
   height: 100%;
-  background-color: #FFF;
-  z-index: 999;
-  overflow: auto;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box; }
+  overflow: auto; }
 
 /**
 * Jquery Timepicker
