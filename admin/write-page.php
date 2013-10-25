@@ -111,8 +111,13 @@ include 'copyright.php';
 include 'common-js.php';
 include 'form-js.php';
 include 'write-js.php';
-include 'file-upload-js.php';
 
+Typecho_Plugin::factory('admin/write-page.php')->trigger($plugged)->richEditor($post);
+if (!$plugged) {
+    include 'editor-js.php';
+}
+
+include 'file-upload-js.php';
 Typecho_Plugin::factory('admin/write-page.php')->bottom($page);
 include 'footer.php';
 ?>

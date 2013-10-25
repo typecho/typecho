@@ -5340,8 +5340,12 @@ else
         if (!this.fullScreenBind) {
             util.addEvent(document, adapter.fullScreenChange.substring(2), function () {
                 if (!isFullScreen()) {
+                    buttons.fullscreen.style.display = '';
+                    buttons.exitFullscreen.style.display = 'none';
                     self.hooks.exitFullScreen();
                 } else {
+                    buttons.fullscreen.style.display = 'none';
+                    buttons.exitFullscreen.style.display = '';
                     self.hooks.enterFullScreen();
                 }
             });
@@ -5350,15 +5354,9 @@ else
         }
 
         if (!isFullScreen()) {
-            buttons.fullscreen.style.display = 'none';
-            buttons.exitFullscreen.style.display = '';
-
             document.body[adapter.requestFullscreen]('webkitRequestFullScreen' == adapter.requestFullscreen 
                     ? Element.ALLOW_KEYBOARD_INPUT : null);
         } else {
-            buttons.fullscreen.style.display = '';
-            buttons.exitFullscreen.style.display = 'none';
-
             document[adapter.cancelFullscreen]();
         }
     };
