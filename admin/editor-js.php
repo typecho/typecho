@@ -55,36 +55,59 @@ $(document).ready(function () {
 
     var editor = new Markdown.Editor(converter, '', options),
         diffMatch = new diff_match_patch(), last = '', preview = $('#wmd-preview'),
-        boundary = '@boundary' + Math.ceil(Math.random() * 1000000) + '@';
+        mark = '@mark' + Math.ceil(Math.random() * 100000000) + '@',
+        span = '<span class="diff" />';
 
     // 自动跟随
-    converter.preConversion = function (text) {
-        var diffs = diffMatch.diff_main(last, text);
-        last = text;
-
+    converter.postConversion = function (html) {
+        var diffs = diffMatch.diff_main(last, html);
+        last = html;
 
         if (diffs.length > 0) {
-            text = '';
-
+            var stack = [], markStr = mark;
+            
             for (var i = 0; i < diffs.length; i ++) {
-                var diff = diffs[i];
+                var diff = diffs[i], op = diff[0], str = diff[1]
+                    sp = str.lastIndexOf('<'), ep = str.lastIndexOf('>');
 
-                if (diff[0] >= 0) {
-                    text += diff[1];
+                if (op != 0) {
+                    if (sp >=0 && sp > ep) {
+                        if (op > 0) {
+                            stack.push(str.substring(0, sp) + markStr + str.substring(sp));
+                        } else {
+                            var lastStr = stack[stack.length - 1], lastSp = lastStr.lastIndexOf('<');
+                            stack[stack.length - 1] = lastStr.substring(0, lastSp) + markStr + lastStr.substring(lastSp);
+                        }
+                    } else {
+                        if (op > 0) {
+                            stack.push(str + markStr);
+                        } else {
+                            stack.push(markStr);
+                        }
+                    }
+                    
+                    markStr = '';
+                } else {
+                    stack.push(str);
                 }
+            }
 
-                if (diff[0] != 0) {
-                    text += (diff[1].substring(-1).match(/\w\u3300-\u33ff\u3400-\u4d8f\u4e00-\u9fff/i) ? ' ' : '') + boundary;
+            html = stack.join('');
+
+            if (!markStr) {
+                var pos = html.indexOf(mark), prev = html.substring(0, pos),
+                    next = html.substr(pos + mark.length),
+                    sp = prev.lastIndexOf('<'), ep = prev.lastIndexOf('>');
+
+                if (sp >= 0 && sp > ep) {
+                    html = prev.substring(0, sp) + span + prev.substring(sp) + next;
+                } else {
+                    html = prev + span + next;
                 }
             }
         }
 
-        return text;
-    }
-
-    converter.postConversion = function (html) {
-        html = html.replace(boundary, '<span class="diff" />');
-        return html.replace(new RegExp(boundary, 'g'), '');
+        return html;
     }
 
     editor.hooks.chain('onPreviewRefresh', function () {
