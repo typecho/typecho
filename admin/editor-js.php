@@ -129,8 +129,7 @@ $(document).ready(function () {
     editor.hooks.chain('enterFullScreen', function () {
         th = textarea.height();
         $(document.body).addClass('fullscreen');
-        $('#wmd-fullscreen-button span').css('background-position', '-240px -20px');
-        textarea.height(window.screen.height - 38);
+        textarea.css('height', window.screen.height - 46);
     });
 
     editor.hooks.chain('exitFullScreen', function () {
