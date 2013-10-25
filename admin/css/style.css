@@ -1118,7 +1118,7 @@ a.operate-reply {
     max-width: 100%; }
   #wmd-preview code, #wmd-preview pre {
     padding: 2px 4px;
-    background: #F6F6F3;
+    background: #F3F3F0;
     font-size: .92857em; }
   #wmd-preview pre {
     padding: 1em; }
@@ -1137,7 +1137,6 @@ a.operate-reply {
 .fullscreen #wmd-button-bar, .fullscreen #text, .fullscreen #wmd-preview {
   position: absolute;
   top: 0;
-  border: 10px solid #F6F6F3;
   width: 50%;
   background: #FFF;
   z-index: 999;
@@ -1146,14 +1145,14 @@ a.operate-reply {
   box-sizing: border-box; }
 .fullscreen #wmd-button-bar {
   left: 0;
-  padding: 10px;
+  padding: 10px 20px;
   z-index: 1000; }
 .fullscreen #text {
-  top: 66px;
+  top: 46px;
   left: 0;
-  padding: 10px;
-  border-width: 0 10px 10px 10px;
-  height: 100%;
+  padding: 20px;
+  border: none;
+  border-top: 1px solid #F6F6F3;
   outline: none;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
@@ -1162,9 +1161,12 @@ a.operate-reply {
   border-radius: 0; }
 .fullscreen #wmd-preview {
   right: 0;
-  border-width: 10px 10px 10px 0;
+  padding: 5px 20px;
   height: 100%;
+  background: #F6F6F3;
   overflow: auto; }
+  .fullscreen #wmd-preview code, .fullscreen #wmd-preview pre {
+    background: #F0F0EC; }
 
 /**
 * Jquery Timepicker
