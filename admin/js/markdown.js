@@ -3068,6 +3068,7 @@ else
         headingexample: "Heading",
 
         fullscreen: 'FullScreen Ctrl+M',
+        exitFullscreen: 'Exit FullScreen Ctrl+M',
 
         hr: "Horizontal Rule <hr> Ctrl+R",
 
@@ -4563,7 +4564,10 @@ else
             buttons.redo = makeButton("wmd-redo-button", redoTitle, "-220px", null);
             buttons.redo.execute = function (manager) { if (manager) manager.redo(); };
             buttons.fullscreen = makeButton("wmd-fullscreen-button", getString("fullscreen"), "-240px", null);
-            buttons.fullscreen.execute = function () { fullScreenManager.doFullScreen(); };
+            buttons.fullscreen.execute = function () { fullScreenManager.doFullScreen(buttons); };
+            buttons.exitFullscreen = makeButton("wmd-exit-fullscreen-button", getString("exitFullscreen"), "-260px", null);
+            buttons.exitFullscreen.style.display = 'none';
+            buttons.exitFullscreen.execute = function () { fullScreenManager.doFullScreen(buttons); };
 
             if (helpOptions) {
                 var helpButton = document.createElement("li");
@@ -4571,7 +4575,7 @@ else
                 helpButton.appendChild(helpButtonImage);
                 helpButton.className = "wmd-button wmd-help-button";
                 helpButton.id = "wmd-help-button" + postfix;
-                helpButton.XShift = "-240px";
+                helpButton.XShift = "-280px";
                 helpButton.isHelp = true;
                 helpButton.style.right = "0px";
                 helpButton.title = getString("help");
@@ -5326,7 +5330,7 @@ else
     };
 
      // fullscreen
-    FullScreenManager.prototype.doFullScreen = function (chunk, postProcessing) {
+    FullScreenManager.prototype.doFullScreen = function (buttons) {
         var adapter = getFullScreenAdapter(), self = this;
 
         if (!adapter) {
@@ -5346,9 +5350,15 @@ else
         }
 
         if (!isFullScreen()) {
+            buttons.fullscreen.style.display = 'none';
+            buttons.exitFullscreen.style.display = '';
+
             document.body[adapter.requestFullscreen]('webkitRequestFullScreen' == adapter.requestFullscreen 
                     ? Element.ALLOW_KEYBOARD_INPUT : null);
         } else {
+            buttons.fullscreen.style.display = '';
+            buttons.exitFullscreen.style.display = 'none';
+
             document[adapter.cancelFullscreen]();
         }
     };
