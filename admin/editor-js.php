@@ -43,6 +43,7 @@ $(document).ready(function () {
 
         fullscreen: '<?php _e('全屏'); ?> - Ctrl+M',
         exitFullscreen: '<?php _e('退出全屏'); ?> - Ctrl+M',
+        fullscreenUnsupport: '<?php _e('此浏览器不支持全屏操作'); ?>',
 
         imagedialog: '<p><b><?php _e('插入图片'); ?></b></p><p><?php _e('请在下方的输入框内输入要插入的远程图片地址'); ?></p><p><?php _e('您也可以使用编辑器下方的文件上传功能插入本地图片'); ?></p>',
         linkdialog: '<p><b><?php _e('插入链接'); ?></b></p><p><?php _e('请在下方的输入框内输入要插入的链接地址'); ?></p>',

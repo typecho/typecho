@@ -3069,6 +3069,7 @@ else
 
         fullscreen: 'FullScreen Ctrl+M',
         exitFullscreen: 'Exit FullScreen Ctrl+M',
+        fullscreenUnsupport: 'Sorry, the browser dont support fullscreen api',
 
         hr: "Horizontal Rule <hr> Ctrl+R",
 
@@ -3181,7 +3182,7 @@ else
                 }
             }
             
-            fullScreenManager = new FullScreenManager(hooks);
+            fullScreenManager = new FullScreenManager(hooks, getString);
             uiManager = new UIManager(idPostfix, panels, undoManager, previewManager, commandManager, fullScreenManager, options.helpButton, getString);
             uiManager.setUndoRedoButtonStates();
 
@@ -5290,9 +5291,10 @@ else
         chunk.selection = "";
     }
 
-    function FullScreenManager (hooks) {
+    function FullScreenManager (hooks, getString) {
         this.fullScreenBind = false;
         this.hooks = hooks;
+        this.getString = getString;
     }
 
     function getFullScreenAdapter () {
@@ -5334,6 +5336,7 @@ else
         var adapter = getFullScreenAdapter(), self = this;
 
         if (!adapter) {
+            alert(self.getString('fullscreenUnsupport'));
             return false;
         }
 
