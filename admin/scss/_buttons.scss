@@ -10,16 +10,16 @@
   cursor: pointer;
 
   @include border-radius(2px);
+  @include transition-duration(.4s);
 
   &:hover {
-    background-color: darken($color, 3%);
-    // @include background-image(linear-gradient($color, darken($color, 3%)));
+    background-color: darken($color, 6%);
   }
   &:active, &.active {
-    background-color: darken($color, 3%);
+    background-color: darken($color, 6%);
   }
   &:disabled {
-    background-color: lighten($color, 3%);
+    background-color: lighten($color, 6%);
     cursor: default;
   }
 }

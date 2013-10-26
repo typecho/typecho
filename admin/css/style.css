@@ -127,6 +127,10 @@ button {
   -ms-border-radius: 2px;
   -o-border-radius: 2px;
   border-radius: 2px;
+  -webkit-transition-duration: 0.4s;
+  -moz-transition-duration: 0.4s;
+  -o-transition-duration: 0.4s;
+  transition-duration: 0.4s;
   display: inline-block;
   padding: 0 12px;
   height: 32px;
@@ -134,11 +138,11 @@ button {
   vertical-align: middle;
   zoom: 1; }
   button:hover {
-    background-color: #e2e2de; }
+    background-color: #dbdbd6; }
   button:active, button.active {
-    background-color: #e2e2de; }
+    background-color: #dbdbd6; }
   button:disabled {
-    background-color: #f0f0ee;
+    background-color: #f7f7f6;
     cursor: default; }
   button:disabled {
     color: #999; }
@@ -160,13 +164,17 @@ button {
   -ms-border-radius: 2px;
   -o-border-radius: 2px;
   border-radius: 2px;
+  -webkit-transition-duration: 0.4s;
+  -moz-transition-duration: 0.4s;
+  -o-transition-duration: 0.4s;
+  transition-duration: 0.4s;
   color: #FFF; }
   .primary:hover {
-    background-color: #41728c; }
+    background-color: #3c6a81; }
   .primary:active, .primary.active {
-    background-color: #41728c; }
+    background-color: #3c6a81; }
   .primary:disabled {
-    background-color: #4b84a0;
+    background-color: #508cab;
     cursor: default; }
 
 .btn-group {
@@ -181,13 +189,17 @@ button {
   -ms-border-radius: 2px;
   -o-border-radius: 2px;
   border-radius: 2px;
+  -webkit-transition-duration: 0.4s;
+  -moz-transition-duration: 0.4s;
+  -o-transition-duration: 0.4s;
+  transition-duration: 0.4s;
   color: #FFF; }
   .btn-warn:hover {
-    background-color: #af4543; }
+    background-color: #a4403f; }
   .btn-warn:active, .btn-warn.active {
-    background-color: #af4543; }
+    background-color: #a4403f; }
   .btn-warn:disabled {
-    background-color: #bd5553;
+    background-color: #c1605e;
     cursor: default; }
 
 /* 下拉菜单 */

@@ -70,6 +70,8 @@ textarea {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
+
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, .2);
 }
 
 /* ------------------
