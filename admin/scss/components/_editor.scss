@@ -74,7 +74,10 @@
     background: #F3F3F0;
     font-size: .92857em;
   }
-  pre { padding: 1em; }
+  pre {
+    padding: 1em;
+    code { padding: 0; }
+  }
   blockquote {
     margin: 1em 1.5em;
     padding-left: 1.5em;

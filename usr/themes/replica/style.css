@@ -37,6 +37,7 @@ pre {
   overflow: auto;
   max-height: 400px;
 }
+pre code { padding: 0; }
 
 blockquote {
   margin: 1em 1.5em;

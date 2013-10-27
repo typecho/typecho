@@ -1133,6 +1133,8 @@ a.operate-reply {
     font-size: .92857em; }
   #wmd-preview pre {
     padding: 1em; }
+    #wmd-preview pre code {
+      padding: 0; }
   #wmd-preview blockquote {
     margin: 1em 1.5em;
     padding-left: 1.5em;
