@@ -279,7 +279,6 @@ textarea {
 #sidebar {
   display: none;
   padding-top: 20px;
-  word-break: break-all;
   word-wrap: break-word;
 }
 .widget {
@@ -324,7 +323,6 @@ textarea {
  *--------------- */
 .post-content, .comment-content {
   line-height: 1.5;
-  word-break: break-all;
   word-wrap: break-word;
 }
 .post-content h2, .comment-content h2 {

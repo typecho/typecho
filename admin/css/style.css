@@ -1124,7 +1124,6 @@ a.operate-reply {
 #wmd-preview {
   background: #FFF;
   padding: 10px 20px;
-  word-break: break-all;
   word-wrap: break-word; }
   #wmd-preview img {
     max-width: 100%; }
@@ -1146,7 +1145,7 @@ a.operate-reply {
     border-width: 2px 0 0 0; }
 
 /* 编辑器全屏 */
-.fullscreen #wmd-button-bar, .fullscreen #text, .fullscreen #wmd-preview {
+.fullscreen #wmd-button-bar, .fullscreen #text, .fullscreen #wmd-preview, .fullscreen .submit {
   position: absolute;
   top: 0;
   width: 50%;
@@ -1157,14 +1156,14 @@ a.operate-reply {
   box-sizing: border-box; }
 .fullscreen #wmd-button-bar {
   left: 0;
-  padding: 10px 20px;
+  padding: 13px 20px;
   z-index: 1000; }
 .fullscreen #text {
-  top: 46px;
+  top: 52px;
   left: 0;
   padding: 20px;
   border: none;
-  border-top: 1px solid #F6F6F3;
+  border-top: 1px solid #F3F3F0;
   outline: none;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
@@ -1172,13 +1171,20 @@ a.operate-reply {
   -o-border-radius: 0;
   border-radius: 0; }
 .fullscreen #wmd-preview {
+  top: 52px;
   right: 0;
   padding: 5px 20px;
+  border: 1px solid #F3F3F0;
+  border-width: 1px 0 0 1px;
   height: 100%;
   background: #F6F6F3;
   overflow: auto; }
   .fullscreen #wmd-preview code, .fullscreen #wmd-preview pre {
     background: #F0F0EC; }
+.fullscreen .submit {
+  right: 0;
+  margin: 0;
+  padding: 10px 20px; }
 
 /**
 * Jquery Timepicker

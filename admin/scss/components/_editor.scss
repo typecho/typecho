@@ -67,7 +67,6 @@
 #wmd-preview {
   background: #FFF;
   padding: 10px 20px;
-  word-break: break-all;
   word-wrap: break-word;
   img { max-width: 100%; }
   code, pre {
@@ -92,7 +91,7 @@
 
 /* 编辑器全屏 */
 .fullscreen {
-  #wmd-button-bar, #text, #wmd-preview {
+  #wmd-button-bar, #text, #wmd-preview, .submit {
     position: absolute;
     top: 0;
     width: 50%;
@@ -102,26 +101,34 @@
   }
   #wmd-button-bar {
     left: 0;
-    padding: 10px 20px;
+    padding: 13px 20px;
     z-index: 1000;
   }
   #text {
-    top: 46px;
+    top: 52px;
     left: 0;
     padding: 20px;
     border: none;
-    border-top: 1px solid #F6F6F3;
+    border-top: 1px solid #F3F3F0;
     outline: none;
     @include border-radius(0);
   }
   #wmd-preview {
+    top: 52px;
     right: 0;
     padding: 5px 20px;
+    border: 1px solid #F3F3F0;
+    border-width: 1px 0 0 1px;
     height: 100%;
     background: #F6F6F3;
     overflow: auto;
     code, pre {
       background: #F0F0EC;
     }
+  }
+  .submit {
+    right: 0;
+    margin: 0;
+    padding: 10px 20px;
   }
 }
