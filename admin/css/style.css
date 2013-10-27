@@ -1176,7 +1176,9 @@ a.operate-reply {
   padding: 5px 20px;
   border: 1px solid #F3F3F0;
   border-width: 1px 0 0 1px;
-  height: 100%;
+  height: -moz-calc(100% - 52px);
+  height: -webkit-calc(100% - 52px);
+  height: calc(100% - 52px);
   background: #F6F6F3;
   overflow: auto; }
   .fullscreen #wmd-preview code, .fullscreen #wmd-preview pre {
