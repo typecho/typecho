@@ -1,8 +1,8 @@
 /*
  * Bento Grid System
  * Source: https://github.com/fenbox/bento
- * Version: 1.1
- * Update: 10.12.2013
+ * Version: 1.2
+ * Update: 2013.10.28
  */
 
 //
@@ -176,7 +176,35 @@ $screen-wide: 1200px;
 }
 
 
-// Clearfix
+/*
+ * Responsive kit
+ */
+
+// Hidden in mobile and down
+@media (max-width: $screen-tablet - 1px) {
+  .kit-hidden-mb {
+    display: none;
+  }
+}
+
+// Hidden in tablet and down
+@media (max-width: $screen-desktop - 1px) {
+  .kit-hidden-tb {
+    display: none;
+  }
+}
+
+// Hidden in descktop and down
+@media (max-width: $screen-wide - 1px) {
+  .kit-hidden {
+    display: none;
+  }
+}
+
+
+/*
+ * Clearfix
+ */
 .clearfix {
   zoom: 1;
   &:before, &:after {
