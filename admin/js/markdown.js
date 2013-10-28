@@ -5328,7 +5328,8 @@ else
     function isFullScreen () {
         return document.fullScreen || 
             document.mozFullScreen || 
-            document.webkitIsFullScreen;
+            document.webkitIsFullScreen ||
+            document.msIsFullScreen;
     };
 
      // fullscreen
