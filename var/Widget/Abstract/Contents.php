@@ -83,6 +83,10 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     protected function ___excerpt()
     {
+        if ($this->hidden) {
+            return $this->text;
+        }
+
         $content = $this->pluginHandle(__CLASS__)->trigger($plugged)->excerpt($this->text, $this);
         if (!$plugged) {
             if ($this->isMarkdown) {
@@ -107,6 +111,10 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     protected function ___content()
     {
+        if ($this->hidden) {
+            return $this->text;
+        }
+
         $content = $this->pluginHandle(__CLASS__)->trigger($plugged)->content($this->text, $this);
 
         if (!$plugged) {
