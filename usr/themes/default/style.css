@@ -158,6 +158,7 @@ textarea {
   margin: .83em 0;
   font-size: 1.5em;
   text-align: center;
+  font-weight: bold;
 }
 .post-meta {
   margin-top: -0.5em;
