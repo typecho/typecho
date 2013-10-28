@@ -1,9 +1,9 @@
 /* ------------------------------------
  * Typecho Default Theme
  *
- * @author  fen1211@gmail.com
- * @link  http: //typecho.net/
- * @update  2009-03-29 14: 30
+ * @author  Typecho Team
+ * @link  http: //typecho.org/
+ * @update  2013-10-28
  * --------------------------------- */
 
 
@@ -14,7 +14,7 @@ body {
   background-color: #FFF;
   color: #444;
   /*font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;*/
-  font-family: "Droid Serif", Georgia, "Times New Roman", serif;
+  font-family: "Droid Serif", Georgia, "Times New Roman", STHeiti, serif;
   font-size: 81.25%;
 }
 
@@ -22,9 +22,8 @@ a {
   color: #3354AA;
   text-decoration: none;
 }
-a:hover {
+a:hover, a:active {
   color: #444;
-  text-decoration: underline;
 }
 pre, code {
   padding: 2px 4px;
@@ -53,6 +52,7 @@ h1, h2, h3 {
 input[type="text"],
 input[type="email"],
 input[type="url"],
+input[type="password"],
 textarea {
   padding: 5px;
   border: 1px solid #E9E9E9;
@@ -67,6 +67,21 @@ textarea {
   resize: vertical;
 }
 
+
+/* Special link style */
+.post-meta a,
+.post-content a,
+.widget a,
+.comment-content a {
+  border-bottom: 1px solid #EEE;
+}
+
+.post-meta a:hover,
+.post-content a:hover,
+.widget a:hover,
+.comment-content a {
+  border-bottom-color: transparent;
+}
 
 /* ------------------
  * Header
@@ -146,15 +161,21 @@ textarea {
 }
 .post-meta {
   margin-top: -0.5em;
+  padding: 0;
   color: #999;
   font-size: .92857em;
   text-align: center;
 }
-.post-meta i {
+.post-meta li {
   display: inline-block;
-  margin: 0 8px;
-  height: 12px;
-  border-right: 1px solid #EEE;
+  margin: 0 8px 0 0;
+  padding-left: 12px;
+  border-left: 1px solid #EEE;
+}
+.post-meta li:first-child {
+  margin-left: 0;
+  padding-left: 0;
+  border: none;
 }
 .post-content {
   line-height: 1.5;
@@ -165,6 +186,10 @@ textarea {
   padding-top: 20px;
   color: #999;
   font-size: 1em;
+}
+
+.protected .text {
+  width: 50%;
 }
 
 /* Page nav */

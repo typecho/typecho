@@ -3,11 +3,11 @@
 <div class="col-mb-12 col-8" id="main">
     <article class="post">
 		<h1 class="post-title"><a href="<?php $this->permalink() ?>"><?php $this->title() ?></a></h1>
-		<div class="post-meta">
-			<?php _e('作者：'); ?><?php $this->author(); ?> <i></i>
-			<?php _e('时间：'); ?><?php $this->date('F j, Y'); ?> <i></i>
-			<?php _e('分类：'); ?><?php $this->category(','); ?>
-		</div>
+		<ul class="post-meta">
+			<li><?php _e('作者：'); ?><?php $this->author(); ?></li>
+			<li><?php _e('时间：'); ?><?php $this->date('F j, Y'); ?></li>
+			<li><?php _e('分类：'); ?><?php $this->category(','); ?></li>
+		</ul>
 		<div class="post-content">
 			<?php $this->content(); ?>
 		</div>

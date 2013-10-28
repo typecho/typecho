@@ -7,12 +7,12 @@
     	<?php while($this->next()): ?>
             <article class="post">
     			<h2 class="post-title"><a href="<?php $this->permalink() ?>"><?php $this->title() ?></a></h2>
-    			<div class="post-meta">
-    				<?php _e('作者：'); ?><a href="<?php $this->author->permalink(); ?>"><?php $this->author(); ?></a> <i></i>
-    				<?php _e('时间：'); ?><?php $this->date('F j, Y'); ?> <i></i>
-    				<?php _e('分类：'); ?><?php $this->category(','); ?> <i></i>
-                    <a href="<?php $this->permalink() ?>#comments"><?php $this->commentsNum('评论', '1 条评论', '%d 条评论'); ?></a>
-    			</div>
+    			<ul class="post-meta">
+    				<li><?php _e('作者：'); ?><a href="<?php $this->author->permalink(); ?>"><?php $this->author(); ?></a></li>
+    				<li><?php _e('时间：'); ?><?php $this->date('F j, Y'); ?></li>
+    				<li><?php _e('分类：'); ?><?php $this->category(','); ?></li>
+                    <li><a href="<?php $this->permalink() ?>#comments"><?php $this->commentsNum('评论', '1 条评论', '%d 条评论'); ?></a></li>
+    			</ul>
                 <div class="post-content">
         			<?php $this->content('阅读剩余部分...'); ?>
                 </div>
