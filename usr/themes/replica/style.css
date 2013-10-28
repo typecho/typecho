@@ -11,15 +11,15 @@
  * Gobal style
  * --------------- */
 body {
-  background-color: #F6F6F3;
+  background-color: #FFF;
   color: #444;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  /*font-family: Georgia, "Times New Roman", STHeiti, serif;*/
+  /*font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;*/
+  font-family: Georgia, "Times New Roman", serif;
   font-size: 87.5%;
 }
 
 a {
-  color: #467B96;
+  color: #3354AA;
   text-decoration: none;
 }
 a:hover {
@@ -28,7 +28,7 @@ a:hover {
 }
 pre, code {
   padding: 2px 4px;
-  background: #F3F3F0;
+  background: #F3F3F3;
   font-family: Menlo, Monaco, Consolas, "Lucida Console", "Courier New", monospace;
   font-size: .92857em;
 }
@@ -42,8 +42,12 @@ pre code { padding: 0; }
 blockquote {
   margin: 1em 1.5em;
   padding-left: 1.5em;
-  border-left: 4px solid #E9E9E6;
+  border-left: 4px solid #E9E9E9;
   color: #777;
+}
+
+h1, h2, h3 {
+  font-weight: normal;
 }
 
 input[type="text"],
@@ -51,7 +55,7 @@ input[type="email"],
 input[type="url"],
 textarea {
   padding: 5px;
-  border: 1px solid #E3E3E0;
+  border: 1px solid #E9E9E9;
   width: 100%;
 
   border-radius: 2px;
@@ -63,30 +67,20 @@ textarea {
   resize: vertical;
 }
 
-.container {
-  padding-top: 20px;
-  margin-bottom: 30px;
-  background-color: #FFF;
-
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-
-  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, .2);
-}
 
 /* ------------------
  * Header
  * --------------- */
 
 #header {
+  padding-top: 35px;
+  border-bottom: 1px solid #E9E9E9;
   text-align: center;
 }
 
 #logo {
   color: #333;
-  font-size: 2em;
-  font-weight: bold;
+  font-size: 2.5em;
 }
 .description {
   margin: .5em 0 0;
@@ -96,19 +90,19 @@ textarea {
 
 /* Navigation menu */
 #nav-menu {
-  margin-top: 20px;
+  margin: 25px 0 -1px;
   padding: 0;
-  border-bottom: 1px solid #E9E9E6;
 }
 #nav-menu a {
   display: inline-block;
   margin-right: -4px;
-  padding: 5px 20px 10px;
-  border-right: 1px solid #E9E9E6;
-}
-#nav-menu a:hover { text-decoration: none; }
-#nav-menu .current {
+  padding: 8px 20px;
+  border: 1px solid #EEE;
   color: #444;
+}
+#nav-menu a:hover,
+#nav-menu .current {
+  background: #F6F6F6;
 }
 
 /* Search */
@@ -143,7 +137,7 @@ textarea {
 
 .post {
   padding: 20px 0;
-  border-bottom: 1px solid #E9E9E6;
+  border-bottom: 1px solid #E9E9E9;
 }
 .post-title {
   margin: .83em 0;
@@ -158,7 +152,7 @@ textarea {
   display: inline-block;
   margin: 0 8px;
   height: 12px;
-  border-right: 1px solid #E9E9E6;
+  border-right: 1px solid #E9E9E9;
 }
 .post-content {
   line-height: 1.5;
@@ -190,13 +184,13 @@ textarea {
   line-height: 24px;
 }
 .page-navigator a:hover {
-  background: #F3F3F0;
+  background: #EEE;
   text-decoration: none;
 }
 
 .page-navigator .current a {
   color: #444;
-  background: #F3F3F0;
+  background: #EEE;
 }
 
 /* ------------------
@@ -213,7 +207,7 @@ textarea {
 .comment-list li {
   padding: 14px;
   margin-top: 10px;
-  border: 1px solid #E9E9E6;
+  border: 1px solid #E9E9E9;
 }
 .comment-list li.comment-level-odd {
   background: #F6F6F3;
@@ -255,7 +249,7 @@ textarea {
 /* Comment reply */
 .comment-list .respond {
   margin-top: 15px;
-  border-top: 1px solid #E9E9E6;
+  border-top: 1px solid #E9E9E9;
 }
 .respond .cancel-comment-reply {
   float: right;
@@ -275,9 +269,9 @@ textarea {
 }
 
 /* ------------------
- * Sidebar
+ * secondary
  * --------------- */
-#sidebar {
+#secondary {
   display: none;
   padding-top: 20px;
   word-wrap: break-word;
@@ -286,7 +280,6 @@ textarea {
   margin-bottom: 30px;
 }
 .widget-title {
-  font-size: 1em;
 }
 .widget-list {
   list-style: none;
@@ -304,7 +297,7 @@ textarea {
  * Footer 
  * --------------- */
 #footer {
-  padding-bottom: 30px;
+  padding: 3em 0;
   line-height: 1.5;
   text-align: center;
   color: #999;
@@ -335,7 +328,7 @@ textarea {
 .post-content hr, .comment-content hr {
   margin: 2em auto;
   width: 100px;
-  border: 1px solid #E9E9E6;
+  border: 1px solid #E9E9E9;
   border-width: 2px 0 0 0;
 }
 
@@ -367,18 +360,12 @@ img.alignright {
  *--------------- */
 
 @media (min-width: 768px) {
-  .container {
-    margin-top: 50px;
-    padding: 60px;
-  }
 }
 
 @media (min-width: 992px) {
-  .container {
-  }
   #header { text-align: left; }
   .site-search { display: block; }
-  #sidebar { display: block; }
+  #secondary { display: block; }
 }
 
 @media (min-width: 1200px) {

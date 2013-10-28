@@ -1,6 +1,8 @@
 
-    </div><!-- end .col-group -->
-</div><!-- end .container -->
+            
+        </div><!-- end .col-group -->
+    </div>
+</div><!-- end #body -->
 
 <footer id="footer">
     &copy; <?php echo date('Y'); ?> <a href="<?php $this->options->siteUrl(); ?>"><?php $this->options->title(); ?></a>.

@@ -1,4 +1,4 @@
-<div class="col-mb-12 col-offset-1 col-3" id="sidebar">
+<div class="col-mb-12 col-offset-1 col-3" id="secondary">
     <?php if (empty($this->options->sidebarBlock) || in_array('ShowRecentPosts', $this->options->sidebarBlock)): ?>
     <section class="widget">
 		<h3 class="widget-title"><?php _e('最新文章'); ?></h3>
@@ -9,7 +9,6 @@
     </section>
     <?php endif; ?>
 
-    <?php if (0): ?>
     <?php if (empty($this->options->sidebarBlock) || in_array('ShowRecentComments', $this->options->sidebarBlock)): ?>
     <section class="widget">
 		<h3 class="widget-title"><?php _e('最近回复'); ?></h3>
@@ -20,7 +19,6 @@
         <?php endwhile; ?>
         </ul>
     </section>
-    <?php endif; ?>
     <?php endif; ?>
 
     <?php if (empty($this->options->sidebarBlock) || in_array('ShowCategory', $this->options->sidebarBlock)): ?>
