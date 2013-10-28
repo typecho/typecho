@@ -353,7 +353,7 @@ textarea {
 .post-content a img {
   background: #FFF;
   position: relative;
-  bottom: -4px;
+  bottom: -4px;  /* hidden img parent link border  */
 }
 .post-content hr, .comment-content hr {
   margin: 2em auto;
