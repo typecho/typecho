@@ -112,7 +112,7 @@ include 'common-js.php';
 include 'form-js.php';
 include 'write-js.php';
 
-Typecho_Plugin::factory('admin/write-page.php')->trigger($plugged)->richEditor($post);
+Typecho_Plugin::factory('admin/write-page.php')->trigger($plugged)->richEditor($page);
 if (!$plugged) {
     include 'editor-js.php';
 }
