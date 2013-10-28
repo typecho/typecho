@@ -1,31 +1,34 @@
 <?php
 /**
- * 这是 Typecho 系统的一套默认皮肤
+ * 这是 Typecho 0.9 系统的一套默认皮肤
  * 
- * @package Typecho Default Theme 
+ * @package Typecho Replica Theme 
  * @author fen
- * @version 1.0.7
+ * @version 1.0
  * @link http://typecho.org
  */
  
  $this->need('header.php');
  ?>
 
-    <div class="grid_12" id="content">
+<div class="col-mb-12 col-8" id="main">
 	<?php while($this->next()): ?>
-        <div class="post">
-			<h2 class="entry_title"><a href="<?php $this->permalink() ?>"><?php $this->title() ?></a></h2>
-			<p class="entry_data">
-				<span><?php _e('作者：'); ?><?php $this->author(); ?></span>
-				<span><?php _e('发布时间：'); ?><?php $this->date('F j, Y'); ?></span>
-				<span><?php _e('分类：'); ?><?php $this->category(','); ?></span>
-				<a href="<?php $this->permalink() ?>#comments"><?php $this->commentsNum('No Comments', '1 Comment', '%d Comments'); ?></a>
-			</p>
-			<?php $this->content('阅读剩余部分...'); ?>
-        </div>
+        <article class="post">
+			<h2 class="post-title"><a href="<?php $this->permalink() ?>"><?php $this->title() ?></a></h2>
+			<div class="post-meta">
+				<?php _e('作者：'); ?><a href="<?php $this->author->permalink(); ?>"><?php $this->author(); ?></a> <i></i>
+				<?php _e('时间：'); ?><?php $this->date('F j, Y'); ?> <i></i>
+				<?php _e('分类：'); ?><?php $this->category(','); ?> <i></i>
+				<a href="<?php $this->permalink() ?>#comments"><?php $this->commentsNum('评论', '1 条评论', '%d 条评论'); ?></a>
+			</div>
+            <div class="post-content">
+    			<?php $this->content('阅读剩余部分...'); ?>
+            </div>
+        </article>
 	<?php endwhile; ?>
 
-    <?php $this->pageNav(); ?>
-    </div><!-- end #content-->
-	<?php $this->need('sidebar.php'); ?>
-	<?php $this->need('footer.php'); ?>
+    <?php $this->pageNav('&laquo; 前一页', '后一页 &raquo;'); ?>
+</div><!-- end #main-->
+
+<?php $this->need('sidebar.php'); ?>
+<?php $this->need('footer.php'); ?>

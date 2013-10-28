@@ -1,9 +1,14 @@
 
+            
+        </div><!-- end .col-group -->
+    </div>
+</div><!-- end #body -->
 
-	<div class="grid_14" id="footer">
-	<a href="<?php $this->options->siteurl(); ?>"><?php $this->options->title(); ?></a> <?php _e('is powered by'); ?> <a href="http://www.typecho.org">Typecho)))</a><br /><a href="<?php $this->options->feedUrl(); ?>"><?php _e('文章'); ?> RSS</a> and <a href="<?php $this->options->commentsFeedUrl(); ?>"><?php _e('评论'); ?> RSS</a>
-	</div><!-- end #footer -->
-</div>
+<footer id="footer">
+    &copy; <?php echo date('Y'); ?> <a href="<?php $this->options->siteUrl(); ?>"><?php $this->options->title(); ?></a>.
+    <?php _e('由 <a href="http://www.typecho.org">Typecho</a> 强力驱动'); ?>.
+</footer><!-- end #footer -->
+
 <?php $this->footer(); ?>
 </body>
 </html>

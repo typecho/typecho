@@ -1,15 +1,15 @@
 <?php $this->need('header.php'); ?>
 
-    <div class="grid_10" id="content">
-        <div class="post">
-            <h2 class="entry_title">404 - <?php _e('页面没找到'); ?></h2>
-            <p>
+    <div class="col-mb-12 col-tb-8 col-tb-offset-2">
+
+        <div class="error-page">
+            <h2 class="post-title">404 - <?php _e('页面没找到'); ?></h2>
+            <p><?php _e('你想查看的页面已被转移或删除了，要不要搜索看看：'); ?></p>
             <form method="post">
-                <div><input type="text" name="s" class="text" size="20" /> <input type="submit" class="submit" value="<?php _e('搜索'); ?>" /></div>
+                <p><input type="text" name="s" class="text" /></p>
+                <p><button type="submit" class="submit"><?php _e('搜索'); ?></button></p>
             </form>
-            </p>
         </div>
 
     </div><!-- end #content-->
-	<?php $this->need('sidebar.php'); ?>
 	<?php $this->need('footer.php'); ?>
