@@ -110,7 +110,7 @@ textarea {
 }
 #nav-menu a {
   display: inline-block;
-  margin-right: -5px;
+  margin-right: -1px;
   padding: 0 20px;
   border: 1px solid #EEE;
   height: 32px;
@@ -149,8 +149,6 @@ textarea {
 /* ------------------
  * Main
  * --------------- */
-#main {
-}
 
 .post {
   padding: 15px 0 20px;
@@ -256,10 +254,6 @@ textarea {
   text-align: right;
   font-size: .92857em;
 }
-.comment-list li .comment-reply a {
-}
-.comment-list li .comment-reply a:hover {
-}
 .comment-meta a {
   color: #999;
   font-size: .92857em;
@@ -277,8 +271,6 @@ textarea {
   font-weight: bold;
   font-style: normal;
 }
-.comment-children li {
-}
 
 /* Comment reply */
 .comment-list .respond {
@@ -289,8 +281,6 @@ textarea {
   float: right;
   margin-top: 15px;
   font-size: .92857em;
-}
-#comment-form {
 }
 #comment-form label {
   display: block;
