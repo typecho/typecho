@@ -156,9 +156,10 @@ textarea {
 }
 .post-title {
   margin: .83em 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 1.5em;
-  text-align: center;
   font-weight: bold;
+  text-align: center;
 }
 .post-meta {
   margin-top: -0.5em;
