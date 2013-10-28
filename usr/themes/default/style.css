@@ -14,8 +14,8 @@ body {
   background-color: #FFF;
   color: #444;
   /*font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;*/
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 87.5%;
+  font-family: "Droid Serif", Georgia, "Times New Roman", serif;
+  font-size: 81.25%;
 }
 
 a {
@@ -28,7 +28,7 @@ a:hover {
 }
 pre, code {
   padding: 2px 4px;
-  background: #F3F3F3;
+  background: #EEE;
   font-family: Menlo, Monaco, Consolas, "Lucida Console", "Courier New", monospace;
   font-size: .92857em;
 }
@@ -42,7 +42,7 @@ pre code { padding: 0; }
 blockquote {
   margin: 1em 1.5em;
   padding-left: 1.5em;
-  border-left: 4px solid #E9E9E9;
+  border-left: 4px solid #EEE;
   color: #777;
 }
 
@@ -74,7 +74,7 @@ textarea {
 
 #header {
   padding-top: 35px;
-  border-bottom: 1px solid #E9E9E9;
+  border-bottom: 1px solid #EEE;
   text-align: center;
 }
 
@@ -95,7 +95,7 @@ textarea {
 }
 #nav-menu a {
   display: inline-block;
-  margin-right: -4px;
+  margin-right: -5px;
   padding: 8px 20px;
   border: 1px solid #EEE;
   color: #444;
@@ -137,22 +137,24 @@ textarea {
 
 .post {
   padding: 20px 0;
-  border-bottom: 1px solid #E9E9E9;
+  border-bottom: 1px solid #EEE;
 }
 .post-title {
   margin: .83em 0;
   font-size: 1.5em;
+  text-align: center;
 }
 .post-meta {
   margin-top: -0.5em;
   color: #999;
   font-size: .92857em;
+  text-align: center;
 }
 .post-meta i {
   display: inline-block;
   margin: 0 8px;
   height: 12px;
-  border-right: 1px solid #E9E9E9;
+  border-right: 1px solid #EEE;
 }
 .post-content {
   line-height: 1.5;
@@ -179,9 +181,9 @@ textarea {
 }
 .page-navigator a {
   display: inline-block;
-  padding: 0 8px;
-  height: 24px;
-  line-height: 24px;
+  padding: 0 10px;
+  height: 30px;
+  line-height: 30px;
 }
 .page-navigator a:hover {
   background: #EEE;
@@ -207,7 +209,7 @@ textarea {
 .comment-list li {
   padding: 14px;
   margin-top: 10px;
-  border: 1px solid #E9E9E9;
+  border: 1px solid #EEE;
 }
 .comment-list li.comment-level-odd {
   background: #F6F6F3;
@@ -249,7 +251,7 @@ textarea {
 /* Comment reply */
 .comment-list .respond {
   margin-top: 15px;
-  border-top: 1px solid #E9E9E9;
+  border-top: 1px solid #EEE;
 }
 .respond .cancel-comment-reply {
   float: right;
@@ -272,7 +274,6 @@ textarea {
  * secondary
  * --------------- */
 #secondary {
-  display: none;
   padding-top: 20px;
   word-wrap: break-word;
 }
@@ -360,18 +361,19 @@ img.alignright {
  *--------------- */
 
 @media (min-width: 768px) {
+  body {
+    font-size: 87.5%;
+  }
 }
 
 @media (min-width: 992px) {
   #header { text-align: left; }
+
   .site-search { display: block; }
+  .post-title, .post-meta { text-align: left; }
+
   #secondary { display: block; }
 }
 
 @media (min-width: 1200px) {
-  body {
-    font-size: 100%;
-  }
-  .container {
-  }
 }

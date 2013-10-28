@@ -41,7 +41,7 @@
                 </form>
             </div>
             <div class="col-mb-12">
-                <nav id="nav-menu">
+                <nav id="nav-menu" class="clearfix">
                     <a<?php if($this->is('index')): ?> class="current"<?php endif; ?> href="<?php $this->options->siteUrl(); ?>"><?php _e('首页'); ?></a>
                     <?php $this->widget('Widget_Contents_Page_List')->to($pages); ?>
                     <?php while($pages->next()): ?>
