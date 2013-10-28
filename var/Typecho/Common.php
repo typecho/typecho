@@ -710,7 +710,7 @@ EOF;
      */
     public static function filterSearchQuery($query)
     {
-        return str_replace(array('%', '?', '*', '/', '{', '}'), '', $query);
+        return str_replace('-', ' ', self::slugName($query));
     }
 
     /**
