@@ -111,8 +111,10 @@ textarea {
 #nav-menu a {
   display: inline-block;
   margin-right: -5px;
-  padding: 8px 20px;
+  padding: 0 20px;
   border: 1px solid #EEE;
+  height: 32px;
+  line-height: 32px;
   color: #444;
 }
 #nav-menu a:hover,
@@ -151,7 +153,7 @@ textarea {
 }
 
 .post {
-  padding: 20px 0;
+  padding: 15px 0 20px;
   border-bottom: 1px solid #EEE;
 }
 .post-title {
@@ -187,7 +189,12 @@ textarea {
   color: #999;
   font-size: 1em;
 }
-
+.more {
+  text-align: center;
+}
+.more a {
+  border: none;
+}
 .protected .text {
   width: 50%;
 }
@@ -299,7 +306,7 @@ textarea {
  * secondary
  * --------------- */
 #secondary {
-  padding-top: 20px;
+  padding-top: 15px;
   word-wrap: break-word;
 }
 .widget {
