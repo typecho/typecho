@@ -39,7 +39,7 @@ Typecho_Cookie::delete('__typecho_remember_mail');
 <?php endif; ?>
 
 <div class="typecho-login">
-    <h1>Typecho</h2>
+    <h1>Typecho</h1>
     <form action="<?php $options->registerAction(); ?>" method="post" name="register">
         <p><input type="text" id="name" name="name" placeholder="<?php _e('用户名'); ?>" value="<?php echo $rememberName; ?>" class="text-l w-100" /></p>
         <p><input type="email" id="mail" name="mail" placeholder="<?php _e('Email'); ?>" value="<?php echo $rememberMail; ?>" class="text-l w-100" /></p>
