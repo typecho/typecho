@@ -5,6 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
 <head>
     <meta charset="<?php $this->options->charset(); ?>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
     <title><?php $this->archiveTitle(' &raquo; ', '', ' - '); ?><?php $this->options->title(); ?></title>
 
     <!-- 使用url函数转换相关路径 -->

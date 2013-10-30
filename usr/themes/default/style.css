@@ -142,6 +142,7 @@ textarea {
   width: 24px;
   height: 24px;
   background: transparent url(img/icon-search.png) no-repeat center center;
+  direction: ltr; /* fix RTL language */
   text-indent: -9999em;
 }
 
@@ -157,7 +158,6 @@ textarea {
 .post-title {
   margin: .83em 0;
   font-size: 1.4em;
-  font-weight: bold;
   text-align: center;
 }
 .post-meta {
