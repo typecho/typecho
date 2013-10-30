@@ -401,7 +401,13 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                 <?php endif;?>
             <?php elseif (isset($_GET['config'])): ?>
             <?php
-                    $adapter = _r('dbAdapter', 'Mysql');
+                    $adapters = array('Mysql', 'Pdo_Mysql', 'SQLite', 'Pdo_SQLite', 'Pgsql', 'Pdo_Pgsql');
+                    foreach ($adapters as $firstAdapter) {
+                        if (_p($firstAdapter)) {
+                            break;
+                        }
+                    }
+                    $adapter = _r('dbAdapter', $firstAdapter);
                     $type = explode('_', $adapter);
                     $type = array_pop($type);
             ?>
