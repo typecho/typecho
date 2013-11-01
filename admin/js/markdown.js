@@ -3068,7 +3068,7 @@ else
         headingexample: "Heading",
 
         fullscreen: 'FullScreen Ctrl+M',
-        exitFullscreen: 'Exit FullScreen Ctrl+M',
+        exitFullscreen: 'Exit FullScreen Ctrl+E',
         fullscreenUnsupport: 'Sorry, the browser dont support fullscreen api',
 
         hr: "Horizontal Rule <hr> Ctrl+R",
@@ -3153,6 +3153,7 @@ else
                                                   * image url (or null if the user cancelled). If this hook returns false, the default dialog will be used.
                                                   */
         hooks.addNoop("enterFullScreen");
+        hooks.addNoop("enterFakeFullScreen");
         hooks.addNoop("exitFullScreen");
 
         this.getConverter = function () { return markdownConverter; }
@@ -4318,6 +4319,9 @@ else
                     case 'm':
                         doClick(buttons.fullscreen);
                         break;
+                    case 'e':
+                        doClick(buttons.exitFullscreen);
+                        break;
                     case "h":
                         doClick(buttons.heading);
                         break;
@@ -4565,10 +4569,10 @@ else
             buttons.redo = makeButton("wmd-redo-button", redoTitle, "-220px", null);
             buttons.redo.execute = function (manager) { if (manager) manager.redo(); };
             buttons.fullscreen = makeButton("wmd-fullscreen-button", getString("fullscreen"), "-240px", null);
-            buttons.fullscreen.execute = function () { fullScreenManager.doFullScreen(buttons); };
+            buttons.fullscreen.execute = function () { fullScreenManager.doFullScreen(buttons, true); };
             buttons.exitFullscreen = makeButton("wmd-exit-fullscreen-button", getString("exitFullscreen"), "-260px", null);
             buttons.exitFullscreen.style.display = 'none';
-            buttons.exitFullscreen.execute = function () { fullScreenManager.doFullScreen(buttons); };
+            buttons.exitFullscreen.execute = function () { fullScreenManager.doFullScreen(buttons, false); };
 
             if (helpOptions) {
                 var helpButton = document.createElement("li");
@@ -5295,6 +5299,7 @@ else
         this.fullScreenBind = false;
         this.hooks = hooks;
         this.getString = getString;
+        this.isFakeFullScreen = false;
     }
 
     function getFullScreenAdapter () {
@@ -5332,8 +5337,8 @@ else
             document.msIsFullScreen;
     };
 
-     // fullscreen
-    FullScreenManager.prototype.doFullScreen = function (buttons) {
+    // fullscreen
+    FullScreenManager.prototype.doFullScreen = function (buttons, enter) {
         var adapter = getFullScreenAdapter(), self = this;
 
         if (!adapter) {
@@ -5357,11 +5362,25 @@ else
             this.fullScreenBind = true;
         }
 
-        if (!isFullScreen()) {
-            document.body[adapter.requestFullscreen]('webkitRequestFullScreen' == adapter.requestFullscreen 
+        if (enter) {
+            if (self.isFakeFullScreen) {
+                document.body[adapter.requestFullscreen]('webkitRequestFullScreen' == adapter.requestFullscreen 
                     ? Element.ALLOW_KEYBOARD_INPUT : null);
+                self.isFakeFullScreen = false;
+            } else {
+                buttons.exitFullscreen.style.display = '';
+                self.hooks.enterFakeFullScreen();
+                self.isFakeFullScreen = true;
+            }
         } else {
-            document[adapter.cancelFullscreen]();
+            if (self.isFakeFullScreen) {
+                buttons.exitFullscreen.style.display = 'none';
+                self.hooks.exitFullScreen();
+            } else {
+                document[adapter.cancelFullscreen]();
+            }
+            
+            self.isFakeFullScreen = false;
         }
     };
 })();
