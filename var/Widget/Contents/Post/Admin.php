@@ -61,8 +61,8 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
     {
         $savedPost = $this->db->fetchRow($this->db->select('cid', 'modified')
         ->from('table.contents')
-        ->where('table.contents.parent = ? AND table.contents.type = ?',
-            $this->cid, 'post_draft')
+        ->where('table.contents.parent = ? AND (table.contents.type = ? OR table.contents.type = ?)',
+            $this->cid, 'post_draft', 'page_draft')
         ->limit(1));
         
         if ($savedPost) {

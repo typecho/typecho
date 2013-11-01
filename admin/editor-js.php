@@ -42,7 +42,7 @@ $(document).ready(function () {
         redomac: '<?php _e('重做'); ?> - Ctrl+Shift+Z',
 
         fullscreen: '<?php _e('全屏'); ?> - Ctrl+M',
-        exitFullscreen: '<?php _e('退出全屏'); ?> - Ctrl+M',
+        exitFullscreen: '<?php _e('退出全屏'); ?> - Ctrl+E',
         fullscreenUnsupport: '<?php _e('此浏览器不支持全屏操作'); ?>',
 
         imagedialog: '<p><b><?php _e('插入图片'); ?></b></p><p><?php _e('请在下方的输入框内输入要插入的远程图片地址'); ?></p><p><?php _e('您也可以使用编辑器下方的文件上传功能插入本地图片'); ?></p>',
@@ -127,10 +127,17 @@ $(document).ready(function () {
 
     var input = $('#text'), th = textarea.height();
 
-    editor.hooks.chain('enterFullScreen', function () {
+    editor.hooks.chain('enterFakeFullScreen', function () {
+        var height = Math.max(document.documentElement.clientHeight, document.body.clientHeight);
+
         th = textarea.height();
         $(document.body).addClass('fullscreen');
-        textarea.css('height', window.screen.height - 46);
+        textarea.css('height', height - 52);
+    });
+
+    editor.hooks.chain('enterFullScreen', function () {
+        $(document.body).addClass('fullscreen');
+        textarea.css('height', window.screen.height - 52);
     });
 
     editor.hooks.chain('exitFullScreen', function () {
