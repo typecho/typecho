@@ -128,7 +128,7 @@ $(document).ready(function () {
     var input = $('#text'), th = textarea.height();
 
     editor.hooks.chain('enterFakeFullScreen', function () {
-        var height = Math.max(document.documentElement.clientHeight, document.body.clientHeight);
+        var height = $(window).height();
 
         th = textarea.height();
         $(document.body).addClass('fullscreen');
