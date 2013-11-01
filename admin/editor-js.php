@@ -128,11 +128,9 @@ $(document).ready(function () {
     var input = $('#text'), th = textarea.height();
 
     editor.hooks.chain('enterFakeFullScreen', function () {
-        var height = window.innerHeight || document.body.clientHeight || document.documentElement.clientHeight;
-
         th = textarea.height();
         $(document.body).addClass('fullscreen');
-        textarea.css('height', height - toolbar.outerHeight());
+        textarea.css('height', $(window).height() - toolbar.outerHeight());
     });
 
     editor.hooks.chain('enterFullScreen', function () {
