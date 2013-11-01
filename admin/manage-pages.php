@@ -63,13 +63,13 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                                 <a href="<?php $options->adminUrl('write-page.php?cid=' . $pages->cid); ?>"><?php $pages->title(); ?></a>
                                 <?php 
                                 if ($pages->hasSaved || 'page_draft' == $pages->type) {
-                                    echo '<em>(' . _t('草稿') . ')</em>';
+                                    echo '<em class="status">' . _t('草稿') . '</em>';
                                 } else if ('waiting' == $pages->status) {
-                                    echo '<em>(' . _t('待审核') . ')</em>';
+                                    echo '<em class="status">' . _t('待审核') . '</em>';
                                 } else if ('private' == $pages->status) {
-                                    echo '<em>(' . _t('私密') . ')</em>';
+                                    echo '<em class="status">' . _t('私密') . '</em>';
                                 } else if ($pages->password) {
-                                    echo '<em>(' . _t('密码保护') . ')</em>';
+                                    echo '<em class="status">' . _t('密码保护') . '</em>';
                                 }
                                 ?>
                                 <?php if ('page_draft' != $pages->type): ?>

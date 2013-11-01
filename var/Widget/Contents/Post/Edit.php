@@ -63,8 +63,8 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                 return $this->row;
             } else {
                 return $this->db->fetchRow($this->widget('Widget_Abstract_Contents')->select()
-                ->where('table.contents.parent = ? AND table.contents.type = ?',
-                    $this->cid, 'post_draft')
+                ->where('table.contents.parent = ? AND (table.contents.type = ? OR table.contents.type = ?)',
+                    $this->cid, 'post_draft', 'page_draft')
                 ->limit(1), array($this->widget('Widget_Abstract_Contents'), 'filter'));
             }
         }
@@ -178,7 +178,9 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     {
         /** 发布内容, 检查是否具有直接发布的权限 */
         if ($this->user->pass('editor', true)) {
-            if ('password' == $contents['visibility'] || !in_array($contents['visibility'], array('private', 'waiting', 'publish'))) {
+            if (empty($contents['visibility'])) {
+                $contents['status'] = 'publish';
+            } else if ('password' == $contents['visibility'] || !in_array($contents['visibility'], array('private', 'waiting', 'publish'))) {
                 if (empty($contents['password']) || 'password' != $contents['visibility']) {
                     $contents['password'] = '';
                 }
@@ -248,7 +250,9 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     {
         /** 发布内容, 检查是否具有直接发布的权限 */
         if ($this->user->pass('editor', true)) {
-            if ('password' == $contents['visibility'] || !in_array($contents['visibility'], array('private', 'waiting', 'publish'))) {
+            if (empty($contents['visibility'])) {
+                $contents['status'] = 'publish';
+            } else if ('password' == $contents['visibility'] || !in_array($contents['visibility'], array('private', 'waiting', 'publish'))) {
                 if (empty($contents['password']) || 'password' != $contents['visibility']) {
                     $contents['password'] = '';
                 }
