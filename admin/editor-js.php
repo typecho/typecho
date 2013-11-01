@@ -128,14 +128,16 @@ $(document).ready(function () {
     var input = $('#text'), th = textarea.height();
 
     editor.hooks.chain('enterFakeFullScreen', function () {
+        var height = Math.max(document.documentElement.clientHeight, document.body.clientHeight);
+
         th = textarea.height();
         $(document.body).addClass('fullscreen');
-        textarea.css('height', document.body.clientHeight - 46 - 1);
+        textarea.css('height', height - 52);
     });
 
     editor.hooks.chain('enterFullScreen', function () {
         $(document.body).addClass('fullscreen');
-        textarea.css('height', window.screen.height - 46);
+        textarea.css('height', window.screen.height - 52);
     });
 
     editor.hooks.chain('exitFullScreen', function () {
