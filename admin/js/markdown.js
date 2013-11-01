@@ -5367,7 +5367,7 @@ else
                 document.body[adapter.requestFullscreen]('webkitRequestFullScreen' == adapter.requestFullscreen 
                     ? Element.ALLOW_KEYBOARD_INPUT : null);
                 self.isFakeFullScreen = false;
-            } else {
+            } else if (!isFullScreen()) {
                 buttons.exitFullscreen.style.display = '';
                 self.hooks.enterFakeFullScreen();
                 self.isFakeFullScreen = true;
@@ -5376,7 +5376,7 @@ else
             if (self.isFakeFullScreen) {
                 buttons.exitFullscreen.style.display = 'none';
                 self.hooks.exitFullScreen();
-            } else {
+            } else if (isFullScreen()) {
                 document[adapter.cancelFullscreen]();
             }
             
