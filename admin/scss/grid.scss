@@ -1,8 +1,8 @@
 /*
  * Bento Grid System
  * Source: https://github.com/fenbox/bento
- * Version: 1.2
- * Update: 2013.10.28
+ * Version: 1.2.5
+ * Update: 2013.11.02
  */
 
 //
@@ -95,6 +95,11 @@ $screen-wide: 1200px;
     margin-right: $gutter-width / -2;
     margin-left: $gutter-width / -2;
   }
+}
+
+.col-group .col-group {
+  margin-right: $gutter-width / -2;
+  margin-left: $gutter-width / -2;
 }
 
 

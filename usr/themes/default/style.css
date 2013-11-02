@@ -15,7 +15,7 @@ body {
   color: #444;
   /*font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;*/
   font-family: "Droid Serif", Georgia, "Times New Roman", STHeiti, serif;
-  font-size: 81.25%;
+  font-size: 87.5%;
 }
 
 a {
@@ -90,7 +90,6 @@ textarea {
 #header {
   padding-top: 35px;
   border-bottom: 1px solid #EEE;
-  text-align: center;
 }
 
 #logo {
@@ -123,9 +122,6 @@ textarea {
 }
 
 /* Search */
-.site-search {
-  display: none;
-}
 #search {
   position: relative;
   margin-top: 15px;
@@ -158,14 +154,12 @@ textarea {
 .post-title {
   margin: .83em 0;
   font-size: 1.4em;
-  text-align: center;
 }
 .post-meta {
   margin-top: -0.5em;
   padding: 0;
   color: #999;
   font-size: .92857em;
-  text-align: center;
 }
 .post-meta li {
   display: inline-block;
@@ -388,20 +382,22 @@ img.alignright {
 /* -----------------
  * Responsive
  *--------------- */
-
-@media (min-width: 768px) {
+@media (max-width: 767px) {
   body {
-    font-size: 87.5%;
+    font-size: 81.25%;
+  }
+}
+
+@media (max-width: 768px) {
+  #header,
+  .post-title,
+  .post-meta {
+    text-align: center;
   }
 }
 
 @media (min-width: 992px) {
-  #header { text-align: left; }
 
-  .site-search { display: block; }
-  .post-title, .post-meta { text-align: left; }
-
-  #secondary { display: block; }
 }
 
 @media (min-width: 1200px) {

@@ -1,8 +1,8 @@
 /*
  * Bento Grid System
  * Source: https://github.com/fenbox/bento
- * Version: 1.2
- * Update: 2013.10.28
+ * Version: 1.2.5
+ * Update: 2013.11.02
  */
 .col-group [class*="col-"] {
   float: left;
@@ -221,6 +221,10 @@
   .col-group {
     margin-right: -10px;
     margin-left: -10px; } }
+.col-group .col-group {
+  margin-right: -10px;
+  margin-left: -10px; }
+
 /*
  * Desktop and up
  */
