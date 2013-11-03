@@ -1147,6 +1147,15 @@ a.operate-reply {
     width: 100px;
     border: 1px solid #E9E9E6;
     border-width: 2px 0 0 0; }
+  #wmd-preview .summary:after {
+    display: block;
+    margin: 2em 0;
+    border: 1px dashed #D9D9D6;
+    border-width: 1px 0;
+    color: #999;
+    font-size: .85714em;
+    text-align: center;
+    content: "- more -"; }
 
 /* 编辑器全屏 */
 .fullscreen #wmd-button-bar, .fullscreen #text, .fullscreen #wmd-preview, .fullscreen .submit {
