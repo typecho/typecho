@@ -1150,7 +1150,7 @@ a.operate-reply {
 
 /* 编辑器全屏 */
 .fullscreen #wmd-button-bar, .fullscreen #text, .fullscreen #wmd-preview, .fullscreen .submit {
-  position: absolute;
+  position: fixed;
   top: 0;
   width: 50%;
   background: #FFF;
@@ -1161,13 +1161,13 @@ a.operate-reply {
 .fullscreen #wmd-button-bar {
   left: 0;
   padding: 13px 20px;
+  border-bottom: 1px solid #F3F3F0;
   z-index: 1000; }
 .fullscreen #text {
-  top: 52px;
+  top: 53px;
   left: 0;
   padding: 20px;
   border: none;
-  border-top: 1px solid #F3F3F0;
   outline: none;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
@@ -1175,19 +1175,21 @@ a.operate-reply {
   -o-border-radius: 0;
   border-radius: 0; }
 .fullscreen #wmd-preview {
-  top: 52px;
+  position: absolute;
+  top: 53px;
   right: 0;
   padding: 5px 20px;
-  border: 1px solid #F3F3F0;
-  border-width: 1px 0 0 1px;
+  border-left: 1px solid #F3F3F0;
   background: #F6F6F3;
   overflow: auto; }
   .fullscreen #wmd-preview code, .fullscreen #wmd-preview pre {
     background: #F0F0EC; }
 .fullscreen .submit {
+  z-index: 1000;
   right: 0;
   margin: 0;
-  padding: 10px 20px; }
+  padding: 10px 20px;
+  border-bottom: 1px solid #F3F3F0; }
 
 /**
 * Jquery Timepicker

@@ -95,7 +95,7 @@
 /* 编辑器全屏 */
 .fullscreen {
   #wmd-button-bar, #text, #wmd-preview, .submit {
-    position: absolute;
+    position: fixed;
     top: 0;
     width: 50%;
     background: #FFF;
@@ -105,25 +105,23 @@
   #wmd-button-bar {
     left: 0;
     padding: 13px 20px;
+    border-bottom: 1px solid #F3F3F0;
     z-index: 1000;
   }
   #text {
-    top: 52px;
+    top: 53px;
     left: 0;
     padding: 20px;
     border: none;
-    border-top: 1px solid #F3F3F0;
     outline: none;
     @include border-radius(0);
   }
   #wmd-preview {
-    top: 52px;
+    position: absolute;
+    top: 53px;
     right: 0;
     padding: 5px 20px;
-    border: 1px solid #F3F3F0;
-    border-width: 1px 0 0 1px;
-    // height: 100%;
-    // @include calc(height, "100% - 52px");
+    border-left: 1px solid #F3F3F0;
     background: #F6F6F3;
     overflow: auto;
     code, pre {
@@ -131,8 +129,10 @@
     }
   }
   .submit {
+    z-index: 1000;
     right: 0;
     margin: 0;
     padding: 10px 20px;
+    border-bottom: 1px solid #F3F3F0;
   }
 }
