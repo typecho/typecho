@@ -36,12 +36,13 @@ $(document).ready(function () {
         headingexample: '<?php _e('标题文字'); ?>',
 
         hr: '<?php _e('分割线'); ?> <hr> Ctrl+R',
+        more: '<?php _e('摘要分割线'); ?> <!--more--> Ctrl+M',
 
         undo: '<?php _e('撤销'); ?> - Ctrl+Z',
         redo: '<?php _e('重做'); ?> - Ctrl+Y',
         redomac: '<?php _e('重做'); ?> - Ctrl+Shift+Z',
 
-        fullscreen: '<?php _e('全屏'); ?> - Ctrl+M',
+        fullscreen: '<?php _e('全屏'); ?> - Ctrl+J',
         exitFullscreen: '<?php _e('退出全屏'); ?> - Ctrl+E',
         fullscreenUnsupport: '<?php _e('此浏览器不支持全屏操作'); ?>',
 

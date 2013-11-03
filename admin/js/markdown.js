@@ -225,6 +225,15 @@ this.makeHtml = function(text) {
         return all;
     });
 
+    if (text.indexOf('<!--more-->')) {
+        var parts = text.split(/\s*<\!\-\-more\-\->\s*/),
+            summary = parts.shift(),
+            details = parts.join('');
+
+        text = '<div class="summary">' + summary + '</div>'
+            + '<div class="details">' + details + '</div>';
+    }
+
     if (self.postConversion) {
         text = self.postConversion(text);
     }
@@ -3066,8 +3075,9 @@ else
 
         heading: "Heading <h1>/<h2> Ctrl+H",
         headingexample: "Heading",
+        more: "More contents <!--more--> Ctrl+M",
 
-        fullscreen: 'FullScreen Ctrl+M',
+        fullscreen: 'FullScreen Ctrl+J',
         exitFullscreen: 'Exit FullScreen Ctrl+E',
         fullscreenUnsupport: 'Sorry, the browser dont support fullscreen api',
 
@@ -4317,6 +4327,9 @@ else
                         doClick(buttons.ulist);
                         break;
                     case 'm':
+                        doClick(buttons.more);
+                        break;
+                    case 'j':
                         doClick(buttons.fullscreen);
                         break;
                     case 'e':
@@ -4558,6 +4571,7 @@ else
             }));
             buttons.heading = makeButton("wmd-heading-button", getString("heading"), "-160px", bindCommand("doHeading"));
             buttons.hr = makeButton("wmd-hr-button", getString("hr"), "-180px", bindCommand("doHorizontalRule"));
+            buttons.more = makeButton("wmd-more-button", getString("more"), "-280px", bindCommand("doMore"));
             makeSpacer(3);
             buttons.undo = makeButton("wmd-undo-button", getString("undo"), "-200px", null);
             buttons.undo.execute = function (manager) { if (manager) manager.undo(); };
@@ -4580,7 +4594,7 @@ else
                 helpButton.appendChild(helpButtonImage);
                 helpButton.className = "wmd-button wmd-help-button";
                 helpButton.id = "wmd-help-button" + postfix;
-                helpButton.XShift = "-280px";
+                helpButton.XShift = "-300px";
                 helpButton.isHelp = true;
                 helpButton.style.right = "0px";
                 helpButton.title = getString("help");
@@ -5286,6 +5300,12 @@ else
 
     commandProto.doHorizontalRule = function (chunk, postProcessing) {
         chunk.startTag = "----------\n";
+        chunk.selection = "";
+        chunk.skipLines(2, 1, true);
+    }
+
+    commandProto.doMore = function (chunk, postProcessing) {
+        chunk.startTag = "<!--more-->\n\n";
         chunk.selection = "";
         chunk.skipLines(2, 1, true);
     }
