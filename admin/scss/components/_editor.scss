@@ -107,7 +107,8 @@
 /* 编辑器全屏 */
 .fullscreen {
   #wmd-button-bar, #text, #wmd-preview, .submit {
-    position: fixed;
+    // position: fixed;
+    position: absolute;
     top: 0;
     width: 50%;
     background: #FFF;
@@ -129,7 +130,6 @@
     @include border-radius(0);
   }
   #wmd-preview {
-    position: absolute;
     top: 53px;
     right: 0;
     padding: 5px 20px;
@@ -141,7 +141,6 @@
     }
   }
   .submit {
-    z-index: 1000;
     right: 0;
     margin: 0;
     padding: 10px 20px;
