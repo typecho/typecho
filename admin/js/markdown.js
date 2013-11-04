@@ -216,7 +216,7 @@ this.makeHtml = function(text) {
         text = _ExecuteExtension(x, text);
     });
 
-    text = text.replace(/<\/?(\!doctype|html|head|body|link|title|input|select|button|textarea|style|script|noscript|iframe|object|embed)[^>]*>/ig, function (all) {
+    text = text.replace(/<\/?(\!doctype|html|head|body|link|title|input|select|button|textarea|style|noscript)[^>]*>/ig, function (all) {
         return all.replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;')
@@ -225,7 +225,7 @@ this.makeHtml = function(text) {
         return all;
     });
 
-    if (text.indexOf('<!--more-->')) {
+    if (text.indexOf('<!--more-->') > 0) {
         var parts = text.split(/\s*<\!\-\-more\-\->\s*/),
             summary = parts.shift(),
             details = parts.join('');
@@ -4858,10 +4858,10 @@ else
 
                     if (!chunk.selection) {
                         if (isImage) {
-                            chunk.selection = that.getString("imagename") || that.getString("imagedescription");
+                            chunk.selection = that.getString("imagename").replace('_', '\\_') || that.getString("imagedescription");
                         }
                         else {
-                            chunk.selection = that.getString("linkname") || that.getString("linkdescription");
+                            chunk.selection = that.getString("linkname").replace('_', '\\_') || that.getString("linkdescription");
                         }
                     }
                 }
@@ -5307,7 +5307,7 @@ else
     commandProto.doMore = function (chunk, postProcessing) {
         chunk.startTag = "<!--more-->\n\n";
         chunk.selection = "";
-        chunk.skipLines(2, 1, true);
+        chunk.skipLines(2, 0, true);
     }
 
     commandProto.doTab = function (chunk, postProcessing) {

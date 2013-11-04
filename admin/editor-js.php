@@ -131,17 +131,24 @@ $(document).ready(function () {
     editor.hooks.chain('enterFakeFullScreen', function () {
         th = textarea.height();
         $(document.body).addClass('fullscreen');
-        textarea.css('height', $(window).height() - toolbar.outerHeight());
+        var h = $(window).height() - toolbar.outerHeight();
+        
+        textarea.css('height', h);
+        preview.css('height', h);
     });
 
     editor.hooks.chain('enterFullScreen', function () {
         $(document.body).addClass('fullscreen');
-        textarea.css('height', window.screen.height - toolbar.outerHeight());
+        
+        var h = window.screen.height - toolbar.outerHeight();
+        textarea.css('height', h);
+        preview.css('height', h);
     });
 
     editor.hooks.chain('exitFullScreen', function () {
         $(document.body).removeClass('fullscreen');
         textarea.height(th);
+        preview.css('height', 'auto');
     });
 
     editor.run();
