@@ -4858,10 +4858,10 @@ else
 
                     if (!chunk.selection) {
                         if (isImage) {
-                            chunk.selection = that.getString("imagename") || that.getString("imagedescription");
+                            chunk.selection = that.getString("imagename").replace('_', '\\_') || that.getString("imagedescription");
                         }
                         else {
-                            chunk.selection = that.getString("linkname") || that.getString("linkdescription");
+                            chunk.selection = that.getString("linkname").replace('_', '\\_') || that.getString("linkdescription");
                         }
                     }
                 }
