@@ -232,8 +232,9 @@
                 return true;
             }
 
+            file = file.toLowerCase();
             for (var i = 0; i < s.types.length; i ++) {
-                var ext = s.types[i];
+                var ext = s.types[i].toLowerCase();
 
                 if (file.length <= ext.length) {
                     continue;
