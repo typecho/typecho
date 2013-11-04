@@ -225,7 +225,7 @@ this.makeHtml = function(text) {
         return all;
     });
 
-    if (text.indexOf('<!--more-->')) {
+    if (text.indexOf('<!--more-->') > 0) {
         var parts = text.split(/\s*<\!\-\-more\-\->\s*/),
             summary = parts.shift(),
             details = parts.join('');
@@ -5307,7 +5307,7 @@ else
     commandProto.doMore = function (chunk, postProcessing) {
         chunk.startTag = "<!--more-->\n\n";
         chunk.selection = "";
-        chunk.skipLines(2, 1, true);
+        chunk.skipLines(2, 0, true);
     }
 
     commandProto.doTab = function (chunk, postProcessing) {
