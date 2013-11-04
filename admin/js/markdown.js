@@ -216,7 +216,7 @@ this.makeHtml = function(text) {
         text = _ExecuteExtension(x, text);
     });
 
-    text = text.replace(/<\/?(\!doctype|html|head|body|link|title|input|select|button|textarea|style|script|noscript|iframe|object|embed)[^>]*>/ig, function (all) {
+    text = text.replace(/<\/?(\!doctype|html|head|body|link|title|input|select|button|textarea|style|noscript)[^>]*>/ig, function (all) {
         return all.replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;')
