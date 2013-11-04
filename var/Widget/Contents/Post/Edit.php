@@ -187,6 +187,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                 $contents['status'] = 'publish';
             } else {
                 $contents['status'] = $contents['visibility'];
+                $contents['password'] = '';
             }
         } else {
             $contents['status'] = 'waiting';
@@ -259,6 +260,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                 $contents['status'] = 'publish';
             } else {
                 $contents['status'] = $contents['visibility'];
+                $contents['password'] = '';
             }
         } else {
             $contents['status'] = 'waiting';
