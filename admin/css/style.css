@@ -1197,6 +1197,14 @@ a.operate-reply {
   margin: 0;
   padding: 10px 20px;
   border-bottom: 1px solid #F3F3F0; }
+.fullscreen .typecho-post-option,
+.fullscreen .title,
+.fullscreen .url-slug,
+.fullscreen .typecho-page-title,
+.fullscreen .typecho-head-nav,
+.fullscreen .message,
+.fullscreen #upload-panel {
+  display: none; }
 
 /**
 * Jquery Timepicker

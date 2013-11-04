@@ -146,4 +146,11 @@
     padding: 10px 20px;
     border-bottom: 1px solid #F3F3F0;
   }
+  .typecho-post-option,
+  .title,
+  .url-slug,
+  .typecho-page-title,
+  .typecho-head-nav,
+  .message,
+  #upload-panel { display: none; }
 }
