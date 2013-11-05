@@ -4859,7 +4859,7 @@ else
                     if (!chunk.selection) {
                         if (isImage) {
                             var imagename = that.getString("imagename");
-                            if (!!imagename) {
+                            if (!imagename) {
                                 imagename = imagename.replace('_', '\\_');
                             }
 
@@ -4867,7 +4867,7 @@ else
                         }
                         else {
                             var linkname = that.getString("linkname");
-                            if (!!linkname) {
+                            if (!linkname) {
                                 linkname = linkname.replace('_', '\\_');
                             }
 
