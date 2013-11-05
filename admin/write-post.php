@@ -16,7 +16,10 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                     Typecho_Common::url('/action/contents-post-edit?do=deleteDraft&cid=' . $post->cid, $options->index)); ?></cite>
                     <?php endif; ?>
 
-                    <p class="title"><input type="text" id="title" name="title" autocomplete="off" value="<?php echo htmlspecialchars($post->title); ?>" placeholder="<?php _e('标题'); ?>" class="w-100 text title" /></p>
+                    <p class="title">
+                        <label for="title" class="visuallyhidden"><?php _e('标题'); ?></label>
+                        <input type="text" id="title" name="title" autocomplete="off" value="<?php echo htmlspecialchars($post->title); ?>" placeholder="<?php _e('标题'); ?>" class="w-100 text title" />
+                    </p>
                     <?php $permalink = Typecho_Common::url($options->routingTable['post']['url'], $options->index);
                     list ($scheme, $permalink) = explode(':', $permalink, 2);
                     $permalink = ltrim($permalink, '/');
@@ -30,9 +33,12 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                     }
                     $input = '<input type="text" id="slug" name="slug" autocomplete="off" value="' . htmlspecialchars($post->slug) . '" class="mono" />';
                     ?>
-                    <p class="mono url-slug"><?php echo preg_replace("/\{slug\}/i", $input, $permalink); ?></p>
-
+                    <p class="mono url-slug">
+                        <label for="slug" class="visuallyhidden"><?php _e('网址缩略名'); ?></label>
+                        <?php echo preg_replace("/\{slug\}/i", $input, $permalink); ?>
+                    </p>
                     <p>
+                        <label for="text" class="visuallyhidden"><?php _e('文章内容'); ?></label>
                         <textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text" name="text" class="w-100 mono"><?php echo htmlspecialchars($post->text); ?></textarea>
                     </p>
 

@@ -41,8 +41,14 @@ Typecho_Cookie::delete('__typecho_remember_mail');
 <div class="typecho-login">
     <h1>Typecho</h1>
     <form action="<?php $options->registerAction(); ?>" method="post" name="register">
-        <p><input type="text" id="name" name="name" placeholder="<?php _e('用户名'); ?>" value="<?php echo $rememberName; ?>" class="text-l w-100" /></p>
-        <p><input type="email" id="mail" name="mail" placeholder="<?php _e('Email'); ?>" value="<?php echo $rememberMail; ?>" class="text-l w-100" /></p>
+        <p>
+            <label for="name" class="visuallyhidden"><?php _e('用户名'); ?></label>
+            <input type="text" id="name" name="name" placeholder="<?php _e('用户名'); ?>" value="<?php echo $rememberName; ?>" class="text-l w-100" />
+        </p>
+        <p>
+            <label for="mail" class="visuallyhidden"><?php _e('Email'); ?></label>
+            <input type="email" id="mail" name="mail" placeholder="<?php _e('Email'); ?>" value="<?php echo $rememberMail; ?>" class="text-l w-100" />
+        </p>
         <p class="submit">
         <!-- <label for="remember"><input type="checkbox" name="remember" class="checkbox" value="1" id="remember" /> <?php _e('记住我'); ?></label> -->
             <button type="submit" class="btn-l w-100 primary"><?php _e('注册'); ?></button>

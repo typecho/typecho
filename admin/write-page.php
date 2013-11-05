@@ -16,18 +16,25 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                         Typecho_Common::url('/action/contents-page-edit?do=deleteDraft&cid=' . $page->cid, $options->index)); ?></cite>
                     <?php endif; ?>
 
-                    <p class="title"><input type="text" id="title" name="title" autocomplete="off" value="<?php echo htmlspecialchars($page->title); ?>" placeholder="<?php _e('标题'); ?>" class="w-100 text title" /></p>
-                        <?php $permalink = Typecho_Common::url($options->routingTable['page']['url'], $options->index);
-                        list ($scheme, $permalink) = explode(':', $permalink, 2);
-                        $permalink = ltrim($permalink, '/');
-                        $permalink = preg_replace("/\[([_a-z0-9-]+)[^\]]*\]/i", "{\\1}", $permalink);
-                        if ($page->have()) {
-                            $permalink = str_replace('{cid}', $page->cid, $permalink);
-                        }
-                        $input = '<input type="text" id="slug" name="slug" autocomplete="off" value="' . htmlspecialchars($page->slug) . '" class="mono" />';
-                        ?>
-                        <p class="mono url-slug"><?php echo preg_replace("/\{slug\}/i", $input, $permalink); ?></p>
+                    <p class="title">
+                        <label for="title" class="visuallyhidden"><?php _e('标题'); ?></label>
+                        <input type="text" id="title" name="title" autocomplete="off" value="<?php echo htmlspecialchars($page->title); ?>" placeholder="<?php _e('标题'); ?>" class="w-100 text title" />
+                    </p>
+                    <?php $permalink = Typecho_Common::url($options->routingTable['page']['url'], $options->index);
+                    list ($scheme, $permalink) = explode(':', $permalink, 2);
+                    $permalink = ltrim($permalink, '/');
+                    $permalink = preg_replace("/\[([_a-z0-9-]+)[^\]]*\]/i", "{\\1}", $permalink);
+                    if ($page->have()) {
+                        $permalink = str_replace('{cid}', $page->cid, $permalink);
+                    }
+                    $input = '<input type="text" id="slug" name="slug" autocomplete="off" value="' . htmlspecialchars($page->slug) . '" class="mono" />';
+                    ?>
+                    <p class="mono url-slug">
+                        <label for="slug" class="visuallyhidden"><?php _e('网址缩略名'); ?></label>
+                        <?php echo preg_replace("/\{slug\}/i", $input, $permalink); ?>
+                    </p>
                     <p>
+                        <label for="text" class="visuallyhidden"><?php _e('页面内容'); ?></label>
                         <textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text" name="text" class="w-100 mono"><?php echo htmlspecialchars($page->text); ?></textarea>
                     </p>
                         

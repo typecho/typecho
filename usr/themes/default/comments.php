@@ -34,7 +34,7 @@
     		</p>
             <?php endif; ?>
     		<p>
-                <!-- <label for="textarea" class="required"><?php _e('内容'); ?></label> -->
+                <label for="textarea" class="required"><?php _e('内容'); ?></label>
                 <textarea rows="8" cols="50" name="text" class="textarea"><?php $this->remember('text'); ?></textarea>
             </p>
     		<p>
