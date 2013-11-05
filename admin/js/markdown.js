@@ -4858,10 +4858,20 @@ else
 
                     if (!chunk.selection) {
                         if (isImage) {
-                            chunk.selection = that.getString("imagename").replace('_', '\\_') || that.getString("imagedescription");
+                            var imagename = that.getString("imagename");
+                            if (!!imagename) {
+                                imagename = imagename.replace('_', '\\_');
+                            }
+
+                            chunk.selection = imagename || that.getString("imagedescription");
                         }
                         else {
-                            chunk.selection = that.getString("linkname").replace('_', '\\_') || that.getString("linkdescription");
+                            var linkname = that.getString("linkname");
+                            if (!!linkname) {
+                                linkname = linkname.replace('_', '\\_');
+                            }
+
+                            chunk.selection = linkname.replace('_', '\\_') || that.getString("linkdescription");
                         }
                     }
                 }
