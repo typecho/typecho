@@ -346,9 +346,8 @@ button {
   font-weight: bold; }
 
 #typecho-nav-list .child {
-  display: none;
   position: absolute;
-  top: 36px;
+  top: -9999em;
   margin: 0;
   min-width: 160px;
   max-width: 240px;
@@ -357,7 +356,7 @@ button {
   z-index: 250; }
 
 #typecho-nav-list .root:hover .child {
-  display: block; }
+  top: 36px; }
 
 #typecho-nav-list .child li a {
   color: #BBB;
