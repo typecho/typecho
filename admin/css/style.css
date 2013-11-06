@@ -700,10 +700,12 @@ a.operate-reply {
   color: #B94A48; }
 
 .typecho-list-table tr td .hidden-by-mouse {
-  visibility: hidden; }
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  opacity: 0; }
 
 .typecho-list-table tr:hover td .hidden-by-mouse {
-  visibility: visible; }
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+  opacity: 1; }
 
 /**
 * 评论管理

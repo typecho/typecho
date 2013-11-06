@@ -54,7 +54,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                     </p>
                 </div>
                 <div class="col-mb-12 col-tb-3" role="complementary">
-                        <section  class="typecho-post-option">
+                        <section  class="typecho-post-option" role="application">
                             <label for="date" class="typecho-label"><?php _e('发布日期'); ?></label>
                             <p><input class="typecho-date w-100" type="text" name="date" id="date" value="<?php $page->have() ? $page->date('Y-m-d H:i') : ''; ?>" /></p>
                         </section>

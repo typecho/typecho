@@ -434,11 +434,11 @@ a.operate-reply {
 
 
 .typecho-list-table tr td .hidden-by-mouse {
-  visibility: hidden;
+  @include opacity(0); 
 }
 
 .typecho-list-table tr:hover td .hidden-by-mouse {
-  visibility: visible;
+  @include opacity(1);
 }
 
 
