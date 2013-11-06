@@ -23,7 +23,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 ?></p>
             </div>
 
-            <div class="col-mb-12 col-tb-6 col-tb-offset-1 typecho-content-panel">
+            <div class="col-mb-12 col-tb-6 col-tb-offset-1 typecho-content-panel" role="form">
                 <section>
                     <h3><?php _e('个人资料'); ?></h3>
                     <?php Typecho_Widget::widget('Widget_Users_Profile')->profileForm()->render(); ?>

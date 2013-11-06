@@ -8,7 +8,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
 <div class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
-        <div class="col-group typecho-page-main">
+        <div class="col-group typecho-page-main" role="main">
             <div class="col-mb-12 typecho-list">
                 <div class="typecho-list-operate clearfix">
                 <form method="get">
@@ -21,7 +21,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     </ul>
                     </div>
                     </div>
-                    <div class="search">
+                    <div class="search" role="search">
                     <?php if ('' != $request->keywords): ?>
                     <a href="<?php $options->adminUrl('manage-pages.php'); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
                     <?php endif; ?>
