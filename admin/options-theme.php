@@ -15,7 +15,7 @@ include 'menu.php';
                     <li class="current"><a href="<?php $options->adminUrl('options-theme.php'); ?>"><?php _e('设置外观'); ?></a></li>
                 </ul>
             </div>
-            <div class="col-mb-12 col-tb-8 col-tb-offset-2">
+            <div class="col-mb-12 col-tb-8 col-tb-offset-2" role="form">
                 <?php Typecho_Widget::widget('Widget_Themes_Config')->config()->render(); ?>
             </div>
         </div>

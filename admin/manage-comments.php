@@ -10,7 +10,7 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == Typ
 <div class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
-        <div class="col-group typecho-page-main">
+        <div class="col-group typecho-page-main" role="main">
             <div class="col-mb-12 typecho-list">
                 <ul class="typecho-option-tabs clearfix">
                     <li<?php if(!isset($request->status) || 'approved' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php'
@@ -58,7 +58,7 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == Typ
                         </ul>
                         </div>
                         </div>
-                        <div class="search">
+                        <div class="search" role="search">
                         <?php if ('' != $request->keywords || '' != $request->category): ?>
                         <a href="<?php $options->adminUrl('manage-comments.php' 
                         . (isset($request->status) || isset($request->cid) ? '?' .
@@ -243,7 +243,7 @@ $(document).ready(function () {
         } else {
             var form = $('<form method="post" action="'
                 + t.attr('rel') + '" class="comment-reply">'
-                + '<p><textarea name="text" class="w-90" rows="3"></textarea></p>'
+                + '<p><label for="text" class="visuallyhidden"><?php _e('内容'); ?></label><textarea id="text" name="text" class="w-90" rows="3"></textarea></p>'
                 + '<p><button type="submit" class="btn-s primary"><?php _e('回复'); ?></button> <button type="button" class="btn-s cancel"><?php _e('取消'); ?></button></p>'
                 + '</form>').insertBefore($('.comment-action', td));
 

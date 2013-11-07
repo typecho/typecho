@@ -7,16 +7,19 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
 <div class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
-        <div class="col-group typecho-page-main typecho-post-area">
+        <div class="col-group typecho-page-main typecho-post-area" role="form">
             <form action="<?php $options->index('/action/contents-post-edit'); ?>" method="post" name="write_post">
-                <div class="col-mb-12 col-tb-9">
+                <div class="col-mb-12 col-tb-9" role="main">
                     <?php if ($post->draft && $post->draft['cid'] != $post->cid): ?>
                     <?php $postModifyDate = new Typecho_Date($post->draft['modified']); ?>
                     <cite class="edit-draft-notice"><?php _e('你正在编辑的是保存于 %s 的草稿, 你也可以 <a href="%s">删除它</a>', $postModifyDate->word(), 
                     Typecho_Common::url('/action/contents-post-edit?do=deleteDraft&cid=' . $post->cid, $options->index)); ?></cite>
                     <?php endif; ?>
 
-                    <p class="title"><input type="text" id="title" name="title" autocomplete="off" value="<?php echo htmlspecialchars($post->title); ?>" placeholder="<?php _e('标题'); ?>" class="w-100 text title" /></p>
+                    <p class="title">
+                        <label for="title" class="visuallyhidden"><?php _e('标题'); ?></label>
+                        <input type="text" id="title" name="title" autocomplete="off" value="<?php echo htmlspecialchars($post->title); ?>" placeholder="<?php _e('标题'); ?>" class="w-100 text title" />
+                    </p>
                     <?php $permalink = Typecho_Common::url($options->routingTable['post']['url'], $options->index);
                     list ($scheme, $permalink) = explode(':', $permalink, 2);
                     $permalink = ltrim($permalink, '/');
@@ -30,9 +33,12 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                     }
                     $input = '<input type="text" id="slug" name="slug" autocomplete="off" value="' . htmlspecialchars($post->slug) . '" class="mono" />';
                     ?>
-                    <p class="mono url-slug"><?php echo preg_replace("/\{slug\}/i", $input, $permalink); ?></p>
-
+                    <p class="mono url-slug">
+                        <label for="slug" class="visuallyhidden"><?php _e('网址缩略名'); ?></label>
+                        <?php echo preg_replace("/\{slug\}/i", $input, $permalink); ?>
+                    </p>
                     <p>
+                        <label for="text" class="visuallyhidden"><?php _e('文章内容'); ?></label>
                         <textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text" name="text" class="w-100 mono"><?php echo htmlspecialchars($post->text); ?></textarea>
                     </p>
 
@@ -51,8 +57,8 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         </span>
                     </p>
                 </div>
-                <div class="col-mb-12 col-tb-3">
-                    <section class="typecho-post-option">
+                <div class="col-mb-12 col-tb-3" role="complementary">
+                    <section class="typecho-post-option" role="application">
                         <label for="date" class="typecho-label"><?php _e('发布日期'); ?></label>
                         <p><input class="typecho-date w-100" type="text" name="date" id="date" value="<?php $post->have() ? $post->date('Y-m-d H:i') : ''; ?>" /></p>
                     </section>
@@ -82,6 +88,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
 
                     <?php Typecho_Plugin::factory('admin/write-post.php')->option($post); ?>
 
+                    <button type="button" id="advance-panel-btn"><?php _e('高级选项'); ?></button>
                     <div id="advance-panel">
                         <?php if($user->pass('editor', true)): ?>
                         <section class="typecho-post-option visibility-option">
@@ -116,7 +123,6 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         </section>
                         <?php Typecho_Plugin::factory('admin/write-post.php')->advanceOption($post); ?>
                     </div><!-- end #advance-panel -->
-                    <a href="###" id="advance-panel-btn"><?php _e('高级选项'); ?></a>
 
                     <?php if($post->have()): ?>
                     <?php $modified = new Typecho_Date($post->modified); ?>

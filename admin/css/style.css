@@ -346,9 +346,8 @@ button {
   font-weight: bold; }
 
 #typecho-nav-list .child {
-  display: none;
   position: absolute;
-  top: 36px;
+  top: -9999em;
   margin: 0;
   min-width: 160px;
   max-width: 240px;
@@ -357,7 +356,7 @@ button {
   z-index: 250; }
 
 #typecho-nav-list .root:hover .child {
-  display: block; }
+  top: 36px; }
 
 #typecho-nav-list .child li a {
   color: #BBB;
@@ -701,10 +700,12 @@ a.operate-reply {
   color: #B94A48; }
 
 .typecho-list-table tr td .hidden-by-mouse {
-  visibility: hidden; }
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  opacity: 0; }
 
 .typecho-list-table tr:hover td .hidden-by-mouse {
-  visibility: visible; }
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+  opacity: 1; }
 
 /**
 * 评论管理
@@ -870,7 +871,9 @@ a.operate-reply {
   font-size: .92857em; }
 
 .typecho-post-area #advance-panel-btn {
-  color: #999; }
+  padding: 0 10px;
+  height: 26px;
+  font-size: .92857em; }
 
 .typecho-post-area #advance-panel {
   display: none; }

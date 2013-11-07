@@ -7,27 +7,34 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
 <div class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
-        <div class="col-group typecho-page-main typecho-post-area">
+        <div class="col-group typecho-page-main typecho-post-area" role="form">
             <form action="<?php $options->index('/action/contents-page-edit'); ?>" method="post" name="write_page">
-                <div class="col-mb-12 col-tb-9">
+                <div class="col-mb-12 col-tb-9" role="main">
                     <?php if ($page->draft && $page->draft['cid'] != $page->cid): ?>
                     <?php $pageModifyDate = new Typecho_Date($page->draft['modified']); ?>
                         <cite class="edit-draft-notice"><?php _e('当前正在编辑的是保存于%s的草稿, 你可以<a href="%s">删除它</a>', $pageModifyDate->word(), 
                         Typecho_Common::url('/action/contents-page-edit?do=deleteDraft&cid=' . $page->cid, $options->index)); ?></cite>
                     <?php endif; ?>
 
-                    <p class="title"><input type="text" id="title" name="title" autocomplete="off" value="<?php echo htmlspecialchars($page->title); ?>" placeholder="<?php _e('标题'); ?>" class="w-100 text title" /></p>
-                        <?php $permalink = Typecho_Common::url($options->routingTable['page']['url'], $options->index);
-                        list ($scheme, $permalink) = explode(':', $permalink, 2);
-                        $permalink = ltrim($permalink, '/');
-                        $permalink = preg_replace("/\[([_a-z0-9-]+)[^\]]*\]/i", "{\\1}", $permalink);
-                        if ($page->have()) {
-                            $permalink = str_replace('{cid}', $page->cid, $permalink);
-                        }
-                        $input = '<input type="text" id="slug" name="slug" autocomplete="off" value="' . htmlspecialchars($page->slug) . '" class="mono" />';
-                        ?>
-                        <p class="mono url-slug"><?php echo preg_replace("/\{slug\}/i", $input, $permalink); ?></p>
+                    <p class="title">
+                        <label for="title" class="visuallyhidden"><?php _e('标题'); ?></label>
+                        <input type="text" id="title" name="title" autocomplete="off" value="<?php echo htmlspecialchars($page->title); ?>" placeholder="<?php _e('标题'); ?>" class="w-100 text title" />
+                    </p>
+                    <?php $permalink = Typecho_Common::url($options->routingTable['page']['url'], $options->index);
+                    list ($scheme, $permalink) = explode(':', $permalink, 2);
+                    $permalink = ltrim($permalink, '/');
+                    $permalink = preg_replace("/\[([_a-z0-9-]+)[^\]]*\]/i", "{\\1}", $permalink);
+                    if ($page->have()) {
+                        $permalink = str_replace('{cid}', $page->cid, $permalink);
+                    }
+                    $input = '<input type="text" id="slug" name="slug" autocomplete="off" value="' . htmlspecialchars($page->slug) . '" class="mono" />';
+                    ?>
+                    <p class="mono url-slug">
+                        <label for="slug" class="visuallyhidden"><?php _e('网址缩略名'); ?></label>
+                        <?php echo preg_replace("/\{slug\}/i", $input, $permalink); ?>
+                    </p>
                     <p>
+                        <label for="text" class="visuallyhidden"><?php _e('页面内容'); ?></label>
                         <textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text" name="text" class="w-100 mono"><?php echo htmlspecialchars($page->text); ?></textarea>
                     </p>
                         
@@ -46,8 +53,8 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                         </span>
                     </p>
                 </div>
-                <div class="col-mb-12 col-tb-3">
-                        <section  class="typecho-post-option">
+                <div class="col-mb-12 col-tb-3" role="complementary">
+                        <section  class="typecho-post-option" role="application">
                             <label for="date" class="typecho-label"><?php _e('发布日期'); ?></label>
                             <p><input class="typecho-date w-100" type="text" name="date" id="date" value="<?php $page->have() ? $page->date('Y-m-d H:i') : ''; ?>" /></p>
                         </section>
@@ -72,6 +79,8 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                         </section>
 
                         <?php Typecho_Plugin::factory('admin/write-page.php')->option($page); ?>
+
+                        <button type="button" id="advance-panel-btn"><?php _e('高级选项'); ?></button>
                         <div id="advance-panel">
                             <section class="typecho-post-option allow-option">
                                 <label class="typecho-label"><?php _e('权限控制'); ?></label>
@@ -87,7 +96,6 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                             
                             <?php Typecho_Plugin::factory('admin/write-page.php')->advanceOption($page); ?>
                         </div>
-                        <a href="###" id="advance-panel-btn"><?php _e('高级选项'); ?></a>
                         <?php if($page->have()): ?>
                         <?php $modified = new Typecho_Date($page->modified); ?>
                         <section class="typecho-post-option">

@@ -1,5 +1,5 @@
 <?php if(!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
-<div class="typecho-foot">
+<div class="typecho-foot" role="contentinfo">
     <div class="copyright">
         <?php _e('由 <a href="http://typecho.org">%s</a> 强力驱动, 版本 %s (%s)', $options->software, $prefixVersion, $suffixVersion); ?>
     </div>

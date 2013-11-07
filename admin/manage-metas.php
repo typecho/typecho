@@ -15,7 +15,7 @@ include 'menu.php';
                     </ul>
                 </div>
                 
-                <div class="col-mb-12 col-tb-8">
+                <div class="col-mb-12 col-tb-8" role="main">
                     <?php if(!isset($request->type) || 'category' == $request->get('type')): ?>
                     <?php Typecho_Widget::widget('Widget_Metas_Category_List')->to($categories); ?>
                     
@@ -123,7 +123,7 @@ include 'menu.php';
                     <?php endif; ?>
                     
                 </div>
-                <div class="col-mb-12 col-tb-4 typecho-mini-panel typecho-radius-topleft typecho-radius-topright typecho-radius-bottomleft typecho-radius-bottomright">
+                <div class="col-mb-12 col-tb-4" role="form">
                     <?php if(!isset($request->type) || 'category' == $request->get('type')): ?>
                         <?php Typecho_Widget::widget('Widget_Metas_Category_Edit')->form()->render(); ?>
                     <?php else: ?>
