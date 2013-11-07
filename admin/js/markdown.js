@@ -4871,7 +4871,7 @@ else
                                 linkname = linkname.replace('_', '\\_');
                             }
 
-                            chunk.selection = linkname.replace('_', '\\_') || that.getString("linkdescription");
+                            chunk.selection = linkname || that.getString("linkdescription");
                         }
                     }
                 }

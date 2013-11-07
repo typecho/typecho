@@ -143,19 +143,19 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == Typ
                                     <?php if('approved' == $comments->status): ?>
                                     <span class="weak"><?php _e('通过'); ?></span>
                                     <?php else: ?>
-                                    <a href="<?php $options->index('/action/comments-edit?do=approved&coid=' . $comments->coid); ?>"><?php _e('通过'); ?></a>
+                                    <a href="<?php $options->index('/action/comments-edit?do=approved&coid=' . $comments->coid); ?>" class="operate-approved"><?php _e('通过'); ?></a>
                                     <?php endif; ?>
                                     
                                     <?php if('waiting' == $comments->status): ?>
                                     <span class="weak"><?php _e('待审核'); ?></span>
                                     <?php else: ?>
-                                    <a href="<?php $options->index('/action/comments-edit?do=waiting&coid=' . $comments->coid); ?>"><?php _e('待审核'); ?></a>
+                                    <a href="<?php $options->index('/action/comments-edit?do=waiting&coid=' . $comments->coid); ?>" class="operate-waiting"><?php _e('待审核'); ?></a>
                                     <?php endif; ?>
                                     
                                     <?php if('spam' == $comments->status): ?>
                                     <span class="weak"><?php _e('垃圾'); ?></span>
                                     <?php else: ?>
-                                    <a href="<?php $options->index('/action/comments-edit?do=spam&coid=' . $comments->coid); ?>"><?php _e('垃圾'); ?></a>
+                                    <a href="<?php $options->index('/action/comments-edit?do=spam&coid=' . $comments->coid); ?>" class="operate-spam"><?php _e('垃圾'); ?></a>
                                     <?php endif; ?>
                                     
                                     <a href="#<?php $comments->theId(); ?>" rel="<?php $options->index('/action/comments-edit?do=edit&coid=' . $comments->coid); ?>" class="operate-edit"><?php _e('编辑'); ?></a>
@@ -226,6 +226,12 @@ $(document).ready(function () {
             });
         }
 
+        return false;
+    });
+
+    $('.operate-approved, .operate-waiting, .operate-spam').click(function () {
+        rememberScroll();
+        window.location.href = $(this).attr('href');
         return false;
     });
 
