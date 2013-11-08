@@ -178,7 +178,7 @@ class Markdown {
 		
 		$this->teardown();
 
-        $text = preg_replace_callback("/<\/?(\!doctype|html|head|body|link|title|input|select|button|textarea|style|script|noscript|iframe|object|embed)[^>]*>/is", 
+        $text = preg_replace_callback("/<\/?(\!doctype|html|head|body|link|title|input|select|button|textarea|style|noscript)[^>]*>/is", 
             array(&$this, '_transform_callback'), $text);
 
 		return $text . "\n";
