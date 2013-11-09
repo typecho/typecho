@@ -25,6 +25,7 @@ package:
 	rm -Rf build/admin/scss
 	rm -Rf build/admin/img/editor
 	rm -Rf build/admin/img/icons
+	rm -Rf build/admin/img/icons-2x
 	mkdir build/usr/uploads/
 	chmod 777 build/usr/uploads/
 	tar -cvvzf build.tar.gz build/
@@ -65,6 +66,7 @@ install:
 	rm -Rf build/admin/scss
 	rm -Rf build/admin/img/editor
 	rm -Rf build/admin/img/icons
+	rm -Rf build/admin/img/icons-2x
 	mkdir build/usr/uploads/
 	chmod 777 build/usr/uploads/
 	cp -Rf build/* ${DIR}
