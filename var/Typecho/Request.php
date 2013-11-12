@@ -700,7 +700,7 @@ class Typecho_Request
         if ($params) {
             $validated = true;
             foreach ($params as $key => $val) {
-                $validated = empty($val) ? ($val != $this->get($key)) : ($val == $this->get($key));
+                $validated = empty($val) ? $this->__isset($key) : ($val == $this->get($key));
 
                 if (!$validated) {
                     break;
