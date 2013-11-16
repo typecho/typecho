@@ -3,10 +3,14 @@
  */
 
 $icons: sprite-map("icons/*.png");
+$icons-2x: sprite-map("icons-2x/*.png");
 
 .icon-sprite-hack {
   background: $icons;
 }
+// .icon-2x-sprite-hack {
+//   background: $icons-2x;
+// }
 
 %i-16 {
   width: 16px;

@@ -134,7 +134,7 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
         $this->widget('Widget_Notice')->set(_t("外观设置已经保存"), NULL, 'success');
 
         /** 转向原页 */
-        $this->response->redirect(Typecho_Common::url('themes.php', $this->options->adminUrl));
+        $this->response->redirect(Typecho_Common::url('options-theme.php', $this->options->adminUrl));
     }
 
     /**

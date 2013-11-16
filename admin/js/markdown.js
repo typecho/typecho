@@ -4860,7 +4860,7 @@ else
                         if (isImage) {
                             var imagename = that.getString("imagename");
                             if (!!imagename) {
-                                imagename = imagename.replace('_', '\\_');
+                                imagename = imagename.replace(/_/g, '\\_');
                             }
 
                             chunk.selection = imagename || that.getString("imagedescription");
@@ -4868,7 +4868,7 @@ else
                         else {
                             var linkname = that.getString("linkname");
                             if (!!linkname) {
-                                linkname = linkname.replace('_', '\\_');
+                                linkname = linkname.replace(/_/g, '\\_');
                             }
 
                             chunk.selection = linkname || that.getString("linkdescription");
