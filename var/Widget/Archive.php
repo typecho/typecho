@@ -1533,8 +1533,9 @@ class Widget_Archive extends Widget_Abstract_Contents
         }
         
         if ($this->options->commentsThreaded && $this->is('single')) {
-            if (1 == $allows['commentReply']) {
-                $header .= "<script type=\"text/javascript\">
+            if ('' != $allows['commentReply']) {
+                if (1 == $allows['commentReply']) {
+                    $header .= "<script type=\"text/javascript\">
 //<![CDATA[
 var TypechoComment = {
     dom : function (id) {
@@ -1606,8 +1607,9 @@ var TypechoComment = {
 }
 //]]>
 </script>";
-            } else {
-                $header .= '<script src="' . $allows['commentReply'] . '" type="text/javascript"></script>';
+                } else {
+                    $header .= '<script src="' . $allows['commentReply'] . '" type="text/javascript"></script>';
+                }
             }
         }
 
