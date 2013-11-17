@@ -1165,6 +1165,32 @@ class Widget_Archive extends Widget_Abstract_Contents
             return;
         }
 
+        $handles = array(
+            'index'                     =>  'indexHandle',
+            'index_page'                =>  'indexHandle',
+            'archive'                   =>  'error404Handle',
+            'archive_page'              =>  'error404Handle',
+            404                         =>  'error404Handle',
+            'page'                      =>  'singleHandle',
+            'post'                      =>  'singleHandle',
+            'attachment'                =>  'singleHandle',
+            'comment_page'              =>  'singleHandle',
+            'category'                  =>  'categoryHandle',
+            'category_page'             =>  'categoryHandle',
+            'tag'                       =>  'tagHandle',
+            'tag_page'                  =>  'tagHandle',
+            'author'                    =>  'authorHandle',
+            'author_page'               =>  'authorHandle',
+            'archive_year'              =>  'dateHandle',
+            'archive_year_page'         =>  'dateHandle',
+            'archive_month'             =>  'dateHandle',
+            'archive_month_page'        =>  'dateHandle',
+            'archive_day'               =>  'dateHandle',
+            'archive_day_page'          =>  'dateHandle',
+            'search'                    =>  'searchHandle',
+            'search_page'               =>  'searchHandle'
+        );
+
         /** 处理搜索结果跳转 */
         if (isset($this->request->s)) {
             $filterKeywords = $this->request->filter('search')->s;
@@ -1177,9 +1203,8 @@ class Widget_Archive extends Widget_Abstract_Contents
         }
 
         /** 自定义首页功能 */
+        $frontPage = $this->options->frontPage;
         if (!$this->_invokeByFeed && ('index' == $this->parameter->type || 'index_page' == $this->parameter->type)) {
-            $frontPage = $this->options->frontPage;
-
             //显示某个页面
             if (0 === strpos($frontPage, 'page:')) {
                 // 对某些变量做hack
@@ -1191,6 +1216,12 @@ class Widget_Archive extends Widget_Abstract_Contents
                 $this->setThemeFile(substr($frontPage, 5));
                 return;
             }
+        }
+
+        if ('recent' != $frontPage && $this->options->frontArchive) {
+            $handles['archive'] = 'indexHandle';
+            $handles['archive_page'] = 'indexHandle';
+            $this->_archiveType = 'front';
         }
 
         /** 初始化分页变量 */
@@ -1230,31 +1261,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->_feedRssUrl = $this->options->feedRssUrl;
         $this->_feedAtomUrl = $this->options->feedAtomUrl;
         $this->_keywords = $this->options->keywords;
-        $this->_description = $this->options->description;
-
-        $handles = array(
-            'index'                     =>  'indexHandle',
-            'index_page'                =>  'indexHandle',
-            404                         =>  'error404Handle',
-            'page'                      =>  'singleHandle',
-            'post'                      =>  'singleHandle',
-            'attachment'                =>  'singleHandle',
-            'comment_page'              =>  'singleHandle',
-            'category'                  =>  'categoryHandle',
-            'category_page'             =>  'categoryHandle',
-            'tag'                       =>  'tagHandle',
-            'tag_page'                  =>  'tagHandle',
-            'author'                    =>  'authorHandle',
-            'author_page'               =>  'authorHandle',
-            'archive_year'              =>  'dateHandle',
-            'archive_year_page'         =>  'dateHandle',
-            'archive_month'             =>  'dateHandle',
-            'archive_month_page'        =>  'dateHandle',
-            'archive_day'               =>  'dateHandle',
-            'archive_day_page'          =>  'dateHandle',
-            'search'                    =>  'searchHandle',
-            'search_page'               =>  'searchHandle'
-        );
+        $this->_description = $this->options->description; 
 
         if (isset($handles[$this->parameter->type])) {
             $handle = $handles[$this->parameter->type];
@@ -1776,7 +1783,7 @@ var TypechoComment = {
             }
 
             //~ 最后找归档路径, 比如 archive.php 或者 single.php
-            if (!$validated && 'index' != $this->_archiveType) {
+            if (!$validated && 'index' != $this->_archiveType && 'front' != $this->_archiveType) {
                 $themeFile = $this->_archiveSingle ? 'single.php' : 'archive.php';
                 if (file_exists($this->_themeDir . $themeFile)) {
                     $this->_themeFile = $themeFile;

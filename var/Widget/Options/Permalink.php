@@ -27,7 +27,7 @@ class Widget_Options_Permalink extends Widget_Abstract_Options implements Widget
      * @param string $rule 待编码的路径
      * @return string
      */
-    private function encodeRule($rule)
+    protected function encodeRule($rule)
     {
         return str_replace(array('{cid}', '{slug}', '{category}', '{year}', '{month}', '{day}', '{mid}'),
             array('[cid:digital]', '[slug]', '[category]', '[year:digital:4]', '[month:digital:2]', '[day:digital:2]', '[mid:digital]'), $rule);
@@ -40,7 +40,7 @@ class Widget_Options_Permalink extends Widget_Abstract_Options implements Widget
      * @param string $rule 待解码的路径
      * @return string
      */
-    private function decodeRule($rule)
+    protected function decodeRule($rule)
     {
         return preg_replace("/\[([_a-z0-9-]+)[^\]]*\]/i", "{\\1}", $rule);
     }
@@ -293,7 +293,7 @@ RewriteRule . {$basePath}index.php [L]
             $routingTable['post']['url'] = $this->request->postPattern;
             $routingTable['page']['url'] = '/' . ltrim($this->encodeRule($this->request->pagePattern), '/');
             $routingTable['category']['url'] = '/' . ltrim($this->encodeRule($this->request->categoryPattern), '/');
-            $routingTable['category_page']['url'] = rtrim($routingTable['category']['url'], '/') . '/[page:digital]';
+            $routingTable['category_page']['url'] = rtrim($routingTable['category']['url'], '/') . '/[page:digital]/';
 
             if (isset($routingTable[0])) {
                 unset($routingTable[0]);

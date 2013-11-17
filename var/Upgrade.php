@@ -987,5 +987,22 @@ Typecho_Date::setTimezoneOffset($options->timezone);
             ))
             ->where('type = ? AND status = ?', 'page', 'draft'));
     }
+
+    /**
+     * v0_9r13_11_17  
+     * 
+     * @param mixed $db 
+     * @param mixed $options 
+     * @static
+     * @access public
+     * @return void
+     */
+    public static function v0_9r13_11_17($db, $options)
+    {
+        Helper::addRoute('archive', '/blog/', 'Widget_Archive', 'render', 'index');
+        Helper::addRoute('archive_page', '/blog/[page:digital]/', 'Widget_Archive', 'render', 'index_page');
+        $db->query($db->insert('table.options')
+            ->rows(array('name' => 'frontArchive', 'user' => 0, 'value' => 0)));
+    }
 }
 

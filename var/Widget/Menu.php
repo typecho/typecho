@@ -140,7 +140,7 @@ class Widget_Menu extends Typecho_Widget
         array(
             array(_t('基本'), _t('基本设置'), 'options-general.php', 'administrator'),
             array(_t('评论'), _t('评论设置'), 'options-discussion.php', 'administrator'),
-            array(_t('文章'), _t('阅读设置'), 'options-reading.php', 'administrator'),
+            array(_t('阅读'), _t('阅读设置'), 'options-reading.php', 'administrator'),
             array(_t('永久链接'), _t('永久链接设置'), 'options-permalink.php', 'administrator'),
         ));
 
