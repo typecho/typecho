@@ -1202,11 +1202,22 @@ class Widget_Archive extends Widget_Abstract_Contents
 
         /** 定时发布功能 */
         if (!$selectPlugged) {
-            if ($this->user->hasLogin()) {
-                $select = $this->select()->where('table.contents.status = ? OR
-                    (table.contents.status = ? AND table.contents.authorId = ?)', 'publish', 'private', $this->user->uid);
+            if ('post' == $this->parameter->type) {
+                if ($this->user->hasLogin()) {
+                    $select = $this->select()->where('table.contents.status = ? OR table.contents.status = ? OR
+                            (table.contents.status = ? AND table.contents.authorId = ?)',
+                            'publish', 'hidden', 'private', $this->user->uid);
+                } else {
+                    $select = $this->select()->where('table.contents.status = ? OR table.contents.status',
+                            'publish', 'hidden');
+                }
             } else {
-                $select = $this->select()->where('table.contents.status = ?', 'publish');
+                if ($this->user->hasLogin()) {
+                    $select = $this->select()->where('table.contents.status = ? OR
+                            (table.contents.status = ? AND table.contents.authorId = ?)', 'publish', 'private', $this->user->uid);
+                } else {
+                    $select = $this->select()->where('table.contents.status = ?', 'publish');
+                }
             }
             $select->where('table.contents.created < ?', $this->options->gmtTime);
         }

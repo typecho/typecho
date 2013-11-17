@@ -96,10 +96,11 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                             <ul>
                                 <?php if ($user->pass('editor', true)): ?>
                                 <li><input id="publish" value="publish" name="visibility" type="radio"<?php if (($post->status == 'publish' && !$post->password) || !$post->status) { ?> checked="true"<?php } ?> /> <label for="publish"><?php _e('公开'); ?></label></li>
-                                <li><input id="password" value="password" name="visibility" type="radio"<?php if ($post->password) { ?> checked="true"<?php } ?> /> <label for="password">密码保护 <input type="text" id="post-password" name="password" class="text-s" value="<?php $post->password(); ?>" size="16" /></label></li>
-                                <li><input id="private" value="private" name="visibility" type="radio"<?php if ($post->status == 'private') { ?> checked="true"<?php } ?> /> <label for="private">私密</label></li>
+                                <li><input id="hidden" value="hidden" name="visibility" type="radio"<?php if ($post->status == 'hidden') { ?> checked="true"<?php } ?> /> <label for="hidden"><?php _e('隐藏'); ?></label></li>
+                                <li><input id="password" value="password" name="visibility" type="radio"<?php if ($post->password) { ?> checked="true"<?php } ?> /> <label for="password"><?php _e('密码保护'); ?> <input type="text" id="post-password" name="password" class="text-s" value="<?php $post->password(); ?>" size="16" /></label></li>
+                                <li><input id="private" value="private" name="visibility" type="radio"<?php if ($post->status == 'private') { ?> checked="true"<?php } ?> /> <label for="private"><?php _e('私密'); ?></label></li>
                                 <?php endif; ?>
-                                <li><input id="waiting" value="waiting" name="visibility" type="radio"<?php if (!$user->pass('editor', true) || $post->status == 'waiting') { ?> checked="true"<?php } ?> /> <label for="waiting">待审核</label></li>
+                                <li><input id="waiting" value="waiting" name="visibility" type="radio"<?php if (!$user->pass('editor', true) || $post->status == 'waiting') { ?> checked="true"<?php } ?> /> <label for="waiting"><?php _e('待审核'); ?></label></li>
                             </ul>
                         </section>
                         <?php endif; ?>
