@@ -107,13 +107,14 @@ textarea {
   padding: 0;
 }
 #nav-menu a {
-  display: inline-block;
+  display: block;
   margin-right: -1px;
   padding: 0 20px;
   border: 1px solid #EEE;
   height: 32px;
   line-height: 32px;
   color: #444;
+  float: left;
 }
 #nav-menu a:hover,
 #nav-menu .current {
