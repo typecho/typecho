@@ -8,7 +8,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
 <div class="main">
     <div class="container typecho-dashboard">
         <?php include 'page-title.php'; ?>
-        <div class="col-group typecho-page-main">
+        <div class="colgroup typecho-page-main">
             <div class="col-mb-12 col-tb-3 typecho-dashboard-nav" role="main">
                 <p class="intro"><?php _e('欢迎使用 Typecho, 您可以使用下面的链接开始您的 Blog 之旅:'); ?></p>
             

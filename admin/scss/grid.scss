@@ -1,8 +1,8 @@
 /*
  * Bento Grid System
  * Source: https://github.com/fenbox/bento
- * Version: 1.2.5
- * Update: 2013.11.02
+ * Version: 1.2.7
+ * Update: 2013.11.15
  */
 
 //
@@ -19,11 +19,11 @@ $screen-desktop: 992px;
 $screen-wide: 1200px;
 
 // Column group
-.col-group {
+.colgroup {
   @extend .clearfix;
 }
 
-.col-group [class*="col-"] {
+.colgroup [class*="col-"] {
   float: left;
   min-height: 1px;
   padding-right: $gutter-width / 2;
@@ -33,8 +33,8 @@ $screen-wide: 1200px;
   box-sizing: border-box;
 }
 
-.col-group [class*="push-"],
-.col-group [class*="pull-"] {
+.colgroup [class*="push-"],
+.colgroup [class*="pull-"] {
   position: relative;
 }
 
@@ -91,15 +91,10 @@ $screen-wide: 1200px;
   }
 
   // Groups
-  .col-group {
+  .colgroup {
     margin-right: $gutter-width / -2;
     margin-left: $gutter-width / -2;
   }
-}
-
-.col-group .col-group {
-  margin-right: $gutter-width / -2;
-  margin-left: $gutter-width / -2;
 }
 
 

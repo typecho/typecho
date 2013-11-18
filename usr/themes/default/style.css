@@ -386,6 +386,11 @@ img.alignright {
   body {
     font-size: 81.25%;
   }
+  #nav-menu a {
+    float: none;
+    display: inline-block;
+    margin: 0 -2px;
+  }
 }
 
 @media (max-width: 768px) {

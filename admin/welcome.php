@@ -7,7 +7,7 @@ include 'menu.php';
 <div class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
-        <div class="col-group typecho-page-main">
+        <div class="colgroup typecho-page-main">
             <div class="col-mb-12">
                 <div id="typecho-welcome" class="message">
                     <form action="<?php $options->adminUrl(); ?>" method="get">

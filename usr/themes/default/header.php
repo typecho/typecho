@@ -27,7 +27,7 @@
 
 <header id="header" class="clearfix">
     <div class="container">
-        <div class="col-group">
+        <div class="colgroup">
             <div class="site-name col-mb-12 col-9">
                 <a id="logo" href="<?php $this->options->siteUrl(); ?>">
                     <?php if ($this->options->logoUrl): ?>
@@ -52,12 +52,12 @@
                     <?php endwhile; ?>
                 </nav>
             </div>
-        </div><!-- end .col-group -->
+        </div><!-- end .colgroup -->
     </div>
 </header><!-- end #header -->
 <div id="body">
     <div class="container">
-        <div class="col-group">
+        <div class="colgroup">
 
     
     

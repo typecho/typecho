@@ -7,7 +7,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
 <div class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
-        <div class="col-group typecho-page-main typecho-post-area" role="form">
+        <div class="colgroup typecho-page-main typecho-post-area" role="form">
             <form action="<?php $options->index('/action/contents-page-edit'); ?>" method="post" name="write_page">
                 <div class="col-mb-12 col-tb-9" role="main">
                     <?php if ($page->draft && $page->draft['cid'] != $page->cid): ?>
