@@ -4,10 +4,7 @@
         <?php $menu->output(); ?>
     </nav>
     <div class="operate">
-        <!-- <?php Typecho_Plugin::factory('admin/menu.php')->navBar(); _e('欢迎'); ?>, -->
-        <a href="<?php $options->adminUrl('profile.php'); ?>" class="author"><?php $user->screenName(); ?></a><!--
-        --><a class="exit" href="<?php $options->logoutUrl(); ?>"><?php _e('登出'); ?></a><!--
-        --><a href="<?php $options->siteUrl(); ?>">网站</a>
+        <a href="<?php $options->adminUrl('profile.php'); ?>" class="author"><?php $user->screenName(); ?></a><a class="exit" href="<?php $options->logoutUrl(); ?>"><?php _e('登出'); ?></a><a href="<?php $options->siteUrl(); ?>">网站</a>
     </div>
 </div>
 
