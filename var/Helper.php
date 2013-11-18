@@ -94,20 +94,33 @@ class Helper
      * @param string $url 路由路径
      * @param string $widget 组件名称
      * @param string $action 组件动作
+     * @param string $after 在某个路由后面
      * @return void
      */
-    public static function addRoute($name, $url, $widget, $action = NULL)
+    public static function addRoute($name, $url, $widget, $action = NULL, $after = NULL)
     {
         $routingTable = self::options()->routingTable;
         if (isset($routingTable[0])) {
             unset($routingTable[0]);
         }
 
-        $routingTable[$name] = array(
+        $pos = 0;
+        foreach ($routingTable as $key => $val) {
+            $pos ++;
+
+            if ($key == $after) {
+                break;
+            }
+        }
+
+        $pre = array_slice($routingTable, 0, $pos);
+        $next = array_slice($routingTable, $pos);
+
+        $routingTable = array_merge($pre, array($name => array(
             'url'       =>  $url,
             'widget'    =>  $widget,
             'action'    =>  $action
-        );
+        )), $next);
         self::options()->routingTable = $routingTable;
 
         $db = Typecho_Db::get();

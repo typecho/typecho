@@ -27,10 +27,10 @@ class Widget_Options_Permalink extends Widget_Abstract_Options implements Widget
      * @param string $rule 待编码的路径
      * @return string
      */
-    private function encodeRule($rule)
+    protected function encodeRule($rule)
     {
-        return str_replace(array('{cid}', '{slug}', '{category}', '{year}', '{month}', '{day}'),
-            array('[cid:digital]', '[slug]', '[category]', '[year:digital:4]', '[month:digital:2]', '[day:digital:2]'), $rule);
+        return str_replace(array('{cid}', '{slug}', '{category}', '{year}', '{month}', '{day}', '{mid}'),
+            array('[cid:digital]', '[slug]', '[category]', '[year:digital:4]', '[month:digital:2]', '[day:digital:2]', '[mid:digital]'), $rule);
     }
 
     /**
@@ -40,7 +40,7 @@ class Widget_Options_Permalink extends Widget_Abstract_Options implements Widget
      * @param string $rule 待解码的路径
      * @return string
      */
-    private function decodeRule($rule)
+    protected function decodeRule($rule)
     {
         return preg_replace("/\[([_a-z0-9-]+)[^\]]*\]/i", "{\\1}", $rule);
     }
@@ -91,6 +91,18 @@ class Widget_Options_Permalink extends Widget_Abstract_Options implements Widget
     public function checkPagePattern($value)
     {
         return strpos($value, '{slug}') !== false || strpos($value, '{cid}') !== false;
+    }
+
+    /**
+     * 检查categoryPattern里是否含有必要参数
+     * 
+     * @param mixed $value 
+     * @access public
+     * @return void
+     */
+    public function checkCategoryPattern($value)
+    {
+        return strpos($value, '{slug}') !== false || strpos($value, '{mid}') !== false;
     }
 
     /**
@@ -241,6 +253,11 @@ RewriteRule . {$basePath}index.php [L]
         $pagePattern->input->setAttribute('class', 'mono w-60');
         $form->addInput($pagePattern->addRule(array($this, 'checkPagePattern'), _t('独立页面路径中没有包含 {cid} 或者 {slug} ')));
 
+        /** 分类页面 */
+        $categoryPattern = new Typecho_Widget_Helper_Form_Element_Text('categoryPattern', NULL, $this->decodeRule($this->options->routingTable['category']['url']), _t('分类路径'), _t('可用参数: <code>{mid}</code> 分类 ID、<code>{slug}</code> 分类缩略名<br />请在路径中至少包含上述的一项参数.'));
+        $categoryPattern->input->setAttribute('class', 'mono w-60');
+        $form->addInput($categoryPattern->addRule(array($this, 'checkCategoryPattern'), _t('分类路径中没有包含 {mid} 或者 {slug} ')));
+
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Element_Submit('submit', NULL, _t('保存设置'));
         $submit->input->setAttribute('class', 'primary');
@@ -275,6 +292,8 @@ RewriteRule . {$basePath}index.php [L]
             $routingTable = $this->options->routingTable;
             $routingTable['post']['url'] = $this->request->postPattern;
             $routingTable['page']['url'] = '/' . ltrim($this->encodeRule($this->request->pagePattern), '/');
+            $routingTable['category']['url'] = '/' . ltrim($this->encodeRule($this->request->categoryPattern), '/');
+            $routingTable['category_page']['url'] = rtrim($routingTable['category']['url'], '/') . '/[page:digital]/';
 
             if (isset($routingTable[0])) {
                 unset($routingTable[0]);

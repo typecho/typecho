@@ -74,6 +74,8 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                                 <?php 
                                 if ($posts->hasSaved || 'post_draft' == $posts->type) {
                                     echo '<em class="status">' . _t('草稿') . '</em>';
+                                } else if ('hidden' == $posts->status) {
+                                    echo '<em class="status">' . _t('隐藏') . '</em>';
                                 } else if ('waiting' == $posts->status) {
                                     echo '<em class="status">' . _t('待审核') . '</em>';
                                 } else if ('private' == $posts->status) {

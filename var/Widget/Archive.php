@@ -1165,65 +1165,11 @@ class Widget_Archive extends Widget_Abstract_Contents
             return;
         }
 
-        /** 处理搜索结果跳转 */
-        if (isset($this->request->s)) {
-            $filterKeywords = $this->request->filter('search')->s;
-
-            /** 跳转到搜索页 */
-            if (NULL != $filterKeywords) {
-                $this->response->redirect(Typecho_Router::url('search',
-                array('keywords' => urlencode($filterKeywords)), $this->options->index));
-            }
-        }
-
-        /** 自定义首页功能 */
-        if (!$this->_invokeByFeed && ('index' == $this->parameter->type || 'index_page' == $this->parameter->type)) {
-            $frontPage = $this->options->frontPage;
-
-            //显示某个页面
-            if (0 === strpos($frontPage, 'page:')) {
-                // 对某些变量做hack
-                $this->request->setParam('cid', intval(substr($frontPage, 5)));
-                $this->parameter->type = 'page';
-                $this->_makeSinglePageAsFrontPage = true;
-            } else if (0 === strpos($frontPage, 'file:')) {
-                // 显示某个文件
-                $this->setThemeFile(substr($frontPage, 5));
-                return;
-            }
-        }
-
-        /** 初始化分页变量 */
-        $this->_currentPage = isset($this->request->page) ? $this->request->page : 1;
-        $hasPushed = false;
-
-        /** select初始化 */
-        $select = $this->pluginHandle()->trigger($selectPlugged)->select($this);
-
-        /** 定时发布功能 */
-        if (!$selectPlugged) {
-            if ($this->user->hasLogin()) {
-                $select = $this->select()->where('table.contents.status = ? OR
-                    (table.contents.status = ? AND table.contents.authorId = ?)', 'publish', 'private', $this->user->uid);
-            } else {
-                $select = $this->select()->where('table.contents.status = ?', 'publish');
-            }
-            $select->where('table.contents.created < ?', $this->options->gmtTime);
-        }
-
-        /** handle初始化 */
-        $this->pluginHandle()->handleInit($this, $select);
-
-        /** 初始化其它变量 */
-        $this->_feedUrl = $this->options->feedUrl;
-        $this->_feedRssUrl = $this->options->feedRssUrl;
-        $this->_feedAtomUrl = $this->options->feedAtomUrl;
-        $this->_keywords = $this->options->keywords;
-        $this->_description = $this->options->description;
-
         $handles = array(
             'index'                     =>  'indexHandle',
             'index_page'                =>  'indexHandle',
+            'archive'                   =>  'error404Handle',
+            'archive_page'              =>  'error404Handle',
             404                         =>  'error404Handle',
             'page'                      =>  'singleHandle',
             'post'                      =>  'singleHandle',
@@ -1244,6 +1190,78 @@ class Widget_Archive extends Widget_Abstract_Contents
             'search'                    =>  'searchHandle',
             'search_page'               =>  'searchHandle'
         );
+
+        /** 处理搜索结果跳转 */
+        if (isset($this->request->s)) {
+            $filterKeywords = $this->request->filter('search')->s;
+
+            /** 跳转到搜索页 */
+            if (NULL != $filterKeywords) {
+                $this->response->redirect(Typecho_Router::url('search',
+                array('keywords' => urlencode($filterKeywords)), $this->options->index));
+            }
+        }
+
+        /** 自定义首页功能 */
+        $frontPage = $this->options->frontPage;
+        if (!$this->_invokeByFeed && ('index' == $this->parameter->type || 'index_page' == $this->parameter->type)) {
+            //显示某个页面
+            if (0 === strpos($frontPage, 'page:')) {
+                // 对某些变量做hack
+                $this->request->setParam('cid', intval(substr($frontPage, 5)));
+                $this->parameter->type = 'page';
+                $this->_makeSinglePageAsFrontPage = true;
+            } else if (0 === strpos($frontPage, 'file:')) {
+                // 显示某个文件
+                $this->setThemeFile(substr($frontPage, 5));
+                return;
+            }
+        }
+
+        if ('recent' != $frontPage && $this->options->frontArchive) {
+            $handles['archive'] = 'indexHandle';
+            $handles['archive_page'] = 'indexHandle';
+            $this->_archiveType = 'front';
+        }
+
+        /** 初始化分页变量 */
+        $this->_currentPage = isset($this->request->page) ? $this->request->page : 1;
+        $hasPushed = false;
+
+        /** select初始化 */
+        $select = $this->pluginHandle()->trigger($selectPlugged)->select($this);
+
+        /** 定时发布功能 */
+        if (!$selectPlugged) {
+            if ('post' == $this->parameter->type) {
+                if ($this->user->hasLogin()) {
+                    $select = $this->select()->where('table.contents.status = ? OR table.contents.status = ? OR
+                            (table.contents.status = ? AND table.contents.authorId = ?)',
+                            'publish', 'hidden', 'private', $this->user->uid);
+                } else {
+                    $select = $this->select()->where('table.contents.status = ? OR table.contents.status',
+                            'publish', 'hidden');
+                }
+            } else {
+                if ($this->user->hasLogin()) {
+                    $select = $this->select()->where('table.contents.status = ? OR
+                            (table.contents.status = ? AND table.contents.authorId = ?)', 'publish', 'private', $this->user->uid);
+                } else {
+                    $select = $this->select()->where('table.contents.status = ?', 'publish');
+                }
+            }
+            $select->where('table.contents.created < ?', $this->options->gmtTime);
+        }
+
+        /** handle初始化 */
+        $this->pluginHandle()->handleInit($this, $select);
+
+        /** 初始化其它变量 */
+        $this->_feedUrl = $this->options->feedUrl;
+        $this->_feedRssUrl = $this->options->feedRssUrl;
+        $this->_feedAtomUrl = $this->options->feedAtomUrl;
+        $this->_keywords = $this->options->keywords;
+        $this->_description = $this->options->description; 
 
         if (isset($handles[$this->parameter->type])) {
             $handle = $handles[$this->parameter->type];
@@ -1765,7 +1783,7 @@ var TypechoComment = {
             }
 
             //~ 最后找归档路径, 比如 archive.php 或者 single.php
-            if (!$validated && 'index' != $this->_archiveType) {
+            if (!$validated && 'index' != $this->_archiveType && 'front' != $this->_archiveType) {
                 $themeFile = $this->_archiveSingle ? 'single.php' : 'archive.php';
                 if (file_exists($this->_themeDir . $themeFile)) {
                     $this->_themeFile = $themeFile;

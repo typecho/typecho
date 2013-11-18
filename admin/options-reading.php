@@ -19,5 +19,19 @@ include 'menu.php';
 include 'copyright.php';
 include 'common-js.php';
 include 'form-js.php';
+?>
+<script>
+$('#frontPage-recent,#frontPage-page,#frontPage-file').change(function () {
+    var t = $(this);
+    if (t.prop('checked')) {
+        if ('frontPage-recent' == t.attr('id')) {
+            $('.front-archive').addClass('hidden');
+        } else {
+            $('.front-archive').insertAfter(t.parent()).removeClass('hidden');
+        }
+    }
+});
+</script>
+<?php
 include 'footer.php';
 ?>

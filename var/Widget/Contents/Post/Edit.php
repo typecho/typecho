@@ -180,7 +180,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         if ($this->user->pass('editor', true)) {
             if (empty($contents['visibility'])) {
                 $contents['status'] = 'publish';
-            } else if ('password' == $contents['visibility'] || !in_array($contents['visibility'], array('private', 'waiting', 'publish'))) {
+            } else if ('password' == $contents['visibility'] || !in_array($contents['visibility'], array('private', 'waiting', 'publish', 'hidden'))) {
                 if (empty($contents['password']) || 'password' != $contents['visibility']) {
                     $contents['password'] = '';
                 }
@@ -253,7 +253,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         if ($this->user->pass('editor', true)) {
             if (empty($contents['visibility'])) {
                 $contents['status'] = 'publish';
-            } else if ('password' == $contents['visibility'] || !in_array($contents['visibility'], array('private', 'waiting', 'publish'))) {
+            } else if ('password' == $contents['visibility'] || !in_array($contents['visibility'], array('private', 'waiting', 'publish', 'hidden'))) {
                 if (empty($contents['password']) || 'password' != $contents['visibility']) {
                     $contents['password'] = '';
                 }
@@ -558,7 +558,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     public function writePost()
     {
         $contents = $this->request->from('password', 'allowComment',
-        'allowPing', 'allowFeed', 'slug', 'category', 'tags', 'text', 'do', 'visibility');
+        'allowPing', 'allowFeed', 'slug', 'category', 'tags', 'text', 'visibility');
 
         $contents['title'] = $this->request->get('title', _t('未命名文档'));
         $contents['created'] = $this->getCreated();

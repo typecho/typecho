@@ -18,7 +18,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Options_Reading extends Widget_Abstract_Options implements Widget_Interface_Do
+class Widget_Options_Reading extends Widget_Options_Permalink
 {
     /**
      * 输出表单结构
@@ -49,6 +49,14 @@ class Widget_Options_Reading extends Widget_Abstract_Options implements Widget_I
             'recent'   =>  _t('显示最新发布的文章')
         );
 
+        $frontPattern = '</label></span><span class="multiline front-archive%class%">'
+            . '<input type="checkbox" id="frontArchive" name="frontArchive" value="1"'
+            . ($this->options->frontArchive && 'recent' != $frontPageType ? ' checked' : '') .' />
+<label for="frontArchive">' . _t('同时将文章列表页路径更改为 %s',
+            '<input type="text" name="archivePattern" class="w-20 mono" value="' 
+            . htmlspecialchars($this->decodeRule($this->options->routingTable['archive']['url'])) . '" />') 
+            . '</label>';
+
         // 页面列表
         $pages = $this->db->fetchAll($this->db->select('cid', 'title')
         ->from('table.contents')->where('type = ?', 'page')
@@ -67,6 +75,7 @@ class Widget_Options_Reading extends Widget_Abstract_Options implements Widget_I
             }
             $pagesSelect .= '</select>';
             $frontPageOptions['page'] = _t('使用 %s 页面作为首页', '</label>' . $pagesSelect . '<label for="frontPage-frontPagePage">');
+            $selectedFrontPageType = 'page';
         }
 
         // 自定义文件列表
@@ -92,6 +101,17 @@ class Widget_Options_Reading extends Widget_Abstract_Options implements Widget_I
             $frontPageOptions['file'] = _t('直接调用 %s 模板文件',
              '</label><select name="frontPageFile" id="frontPage-frontPageFile">'
             . $filesSelect . '</select><label for="frontPage-frontPageFile">');
+            $selectedFrontPageType = 'file';
+        }
+        
+        if (isset($frontPageOptions[$frontPageType]) && 'recent' != $frontPageType && isset($selectedFrontPageType)) {
+            $selectedFrontPageType = $frontPageType;
+            $frontPattern = str_replace('%class%', '', $frontPattern);
+        }
+
+        if (isset($selectedFrontPageType)) {
+            $frontPattern = str_replace('%class%', ' hidden', $frontPattern);
+            $frontPageOptions[$selectedFrontPageType] .= $frontPattern;
         }
 
         $frontPage = new Typecho_Widget_Helper_Form_Element_Radio('frontPage', $frontPageOptions,
@@ -137,7 +157,7 @@ class Widget_Options_Reading extends Widget_Abstract_Options implements Widget_I
             $this->response->goBack();
         }
 
-        $settings = $this->request->from('postDateFormat', 'frontPage', 'pageSize', 'postsListSize', 'feedFullText');
+        $settings = $this->request->from('postDateFormat', 'frontPage', 'frontArchive', 'pageSize', 'postsListSize', 'feedFullText');
 
         if ('page' == $settings['frontPage'] && isset($this->request->frontPagePage) &&
         $this->db->fetchRow($this->db->select('cid')
@@ -155,6 +175,21 @@ class Widget_Options_Reading extends Widget_Abstract_Options implements Widget_I
 
         } else {
             $settings['frontPage'] = 'recent';
+        }
+
+        if ('recent' != $settings['frontPage']) {
+            $settings['frontArchive'] = empty($settings['frontArchive']) ? 0 : 1;
+            if ($settings['frontArchive']) {
+                $routingTable = $this->options->routingTable;
+                $routingTable['archive']['url'] = '/' . ltrim($this->encodeRule($this->request->archivePattern), '/');
+                $routingTable['archive_page']['url'] = rtrim($routingTable['archive']['url'], '/') . '/page/[page:digital]/';
+
+                if (isset($routingTable[0])) {
+                    unset($routingTable[0]);
+                }
+
+                $settings['routingTable'] = serialize($routingTable);
+            }
         }
 
         foreach ($settings as $name => $value) {
