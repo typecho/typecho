@@ -32,7 +32,7 @@ class Typecho_Widget_Helper_PageNavigator_Box extends Typecho_Widget_Helper_Page
      * @param string $currentClass 当前激活元素class
      * @return void
      */
-    public function render($prevWord = 'PREV', $nextWord = 'NEXT', $splitPage = 3, $splitWord = '...', $currentClass)
+    public function render($prevWord = 'PREV', $nextWord = 'NEXT', $splitPage = 3, $splitWord = '...', $currentClass = 'current')
     {
         if ($this->_total < 1) {
             return;
