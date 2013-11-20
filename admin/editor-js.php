@@ -140,9 +140,10 @@ $(document).ready(function () {
         var diff = $('.diff', preview);
 
         if (diff.length > 0) {
-            var p = diff.position();
+            var p = diff.position(), lh = diff.parent().css('line-height');
+            lh = !!lh ? parseInt(lh) : 0;
 
-            if (p.top < 0 || p.top > preview.height()) {
+            if (p.top < 0 || p.top > preview.height() - lh) {
                 preview.scrollTo(diff, {
                     offset  :   - 50
                 });
