@@ -275,6 +275,20 @@ Lexer.prototype.token = function(src, top) {
 
     // list
     if (cap = this.rules.list.exec(src)) {
+      // fix bug
+      var lines = cap[0].split("\n"), len = -1;
+      for (var num = 0; num < lines.length; num ++) {
+        var line = lines[num];
+        console.log(line);
+
+        if (!line.match(/^( *)(bull) [\s\S]+?/)) {
+            break;
+        }
+
+        len += line.length + 1;
+      }
+      console.log(len, cap[0].length);
+
       src = src.substring(cap[0].length);
       bull = cap[2];
 
