@@ -29,9 +29,10 @@ class Typecho_Widget_Helper_PageNavigator_Box extends Typecho_Widget_Helper_Page
      * @param string $nextWord 下一页文字
      * @param int $splitPage 分割范围
      * @param string $splitWord 分割字符
+     * @param string $currentClass 当前激活元素class
      * @return void
      */
-    public function render($prevWord = 'PREV', $nextWord = 'NEXT', $splitPage = 3, $splitWord = '...')
+    public function render($prevWord = 'PREV', $nextWord = 'NEXT', $splitPage = 3, $splitWord = '...', $currentClass)
     {
         if ($this->_total < 1) {
             return;
@@ -52,13 +53,13 @@ class Typecho_Widget_Helper_PageNavigator_Box extends Typecho_Widget_Helper_Page
 
             if ($from > 2) {
                 //输出省略号
-                echo '<li>' . $splitWord . '</li>';
+                echo '<li><span>' . $splitWord . '</span></li>';
             }
         }
 
         //输出中间页
         for ($i = $from; $i <= $to; $i ++) {
-                echo '<li' . ($i != $this->_currentPage ? '' : ' class="current"') . '><a href="' .
+                echo '<li' . ($i != $this->_currentPage ? '' : ' class="' . $currentClass . '"') . '><a href="' .
                 str_replace($this->_pageHolder, $i, $this->_pageTemplate) . $this->_anchor . '">'
                 . $i . '</a></li>';
         }
@@ -66,7 +67,7 @@ class Typecho_Widget_Helper_PageNavigator_Box extends Typecho_Widget_Helper_Page
         //输出最后页
         if ($to < $this->_totalPage) {
             if ($to < $this->_totalPage - 1) {
-                echo '<li>' . $splitWord . '</li>';
+                echo '<li><span>' . $splitWord . '</span></li>';
             }
 
             echo '<li><a href="' . str_replace($this->_pageHolder, $this->_totalPage, $this->_pageTemplate) . $this->_anchor . '">'

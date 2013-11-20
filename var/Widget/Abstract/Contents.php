@@ -90,8 +90,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $content = $this->pluginHandle(__CLASS__)->trigger($plugged)->excerpt($this->text, $this);
         if (!$plugged) {
             if ($this->isMarkdown) {
-                $markdown = new Markdown();
-                $content = $markdown->transform($content);
+                $content = MarkdownExtraExtended::defaultTransform($content);
             } else {
                 $content = Typecho_Common::cutParagraph($content);
             }
@@ -119,8 +118,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
 
         if (!$plugged) {
             if ($this->isMarkdown) {
-                $markdown = new Markdown();
-                $content = $markdown->transform($content);
+                $content = MarkdownExtraExtended::defaultTransform($content);
             } else {
                 $content = Typecho_Common::cutParagraph($content);
             }
