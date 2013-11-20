@@ -279,16 +279,15 @@ Lexer.prototype.token = function(src, top) {
       var lines = cap[0].split("\n"), len = -1;
       for (var num = 0; num < lines.length; num ++) {
         var line = lines[num];
-        console.log(line);
 
-        if (!line.match(/^( *)(bull) [\s\S]+?/)) {
+        if (!line.match(/^( *)(?:[*+-]|\d+\.) [\s\S]+?/) && !line.match(/^\s*$/)) {
             break;
         }
 
         len += line.length + 1;
       }
-      console.log(len, cap[0].length);
-
+        
+      cap[0] = cap[0].substring(0, len);
       src = src.substring(cap[0].length);
       bull = cap[2];
 
