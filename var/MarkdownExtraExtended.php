@@ -3106,11 +3106,6 @@ class MarkdownExtraExtended extends MarkdownExtra {
 		parent::__construct();
 	}
 	
-	function transform($text) {	
-		$text = parent::transform($text);				
-		return $text;		
-	}
-	
 	function doHardBreaks($text) {
 		# Do hard breaks:
 		# EXTENDED: changed to allow breaks without two spaces and just one new line
