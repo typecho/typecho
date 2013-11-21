@@ -1233,7 +1233,7 @@ class Widget_Archive extends Widget_Abstract_Contents
 
         /** 定时发布功能 */
         if (!$selectPlugged) {
-            if ('post' == $this->parameter->type) {
+            if ('post' == $this->parameter->type || 'page' == $this->parameter->type) {
                 if ($this->user->hasLogin()) {
                     $select = $this->select()->where('table.contents.status = ? OR table.contents.status = ? OR
                             (table.contents.status = ? AND table.contents.authorId = ?)',

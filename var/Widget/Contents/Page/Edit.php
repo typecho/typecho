@@ -60,10 +60,11 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
     public function writePage()
     {
         $contents = $this->request->from('text', 'template', 'allowComment',
-            'allowPing', 'allowFeed', 'slug', 'order');
+            'allowPing', 'allowFeed', 'slug', 'order', 'visibility');
 
         $contents['title'] = $this->request->get('title', _t('未命名页面'));
         $contents['created'] = $this->getCreated();
+        $contents['visibility'] = ('hidden' == $contents['visibility'] ? 'hidden' : 'publish');
 
         if ($this->request->markdown && $this->options->markdown) {
             $contents['text'] = '<!--markdown-->' . $contents['text'];

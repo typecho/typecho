@@ -66,12 +66,6 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                                     echo '<em class="status">' . _t('草稿') . '</em>';
                                 } else if ('hidden' == $pages->status) {
                                     echo '<em class="status">' . _t('隐藏') . '</em>';
-                                } else if ('waiting' == $pages->status) {
-                                    echo '<em class="status">' . _t('待审核') . '</em>';
-                                } else if ('private' == $pages->status) {
-                                    echo '<em class="status">' . _t('私密') . '</em>';
-                                } else if ($pages->password) {
-                                    echo '<em class="status">' . _t('密码保护') . '</em>';
                                 }
                                 ?>
                                 <?php if ('page_draft' != $pages->type): ?>

@@ -82,6 +82,14 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
 
                         <button type="button" id="advance-panel-btn"><?php _e('高级选项'); ?></button>
                         <div id="advance-panel">
+                            <section class="typecho-post-option visibility-option">
+                                <label class="typecho-label"><?php _e('公开度'); ?></label>
+                                <ul>
+                                    <li><input id="publish" value="publish" name="visibility" type="radio"<?php if ($page->status == 'publish' || !$page->status) { ?> checked="true"<?php } ?> /> <label for="publish"><?php _e('公开'); ?></label></li>
+                                    <li><input id="hidden" value="hidden" name="visibility" type="radio"<?php if ($page->status == 'hidden') { ?> checked="true"<?php } ?> /> <label for="hidden"><?php _e('隐藏'); ?></label></li>
+                                </ul>
+                            </section>
+
                             <section class="typecho-post-option allow-option">
                                 <label class="typecho-label"><?php _e('权限控制'); ?></label>
                                 <ul>
