@@ -206,7 +206,13 @@ class Widget_Menu extends Typecho_Widget
                         }
                     }
                 }
-
+                
+                if(!empty($currentUrlParts['query']) && substr($urlParts['path'],-13) == 'extending.php'){
+                    if( $urlParts['query'] != $currentUrlParts['query']){
+                        $validate = false;
+                    } 
+                }
+                
                 if ($hidden && $validate) {
                     $hidden = false;
                 }
