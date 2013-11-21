@@ -121,7 +121,7 @@ class Widget_User extends Typecho_Widget
         /** 开始验证用户 **/
         $user = $this->db->fetchRow($this->db->select()
         ->from('table.users')
-        ->where('name = ?', $name)
+        ->where((strpos($name, '@') ? 'mail' : 'name') . ' = ?', $name)
         ->limit(1));
 
         $hashValidate = $this->pluginHandle()->trigger($hashPluggable)->hashValidate($password, $user['password']);

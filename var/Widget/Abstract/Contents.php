@@ -512,12 +512,12 @@ class Widget_Abstract_Contents extends Widget_Abstract
 
         $value['slug'] = $tmpSlug;
         $value['category'] = $tmpCategory;
-
+        
         /** 处理密码保护流程 */
         if (!empty($value['password']) &&
         $value['password'] != $this->request->protectPassword &&
-        ($value['authorId'] != $this->user->uid
-        || !$this->user->pass('editor', true))) {
+        $value['authorId'] != $this->user->uid && 
+        !$this->user->pass('editor', true)) {
             $value['hidden'] = true;
 
             /** 抛出错误 */
