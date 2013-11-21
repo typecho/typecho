@@ -20,29 +20,7 @@ class Markdown {
 
 	### Version ###
 
-	const  MARKDOWNLIB_VERSION  =  "1.3";
-
-	### Simple Function Interface ###
-
-	public static function defaultTransform($text) {
-	#
-	# Initialize the parser and return the result of its transform method.
-	# This will work fine for derived classes too.
-	#
-		# Take parser class on which this function was called.
-		$parser_class = get_called_class();
-
-		# try to take parser from the static parser list
-		static $parser_list;
-		$parser =& $parser_list[$parser_class];
-
-		# create the parser it not already set
-		if (!$parser)
-			$parser = new $parser_class;
-
-		# Transform text using parser.
-		return $parser->transform($text);
-	}
+	const  MARKDOWNLIB_VERSION  =  "1.3";	
 
 	### Configuration Variables ###
 
@@ -3104,6 +3082,19 @@ class MarkdownExtraExtended extends MarkdownExtra {
 		);
 		
 		parent::__construct();
+	}
+
+    public static function defaultTransform($text) {
+		# try to take parser from the static parser list
+		static $parser;
+
+		# create the parser it not already set
+		if (!$parser) {
+			$parser = new MarkdownExtraExtended();
+        }
+
+		# Transform text using parser.
+		return $parser->transform($text);
 	}
 	
 	function doHardBreaks($text) {
