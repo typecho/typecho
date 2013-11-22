@@ -213,7 +213,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
             $this->update(array('value' => $value), $this->db->sql()->where('name = ?', $name));
         }
 
-        $this->widget('Widget_Notice')->set(_t("设置已经保存"), NULL, 'success');
+        $this->widget('Widget_Notice')->set(_t("设置已经保存"), 'success');
         $this->response->goBack();
     }
 

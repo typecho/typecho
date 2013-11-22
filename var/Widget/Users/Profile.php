@@ -259,7 +259,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         $this->widget('Widget_Notice')->highlight('user-' . $this->user->uid);
 
         /** 提示信息 */
-        $this->widget('Widget_Notice')->set(_t('您的档案已经更新'), NULL, 'success');
+        $this->widget('Widget_Notice')->set(_t('您的档案已经更新'), 'success');
 
         /** 转向原页 */
         $this->response->goBack();
@@ -299,7 +299,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
             }
         }
 
-        $this->widget('Widget_Notice')->set(_t("设置已经保存"), NULL, 'success');
+        $this->widget('Widget_Notice')->set(_t("设置已经保存"), 'success');
         $this->response->goBack();
     }
 
@@ -326,7 +326,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         $this->widget('Widget_Notice')->highlight('user-' . $this->user->uid);
 
         /** 提示信息 */
-        $this->widget('Widget_Notice')->set(_t('密码已经成功修改'), NULL, 'success');
+        $this->widget('Widget_Notice')->set(_t('密码已经成功修改'), 'success');
 
         /** 转向原页 */
         $this->response->goBack();
@@ -383,7 +383,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         }
 
         /** 提示信息 */
-        $this->widget('Widget_Notice')->set(_t("%s 设置已经保存", $info['title']), NULL, 'success');
+        $this->widget('Widget_Notice')->set(_t("%s 设置已经保存", $info['title']), 'success');
 
         /** 转向原页 */
         $this->response->redirect(Typecho_Common::url('profile.php', $this->options->adminUrl));

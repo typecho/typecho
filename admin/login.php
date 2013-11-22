@@ -1,26 +1,14 @@
 <?php
 include 'common.php';
-include 'header.php';
 
+if ($user->hasLogin()) {
+    $response->redirect($options->adminUrl);
+}
 $rememberName = Typecho_Cookie::get('__typecho_remember_name');
 Typecho_Cookie::delete('__typecho_remember_name');
-?>
 
-<?php if(!$user->hasLogin()): ?>
-    <?php if($notice->have() && in_array($notice->noticeType, array('success', 'notice', 'error'))): ?>
-    <div class="message <?php $notice->noticeType(); ?> popup">
-        <ul>
-            <?php $notice->lists(); ?>
-        </ul>
-    </div>
-    <?php endif; ?>
-<?php else: ?>
-    <div class="message notice popup">
-        <ul>
-            <li><?php _e('您已经登录到%s', $options->title); ?></li>
-        </ul>
-    </div>
-<?php endif; ?>
+include 'header.php';
+?>
 
 <div class="typecho-login">
     <h1>Typecho</h1>
@@ -42,12 +30,7 @@ Typecho_Cookie::delete('__typecho_remember_name');
     
     <p class="more-link">
         <a href="<?php $options->siteUrl(); ?>"><?php _e('返回首页'); ?></a>
-        <?php if($user->hasLogin()): ?>
-        <!-- &bull;
-        <a href=""><?php _e('忘记密码'); ?></a> -->
-        &bull;
-        <a href="<?php $options->adminUrl(); ?>"><?php _e('后台管理'); ?></a>
-        <?php elseif($options->allowRegister): ?>
+        <?php if($options->allowRegister): ?>
         &bull;
         <a href="<?php $options->registerUrl(); ?>"><?php _e('用户注册'); ?></a>
         <?php endif; ?>

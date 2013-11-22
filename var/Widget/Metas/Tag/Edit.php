@@ -218,7 +218,7 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
 
         /** 提示信息 */
         $this->widget('Widget_Notice')->set(_t('标签 <a href="%s">%s</a> 已经被增加',
-        $this->permalink, $this->name), NULL, 'success');
+        $this->permalink, $this->name), 'success');
 
         /** 转向原页 */
         $this->response->redirect(Typecho_Common::url('manage-metas.php?type=tag', $this->options->adminUrl));
@@ -250,7 +250,7 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
 
         /** 提示信息 */
         $this->widget('Widget_Notice')->set(_t('标签 <a href="%s">%s</a> 已经被更新',
-        $this->permalink, $this->name), NULL, 'success');
+        $this->permalink, $this->name), 'success');
 
         /** 转向原页 */
         $this->response->redirect(Typecho_Common::url('manage-metas.php?type=tag', $this->options->adminUrl));
@@ -277,7 +277,7 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
         }
 
         /** 提示信息 */
-        $this->widget('Widget_Notice')->set($deleteCount > 0 ? _t('标签已经删除') : _t('没有标签被删除'), NULL,
+        $this->widget('Widget_Notice')->set($deleteCount > 0 ? _t('标签已经删除') : _t('没有标签被删除'),
         $deleteCount > 0 ? 'success' : 'notice');
 
         /** 转向原页 */
@@ -293,13 +293,13 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
     public function mergeTag()
     {
         if (empty($this->request->merge)) {
-            $this->widget('Widget_Notice')->set(_t('请填写需要合并到的标签'), NULL, 'notice');
+            $this->widget('Widget_Notice')->set(_t('请填写需要合并到的标签'), 'notice');
             $this->response->goBack();
         }
 
         $merge = $this->scanTags($this->request->merge);
         if (empty($merge)) {
-            $this->widget('Widget_Notice')->set(_t('合并到的标签名不合法'), NULL, 'error');
+            $this->widget('Widget_Notice')->set(_t('合并到的标签名不合法'), 'error');
             $this->response->goBack();
         }
 
@@ -309,9 +309,9 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
             $this->merge($merge, 'tag', $tags);
 
             /** 提示信息 */
-            $this->widget('Widget_Notice')->set(_t('标签已经合并'), NULL, 'success');
+            $this->widget('Widget_Notice')->set(_t('标签已经合并'), 'success');
         } else {
-            $this->widget('Widget_Notice')->set(_t('没有选择任何标签'), NULL, 'notice');
+            $this->widget('Widget_Notice')->set(_t('没有选择任何标签'), 'notice');
         }
 
         /** 转向原页 */
@@ -332,9 +332,9 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
                 $this->refreshCountByTypeAndStatus($tag, 'post', 'publish');
             }
 
-            $this->widget('Widget_Notice')->set(_t('标签刷新已经完成'), NULL, 'success');
+            $this->widget('Widget_Notice')->set(_t('标签刷新已经完成'), 'success');
         } else {
-            $this->widget('Widget_Notice')->set(_t('没有选择任何标签'), NULL, 'notice');
+            $this->widget('Widget_Notice')->set(_t('没有选择任何标签'), 'notice');
         }
 
         /** 转向原页 */

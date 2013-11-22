@@ -25,8 +25,10 @@ class Widget_Init extends Typecho_Widget
         /** 对变量赋值 */
         $options = $this->widget('Widget_Options');
 
-        /** 开始会话 */
-        @session_start();
+        /** 开始会话, 减小负载只针对后台打开session支持 */
+        if ($this->widget('Widget_User')->hasLogin()) {
+            @session_start();
+        }
 
         /** cookie初始化 */
         Typecho_Cookie::setPrefix($options->siteUrl);

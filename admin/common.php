@@ -17,7 +17,6 @@ Typecho_Plugin::factory('admin/common.php')->begin();
 
 Typecho_Widget::widget('Widget_Options')->to($options);
 Typecho_Widget::widget('Widget_User')->to($user);
-Typecho_Widget::widget('Widget_Notice')->to($notice);
 Typecho_Widget::widget('Widget_Menu')->to($menu);
 
 /** 初始化上下文 */
@@ -48,9 +47,9 @@ if (!$user->logged && !Typecho_Cookie::get('__typecho_first_run') && !empty($cur
         if ($mustUpgrade && 'upgrade.php' != $adminFile) {
             $response->redirect(Typecho_Common::url('upgrade.php', $options->adminUrl));
         } else if (!$mustUpgrade && 'upgrade.php' == $adminFile) {
-            $response->redirect(Typecho_Common::url('index.php', $options->adminUrl));
+            $response->redirect($options->adminUrl);
         } else if (!$mustUpgrade && 'welcome.php' == $adminFile && $user->logged) {
-            $response->redirect(Typecho_Common::url('index.php', $options->adminUrl));
+            $response->redirect($options->adminUrl);
         }
     }
 

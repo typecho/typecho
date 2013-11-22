@@ -1259,8 +1259,10 @@ class Markdown {
 
 
 	protected function doAutoLinks($text) {
-		$text = preg_replace_callback('{<((https?|ftp|dict):[^\'">\s]+)>}i', 
+		$text = preg_replace_callback('/(="|<)?\b(https?|ftp)(:\/\/[-A-Z0-9+&@#\/%?=~_|\[\]\(\)!:,\.;]*[-A-Z0-9+&@#\/%=~_|\[\])])(?=$|\W)/i', 
 			array(&$this, '_doAutoLinks_url_callback'), $text);
+		$text = preg_replace_callback('{<((https?|ftp|dict):[^\'">\s]+)>}i', 
+			array(&$this, '_doAutoLinks_url_callback_replace'), $text);
 
 		# Email addresses: <address@domain.foo>
 		$text = preg_replace_callback('{
@@ -1285,10 +1287,49 @@ class Markdown {
 
 		return $text;
 	}
+    protected function _doAutoLinks_url_callback_replace($matches) {
+        $url = $this->encodeAttribute($matches[1]);
+        $link = "<a rel=\"nofollow\" href=\"$url\">$url</a>";
+        return $this->hashPart($link);
+    }
+
 	protected function _doAutoLinks_url_callback($matches) {
-		$url = $this->encodeAttribute($matches[1]);
-		$link = "<a href=\"$url\">$url</a>";
-		return $this->hashPart($link);
+        list ($wholeMatch, $lookbehind, $protocol, $link) = $matches;
+
+        if ($lookbehind) {
+            return $wholeMatch;
+        }
+
+        if ($link[strlen($link) - 1] != ')') {
+            return '<' . $protocol . $link . '>';
+        }
+
+        $level = 0;
+        if (preg_match_all("/[()]/", $link, $matches)) {
+            foreach ($matches[0] as $op) {
+                if ('(' == $op) {
+                    if ($level <= 0) {
+                        $level = 1;
+                    } else {
+                        $level ++;
+                    }
+                } else {
+                    $level --;
+                }
+            }
+        }
+
+        $tail = '';
+        if ($level < 0) {
+            $link = preg_replace("/\){1," . (- $level) . "}$/", $link, function ($matches) use (&$tail) {
+                $tail = $matches[0];
+                return '';
+            });
+        }
+
+		$url = $this->encodeAttribute($matches[2] . $matches[3]);
+		$link = "<a rel=\"nofollow\" href=\"$url\">$url</a>";
+		return '<' . $protocol . $link . '>' . $tail;
 	}
 	protected function _doAutoLinks_email_callback($matches) {
 		$address = $matches[1];
@@ -2258,7 +2299,7 @@ class MarkdownExtra extends Markdown {
 			$url = $this->urls[$link_id];
 			$url = $this->encodeAttribute($url);
 			
-			$result = "<a href=\"$url\"";
+			$result = "<a rel=\"nofollow\" href=\"$url\"";
 			if ( isset( $this->titles[$link_id] ) ) {
 				$title = $this->titles[$link_id];
 				$title = $this->encodeAttribute($title);
@@ -2286,7 +2327,7 @@ class MarkdownExtra extends Markdown {
 
 		$url = $this->encodeAttribute($url);
 
-		$result = "<a href=\"$url\"";
+		$result = "<a rel=\"nofollow\" href=\"$url\"";
 		if (isset($title)) {
 			$title = $this->encodeAttribute($title);
 			$result .=  " title=\"$title\"";

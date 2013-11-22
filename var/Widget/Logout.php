@@ -30,5 +30,6 @@ class Widget_Logout extends Widget_Abstract_Users implements Widget_Interface_Do
         $this->user->logout();
         $this->pluginHandle()->logout();
         $this->response->goBack(NULL, $this->options->index);
+        @session_destroy();
     }
 }

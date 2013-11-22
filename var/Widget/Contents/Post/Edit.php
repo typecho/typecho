@@ -581,7 +581,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             /** 设置提示信息 */
             $this->widget('Widget_Notice')->set('post' == $this->type ?
             _t('文章 "<a href="%s">%s</a>" 已经发布', $this->permalink, $this->title) :
-            _t('文章 "%s" 等待审核', $this->title), NULL, 'success');
+            _t('文章 "%s" 等待审核', $this->title), 'success');
 
             /** 设置高亮 */
             $this->widget('Widget_Notice')->highlight($this->theId);
@@ -605,7 +605,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                 ));
             } else {
                 /** 设置提示信息 */
-                $this->widget('Widget_Notice')->set(_t('草稿 "%s" 已经被保存', $this->title), NULL, 'success');
+                $this->widget('Widget_Notice')->set(_t('草稿 "%s" 已经被保存', $this->title), 'success');
 
                 /** 返回原页面 */
                 $this->response->redirect(Typecho_Common::url('write-post.php?cid=' . $this->cid, $this->options->adminUrl));
@@ -671,7 +671,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         }
 
         /** 设置提示信息 */
-        $this->widget('Widget_Notice')->set($deleteCount > 0 ? _t('文章已经被删除') : _t('没有文章被删除'), NULL,
+        $this->widget('Widget_Notice')->set($deleteCount > 0 ? _t('文章已经被删除') : _t('没有文章被删除'),
         $deleteCount > 0 ? 'success' : 'notice');
 
         /** 返回原网页 */
@@ -709,7 +709,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         }
         
         /** 设置提示信息 */
-        $this->widget('Widget_Notice')->set($deleteCount > 0 ? _t('草稿已经被删除') : _t('没有草稿被删除'), NULL,
+        $this->widget('Widget_Notice')->set($deleteCount > 0 ? _t('草稿已经被删除') : _t('没有草稿被删除'),
         $deleteCount > 0 ? 'success' : 'notice');
         
         /** 返回原网页 */
