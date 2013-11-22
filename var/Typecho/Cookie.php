@@ -91,10 +91,10 @@ class Typecho_Cookie
         /** 对数组型COOKIE的写入支持 */
         if (is_array($value)) {
             foreach ($value as $name => $val) {
-                setcookie("{$key}[{$name}]", $val, $expire, $path);
+                setrawcookie("{$key}[{$name}]", rawurlencode($val), $expire, $path);
             }
         } else {
-            setcookie($key, $value, $expire, $path);
+            setrawcookie($key, rawurlencode($value), $expire, $path);
         }
         
         $_COOKIE[$key] = $value;
