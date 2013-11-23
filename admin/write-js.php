@@ -149,7 +149,7 @@ $(document).ready(function() {
                     cid = o.cid;
                     autoSave.text('<?php _e('内容已经保存'); ?>' + ' (' + o.time + ')').effect('highlight', 1000);
                     locked = false;
-                });
+                }, 'json');
             }
         }, 10000);
     }

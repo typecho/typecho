@@ -261,7 +261,7 @@ $(document).ready(function () {
                 $.post(t.attr('action'), t.serialize(), function (o) {
                     reply.html(o.comment.content)
                         .effect('highlight');
-                });
+                }, 'json');
 
                 t.remove();
                 return false;
@@ -333,7 +333,7 @@ $(document).ready(function () {
             $.post(t.attr('action'), comment, function (o) {
                 $('.comment-content', oldTr).html(o.comment.content)
                     .effect('highlight');
-            });
+            }, 'json');
             
             oldTr.show();
             tr.remove();
