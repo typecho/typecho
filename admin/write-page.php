@@ -80,7 +80,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
 
                         <?php Typecho_Plugin::factory('admin/write-page.php')->option($page); ?>
 
-                        <button type="button" id="advance-panel-btn"><?php _e('高级选项'); ?></button>
+                        <button type="button" id="advance-panel-btn" class="btn-xs"><?php _e('高级选项'); ?></button>
                         <div id="advance-panel">
                             <section class="typecho-post-option visibility-option">
                                 <label class="typecho-label"><?php _e('公开度'); ?></label>

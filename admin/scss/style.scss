@@ -657,8 +657,6 @@ a.operate-reply {
 }
 
 #advance-panel-btn {
-  padding: 0 10px;
-  height: 26px;
   font-size: .92857em;
 }
 
@@ -676,8 +674,12 @@ a.operate-reply {
 
   .description {
     margin: 0;
-    padding: 10px 0 5px;
+    padding: 10px 0;
     border-top: 1px solid #F0F0EC;
+    text-align: right;
+    button {
+      float: left;
+    }
   }
 
   .typecho-label {
