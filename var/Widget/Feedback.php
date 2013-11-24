@@ -77,7 +77,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
 
         $validator->addRule('text', 'required', _t('必须填写评论内容'));
 
-        $comment['text'] = $this->request->filter(array($this, 'filterText'))->text;
+        $comment['text'] = $this->request->text;
 
         /** 对一般匿名访问者,将用户数据保存一个月 */
         if (!$this->user->hasLogin()) {
@@ -174,7 +174,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
 
         $trackback['author'] = $this->request->filter('trim')->blog_name;
         $trackback['url'] = $this->request->filter('trim')->url;
-        $trackback['text'] = $this->request->filter(array($this, 'filterText'))->excerpt;
+        $trackback['text'] = $this->request->excerpt;
 
         //检验格式
         $validator = new Typecho_Validate();

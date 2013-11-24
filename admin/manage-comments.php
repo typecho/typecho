@@ -243,7 +243,7 @@ $(document).ready(function () {
         } else {
             var form = $('<form method="post" action="'
                 + t.attr('rel') + '" class="comment-reply">'
-                + '<p><label for="text" class="visuallyhidden"><?php _e('内容'); ?></label><textarea id="text" name="text" class="w-90" rows="3"></textarea></p>'
+                + '<p><label for="text" class="visuallyhidden"><?php _e('内容'); ?></label><textarea id="text" name="text" class="w-90 mono" rows="3"></textarea></p>'
                 + '<p><button type="submit" class="btn-s primary"><?php _e('回复'); ?></button> <button type="button" class="btn-s cancel"><?php _e('取消'); ?></button></p>'
                 + '</form>').insertBefore($('.comment-action', td));
 
@@ -286,7 +286,7 @@ $(document).ready(function () {
                         + '<input class="text-s w-100" type="text" name="url" id="' + id + '-url"></p></form></td>'
                         + '<td valign="top"><form method="post" action="'
                         + t.attr('rel') + '" class="comment-edit-content"><p><label for="' + id + '-text"><?php _e('内容'); ?></label>'
-                        + '<textarea name="text" id="' + id + '-text" rows="6" class="w-90"></textarea></p>'
+                        + '<textarea name="text" id="' + id + '-text" rows="6" class="w-90 mono"></textarea></p>'
                         + '<p><button type="submit" class="btn-s primary"><?php _e('提交'); ?></button> '
                         + '<button type="button" class="btn-s cancel"><?php _e('取消'); ?></button></p></form></td></tr>')
                         .data('id', id).data('comment', comment).insertAfter(tr);

@@ -37,6 +37,18 @@ CREATE TABLE typecho_contents ( "cid" INTEGER NOT NULL PRIMARY KEY,
 CREATE UNIQUE INDEX typecho_contents_slug ON typecho_contents ("slug");
 CREATE INDEX typecho_contents_created ON typecho_contents ("created");
 
+CREATE TABLE "typecho_fields" ("cid" INTEGER NOT NULL,
+  "name" varchar(200) NOT NULL,
+  "type" varchar(8) default 'str',
+  "str_value" text,
+  "int_value" int(10) default '0',
+  "float_value" real default '0'
+);
+
+CREATE UNIQUE INDEX typecho_fields_cid_name ON typecho_fields ("cid", "name");
+CREATE INDEX typecho_fields_int_value ON typecho_fields ("int_value");
+CREATE INDEX typecho_fields_float_value ON typecho_fields ("float_value");
+
 CREATE TABLE typecho_metas ( "mid" INTEGER NOT NULL PRIMARY KEY, 
 "name" varchar(200) default NULL , 
 "slug" varchar(200) default NULL , 

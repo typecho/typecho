@@ -47,6 +47,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
 
         $commentsShowOptions = array(
             'commentsShowCommentOnly'   =>  _t('仅显示评论, 不显示 Pingback 和 Trackback'),
+            'commentsMarkdown'      =>  _t('在评论中使用Markdown语法'),
             'commentsShowUrl'       =>  _t('评论者名称显示时自动加上其个人主页链接'),
             'commentsUrlNofollow'   =>  _t('对评论者个人主页链接使用 <a href="http://en.wikipedia.org/wiki/Nofollow">nofollow 属性</a>'),
             'commentsAvatar'        =>  _t('启用 <a href="http://gravatar.com">Gravatar</a> 头像服务, 最高显示评级为 %s 的头像',
@@ -74,6 +75,10 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         $commentsShowOptionsValue = array();
         if ($this->options->commentsShowCommentOnly) {
             $commentsShowOptionsValue[] = 'commentsShowCommentOnly';
+        }
+
+        if ($this->options->commentsMarkdown) {
+            $commentsShowOptionsValue[] = 'commentsMarkdown';
         }
 
         if ($this->options->commentsShowUrl) {
@@ -182,6 +187,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
                 'commentsPostTimeout', 'commentsPostInterval', 'commentsRequireModeration', 'commentsRequireURL', 'commentsHTMLTagAllowed', 'commentsStopWords', 'commentsIpBlackList');
 
         $settings['commentsShowCommentOnly'] = $this->isEnableByCheckbox($settings['commentsShow'], 'commentsShowCommentOnly');
+        $settings['commentsMarkdown'] = $this->isEnableByCheckbox($settings['commentsShow'], 'commentsMarkdown');
         $settings['commentsShowUrl'] = $this->isEnableByCheckbox($settings['commentsShow'], 'commentsShowUrl');
         $settings['commentsUrlNofollow'] = $this->isEnableByCheckbox($settings['commentsShow'], 'commentsUrlNofollow');
         $settings['commentsAvatar'] = $this->isEnableByCheckbox($settings['commentsShow'], 'commentsAvatar');
