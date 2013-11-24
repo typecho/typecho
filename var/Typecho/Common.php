@@ -20,7 +20,7 @@
 class Typecho_Common
 {
     /** 程序版本 */
-    const VERSION = '0.9/13.11.17';
+    const VERSION = '0.9/13.11.24';
 
     /**
      * 缓存的包含路径
@@ -634,7 +634,8 @@ EOF;
     public static function stripTags($html, $allowableTags = NULL)
     {
         if (!empty($allowableTags) && preg_match_all("/\<([a-z]+)([^>]*)\>/is", $allowableTags, $tags)) {
-            self::$_allowableTags = '|' . implode('|', $tags[1]) . '|';
+            self::$_allowableTags = '|' . implode('|', 
+                array_unique(array_map('trim', array_map('strtolower', $tags[1])))) . '|';
 
             if (in_array('code', $tags[1])) {
                 $html = self::lockHTML($html);

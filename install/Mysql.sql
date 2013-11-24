@@ -69,6 +69,24 @@ CREATE TABLE `typecho_contents` (
 -- --------------------------------------------------------
 
 --
+-- 表的结构 `typecho_fields`
+--
+
+CREATE TABLE `typecho_fields` (
+  `cid` int(10) unsigned NOT NULL,
+  `name` varchar(200) NOT NULL,
+  `type` varchar(8) default 'str',
+  `str_value` text,
+  `int_value` int(10) default '0',
+  `float_value` float default '0',
+  PRIMARY KEY  (`cid`,`name`),
+  KEY `int_value` (`int_value`),
+  KEY `float_value` (`float_value`)
+) ENGINE=MyISAM  DEFAULT CHARSET=%charset%;
+
+-- --------------------------------------------------------
+
+--
 -- 表的结构 `typecho_metas`
 --
 
