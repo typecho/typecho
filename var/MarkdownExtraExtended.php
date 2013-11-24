@@ -146,10 +146,21 @@ class Markdown {
 		$this->teardown();
 
         $text = preg_replace_callback("/<\/?(\!doctype|html|head|body|link|title|input|select|button|textarea|style|noscript)[^>]*>/is", 
-            'htmlspecialchars', $text);
+            array(&$this, '_doEscape_callback'), $text);
 
 		return $text . "\n";
 	}
+
+    /**
+     * _doEscape_callback  
+     * 
+     * @param array $matches 
+     * @access protected
+     * @return string
+     */
+    protected function _doEscape_callback($matches) {
+        return htmlspecialchars($matches[0], ENT_NOQUOTES);
+    }
 	
 	protected $document_gamut = array(
 		# Strip link definitions, store in hashes.
@@ -936,7 +947,7 @@ class Markdown {
 		return $text;
 	}
 	protected function _doCodeBlocks_callback($matches) {
-		$codeblock = $matches[1];
+		$codeblock = $this->unhashHTMLBlocks($matches[1]);
 
 		$codeblock = $this->outdent($codeblock);
 		$codeblock = htmlspecialchars($codeblock, ENT_NOQUOTES);
@@ -1527,9 +1538,13 @@ class Markdown {
 			array(&$this, '_unhash_callback'), $text);
 	}
 	protected function _unhash_callback($matches) {
-		return $this->html_hashes[$matches[0]];
+		return $this->html_hashes[trim($matches[0])];
 	}
 
+    protected function unhashHTMLBlocks($text) {
+		return preg_replace_callback("/\n\n(.)\\x1A[0-9]+\\1\n\n/", 
+			array(&$this, '_unhash_callback'), $text);
+    }
 }
 
 #
@@ -3207,7 +3222,7 @@ class MarkdownExtraExtended extends MarkdownExtra {
 	}
 	
 	function _doFencedCodeBlocks_callback($matches) {
-		$codeblock = $matches[4];
+		$codeblock = $this->unhashHTMLBlocks($matches[4]);
 		$codeblock = htmlspecialchars($codeblock, ENT_NOQUOTES);
 		$codeblock = preg_replace_callback('/^\n+/',
 			array(&$this, '_doFencedCodeBlocks_newlines'), $codeblock);
