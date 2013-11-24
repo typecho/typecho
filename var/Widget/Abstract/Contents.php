@@ -76,6 +76,25 @@ class Widget_Abstract_Contents extends Widget_Abstract
     }
 
     /**
+     * __fields
+     * 
+     * @access protected
+     * @return void
+     */
+    protected function __fields()
+    {
+        $fields = array();
+        $rows = $this->db->fetchAll($this->db->select()->from('table.fields')
+            ->where('cid = ?', $this->cid));
+
+        foreach ($rows as $row) {
+            $fields[$row['name']] = $fields[$fields['type'] . '_value'];
+        }
+
+        return new Typecho_Config($fields);
+    }
+
+    /**
      * 获取文章内容摘要
      *
      * @access protected
@@ -381,6 +400,133 @@ class Widget_Abstract_Contents extends Widget_Abstract
         ->where('cid = ?', $cid));
 
         return $result;
+    }
+
+    /**
+     * 删除自定义字段
+     * 
+     * @param integer $cid 
+     * @access public
+     * @return integer
+     */
+    public function deleteFields($cid)
+    {
+        return $this->db->query($this->db->delete('table.contents')
+            ->where('cid = ?', $cid));
+    }
+
+    /**
+     * 保存自定义字段 
+     * 
+     * @param array $fields 
+     * @param mixed $cid 
+     * @access public
+     * @return void
+     */
+    public function applyFields(array $fields, $cid)
+    {
+        $exists = array_flip(Typecho_Common::arrayFlatten($this->db->fetchAll($this->db->select('name')
+            ->from('table.contents')->where('cid = ?', $cid)), 'name'));
+
+        foreach ($fields as $name => $value) {
+            $type = 'str';
+
+            if (is_array($value) && 2 == count($value)) {
+                list($type, $value) = $value;
+            } else if (strpos($name, ':') > 0) {
+                list ($type, $name) = explode(':', $name, 2);
+            }
+
+            if (isset($exists[$name])) {
+                unset($exists[$name]);
+            }
+
+            $this->setField($name, $type, $value, $cid);
+        }
+
+        foreach ($exists as $name => $value) {
+            $this->db->query($this->db->delete('table.contents')
+                ->where('cid = ? AND name = ?', $cid, $name));
+        }
+    }
+
+    /**
+     * 设置单个字段
+     * 
+     * @param string $name 
+     * @param string $type 
+     * @param string $value 
+     * @param integer $cid 
+     * @access public
+     * @return integer
+     */
+    public function setField($name, $type, $value, $cid)
+    {
+        $exist = $this->db->fetchRow($this->db->select('cid')->from('table.contents')
+            ->where('cid = ? AND name = ?', $cid, $name));
+
+        if (empty($exist)) {
+            return $this->db->query($this->db->insert('table.contents')
+                ->rows(array(
+                    'cid'           =>  $cid,
+                    'name'          =>  $name,
+                    'type'          =>  $type,
+                    'str_value'     =>  'str' == $type ? $value : NULL,
+                    'int_value'     =>  'int' == $type ? intval($value) : 0,
+                    'float_value'   =>  'float' == $type ? floatval($value) : 0
+                )));
+        } else {
+            return $this->db->query($this->db->update('table.contents')
+                ->rows(array(
+                    'type'          =>  $type,
+                    'str_value'     =>  'str' == $type ? $value : NULL,
+                    'int_value'     =>  'int' == $type ? intval($value) : 0,
+                    'float_value'   =>  'float' == $type ? floatval($value) : 0
+                ))
+                ->where('cid = ? AND name = ?', $cid, $name));
+        }
+    }
+
+    /**
+     * 自增一个整形字段
+     * 
+     * @param string $name 
+     * @param integer $value 
+     * @param integer $cid 
+     * @access public
+     * @return integer
+     */
+    public function incrIntField($name, $value, $cid)
+    {
+        $exist = $this->db->fetchRow($this->db->select('type')->from('table.contents')
+            ->where('cid = ? AND name = ?', $cid, $name));
+        $value = intval($value);
+
+        if (empty($exist)) {
+            return $this->db->query($this->db->insert('table.contents')
+                ->rows(array(
+                    'cid'           =>  $cid,
+                    'name'          =>  $name,
+                    'type'          =>  'int',
+                    'str_value'     =>  NULL,
+                    'int_value'     =>  $value,
+                    'float_value'   =>  0
+                )));
+        } else {
+            $struct = array(
+                'str_value'     =>  NULL,
+                'float_value'   =>  NULL
+            );
+
+            if ('int' != $exist['type']) {
+                $struct['type'] = 'int';
+            }
+
+            return $this->db->query($this->db->update('table.contents')
+                ->rows($struct)
+                ->expression('int_value', 'int_value ' . ($value >= 0 ? '+' : '') . $value)
+                ->where('cid = ? AND name = ?', $cid, $name));
+        }
     }
 
     /**

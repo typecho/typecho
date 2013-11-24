@@ -147,8 +147,12 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
                         $page, 'page_draft')
                     ->limit(1));
 
+                    /** 删除自定义字段 */
+                    $this->deleteFields($page);
+
                     if ($draft) {
                         $this->deleteDraft($draft['cid']);
+                        $this->deleteFields($draft['cid']);
                     }
 
                     $deleteCount ++;
@@ -189,6 +193,7 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
 
                 if ($draft) {
                     $this->deleteDraft($draft['cid']);
+                    $this->deleteFields($draft['cid']);
                     $deleteCount ++;
                 }
             }

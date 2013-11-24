@@ -48,36 +48,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                     </div> -->
 
                     <?php include 'file-upload.php'; ?>
-
-                    <section id="custom-field" class="typecho-post-option fold">
-                        <label class="typecho-label"><?php _e('自定义字段'); ?></label>
-                        <table class="mono">
-                            <tr>
-                                <th width="25%"><?php _e('KEY'); ?></th>
-                                <th width="10%"><?php _e('TYPE'); ?></th>
-                                <th><?php _e('VALUE'); ?></th>
-                                <th width="10%"></th>
-                            </tr>
-                            <tr>
-                                <td><input type="text" class="text-s w-100"></td>
-                                <td>
-                                    <select name="" id="">
-                                        <option value=""><?php _e('varchar'); ?></option>
-                                        <option value=""><?php _e('int'); ?></option>
-                                        <option value=""><?php _e('float'); ?></option>
-                                    </select>
-                                </td>
-                                <td><textarea class="text-s w-100" rows="2"></textarea></td>
-                                <td>
-                                    <button type="button" class="btn-xs"><?php _e('删除'); ?></button>
-                                </td>
-                            </tr>
-                        </table>
-                        <p class="description">
-                            <button type="button" class="btn-xs"><?php _e('+添加字段'); ?></button>
-                            <?php _e('自定义字段可以扩展你的模板功能, 使用方法参见 <a href="">帮助文档</a>'); ?>
-                        </p>
-                    </section>
+                    <?php include 'custom-fields.php'; ?>
 
                     <?php Typecho_Plugin::factory('admin/write-post.php')->content($post); ?>
                     <p class="submit clearfix">

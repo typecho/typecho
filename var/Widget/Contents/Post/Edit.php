@@ -73,6 +73,34 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     }
 
     /**
+     * getFields  
+     * 
+     * @access protected
+     * @return void
+     */
+    protected function getFields()
+    {
+        $fields = array();
+
+        if (!empty($this->request->fieldNames)) {
+            $data = $this->request->from('fieldNames', 'fieldTypes', 'fieldValues');
+            foreach ($data['fieldNames'] as $key => $val) {
+                if (empty($val)) {
+                    continue;
+                }
+
+                $fields[$val] = array($data['fieldTypes'][$key], $data['fieldValues'][$key]);
+            }
+        }
+
+        if (!empty($this->request->fields)) {
+            $fields = array_merge($fields, $this->request->fields);
+        }
+
+        return $fields;
+    }
+
+    /**
      * 根据提交值获取created字段值
      *
      * @access protected
@@ -209,6 +237,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             /** 如果它本身不是草稿, 需要删除其草稿 */
             if (!$isDraftToPublish && $this->draft) {
                 $this->deleteDraft($this->draft['cid']);
+                $this->deleteFields($this->draft['cid']);
             }
 
             /** 直接将草稿状态更改 */
@@ -235,6 +264,9 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
 
             /** 同步附件 */
             $this->attach($realId);
+
+            /** 保存自定义字段 */
+            $this->applyFields($this->getFields(), $realId);
         
             $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $realId)->limit(1), array($this, 'push'));
         }
@@ -307,6 +339,9 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
 
             /** 同步附件 */
             $this->attach($this->cid);
+            
+            /** 保存自定义字段 */
+            $this->applyFields($this->getFields(), $realId);
         }
     }
 
@@ -427,6 +462,77 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     public function getMenuTitle()
     {
         return _t('编辑 %s', $this->title);
+    }
+
+    /**
+     * getDefaultFieldItems
+     * 
+     * @access public
+     * @return array
+     */
+    public function getDefaultFieldItems()
+    {
+        $defaultFields = array();
+        $configFile = __TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/functions.php';
+        $layout = new Typecho_Widget_Helper_Layout();
+        $fields = new Typecho_Config();
+
+        if ($this->have()) {
+            $fields = $this->fields;
+        }
+
+        $this->pluginHandle()->getDefaultFieldItems($layout);
+
+        if (file_exists($configFile)) {
+            require_once $configFile;
+            
+            if (function_exists('themeFields')) {
+                themeFields($layout); 
+            }
+        }
+
+        $items = $layout->getItems(); 
+        foreach ($items as $item) {
+            if ($item instanceof Typecho_Widget_Helper_Form_Element) {
+                $name = $item->input->getAttribute('name');
+
+                if (preg_match("/^fields\[(.+)\]$/", $name, $matches)) {
+                    $name = $matches[1];
+                } else {
+                    $item->input->setAttribute('name', 'fields[' . $name . ']');
+                }
+
+                $item->value($fields->{$name});
+                $defaultFields[$name] = array($item->label, $item->input);
+            }
+        }
+
+        return $defaultFields;
+    }
+
+    /**
+     * getFieldItems
+     * 
+     * @access public
+     * @return void
+     */
+    public function getFieldItems()
+    {
+        $fields = array();
+        
+        if ($this->have()) {
+            $defaultFields = $this->getDefaultFieldItems();
+            $rows = $this->db->fetchAll($this->db->select()->from('table.fields')
+                ->where('cid = ?', $this->cid));
+
+            foreach ($rows as $row) {
+                if (!isset($defaultFields[$row['name']])) {
+                    $fields[$row['name']] = $fields[$fields['type'] . '_value'];
+                }
+            }
+        }
+
+        return $fields;
     }
 
     /**
@@ -558,7 +664,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     public function writePost()
     {
         $contents = $this->request->from('password', 'allowComment',
-        'allowPing', 'allowFeed', 'slug', 'category', 'tags', 'text', 'visibility');
+            'allowPing', 'allowFeed', 'slug', 'category', 'tags', 'text', 'visibility');
 
         $contents['title'] = $this->request->get('title', _t('未命名文档'));
         $contents['created'] = $this->getCreated();
@@ -659,8 +765,12 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                         $post, 'post_draft')
                     ->limit(1));
 
+                    /** 删除自定义字段 */
+                    $this->deleteFields($post);
+
                     if ($draft) {
                         $this->deleteDraft($draft['cid']);
+                        $this->deleteFields($draft['cid']);
                     }
 
                     $deleteCount ++;
@@ -703,6 +813,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
 
                 if ($draft) {
                     $this->deleteDraft($draft['cid']);
+                    $this->deleteFields($draft['cid']);
                     $deleteCount ++;
                 }
             }

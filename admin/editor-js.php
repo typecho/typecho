@@ -1,3 +1,4 @@
+<?php if(!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <?php $content = !empty($post) ? $post : $page; if ($options->markdown && (!$content->have() || $content->isMarkdown)): ?>
 <script src="<?php $options->adminUrl('js/marked.js?v=' . $suffixVersion); ?>"></script>
 <script src="<?php $options->adminUrl('js/pagedown.js?v=' . $suffixVersion); ?>"></script>
