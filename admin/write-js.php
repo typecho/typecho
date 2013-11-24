@@ -187,10 +187,16 @@ $(document).ready(function() {
     // 高级选项控制
     $('#advance-panel-btn').click(function() {
         $('#advance-panel').toggle();
-        $(this).toggleClass('fold');
+        return false;
+    });
+
+    // 自定义字段
+    $('#custom-field .typecho-label').click(function() {
+        $(this).parent().toggleClass('fold');
         return false;
     });
     
+    // 草稿删除确认
     $('.edit-draft-notice a').click(function () {
         if (confirm('<?php _e('您确认要删除这份草稿吗?'); ?>')) {
             window.location.href = $(this).attr('href');

@@ -22,10 +22,12 @@ textarea {
 
 input[type="radio"], input[type="checkbox"] { margin-right: 3px; }
 
-input.text-s { padding: 5px; }
-input.text-l {
-  padding: 10px;
-  font-size: 1.14286em;
+input, textarea {
+  &.text-s { padding: 5px; }
+  &.text-l {
+    padding: 10px;
+    font-size: 1.14286em;
+  }
 }
 
 .w-10 { width: 10%; }

@@ -656,14 +656,49 @@ a.operate-reply {
   font-size: .92857em;
 }
 
-.typecho-post-area #advance-panel-btn {
+#advance-panel-btn {
   padding: 0 10px;
   height: 26px;
   font-size: .92857em;
 }
 
-.typecho-post-area #advance-panel {
+#advance-panel {
   display: none;
+}
+
+#custom-field {
+  margin: 1em 0;
+  padding: 10px 15px;
+  background: #FFF;
+  &.fold {
+    table, .description { display: none; }
+  }
+
+  .description {
+    margin: 0;
+    padding: 10px 0 5px;
+    border-top: 1px solid #F0F0EC;
+  }
+
+  .typecho-label {
+    margin: 0;
+    cursor: pointer;
+    &:hover {
+      color: #467B96;
+    }
+  }
+
+  th, td {
+    padding: 10px 5px;
+    text-align: left;
+    font-size: .92857em;
+    font-weight: normal;
+  }
+  td {
+    border-top: 1px solid #F0F0EC;
+    vertical-align: top;
+  }
+  select { height: 27px; }
 }
 
 .typecho-post-area .is-draft {

@@ -75,10 +75,9 @@ textarea {
 input[type="radio"], input[type="checkbox"] {
   margin-right: 3px; }
 
-input.text-s {
+input.text-s, textarea.text-s {
   padding: 5px; }
-
-input.text-l {
+input.text-l, textarea.text-l {
   padding: 10px;
   font-size: 1.14286em; }
 
@@ -876,13 +875,39 @@ a.operate-reply {
   resize: none;
   font-size: .92857em; }
 
-.typecho-post-area #advance-panel-btn {
+#advance-panel-btn {
   padding: 0 10px;
   height: 26px;
   font-size: .92857em; }
 
-.typecho-post-area #advance-panel {
+#advance-panel {
   display: none; }
+
+#custom-field {
+  margin: 1em 0;
+  padding: 10px 15px;
+  background: #FFF; }
+  #custom-field.fold table, #custom-field.fold .description {
+    display: none; }
+  #custom-field .description {
+    margin: 0;
+    padding: 10px 0 5px;
+    border-top: 1px solid #F0F0EC; }
+  #custom-field .typecho-label {
+    margin: 0;
+    cursor: pointer; }
+    #custom-field .typecho-label:hover {
+      color: #467B96; }
+  #custom-field th, #custom-field td {
+    padding: 10px 5px;
+    text-align: left;
+    font-size: .92857em;
+    font-weight: normal; }
+  #custom-field td {
+    border-top: 1px solid #F0F0EC;
+    vertical-align: top; }
+  #custom-field select {
+    height: 27px; }
 
 .typecho-post-area .is-draft {
   background: #FFF1A8; }
@@ -1134,7 +1159,7 @@ a.operate-reply {
 /* 预览 */
 #wmd-preview {
   background: #FFF;
-  padding: 10px 20px;
+  padding: 5px 15px;
   word-wrap: break-word; }
   #wmd-preview img {
     max-width: 100%; }

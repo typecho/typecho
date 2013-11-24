@@ -42,7 +42,53 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         <textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text" name="text" class="w-100 mono"><?php echo htmlspecialchars($post->text); ?></textarea>
                     </p>
 
+                    <div class="">
+                        <a href="###" class="current">撰写</a>
+                        <a href="###">预览</a>
+                    </div>
+
                     <?php include 'file-upload.php'; ?>
+
+                    <section id="custom-field" class="typecho-post-option fold">
+                        <label class="typecho-label"><?php _e('自定义字段'); ?></label>
+                        <table class="mono">
+                            <tr>
+                                <th width="25%"><?php _e('KEY'); ?></th>
+                                <th width="10%"><?php _e('TYPE'); ?></th>
+                                <th><?php _e('VALUE'); ?></th>
+                                <th width="8%"></th>
+                            </tr>
+                            <tr>
+                                <td><input type="text" class="text-s w-100"></td>
+                                <td>
+                                    <select name="" id="">
+                                        <option value=""><?php _e('varchar'); ?></option>
+                                        <option value=""><?php _e('int'); ?></option>
+                                        <option value=""><?php _e('float'); ?></option>
+                                    </select>
+                                </td>
+                                <td><textarea class="text-s w-100" rows="2"></textarea></td>
+                                <td>
+                                    <button type="button" class="btn-s"><?php _e('-'); ?></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="text" class="text-s w-100"></td>
+                                <td>
+                                    <select name="" id="">
+                                        <option value=""><?php _e('varchar'); ?></option>
+                                        <option value=""><?php _e('int'); ?></option>
+                                        <option value=""><?php _e('float'); ?></option>
+                                    </select>
+                                </td>
+                                <td><textarea class="text-s w-100"></textarea></td>
+                                <td>
+                                    <button type="button" class="btn-s"><?php _e('+'); ?></button>
+                                </td>
+                            </tr>
+                        </table>
+                        <p class="description"><?php _e('自定义字段可以扩展你的模板功能, 使用方法参见 <a href="">帮助文档</a>'); ?></p>
+                    </section>
 
                     <?php Typecho_Plugin::factory('admin/write-post.php')->content($post); ?>
                     <p class="submit clearfix">
