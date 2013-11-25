@@ -2,6 +2,12 @@
 $(document).ready(function () {
     // 自定义字段
     $('#custom-field-expand').click(function() {
+        var btn = $('i', this);
+        if (btn.hasClass('i-caret-right')) {
+            btn.removeClass('i-caret-right').addClass('i-caret-down');
+        } else {
+            btn.removeClass('i-caret-down').addClass('i-caret-right');
+        }
         $(this).parent().toggleClass('fold');
     });
 

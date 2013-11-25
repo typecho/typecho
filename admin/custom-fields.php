@@ -4,7 +4,7 @@ $fields = isset($post) ? $post->getFieldItems() : $page->getFieldItems();
 $defaultFields = isset($post) ? $post->getDefaultFieldItems() : $post->getDefaultFieldItems();
 ?>
                     <section id="custom-field" class="typecho-post-option<?php if (empty($defaultFields) && empty($fields)): ?> fold<?php endif; ?>">
-                        <label id="custom-field-expand" class="typecho-label"><?php _e('自定义字段'); ?>  <i class="i-caret-down"></i></label>
+                        <label id="custom-field-expand" class="typecho-label"><i class="i-caret-right"></i> <?php _e('自定义字段'); ?></label>
                         <table class="typecho-list-table mono">
                             <colgroup>
                                 <col width="25%"/>

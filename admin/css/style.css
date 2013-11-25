@@ -1063,16 +1063,19 @@ a.operate-reply {
   display: inline-block;
   border-style: solid;
   border-color: transparent transparent #BBB transparent;
-  border-width: 0 4px 5px;
-  vertical-align: middle; }
+  border-width: 3px 4px 5px; }
 
 .i-caret-down {
   border-color: #BBB transparent transparent transparent;
-  border-width: 5px 4px 0; }
+  border-width: 5px 4px 3px; }
+
+.i-caret-left {
+  border-color: transparent #BBB transparent transparent;
+  border-width: 4px 5px 4px 3px; }
 
 .i-caret-right {
   border-color: transparent transparent transparent #BBB;
-  border-width: 4px 0 4px 5px; }
+  border-width: 4px 3px 4px 5px; }
 
 .i-exlink {
   background-position: 0 0; }
