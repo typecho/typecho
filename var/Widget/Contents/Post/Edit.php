@@ -533,7 +533,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
 
             foreach ($rows as $row) {
                 if (!isset($defaultFields[$row['name']])) {
-                    $fields[$row['name']] = $fields[$fields['type'] . '_value'];
+                    $fields[] = $row;
                 }
             }
         }

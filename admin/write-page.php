@@ -42,7 +42,6 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                         
                     <?php Typecho_Plugin::factory('admin/write-page.php')->content($page); ?>
                     <p class="submit clearfix">
-                        <span id="auto-save-message" class="left"></span>
                         <span class="right">
                             <input type="hidden" name="cid" value="<?php $page->cid(); ?>" />
                             <button type="submit" name="do" value="save" id="btn-save"><?php _e('保存草稿'); ?></button>

@@ -126,12 +126,12 @@ $(document).ready(function() {
     }), savedData = null;
 
     // 自动保存
-<?php if ($options->autoSave): ?>
+<?php if ($options->autoSave): ?> 
     var locked = false,
         formAction = form.attr('action'),
         idInput = $('input[name=cid]'),
         cid = idInput.val(),
-        autoSave = $('#auto-save-message'),
+        autoSave = $('<span id="auto-save-message" class="left"></span>').prependTo('.submit'),
         autoSaveOnce = !!cid,
         lastSaveTime = null;
 

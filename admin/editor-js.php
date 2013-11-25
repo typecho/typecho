@@ -7,7 +7,7 @@
 $(document).ready(function () {
     var textarea = $('#text'),
         toolbar = $('<div class="editor" id="wmd-button-bar" />').insertBefore(textarea.parent())
-        preview = $('<div id="wmd-preview" />').insertBefore('.submit');
+        preview = $('<div id="wmd-preview" />').insertAfter('#upload-panel');
 
     var options = {};
 
