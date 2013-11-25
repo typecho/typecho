@@ -38,8 +38,6 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                         <textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text" name="text" class="w-100 mono"><?php echo htmlspecialchars($page->text); ?></textarea>
                     </p>
                         
-                    <?php include 'file-upload.php'; ?>
-                        
                     <?php Typecho_Plugin::factory('admin/write-page.php')->content($page); ?>
                     <p class="submit clearfix">
                         <span class="right">
@@ -52,7 +50,15 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                         </span>
                     </p>
                 </div>
-                <div class="col-mb-12 col-tb-3" role="complementary">
+                <div id="edit-secondary" class="col-mb-12 col-tb-3" role="complementary">
+                    <ul class="typecho-option-tabs clearfix">
+                        <li class="active w-50"><a href="#tab-files">附件</a></li>
+                        <li class="w-50"><a href="#tab-advance">更多</a></li>
+                    </ul>
+                    <div id="tab-files" class="tab_content">
+                        <?php include 'file-upload.php'; ?>
+                    </div>
+                    <div id="tab-advance" class="tab_content">
                         <section  class="typecho-post-option" role="application">
                             <label for="date" class="typecho-label"><?php _e('发布日期'); ?></label>
                             <p><input class="typecho-date w-100" type="text" name="date" id="date" value="<?php $page->have() ? $page->date('Y-m-d H:i') : ''; ?>" /></p>
@@ -114,7 +120,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                         </p>
                         </section>
                         <?php endif; ?>
-                    </ul>
+                    </div>
                 </div>
             </form>
         </div>

@@ -12,34 +12,38 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == Typ
         <?php include 'page-title.php'; ?>
         <div class="colgroup typecho-page-main" role="main">
             <div class="col-mb-12 typecho-list">
-                <ul class="typecho-option-tabs clearfix">
-                    <li<?php if(!isset($request->status) || 'approved' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php'
-                    . (isset($request->cid) ? '?cid=' . $request->cid : '')); ?>"><?php _e('已通过'); ?></a></li>
-                    <li<?php if('waiting' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=waiting'
-                    . (isset($request->cid) ? '&cid=' . $request->cid : '')); ?>"><?php _e('待审核'); ?>
-                    <?php if(!$isAllComments && $stat->myWaitingCommentsNum > 0 && !isset($request->cid)): ?> 
-                        <span class="balloon"><?php $stat->myWaitingCommentsNum(); ?></span>
-                    <?php elseif($isAllComments && $stat->waitingCommentsNum > 0 && !isset($request->cid)): ?>
-                        <span class="balloon"><?php $stat->waitingCommentsNum(); ?></span>
-                    <?php elseif(isset($request->cid) && $stat->currentWaitingCommentsNum > 0): ?>
-                        <span class="balloon"><?php $stat->currentWaitingCommentsNum(); ?></span>
-                    <?php endif; ?>
-                    </a></li>
-                    <li<?php if('spam' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=spam'
-                    . (isset($request->cid) ? '&cid=' . $request->cid : '')); ?>"><?php _e('垃圾'); ?>
-                    <?php if(!$isAllComments && $stat->mySpamCommentsNum > 0 && !isset($request->cid)): ?> 
-                        <span class="balloon"><?php $stat->mySpamCommentsNum(); ?></span>
-                    <?php elseif($isAllComments && $stat->spamCommentsNum > 0 && !isset($request->cid)): ?>
-                        <span class="balloon"><?php $stat->spamCommentsNum(); ?></span>
-                    <?php elseif(isset($request->cid) && $stat->currentSpamCommentsNum > 0): ?>
-                        <span class="balloon"><?php $stat->currentSpamCommentsNum(); ?></span>
-                    <?php endif; ?>
-                    </a></li>
+                <div class="clearfix">
+                    <ul class="typecho-option-tabs right">
                     <?php if($user->pass('editor', true) && !isset($request->cid)): ?>
-                        <li class="right<?php if($isAllComments): ?> current<?php endif; ?>"><a href="<?php echo $request->makeUriByRequest('__typecho_all_comments=on'); ?>"><?php _e('所有'); ?></a></li>
-                        <li class="right<?php if(!$isAllComments): ?> current<?php endif; ?>"><a href="<?php echo $request->makeUriByRequest('__typecho_all_comments=off'); ?>"><?php _e('我的'); ?></a></li>
+                        <li class="<?php if($isAllComments): ?> current<?php endif; ?>"><a href="<?php echo $request->makeUriByRequest('__typecho_all_comments=on'); ?>"><?php _e('所有'); ?></a></li>
+                        <li class="<?php if(!$isAllComments): ?> current<?php endif; ?>"><a href="<?php echo $request->makeUriByRequest('__typecho_all_comments=off'); ?>"><?php _e('我的'); ?></a></li>
                     <?php endif; ?>
-                </ul>
+                    </ul>
+                    <ul class="typecho-option-tabs">
+                        <li<?php if(!isset($request->status) || 'approved' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php'
+                        . (isset($request->cid) ? '?cid=' . $request->cid : '')); ?>"><?php _e('已通过'); ?></a></li>
+                        <li<?php if('waiting' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=waiting'
+                        . (isset($request->cid) ? '&cid=' . $request->cid : '')); ?>"><?php _e('待审核'); ?>
+                        <?php if(!$isAllComments && $stat->myWaitingCommentsNum > 0 && !isset($request->cid)): ?> 
+                            <span class="balloon"><?php $stat->myWaitingCommentsNum(); ?></span>
+                        <?php elseif($isAllComments && $stat->waitingCommentsNum > 0 && !isset($request->cid)): ?>
+                            <span class="balloon"><?php $stat->waitingCommentsNum(); ?></span>
+                        <?php elseif(isset($request->cid) && $stat->currentWaitingCommentsNum > 0): ?>
+                            <span class="balloon"><?php $stat->currentWaitingCommentsNum(); ?></span>
+                        <?php endif; ?>
+                        </a></li>
+                        <li<?php if('spam' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=spam'
+                        . (isset($request->cid) ? '&cid=' . $request->cid : '')); ?>"><?php _e('垃圾'); ?>
+                        <?php if(!$isAllComments && $stat->mySpamCommentsNum > 0 && !isset($request->cid)): ?> 
+                            <span class="balloon"><?php $stat->mySpamCommentsNum(); ?></span>
+                        <?php elseif($isAllComments && $stat->spamCommentsNum > 0 && !isset($request->cid)): ?>
+                            <span class="balloon"><?php $stat->spamCommentsNum(); ?></span>
+                        <?php elseif(isset($request->cid) && $stat->currentSpamCommentsNum > 0): ?>
+                            <span class="balloon"><?php $stat->currentSpamCommentsNum(); ?></span>
+                        <?php endif; ?>
+                        </a></li>
+                    </ul>
+                </div>
             
                 <div class="typecho-list-operate clearfix">
                     <form method="get">

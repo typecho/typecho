@@ -304,8 +304,13 @@ a.button:hover, a.balloon-button:hover {
 */
 .typecho-option-tabs {
   list-style: none;
-  margin: 1em 0;
+  margin: 1em 0 0;
   padding: 0;
+  font-size: 13px;
+  text-align: center;
+  &.fix-tabs {
+    margin-bottom: 1em;
+  }
 }
 
 .typecho-option-tabs a {
@@ -313,9 +318,11 @@ a.button:hover, a.balloon-button:hover {
   margin-right: -1px;
   border: 1px solid #D9D9D6;
   padding: 0 15px;
-  height: 24px;
-  line-height: 24px;
+  height: 26px;
+  line-height: 26px;
   color: #666;
+  @include box-sizing(border-box);
+  
 }
 .typecho-option-tabs a:hover {
   background-color: #E9E9E6;
@@ -325,13 +332,20 @@ a.button:hover, a.balloon-button:hover {
 
 .typecho-option-tabs li {
   float: left;
+  &:first-child a {
+    @include border-radius(2px 0 0 2px);
+  }
+  &:last-child a {
+    @include border-radius(0 2px 2px 0);
+  }
 }
 
-.typecho-option-tabs li.right {
+.typecho-option-tabs.right {
   float: right;
 }
 
-.typecho-option-tabs li.current a {
+.typecho-option-tabs li.current a,
+.typecho-option-tabs li.active a {
   background-color: #E9E9E6;
 }
 
@@ -730,13 +744,13 @@ background: #FFF1A8;
   padding: 0;
 }
 
+#edit-secondary {
+  #tab-advance { display: none; }
+}
+
 /**
 * 标签列表
 */
-
-.manage-metas .typecho-list-operate {
-  margin-top: 0;
-}
 
 .typecho-page-main ul.tag-list {
   list-style: none;
@@ -784,10 +798,11 @@ background: #FFF1A8;
 */
 #upload-panel {
   padding: 15px;
-  border: 1px dashed #D9D9D6;
+  border: 1px solid #D9D9D6;
   background-color: #FFF;
   color: #999;
   font-size: .92857em;
+  @include border-radius(2px);
   &.drag {
     background-color: #FFFBCC;
   }
@@ -795,11 +810,24 @@ background: #FFF1A8;
 
 #file-list {
   list-style: none;
-  margin: 0;
+  margin: 15px 0 0;
   padding: 0;
-  li { margin-top: 5px; }
+  border-top: 1px dashed #EEE;
+  min-height: 180px;
+  li {
+    padding: 5px 0;
+    border-top: 1px dashed #EEE;
+    &:first-child { border: none; }
+  }
   .file {
     margin-left: 5px;
+  }
+  .insert {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 }
 

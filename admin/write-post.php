@@ -60,89 +60,98 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         </span>
                     </p>
 
-                    <?php include 'file-upload.php'; ?>
-
                     <?php Typecho_Plugin::factory('admin/write-post.php')->content($post); ?>
                 </div>
-                <div class="col-mb-12 col-tb-3" role="complementary">
-                    <section class="typecho-post-option" role="application">
-                        <label for="date" class="typecho-label"><?php _e('发布日期'); ?></label>
-                        <p><input class="typecho-date w-100" type="text" name="date" id="date" value="<?php $post->have() ? $post->date('Y-m-d H:i') : ''; ?>" /></p>
-                    </section>
 
-                    <section class="typecho-post-option category-option">
-                        <label class="typecho-label"><?php _e('分类'); ?></label>
-                        <?php Typecho_Widget::widget('Widget_Metas_Category_List')->to($category); ?>
-                        <ul>
-                            <?php
-                            if ($post->have()) {
-                                $categories = Typecho_Common::arrayFlatten($post->categories, 'mid');
-                            } else {
-                                $categories = array();
-                            }
-                            ?>
-                            <?php while($category->next()): ?>
-                            <li><input type="checkbox" id="category-<?php $category->mid(); ?>" value="<?php $category->mid(); ?>" name="category[]" <?php if(in_array($category->mid, $categories)): ?>checked="true"<?php endif; ?>/>
-                            <label for="category-<?php $category->mid(); ?>"><?php $category->name(); ?></label></li>
-                            <?php endwhile; ?>
-                        </ul>
-                    </section>
+                <div id="edit-secondary" class="col-mb-12 col-tb-3" role="complementary">
+                    <ul class="typecho-option-tabs clearfix">
+                        <li class="active w-50"><a href="#tab-files">附件</a></li>
+                        <li class="w-50"><a href="#tab-advance">更多</a></li>
+                    </ul>
 
-                    <section class="typecho-post-option">
-                        <label for="token-input-tags" class="typecho-label"><?php _e('标签'); ?></label>
-                        <p><input id="tags" name="tags" type="text" value="<?php $post->tags(',', false); ?>" class="w-100 text" /></p>
-                    </section>
+                    <div id="tab-files" class="tab_content">
+                        <?php include 'file-upload.php'; ?>
+                    </div>
+                    <div id="tab-advance" class="tab_content">
+                        <section class="typecho-post-option" role="application">
+                            <label for="date" class="typecho-label"><?php _e('发布日期'); ?></label>
+                            <p><input class="typecho-date w-100" type="text" name="date" id="date" value="<?php $post->have() ? $post->date('Y-m-d H:i') : ''; ?>" /></p>
+                        </section>
 
-                    <?php Typecho_Plugin::factory('admin/write-post.php')->option($post); ?>
-
-                    <button type="button" id="advance-panel-btn" class="btn-xs"><?php _e('高级选项'); ?> <i class="i-caret-down"></i></button>
-                    <div id="advance-panel">
-                        <?php if($user->pass('editor', true)): ?>
-                        <section class="typecho-post-option visibility-option">
-                            <label class="typecho-label"><?php _e('公开度'); ?></label>
+                        <section class="typecho-post-option category-option">
+                            <label class="typecho-label"><?php _e('分类'); ?></label>
+                            <?php Typecho_Widget::widget('Widget_Metas_Category_List')->to($category); ?>
                             <ul>
-                                <?php if ($user->pass('editor', true)): ?>
-                                <li><input id="publish" value="publish" name="visibility" type="radio"<?php if (($post->status == 'publish' && !$post->password) || !$post->status) { ?> checked="true"<?php } ?> /> <label for="publish"><?php _e('公开'); ?></label></li>
-                                <li><input id="hidden" value="hidden" name="visibility" type="radio"<?php if ($post->status == 'hidden') { ?> checked="true"<?php } ?> /> <label for="hidden"><?php _e('隐藏'); ?></label></li>
-                                <li><input id="password" value="password" name="visibility" type="radio"<?php if ($post->password) { ?> checked="true"<?php } ?> /> <label for="password"><?php _e('密码保护'); ?> <input type="text" id="post-password" name="password" class="text-s" value="<?php $post->password(); ?>" size="16" /></label></li>
-                                <li><input id="private" value="private" name="visibility" type="radio"<?php if ($post->status == 'private') { ?> checked="true"<?php } ?> /> <label for="private"><?php _e('私密'); ?></label></li>
-                                <?php endif; ?>
-                                <li><input id="waiting" value="waiting" name="visibility" type="radio"<?php if (!$user->pass('editor', true) || $post->status == 'waiting') { ?> checked="true"<?php } ?> /> <label for="waiting"><?php _e('待审核'); ?></label></li>
+                                <?php
+                                if ($post->have()) {
+                                    $categories = Typecho_Common::arrayFlatten($post->categories, 'mid');
+                                } else {
+                                    $categories = array();
+                                }
+                                ?>
+                                <?php while($category->next()): ?>
+                                <li><input type="checkbox" id="category-<?php $category->mid(); ?>" value="<?php $category->mid(); ?>" name="category[]" <?php if(in_array($category->mid, $categories)): ?>checked="true"<?php endif; ?>/>
+                                <label for="category-<?php $category->mid(); ?>"><?php $category->name(); ?></label></li>
+                                <?php endwhile; ?>
                             </ul>
                         </section>
-                        <?php endif; ?>
 
                         <section class="typecho-post-option">
-                            <label for="trackback" class="typecho-label"><?php _e('引用通告'); ?></label>
-                            <p><textarea id="trackback" class="w-100 mono" name="trackback" rows="3"></textarea></p>
-                            <p class="description"><?php _e('每一行一个引用地址, 用回车隔开'); ?></p>
+                            <label for="token-input-tags" class="typecho-label"><?php _e('标签'); ?></label>
+                            <p><input id="tags" name="tags" type="text" value="<?php $post->tags(',', false); ?>" class="w-100 text" /></p>
                         </section>
 
-                        <section class="typecho-post-option allow-option">
-                            <label class="typecho-label"><?php _e('权限控制'); ?></label>
-                            <ul>
-                                <li><input id="allowComment" name="allowComment" type="checkbox" value="1" <?php if($post->allow('comment')): ?>checked="true"<?php endif; ?> />
-                                <label for="allowComment"><?php _e('允许评论'); ?></label></li>
-                                <li><input id="allowPing" name="allowPing" type="checkbox" value="1" <?php if($post->allow('ping')): ?>checked="true"<?php endif; ?> />
-                                <label for="allowPing"><?php _e('允许被引用'); ?></label></li>
-                                <li><input id="allowFeed" name="allowFeed" type="checkbox" value="1" <?php if($post->allow('feed')): ?>checked="true"<?php endif; ?> />
-                                <label for="allowFeed"><?php _e('允许在聚合中出现'); ?></label></li>
-                            </ul>
-                        </section>
-                        <?php Typecho_Plugin::factory('admin/write-post.php')->advanceOption($post); ?>
-                    </div><!-- end #advance-panel -->
+                        <?php Typecho_Plugin::factory('admin/write-post.php')->option($post); ?>
 
-                    <?php if($post->have()): ?>
-                    <?php $modified = new Typecho_Date($post->modified); ?>
-                    <section class="typecho-post-option">
-                        <p class="description">
-                            <br>&mdash;<br>
-                            <?php _e('本文由 <a href="%s">%s</a> 撰写',
-                            Typecho_Common::url('manage-posts.php?uid=' . $post->author->uid, $options->adminUrl), $post->author->screenName); ?><br>
-                            <?php _e('最后更新于 %s', $modified->word()); ?>
-                        </p>
-                    </section>
-                    <?php endif; ?>
+                        <button type="button" id="advance-panel-btn" class="btn-xs"><?php _e('高级选项'); ?> <i class="i-caret-down"></i></button>
+                        <div id="advance-panel">
+                            <?php if($user->pass('editor', true)): ?>
+                            <section class="typecho-post-option visibility-option">
+                                <label class="typecho-label"><?php _e('公开度'); ?></label>
+                                <ul>
+                                    <?php if ($user->pass('editor', true)): ?>
+                                    <li><input id="publish" value="publish" name="visibility" type="radio"<?php if (($post->status == 'publish' && !$post->password) || !$post->status) { ?> checked="true"<?php } ?> /> <label for="publish"><?php _e('公开'); ?></label></li>
+                                    <li><input id="hidden" value="hidden" name="visibility" type="radio"<?php if ($post->status == 'hidden') { ?> checked="true"<?php } ?> /> <label for="hidden"><?php _e('隐藏'); ?></label></li>
+                                    <li><input id="password" value="password" name="visibility" type="radio"<?php if ($post->password) { ?> checked="true"<?php } ?> /> <label for="password"><?php _e('密码保护'); ?> <input type="text" id="post-password" name="password" class="text-s" value="<?php $post->password(); ?>" size="16" /></label></li>
+                                    <li><input id="private" value="private" name="visibility" type="radio"<?php if ($post->status == 'private') { ?> checked="true"<?php } ?> /> <label for="private"><?php _e('私密'); ?></label></li>
+                                    <?php endif; ?>
+                                    <li><input id="waiting" value="waiting" name="visibility" type="radio"<?php if (!$user->pass('editor', true) || $post->status == 'waiting') { ?> checked="true"<?php } ?> /> <label for="waiting"><?php _e('待审核'); ?></label></li>
+                                </ul>
+                            </section>
+                            <?php endif; ?>
+
+                            <section class="typecho-post-option">
+                                <label for="trackback" class="typecho-label"><?php _e('引用通告'); ?></label>
+                                <p><textarea id="trackback" class="w-100 mono" name="trackback" rows="3"></textarea></p>
+                                <p class="description"><?php _e('每一行一个引用地址, 用回车隔开'); ?></p>
+                            </section>
+
+                            <section class="typecho-post-option allow-option">
+                                <label class="typecho-label"><?php _e('权限控制'); ?></label>
+                                <ul>
+                                    <li><input id="allowComment" name="allowComment" type="checkbox" value="1" <?php if($post->allow('comment')): ?>checked="true"<?php endif; ?> />
+                                    <label for="allowComment"><?php _e('允许评论'); ?></label></li>
+                                    <li><input id="allowPing" name="allowPing" type="checkbox" value="1" <?php if($post->allow('ping')): ?>checked="true"<?php endif; ?> />
+                                    <label for="allowPing"><?php _e('允许被引用'); ?></label></li>
+                                    <li><input id="allowFeed" name="allowFeed" type="checkbox" value="1" <?php if($post->allow('feed')): ?>checked="true"<?php endif; ?> />
+                                    <label for="allowFeed"><?php _e('允许在聚合中出现'); ?></label></li>
+                                </ul>
+                            </section>
+                            <?php Typecho_Plugin::factory('admin/write-post.php')->advanceOption($post); ?>
+                        </div><!-- end #advance-panel -->
+
+                        <?php if($post->have()): ?>
+                        <?php $modified = new Typecho_Date($post->modified); ?>
+                        <section class="typecho-post-option">
+                            <p class="description">
+                                <br>&mdash;<br>
+                                <?php _e('本文由 <a href="%s">%s</a> 撰写',
+                                Typecho_Common::url('manage-posts.php?uid=' . $post->author->uid, $options->adminUrl), $post->author->screenName); ?><br>
+                                <?php _e('最后更新于 %s', $modified->word()); ?>
+                            </p>
+                        </section>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </form>
         </div>

@@ -185,6 +185,17 @@ $(document).ready(function() {
         }
     });
 
+    // 控制附件和参数的转换
+    $("#edit-secondary .typecho-option-tabs li").click(function() {
+        $("#edit-secondary .typecho-option-tabs li").removeClass('active');
+        $(this).addClass("active");
+        $(".tab_content").hide();
+        var selected_tab = $(this).find("a").attr("href");
+        $(selected_tab).show();
+        return false;
+    });
+
+
     // 高级选项控制
     $('#advance-panel-btn').click(function() {
         $('#advance-panel').toggle();
