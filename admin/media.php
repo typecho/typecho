@@ -102,8 +102,7 @@ $(document).ready(function() {
     });
 
     $('#upload-panel').filedrop({
-        url             :   '<?php $options->index('/action/upload' 
-            . (isset($fileParentContent) ? '?cid=' . $fileParentContent->cid : '')); ?>',
+        url             :   '<?php $options->index('/action/upload?do=modify&cid=' . $attachment->cid); ?>',
         allowedfileextensions   :   ['.<?php $attachment->attachment->type(); ?>'],
 
         maxfilesize     :   <?php 
