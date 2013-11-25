@@ -502,6 +502,12 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                     $item->input->setAttribute('name', 'fields[' . $name . ']');
                 }
 
+                $isFieldReadOnly = $this->pluginHandle('Widget_Abstract_Contents')
+                    ->trigger($plugged)->isFieldReadOnly($name);
+                if ($plugged && $isFieldReadOnly) {
+                    $item->input->setAttribute('readonly', 'readonly');
+                }
+
                 $item->value($fields->{$name});
                 $defaultFields[$name] = array($item->label, $item->input);
             }

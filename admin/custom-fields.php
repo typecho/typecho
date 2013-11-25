@@ -4,12 +4,12 @@ $fields = isset($post) ? $post->getFieldItems() : $page->getFieldItems();
 $defaultFields = isset($post) ? $post->getDefaultFieldItems() : $post->getDefaultFieldItems();
 ?>
                     <section id="custom-field" class="typecho-post-option fold">
-                        <label class="typecho-label"><?php _e('自定义字段'); ?></label>
+                        <label id="custom-field-expand" class="typecho-label"><?php _e('自定义字段'); ?></label>
                         <table class="typecho-list-table mono">
                             <colgroup>
                                 <col width="25%"/>
                                 <col width="10%"/>
-                                <col width=""/>
+                                <col width="55%"/>
                                 <col width="10%"/>
                             </colgroup>
                             <?php foreach ($defaultFields as $field): ?>
@@ -53,7 +53,7 @@ $defaultFields = isset($post) ? $post->getDefaultFieldItems() : $post->getDefaul
                             <?php endif; ?>
                         </table>
                         <p class="description">
-                            <button type="button" class="btn-xs"><?php _e('+添加字段'); ?></button>
+                            <button type="button" class="btn-xs operate-add"><?php _e('+添加字段'); ?></button>
                             <?php _e('自定义字段可以扩展你的模板功能, 使用方法参见 <a href="">帮助文档</a>'); ?>
                         </p>
                     </section>

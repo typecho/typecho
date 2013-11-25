@@ -190,12 +190,6 @@ $(document).ready(function() {
         $('#advance-panel').toggle();
         return false;
     });
-
-    // 自定义字段
-    $('#custom-field .typecho-label').click(function() {
-        $(this).parent().toggleClass('fold');
-        return false;
-    });
     
     // 草稿删除确认
     $('.edit-draft-notice a').click(function () {

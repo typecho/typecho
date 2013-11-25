@@ -47,8 +47,8 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         <a href="###">预览</a>
                     </div> -->
 
-                    <?php include 'file-upload.php'; ?>
                     <?php include 'custom-fields.php'; ?>
+                    <?php include 'file-upload.php'; ?>
 
                     <?php Typecho_Plugin::factory('admin/write-post.php')->content($post); ?>
                     <p class="submit clearfix">
@@ -160,6 +160,7 @@ if (!$plugged) {
 }
 
 include 'file-upload-js.php';
+include 'custom-fields-js.php';
 Typecho_Plugin::factory('admin/write-post.php')->bottom($post);
 include 'footer.php';
 ?>

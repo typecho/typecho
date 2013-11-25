@@ -76,12 +76,12 @@ class Widget_Abstract_Contents extends Widget_Abstract
     }
 
     /**
-     * __fields
+     * ___fields
      * 
      * @access protected
      * @return void
      */
-    protected function __fields()
+    protected function ___fields()
     {
         $fields = array();
         $rows = $this->db->fetchAll($this->db->select()->from('table.fields')
@@ -439,6 +439,11 @@ class Widget_Abstract_Contents extends Widget_Abstract
 
             if (isset($exists[$name])) {
                 unset($exists[$name]);
+            }
+
+            $isFieldReadOnly = $this->pluginHandle(__CLASS__)->trigger($plugged)->isFieldReadOnly($name);
+            if ($plugged && $isFieldReadOnly) {
+                continue;
             }
 
             $this->setField($name, $type, $value, $cid);

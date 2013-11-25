@@ -20,12 +20,12 @@
 class Widget_Abstract_Users extends Widget_Abstract
 {
     /**
-     * __options  
+     * ___options  
      * 
      * @access protected
      * @return Config
      */
-    protected function __options()
+    protected function ___options()
     {
         $rows = $this->db->fetchAll($this->db->select()
             ->from('table.options')->where('user = ?', $this->uid));
