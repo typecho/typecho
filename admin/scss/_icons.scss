@@ -31,14 +31,24 @@ $icons-2x: sprite-map("icons-2x/*.png");
   @extend %i-16;
   background-position: sprite-position($icons, icon-delete);
 }
-.i-caret-up {
-  @extend %i-16;
-  background-position: sprite-position($icons, icon-caret-up);
+
+// 小箭头
+.i-caret-up, .i-caret-down, .i-caret-left, .i-caret-right {
+  display: inline-block;
+  border-style: solid;
+  border-color: transparent transparent #BBB transparent;
+  border-width: 0 4px 5px;
+  vertical-align: middle;
 }
 .i-caret-down {
-  @extend %i-16;
-  background-position: sprite-position($icons, icon-caret-down);
+  border-color: #BBB transparent transparent transparent;
+  border-width: 5px 4px 0;
 }
+.i-caret-right {
+  border-color: transparent transparent transparent #BBB;
+  border-width: 4px 0 4px 5px;
+}
+
 .i-exlink {
   @extend %i-16;
   background-position: sprite-position($icons, icon-exlink);

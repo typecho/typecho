@@ -74,9 +74,13 @@
     background: #F3F3F0;
     font-size: .92857em;
   }
+  code { color: #B94A48; }
   pre {
     padding: 1em;
-    code { padding: 0; }
+    code {
+      padding: 0;
+      color: #444;
+    }
   }
   blockquote {
     margin: 1em 1.5em;
@@ -90,17 +94,14 @@
     border: 1px solid #E9E9E6;
     border-width: 2px 0 0 0;
   }
-  .summary {
-    &:after {
-      display: block;
-      margin: 2em 0;
-      border: 1px dashed #D9D9D6;
-      border-width: 1px 0;
-      color: #999;
-      font-size: .85714em;
-      text-align: center;
-      content: "- more -";
-    }
+  .summary:after {
+    display: block;
+    margin: 2em 0;
+    background: #FFF9E8;
+    color: darken(#FFF9E8, 55%);
+    font-size: .85714em;
+    text-align: center;
+    content: "- more -";
   }
 }
 

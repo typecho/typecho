@@ -673,9 +673,7 @@ a.operate-reply {
   }
 
   .description {
-    margin: 0;
-    padding: 10px 0;
-    border-top: 1px solid #F0F0EC;
+    margin-top: 10px;
     text-align: right;
     button {
       float: left;
@@ -689,16 +687,18 @@ a.operate-reply {
       color: #467B96;
     }
   }
-
-  th, td {
-    padding: 10px 5px;
-    text-align: left;
-    font-size: .92857em;
-    font-weight: normal;
+  table {
+    margin-top: 10px;
   }
   td {
-    border-top: 1px solid #F0F0EC;
+    padding: 10px 5px;
+    font-size: .92857em;
+    border-bottom: 1px solid #F0F0EC;
     vertical-align: top;
+    label {
+      font-size: 1em;
+      font-weight: normal;
+    }
   }
   select { height: 27px; }
 }

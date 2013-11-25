@@ -94,7 +94,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
 
                     <?php Typecho_Plugin::factory('admin/write-post.php')->option($post); ?>
 
-                    <button type="button" id="advance-panel-btn" class="btn-xs"><?php _e('高级选项'); ?></button>
+                    <button type="button" id="advance-panel-btn" class="btn-xs"><?php _e('高级选项'); ?> <i class="i-caret-down"></i></button>
                     <div id="advance-panel">
                         <?php if($user->pass('editor', true)): ?>
                         <section class="typecho-post-option visibility-option">
