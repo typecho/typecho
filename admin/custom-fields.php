@@ -3,8 +3,8 @@
 $fields = isset($post) ? $post->getFieldItems() : $page->getFieldItems();
 $defaultFields = isset($post) ? $post->getDefaultFieldItems() : $post->getDefaultFieldItems();
 ?>
-                    <section id="custom-field" class="typecho-post-option fold">
-                        <label id="custom-field-expand" class="typecho-label"><?php _e('自定义字段'); ?> <i class="i-caret-down"></i></label>
+                    <section id="custom-field" class="typecho-post-option<?php if (empty($defaultFields) && empty($fields)): ?> fold<?php endif; ?>">
+                        <label id="custom-field-expand" class="typecho-label"><?php _e('自定义字段'); ?>  <i class="i-caret-down"></i></label>
                         <table class="typecho-list-table mono">
                             <colgroup>
                                 <col width="25%"/>
@@ -29,7 +29,7 @@ $defaultFields = isset($post) ? $post->getDefaultFieldItems() : $post->getDefaul
                                         <option value="float"<?php if ('float' == $field['type']): ?> selected<?php endif; ?>><?php _e('小数'); ?></option>
                                     </select>
                                 </td>
-                                <td><textarea name="fieldValues[]" class="text-s w-100" rows="2"><?php echo htmlspecialchars($field['value']); ?></textarea></td>
+                                <td><textarea name="fieldValues[]" class="text-s w-100" rows="2"><?php echo htmlspecialchars($field[$field['type'] . '_value']); ?></textarea></td>
                                 <td>
                                     <button type="button" class="btn-xs"><?php _e('删除'); ?></button>
                                 </td>

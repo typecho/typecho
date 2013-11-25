@@ -46,13 +46,10 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         <a href="###" class="current">撰写</a>
                         <a href="###">预览</a>
                     </div> -->
-
+                    
                     <?php include 'custom-fields.php'; ?>
-                    <?php include 'file-upload.php'; ?>
 
-                    <?php Typecho_Plugin::factory('admin/write-post.php')->content($post); ?>
                     <p class="submit clearfix">
-                        <span id="auto-save-message" class="left"></span>
                         <span class="right">
                             <input type="hidden" name="cid" value="<?php $post->cid(); ?>" />
                             <button type="submit" name="do" value="save" id="btn-save"><?php _e('保存草稿'); ?></button>
@@ -62,6 +59,10 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                             <?php endif; ?>
                         </span>
                     </p>
+
+                    <?php include 'file-upload.php'; ?>
+
+                    <?php Typecho_Plugin::factory('admin/write-post.php')->content($post); ?>
                 </div>
                 <div class="col-mb-12 col-tb-3" role="complementary">
                     <section class="typecho-post-option" role="application">

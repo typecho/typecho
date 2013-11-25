@@ -88,7 +88,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
             ->where('cid = ?', $this->cid));
 
         foreach ($rows as $row) {
-            $fields[$row['name']] = $fields[$fields['type'] . '_value'];
+            $fields[$row['name']] = $row[$row['type'] . '_value'];
         }
 
         return new Typecho_Config($fields);
@@ -426,13 +426,14 @@ class Widget_Abstract_Contents extends Widget_Abstract
     public function applyFields(array $fields, $cid)
     {
         $exists = array_flip(Typecho_Common::arrayFlatten($this->db->fetchAll($this->db->select('name')
-            ->from('table.contents')->where('cid = ?', $cid)), 'name'));
+            ->from('table.fields')->where('cid = ?', $cid)), 'name'));
 
         foreach ($fields as $name => $value) {
             $type = 'str';
 
             if (is_array($value) && 2 == count($value)) {
-                list($type, $value) = $value;
+                $type = $value[0];
+                $value = $value[1];
             } else if (strpos($name, ':') > 0) {
                 list ($type, $name) = explode(':', $name, 2);
             }
@@ -450,7 +451,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
         }
 
         foreach ($exists as $name => $value) {
-            $this->db->query($this->db->delete('table.contents')
+            $this->db->query($this->db->delete('table.fields')
                 ->where('cid = ? AND name = ?', $cid, $name));
         }
     }
@@ -467,11 +468,15 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     public function setField($name, $type, $value, $cid)
     {
-        $exist = $this->db->fetchRow($this->db->select('cid')->from('table.contents')
+        if (empty($name) || !in_array($type, array('str', 'int', 'float'))) {
+            return false;
+        }
+
+        $exist = $this->db->fetchRow($this->db->select('cid')->from('table.fields')
             ->where('cid = ? AND name = ?', $cid, $name));
 
         if (empty($exist)) {
-            return $this->db->query($this->db->insert('table.contents')
+            return $this->db->query($this->db->insert('table.fields')
                 ->rows(array(
                     'cid'           =>  $cid,
                     'name'          =>  $name,
@@ -481,7 +486,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
                     'float_value'   =>  'float' == $type ? floatval($value) : 0
                 )));
         } else {
-            return $this->db->query($this->db->update('table.contents')
+            return $this->db->query($this->db->update('table.fields')
                 ->rows(array(
                     'type'          =>  $type,
                     'str_value'     =>  'str' == $type ? $value : NULL,
@@ -503,12 +508,12 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     public function incrIntField($name, $value, $cid)
     {
-        $exist = $this->db->fetchRow($this->db->select('type')->from('table.contents')
+        $exist = $this->db->fetchRow($this->db->select('type')->from('table.fields')
             ->where('cid = ? AND name = ?', $cid, $name));
         $value = intval($value);
 
         if (empty($exist)) {
-            return $this->db->query($this->db->insert('table.contents')
+            return $this->db->query($this->db->insert('table.fields')
                 ->rows(array(
                     'cid'           =>  $cid,
                     'name'          =>  $name,
@@ -527,7 +532,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
                 $struct['type'] = 'int';
             }
 
-            return $this->db->query($this->db->update('table.contents')
+            return $this->db->query($this->db->update('table.fields')
                 ->rows($struct)
                 ->expression('int_value', 'int_value ' . ($value >= 0 ? '+' : '') . $value)
                 ->where('cid = ? AND name = ?', $cid, $name));
