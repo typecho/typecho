@@ -1031,9 +1031,10 @@ a.operate-reply {
   margin: 15px 0 0;
   padding: 0;
   border-top: 1px dashed #EEE;
-  min-height: 180px; }
+  min-height: 30px; }
   #file-list li {
-    padding: 5px 0;
+    padding-top: 5px;
+    padding-bottom: 5px;
     border-top: 1px dashed #EEE; }
     #file-list li:first-child {
       border: none; }
@@ -1045,6 +1046,9 @@ a.operate-reply {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis; }
+
+#tab-files #file-list {
+  min-height: 180px; }
 
 /**
 * 附件管理

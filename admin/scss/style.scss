@@ -813,9 +813,10 @@ background: #FFF1A8;
   margin: 15px 0 0;
   padding: 0;
   border-top: 1px dashed #EEE;
-  min-height: 180px;
+  min-height: 30px;
   li {
-    padding: 5px 0;
+    padding-top: 5px;
+    padding-bottom: 5px;
     border-top: 1px dashed #EEE;
     &:first-child { border: none; }
   }
@@ -829,6 +830,10 @@ background: #FFF1A8;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
+}
+
+#tab-files #file-list {
+  min-height: 180px;
 }
 
 
