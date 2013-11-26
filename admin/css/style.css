@@ -274,17 +274,21 @@ button {
   color: #264409; }
 
 .balloon {
-  padding: 0 5px;
-  min-width: 20px;
-  background: #C9C9C6;
+  display: inline-block;
+  padding: 0 4px;
+  min-width: 10px;
+  height: 14px;
+  line-height: 14px;
+  background: #B9B9B6;
+  vertical-align: text-top;
   text-align: center;
   font-size: 12px;
   color: #FFF;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  -ms-border-radius: 10px;
-  -o-border-radius: 10px;
-  border-radius: 10px; }
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+  border-radius: 20px; }
 
 /**
 * 后台分页
@@ -330,10 +334,12 @@ button {
   color: #FFF;
   text-decoration: none; }
 
-#typecho-nav-list ul {
-  list-style: none;
-  margin: 0;
-  padding: 0; }
+#typecho-nav-list {
+  float: left; }
+  #typecho-nav-list ul {
+    list-style: none;
+    margin: 0;
+    padding: 0; }
 
 #typecho-nav-list ul:first-child {
   border-left: 1px solid #383D45; }
@@ -363,7 +369,7 @@ button {
 
 #typecho-nav-list .child {
   position: absolute;
-  top: -9999em;
+  left: -9999em;
   margin: 0;
   min-width: 160px;
   max-width: 240px;
@@ -372,7 +378,8 @@ button {
   z-index: 250; }
 
 #typecho-nav-list .root:hover .child {
-  top: 36px; }
+  top: 36px;
+  left: 0; }
 
 #typecho-nav-list .child li a {
   color: #BBB;
