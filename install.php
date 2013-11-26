@@ -70,6 +70,7 @@ function _engine()
 {
     return !empty($_SERVER['HTTP_APPNAME']) // SAE
         || !!getenv('HTTP_BAE_ENV_APPID')   // BAE
+        || !!getenv('HTTP_BAE_LOGID')   // BAE 3.0
         || (isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false); // GAE
 }
 
@@ -512,8 +513,9 @@ Typecho_Db::set(\$db);
                                     
                                     if (!file_exists('./config.inc.php')) {
                                     ?>
-<div class="message notice"><p><?php _e('安装程序无法自动创建 config.inc.php 文件'); ?><br /><?php _e('您可以在网站根目录下手动创建 config.inc.php 文件, 并复制如下代码至其中'); ?></p>
-<p><textarea rows="5" onmouseover="this.select();" readonly><?php echo htmlspecialchars($contents); ?></textarea></p>
+<div class="message notice"><p><?php _e('安装程序无法自动创建 <strong>config.inc.php</strong> 文件'); ?><br />
+<?php _e('您可以在网站根目录下手动创建 <strong>config.inc.php</strong> 文件, 并复制如下代码至其中'); ?></p>
+<p><textarea rows="5" onmouseover="this.select();" class="w-100" readonly><?php echo htmlspecialchars($contents); ?></textarea></p>
 <p><button name="created" value="1" type="submit" class="primary">创建完毕, 继续安装 &raquo;</button></p></div>
                                     <?php
                                     } else { 
