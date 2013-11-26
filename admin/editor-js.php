@@ -211,7 +211,7 @@ $(document).ready(function () {
             selected_el = $(selected_tab).removeClass("wmd-hidetab");
 
         // 预览和编辑窗口高度一致
-        $("#wmd-preview").height($("#text").innerHeight());
+        $("#wmd-preview").outerHeight($("#wmd-editarea").innerHeight());
 
         return false;
     });

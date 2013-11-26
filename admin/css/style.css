@@ -1200,12 +1200,13 @@ a.operate-reply {
 
 .wmd-edittab {
   float: right;
-  margin-top: 5px;
+  margin-top: 3px;
   font-size: .92857em; }
   .wmd-edittab a {
     display: inline-block;
-    padding: 0 10px;
+    padding: 0 8px;
     margin-left: 5px;
+    height: 20px;
     line-height: 20px; }
     .wmd-edittab a:hover {
       text-decoration: none; }
