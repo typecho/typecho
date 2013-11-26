@@ -273,6 +273,19 @@ button {
 .success a {
   color: #264409; }
 
+.balloon {
+  padding: 0 5px;
+  min-width: 20px;
+  background: #C9C9C6;
+  text-align: center;
+  font-size: 12px;
+  color: #FFF;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+  border-radius: 10px; }
+
 /**
 * 后台分页
 */
@@ -449,7 +462,7 @@ button {
 * 载入状态
 */
 .loading {
-  padding-left: 20px;
+  padding-left: 20px !important;
   background: transparent url(../img/ajax-loader.gif) no-repeat left center; }
 
 /**
@@ -586,10 +599,6 @@ button {
 .typecho-dashboard ul {
   list-style: none;
   padding: 0; }
-
-.typecho-dashboard span {
-  font-size: .92857em;
-  color: #999; }
 
 .typecho-dashboard li {
   margin-bottom: 5px; }
@@ -957,7 +966,7 @@ a.operate-reply {
   list-style: none;
   padding: 0; }
 
-#edit-secondary #tab-advance {
+#edit-secondary #tab-files {
   display: none; }
 
 /**
@@ -1013,29 +1022,24 @@ a.operate-reply {
 * Upload
 */
 #upload-panel {
-  padding: 15px;
-  border: 1px solid #D9D9D6;
-  background-color: #FFF;
   color: #999;
-  font-size: .92857em;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  -ms-border-radius: 2px;
-  -o-border-radius: 2px;
-  border-radius: 2px; }
-  #upload-panel.drag {
+  font-size: .92857em; }
+  #upload-panel.drag, #upload-panel.drag .upload-area {
     background-color: #FFFBCC; }
+
+.upload-area {
+  padding: 12px;
+  border: 1px dashed #D9D9D6;
+  background-color: #FFF;
+  text-align: center; }
 
 #file-list {
   list-style: none;
-  margin: 15px 0 0;
-  padding: 0;
-  border-top: 1px dashed #EEE;
-  min-height: 30px; }
+  margin: 0;
+  padding: 0; }
   #file-list li {
-    padding-top: 5px;
-    padding-bottom: 5px;
-    border-top: 1px dashed #EEE; }
+    padding: 6px;
+    border-top: 1px solid #EEE; }
     #file-list li:first-child {
       border: none; }
   #file-list .file {
@@ -1046,6 +1050,8 @@ a.operate-reply {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis; }
+  #file-list .info {
+    text-transform: uppercase; }
 
 #tab-files #file-list {
   min-height: 180px; }

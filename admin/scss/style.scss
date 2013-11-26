@@ -123,7 +123,7 @@ a.button:hover, a.balloon-button:hover {
 * 载入状态
 */
 .loading {
-  padding-left: 20px;
+  padding-left: 20px !important;
   background: transparent url(../img/ajax-loader.gif) no-repeat left center;
 }
 
@@ -289,10 +289,6 @@ a.button:hover, a.balloon-button:hover {
 .typecho-dashboard ul {
   list-style: none;
   padding: 0;
-}
-.typecho-dashboard span {
-  font-size: .92857em;
-  color: #999;
 }
 .typecho-dashboard li {
   margin-bottom: 5px;
@@ -745,7 +741,7 @@ background: #FFF1A8;
 }
 
 #edit-secondary {
-  #tab-advance { display: none; }
+  #tab-files { display: none; }
 }
 
 /**
@@ -797,27 +793,27 @@ background: #FFF1A8;
 * Upload
 */
 #upload-panel {
-  padding: 15px;
-  border: 1px solid #D9D9D6;
-  background-color: #FFF;
   color: #999;
   font-size: .92857em;
-  @include border-radius(2px);
-  &.drag {
+  &.drag, &.drag .upload-area {
     background-color: #FFFBCC;
   }
 }
 
+.upload-area {
+  padding: 12px;
+  border: 1px dashed #D9D9D6;
+  background-color: #FFF;
+  text-align: center;
+}
+
 #file-list {
   list-style: none;
-  margin: 15px 0 0;
+  margin: 0;
   padding: 0;
-  border-top: 1px dashed #EEE;
-  min-height: 30px;
   li {
-    padding-top: 5px;
-    padding-bottom: 5px;
-    border-top: 1px dashed #EEE;
+    padding: 6px;
+    border-top: 1px solid #EEE;
     &:first-child { border: none; }
   }
   .file {
@@ -829,6 +825,9 @@ background: #FFF1A8;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+  }
+  .info {
+    text-transform: uppercase;
   }
 }
 

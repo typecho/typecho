@@ -52,13 +52,11 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                 </div>
                 <div id="edit-secondary" class="col-mb-12 col-tb-3" role="complementary">
                     <ul class="typecho-option-tabs clearfix">
-                        <li class="active w-50"><a href="#tab-files">附件</a></li>
-                        <li class="w-50"><a href="#tab-advance">更多</a></li>
+                        <li class="active w-50"><a href="#tab-advance">更多</a></li>
+                        <li class="w-50"><a href="#tab-files">附件</a></li>
                     </ul>
-                    <div id="tab-files" class="tab_content">
-                        <?php include 'file-upload.php'; ?>
-                    </div>
-                    <div id="tab-advance" class="tab_content">
+
+                    <div id="tab-advance" class="tab-content">
                         <section  class="typecho-post-option" role="application">
                             <label for="date" class="typecho-label"><?php _e('发布日期'); ?></label>
                             <p><input class="typecho-date w-100" type="text" name="date" id="date" value="<?php $page->have() ? $page->date('Y-m-d H:i') : ''; ?>" /></p>
@@ -120,7 +118,11 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                         </p>
                         </section>
                         <?php endif; ?>
-                    </div>
+                    </div><!-- end #tab-advance -->
+
+                    <div id="tab-files" class="tab-content">
+                        <?php include 'file-upload.php'; ?>
+                    </div><!-- end #tab-files -->
                 </div>
             </form>
         </div>

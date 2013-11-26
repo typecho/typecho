@@ -13,7 +13,7 @@ if (isset($post) || isset($page)) {
 ?>
 
 <div id="upload-panel" class="p">
-    <?php _e('将要上传的文件拖放到这里 或者 %s选择文件上传%s', '<a href="###" class="upload-file">', '</a>'); ?>
+    <div class="upload-area"><?php _e('拖放文件到这里<br>或者 %s选择文件上传%s', '<a href="###" class="upload-file">', '</a>'); ?></div>
     <ul id="file-list">
     <?php while ($attachment->next()): ?>
         <li data-cid="<?php $attachment->cid(); ?>" data-url="<?php echo $attachment->attachment->url; ?>" data-image="<?php echo $attachment->attachment->isImage ? 1 : 0; ?>"><input type="hidden" name="attachment[]" value="<?php $attachment->cid(); ?>" />

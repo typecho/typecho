@@ -27,7 +27,7 @@ Typecho_Widget::widget('Widget_Contents_Attachment_Edit')->to($attachment);
                 </p>
 
                 <div id="upload-panel" class="p">
-                    将要替换的文件拖放到这里 或者 <a href="###" class="upload-file">选择替换文件</a>
+                    <div class="upload-area">拖放替换文件到这里 或者 <a href="###" class="upload-file">选择文件替换</a></div>
                     <ul id="file-list"></ul>
                 </div>
             </div>
