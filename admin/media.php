@@ -28,7 +28,6 @@ Typecho_Widget::widget('Widget_Contents_Attachment_Edit')->to($attachment);
 
                 <div id="upload-panel" class="p">
                     将要替换的文件拖放到这里 或者 <a href="###" class="upload-file">选择替换文件</a>
-                    <ul id="file-list"></ul>
                 </div>
             </div>
             <div class="col-mb-12 col-tb-4 edit-media" role="form">
@@ -77,15 +76,19 @@ $(document).ready(function() {
     });
 
     function fileUploadStart (file, id) {
+        $('<ul id="file-list"></ul>').appendTo('#upload-panel');
         $('<li id="' + id + '" class="loading">'
             + file + '</li>').prependTo('#file-list');
     }
 
     function fileUploadComplete (id, url, data) {
+        var img = $('.typecho-attachment-photo').get(0);
+        img.src = '<?php $attachment->attachment->url(); ?>?' + Math.random();
+        
         $('#' + id).html('<?php _e('文件 %s 已经替换'); ?>'.replace('%s', data.title))
         .effect('highlight', 1000, function () {
             $(this).remove();
-            window.location.reload();
+            $('#file-list').remove();
         });
     }
 
@@ -96,6 +99,7 @@ $(document).ready(function() {
         onUpload    :   fileUploadStart,
         onError     :   function (id) {
             $('#' + id).remove();
+            $('#file-list').remove();
             alert(errorWord);
         },
         onComplete  :   fileUploadComplete

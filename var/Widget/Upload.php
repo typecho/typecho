@@ -30,7 +30,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
      */
     private static function makeUploadDir($path)
     {
-        if (!@mkdir($path)) {
+        if (!@mkdir($path, 0777, true)) {
             return false;
         }
 
@@ -75,24 +75,11 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
 
         $options = Typecho_Widget::widget('Widget_Options');
         $date = new Typecho_Date($options->gmtTime);
-        $path = Typecho_Common::url(self::UPLOAD_PATH, __TYPECHO_ROOT_DIR__);
+        $path = Typecho_Common::url(self::UPLOAD_PATH, __TYPECHO_ROOT_DIR__)
+            . '/' . $date->year . '/' . $date->month;
 
         //创建上传目录
         if (!is_dir($path)) {
-            if (!self::makeUploadDir($path)) {
-                return false;
-            }
-        }
-
-        //创建年份目录
-        if (!is_dir($path = $path . '/' . $date->year)) {
-            if (!self::makeUploadDir($path)) {
-                return false;
-            }
-        }
-
-        //创建月份目录
-        if (!is_dir($path = $path . '/' . $date->month)) {
             if (!self::makeUploadDir($path)) {
                 return false;
             }
@@ -105,7 +92,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         if (isset($file['tmp_name'])) {
 
             //移动上传文件
-            if (!move_uploaded_file($file['tmp_name'], $path)) {
+            if (!@move_uploaded_file($file['tmp_name'], $path)) {
                 return false;
             }
         } else if (isset($file['bytes'])) {
@@ -166,13 +153,21 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         }
 
         $path = Typecho_Common::url($content['attachment']->path, __TYPECHO_ROOT_DIR__);
+        $dir = dirname($path);
+
+        //创建上传目录
+        if (!is_dir($dir)) {
+            if (!self::makeUploadDir($dir)) {
+                return false;
+            }
+        }
 
         if (isset($file['tmp_name'])) {
             
             @unlink($path);
 
             //移动上传文件
-            if (!move_uploaded_file($file['tmp_name'], $path)) {
+            if (!@move_uploaded_file($file['tmp_name'], $path)) {
                 return false;
             }
         } else if (isset($file['bytes'])) {
