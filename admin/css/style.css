@@ -1217,6 +1217,9 @@ a.operate-reply {
 .wmd-hidetab {
   display: none; }
 
+.wmd-visualhide {
+  visibility: hidden; }
+
 /* 对话框 */
 .wmd-prompt-background {
   background-color: #000; }
@@ -1246,9 +1249,8 @@ a.operate-reply {
   background: #FFF;
   margin: 1em 0;
   padding: 0 15px;
-  border: 1px solid #D9D9D6;
   word-wrap: break-word;
-  overflow: scroll;
+  overflow: auto;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   -ms-border-radius: 2px;
@@ -1339,6 +1341,8 @@ a.operate-reply {
   display: none; }
 .fullscreen .wmd-hidetab {
   display: block; }
+.fullscreen .wmd-visualhide {
+  visibility: visible; }
 
 /**
 * Jquery Timepicker

@@ -63,7 +63,11 @@
 // 控制被隐藏的 tab，全屏时显示
 .wmd-hidetab {
   display: none;
-} 
+}
+// 隐藏编辑器，但占位
+.wmd-visualhide {
+  visibility: hidden;
+}
 
 /* 对话框 */
 .wmd-prompt-background {
@@ -94,9 +98,8 @@
   background: #FFF;
   margin: 1em 0;
   padding: 0 15px;
-  border: 1px solid #D9D9D6;
   word-wrap: break-word;
-  overflow: scroll;
+  overflow: auto;
   @include border-radius(2px);
   img { max-width: 100%; }
   code, pre {
@@ -188,4 +191,7 @@
   .message,
   #upload-panel { display: none; }
   .wmd-hidetab { display: block; }
+  .wmd-visualhide {
+    visibility: visible;
+  }
 }

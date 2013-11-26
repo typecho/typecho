@@ -210,6 +210,13 @@ $(document).ready(function () {
         var selected_tab = $(this).attr("href"),
             selected_el = $(selected_tab).removeClass("wmd-hidetab");
 
+        // 预览时隐藏编辑器按钮
+        if (selected_tab == "#wmd-preview") {
+            $("#wmd-button-row").addClass("wmd-visualhide");
+        } else {
+            $("#wmd-button-row").removeClass("wmd-visualhide");
+        }
+
         // 预览和编辑窗口高度一致
         $("#wmd-preview").outerHeight($("#wmd-editarea").innerHeight());
 
