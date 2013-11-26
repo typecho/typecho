@@ -65,8 +65,8 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
 
                 <div id="edit-secondary" class="col-mb-12 col-tb-3" role="complementary">
                     <ul class="typecho-option-tabs clearfix">
-                        <li class="active w-50"><a href="#tab-advance">选项</a></li>
-                        <li class="w-50"><a href="#tab-files">附件</a></li>
+                        <li class="active w-50"><a href="#tab-advance"><?php _e('选项'); ?></a></li>
+                        <li class="w-50"><a href="#tab-files" id="tab-files-btn"><?php _e('附件'); ?></a></li>
                     </ul>
 
 
