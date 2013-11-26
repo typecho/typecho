@@ -176,7 +176,7 @@ $(document).ready(function() {
             $(this).removeClass('drag');
         },
 
-        uploadOpened   :   function (i, file, len) {
+        uploadStarted   :   function (i, file, len) {
             fileUploadStart(file.name, 'drag-' + i);
         },
 
