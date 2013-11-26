@@ -793,28 +793,27 @@ background: #FFF1A8;
 * Upload
 */
 #upload-panel {
+  border: 1px dashed #D9D9D6;
+  background-color: #FFF;
   color: #999;
   font-size: .92857em;
-  &.drag, &.drag .upload-area {
+  &.drag {
     background-color: #FFFBCC;
   }
 }
 
 .upload-area {
-  padding: 12px;
-  border: 1px dashed #D9D9D6;
-  background-color: #FFF;
+  padding: 15px;
   text-align: center;
 }
 
 #file-list {
   list-style: none;
-  margin: 0;
+  margin: 0 12px;
   padding: 0;
   li {
-    padding: 6px;
-    border-top: 1px solid #EEE;
-    &:first-child { border: none; }
+    padding: 8px 0;
+    border-top: 1px dashed #D9D9D6;
   }
   .file {
     margin-left: 5px;
@@ -829,10 +828,6 @@ background: #FFF1A8;
   .info {
     text-transform: uppercase;
   }
-}
-
-#tab-files #file-list {
-  min-height: 180px;
 }
 
 

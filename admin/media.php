@@ -77,15 +77,19 @@ $(document).ready(function() {
     });
 
     function fileUploadStart (file, id) {
+        $('<ul id="file-list"></ul>').appendTo('#upload-panel');
         $('<li id="' + id + '" class="loading">'
             + file + '</li>').prependTo('#file-list');
     }
 
     function fileUploadComplete (id, url, data) {
+        var img = $('.typecho-attachment-photo').get(0);
+        img.src = '<?php $attachment->attachment->url(); ?>?' + Math.random();
+        
         $('#' + id).html('<?php _e('文件 %s 已经替换'); ?>'.replace('%s', data.title))
         .effect('highlight', 1000, function () {
             $(this).remove();
-            window.location.reload();
+            $('#file-list').remove();
         });
     }
 
@@ -96,14 +100,14 @@ $(document).ready(function() {
         onUpload    :   fileUploadStart,
         onError     :   function (id) {
             $('#' + id).remove();
+            $('#file-list').remove();
             alert(errorWord);
         },
         onComplete  :   fileUploadComplete
     });
 
     $('#upload-panel').filedrop({
-        url             :   '<?php $options->index('/action/upload' 
-            . (isset($fileParentContent) ? '?cid=' . $fileParentContent->cid : '')); ?>',
+        url             :   '<?php $options->index('/action/upload?do=modify&cid=' . $attachment->cid); ?>',
         allowedfileextensions   :   ['.<?php $attachment->attachment->type(); ?>'],
 
         maxfilesize     :   <?php 

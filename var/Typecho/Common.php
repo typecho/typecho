@@ -560,6 +560,8 @@ EOF;
      */
     public static function stripTags($html, $allowableTags = NULL)
     {
+        static $dom;
+
         $normalizeTags = '';
         $allowableAttributes = array();
 
@@ -573,8 +575,11 @@ EOF;
         }
 
         $html = strip_tags($html, $normalizeTags);
-        $dom = new DOMDocument('1.0', self::$charset);
-        $dom->xmlStandalone = false;
+
+        if (empty($dom)) {
+            $dom = new DOMDocument('1.0', self::$charset);
+            $dom->xmlStandalone = false;
+        }
         @$dom->loadHTML('<?xml encoding="UTF-8">' . $html);
 
         foreach($dom->getElementsByTagName('*') as $node){
