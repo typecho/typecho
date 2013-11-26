@@ -41,11 +41,6 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         <label for="text" class="visuallyhidden"><?php _e('文章内容'); ?></label>
                         <textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text" name="text" class="w-100 mono"><?php echo htmlspecialchars($post->text); ?></textarea>
                     </p>
-
-                    <!-- <div class="">
-                        <a href="###" class="current">撰写</a>
-                        <a href="###">预览</a>
-                    </div> -->
                     
                     <?php include 'custom-fields.php'; ?>
 

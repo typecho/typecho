@@ -7,7 +7,7 @@
 $(document).ready(function () {
     var textarea = $('#text'),
         toolbar = $('<div class="editor" id="wmd-button-bar" />').insertBefore(textarea.parent())
-        preview = $('<div id="wmd-preview" />').insertAfter('.submit');
+        preview = $('<div id="wmd-preview" class="wmd-hidetab" />').insertAfter('.editor');
 
     var options = {};
 
@@ -196,6 +196,25 @@ $(document).ready(function () {
             }
         }, 10);
     };
+
+
+    // 编辑预览切换
+    var edittab = $('.editor').prepend('<div class="wmd-edittab"><a href="#wmd-editarea" class="active">撰写</a><a href="#wmd-preview">预览</a></div>'),
+        editarea = $(textarea.parent()).attr("id", "wmd-editarea");
+
+    $(".wmd-edittab a").click(function() {
+        $(".wmd-edittab a").removeClass('active');
+        $(this).addClass("active");
+        $("#wmd-editarea, #wmd-preview").addClass("wmd-hidetab");
+        
+        var selected_tab = $(this).attr("href"),
+            selected_el = $(selected_tab).removeClass("wmd-hidetab");
+
+        // 预览和编辑窗口高度一致
+        $("#wmd-preview").height($("#text").innerHeight());
+
+        return false;
+    });
 });
 </script>
 <?php endif; ?>

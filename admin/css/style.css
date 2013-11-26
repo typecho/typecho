@@ -903,7 +903,8 @@ a.operate-reply {
 .typecho-post-area .url-slug {
   margin-top: -0.5em;
   color: #AAA;
-  font-size: .92857em; }
+  font-size: .92857em;
+  word-break: break-word; }
 
 .typecho-post-area #slug {
   padding: 2px;
@@ -1191,11 +1192,29 @@ a.operate-reply {
       background: #E9E9E6;
       cursor: default; }
 
-.editor span {
+#wmd-button-row span {
   display: block;
   width: 20px;
   height: 20px;
   background: transparent url(../img/editor.png) no-repeat; }
+
+.wmd-edittab {
+  float: right;
+  margin-top: 5px;
+  font-size: .92857em; }
+  .wmd-edittab a {
+    display: inline-block;
+    padding: 0 10px;
+    margin-left: 5px;
+    line-height: 20px; }
+    .wmd-edittab a:hover {
+      text-decoration: none; }
+    .wmd-edittab a.active {
+      background: #E9E9E6;
+      color: #999; }
+
+.wmd-hidetab {
+  display: none; }
 
 /* 对话框 */
 .wmd-prompt-background {
@@ -1224,8 +1243,16 @@ a.operate-reply {
 /* 预览 */
 #wmd-preview {
   background: #FFF;
-  padding: 5px 15px;
-  word-wrap: break-word; }
+  margin: 1em 0;
+  padding: 0 15px;
+  border: 1px solid #D9D9D6;
+  word-wrap: break-word;
+  overflow: scroll;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px; }
   #wmd-preview img {
     max-width: 100%; }
   #wmd-preview code, #wmd-preview pre {
@@ -1267,7 +1294,12 @@ a.operate-reply {
   z-index: 999;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
-  box-sizing: border-box; }
+  box-sizing: border-box;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -ms-border-radius: 0;
+  -o-border-radius: 0;
+  border-radius: 0; }
 .fullscreen #wmd-button-bar {
   left: 0;
   padding: 13px 20px;
@@ -1278,16 +1310,13 @@ a.operate-reply {
   left: 0;
   padding: 20px;
   border: none;
-  outline: none;
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  -ms-border-radius: 0;
-  -o-border-radius: 0;
-  border-radius: 0; }
+  outline: none; }
 .fullscreen #wmd-preview {
   top: 53px;
   right: 0;
+  margin: 0;
   padding: 5px 20px;
+  border: none;
   border-left: 1px solid #F3F3F0;
   background: #F6F6F3;
   overflow: auto; }
@@ -1298,6 +1327,7 @@ a.operate-reply {
   margin: 0;
   padding: 10px 20px;
   border-bottom: 1px solid #F3F3F0; }
+.fullscreen .wmd-edittab,
 .fullscreen .typecho-post-option,
 .fullscreen .title,
 .fullscreen .url-slug,
@@ -1306,6 +1336,8 @@ a.operate-reply {
 .fullscreen .message,
 .fullscreen #upload-panel {
   display: none; }
+.fullscreen .wmd-hidetab {
+  display: block; }
 
 /**
 * Jquery Timepicker
