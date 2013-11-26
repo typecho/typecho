@@ -152,10 +152,11 @@ $(document).ready(function () {
         }
     });
 
-    var input = $('#text'), th = textarea.height();
+    var input = $('#text'), th = textarea.height(), ph = preview.height();
 
     editor.hooks.chain('enterFakeFullScreen', function () {
         th = textarea.height();
+        ph = preview.height();
         $(document.body).addClass('fullscreen');
         var h = $(window).height() - toolbar.outerHeight();
         
@@ -174,7 +175,7 @@ $(document).ready(function () {
     editor.hooks.chain('exitFullScreen', function () {
         $(document.body).removeClass('fullscreen');
         textarea.height(th);
-        preview.css('height', 'auto');
+        preview.height(ph);
     });
 
     editor.run();
