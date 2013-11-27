@@ -592,7 +592,7 @@ EOF;
                 $attribute = $node->attributes->item($i);
                 $name = strtolower($attribute->name);
 
-                if (!in_array($name, $allowableAttributes[$tagName])) {
+                if (empty($allowableAttributes[$tagName]) || !in_array($name, $allowableAttributes[$tagName])) {
                     $node->removeAttributeNode($attribute);
                 }
             }
