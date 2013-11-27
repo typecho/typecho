@@ -578,9 +578,12 @@ EOF;
 
         if (empty($dom)) {
             $dom = new DOMDocument('1.0', self::$charset);
+            $dom->encoding = self::$charset;
             $dom->xmlStandalone = false;
         }
-        @$dom->loadHTML('<?xml encoding="UTF-8">' . $html);
+        @$dom->loadHTML('<?xml encoding="' . self::$charset . '">'
+            . '<head><meta http-equiv="Content-Type" content="text/html; charset=' . self::$charset . '"/></head><body>' 
+            . $html . '</body>');
 
         foreach($dom->getElementsByTagName('*') as $node){
             $tagName = strtolower($node->tagName);
