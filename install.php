@@ -360,7 +360,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                 <div class="typecho-install-body">
                     <form method="post" action="?start" name="check">
 <?php
-                                        if(('Mysql' == $type && 1050 == $code) ||
+                                        if(('Mysql' == $type && (1050 == $code || '42S01' == $code)) ||
                                         ('SQLite' == $type && ('HY000' == $code || 1 == $code)) ||
                                         ('Pgsql' == $type && '42P07' == $code)) {
                                             if(_r('delete')) {
