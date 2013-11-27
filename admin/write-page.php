@@ -38,7 +38,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                         <textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text" name="text" class="w-100 mono"><?php echo htmlspecialchars($page->text); ?></textarea>
                     </p>
                         
-                    <?php Typecho_Plugin::factory('admin/write-page.php')->content($page); ?>
+                    <?php include 'custom-fields.php'; ?>
                     <p class="submit clearfix">
                         <span class="right">
                             <input type="hidden" name="cid" value="<?php $page->cid(); ?>" />
@@ -49,6 +49,8 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                             <?php endif; ?>
                         </span>
                     </p>
+                    
+                    <?php Typecho_Plugin::factory('admin/write-page.php')->content($page); ?>
                 </div>
                 <div id="edit-secondary" class="col-mb-12 col-tb-3" role="complementary">
                     <ul class="typecho-option-tabs clearfix">
@@ -141,6 +143,7 @@ if (!$plugged) {
 }
 
 include 'file-upload-js.php';
+include 'custom-fields-js.php';
 Typecho_Plugin::factory('admin/write-page.php')->bottom($page);
 include 'footer.php';
 ?>
