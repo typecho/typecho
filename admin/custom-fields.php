@@ -1,7 +1,7 @@
 <?php if(!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <?php
 $fields = isset($post) ? $post->getFieldItems() : $page->getFieldItems();
-$defaultFields = isset($post) ? $post->getDefaultFieldItems() : $post->getDefaultFieldItems();
+$defaultFields = isset($post) ? $post->getDefaultFieldItems() : $page->getDefaultFieldItems();
 ?>
                     <section id="custom-field" class="typecho-post-option<?php if (empty($defaultFields) && empty($fields)): ?> fold<?php endif; ?>">
                         <label id="custom-field-expand" class="typecho-label"><i class="i-caret-right"></i> <?php _e('自定义字段'); ?></label>
