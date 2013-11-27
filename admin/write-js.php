@@ -131,7 +131,7 @@ $(document).ready(function() {
         formAction = form.attr('action'),
         idInput = $('input[name=cid]'),
         cid = idInput.val(),
-        autoSave = $('#auto-save-message'),
+        autoSave = $('<span id="auto-save-message" class="left"></span>').prependTo('.submit'),
         autoSaveOnce = !!cid,
         lastSaveTime = null;
 
