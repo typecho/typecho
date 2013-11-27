@@ -1339,7 +1339,7 @@ class Markdown {
 
 		$url = $this->encodeAttribute($matches[2] . $matches[3]);
 		$link = "<a rel=\"nofollow\" href=\"$url\">$url</a>";
-		return '<' . $protocol . $link . '>' . $this->tail;
+		return '<' . $protocol . $this->hashPart($link) . '>' . $this->tail;
 	}
 
 	protected function _doAutoLinks_email_callback($matches) {
