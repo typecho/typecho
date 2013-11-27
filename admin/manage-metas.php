@@ -68,7 +68,7 @@ include 'menu.php';
                                     <td><?php $categories->slug(); ?></td>
                                     <td>
                                     <?php if ($options->defaultCategory == $categories->mid): ?>
-                                    <span class="balloon right"><?php _e('默认'); ?></span>
+                                    <?php _e('默认'); ?>
                                     <?php else: ?>
                                     <a class="hidden-by-mouse" href="<?php $options->index('/action/metas-category-edit?do=default&mid=' . $categories->mid); ?>" title="<?php _e('设为默认'); ?>"><?php _e('默认'); ?></a>
                                     <?php endif; ?>
