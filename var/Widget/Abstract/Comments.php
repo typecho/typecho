@@ -111,16 +111,12 @@ class Widget_Abstract_Comments extends Widget_Abstract
 
         $text = $this->pluginHandle(__CLASS__)->trigger($plugged)->content($text, $this);
         if (!$plugged) {
-            if ($this->options->commentsMarkdown) {
-                $text = MarkdownExtraExtended::defaultTransform($text);
-                $text = Typecho_Common::stripTags($text, '<p><br>' . $this->options->commentsHTMLTagAllowed);
-            } else {
-                $text = Typecho_Common::stripTags($text, $this->options->commentsHTMLTagAllowed);
-                $text = Typecho_Common::cutParagraph($text);
-            }
+            $text = $this->options->commentsMarkdown ? MarkdownExtraExtended::defaultTransform($text)
+                : Typecho_Common::cutParagraph($text);
         }
 
-        return $this->pluginHandle(__CLASS__)->contentEx($text, $this);
+        $text = $this->pluginHandle(__CLASS__)->contentEx($text, $this);
+        return Typecho_Common::stripTags($text, '<p><br>' . $this->options->commentsHTMLTagAllowed);
     }
 
     /**

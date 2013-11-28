@@ -828,7 +828,7 @@ class Markdown {
 			}
 			else {
 				$text = preg_replace_callback('{
-						(?:(?<=\n)\n|\A\n?) # Must eat the newline
+						(?:(?<=\n)\n?|\A\n?) # Must eat the newline
 						'.$whole_list_re.'
 					}mx',
 					array($this, '_doLists_callback'), $text);
