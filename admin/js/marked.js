@@ -276,13 +276,24 @@ Lexer.prototype.token = function(src, top) {
     // list
     if (cap = this.rules.list.exec(src)) {
       // fix bug
-      var lines = cap[0].split("\n"), len = -1;
+      var lines = cap[0].split("\n"), len = -1, bullType = function (bull) {
+        return bull.match(/^[*+-]$/) ? 'ul' : 'ol';
+      }, lastBull = bullType(cap[2]), lastSpace;
+      
       for (var num = 0; num < lines.length; num ++) {
-        var line = lines[num];
+        var line = lines[num], match = line.match(/^( *)([*+-]|\d+\.) [\s\S]+?/);
 
-        if (!line.match(/^( *)(?:[*+-]|\d+\.) [\s\S]+?/) && !line.match(/^\s*$/)) {
+        if (!match && !line.match(/^\s*$/)) {
             break;
         }
+
+        var currentBull = bullType(match[2]), currentSpace = match[1];
+        if (lastBull != currentBull && lastSpace == currentSpace) {
+            break;
+        }
+
+        lastBull = currentBull;
+        lastSpace = currentSpace;
 
         len += line.length + 1;
       }
