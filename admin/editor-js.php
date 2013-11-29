@@ -1,7 +1,7 @@
 <?php if(!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <?php $content = !empty($post) ? $post : $page; if ($options->markdown && (!$content->have() || $content->isMarkdown)): ?>
-<script src="<?php $options->adminUrl('js/marked.js?v=' . $suffixVersion); ?>"></script>
 <script src="<?php $options->adminUrl('js/pagedown.js?v=' . $suffixVersion); ?>"></script>
+<script src="<?php $options->adminUrl('js/pagedown-extra.js?v=' . $suffixVersion); ?>"></script>
 <script src="<?php $options->adminUrl('js/diff.js?v=' . $suffixVersion); ?>"></script>
 <script>
 $(document).ready(function () {
@@ -57,18 +57,19 @@ $(document).ready(function () {
         help: '<?php _e('Markdown语法帮助'); ?>'
     };
 
-    var editor = new Markdown.Editor(marked, '', options),
+    var converter = new Markdown.Converter(),
+        editor = new Markdown.Editor(converter, '', options),
         diffMatch = new diff_match_patch(), last = '', preview = $('#wmd-preview'),
         mark = '@mark' + Math.ceil(Math.random() * 100000000) + '@',
         span = '<span class="diff" />';
     
     // 设置markdown
-    marked.setOptions({
-        breaks      :   true
+    Markdown.Extra.init(converter, {
+        extensions  :   'all'
     });
 
     // 自动跟随
-    editor.hooks.chain('postMarkdown', function (html) {
+    converter.hooks.chain('postConversion', function (html) {
         html = html.replace(/<\/?(\!doctype|html|head|body|link|title|input|select|button|textarea|style|noscript)[^>]*>/ig, function (all) {
             return all.replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
