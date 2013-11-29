@@ -8,7 +8,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
 <div class="main">
     <div class="container typecho-dashboard">
         <?php include 'page-title.php'; ?>
-        <div class="col-group typecho-page-main">
+        <div class="colgroup typecho-page-main">
             <div class="col-mb-12 col-tb-3 typecho-dashboard-nav" role="main">
                 <p class="intro"><?php _e('欢迎使用 Typecho, 您可以使用下面的链接开始您的 Blog 之旅:'); ?></p>
             
@@ -118,7 +118,9 @@ include 'common-js.php';
 
 <script>
 $(document).ready(function () {
-    var ul = $('.intro-link ul'), html = $.cookie('__typecho_feed'), update = $.cookie('__typecho_update');
+    var ul = $('.intro-link ul'), cache = window.sessionStorage,
+        html = cache ? cache.getItem('feed') : '',
+        update = cache ? cache.getItem('update') : '';
 
     if (!!html) {
         ul.html(html);
@@ -132,8 +134,8 @@ $(document).ready(function () {
             }
 
             ul.html(html);
-            $.cookie('__typecho_feed', html);
-        });
+            cache.setItem('feed', html);
+        }, 'json');
     }
 
     function applyUpdate(update) {
@@ -152,8 +154,8 @@ $(document).ready(function () {
         update = '';
         $.get('<?php $options->index('/action/ajax?do=checkVersion'); ?>', function (o, status, resp) {
             applyUpdate(o);
-            $.cookie('__typecho_update', resp.responseText);
-        });
+            cache.setItem('update', resp.responseText);
+        }, 'json');
     }
 });
 

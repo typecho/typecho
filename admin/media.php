@@ -9,7 +9,7 @@ Typecho_Widget::widget('Widget_Contents_Attachment_Edit')->to($attachment);
 <div class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
-        <div class="col-group typecho-page-main">
+        <div class="colgroup typecho-page-main">
             <div class="col-mb-12 col-tb-8" role="main">
                 <?php if ($attachment->attachment->isImage): ?>
                 <p><img src="<?php $attachment->attachment->url(); ?>" alt="<?php $attachment->attachment->name(); ?>" class="typecho-attachment-photo" /></p>
@@ -27,7 +27,7 @@ Typecho_Widget::widget('Widget_Contents_Attachment_Edit')->to($attachment);
                 </p>
 
                 <div id="upload-panel" class="p">
-                    将要替换的文件拖放到这里 或者 <a href="###" class="upload-file">选择替换文件</a>
+                    <div class="upload-area">拖放替换文件到这里 或者 <a href="###" class="upload-file">选择文件替换</a></div>
                     <ul id="file-list"></ul>
                 </div>
             </div>
@@ -77,15 +77,19 @@ $(document).ready(function() {
     });
 
     function fileUploadStart (file, id) {
+        $('<ul id="file-list"></ul>').appendTo('#upload-panel');
         $('<li id="' + id + '" class="loading">'
             + file + '</li>').prependTo('#file-list');
     }
 
     function fileUploadComplete (id, url, data) {
+        var img = $('.typecho-attachment-photo').get(0);
+        img.src = '<?php $attachment->attachment->url(); ?>?' + Math.random();
+        
         $('#' + id).html('<?php _e('文件 %s 已经替换'); ?>'.replace('%s', data.title))
         .effect('highlight', 1000, function () {
             $(this).remove();
-            window.location.reload();
+            $('#file-list').remove();
         });
     }
 
@@ -96,14 +100,14 @@ $(document).ready(function() {
         onUpload    :   fileUploadStart,
         onError     :   function (id) {
             $('#' + id).remove();
+            $('#file-list').remove();
             alert(errorWord);
         },
         onComplete  :   fileUploadComplete
     });
 
     $('#upload-panel').filedrop({
-        url             :   '<?php $options->index('/action/upload' 
-            . (isset($fileParentContent) ? '?cid=' . $fileParentContent->cid : '')); ?>',
+        url             :   '<?php $options->index('/action/upload?do=modify&cid=' . $attachment->cid); ?>',
         allowedfileextensions   :   ['.<?php $attachment->attachment->type(); ?>'],
 
         maxfilesize     :   <?php 
@@ -172,7 +176,7 @@ $(document).ready(function() {
             $(this).removeClass('drag');
         },
 
-        uploadOpened   :   function (i, file, len) {
+        uploadStarted   :   function (i, file, len) {
             fileUploadStart(file.name, 'drag-' + i);
         },
 

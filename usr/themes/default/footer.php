@@ -1,6 +1,6 @@
 
             
-        </div><!-- end .col-group -->
+        </div><!-- end .colgroup -->
     </div>
 </div><!-- end #body -->
 

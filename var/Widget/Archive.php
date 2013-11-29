@@ -1233,7 +1233,7 @@ class Widget_Archive extends Widget_Abstract_Contents
 
         /** 定时发布功能 */
         if (!$selectPlugged) {
-            if ('post' == $this->parameter->type) {
+            if ('post' == $this->parameter->type || 'page' == $this->parameter->type) {
                 if ($this->user->hasLogin()) {
                     $select = $this->select()->where('table.contents.status = ? OR table.contents.status = ? OR
                             (table.contents.status = ? AND table.contents.authorId = ?)',
@@ -1314,7 +1314,8 @@ class Widget_Archive extends Widget_Abstract_Contents
      * @param string $splitWord 分割字符
      * @return void
      */
-    public function pageNav($prev = '&laquo;', $next = '&raquo;', $splitPage = 3, $splitWord = '...')
+    public function pageNav($prev = '&laquo;', $next = '&raquo;', $splitPage = 3, $splitWord = '...',
+        $class = 'page-navigator', $currentClass = 'current')
     {
         if ($this->have()) {
             $hasNav = false;
@@ -1329,8 +1330,8 @@ class Widget_Archive extends Widget_Abstract_Contents
                 $nav = new Typecho_Widget_Helper_PageNavigator_Box(false === $this->_total ? $this->_total = $this->size($this->_countSql) : $this->_total,
                 $this->_currentPage, $this->parameter->pageSize, $query);
                 
-                echo '<ol class="page-navigator">';
-                $nav->render($prev, $next, $splitPage, $splitWord);
+                echo '<ol class="' . $class . '">';
+                $nav->render($prev, $next, $splitPage, $splitWord, $currentClass);
                 echo '</ol>';
             }
         }

@@ -122,6 +122,17 @@ class Typecho_Widget_Helper_Layout
     }
 
     /**
+     * getItems  
+     * 
+     * @access public
+     * @return array
+     */
+    public function getItems()
+    {
+        return $this->_items;
+    }
+
+    /**
      * 设置内部数据
      *
      * @access public

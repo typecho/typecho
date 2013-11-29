@@ -225,7 +225,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
 
         /** 提示信息 */
         $this->widget('Widget_Notice')->set(_t('分类 <a href="%s">%s</a> 已经被增加',
-        $this->permalink, $this->name), NULL, 'success');
+        $this->permalink, $this->name), 'success');
 
         /** 转向原页 */
         $this->response->redirect(Typecho_Common::url('manage-metas.php', $this->options->adminUrl));
@@ -258,7 +258,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
 
         /** 提示信息 */
         $this->widget('Widget_Notice')->set(_t('分类 <a href="%s">%s</a> 已经被更新',
-        $this->permalink, $this->name), NULL, 'success');
+        $this->permalink, $this->name), 'success');
 
         /** 转向原页 */
         $this->response->redirect(Typecho_Common::url('manage-metas.php', $this->options->adminUrl));
@@ -285,7 +285,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         }
 
         /** 提示信息 */
-        $this->widget('Widget_Notice')->set($deleteCount > 0 ? _t('分类已经删除') : _t('没有分类被删除'), NULL,
+        $this->widget('Widget_Notice')->set($deleteCount > 0 ? _t('分类已经删除') : _t('没有分类被删除'),
         $deleteCount > 0 ? 'success' : 'notice');
 
         /** 转向原页 */
@@ -306,7 +306,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $validator->addRule('merge', array($this, 'categoryExists'), _t('请选择需要合并的分类'));
 
         if ($validator->run($this->request->from('merge'))) {
-            $this->widget('Widget_Notice')->set($e->getMessages(), NULL, 'error');
+            $this->widget('Widget_Notice')->set($e->getMessages(), 'error');
             $this->response->goBack();
         }
 
@@ -317,9 +317,9 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
             $this->merge($merge, 'category', $categories);
 
             /** 提示信息 */
-            $this->widget('Widget_Notice')->set(_t('分类已经合并'), NULL, 'success');
+            $this->widget('Widget_Notice')->set(_t('分类已经合并'), 'success');
         } else {
-            $this->widget('Widget_Notice')->set(_t('没有选择任何分类'), NULL, 'notice');
+            $this->widget('Widget_Notice')->set(_t('没有选择任何分类'), 'notice');
         }
 
         /** 转向原页 */
@@ -361,9 +361,9 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
                 $this->refreshCountByTypeAndStatus($category, 'post', 'publish');
             }
 
-            $this->widget('Widget_Notice')->set(_t('分类刷新已经完成'), NULL, 'success');
+            $this->widget('Widget_Notice')->set(_t('分类刷新已经完成'), 'success');
         } else {
-            $this->widget('Widget_Notice')->set(_t('没有选择任何分类'), NULL, 'notice');
+            $this->widget('Widget_Notice')->set(_t('没有选择任何分类'), 'notice');
         }
 
         /** 转向原页 */
@@ -384,7 +384,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $validator->addRule('mid', array($this, 'categoryExists'), _t('分类不存在'));
 
         if ($error = $validator->run($this->request->from('mid'))) {
-            $this->widget('Widget_Notice')->set($error, NULL, 'error');
+            $this->widget('Widget_Notice')->set($error, 'error');
         } else {
 
             $this->db->query($this->db->update('table.options')
@@ -399,7 +399,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
 
             /** 提示信息 */
             $this->widget('Widget_Notice')->set(_t('<a href="%s">%s</a> 已经被设为默认分类',
-            $this->permalink, $this->name), NULL, 'success');
+            $this->permalink, $this->name), 'success');
         }
 
         /** 转向原页 */

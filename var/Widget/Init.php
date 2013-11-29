@@ -23,10 +23,7 @@ class Widget_Init extends Typecho_Widget
     public function execute()
     {
         /** 对变量赋值 */
-        $options = $this->widget('Widget_Options');
-
-        /** 开始会话 */
-        @session_start();
+        $options = $this->widget('Widget_Options'); 
 
         /** cookie初始化 */
         Typecho_Cookie::setPrefix($options->siteUrl);
@@ -63,6 +60,11 @@ class Widget_Init extends Typecho_Widget
 
         /** 初始化时区 */
         Typecho_Date::setTimezoneOffset($options->timezone);
+
+        /** 开始会话, 减小负载只针对后台打开session支持 */
+        if ($this->widget('Widget_User')->hasLogin()) {
+            @session_start();
+        }
 
         /** 监听缓冲区 */
         ob_start();

@@ -12,9 +12,6 @@
 /** Typecho_Widget_Helper_Layout */
 require_once 'Typecho/Widget/Helper/Layout.php';
 
-/** Typecho_Request */
-require_once 'Typecho/Cookie.php';
-
 /** Typecho_Validate */
 require_once 'Typecho/Validate.php';
 
@@ -239,11 +236,11 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
         $error = $validator->run($formData, $rules);
 
         if ($error) {
-            /** 利用cookie记录错误 */
-            Typecho_Cookie::set('__typecho_form_message_' . $id, $error);
+            /** 利用session记录错误 */
+            $_SESSION['__typecho_form_message_' . $id] = $error;
 
-            /** 利用cookie记录表单值 */
-            Typecho_Cookie::set('__typecho_form_record_' . $id, $formData);
+            /** 利用session记录表单值 */
+            $_SESSION['__typecho_form_record_' . $id] = $formData;
         }
 
         return $error;
@@ -260,8 +257,9 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
         $id = md5(implode('"', array_keys($this->_inputs)));
 
         /** 恢复表单值 */
-        if ($record = Typecho_Cookie::get('__typecho_form_record_' . $id)) {
-            $message = Typecho_Cookie::get('__typecho_form_message_' . $id);
+        if (isset($_SESSION['__typecho_form_record_' . $id])) {
+            $record = $_SESSION['__typecho_form_record_' . $id];
+            $message = $_SESSION['__typecho_form_message_' . $id];
             foreach ($this->_inputs as $name => $input) {
                 $input->value(isset($record[$name]) ? $record[$name] : $input->value);
 
@@ -271,10 +269,10 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
                 }
             }
 
-            Typecho_Cookie::delete('__typecho_form_record_' . $id);
+            unset($_SESSION['__typecho_form_record_' . $id]);
         }
 
         parent::render();
-        Typecho_Cookie::delete('__typecho_form_message_' . $id);
+        unset($_SESSION['__typecho_form_message_' . $id]);
     }
 }

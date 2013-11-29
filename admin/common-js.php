@@ -5,18 +5,29 @@
 <script>
     (function () {
         $(document).ready(function() {
-            <?php if ($notice->highlight): ?>                
-            //增加高亮效果
-            $('#<?php echo $notice->highlight; ?>').effect('highlight', 1000);
-            <?php endif; ?>
-
-            //增加淡出效果
+            // 处理消息机制
             (function () {
-                var p = $('.popup');
+                var prefix = '<?php echo Typecho_Cookie::getPrefix(); ?>',
+                    cookies = {
+                        notice      :   $.cookie(prefix + '__typecho_notice'),
+                        noticeType  :   $.cookie(prefix + '__typecho_notice_type'),
+                        highlight   :   $.cookie(prefix + '__typecho_notice_highlight')
+                    },
+                    path = '<?php $parts = parse_url($options->siteUrl);
+                        echo empty($parts['path']) ? '/' : $parts['path']; ?>';
 
-                if (p.length > 0) {
-                    var head = $('.typecho-head-nav'), 
-                        offset = head.length > 0 ? head.outerHeight() : 0;
+                if (!!cookies.notice && 'success|notice|error'.indexOf(cookies.noticeType) >= 0) {
+                    var head = $('.typecho-head-nav'),
+                        p = $('<div class="message popup ' + cookies.noticeType + '">'
+                        + '<ul><li>' + $.parseJSON(cookies.notice).join('</li><li>') 
+                        + '</li></ul></div>'), offset = 0;
+
+                    if (head.length > 0) {
+                        p.insertAfter(head);
+                        offset = head.outerHeight();
+                    } else {
+                        p.prependTo(document.body);
+                    }
 
                     function checkScroll () {
                         if ($(window).scrollTop() >= offset) {
@@ -52,6 +63,15 @@
                             $(this).remove();
                         });
                     });
+
+                    
+                    $.cookie(prefix + '__typecho_notice', null, {path : path});
+                    $.cookie(prefix + '__typecho_notice_type', null, {path : path});
+                }
+
+                if (cookies.highlight) {
+                    $('#' + cookies.highlight).effect('highlight', 1000);
+                    $.cookie(prefix + '__typecho_notice_highlight', null, {path : path});
                 }
             })();
 

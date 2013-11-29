@@ -39,8 +39,16 @@ button {
   }
 }
 
+.btn-xs {
+  padding: 0 10px;
+  height: 25px;
+}
 .btn-s { height: 28px; }
-.btn-l { height: 40px; font-size: 1.14286em; font-weight: bold; }
+.btn-l {
+  height: 40px;
+  font-size: 1.14286em;
+  font-weight: bold;
+}
 
 .primary {
   @include button(#467B96);

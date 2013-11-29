@@ -206,7 +206,14 @@ class Widget_Menu extends Typecho_Widget
                         }
                     }
                 }
-
+                
+                if ($validate
+                    && basename($urlParts['path']) == 'extending.php'
+                    && !empty($currentUrlParams['panel']) && !empty($urlParams['panel'])
+                    && $urlParams['panel'] != $currentUrlParams['panel']){
+                    $validate = false;
+                }
+                
                 if ($hidden && $validate) {
                     $hidden = false;
                 }

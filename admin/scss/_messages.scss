@@ -34,3 +34,21 @@
 }
 .success a { color: #264409; }
 
+
+// 气泡
+.balloon {
+  display: inline-block;
+  padding: 0 4px;
+  min-width: 10px;
+  height: 14px;
+  line-height: 14px;
+  background: #B9B9B6;
+  vertical-align: text-top;
+  text-align: center;
+  font-size: 12px;
+  color: #FFF;
+
+  @include border-radius(20px);
+
+}
+

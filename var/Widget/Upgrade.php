@@ -84,7 +84,7 @@ class Widget_Upgrade extends Widget_Abstract_Options implements Widget_Interface
                     $message[] = $result;
                 }
             } catch (Typecho_Exception $e) {
-                $this->widget('Widget_Notice')->set($e->getMessage(), NULL, 'error');
+                $this->widget('Widget_Notice')->set($e->getMessage(), 'error');
                 $this->response->goBack();
                 return;
             }
@@ -108,7 +108,7 @@ class Widget_Upgrade extends Widget_Abstract_Options implements Widget_Interface
         Typecho_Cookie::delete('__typecho_check_version');
 
         $this->widget('Widget_Notice')->set(empty($message) ? _t("升级已经完成") : $message,
-        NULL, empty($message) ? 'success' : 'notice');
+        empty($message) ? 'success' : 'notice');
     }
 
     /**

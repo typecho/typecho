@@ -20,6 +20,24 @@
 class Widget_Abstract_Users extends Widget_Abstract
 {
     /**
+     * ___options  
+     * 
+     * @access protected
+     * @return Config
+     */
+    protected function ___options()
+    {
+        $rows = $this->db->fetchAll($this->db->select()
+            ->from('table.options')->where('user = ?', $this->uid));
+        $options = array();
+        foreach ($rows as $row) {
+            $options[$row['name']] = $row['value'];
+        }
+
+        return new Typecho_Config($options);
+    }
+
+    /**
      * 判断用户名称是否存在
      *
      * @access public

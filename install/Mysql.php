@@ -18,7 +18,29 @@
 <input type="hidden" name="dbDatabase" value="<?php echo SAE_MYSQL_DB; ?>" />
 <?php elseif (!!getenv('HTTP_BAE_ENV_ADDR_SQL_IP')): ?>
 <!-- BAE -->
+<?php
+$baeDbUser = "getenv('HTTP_BAE_ENV_AK')";
+$baeDbPassword = "getenv('HTTP_BAE_ENV_SK')";
+?>
 <h3 class="warning"><?php _e('系统将为您自动匹配 %s 环境的安装选项', 'BAE'); ?></h3>
+<?php if (!getenv('HTTP_BAE_ENV_AK')): $baeDbUser = "'{user}'"; ?>
+<li>
+<label class="typecho-label" for="dbUser"><?php _e('应用API Key'); ?></label>
+<input type="text" class="text" name="dbUser" id="dbUser" value="<?php _v('dbUser'); ?>" />
+</li>
+<?php else: ?>
+<input type="hidden" name="dbUser" value="<?php echo getenv('HTTP_BAE_ENV_AK'); ?>" />
+<?php endif; ?>
+
+<?php if (!getenv('HTTP_BAE_ENV_SK')): $baeDbPassword = "'{password}'"; ?>
+<li>
+<label class="typecho-label" for="dbPassword"><?php _e('应用Secret Key'); ?></label>
+<input type="text" class="text" name="dbPassword" id="dbPassword" value="<?php _v('dbPassword'); ?>" />
+</li>
+<?php else: ?>
+<input type="hidden" name="dbPassword" value="<?php echo getenv('HTTP_BAE_ENV_SK'); ?>" />
+<?php endif; ?>
+
 <li>
 <label class="typecho-label" for="dbDatabase"><?php _e('数据库名'); ?></label>
 <input type="text" class="text" id="dbDatabase" name="dbDatabase" value="<?php _v('dbDatabase'); ?>" />
@@ -26,16 +48,14 @@
 </li>
 <input type="hidden" name="config" value="array (
     'host'      =>  getenv('HTTP_BAE_ENV_ADDR_SQL_IP'),
-    'user'      =>  getenv('HTTP_BAE_ENV_AK'),
-    'password'  =>  getenv('HTTP_BAE_ENV_SK'),
+    'user'      =>  <?php echo $baeDbUser; ?>,
+    'password'  =>  <?php echo $baeDbPassword; ?>,
     'charset'   =>  '<?php _e('utf8'); ?>',
     'port'      =>  getenv('HTTP_BAE_ENV_ADDR_SQL_PORT'),
     'database'  =>  '{database}'
 )" />
 <input type="hidden" name="dbHost" value="<?php echo getenv('HTTP_BAE_ENV_ADDR_SQL_IP'); ?>" />
 <input type="hidden" name="dbPort" value="<?php echo getenv('HTTP_BAE_ENV_ADDR_SQL_PORT'); ?>" />
-<input type="hidden" name="dbUser" value="<?php echo getenv('HTTP_BAE_ENV_AK'); ?>" />
-<input type="hidden" name="dbPassword" value="<?php echo getenv('HTTP_BAE_ENV_SK'); ?>" />
 <?php elseif (isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false): ?>
 <!-- GAE -->
 <h3 class="warning"><?php _e('系统将为您自动匹配 %s 环境的安装选项', 'GAE'); ?></h3>

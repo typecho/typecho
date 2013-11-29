@@ -23,14 +23,6 @@ require_once 'Typecho/Widget/Helper/Layout.php';
 abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_Layout
 {
     /**
-     * 表单标题
-     *
-     * @access protected
-     * @var string
-     */
-    protected $label;
-
-    /**
      * 表单描述
      *
      * @access private
@@ -77,6 +69,14 @@ abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_
      * @var Typecho_Widget_Helper_Layout
      */
     public $input;
+
+    /**
+     * 表单标题
+     *
+     * @access public
+     * @var Typecho_Widget_Helper_Layout
+     */
+    public $label;
 
     /**
      * 表单验证器

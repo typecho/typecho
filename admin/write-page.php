@@ -7,7 +7,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
 <div class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
-        <div class="col-group typecho-page-main typecho-post-area" role="form">
+        <div class="colgroup typecho-page-main typecho-post-area" role="form">
             <form action="<?php $options->index('/action/contents-page-edit'); ?>" method="post" name="write_page">
                 <div class="col-mb-12 col-tb-9" role="main">
                     <?php if ($page->draft && $page->draft['cid'] != $page->cid): ?>
@@ -38,11 +38,8 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                         <textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text" name="text" class="w-100 mono"><?php echo htmlspecialchars($page->text); ?></textarea>
                     </p>
                         
-                    <?php include 'file-upload.php'; ?>
-                        
-                    <?php Typecho_Plugin::factory('admin/write-page.php')->content($page); ?>
+                    <?php include 'custom-fields.php'; ?>
                     <p class="submit clearfix">
-                        <span id="auto-save-message" class="left"></span>
                         <span class="right">
                             <input type="hidden" name="cid" value="<?php $page->cid(); ?>" />
                             <button type="submit" name="do" value="save" id="btn-save"><?php _e('保存草稿'); ?></button>
@@ -52,8 +49,16 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                             <?php endif; ?>
                         </span>
                     </p>
+                    
+                    <?php Typecho_Plugin::factory('admin/write-page.php')->content($page); ?>
                 </div>
-                <div class="col-mb-12 col-tb-3" role="complementary">
+                <div id="edit-secondary" class="col-mb-12 col-tb-3" role="complementary">
+                    <ul class="typecho-option-tabs clearfix">
+                        <li class="active w-50"><a href="#tab-advance"><?php _e('选项'); ?></a></li>
+                        <li class="w-50"><a href="#tab-files" id="tab-files-btn"><?php _e('附件'); ?></a></li>
+                    </ul>
+
+                    <div id="tab-advance" class="tab-content">
                         <section  class="typecho-post-option" role="application">
                             <label for="date" class="typecho-label"><?php _e('发布日期'); ?></label>
                             <p><input class="typecho-date w-100" type="text" name="date" id="date" value="<?php $page->have() ? $page->date('Y-m-d H:i') : ''; ?>" /></p>
@@ -80,8 +85,16 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
 
                         <?php Typecho_Plugin::factory('admin/write-page.php')->option($page); ?>
 
-                        <button type="button" id="advance-panel-btn"><?php _e('高级选项'); ?></button>
+                        <button type="button" id="advance-panel-btn" class="btn-xs"><?php _e('高级选项'); ?> <i class="i-caret-down"></i></button>
                         <div id="advance-panel">
+                            <section class="typecho-post-option visibility-option">
+                                <label class="typecho-label"><?php _e('公开度'); ?></label>
+                                <ul>
+                                    <li><input id="publish" value="publish" name="visibility" type="radio"<?php if ($page->status == 'publish' || !$page->status) { ?> checked="true"<?php } ?> /> <label for="publish"><?php _e('公开'); ?></label></li>
+                                    <li><input id="hidden" value="hidden" name="visibility" type="radio"<?php if ($page->status == 'hidden') { ?> checked="true"<?php } ?> /> <label for="hidden"><?php _e('隐藏'); ?></label></li>
+                                </ul>
+                            </section>
+
                             <section class="typecho-post-option allow-option">
                                 <label class="typecho-label"><?php _e('权限控制'); ?></label>
                                 <ul>
@@ -107,7 +120,11 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                         </p>
                         </section>
                         <?php endif; ?>
-                    </ul>
+                    </div><!-- end #tab-advance -->
+
+                    <div id="tab-files" class="tab-content">
+                        <?php include 'file-upload.php'; ?>
+                    </div><!-- end #tab-files -->
                 </div>
             </form>
         </div>
@@ -126,6 +143,7 @@ if (!$plugged) {
 }
 
 include 'file-upload-js.php';
+include 'custom-fields-js.php';
 Typecho_Plugin::factory('admin/write-page.php')->bottom($page);
 include 'footer.php';
 ?>

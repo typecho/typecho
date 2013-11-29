@@ -307,9 +307,9 @@ RewriteRule . {$basePath}index.php [L]
         }
 
         if ($patternValid) {
-            $this->widget('Widget_Notice')->set(_t("设置已经保存"), NULL, 'success');
+            $this->widget('Widget_Notice')->set(_t("设置已经保存"), 'success');
         } else {
-            $this->widget('Widget_Notice')->set(_t("自定义链接与现有规则存在冲突! 它可能影响解析效率, 建议你重新分配一个规则."), NULL, 'notice');
+            $this->widget('Widget_Notice')->set(_t("自定义链接与现有规则存在冲突! 它可能影响解析效率, 建议你重新分配一个规则."), 'notice');
         }
         $this->response->goBack();
     }
@@ -324,7 +324,7 @@ RewriteRule . {$basePath}index.php [L]
     {
         $this->update(array('value' => 1), $this->db->sql()->where('name = ?', 'rewrite'));
 
-        $this->widget('Widget_Notice')->set(_t("设置已经保存"), NULL, 'success');
+        $this->widget('Widget_Notice')->set(_t("设置已经保存"), 'success');
         $this->response->goBack();
     }
 

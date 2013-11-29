@@ -7,7 +7,7 @@ include 'menu.php';
 <div class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
-        <div class="col-group typecho-page-main manage-metas">
+        <div class="colgroup typecho-page-main manage-metas">
                 <div class="col-mb-12">
                     <ul class="typecho-option-tabs clearfix">
                         <li<?php if(!isset($request->type) || 'category' == $request->get('type')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-metas.php'); ?>"><?php _e('分类'); ?></a></li>
@@ -68,7 +68,7 @@ include 'menu.php';
                                     <td><?php $categories->slug(); ?></td>
                                     <td>
                                     <?php if ($options->defaultCategory == $categories->mid): ?>
-                                    <span class="balloon right"><?php _e('默认'); ?></span>
+                                    <?php _e('默认'); ?>
                                     <?php else: ?>
                                     <a class="hidden-by-mouse" href="<?php $options->index('/action/metas-category-edit?do=default&mid=' . $categories->mid); ?>" title="<?php _e('设为默认'); ?>"><?php _e('默认'); ?></a>
                                     <?php endif; ?>
@@ -97,8 +97,8 @@ include 'menu.php';
                             <li><a lang="<?php _e('你确认要删除这些标签吗?'); ?>" href="<?php $options->index('/action/metas-tag-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
                             <li><a lang="<?php _e('刷新标签可能需要等待较长时间, 你确认要刷新这些标签吗?'); ?>" href="<?php $options->index('/action/metas-tag-edit?do=refresh'); ?>"><?php _e('刷新'); ?></a></li>
                             <li class="multiline">
-                                <button type="button" class="merge" rel="<?php $options->index('/action/metas-tag-edit?do=merge'); ?>"><?php _e('合并到'); ?></button>
-                                <input type="text" name="merge" />
+                                <button type="button" class="btn-s merge" rel="<?php $options->index('/action/metas-tag-edit?do=merge'); ?>"><?php _e('合并到'); ?></button>
+                                <input type="text" name="merge" class="text-s" />
                             </li>
                         </ul>
                         </div>

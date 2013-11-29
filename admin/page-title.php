@@ -1,5 +1,5 @@
 <?php if(!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
-<div class="col-group">
+<div class="colgroup">
     <div class="typecho-page-title col-mb-12">
         <h2><?php echo $menu->title; ?><?php 
         if (!empty($menu->addLink)) {

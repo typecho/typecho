@@ -164,6 +164,17 @@ class Typecho_Db
     }
 
     /**
+     * getConfig  
+     * 
+     * @access public
+     * @return void
+     */
+    public function getConfig()
+    {
+        return $this->_config;
+    }
+
+    /**
      * 获取SQL词法构建器实例化对象
      *
      * @return Typecho_Db_Query

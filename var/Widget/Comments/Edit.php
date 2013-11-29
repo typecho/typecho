@@ -89,7 +89,7 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
         }
 
         /** 设置提示信息 */
-        $this->widget('Widget_Notice')->set($updateRows > 0 ? _t('评论已经被标记为待审核') : _t('没有评论被标记为待审核'), NULL,
+        $this->widget('Widget_Notice')->set($updateRows > 0 ? _t('评论已经被标记为待审核') : _t('没有评论被标记为待审核'),
         $updateRows > 0 ? 'success' : 'notice');
 
         /** 返回原网页 */
@@ -114,7 +114,7 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
         }
 
         /** 设置提示信息 */
-        $this->widget('Widget_Notice')->set($updateRows > 0 ? _t('评论已经被标记为垃圾') : _t('没有评论被标记为垃圾'), NULL,
+        $this->widget('Widget_Notice')->set($updateRows > 0 ? _t('评论已经被标记为垃圾') : _t('没有评论被标记为垃圾'),
         $updateRows > 0 ? 'success' : 'notice');
 
         /** 返回原网页 */
@@ -139,7 +139,7 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
         }
 
         /** 设置提示信息 */
-        $this->widget('Widget_Notice')->set($updateRows > 0 ? _t('评论已经被通过') : _t('没有评论被通过'), NULL,
+        $this->widget('Widget_Notice')->set($updateRows > 0 ? _t('评论已经被通过') : _t('没有评论被通过'),
         $updateRows > 0 ? 'success' : 'notice');
 
         /** 返回原网页 */
@@ -191,7 +191,7 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
             
         } else {
             /** 设置提示信息 */
-            $this->widget('Widget_Notice')->set($deleteRows > 0 ? _t('评论已经被删除') : _t('没有评论被删除'), NULL,
+            $this->widget('Widget_Notice')->set($deleteRows > 0 ? _t('评论已经被删除') : _t('没有评论被删除'),
             $deleteRows > 0 ? 'success' : 'notice');
 
             /** 返回原网页 */
@@ -220,7 +220,7 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
 
         /** 设置提示信息 */
         $this->widget('Widget_Notice')->set($deleteRows > 0 ?
-        _t('所有垃圾评论已经被删除') : _t('没有垃圾评论被删除'), NULL,
+        _t('所有垃圾评论已经被删除') : _t('没有垃圾评论被删除'),
         $deleteRows > 0 ? 'success' : 'notice');
 
         /** 返回原网页 */

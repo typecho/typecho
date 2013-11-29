@@ -32,11 +32,41 @@
   }
 }
 
-.editor span {
+#wmd-button-row span {
   display: block;
   width: 20px;
   height: 20px;
   background: transparent url(../img/editor.png) no-repeat;
+}
+
+// 撰写预览切换 tab
+.wmd-edittab {
+  float: right;
+  margin-top: 3px;
+  font-size: .92857em;
+  a {
+    display: inline-block;
+    padding: 0 8px;
+    margin-left: 5px;
+    height: 20px;
+    line-height: 20px;
+    &:hover {
+      text-decoration: none;
+    }
+    &.active {
+      background: #E9E9E6;
+      color: #999;
+    }
+  }
+}
+
+// 控制被隐藏的 tab，全屏时显示
+.wmd-hidetab {
+  display: none;
+}
+// 隐藏编辑器，但占位
+.wmd-visualhide {
+  visibility: hidden;
 }
 
 /* 对话框 */
@@ -66,17 +96,24 @@
 /* 预览 */
 #wmd-preview {
   background: #FFF;
-  padding: 10px 20px;
+  margin: 1em 0;
+  padding: 0 15px;
   word-wrap: break-word;
+  overflow: auto;
+  @include border-radius(2px);
   img { max-width: 100%; }
   code, pre {
     padding: 2px 4px;
     background: #F3F3F0;
     font-size: .92857em;
   }
+  code { color: #B94A48; }
   pre {
     padding: 1em;
-    code { padding: 0; }
+    code {
+      padding: 0;
+      color: #444;
+    }
   }
   blockquote {
     margin: 1em 1.5em;
@@ -90,17 +127,14 @@
     border: 1px solid #E9E9E6;
     border-width: 2px 0 0 0;
   }
-  .summary {
-    &:after {
-      display: block;
-      margin: 2em 0;
-      border: 1px dashed #D9D9D6;
-      border-width: 1px 0;
-      color: #999;
-      font-size: .85714em;
-      text-align: center;
-      content: "- more -";
-    }
+  .summary:after {
+    display: block;
+    margin: 2em 0;
+    background: #FFF9E8;
+    color: darken(#FFF9E8, 55%);
+    font-size: .85714em;
+    text-align: center;
+    content: "- more -";
   }
 }
 
@@ -114,6 +148,7 @@
     background: #FFF;
     z-index: 999;
     @include box-sizing(border-box);
+    @include border-radius(0);
   }
   #wmd-button-bar {
     left: 0;
@@ -127,12 +162,13 @@
     padding: 20px;
     border: none;
     outline: none;
-    @include border-radius(0);
   }
   #wmd-preview {
     top: 53px;
     right: 0;
+    margin: 0;
     padding: 5px 20px;
+    border: none;
     border-left: 1px solid #F3F3F0;
     background: #F6F6F3;
     overflow: auto;
@@ -146,6 +182,7 @@
     padding: 10px 20px;
     border-bottom: 1px solid #F3F3F0;
   }
+  .wmd-edittab,
   .typecho-post-option,
   .title,
   .url-slug,
@@ -153,4 +190,8 @@
   .typecho-head-nav,
   .message,
   #upload-panel { display: none; }
+  .wmd-hidetab { display: block; }
+  .wmd-visualhide {
+    visibility: visible;
+  }
 }

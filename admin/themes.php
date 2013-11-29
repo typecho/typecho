@@ -7,9 +7,9 @@ include 'menu.php';
 <div class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
-        <div class="col-group typecho-page-main">
+        <div class="colgroup typecho-page-main">
             <div class="col-mb-12">
-                <ul class="typecho-option-tabs clearfix">
+                <ul class="typecho-option-tabs fix-tabs clearfix">
                     <li class="current"><a href="<?php $options->adminUrl('themes.php'); ?>"><?php _e('可以使用的外观'); ?></a></li>
                     <li><a href="<?php $options->adminUrl('theme-editor.php'); ?>"><?php _e('编辑当前外观'); ?></a></li>
                     <?php if (Widget_Themes_Config::isExists()): ?>

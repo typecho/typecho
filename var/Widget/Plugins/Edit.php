@@ -102,7 +102,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
                 $this->db->sql()->where('name = ?', 'plugins'));
             } catch (Typecho_Plugin_Exception $e) {
                 /** 截获异常 */
-                $this->widget('Widget_Notice')->set($e->getMessage(), NULL, 'error');
+                $this->widget('Widget_Notice')->set($e->getMessage(), 'error');
                 $this->response->goBack();
             }
 
@@ -133,9 +133,9 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
         $this->widget('Widget_Notice')->highlight('plugin-' . $pluginName);
 
         if (isset($result) && is_string($result)) {
-            $this->widget('Widget_Notice')->set($result, NULL, 'notice');
+            $this->widget('Widget_Notice')->set($result, 'notice');
         } else {
-            $this->widget('Widget_Notice')->set(_t('插件已经被启用'), NULL, 'success');
+            $this->widget('Widget_Notice')->set(_t('插件已经被启用'), 'success');
         }
         $this->response->goBack();
     }
@@ -184,7 +184,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
                 $result = call_user_func(array($className, 'deactivate'));
             } catch (Typecho_Plugin_Exception $e) {
                 /** 截获异常 */
-                $this->widget('Widget_Notice')->set($e->getMessage(), NULL, 'error');
+                $this->widget('Widget_Notice')->set($e->getMessage(), 'error');
                 $this->response->goBack();
             }
 
@@ -200,9 +200,9 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
         $this->delete($this->db->sql()->where('name = ?', '_plugin:' . $pluginName));
 
         if (isset($result) && is_string($result)) {
-            $this->widget('Widget_Notice')->set($result, NULL, 'notice');
+            $this->widget('Widget_Notice')->set($result, 'notice');
         } else {
-            $this->widget('Widget_Notice')->set(_t('插件已经被禁用'), NULL, 'success');
+            $this->widget('Widget_Notice')->set(_t('插件已经被禁用'), 'success');
         }
         $this->response->goBack();
     }
@@ -232,7 +232,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
         $this->widget('Widget_Notice')->highlight('plugin-' . $pluginName);
 
         /** 提示信息 */
-        $this->widget('Widget_Notice')->set(_t("插件设置已经保存"), NULL, 'success');
+        $this->widget('Widget_Notice')->set(_t("插件设置已经保存"), 'success');
 
         /** 转向原页 */
         $this->response->redirect(Typecho_Common::url('plugins.php', $this->options->adminUrl));

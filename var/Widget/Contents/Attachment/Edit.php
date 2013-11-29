@@ -196,7 +196,7 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
             /** 提示信息 */
             $this->widget('Widget_Notice')->set('publish' == $this->status ?
             _t('文件 <a href="%s">%s</a> 已经被更新', $this->permalink, $this->title) :
-            _t('未归档文件 %s 已经被更新', $this->title), NULL, 'success');
+            _t('未归档文件 %s 已经被更新', $this->title), 'success');
 
         }
 
@@ -250,7 +250,7 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
             : array('code' => 500, 'message' => _t('没有文件被删除')));
         } else {
             /** 设置提示信息 */
-            $this->widget('Widget_Notice')->set($deleteCount > 0 ? _t('文件已经被删除') : _t('没有文件被删除'), NULL,
+            $this->widget('Widget_Notice')->set($deleteCount > 0 ? _t('文件已经被删除') : _t('没有文件被删除'), 
             $deleteCount > 0 ? 'success' : 'notice');
 
             /** 返回原网页 */

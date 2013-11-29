@@ -8,7 +8,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
 <div class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
-        <div class="col-group typecho-page-main" role="main">
+        <div class="colgroup typecho-page-main" role="main">
             <div class="col-mb-12 typecho-list">
                 <div class="typecho-list-operate clearfix">
                 <form method="get">
@@ -66,12 +66,6 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                                     echo '<em class="status">' . _t('草稿') . '</em>';
                                 } else if ('hidden' == $pages->status) {
                                     echo '<em class="status">' . _t('隐藏') . '</em>';
-                                } else if ('waiting' == $pages->status) {
-                                    echo '<em class="status">' . _t('待审核') . '</em>';
-                                } else if ('private' == $pages->status) {
-                                    echo '<em class="status">' . _t('私密') . '</em>';
-                                } else if ($pages->password) {
-                                    echo '<em class="status">' . _t('密码保护') . '</em>';
                                 }
                                 ?>
                                 <?php if ('page_draft' != $pages->type): ?>

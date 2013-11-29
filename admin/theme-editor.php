@@ -9,9 +9,9 @@ Typecho_Widget::widget('Widget_Themes_Files')->to($files);
 <div class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
-        <div class="col-group typecho-page-main">
+        <div class="colgroup typecho-page-main">
             <div class="col-mb-12">
-                <ul class="typecho-option-tabs clearfix">
+                <ul class="typecho-option-tabs fix-tabs clearfix">
                     <li><a href="<?php $options->adminUrl('themes.php'); ?>"><?php _e('可以使用的外观'); ?></a></li>
                     <li class="current"><a href="<?php $options->adminUrl('theme-editor.php'); ?>">
                     <?php if ($options->theme == $files->theme): ?>
@@ -29,10 +29,8 @@ Typecho_Widget::widget('Widget_Themes_Files')->to($files);
             <div class="typecho-edit-theme">
                 <div class="col-mb-12 col-tb-8 col-9 content">
                     <form method="post" name="theme" id="theme" action="<?php $options->index('/action/themes-edit'); ?>">
-                        <p>
-                            <label for="content" class="visuallyhidden"><?php _e('编辑源码'); ?></label>
-                            <textarea name="content" id="content" class="w-100 mono" <?php if(!$files->currentIsWriteable()): ?>readonly<?php endif; ?>><?php echo $files->currentContent(); ?></textarea>
-                        </p>
+                        <label for="content" class="visuallyhidden"><?php _e('编辑源码'); ?></label>
+                        <textarea name="content" id="content" class="w-100 mono" <?php if(!$files->currentIsWriteable()): ?>readonly<?php endif; ?>><?php echo $files->currentContent(); ?></textarea>
                         <p class="submit">
                             <?php if($files->currentIsWriteable()): ?>
                             <input type="hidden" name="theme" value="<?php echo $files->currentTheme(); ?>" />

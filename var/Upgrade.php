@@ -1004,5 +1004,71 @@ Typecho_Date::setTimezoneOffset($options->timezone);
         $db->query($db->insert('table.options')
             ->rows(array('name' => 'frontArchive', 'user' => 0, 'value' => 0)));
     }
+
+    /**
+     * v0_9r13_11_24  
+     * 
+     * @param mixed $db 
+     * @param mixed $options 
+     * @static
+     * @access public
+     * @return void
+     */
+    public static function v0_9r13_11_24($db, $options)
+    {
+        /* 增加数据表 */
+        $adapterName = $db->getAdapterName();
+        $prefix  = $db->getPrefix();
+
+        switch (true) {
+            case false !== strpos($adapterName, 'Mysql'):
+                $config = $db->getConfig();
+                $db->query("CREATE TABLE `{$prefix}fields` (
+  `cid` int(10) unsigned NOT NULL,
+  `name` varchar(200) NOT NULL,
+  `type` varchar(8) default 'str',
+  `str_value` text,
+  `int_value` int(10) default '0',
+  `float_value` float default '0',
+  PRIMARY KEY  (`cid`,`name`),
+  KEY `int_value` (`int_value`),
+  KEY `float_value` (`float_value`)
+) ENGINE=MyISAM  DEFAULT CHARSET=" . $config[0]->charset, Typecho_Db::WRITE);
+                break;
+
+            case false !== strpos($adapterName, 'Pgsql'):
+                $db->query('CREATE TABLE "' . $prefix . 'fields" ("cid" INT NOT NULL,
+  "name" VARCHAR(200) NOT NULL,
+  "type" VARCHAR(8) NULL DEFAULT \'str\',
+  "str_value" TEXT NULL DEFAULT NULL,
+  "int_value" INT NULL DEFAULT \'0\',
+  "float_value" REAL NULL DEFAULT \'0\',
+  PRIMARY KEY  ("cid","name")
+)', Typecho_Db::WRITE);
+                $db->query('CREATE INDEX "' . $prefix . 'fields_int_value" ON "' . $prefix . 'fields" ("int_value")', Typecho_Db::WRITE);
+                $db->query('CREATE INDEX "' . $prefix . 'fields_float_value" ON "' . $prefix . 'fields" ("float_value")', Typecho_Db::WRITE);
+                break;
+
+            case false !== strpos($adapterName, 'SQLite'):
+                $db->query('CREATE TABLE "' . $prefix . 'fields" ("cid" INTEGER NOT NULL,
+  "name" varchar(200) NOT NULL,
+  "type" varchar(8) default \'str\',
+  "str_value" text,
+  "int_value" int(10) default \'0\',
+  "float_value" real default \'0\'
+)', Typecho_Db::WRITE);
+                $db->query('CREATE UNIQUE INDEX ' . $prefix . 'fields_cid_name ON ' . $prefix . 'fields ("cid", "name")', Typecho_Db::WRITE);
+                $db->query('CREATE INDEX ' . $prefix . 'fields_int_value ON ' . $prefix . 'fields ("int_value")', Typecho_Db::WRITE);
+                $db->query('CREATE INDEX ' . $prefix . 'fields_float_value ON ' . $prefix . 'fields ("float_value")', Typecho_Db::WRITE);
+
+                break;
+
+            default:
+                break;
+        }
+
+        $db->query($db->insert('table.options')
+            ->rows(array('name' => 'commentsMarkdown', 'user' => 0, 'value' => 0)));
+    }
 }
 

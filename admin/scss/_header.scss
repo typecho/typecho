@@ -14,10 +14,13 @@
   text-decoration: none;
 }
 
-#typecho-nav-list ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+#typecho-nav-list {
+  float: left;
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
 }
 
 #typecho-nav-list ul:first-child {
@@ -53,7 +56,7 @@
 
 #typecho-nav-list .child {
   position: absolute;
-  top: -9999em;
+  left: -9999em;
   margin: 0;
   min-width: 160px; 
   max-width: 240px;
@@ -64,6 +67,7 @@
 
 #typecho-nav-list .root:hover .child {
   top: 36px;
+  left: 0;
 }
 
 #typecho-nav-list .child li a {

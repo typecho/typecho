@@ -27,6 +27,25 @@ $(document).ready(function() {
         loading = $('<img src="<?php $options->adminUrl('img/ajax-loader.gif'); ?>" style="display:none" />')
             .appendTo(document.body);
 
+    function updateAttacmentNumber () {
+        var btn = $('#tab-files-btn'),
+            balloon = $('.balloon', btn),
+            count = $('#file-list li').length;
+
+        if (count > 0) {
+            if (!balloon.length) {
+                btn.html($.trim(btn.html()) + ' ');
+                balloon = $('<span class="balloon"></span>').appendTo(btn);
+            }
+
+            balloon.html(count);
+        } else if (0 == count && balloon.length > 0) {
+            balloon.remove();
+        }
+    }
+
+    updateAttacmentNumber();
+
     function fileUploadStart (file, id) {
         $('<li id="' + id + '" class="loading">'
             + file + '</li>').prependTo('#file-list');
@@ -37,20 +56,22 @@ $(document).ready(function() {
             .data('url', data.url)
             .data('image', data.isImage)
             .html('<input type="hidden" name="attachment[]" value="' + data.cid + '" />'
-                + '<a class="insert" target="_blank" href="###" title="<?php _e('点击插入文件'); ?>">' + data.title + '</a> ' + data.bytes
+                + '<a class="insert" target="_blank" href="###" title="<?php _e('点击插入文件'); ?>">' + data.title + '</a><div class="info">' + data.bytes
                 + ' <a class="file" target="_blank" href="<?php $options->adminUrl('media.php'); ?>?cid=' 
                 + data.cid + '" title="<?php _e('编辑'); ?>"><i class="i-edit"></i></a>'
-                + ' <a class="delete" href="###" title="<?php _e('删除'); ?>"><i class="i-delete"></i></a>')
+                + ' <a class="delete" href="###" title="<?php _e('删除'); ?>"><i class="i-delete"></i></a></div>')
             .effect('highlight', 1000);
             
         attachInsertEvent(li);
         attachDeleteEvent(li);
+        updateAttacmentNumber();
     }
 
-    $('.upload-file').fileUpload({
-        url         :   '<?php $options->index('/action/upload' 
-            . (isset($fileParentContent) ? '?cid=' . $fileParentContent->cid : '')); ?>',
-        types       :   <?php
+    $('#tab-files').bind('init', function () {
+        $('.upload-file').fileUpload({
+            url         :   '<?php $options->index('/action/upload' 
+                . (isset($fileParentContent) ? '?cid=' . $fileParentContent->cid : '')); ?>',
+            types       :   <?php
     $attachmenttypes = $options->allowedattachmenttypes;
     $attachmenttypescount = count($attachmenttypes);
     $types = array();
@@ -61,13 +82,14 @@ $(document).ready(function() {
 
     echo json_encode($types);
 ?>,
-        typesError  :   '<?php _e('文件 %s 的类型不被支持'); ?>',
-        onUpload    :   fileUploadStart,
-        onError     :   function (id) {
-            $('#' + id).remove();
-            alert(errorWord);
-        },
-        onComplete  :   fileUploadComplete
+            typesError  :   '<?php _e('文件 %s 的类型不被支持'); ?>',
+            onUpload    :   fileUploadStart,
+            onError     :   function (id) {
+                $('#' + id).remove();
+                alert(errorWord);
+            },
+            onComplete  :   fileUploadComplete
+        });
     });
 
     $('#upload-panel').filedrop({
@@ -151,7 +173,7 @@ $(document).ready(function() {
             $(this).removeClass('drag');
         },
 
-        uploadOpened   :   function (i, file, len) {
+        uploadStarted   :   function (i, file, len) {
             fileUploadStart(file.name, 'drag-' + i);
         },
 
@@ -178,6 +200,7 @@ $(document).ready(function() {
                     function () {
                         $(el).fadeOut(function () {
                             $(this).remove();
+                            updateAttacmentNumber();
                         });
                     });
             }
