@@ -466,7 +466,7 @@ else
             text = _DoItalicsAndBold(text);
 
             // Do hard breaks:
-            text = text.replace(/  +\n/g, " <br>\n");
+            text = text.replace(/ *\n/g, " <br>\n");
             
             text = pluginHooks.postSpanGamut(text);
 
