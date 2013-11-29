@@ -1370,8 +1370,13 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     public function comments()
     {
-        $parameter = array('parentId' => $this->hidden ? 0 : $this->cid, 'parentContent' => $this->row,
-        'respondId' => $this->respondId, 'commentPage' => $this->request->filter('int')->commentPage);
+        $parameter = array(
+            'parentId'      => $this->hidden ? 0 : $this->cid,
+            'parentContent' => $this->row,
+            'respondId'     => $this->respondId,
+            'commentPage'   => $this->request->filter('int')->commentPage,
+            'allowComment'  => $this->allow('comment')
+        );
 
         return $this->widget('Widget_Comments_Archive', $parameter);
     }
@@ -1384,8 +1389,11 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     public function pings()
     {
-        return $this->widget('Widget_Comments_Ping', array('parentId' => $this->hidden ? 0 : $this->cid,
-                    'parentContent' => $this->row));
+        return $this->widget('Widget_Comments_Ping', array(
+            'parentId'      => $this->hidden ? 0 : $this->cid,
+            'parentContent' => $this->row,
+            'allowPing'     =>  $this->allow('ping')
+        ));
     }
 
     /**
