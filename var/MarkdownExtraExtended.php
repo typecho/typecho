@@ -3138,8 +3138,12 @@ class MarkdownExtraExtended extends MarkdownExtra {
 		
 	public function __construct() {
 		$this->block_gamut += array(
-			"doFencedFigures" => 7,
+			"doFencedFigures"   => 7
 		);
+
+        $this->document_gamut += array(
+            "doClearBreaks"     =>  100
+        );
 		
 		parent::__construct();
 	}
@@ -3164,6 +3168,11 @@ class MarkdownExtraExtended extends MarkdownExtra {
 		return preg_replace_callback('/ *\n/', 
 			array($this, '_doHardBreaks_callback'), $text);
 	}
+
+    public function doClearBreaks($text) {
+        return preg_replace("/\s*((?:<br \/>\n)+)\s*(<\/?(?:$this->block_tags_re|li)[^\d])/is",
+            "\\2", $text);
+    }
 
 
 	public function doBlockQuotes($text) {

@@ -70,6 +70,7 @@ $(document).ready(function () {
 
     // 自动跟随
     converter.hooks.chain('postConversion', function (html) {
+        // clear special html tags
         html = html.replace(/<\/?(\!doctype|html|head|body|link|title|input|select|button|textarea|style|noscript)[^>]*>/ig, function (all) {
             return all.replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
@@ -77,6 +78,9 @@ $(document).ready(function () {
                 .replace(/'/g, '&#039;')
                 .replace(/"/g, '&quot;');
         });
+
+        // clear hard breaks
+        html = html.replace(/\s*((?:<br>\n)+)\s*(<\/?(?:p|div|h[1-6]|blockquote|pre|table|dl|ol|ul|address|form|fieldset|iframe|hr|legend|article|section|nav|aside|hgroup|header|footer|figcaption|li|dd|dt)[^\w])/gm, '$2');
 
         if (html.indexOf('<!--more-->') > 0) {
             var parts = html.split(/\s*<\!\-\-more\-\->\s*/),
