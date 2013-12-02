@@ -432,14 +432,15 @@ class Widget_Abstract_Contents extends Widget_Abstract
                 list ($type, $name) = explode(':', $name, 2);
             }
 
-            if (isset($exists[$name])) {
-                unset($exists[$name]);
-            }
-
             $isFieldReadOnly = $this->pluginHandle(__CLASS__)->trigger($plugged)->isFieldReadOnly($name);
             if ($plugged && $isFieldReadOnly) {
                 continue;
             }
+
+            if (isset($exists[$name])) {
+                unset($exists[$name]);
+            }
+ 
 
             $this->setField($name, $type, $value, $cid);
         }

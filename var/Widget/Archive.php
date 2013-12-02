@@ -1239,7 +1239,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                             (table.contents.status = ? AND table.contents.authorId = ?)',
                             'publish', 'hidden', 'private', $this->user->uid);
                 } else {
-                    $select = $this->select()->where('table.contents.status = ? OR table.contents.status',
+                    $select = $this->select()->where('table.contents.status = ? OR table.contents.status = ?',
                             'publish', 'hidden');
                 }
             } else {
