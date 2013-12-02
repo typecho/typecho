@@ -77,7 +77,22 @@ $(document).ready(function() {
             noResultsText   :   '<?php _e('此标签不存在, 按回车创建'); ?>',
             prePopulate     :   tagsPre,
 
-            onResult        :   function (result) {
+            onResult        :   function (result, query) {
+                if (!query) {
+                    return result;
+                }
+
+                if (!result) {
+                    result = [];
+                }
+
+                if (!result[0] || result[0]['id'] != query) {
+                    result.unshift({
+                        id      :   query,
+                        tags    :   query
+                    });
+                }
+
                 return result.slice(0, 5);
             }
         });
