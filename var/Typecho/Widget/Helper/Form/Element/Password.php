@@ -36,6 +36,7 @@ class Typecho_Widget_Helper_Form_Element_Password extends Typecho_Widget_Helper_
         'name' => $name, 'type' => 'password', 'class' => 'password'));
         $this->label->setAttribute('for', $name . '-0-' . self::$uniqueId);
         $this->container($input);
+        $this->inputs[] = $input;
         return $input;
     }
 

@@ -35,6 +35,8 @@ class Typecho_Widget_Helper_Form_Element_Textarea extends Typecho_Widget_Helper_
         $input = new Typecho_Widget_Helper_Layout('textarea', array('id' => $name . '-0-' . self::$uniqueId, 'name' => $name));
         $this->label->setAttribute('for', $name . '-0-' . self::$uniqueId);
         $this->container($input->setClose(false));
+        $this->inputs[] = $input;
+
         return $input;
     }
 

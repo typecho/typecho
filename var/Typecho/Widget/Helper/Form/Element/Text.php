@@ -36,6 +36,7 @@ class Typecho_Widget_Helper_Form_Element_Text extends Typecho_Widget_Helper_Form
         'name' => $name, 'type' => 'text', 'class' => 'text'));
         $this->container($input);
         $this->label->setAttribute('for', $name . '-0-' . self::$uniqueId);
+        $this->inputs[] = $input;
 
         return $input;
     }

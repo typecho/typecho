@@ -46,6 +46,7 @@ class Typecho_Widget_Helper_Form_Element_Hidden extends Typecho_Widget_Helper_Fo
     {
         $input = new Typecho_Widget_Helper_Layout('input', array('name' => $name, 'type' => 'hidden'));
         $this->container($input);
+        $this->inputs[] = $input;
         return $input;
     }
 

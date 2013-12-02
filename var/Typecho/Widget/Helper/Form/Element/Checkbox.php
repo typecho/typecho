@@ -44,6 +44,7 @@ class Typecho_Widget_Helper_Form_Element_Checkbox extends Typecho_Widget_Helper_
             $this->_options[$value] = new Typecho_Widget_Helper_Layout('input');
             $item = $this->multiline();
             $id = $this->name . '-' . $this->filterValue($value);
+            $this->inputs[] = $this->_options[$value];
 
             $item->addItem($this->_options[$value]->setAttribute('name', $this->name . '[]')
             ->setAttribute('type', 'checkbox')
