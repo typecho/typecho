@@ -112,6 +112,35 @@ class Typecho_Common
         $safePath = rtrim(__TYPECHO_ROOT_DIR__, '/');
         return 0 === strpos($path, $safePath);
     }
+
+    /**
+     * __filterAttrs  
+     * 
+     * @param mixed $matches 
+     * @static
+     * @access public
+     * @return void
+     */
+    public static function __filterAttrs($matches)
+    {
+        $str = trim($matches[2]);
+
+        if (empty($str)) {
+            return '';
+        }
+
+        $attrs = self::__parseAttrs($str);
+        $parsedAttrs = array();
+        $tag = strtolower($matches[1]);
+
+        foreach ($attrs as $key => $val) {
+            if (in_array($key, self::$_allowableAttributes[$tag])) {
+                $parsedAttrs[] = " {$key}" . (empty($val) ? '' : "={$val}");
+            }
+        }
+
+        return '<' . $tag . implode('', $parsedAttrs) . '>';
+    }
     
     /**
      * 解析属性
@@ -574,33 +603,12 @@ EOF;
             }
         }
 
+        self::$_allowableAttributes = $allowableAttributes;
         $html = strip_tags($html, $normalizeTags);
+        $html = preg_replace_callback("/<([_a-z0-9-]+)(\s+[^>]+)?>/is",
+            array('Typecho_Common', '__filterAttrs'), $html);
 
-        if (empty($dom)) {
-            $dom = new DOMDocument('1.0', self::$charset);
-            $dom->encoding = self::$charset;
-            $dom->xmlStandalone = false;
-        }
-        @$dom->loadHTML('<?xml encoding="' . self::$charset . '">'
-            . '<head><meta http-equiv="Content-Type" content="text/html; charset=' . self::$charset . '"/></head><body>' 
-            . $html . '</body>');
-
-        foreach($dom->getElementsByTagName('*') as $node){
-            $tagName = strtolower($node->tagName);
-
-            for ($i = 0; $i < $node->attributes->length; $i ++) {
-                $attribute = $node->attributes->item($i);
-                $name = strtolower($attribute->name);
-
-                if (empty($allowableAttributes[$tagName]) || !in_array($name, $allowableAttributes[$tagName])) {
-                    $node->removeAttributeNode($attribute);
-                }
-            }
-        }
-        
-        
-        $body = $dom->getElementsByTagName('body');
-        return $body->length > 0 ? $body->item(0)->nodeValue : '';
+        return $html;
     }
 
     /**

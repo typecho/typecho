@@ -143,7 +143,15 @@ $(document).ready(function () {
     });
 
     editor.hooks.chain('onPreviewRefresh', function () {
-        var diff = $('.diff', preview);
+        var diff = $('.diff', preview), scrolled = false;
+
+        $('img', preview).load(function () {
+            if (scrolled) {
+                preview.scrollTo(diff, {
+                    offset  :   - 50
+                });
+            }
+        });
 
         if (diff.length > 0) {
             var p = diff.position(), lh = diff.parent().css('line-height');
@@ -153,6 +161,7 @@ $(document).ready(function () {
                 preview.scrollTo(diff, {
                     offset  :   - 50
                 });
+                scrolled = true;
             }
         }
     });

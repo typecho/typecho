@@ -3170,7 +3170,7 @@ class MarkdownExtraExtended extends MarkdownExtra {
 	}
 
     public function doClearBreaks($text) {
-        return preg_replace("/\s*((?:<br \/>\n)+)\s*(<\/?(?:$this->block_tags_re|li)[^\d])/is",
+        return preg_replace("/\s*((?:<br \/>\n)+)\s*(<\/?(?:$this->block_tags_re|li|dd|dt)[^\d])/is",
             "\\2", $text);
     }
 
