@@ -123,10 +123,14 @@ class Typecho_Common
      */
     public static function __filterAttrs($matches)
     {
+        if (!isset($matches[2])) {
+            return $matches[0];
+        }
+
         $str = trim($matches[2]);
 
         if (empty($str)) {
-            return '';
+            return $matches[0];
         }
 
         $attrs = self::__parseAttrs($str);
