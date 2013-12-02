@@ -10,6 +10,7 @@
   cursor: pointer;
 
   @include border-radius(2px);
+  // @include transition-property(background-color);
   @include transition-duration(.4s);
 
   &:hover {

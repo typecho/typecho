@@ -106,7 +106,7 @@ textarea {
 
 /* Navigation menu */
 #nav-menu {
-  margin: 25px 0 -1px;
+  margin: 25px 0 0;
   padding: 0;
 }
 #nav-menu a {
@@ -114,6 +114,7 @@ textarea {
   margin-right: -1px;
   padding: 0 20px;
   border: 1px solid #EEE;
+  border-bottom: none;
   height: 32px;
   line-height: 32px;
   color: #444;
