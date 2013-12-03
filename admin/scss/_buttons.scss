@@ -11,9 +11,9 @@
 
   @include border-radius(2px);
   // @include transition-property(background-color);
-  @include transition-duration(.4s);
 
   &:hover {
+    @include transition-duration(.4s);
     background-color: darken($color, 6%);
   }
   &:active, &.active {

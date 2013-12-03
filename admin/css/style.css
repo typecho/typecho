@@ -127,10 +127,6 @@ button {
   -ms-border-radius: 2px;
   -o-border-radius: 2px;
   border-radius: 2px;
-  -webkit-transition-duration: 0.4s;
-  -moz-transition-duration: 0.4s;
-  -o-transition-duration: 0.4s;
-  transition-duration: 0.4s;
   display: inline-block;
   padding: 0 12px;
   height: 32px;
@@ -138,6 +134,10 @@ button {
   vertical-align: middle;
   zoom: 1; }
   button:hover {
+    -webkit-transition-duration: 0.4s;
+    -moz-transition-duration: 0.4s;
+    -o-transition-duration: 0.4s;
+    transition-duration: 0.4s;
     background-color: #dbdbd6; }
   button:active, button.active {
     background-color: #dbdbd6; }
@@ -168,12 +168,12 @@ button {
   -ms-border-radius: 2px;
   -o-border-radius: 2px;
   border-radius: 2px;
-  -webkit-transition-duration: 0.4s;
-  -moz-transition-duration: 0.4s;
-  -o-transition-duration: 0.4s;
-  transition-duration: 0.4s;
   color: #FFF; }
   .primary:hover {
+    -webkit-transition-duration: 0.4s;
+    -moz-transition-duration: 0.4s;
+    -o-transition-duration: 0.4s;
+    transition-duration: 0.4s;
     background-color: #3c6a81; }
   .primary:active, .primary.active {
     background-color: #3c6a81; }
@@ -193,12 +193,12 @@ button {
   -ms-border-radius: 2px;
   -o-border-radius: 2px;
   border-radius: 2px;
-  -webkit-transition-duration: 0.4s;
-  -moz-transition-duration: 0.4s;
-  -o-transition-duration: 0.4s;
-  transition-duration: 0.4s;
   color: #FFF; }
   .btn-warn:hover {
+    -webkit-transition-duration: 0.4s;
+    -moz-transition-duration: 0.4s;
+    -o-transition-duration: 0.4s;
+    transition-duration: 0.4s;
     background-color: #a4403f; }
   .btn-warn:active, .btn-warn.active {
     background-color: #a4403f; }
