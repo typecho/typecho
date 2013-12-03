@@ -218,11 +218,22 @@ $(document).ready(function() {
         return false;
     });
 
-
     // 高级选项控制
     $('#advance-panel-btn').click(function() {
         $('#advance-panel').toggle();
         return false;
+    });
+
+    // 自动隐藏密码框
+    $('#visibility').change(function () {
+        var val = $(this).val(), password = $('#post-password');
+        console.log(val);
+
+        if ('password' == val) {
+            password.removeClass('hidden');
+        } else {
+            password.addClass('hidden');
+        }
     });
     
     // 草稿删除确认

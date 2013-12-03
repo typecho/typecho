@@ -89,10 +89,12 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                         <div id="advance-panel">
                             <section class="typecho-post-option visibility-option">
                                 <label class="typecho-label"><?php _e('公开度'); ?></label>
-                                <ul>
-                                    <li><input id="publish" value="publish" name="visibility" type="radio"<?php if ($page->status == 'publish' || !$page->status) { ?> checked="true"<?php } ?> /> <label for="publish"><?php _e('公开'); ?></label></li>
-                                    <li><input id="hidden" value="hidden" name="visibility" type="radio"<?php if ($page->status == 'hidden') { ?> checked="true"<?php } ?> /> <label for="hidden"><?php _e('隐藏'); ?></label></li>
-                                </ul>
+                                <p>
+                                <select id="visibility" name="visibility">
+                                    <option value="publish"<?php if ($page->status == 'publish' || !$page->status): ?> selected<?php endif; ?>><?php _e('公开'); ?></option>
+                                    <option value="hidden"<?php if ($page->status == 'hidden'): ?> selected<?php endif; ?>><?php _e('隐藏'); ?></option>
+                                </select>
+                                </p>
                             </section>
 
                             <section class="typecho-post-option allow-option">
