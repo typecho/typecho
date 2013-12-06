@@ -186,7 +186,8 @@ class Typecho_Validate
      */
     public function enum($str, array $params)
     {
-        return in_array($str, $params);
+        $keys = array_flip($params);
+        return isset($keys[$str]);
     }
 
     /**
