@@ -7,7 +7,7 @@ include 'menu.php';
 <div class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
-        <div class="colgroup typecho-page-main">
+        <div class="colgroup typecho-page-main" role="main">
             <div class="col-mb-12">
                 <ul class="typecho-option-tabs fix-tabs clearfix">
                     <li class="current"><a href="<?php $options->adminUrl('themes.php'); ?>"><?php _e('可以使用的外观'); ?></a></li>

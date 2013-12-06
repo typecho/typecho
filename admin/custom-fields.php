@@ -21,15 +21,22 @@ $defaultFields = isset($post) ? $post->getDefaultFieldItems() : $page->getDefaul
                             <?php endforeach; ?>
                             <?php foreach ($fields as $field): ?>
                             <tr>
-                                <td><input type="text" name="fieldNames[]" value="<?php echo htmlspecialchars($field['name']); ?>" class="text-s w-100"></td>
                                 <td>
-                                    <select name="fieldTypes[]" id="">
+                                    <label for="fieldname" class="visuallyhidden"><?php _e('字段名称'); ?></label>
+                                    <input type="text" name="fieldNames[]" value="<?php echo htmlspecialchars($field['name']); ?>" id="fieldname" class="text-s w-100">
+                                </td>
+                                <td>
+                                    <label for="fieldtype" class="visuallyhidden"><?php _e('字段类型'); ?></label>
+                                    <select name="fieldTypes[]" id="fieldtype">
                                         <option value="str"<?php if ('str' == $field['type']): ?> selected<?php endif; ?>><?php _e('字符'); ?></option>
                                         <option value="int"<?php if ('int' == $field['type']): ?> selected<?php endif; ?>><?php _e('整数'); ?></option>
                                         <option value="float"<?php if ('float' == $field['type']): ?> selected<?php endif; ?>><?php _e('小数'); ?></option>
                                     </select>
                                 </td>
-                                <td><textarea name="fieldValues[]" class="text-s w-100" rows="2"><?php echo htmlspecialchars($field[$field['type'] . '_value']); ?></textarea></td>
+                                <td>
+                                    <label for="fieldvalue" class="visuallyhidden"><?php _e('字段值'); ?></label>
+                                    <textarea name="fieldValues[]" id="fieldvalue" class="text-s w-100" rows="2"><?php echo htmlspecialchars($field[$field['type'] . '_value']); ?></textarea>
+                                </td>
                                 <td>
                                     <button type="button" class="btn-xs"><?php _e('删除'); ?></button>
                                 </td>
@@ -38,20 +45,20 @@ $defaultFields = isset($post) ? $post->getDefaultFieldItems() : $page->getDefaul
                             <?php if (empty($defaultFields) && empty($fields)): ?>
                             <tr>
                                 <td>
-                                    <label for="title" class="visuallyhidden"><?php _e('字段名称'); ?></label>
-                                    <input type="text" name="fieldNames[]" placeholder="<?php _e('字段名称'); ?>" class="text-s w-100">
+                                    <label for="fieldname" class="visuallyhidden"><?php _e('字段名称'); ?></label>
+                                    <input type="text" name="fieldNames[]" placeholder="<?php _e('字段名称'); ?>" id="fieldname" class="text-s w-100">
                                 </td>
                                 <td>
-                                    <label for="title" class="visuallyhidden"><?php _e('字段类型'); ?></label>
-                                    <select name="fieldTypes[]" id="">
+                                    <label for="fieldtype" class="visuallyhidden"><?php _e('字段类型'); ?></label>
+                                    <select name="fieldTypes[]" id="fieldtype">
                                         <option value="str"><?php _e('字符'); ?></option>
                                         <option value="int"><?php _e('整数'); ?></option>
                                         <option value="float"><?php _e('小数'); ?></option>
                                     </select>
                                 </td>
                                 <td>
-                                    <label for="title" class="visuallyhidden"><?php _e('字段值'); ?></label>
-                                    <textarea name="fieldValues[]" placeholder="<?php _e('字段值'); ?>" class="text-s w-100" rows="2"></textarea>
+                                    <label for="fieldvalue" class="visuallyhidden"><?php _e('字段值'); ?></label>
+                                    <textarea name="fieldValues[]" placeholder="<?php _e('字段值'); ?>" id="fieldvalue" class="text-s w-100" rows="2"></textarea>
                                 </td>
                                 <td>
                                     <button type="button" class="btn-xs"><?php _e('删除'); ?></button>
