@@ -78,7 +78,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      * @access private
      * @var array
      */
-    private $_pageRow;
+    private $_pageRow = array();
 
     /**
      * 聚合器对象
@@ -592,16 +592,29 @@ class Widget_Archive extends Widget_Abstract_Contents
      * @access private
      * @return void
      */
-    private function checkRewrite()
+    private function checkPermalink()
     {
-        $requestUrl = $this->request->getRequestUrl();
-        $index = Typecho_Common::url('index.php', $this->options->siteUrl);
+        $type = $this->parameter->type;
+
+        if ('index' == $type                        // 首页跳转不用处理
+            || $this->_makeSinglePageAsFrontPage    // 自定义首页不处理
+            || $this->_invokeByFeed                 // 不要处理feed
+            || $this->_invokeFromOutside) {         // 不要处理外部调用
+            return;
+        }
         
-        if ($this->options->rewrite &&
-            0 === strpos($requestUrl, $index)) {
-            $path = substr($requestUrl, strlen($index));
-            $url = Typecho_Common::url($path, $this->options->index);
-            $this->response->redirect($url, true);
+        $value = array(
+            'page'  =>  $this->_currentPage
+        );
+        $value = array_merge($this->_archiveSingle ? $this->row
+ : $this->_pageRow, $value);
+
+        $path = Typecho_Router::url($type, $value);
+        $permalink = Typecho_Common::url($path, $this->options->index);
+        $requestUrl = $this->request->getRequestUrl();
+
+        if ($permalink != $requestUrl) {
+            $this->response->redirect($permalink, true);
         }
     }
 
@@ -1221,9 +1234,6 @@ class Widget_Archive extends Widget_Abstract_Contents
             }
         }
 
-        /** 处理Rewrite跳转 */
-        $this->checkRewrite();
-
         /** 自定义首页功能 */
         $frontPage = $this->options->frontPage;
         if (!$this->_invokeByFeed && ('index' == $this->parameter->type || 'index_page' == $this->parameter->type)) {
@@ -1300,6 +1310,9 @@ class Widget_Archive extends Widget_Abstract_Contents
                 themeInit($this);
             }
         }
+
+        /** 处理静态链接跳转 */
+        $this->checkPermalink();
 
         /** 如果已经提前压入则直接返回 */
         if ($hasPushed) {
