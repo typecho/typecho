@@ -21,7 +21,6 @@ package:
 	@echo 'package'
 	rm -Rf build/tools/
 	rm -Rf build/todo.txt
-	rm -Rf build/usr/plugins/*
 	rm -Rf build/admin/scss
 	rm -Rf build/admin/img/editor
 	rm -Rf build/admin/img/icons
@@ -62,7 +61,6 @@ install:
 	make update
 	rm -Rf build/tools/
 	rm -Rf build/todo.txt
-	rm -Rf build/usr/plugins/*
 	rm -Rf build/admin/scss
 	rm -Rf build/admin/img/editor
 	rm -Rf build/admin/img/icons
