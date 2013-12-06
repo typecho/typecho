@@ -587,6 +587,25 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
+     * 检查链接是否正确
+     * 
+     * @access private
+     * @return void
+     */
+    private function checkRewrite()
+    {
+        $requestUrl = $this->request->getRequestUrl();
+        $index = Typecho_Common::url('index.php', $this->options->siteUrl);
+        
+        if ($this->options->rewrite &&
+            0 === strpos($requestUrl, $index)) {
+            $path = substr($requestUrl, strlen($index));
+            $url = Typecho_Common::url($path, $this->options->index);
+            $this->response->redirect($url, true);
+        }
+    }
+
+    /**
      * 导入对象
      *
      * @access private
@@ -1202,6 +1221,9 @@ class Widget_Archive extends Widget_Abstract_Contents
             }
         }
 
+        /** 处理Rewrite跳转 */
+        $this->checkRewrite();
+
         /** 自定义首页功能 */
         $frontPage = $this->options->frontPage;
         if (!$this->_invokeByFeed && ('index' == $this->parameter->type || 'index_page' == $this->parameter->type)) {
@@ -1319,16 +1341,18 @@ class Widget_Archive extends Widget_Abstract_Contents
     {
         if ($this->have()) {
             $hasNav = false;
-            $this->pluginHandle()->trigger($hasNav)->pageNav($prev, $next, $splitPage, $splitWord);
+            $this->_total = (false === $this->_total ? $this->size($this->_countSql) : $this->_total);
+            $this->pluginHandle()->trigger($hasNav)->pageNav($this->_currentPage, $this->_total, 
+                $this->parameter->pageSize, $prev, $next, $splitPage, $splitWord);
 
-            if (!$hasNav) {
+            if (!$hasNav && $this->_total > $this->parameter->pageSize) {
                 $query = Typecho_Router::url($this->parameter->type .
                 (false === strpos($this->parameter->type, '_page') ? '_page' : NULL),
                 $this->_pageRow, $this->options->index);
 
                 /** 使用盒状分页 */
-                $nav = new Typecho_Widget_Helper_PageNavigator_Box(false === $this->_total ? $this->_total = $this->size($this->_countSql) : $this->_total,
-                $this->_currentPage, $this->parameter->pageSize, $query);
+                $nav = new Typecho_Widget_Helper_PageNavigator_Box($this->_total, 
+                    $this->_currentPage, $this->parameter->pageSize, $query);
                 
                 echo '<ol class="' . $class . '">';
                 $nav->render($prev, $next, $splitPage, $splitWord, $currentClass);

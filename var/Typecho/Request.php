@@ -298,6 +298,18 @@ class Typecho_Request
     }
 
     /**
+     * 获取当前请求url
+     * 
+     * @access public
+     * @return string
+     */
+    public function getRequestUrl()
+    {
+        $scheme = $this->isSecure() ? 'https' : 'http';
+        return $scheme . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+    }
+
+    /**
      * 根据当前uri构造指定参数的uri
      *
      * @access public
@@ -307,8 +319,7 @@ class Typecho_Request
     public function makeUriByRequest($parameter = NULL)
     {
         /** 初始化地址 */
-        $scheme = $this->isSecure() ? 'https' : 'http';
-        $requestUri = strtolower($scheme) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        $requestUri = $this->getRequestUrl();
         $parts = parse_url($requestUri);
 
         /** 初始化参数 */
