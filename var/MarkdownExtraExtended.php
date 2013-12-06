@@ -1334,12 +1334,13 @@ class Markdown {
 
         $this->tail = '';
         if ($level < 0) {
-            $link = preg_replace("/\){1," . (- $level) . "}$/", $link, array($this, '_doAutoLinks_url_callback_callback'));
+            $link = preg_replace_callback("/\){1," . (- $level) . "}$/", 
+                array($this, '_doAutoLinks_url_callback_callback'), $link);
         }
 
-		$url = $this->encodeAttribute($matches[2] . $matches[3]);
+		$url = $this->encodeAttribute($protocol . $link);
 		$link = "<a rel=\"nofollow\" href=\"$url\">$url</a>";
-		return '<' . $protocol . $this->hashPart($link) . '>' . $this->tail;
+		return $this->hashPart($link) . $this->tail;
 	}
 
 	protected function _doAutoLinks_email_callback($matches) {
