@@ -113,7 +113,8 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                                 </select>
                                 </p>
                                 <p id="post-password"<?php if (strlen($post->password) == 0): ?> class="hidden"<?php endif; ?>>
-                                <input type="text" name="password" class="text-s" value="<?php $post->password(); ?>" size="16" placeholder="<?php _e('内容密码'); ?>" />
+                                    <label for="password" class="visuallyhidden">内容密码</label>
+                                    <input type="text" name="password" class="text-s" value="<?php $post->password(); ?>" size="16" placeholder="<?php _e('内容密码'); ?>" />
                                 </p>
                             </section>
                             <?php endif; ?>
