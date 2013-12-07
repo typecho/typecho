@@ -14,25 +14,25 @@ $stat = Typecho_Widget::widget('Widget_Stat');
             <div class="col-mb-12">
                 
                 <div class="typecho-list-operate clearfix">
-                <form method="get">
-                    <div class="operate">
-                        <input type="checkbox" class="typecho-table-select-all" />
-                    <div class="btn-group btn-drop">
-                    <button class="dropdown-toggle btn-s" type="button" href="">选中项 <i class="i-caret-down"></i></button>
-                    <ul class="dropdown-menu">
-                        <li><a lang="<?php _e('你确认要删除这些文件吗?'); ?>" href="<?php $options->index('/action/contents-attachment-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
-                    </ul>
-                    </div>  
-                    </div>
-                    <div class="search" role="search">
-                    <?php if ('' != $request->keywords): ?>
-                    <a href="<?php $options->adminUrl('manage-medias.php'); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
-                    <?php endif; ?>
-                    <input type="text" class="text-s" placeholder="<?php _e('请输入关键字'); ?>" value="<?php echo htmlspecialchars($request->keywords); ?>"<?php if ('' == $request->keywords): ?> onclick="value='';name='keywords';" <?php else: ?> name="keywords"<?php endif; ?>/>
-                    <button type="submit" class="btn-s"><?php _e('筛选'); ?></button>
-                    </div>
-                </form>
-                </div>
+                    <form method="get">
+                        <div class="operate">
+                            <input type="checkbox" class="typecho-table-select-all" />
+                            <div class="btn-group btn-drop">
+                            <button class="dropdown-toggle btn-s" type="button" href="">选中项 <i class="i-caret-down"></i></button>
+                            <ul class="dropdown-menu">
+                                <li><a lang="<?php _e('你确认要删除这些文件吗?'); ?>" href="<?php $options->index('/action/contents-attachment-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
+                            </ul>
+                            </div>  
+                        </div>
+                        <div class="search" role="search">
+                            <?php if ('' != $request->keywords): ?>
+                            <a href="<?php $options->adminUrl('manage-medias.php'); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
+                            <?php endif; ?>
+                            <input type="text" class="text-s" placeholder="<?php _e('请输入关键字'); ?>" value="<?php echo htmlspecialchars($request->keywords); ?>"<?php if ('' == $request->keywords): ?> onclick="value='';name='keywords';" <?php else: ?> name="keywords"<?php endif; ?>/>
+                            <button type="submit" class="btn-s"><?php _e('筛选'); ?></button>
+                        </div>
+                    </form>
+                </div><!-- end .typecho-list-operate -->
             
                 <form method="post" name="manage_medias" class="operate-form">
                 <div class="typecho-table-wrap">
@@ -84,18 +84,31 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             </tr>
                             <?php endif; ?>
                         </tbody>
-                    </table>
-                </div>
-                </form>
-                
+                    </table><!-- end .typecho-list-table -->
+                </div><!-- end .typecho-table-wrap -->
+                </form><!-- end .operate-form -->
 
-                <?php if($attachments->have()): ?>
-                <ul class="typecho-pager">
-                    <?php $attachments->pageNav(); ?>
-                </ul>
-                <?php endif; ?>
+                <div class="typecho-list-operate clearfix">
+                    <form method="get">
+                        <div class="operate">
+                            <input type="checkbox" class="typecho-table-select-all" />
+                            <div class="btn-group btn-drop">
+                                <button class="dropdown-toggle btn-s" type="button" href="">选中项 <i class="i-caret-down"></i></button>
+                                <ul class="dropdown-menu">
+                                    <li><a lang="<?php _e('你确认要删除这些文件吗?'); ?>" href="<?php $options->index('/action/contents-attachment-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <?php if($attachments->have()): ?>
+                        <ul class="typecho-pager">
+                            <?php $attachments->pageNav(); ?>
+                        </ul>
+                        <?php endif; ?>  
+                    </form>
+                </div><!-- end .typecho-list-operate -->
+                
             </div>
-        </div>
+        </div><!-- end .typecho-page-main -->
     </div>
 </div>
 

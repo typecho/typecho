@@ -49,37 +49,37 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == Typ
                     <form method="get">
                         <div class="operate">
                             <input type="checkbox" class="typecho-table-select-all" />
-                        <div class="btn-group btn-drop">
-                        <button class="dropdown-toggle btn-s" type="button" href="">选中项 <i class="i-caret-down"></i></button>
-                        <ul class="dropdown-menu">
-                            <li><a href="<?php $options->index('/action/comments-edit?do=approved'); ?>"><?php _e('通过'); ?></a></li>
-                            <li><a href="<?php $options->index('/action/comments-edit?do=waiting'); ?>"><?php _e('待审核'); ?></a></li>
-                            <li><a href="<?php $options->index('/action/comments-edit?do=spam'); ?>"><?php _e('标记垃圾'); ?></a></li>
-                            <li><a lang="<?php _e('你确认要删除这些评论吗?'); ?>" href="<?php $options->index('/action/comments-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
-                            <?php if('spam' == $request->get('status')): ?>
-                            <li><a lang="<?php _e('你确认要删除所有垃圾评论吗?'); ?>" href="<?php $options->index('/action/comments-edit?do=delete-spam'); ?>"><?php _e('删除所有垃圾评论'); ?></a></li>
-                            <?php endif; ?>
-                        </ul>
-                        </div>
+                            <div class="btn-group btn-drop">
+                            <button class="dropdown-toggle btn-s" type="button" href="">选中项 <i class="i-caret-down"></i></button>
+                            <ul class="dropdown-menu">
+                                <li><a href="<?php $options->index('/action/comments-edit?do=approved'); ?>"><?php _e('通过'); ?></a></li>
+                                <li><a href="<?php $options->index('/action/comments-edit?do=waiting'); ?>"><?php _e('待审核'); ?></a></li>
+                                <li><a href="<?php $options->index('/action/comments-edit?do=spam'); ?>"><?php _e('标记垃圾'); ?></a></li>
+                                <li><a lang="<?php _e('你确认要删除这些评论吗?'); ?>" href="<?php $options->index('/action/comments-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
+                                <?php if('spam' == $request->get('status')): ?>
+                                <li><a lang="<?php _e('你确认要删除所有垃圾评论吗?'); ?>" href="<?php $options->index('/action/comments-edit?do=delete-spam'); ?>"><?php _e('删除所有垃圾评论'); ?></a></li>
+                                <?php endif; ?>
+                            </ul>
+                            </div>
                         </div>
                         <div class="search" role="search">
-                        <?php if ('' != $request->keywords || '' != $request->category): ?>
-                        <a href="<?php $options->adminUrl('manage-comments.php' 
-                        . (isset($request->status) || isset($request->cid) ? '?' .
-                        (isset($request->status) ? 'status=' . htmlspecialchars($request->get('status')) : '') .
-                        (isset($request->cid) ? (isset($request->status) ? '&' : '') . 'cid=' . htmlspecialchars($request->get('cid')) : '') : '')); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
-                        <?php endif; ?>
-                        <input type="text" class="text-s" placeholder="<?php _e('请输入关键字'); ?>" value="<?php echo htmlspecialchars($request->keywords); ?>"<?php if ('' == $request->keywords): ?> onclick="value='';name='keywords';" <?php else: ?> name="keywords"<?php endif; ?>/>
-                        <?php if(isset($request->status)): ?>
-                            <input type="hidden" value="<?php echo htmlspecialchars($request->get('status')); ?>" name="status" />
-                        <?php endif; ?>
-                        <?php if(isset($request->cid)): ?>
-                            <input type="hidden" value="<?php echo htmlspecialchars($request->get('cid')); ?>" name="cid" />
-                        <?php endif; ?>
-                        <button type="submit" class="btn-s"><?php _e('筛选'); ?></button>
+                            <?php if ('' != $request->keywords || '' != $request->category): ?>
+                            <a href="<?php $options->adminUrl('manage-comments.php' 
+                            . (isset($request->status) || isset($request->cid) ? '?' .
+                            (isset($request->status) ? 'status=' . htmlspecialchars($request->get('status')) : '') .
+                            (isset($request->cid) ? (isset($request->status) ? '&' : '') . 'cid=' . htmlspecialchars($request->get('cid')) : '') : '')); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
+                            <?php endif; ?>
+                            <input type="text" class="text-s" placeholder="<?php _e('请输入关键字'); ?>" value="<?php echo htmlspecialchars($request->keywords); ?>"<?php if ('' == $request->keywords): ?> onclick="value='';name='keywords';" <?php else: ?> name="keywords"<?php endif; ?>/>
+                            <?php if(isset($request->status)): ?>
+                                <input type="hidden" value="<?php echo htmlspecialchars($request->get('status')); ?>" name="status" />
+                            <?php endif; ?>
+                            <?php if(isset($request->cid)): ?>
+                                <input type="hidden" value="<?php echo htmlspecialchars($request->get('cid')); ?>" name="cid" />
+                            <?php endif; ?>
+                            <button type="submit" class="btn-s"><?php _e('筛选'); ?></button>
                         </div>
                     </form>
-                </div>
+                </div><!-- end .typecho-list-operate -->
                 
                 <form method="post" name="manage_comments" class="operate-form">
                 <div class="typecho-table-wrap">
@@ -179,21 +179,40 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == Typ
                         </tr>
                         <?php endif; ?>
                         </tbody>
-                    </table>
-                </div>
+                    </table><!-- end .typecho-list-table -->
+                </div><!-- end .typecho-table-wrap -->
 
-                    <?php if(isset($request->cid)): ?>
-                    <input type="hidden" value="<?php echo htmlspecialchars($request->get('cid')); ?>" name="cid" />
-                    <?php endif; ?>
-                </form>
-
-                <?php if($comments->have()): ?>
-                <ul class="typecho-pager">
-                    <?php $comments->pageNav(); ?>
-                </ul>
+                <?php if(isset($request->cid)): ?>
+                <input type="hidden" value="<?php echo htmlspecialchars($request->get('cid')); ?>" name="cid" />
                 <?php endif; ?>
-            </div>
-        </div>
+                </form><!-- end .operate-form -->
+
+                <div class="typecho-list-operate clearfix">
+                    <form method="get">
+                        <div class="operate">
+                            <input type="checkbox" class="typecho-table-select-all" />
+                            <div class="btn-group btn-drop">
+                            <button class="dropdown-toggle btn-s" type="button" href="">选中项 <i class="i-caret-down"></i></button>
+                            <ul class="dropdown-menu">
+                                <li><a href="<?php $options->index('/action/comments-edit?do=approved'); ?>"><?php _e('通过'); ?></a></li>
+                                <li><a href="<?php $options->index('/action/comments-edit?do=waiting'); ?>"><?php _e('待审核'); ?></a></li>
+                                <li><a href="<?php $options->index('/action/comments-edit?do=spam'); ?>"><?php _e('标记垃圾'); ?></a></li>
+                                <li><a lang="<?php _e('你确认要删除这些评论吗?'); ?>" href="<?php $options->index('/action/comments-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
+                                <?php if('spam' == $request->get('status')): ?>
+                                <li><a lang="<?php _e('你确认要删除所有垃圾评论吗?'); ?>" href="<?php $options->index('/action/comments-edit?do=delete-spam'); ?>"><?php _e('删除所有垃圾评论'); ?></a></li>
+                                <?php endif; ?>
+                            </ul>
+                            </div>
+                        </div>
+                        <?php if($comments->have()): ?>
+                        <ul class="typecho-pager">
+                            <?php $comments->pageNav(); ?>
+                        </ul>
+                        <?php endif; ?>
+                    </form>
+                </div><!-- end .typecho-list-operate -->
+            </div><!-- end .typecho-list -->
+        </div><!-- end .typecho-page-main -->
     </div>
 </div>
 <?php
