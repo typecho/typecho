@@ -83,8 +83,11 @@ $(document).ready(function() {
     }
 
     function fileUploadComplete (id, url, data) {
-        var img = $('.typecho-attachment-photo').get(0);
-        img.src = '<?php $attachment->attachment->url(); ?>?' + Math.random();
+        var img = $('.typecho-attachment-photo');
+
+        if (img.length > 0) {
+            img.get(0).src = '<?php $attachment->attachment->url(); ?>?' + Math.random();
+        }
         
         $('#' + id).html('<?php _e('文件 %s 已经替换'); ?>'.replace('%s', data.title))
         .effect('highlight', 1000, function () {
