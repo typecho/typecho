@@ -65,7 +65,7 @@ $(document).ready(function () {
     
     // 设置markdown
     Markdown.Extra.init(converter, {
-        extensions  :   'all'
+        extensions  :   ["tables", "fenced_code_gfm", "def_list", "attr_list", "footnotes"]
     });
 
     // 自动跟随
