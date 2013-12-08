@@ -85,6 +85,18 @@ textarea {
   border-bottom-color: transparent;
 }
 
+.browsehappy {
+  padding: 8px 0;
+  background: #FBE3E4;
+  color: #8A1F11;
+  text-align: center;
+}
+.browsehappy a {
+  color: #8A1F11;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
 /* ------------------
  * Header
  * --------------- */

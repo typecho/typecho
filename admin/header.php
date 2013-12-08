@@ -27,5 +27,5 @@ $header = Typecho_Plugin::factory('admin/header.php')->header($header);
     </head>
     <body<?php if (isset($bodyClass)) {echo ' class="' . $bodyClass . '"';} ?>>
     <!--[if lt IE 9]>
-        <div class="message error browsehappy"><?php _e('您正在使用 <strong>旧版本</strong> 的浏览器. 为了更好的访问本页面, 请 <a href="http://browsehappy.com/">升级你的浏览器</a>'); ?>.</div>
+        <div class="message error browsehappy"><?php _e('页面 <strong>不支持</strong> 你正在使用的浏览器. 为了正常的使用, 请 <a href="http://browsehappy.com/">升级你的浏览器</a>'); ?>.</div>
     <![endif]-->
