@@ -75,6 +75,19 @@
                 }
             })();
 
+
+            // 导航菜单 tab 聚焦时展开下拉菜单
+            (function () {
+                $('#typecho-nav-list').find('.parent a').focus(function() {
+                    $('#typecho-nav-list').find('.child').hide();
+                    $(this).parents('.root').find('.child').show();
+                });
+                $('#typecho-nav-list').find('.child li:last-child a').blur(function() {
+                    $(this).parents('.child').hide();
+                });
+            })();
+
+
             if ($('.typecho-login').length == 0) {
                 $('a').each(function () {
                     var t = $(this), href = t.attr('href');

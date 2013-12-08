@@ -330,7 +330,8 @@ button {
 .typecho-head-nav a {
   color: #BBB; }
 
-.typecho-head-nav a:hover {
+.typecho-head-nav a:hover,
+.typecho-head-nav a:focus {
   color: #FFF;
   text-decoration: none; }
 
@@ -369,17 +370,16 @@ button {
 
 #typecho-nav-list .child {
   position: absolute;
-  left: -9999em;
+  top: 36px;
+  display: none;
   margin: 0;
   min-width: 160px;
   max-width: 240px;
   background: #202328;
-  overflow: hidden;
   z-index: 250; }
 
 #typecho-nav-list .root:hover .child {
-  top: 36px;
-  left: 0; }
+  display: block; }
 
 #typecho-nav-list .child li a {
   color: #BBB;
@@ -391,7 +391,8 @@ button {
   height: 36px;
   line-height: 36px; }
 
-#typecho-nav-list .child li a:hover {
+#typecho-nav-list .child li a:hover,
+#typecho-nav-list .child li a:focus {
   background: #292D33;
   color: #FFF; }
 
