@@ -13,9 +13,9 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 <div class="typecho-list-operate clearfix">
                     <form method="get">
                         <div class="operate">
-                            <input type="checkbox" class="typecho-table-select-all" />
+                            <label><i class="visuallyhidden"><?php _e('全选'); ?></i><input type="checkbox" class="typecho-table-select-all" /></label>
                             <div class="btn-group btn-drop">
-                                <button class="dropdown-toggle btn-s" type="button" href="">选中项 <i class="i-caret-down"></i></button>
+                                <button class="dropdown-toggle btn-s" type="button">选中项 <i class="i-caret-down"></i></button>
                                 <ul class="dropdown-menu">
                                     <li><a lang="<?php _e('你确认要删除这些文章吗?'); ?>" href="<?php $options->index('/action/contents-post-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
                                 </ul>
@@ -85,7 +85,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                                 }
                                 ?>
                                 <?php if ('post_draft' != $posts->type): ?>
-                                <a href="<?php $posts->permalink(); ?>"><i class="i-exlink" title="<?php _e('浏览 %s', htmlspecialchars($posts->title)); ?>" /></i></a>
+                                <a href="<?php $posts->permalink(); ?>" title="<?php _e('浏览 %s', htmlspecialchars($posts->title)); ?>"><i class="i-exlink"></i></a>
                                 <?php endif; ?>
                                 </td>
                                 <td><a href="<?php $options->adminUrl('manage-posts.php?uid=' . $posts->author->uid); ?>"><?php $posts->author(); ?></a></td>
@@ -125,7 +125,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <div class="operate">
                             <input type="checkbox" class="typecho-table-select-all" />
                             <div class="btn-group btn-drop">
-                                <button class="dropdown-toggle btn-s" type="button" href="">选中项 <i class="i-caret-down"></i></button>
+                                <button class="dropdown-toggle btn-s" type="button">选中项 <i class="i-caret-down"></i></button>
                                 <ul class="dropdown-menu">
                                     <li><a lang="<?php _e('你确认要删除这些文章吗?'); ?>" href="<?php $options->index('/action/contents-post-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
                                 </ul>

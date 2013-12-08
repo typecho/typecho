@@ -48,9 +48,9 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == Typ
                 <div class="typecho-list-operate clearfix">
                     <form method="get">
                         <div class="operate">
-                            <input type="checkbox" class="typecho-table-select-all" />
+                            <label><i class="visuallyhidden"><?php _e('全选'); ?></i><input type="checkbox" class="typecho-table-select-all" /></label>
                             <div class="btn-group btn-drop">
-                            <button class="dropdown-toggle btn-s" type="button" href="">选中项 <i class="i-caret-down"></i></button>
+                            <button class="dropdown-toggle btn-s" type="button">选中项 <i class="i-caret-down"></i></button>
                             <ul class="dropdown-menu">
                                 <li><a href="<?php $options->index('/action/comments-edit?do=approved'); ?>"><?php _e('通过'); ?></a></li>
                                 <li><a href="<?php $options->index('/action/comments-edit?do=waiting'); ?>"><?php _e('待审核'); ?></a></li>
@@ -192,7 +192,7 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == Typ
                         <div class="operate">
                             <input type="checkbox" class="typecho-table-select-all" />
                             <div class="btn-group btn-drop">
-                            <button class="dropdown-toggle btn-s" type="button" href="">选中项 <i class="i-caret-down"></i></button>
+                            <button class="dropdown-toggle btn-s" type="button">选中项 <i class="i-caret-down"></i></button>
                             <ul class="dropdown-menu">
                                 <li><a href="<?php $options->index('/action/comments-edit?do=approved'); ?>"><?php _e('通过'); ?></a></li>
                                 <li><a href="<?php $options->index('/action/comments-edit?do=waiting'); ?>"><?php _e('待审核'); ?></a></li>
