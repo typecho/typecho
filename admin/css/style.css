@@ -310,7 +310,12 @@ button {
 
 .typecho-pager a {
   display: block;
-  padding: 0 10px; }
+  padding: 0 10px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px; }
 
 .typecho-pager a:hover {
   text-decoration: none;
