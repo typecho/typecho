@@ -261,10 +261,10 @@ button {
 
 .notice {
   background: #FFF6BF;
-  color: #514721; }
+  color: #8A6D3B; }
 
 .notice a {
-  color: #514721; }
+  color: #8A6D3B; }
 
 .success {
   background: #E6EFC2;
@@ -573,6 +573,35 @@ button {
   margin: 1em 0;
   padding: 1em 2em;
   background-color: #E9E9E6; }
+
+.welcome-board {
+  color: #999;
+  font-size: 1.15em; }
+  .welcome-board em {
+    color: #444;
+    font-size: 2em;
+    font-style: normal;
+    font-family: Georgia; }
+
+#start-link {
+  padding: 0 0 1.8em;
+  border-bottom: 1px solid #ECECEC; }
+  #start-link li {
+    float: left;
+    margin-right: 1.5em; }
+
+.latest-link li {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; }
+.latest-link span {
+  margin-right: 4px;
+  padding-right: 8px;
+  border-right: 1px solid #ECECEC;
+  color: #999; }
+
+.update-check {
+  font-size: 14px; }
 
 /**
 * 登录框
