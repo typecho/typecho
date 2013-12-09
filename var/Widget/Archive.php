@@ -272,6 +272,7 @@ class Widget_Archive extends Widget_Abstract_Contents
             if ('/comments/' == $feedQuery || '/comments' == $feedQuery) {
                 /** 专为feed使用的hack */
                 $this->parameter->type = 'comments';
+                $this->parameter->checkPermalink = false;
             } else {
                 $matched = Typecho_Router::match($this->request->feed, 'pageSize=10&isFeed=1');
                 if ($matched && $matched instanceof Widget_Archive) {
@@ -602,6 +603,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         if ('index' == $type                        // 首页跳转不用处理
             || $this->_makeSinglePageAsFrontPage    // 自定义首页不处理
             || $this->_invokeByFeed                 // 不要处理feed
+            || 'feed' == $this->parameter->type     // 不处理feed
             || $this->_invokeFromOutside            // 不要处理外部调用 
             || !$this->parameter->checkPermalink) { // 强制关闭
             return;
@@ -610,8 +612,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         $value = array(
             'page'  =>  $this->_currentPage
         );
-        $value = array_merge($this->_archiveSingle ? $this->row
- : $this->_pageRow, $value);
+        $value = array_merge($this->_archiveSingle ? $this->row : $this->_pageRow, $value);
 
         $path = Typecho_Router::url($type, $value);
         $permalink = Typecho_Common::url($path, $this->options->index);
