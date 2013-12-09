@@ -109,3 +109,25 @@ $icons-2x: sprite-map("icons-2x/*.png");
   @extend %i-16;
   background-position: sprite-position($icons, mime-unknow);
 }
+
+
+/* Logo 图标 */
+.i-logo, .i-logo-s {
+  width: 169px;
+  height: 40px;
+  display: inline-block;
+  background: url("../img/typecho-logo.svg") no-repeat;
+  text-indent: -9999em;
+  @include background-size(auto 40px);
+  @include opacity(.3);
+  &:hover {
+    @include opacity(.2);
+  }
+}
+.i-logo-s {
+  width: 26px;
+  height: 26px;
+  @include background-size(auto 26px);
+  @include opacity(.1);
+}
+

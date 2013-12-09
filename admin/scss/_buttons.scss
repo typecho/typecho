@@ -17,7 +17,7 @@
     background-color: darken($color, 6%);
   }
   &:active, &.active {
-    background-color: darken($color, 6%);
+    background-color: darken($color, 8%);
   }
   &:disabled {
     background-color: lighten($color, 6%);

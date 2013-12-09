@@ -13,7 +13,7 @@ include 'header.php';
 ?>
 
 <div class="typecho-login">
-    <h1>Typecho</h1>
+    <h1><a href="http://typecho.org" class="i-logo">Typecho</a></h1>
     <form action="<?php $options->registerAction(); ?>" method="post" name="register" role="form">
         <p>
             <label for="name" class="visuallyhidden"><?php _e('用户名'); ?></label>

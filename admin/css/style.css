@@ -140,7 +140,7 @@ button {
     transition-duration: 0.4s;
     background-color: #dbdbd6; }
   button:active, button.active {
-    background-color: #dbdbd6; }
+    background-color: #d6d6d0; }
   button:disabled {
     background-color: #f7f7f6;
     cursor: default; }
@@ -176,7 +176,7 @@ button {
     transition-duration: 0.4s;
     background-color: #3c6a81; }
   .primary:active, .primary.active {
-    background-color: #3c6a81; }
+    background-color: #39647a; }
   .primary:disabled {
     background-color: #508cab;
     cursor: default; }
@@ -201,7 +201,7 @@ button {
     transition-duration: 0.4s;
     background-color: #a4403f; }
   .btn-warn:active, .btn-warn.active {
-    background-color: #a4403f; }
+    background-color: #9c3e3c; }
   .btn-warn:disabled {
     background-color: #c1605e;
     cursor: default; }
@@ -420,17 +420,17 @@ button {
 * 注脚
 */
 .typecho-foot {
-  padding: 4em 0;
+  padding: 4em 0 3em;
   color: #999;
   line-height: 1.8;
   text-align: center; }
-
-.typecho-foot .resource {
-  color: #CCC; }
-
-.typecho-foot .resource a {
-  margin: 0 3px;
-  color: #999; }
+  .typecho-foot .copyright p {
+    margin: 10px 0 0; }
+  .typecho-foot .resource {
+    color: #CCC; }
+  .typecho-foot .resource a {
+    margin: 0 3px;
+    color: #999; }
 
 /* 低版本浏览器升级提示 */
 .browsehappy {
@@ -577,6 +577,8 @@ button {
   width: 280px;
   height: 100%;
   text-align: center; }
+  .typecho-login h1 {
+    margin-bottom: 1em; }
 
 .typecho-login .more-link {
   margin-top: 2em;
@@ -939,10 +941,13 @@ a.operate-reply {
     #custom-field .description button {
       float: left; }
   #custom-field .typecho-label {
-    margin: 0;
-    cursor: pointer; }
-    #custom-field .typecho-label:hover {
-      color: #467B96; }
+    margin: 0; }
+    #custom-field .typecho-label a {
+      display: block;
+      color: #444; }
+      #custom-field .typecho-label a:hover {
+        color: #467B96;
+        text-decoration: none; }
   #custom-field table {
     margin-top: 10px; }
   #custom-field td {
@@ -1164,6 +1169,33 @@ a.operate-reply {
 
 .mime-unknow {
   background-position: 0 -160px; }
+
+/* Logo 图标 */
+.i-logo, .i-logo-s {
+  width: 169px;
+  height: 40px;
+  display: inline-block;
+  background: url("../img/typecho-logo.svg") no-repeat;
+  text-indent: -9999em;
+  -webkit-background-size: auto 40px;
+  -moz-background-size: auto 40px;
+  -o-background-size: auto 40px;
+  background-size: auto 40px;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=30);
+  opacity: 0.3; }
+  .i-logo:hover, .i-logo-s:hover {
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=20);
+    opacity: 0.2; }
+
+.i-logo-s {
+  width: 26px;
+  height: 26px;
+  -webkit-background-size: auto 26px;
+  -moz-background-size: auto 26px;
+  -o-background-size: auto 26px;
+  background-size: auto 26px;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=10);
+  opacity: 0.1; }
 
 /*
 * Editor

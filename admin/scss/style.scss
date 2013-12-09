@@ -252,6 +252,9 @@ a.button:hover, a.balloon-button:hover {
   width: 280px;
   height: 100%;
   text-align: center;
+  h1 {
+    margin-bottom: 1em; 
+  }
 }
 
 .typecho-login .more-link {
@@ -698,9 +701,13 @@ a.operate-reply {
 
   .typecho-label {
     margin: 0;
-    cursor: pointer;
-    &:hover {
-      color: #467B96;
+    a {
+      display: block;
+      color: #444;
+      &:hover {
+        color: #467B96;
+        text-decoration: none;
+      }
     }
   }
   table {
