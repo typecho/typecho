@@ -22,11 +22,11 @@ $defaultFields = isset($post) ? $post->getDefaultFieldItems() : $page->getDefaul
                             <?php foreach ($fields as $field): ?>
                             <tr>
                                 <td>
-                                    <label for="fieldname" class="visuallyhidden"><?php _e('字段名称'); ?></label>
+                                    <label for="fieldname" class="sr-only"><?php _e('字段名称'); ?></label>
                                     <input type="text" name="fieldNames[]" value="<?php echo htmlspecialchars($field['name']); ?>" id="fieldname" class="text-s w-100">
                                 </td>
                                 <td>
-                                    <label for="fieldtype" class="visuallyhidden"><?php _e('字段类型'); ?></label>
+                                    <label for="fieldtype" class="sr-only"><?php _e('字段类型'); ?></label>
                                     <select name="fieldTypes[]" id="fieldtype">
                                         <option value="str"<?php if ('str' == $field['type']): ?> selected<?php endif; ?>><?php _e('字符'); ?></option>
                                         <option value="int"<?php if ('int' == $field['type']): ?> selected<?php endif; ?>><?php _e('整数'); ?></option>
@@ -34,7 +34,7 @@ $defaultFields = isset($post) ? $post->getDefaultFieldItems() : $page->getDefaul
                                     </select>
                                 </td>
                                 <td>
-                                    <label for="fieldvalue" class="visuallyhidden"><?php _e('字段值'); ?></label>
+                                    <label for="fieldvalue" class="sr-only"><?php _e('字段值'); ?></label>
                                     <textarea name="fieldValues[]" id="fieldvalue" class="text-s w-100" rows="2"><?php echo htmlspecialchars($field[$field['type'] . '_value']); ?></textarea>
                                 </td>
                                 <td>
@@ -45,11 +45,11 @@ $defaultFields = isset($post) ? $post->getDefaultFieldItems() : $page->getDefaul
                             <?php if (empty($defaultFields) && empty($fields)): ?>
                             <tr>
                                 <td>
-                                    <label for="fieldname" class="visuallyhidden"><?php _e('字段名称'); ?></label>
+                                    <label for="fieldname" class="sr-only"><?php _e('字段名称'); ?></label>
                                     <input type="text" name="fieldNames[]" placeholder="<?php _e('字段名称'); ?>" id="fieldname" class="text-s w-100">
                                 </td>
                                 <td>
-                                    <label for="fieldtype" class="visuallyhidden"><?php _e('字段类型'); ?></label>
+                                    <label for="fieldtype" class="sr-only"><?php _e('字段类型'); ?></label>
                                     <select name="fieldTypes[]" id="fieldtype">
                                         <option value="str"><?php _e('字符'); ?></option>
                                         <option value="int"><?php _e('整数'); ?></option>
@@ -57,7 +57,7 @@ $defaultFields = isset($post) ? $post->getDefaultFieldItems() : $page->getDefaul
                                     </select>
                                 </td>
                                 <td>
-                                    <label for="fieldvalue" class="visuallyhidden"><?php _e('字段值'); ?></label>
+                                    <label for="fieldvalue" class="sr-only"><?php _e('字段值'); ?></label>
                                     <textarea name="fieldValues[]" placeholder="<?php _e('字段值'); ?>" id="fieldvalue" class="text-s w-100" rows="2"></textarea>
                                 </td>
                                 <td>

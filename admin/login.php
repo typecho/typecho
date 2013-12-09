@@ -14,11 +14,11 @@ include 'header.php';
     <h1><a href="http://typecho.org" class="i-logo">Typecho</a></h1>
     <form action="<?php $options->loginAction(); ?>" method="post" name="login" role="form">
         <p>
-            <label for="name" class="visuallyhidden"><?php _e('用户名'); ?></label>
+            <label for="name" class="sr-only"><?php _e('用户名'); ?></label>
             <input type="text" id="name" name="name" value="<?php echo $rememberName; ?>" placeholder="<?php _e('用户名'); ?>" class="text-l w-100" />
         </p>
         <p>
-            <label for="password" class="visuallyhidden"><?php _e('密码'); ?></label>
+            <label for="password" class="sr-only"><?php _e('密码'); ?></label>
             <input type="password" id="password" name="password" class="text-l w-100" placeholder="<?php _e('密码'); ?>" />
         </p>
         <p class="submit">

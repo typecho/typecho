@@ -17,7 +17,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                     <?php endif; ?>
 
                     <p class="title">
-                        <label for="title" class="visuallyhidden"><?php _e('标题'); ?></label>
+                        <label for="title" class="sr-only"><?php _e('标题'); ?></label>
                         <input type="text" id="title" name="title" autocomplete="off" value="<?php echo htmlspecialchars($page->title); ?>" placeholder="<?php _e('标题'); ?>" class="w-100 text title" />
                     </p>
                     <?php $permalink = Typecho_Common::url($options->routingTable['page']['url'], $options->index);
@@ -30,11 +30,11 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                     $input = '<input type="text" id="slug" name="slug" autocomplete="off" value="' . htmlspecialchars($page->slug) . '" class="mono" />';
                     ?>
                     <p class="mono url-slug">
-                        <label for="slug" class="visuallyhidden"><?php _e('网址缩略名'); ?></label>
+                        <label for="slug" class="sr-only"><?php _e('网址缩略名'); ?></label>
                         <?php echo preg_replace("/\{slug\}/i", $input, $permalink); ?>
                     </p>
                     <p>
-                        <label for="text" class="visuallyhidden"><?php _e('页面内容'); ?></label>
+                        <label for="text" class="sr-only"><?php _e('页面内容'); ?></label>
                         <textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text" name="text" class="w-100 mono"><?php echo htmlspecialchars($page->text); ?></textarea>
                     </p>
                         

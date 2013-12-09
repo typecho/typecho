@@ -48,9 +48,9 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == Typ
                 <div class="typecho-list-operate clearfix">
                     <form method="get">
                         <div class="operate">
-                            <label><i class="visuallyhidden"><?php _e('全选'); ?></i><input type="checkbox" class="typecho-table-select-all" /></label>
+                            <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox" class="typecho-table-select-all" /></label>
                             <div class="btn-group btn-drop">
-                            <button class="dropdown-toggle btn-s" type="button">选中项 <i class="i-caret-down"></i></button>
+                            <button class="dropdown-toggle btn-s" type="button"><?php _e('<i class="sr-only">操作</i>选中项'); ?> <i class="i-caret-down"></i></button>
                             <ul class="dropdown-menu">
                                 <li><a href="<?php $options->index('/action/comments-edit?do=approved'); ?>"><?php _e('通过'); ?></a></li>
                                 <li><a href="<?php $options->index('/action/comments-edit?do=waiting'); ?>"><?php _e('待审核'); ?></a></li>
@@ -192,7 +192,7 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == Typ
                         <div class="operate">
                             <input type="checkbox" class="typecho-table-select-all" />
                             <div class="btn-group btn-drop">
-                            <button class="dropdown-toggle btn-s" type="button">选中项 <i class="i-caret-down"></i></button>
+                            <button class="dropdown-toggle btn-s" type="button"><?php _e('<i class="sr-only">操作</i>选中项'); ?> <i class="i-caret-down"></i></button>
                             <ul class="dropdown-menu">
                                 <li><a href="<?php $options->index('/action/comments-edit?do=approved'); ?>"><?php _e('通过'); ?></a></li>
                                 <li><a href="<?php $options->index('/action/comments-edit?do=waiting'); ?>"><?php _e('待审核'); ?></a></li>
@@ -266,7 +266,7 @@ $(document).ready(function () {
         } else {
             var form = $('<form method="post" action="'
                 + t.attr('rel') + '" class="comment-reply">'
-                + '<p><label for="text" class="visuallyhidden"><?php _e('内容'); ?></label><textarea id="text" name="text" class="w-90 mono" rows="3"></textarea></p>'
+                + '<p><label for="text" class="sr-only"><?php _e('内容'); ?></label><textarea id="text" name="text" class="w-90 mono" rows="3"></textarea></p>'
                 + '<p><button type="submit" class="btn-s primary"><?php _e('回复'); ?></button> <button type="button" class="btn-s cancel"><?php _e('取消'); ?></button></p>'
                 + '</form>').insertBefore($('.comment-action', td));
 

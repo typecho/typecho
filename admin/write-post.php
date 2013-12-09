@@ -17,7 +17,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                     <?php endif; ?>
 
                     <p class="title">
-                        <label for="title" class="visuallyhidden"><?php _e('标题'); ?></label>
+                        <label for="title" class="sr-only"><?php _e('标题'); ?></label>
                         <input type="text" id="title" name="title" autocomplete="off" value="<?php echo htmlspecialchars($post->title); ?>" placeholder="<?php _e('标题'); ?>" class="w-100 text title" />
                     </p>
                     <?php $permalink = Typecho_Common::url($options->routingTable['post']['url'], $options->index);
@@ -34,11 +34,11 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                     $input = '<input type="text" id="slug" name="slug" autocomplete="off" value="' . htmlspecialchars($post->slug) . '" class="mono" />';
                     ?>
                     <p class="mono url-slug">
-                        <label for="slug" class="visuallyhidden"><?php _e('网址缩略名'); ?></label>
+                        <label for="slug" class="sr-only"><?php _e('网址缩略名'); ?></label>
                         <?php echo preg_replace("/\{slug\}/i", $input, $permalink); ?>
                     </p>
                     <p>
-                        <label for="text" class="visuallyhidden"><?php _e('文章内容'); ?></label>
+                        <label for="text" class="sr-only"><?php _e('文章内容'); ?></label>
                         <textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text" name="text" class="w-100 mono"><?php echo htmlspecialchars($post->text); ?></textarea>
                     </p>
                     
@@ -113,7 +113,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                                 </select>
                                 </p>
                                 <p id="post-password"<?php if (strlen($post->password) == 0): ?> class="hidden"<?php endif; ?>>
-                                    <label for="protect-pwd" class="visuallyhidden">内容密码</label>
+                                    <label for="protect-pwd" class="sr-only">内容密码</label>
                                     <input type="text" name="password" id="protect-pwd" class="text-s" value="<?php $post->password(); ?>" size="16" placeholder="<?php _e('内容密码'); ?>" />
                                 </p>
                             </section>

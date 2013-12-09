@@ -172,7 +172,7 @@
             single      :   false
         }, options), 
         p = this.parent().css('position', 'relative'),
-        input = $('<input class="visuallyhidden" name="' + s.name + '" type="file" />').css({
+        input = $('<input class="sr-only" name="' + s.name + '" type="file" />').css({
             opacity     :   0,
             cursor      :   'pointer',
             position    :   'absolute',
