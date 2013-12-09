@@ -10,9 +10,9 @@ $stat = Typecho_Widget::widget('Widget_Stat');
         <?php include 'page-title.php'; ?>
         <div class="colgroup typecho-page-main">
             <div class="col-mb-12 welcome-board" role="main">
-                <?php _e('目前有 <em>%s</em> 篇日志, 并有 <em>%s</em> 条关于你的评论在 <em>%s</em> 个分类中.', 
+                <p><?php _e('目前有 <em>%s</em> 篇日志, 并有 <em>%s</em> 条关于你的评论在 <em>%s</em> 个分类中.', 
                 $stat->myPublishedPostsNum, $stat->myPublishedCommentsNum, $stat->categoriesNum); ?>
-                <br><?php _e('使用下面的链接开始你的故事吧:'); ?>
+                <br><?php _e('使用下面的链接开始你的故事吧:'); ?></p>
         
                 <ul id="start-link" class="clearfix">
                     <?php if($user->pass('contributor', true)): ?>
@@ -45,7 +45,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 <?php $version = Typecho_Cookie::get('__typecho_check_version'); ?>
                 <?php if ($version && $version['available']): ?>
                 <div class="update-check">
-                    <p>
+                    <p class="message notice">
                         <?php _e('您当前使用的版本是'); ?> <?php echo $version['current']; ?> &rarr;
                         <strong><a href="<?php echo $version['link']; ?>"><?php _e('官方最新版本是'); ?> <?php echo $version['latest']; ?></a></strong>
                     </p>
