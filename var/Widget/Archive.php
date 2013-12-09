@@ -216,8 +216,11 @@ class Widget_Archive extends Widget_Abstract_Contents
     {
         parent::__construct($request, $response, $params);
 
-        $this->parameter->setDefault(array('pageSize' => $this->options->pageSize,
-        'type' => NULL));
+        $this->parameter->setDefault(array(
+            'pageSize'          =>  $this->options->pageSize,
+            'type'              =>  NULL,
+            'checkPermalink'    =>  true
+        ));
 
         /** 用于判断是路由调用还是外部调用 */
         if (NULL == $this->parameter->type) {
@@ -599,7 +602,8 @@ class Widget_Archive extends Widget_Abstract_Contents
         if ('index' == $type                        // 首页跳转不用处理
             || $this->_makeSinglePageAsFrontPage    // 自定义首页不处理
             || $this->_invokeByFeed                 // 不要处理feed
-            || $this->_invokeFromOutside) {         // 不要处理外部调用
+            || $this->_invokeFromOutside            // 不要处理外部调用 
+            || !$this->parameter->checkPermalink) { // 强制关闭
             return;
         }
         
