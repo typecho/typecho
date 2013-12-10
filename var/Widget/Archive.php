@@ -1134,7 +1134,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->_keywords = $keywords;
 
         /** 设置分页 */
-        $this->_pageRow = array('keywords' => $keywords);
+        $this->_pageRow = array('keywords' => urlencode($keywords));
 
         /** 设置头部feed */
         /** RSS 2.0 */
