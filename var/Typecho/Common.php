@@ -20,7 +20,7 @@
 class Typecho_Common
 {
     /** 程序版本 */
-    const VERSION = '0.9/13.12.6';
+    const VERSION = '0.9/13.12.10';
 
     /**
      * 缓存的包含路径
