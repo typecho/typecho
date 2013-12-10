@@ -368,7 +368,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                                             if(_r('delete')) {
                                                 //删除原有数据
                                                 $dbPrefix = $config['prefix'];
-                                                $tableArray = array($dbPrefix . 'comments', $dbPrefix . 'contents', $dbPrefix . 'metas', $dbPrefix . 'options', $dbPrefix . 'relationships', $dbPrefix . 'users',);
+                                                $tableArray = array($dbPrefix . 'comments', $dbPrefix . 'contents', $dbPrefix . 'fields', $dbPrefix . 'metas', $dbPrefix . 'options', $dbPrefix . 'relationships', $dbPrefix . 'users',);
                                                 foreach($tableArray as $table) {
                                                     if($type == 'Mysql') {
                                                         $installDb->query("DROP TABLE IF EXISTS `{$table}`");
