@@ -9,6 +9,8 @@ $rememberMail = Typecho_Cookie::get('__typecho_remember_mail');
 Typecho_Cookie::delete('__typecho_remember_name');
 Typecho_Cookie::delete('__typecho_remember_mail');
 
+$bodyClass = 'body-100';
+
 include 'header.php';
 ?>
 <div class="typecho-login-wrap">
@@ -41,7 +43,6 @@ include 'common-js.php';
 <script>
 $(document).ready(function () {
     $('#name').focus();
-    $('body').css('height', '100%');
 });
 </script>
 <?php
