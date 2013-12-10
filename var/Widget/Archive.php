@@ -720,7 +720,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     {
         if ('comment_page' == $this->parameter->type) {
             $params = array();
-            $matched = Typecho_Router::match($this->request->permalink);
+            $matched = Typecho_Router::match($this->request->permalink, 'checkPermalink=0');
 
             if ($matched && $matched instanceof Widget_Archive && $matched->is('single')) {
                 $this->import($matched);
