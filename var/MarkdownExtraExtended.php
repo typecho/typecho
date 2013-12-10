@@ -1516,7 +1516,7 @@ class Markdown {
 		foreach ($blocks as $block) {
 			# Calculate amount of space, insert spaces, insert block.
 			$amount = $this->tab_width - 
-				$strlen($line, 'UTF-8') % $this->tab_width;
+				call_user_func($strlen, $line, 'UTF-8') % $this->tab_width;
 			$line .= str_repeat(" ", $amount) . $block;
 		}
 		return $line;
@@ -1529,10 +1529,14 @@ class Markdown {
 	# regular expression.
 	#
 		if (function_exists($this->utf8_strlen)) return;
-		$this->utf8_strlen = create_function('$text', 'return preg_match_all(
-			"/[\\\\x00-\\\\xBF]|[\\\\xC0-\\\\xFF][\\\\x80-\\\\xBF]*/", 
-			$text, $m);');
+		$this->utf8_strlen = array($this, '_utf8_strlen');
 	}
+
+    protected function _utf8_strlen($text) {
+        return preg_match_all(
+			"/[\\x00-\\xBF]|[\\xC0-\\xFF][\\x80-\\xBF]*/", 
+			$text, $m);
+    }
 
 
 	protected function unhash($text) {
@@ -2174,7 +2178,7 @@ class MarkdownExtra extends Markdown {
 					# Calculate indent before tag.
 					if (preg_match('/(?:^|\n)( *?)(?! ).*?$/', $block_text, $matches)) {
 						$strlen = $this->utf8_strlen;
-						$indent = $strlen($matches[1], 'UTF-8');
+						$indent = call_user_func($strlen, $matches[1], 'UTF-8');
 					} else {
 						$indent = 0;
 					}
