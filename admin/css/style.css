@@ -600,8 +600,10 @@ button {
 .latest-link span {
   display: inline-block;
   margin-right: 4px;
-  width: 45px;
+  padding-right: 8px;
   border-right: 1px solid #ECECEC;
+  width: 37px;
+  text-align: right;
   color: #999; }
 
 .update-check {
@@ -610,11 +612,16 @@ button {
 /**
 * 登录框
 */
+.typecho-login-wrap {
+  display: table;
+  margin: 0 auto;
+  height: 100%; }
+
 .typecho-login {
-  margin: 150px auto 0;
+  display: table-cell;
   width: 280px;
-  height: 100%;
-  text-align: center; }
+  text-align: center;
+  vertical-align: middle; }
   .typecho-login h1 {
     margin-bottom: 1em; }
 
