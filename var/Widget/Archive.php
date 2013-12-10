@@ -604,6 +604,7 @@ class Widget_Archive extends Widget_Abstract_Contents
             || $this->_makeSinglePageAsFrontPage    // 自定义首页不处理
             || $this->_invokeByFeed                 // 不要处理feed
             || 'feed' == $this->parameter->type     // 不处理feed
+            || 'comment_page' == $this->parameter->type     // 不处理comment
             || $this->_invokeFromOutside            // 不要处理外部调用 
             || !$this->parameter->checkPermalink) { // 强制关闭
             return;
