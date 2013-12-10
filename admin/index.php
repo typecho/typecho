@@ -61,7 +61,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     <?php if($posts->have()): ?>
                     <?php while($posts->next()): ?>
                         <li>
-                            <span><?php $posts->date('m.d'); ?></span>
+                            <span><?php $posts->date('n.j'); ?></span>
                             <a href="<?php $posts->permalink(); ?>" class="title"><?php $posts->title(); ?></a>
                         </li>
                     <?php endwhile; ?>
@@ -80,7 +80,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <?php if($comments->have()): ?>
                         <?php while($comments->next()): ?>
                         <li>
-                            <span><?php $comments->date('m.d'); ?></span>
+                            <span><?php $comments->date('n.j'); ?></span>
                             <a href="<?php $comments->permalink(); ?>" class="title"><?php $comments->author(true); ?></a>:
                             <?php $comments->excerpt(35, '...'); ?>
                         </li>
