@@ -262,9 +262,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
     {
         /** 回调方法 */
         $callback = $this->request->type;
-        $this->_content = Typecho_Router::match($this->request->permalink, array(
-            'checkPermalink'    =>  false
-        ));
+        $this->_content = Typecho_Router::match($this->request->permalink);
 
         /** 判断内容是否存在 */
         if (false !== $this->_content && $this->_content instanceof Widget_Archive &&

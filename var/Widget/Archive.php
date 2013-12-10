@@ -272,7 +272,6 @@ class Widget_Archive extends Widget_Abstract_Contents
             if ('/comments/' == $feedQuery || '/comments' == $feedQuery) {
                 /** 专为feed使用的hack */
                 $this->parameter->type = 'comments';
-                $this->parameter->checkPermalink = false;
             } else {
                 $matched = Typecho_Router::match($this->request->feed, 'pageSize=10&isFeed=1');
                 if ($matched && $matched instanceof Widget_Archive) {
@@ -600,12 +599,8 @@ class Widget_Archive extends Widget_Abstract_Contents
     {
         $type = $this->parameter->type;
 
-        if ('index' == $type                        // 首页跳转不用处理
+        if (in_array($type, array('index', 'comment_page', 404))
             || $this->_makeSinglePageAsFrontPage    // 自定义首页不处理
-            || $this->_invokeByFeed                 // 不要处理feed
-            || 'feed' == $this->parameter->type     // 不处理feed
-            || 'comment_page' == $this->parameter->type     // 不处理comment
-            || $this->_invokeFromOutside            // 不要处理外部调用 
             || !$this->parameter->checkPermalink) { // 强制关闭
             return;
         }
@@ -720,7 +715,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     {
         if ('comment_page' == $this->parameter->type) {
             $params = array();
-            $matched = Typecho_Router::match($this->request->permalink, 'checkPermalink=0');
+            $matched = Typecho_Router::match($this->request->permalink);
 
             if ($matched && $matched instanceof Widget_Archive && $matched->is('single')) {
                 $this->import($matched);
@@ -1320,9 +1315,6 @@ class Widget_Archive extends Widget_Abstract_Contents
             }
         }
 
-        /** 处理静态链接跳转 */
-        $this->checkPermalink();
-
         /** 如果已经提前压入则直接返回 */
         if ($hasPushed) {
             return;
@@ -1795,6 +1787,9 @@ var TypechoComment = {
      */
     public function render()
     {
+        /** 处理静态链接跳转 */
+        $this->checkPermalink();
+        
         /** 添加Pingback */
         $this->response->setHeader('X-Pingback', $this->options->xmlRpcUrl);
         $validated = false;
