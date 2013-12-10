@@ -21,6 +21,14 @@
 class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widget_Interface_Do
 {
     /**
+     * 自定义字段的hook名称 
+     * 
+     * @var string
+     * @access protected
+     */
+    protected $themeCustomFieldsHook = 'themePostFields';
+
+    /**
      * 将tags取出
      *
      * @access protected
@@ -488,6 +496,10 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             
             if (function_exists('themeFields')) {
                 themeFields($layout); 
+            }
+
+            if (function_exists($this->themeCustomFieldsHook)) {
+                call_user_func($this->themeCustomFieldsHook, $layout);
             }
         }
 
