@@ -250,7 +250,7 @@ a.button:hover, a.balloon-button:hover {
     color: #444;
     font-size: 2em;
     font-style: normal;
-    font-family: Georgia;
+    font-family: Georgia, serif;
   }
 }
 
@@ -262,6 +262,9 @@ a.button:hover, a.balloon-button:hover {
     float: left;
     margin-right: 1.5em;
   }
+  .balloon {
+    margin-top: 2px;
+  }
 }
 
 .latest-link {
@@ -271,8 +274,9 @@ a.button:hover, a.balloon-button:hover {
     text-overflow: ellipsis;
   }
   span {
+    display: inline-block;
     margin-right: 4px;
-    padding-right: 8px;
+    width: 45px;
     border-right: 1px solid #ECECEC;
     color: #999;
   }

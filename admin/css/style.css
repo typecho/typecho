@@ -581,7 +581,7 @@ button {
     color: #444;
     font-size: 2em;
     font-style: normal;
-    font-family: Georgia; }
+    font-family: Georgia, serif; }
 
 #start-link {
   margin-bottom: 25px;
@@ -590,14 +590,17 @@ button {
   #start-link li {
     float: left;
     margin-right: 1.5em; }
+  #start-link .balloon {
+    margin-top: 2px; }
 
 .latest-link li {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis; }
 .latest-link span {
+  display: inline-block;
   margin-right: 4px;
-  padding-right: 8px;
+  width: 45px;
   border-right: 1px solid #ECECEC;
   color: #999; }
 
