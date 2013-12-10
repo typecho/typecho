@@ -357,7 +357,8 @@ textarea {
 .post-content h2, .comment-content h2 {
   font-size: 1.28571em;
 }
-.post-content img, .comment-content img {
+.post-content img, .comment-content img,
+.post-content video, .comment-content video {
   max-width: 100%;
 }
 .post-content a img {
