@@ -619,7 +619,10 @@ class Widget_Archive extends Widget_Abstract_Contents
         $permalink = Typecho_Common::url($path, $this->options->index);
         $requestUrl = $this->request->getRequestUrl();
 
-        if ($permalink != $requestUrl) {
+        $src = parse_url($permalink);
+        $target = parse_url($requestUrl);
+
+        if ($src['host'] != $target['host'] || $src['path'] != $target['path']) {
             $this->response->redirect($permalink, true);
         }
     }
