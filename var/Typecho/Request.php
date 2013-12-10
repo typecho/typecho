@@ -651,7 +651,8 @@ class Typecho_Request
      */
     public function isSecure()
     {
-        return (isset($_SERVER['HTTPS']) && 'off' != $_SERVER['HTTPS']) || (isset($_SERVER['SERVER_PORT']) && 443 == $_SERVER['SERVER_PORT']);
+        return (!empty($_SERVER['HTTPS']) && 'off' != strtolower($_SERVER['HTTPS'])) 
+            || (!empty($_SERVER['SERVER_PORT']) && 443 == $_SERVER['SERVER_PORT']);
     }
 
     /**
