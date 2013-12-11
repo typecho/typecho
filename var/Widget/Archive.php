@@ -796,12 +796,6 @@ class Widget_Archive extends Widget_Abstract_Contents
             }
         }
 
-        /** 设置关键词 */
-        $this->_keywords = implode(',', Typecho_Common::arrayFlatten($this->tags, 'name'));
-
-        /** 设置描述 */
-        $this->_description = $this->description;
-
         /** 设置模板 */
         if ($this->template) {
             /** 应用自定义模板 */
@@ -823,6 +817,12 @@ class Widget_Archive extends Widget_Abstract_Contents
 
             /** 设置标题 */
             $this->_archiveTitle = $this->title;
+
+            /** 设置关键词 */
+            $this->_keywords = implode(',', Typecho_Common::arrayFlatten($this->tags, 'name'));
+
+            /** 设置描述 */
+            $this->_description = $this->description;
         }
 
         /** 设置归档类型 */
