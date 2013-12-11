@@ -605,13 +605,17 @@ class Widget_Archive extends Widget_Abstract_Contents
             return;
         }
         
-        $value = array(
-            'page'  =>  $this->_currentPage
-        );
-        $value = array_merge($this->_archiveSingle ? $this->row : $this->_pageRow, $value);
+        if ($this->_archiveSingle) {
+            $permalink = $this->permalink;
+        } else {
+            $value = array_merge($this->_pageRow, array(
+                'page'  =>  $this->_currentPage
+            ));
 
-        $path = Typecho_Router::url($type, $value);
-        $permalink = Typecho_Common::url($path, $this->options->index);
+            $path = Typecho_Router::url($type, $value);
+            $permalink = Typecho_Common::url($path, $this->options->index);
+        }
+
         $requestUrl = $this->request->getRequestUrl();
 
         $src = parse_url($permalink);
@@ -792,12 +796,6 @@ class Widget_Archive extends Widget_Abstract_Contents
             }
         }
 
-        /** 设置关键词 */
-        $this->_keywords = implode(',', Typecho_Common::arrayFlatten($this->tags, 'name'));
-
-        /** 设置描述 */
-        $this->_description = $this->description;
-
         /** 设置模板 */
         if ($this->template) {
             /** 应用自定义模板 */
@@ -819,6 +817,12 @@ class Widget_Archive extends Widget_Abstract_Contents
 
             /** 设置标题 */
             $this->_archiveTitle = $this->title;
+
+            /** 设置关键词 */
+            $this->_keywords = implode(',', Typecho_Common::arrayFlatten($this->tags, 'name'));
+
+            /** 设置描述 */
+            $this->_description = $this->description;
         }
 
         /** 设置归档类型 */
@@ -875,7 +879,9 @@ class Widget_Archive extends Widget_Abstract_Contents
         ->where('table.contents.type = ?', 'post');
 
         /** 设置分页 */
-        $this->_pageRow = $category;
+        $this->_pageRow = array_merge($category, array(
+            'slug'  =>  urlencode($category['slug'])
+        ));
 
         /** 设置关键词 */
         $this->_keywords = $category['name'];
@@ -941,7 +947,9 @@ class Widget_Archive extends Widget_Abstract_Contents
         ->where('table.contents.type = ?', 'post');
 
         /** 设置分页 */
-        $this->_pageRow = $tag;
+        $this->_pageRow = array_merge($tag, array(
+            'slug'  =>  urlencode($tag['slug'])
+        ));
 
         /** 设置关键词 */
         $this->_keywords = $tag['name'];
@@ -1556,6 +1564,8 @@ class Widget_Archive extends Widget_Abstract_Contents
             $allows = array_merge($allows, $rules);
         }
 
+        $allows = $this->pluginHandle()->headerOptions($allows, $this);
+
         $header = '';
         if (!empty($allows['description'])) {
             $header .= '<meta name="description" content="' . $allows['description'] . '" />' . "\n";
@@ -1679,7 +1689,7 @@ var TypechoComment = {
         }
 
         /** 插件支持 */
-        $header = $this->pluginHandle()->header($header, $this);
+        $this->pluginHandle()->header($header, $this);
 
         /** 输出header */
         echo $header;
