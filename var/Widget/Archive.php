@@ -605,13 +605,17 @@ class Widget_Archive extends Widget_Abstract_Contents
             return;
         }
         
-        $value = array(
-            'page'  =>  $this->_currentPage
-        );
-        $value = array_merge($this->_archiveSingle ? $this->row : $this->_pageRow, $value);
+        if ($this->_archiveSingle) {
+            $permalink = $this->permalink;
+        } else {
+            $value = array_merge($this->_pageRow, array(
+                'page'  =>  $this->_currentPage
+            ));
 
-        $path = Typecho_Router::url($type, $value);
-        $permalink = Typecho_Common::url($path, $this->options->index);
+            $path = Typecho_Router::url($type, $value);
+            $permalink = Typecho_Common::url($path, $this->options->index);
+        }
+
         $requestUrl = $this->request->getRequestUrl();
 
         $src = parse_url($permalink);
@@ -875,7 +879,9 @@ class Widget_Archive extends Widget_Abstract_Contents
         ->where('table.contents.type = ?', 'post');
 
         /** 设置分页 */
-        $this->_pageRow = $category;
+        $this->_pageRow = array_merge($category, array(
+            'slug'  =>  urlencode($category['slug'])
+        ));
 
         /** 设置关键词 */
         $this->_keywords = $category['name'];
@@ -941,7 +947,9 @@ class Widget_Archive extends Widget_Abstract_Contents
         ->where('table.contents.type = ?', 'post');
 
         /** 设置分页 */
-        $this->_pageRow = $tag;
+        $this->_pageRow = array_merge($tag, array(
+            'slug'  =>  urlencode($tag['slug'])
+        ));
 
         /** 设置关键词 */
         $this->_keywords = $tag['name'];
