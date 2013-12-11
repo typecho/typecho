@@ -1564,6 +1564,8 @@ class Widget_Archive extends Widget_Abstract_Contents
             $allows = array_merge($allows, $rules);
         }
 
+        $allows = $this->pluginHandle()->headerOptions($allows, $this);
+
         $header = '';
         if (!empty($allows['description'])) {
             $header .= '<meta name="description" content="' . $allows['description'] . '" />' . "\n";
@@ -1687,7 +1689,7 @@ var TypechoComment = {
         }
 
         /** 插件支持 */
-        $header = $this->pluginHandle()->header($header, $this);
+        $this->pluginHandle()->header($header, $this);
 
         /** 输出header */
         echo $header;
