@@ -195,6 +195,16 @@ textarea {
   clear: both;
 }
 
+.post-near {
+  list-style: none;
+  margin: 30px 0;
+  padding: 0;
+  color: #999;
+}
+.post-near li {
+  margin: 10px 0;
+}
+
 .archive-title {
   margin: 1em 0 -1em;
   padding-top: 20px;
@@ -364,7 +374,8 @@ textarea {
 .post-content video, .comment-content video {
   max-width: 100%;
 }
-.post-content a img {
+.post-content a img,
+.comment-content a img {
   background: #FFF;
   position: relative;
   bottom: -4px;  /* hidden img parent link border  */
