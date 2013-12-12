@@ -45,7 +45,6 @@ blockquote {
   margin: 1em 1.5em;
   padding-left: 1.5em;
   border-left: 4px solid #F3F3F0;
-  color: #777;
 }
 
 h1, h2, h3 {
@@ -86,6 +85,18 @@ textarea {
   border-bottom-color: transparent;
 }
 
+.browsehappy {
+  padding: 8px 0;
+  background: #FBE3E4;
+  color: #8A1F11;
+  text-align: center;
+}
+.browsehappy a {
+  color: #8A1F11;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
 /* ------------------
  * Header
  * --------------- */
@@ -107,7 +118,7 @@ textarea {
 
 /* Navigation menu */
 #nav-menu {
-  margin: 25px 0 -1px;
+  margin: 25px 0 0;
   padding: 0;
 }
 #nav-menu a {
@@ -115,6 +126,7 @@ textarea {
   margin-right: -1px;
   padding: 0 20px;
   border: 1px solid #EEE;
+  border-bottom: none;
   height: 32px;
   line-height: 32px;
   color: #444;
@@ -179,6 +191,9 @@ textarea {
 .post-content {
   line-height: 1.5;
 }
+.post .tags {
+  clear: both;
+}
 
 .archive-title {
   margin: 1em 0 -1em;
@@ -206,7 +221,7 @@ textarea {
 }
 .page-navigator li {
   display: inline-block;
-  margin: 0 8px;
+  margin: 0 4px;
 }
 .page-navigator a {
   display: inline-block;
@@ -345,7 +360,8 @@ textarea {
 .post-content h2, .comment-content h2 {
   font-size: 1.28571em;
 }
-.post-content img, .comment-content img {
+.post-content img, .comment-content img,
+.post-content video, .comment-content video {
   max-width: 100%;
 }
 .post-content a img {
@@ -376,10 +392,10 @@ textarea {
   float: right;
 }
 img.alignleft {
-  margin: 5px 15px 0 0;
+  margin: 0 15px 0 0;
 }
 img.alignright {
-  margin: 5px 0 0 15px;
+  margin: 0 0 0 15px;
 }
 
 
@@ -414,3 +430,42 @@ img.alignright {
     max-width: 952px;
   }
 }
+
+
+/*
+* Hide from both screenreaders and browsers: h5bp.com/u
+*/
+.hidden {
+  display: none !important;
+  visibility: hidden; }
+
+/*
+* Hide only visually, but have it available for screenreaders: h5bp.com/v
+*/
+.sr-only {
+  border: 0;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px; }
+
+/*
+* Extends the .sr-only class to allow the element to be focusable
+* when navigated to via the keyboard: h5bp.com/p
+*/
+.sr-only.focusable:active,
+.sr-only.focusable:focus {
+  clip: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  position: static;
+  width: auto; }
+
+/*
+* Hide visually and from screenreaders, but maintain layout
+*/
+.invisible {
+  visibility: hidden; }

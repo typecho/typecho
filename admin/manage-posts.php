@@ -13,33 +13,33 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 <div class="typecho-list-operate clearfix">
                     <form method="get">
                         <div class="operate">
-                            <input type="checkbox" class="typecho-table-select-all" />
-                        <div class="btn-group btn-drop">
-                        <button class="dropdown-toggle btn-s" type="button" href="">选中项 <i class="i-caret-down"></i></button>
-                        <ul class="dropdown-menu">
-                            <li><a lang="<?php _e('你确认要删除这些文章吗?'); ?>" href="<?php $options->index('/action/contents-post-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
-                        </ul>
-                        </div>  
+                            <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox" class="typecho-table-select-all" /></label>
+                            <div class="btn-group btn-drop">
+                                <button class="dropdown-toggle btn-s" type="button"><?php _e('<i class="sr-only">操作</i>选中项'); ?> <i class="i-caret-down"></i></button>
+                                <ul class="dropdown-menu">
+                                    <li><a lang="<?php _e('你确认要删除这些文章吗?'); ?>" href="<?php $options->index('/action/contents-post-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
+                                </ul>
+                            </div>  
                         </div>
                         <div class="search" role="search">
-                        <?php if ('' != $request->keywords || '' != $request->category): ?>
-                        <a href="<?php $options->adminUrl('manage-posts.php' . (isset($request->uid) ? '?uid=' . htmlspecialchars($request->get('uid')) : '')); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
-                        <?php endif; ?>
-                        <input type="text" class="text-s" placeholder="<?php _e('请输入关键字'); ?>" value="<?php echo htmlspecialchars($request->keywords); ?>" name="keywords" />
-                        <select name="category">
-                        	<option value=""><?php _e('所有分类'); ?></option>
-                        	<?php Typecho_Widget::widget('Widget_Metas_Category_List')->to($category); ?>
-                        	<?php while($category->next()): ?>
-                        	<option value="<?php $category->mid(); ?>"<?php if($request->get('category') == $category->mid): ?> selected="true"<?php endif; ?>><?php $category->name(); ?></option>
-                        	<?php endwhile; ?>
-                        </select>
-                        <button type="submit" class="btn-s"><?php _e('筛选'); ?></button>
-                        <?php if(isset($request->uid)): ?>
+                            <?php if ('' != $request->keywords || '' != $request->category): ?>
+                            <a href="<?php $options->adminUrl('manage-posts.php' . (isset($request->uid) ? '?uid=' . htmlspecialchars($request->get('uid')) : '')); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
+                            <?php endif; ?>
+                            <input type="text" class="text-s" placeholder="<?php _e('请输入关键字'); ?>" value="<?php echo htmlspecialchars($request->keywords); ?>" name="keywords" />
+                            <select name="category">
+                            	<option value=""><?php _e('所有分类'); ?></option>
+                            	<?php Typecho_Widget::widget('Widget_Metas_Category_List')->to($category); ?>
+                            	<?php while($category->next()): ?>
+                            	<option value="<?php $category->mid(); ?>"<?php if($request->get('category') == $category->mid): ?> selected="true"<?php endif; ?>><?php $category->name(); ?></option>
+                            	<?php endwhile; ?>
+                            </select>
+                            <button type="submit" class="btn-s"><?php _e('筛选'); ?></button>
+                            <?php if(isset($request->uid)): ?>
                             <input type="hidden" value="<?php echo htmlspecialchars($request->get('uid')); ?>" name="uid" />
-                        <?php endif; ?>
+                            <?php endif; ?>
                         </div>
                     </form>
-                </div>
+                </div><!-- end .typecho-list-operate -->
             
                 <form method="post" name="manage_posts" class="operate-form">
                 <div class="typecho-table-wrap">
@@ -85,7 +85,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                                 }
                                 ?>
                                 <?php if ('post_draft' != $posts->type): ?>
-                                <a href="<?php $posts->permalink(); ?>"><i class="i-exlink" title="<?php _e('浏览 %s', htmlspecialchars($posts->title)); ?>" /></i></a>
+                                <a href="<?php $posts->permalink(); ?>" title="<?php _e('浏览 %s', htmlspecialchars($posts->title)); ?>"><i class="i-exlink"></i></a>
                                 <?php endif; ?>
                                 </td>
                                 <td><a href="<?php $options->adminUrl('manage-posts.php?uid=' . $posts->author->uid); ?>"><?php $posts->author(); ?></a></td>
@@ -118,16 +118,29 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         </tbody>
                     </table>
                 </div>
-                </form>
+                </form><!-- end .operate-form -->
 
-                <?php if($posts->have()): ?>
-                <ul class="typecho-pager">
-                    <?php $posts->pageNav(); ?>
-                </ul>
-                <?php endif; ?>
-            
-            </div>
-        </div>
+                <div class="typecho-list-operate clearfix">
+                    <form method="get">
+                        <div class="operate">
+                            <input type="checkbox" class="typecho-table-select-all" />
+                            <div class="btn-group btn-drop">
+                                <button class="dropdown-toggle btn-s" type="button"><?php _e('<i class="sr-only">操作</i>选中项'); ?> <i class="i-caret-down"></i></button>
+                                <ul class="dropdown-menu">
+                                    <li><a lang="<?php _e('你确认要删除这些文章吗?'); ?>" href="<?php $options->index('/action/contents-post-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
+                                </ul>
+                            </div>  
+                        </div>
+
+                        <?php if($posts->have()): ?>
+                        <ul class="typecho-pager">
+                            <?php $posts->pageNav(); ?>
+                        </ul>
+                        <?php endif; ?>
+                    </form>
+                </div><!-- end .typecho-list-operate -->
+            </div><!-- end .typecho-list -->
+        </div><!-- end .typecho-page-main -->
     </div>
 </div>
 

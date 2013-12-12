@@ -1334,12 +1334,13 @@ class Markdown {
 
         $this->tail = '';
         if ($level < 0) {
-            $link = preg_replace("/\){1," . (- $level) . "}$/", $link, array($this, '_doAutoLinks_url_callback_callback'));
+            $link = preg_replace_callback("/\){1," . (- $level) . "}$/", 
+                array($this, '_doAutoLinks_url_callback_callback'), $link);
         }
 
-		$url = $this->encodeAttribute($matches[2] . $matches[3]);
+		$url = $this->encodeAttribute($protocol . $link);
 		$link = "<a rel=\"nofollow\" href=\"$url\">$url</a>";
-		return '<' . $protocol . $this->hashPart($link) . '>' . $this->tail;
+		return $this->hashPart($link) . $this->tail;
 	}
 
 	protected function _doAutoLinks_email_callback($matches) {
@@ -1515,7 +1516,7 @@ class Markdown {
 		foreach ($blocks as $block) {
 			# Calculate amount of space, insert spaces, insert block.
 			$amount = $this->tab_width - 
-				$strlen($line, 'UTF-8') % $this->tab_width;
+				call_user_func($strlen, $line, 'UTF-8') % $this->tab_width;
 			$line .= str_repeat(" ", $amount) . $block;
 		}
 		return $line;
@@ -1528,10 +1529,14 @@ class Markdown {
 	# regular expression.
 	#
 		if (function_exists($this->utf8_strlen)) return;
-		$this->utf8_strlen = create_function('$text', 'return preg_match_all(
-			"/[\\\\x00-\\\\xBF]|[\\\\xC0-\\\\xFF][\\\\x80-\\\\xBF]*/", 
-			$text, $m);');
+		$this->utf8_strlen = array($this, '_utf8_strlen');
 	}
+
+    protected function _utf8_strlen($text) {
+        return preg_match_all(
+			"/[\\x00-\\xBF]|[\\xC0-\\xFF][\\x80-\\xBF]*/", 
+			$text, $m);
+    }
 
 
 	protected function unhash($text) {
@@ -2173,7 +2178,7 @@ class MarkdownExtra extends Markdown {
 					# Calculate indent before tag.
 					if (preg_match('/(?:^|\n)( *?)(?! ).*?$/', $block_text, $matches)) {
 						$strlen = $this->utf8_strlen;
-						$indent = $strlen($matches[1], 'UTF-8');
+						$indent = call_user_func($strlen, $matches[1], 'UTF-8');
 					} else {
 						$indent = 0;
 					}
@@ -3170,7 +3175,7 @@ class MarkdownExtraExtended extends MarkdownExtra {
 	}
 
     public function doClearBreaks($text) {
-        return preg_replace("/\s*((?:<br \/>\n)+)\s*(<\/?(?:$this->block_tags_re|li)[^\d])/is",
+        return preg_replace("/\s*((?:<br \/>\n)+)\s*(<\/?(?:$this->block_tags_re|li|dd|dt)[^\d])/is",
             "\\2", $text);
     }
 

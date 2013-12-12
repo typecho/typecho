@@ -11,7 +11,7 @@
  $this->need('header.php');
  ?>
 
-<div class="col-mb-12 col-8" id="main">
+<div class="col-mb-12 col-8" id="main" role="main">
 	<?php while($this->next()): ?>
         <article class="post">
 			<h2 class="post-title"><a href="<?php $this->permalink() ?>"><?php $this->title() ?></a></h2>

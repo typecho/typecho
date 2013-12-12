@@ -410,6 +410,18 @@ class Widget_Abstract_Contents extends Widget_Abstract
     }
 
     /**
+     * 检查字段名是否符合要求  
+     * 
+     * @param string $name 
+     * @access public
+     * @return boolean
+     */
+    public function checkFieldName($name)
+    {
+        return preg_match("/^[_a-z][_a-z0-9]*$/i", $name);
+    }
+
+    /**
      * 保存自定义字段 
      * 
      * @param array $fields 
@@ -432,8 +444,8 @@ class Widget_Abstract_Contents extends Widget_Abstract
                 list ($type, $name) = explode(':', $name, 2);
             }
 
-            if (isset($exists[$name])) {
-                unset($exists[$name]);
+            if (!$this->checkFieldName($name)) {
+                continue;
             }
 
             $isFieldReadOnly = $this->pluginHandle(__CLASS__)->trigger($plugged)->isFieldReadOnly($name);
@@ -441,6 +453,10 @@ class Widget_Abstract_Contents extends Widget_Abstract
                 continue;
             }
 
+            if (isset($exists[$name])) {
+                unset($exists[$name]);
+            }
+ 
             $this->setField($name, $type, $value, $cid);
         }
 
@@ -462,7 +478,8 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     public function setField($name, $type, $value, $cid)
     {
-        if (empty($name) || !in_array($type, array('str', 'int', 'float'))) {
+        if (empty($name) || !$this->checkFieldName($name) 
+            || !in_array($type, array('str', 'int', 'float'))) {
             return false;
         }
 
@@ -502,6 +519,10 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     public function incrIntField($name, $value, $cid)
     {
+        if (!$this->checkFieldName($name)) {
+            return false;
+        }
+
         $exist = $this->db->fetchRow($this->db->select('type')->from('table.fields')
             ->where('cid = ? AND name = ?', $cid, $name));
         $value = intval($value);

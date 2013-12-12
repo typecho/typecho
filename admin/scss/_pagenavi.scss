@@ -4,9 +4,9 @@
 
 .typecho-pager {
   list-style: none;
-  margin: 30px 0 0;
+  float: right;
+  margin: 0;
   padding: 0;
-  font-size: 1.14286em;
   line-height: 1;
   text-align: center;
   zoom: 1;
@@ -15,13 +15,14 @@
 .typecho-pager li {
   display: inline-block;
   margin: 0 3px;
-  height: 32px;
-  line-height: 32px;
+  height: 28px;
+  line-height: 28px;
 }
 
 .typecho-pager a {
   display: block;
-  padding: 0 15px;
+  padding: 0 10px;
+  @include border-radius(2px);
 }
 
 .typecho-pager a:hover {

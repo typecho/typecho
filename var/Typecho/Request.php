@@ -40,6 +40,14 @@ class Typecho_Request
     private $_server = array();
 
     /**
+     * _requestUri  
+     * 
+     * @var string
+     * @access private
+     */
+    private $_requestUri = NULL;
+
+    /**
      * 客户端ip地址
      *
      * @access private
@@ -298,6 +306,63 @@ class Typecho_Request
     }
 
     /**
+     * 获取当前请求url
+     * 
+     * @access public
+     * @return string
+     */
+    public function getRequestUrl()
+    {
+        $scheme = $this->isSecure() ? 'https' : 'http';
+        return $scheme . '://' . $_SERVER['HTTP_HOST'] . $this->getRequestUri();
+    }
+
+    /**
+     * 获取请求地址
+     * 
+     * @access public
+     * @return string
+     */
+    public function getRequestUri()
+    {
+        if (!empty($this->_requestUri)) {
+            return $this->_requestUri;
+        }
+
+        //处理requestUri
+        $requestUri = '/';
+
+        if (isset($_SERVER['HTTP_X_REWRITE_URL'])) { // check this first so IIS will catch
+            $requestUri = $_SERVER['HTTP_X_REWRITE_URL'];
+        } elseif (
+            // IIS7 with URL Rewrite: make sure we get the unencoded url (double slash problem)
+            isset($_SERVER['IIS_WasUrlRewritten'])
+            && $_SERVER['IIS_WasUrlRewritten'] == '1'
+            && isset($_SERVER['UNENCODED_URL'])
+            && $_SERVER['UNENCODED_URL'] != ''
+            ) {
+            $requestUri = $_SERVER['UNENCODED_URL'];
+        } elseif (isset($_SERVER['REQUEST_URI'])) {
+            $requestUri = $_SERVER['REQUEST_URI'];
+            if (isset($_SERVER['HTTP_HOST']) && strstr($requestUri, $_SERVER['HTTP_HOST'])) {
+                $parts       = @parse_url($requestUri);
+
+                if (false !== $parts) {
+                    $requestUri  = (empty($parts['path']) ? '' : $parts['path'])
+                                 . ((empty($parts['query'])) ? '' : '?' . $parts['query']);
+                }
+            }
+        } elseif (isset($_SERVER['ORIG_PATH_INFO'])) { // IIS 5.0, PHP as CGI
+            $requestUri = $_SERVER['ORIG_PATH_INFO'];
+            if (!empty($_SERVER['QUERY_STRING'])) {
+                $requestUri .= '?' . $_SERVER['QUERY_STRING'];
+            }
+        }
+
+        return $this->_requestUri = $requestUri;
+    }
+
+    /**
      * 根据当前uri构造指定参数的uri
      *
      * @access public
@@ -307,8 +372,7 @@ class Typecho_Request
     public function makeUriByRequest($parameter = NULL)
     {
         /** 初始化地址 */
-        $scheme = $this->isSecure() ? 'https' : 'http';
-        $requestUri = strtolower($scheme) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        $requestUri = $this->getRequestUrl();
         $parts = parse_url($requestUri);
 
         /** 初始化参数 */
@@ -353,36 +417,7 @@ class Typecho_Request
         $pathInfo = NULL;
 
         //处理requestUri
-        $requestUri = NULL;
-
-        if (isset($_SERVER['HTTP_X_REWRITE_URL'])) { // check this first so IIS will catch
-            $requestUri = $_SERVER['HTTP_X_REWRITE_URL'];
-        } elseif (
-            // IIS7 with URL Rewrite: make sure we get the unencoded url (double slash problem)
-            isset($_SERVER['IIS_WasUrlRewritten'])
-            && $_SERVER['IIS_WasUrlRewritten'] == '1'
-            && isset($_SERVER['UNENCODED_URL'])
-            && $_SERVER['UNENCODED_URL'] != ''
-            ) {
-            $requestUri = $_SERVER['UNENCODED_URL'];
-        } elseif (isset($_SERVER['REQUEST_URI'])) {
-            $requestUri = $_SERVER['REQUEST_URI'];
-            if (isset($_SERVER['HTTP_HOST']) && strstr($requestUri, $_SERVER['HTTP_HOST'])) {
-                $parts       = @parse_url($requestUri);
-
-                if (false !== $parts) {
-                    $requestUri  = (empty($parts['path']) ? '' : $parts['path'])
-                                 . ((empty($parts['query'])) ? '' : '?' . $parts['query']);
-                }
-            }
-        } elseif (isset($_SERVER['ORIG_PATH_INFO'])) { // IIS 5.0, PHP as CGI
-            $requestUri = $_SERVER['ORIG_PATH_INFO'];
-            if (!empty($_SERVER['QUERY_STRING'])) {
-                $requestUri .= '?' . $_SERVER['QUERY_STRING'];
-            }
-        } else {
-            return $this->_pathInfo = '/';
-        }
+        $requestUri = $this->getRequestUri();
 
         //处理baseUrl
         $filename = (isset($_SERVER['SCRIPT_FILENAME'])) ? basename($_SERVER['SCRIPT_FILENAME']) : '';
@@ -640,7 +675,8 @@ class Typecho_Request
      */
     public function isSecure()
     {
-        return (isset($_SERVER['HTTPS']) && 'on' == $_SERVER['HTTPS']) || (isset($_SERVER['SERVER_PORT']) && 443 == $_SERVER['SERVER_PORT']);
+        return (!empty($_SERVER['HTTPS']) && 'off' != strtolower($_SERVER['HTTPS'])) 
+            || (!empty($_SERVER['SERVER_PORT']) && 443 == $_SERVER['SERVER_PORT']);
     }
 
     /**

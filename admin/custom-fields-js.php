@@ -9,6 +9,7 @@ $(document).ready(function () {
             btn.removeClass('i-caret-down').addClass('i-caret-right');
         }
         $(this).parent().toggleClass('fold');
+        return false;
     });
 
     function attachDeleteEvent (el) {

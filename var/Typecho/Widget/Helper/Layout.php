@@ -166,6 +166,16 @@ class Typecho_Widget_Helper_Layout
     {
         $this->_tagName = $tagName;
     }
+    
+    /**
+     * getTagName  
+     * 
+     * @param mixed $tagName 
+     * @access public
+     * @return void
+     */
+    public function getTagName($tagName)
+    {}
 
     /**
      * 设置表单属性

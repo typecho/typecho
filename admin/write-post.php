@@ -17,7 +17,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                     <?php endif; ?>
 
                     <p class="title">
-                        <label for="title" class="visuallyhidden"><?php _e('标题'); ?></label>
+                        <label for="title" class="sr-only"><?php _e('标题'); ?></label>
                         <input type="text" id="title" name="title" autocomplete="off" value="<?php echo htmlspecialchars($post->title); ?>" placeholder="<?php _e('标题'); ?>" class="w-100 text title" />
                     </p>
                     <?php $permalink = Typecho_Common::url($options->routingTable['post']['url'], $options->index);
@@ -34,11 +34,11 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                     $input = '<input type="text" id="slug" name="slug" autocomplete="off" value="' . htmlspecialchars($post->slug) . '" class="mono" />';
                     ?>
                     <p class="mono url-slug">
-                        <label for="slug" class="visuallyhidden"><?php _e('网址缩略名'); ?></label>
+                        <label for="slug" class="sr-only"><?php _e('网址缩略名'); ?></label>
                         <?php echo preg_replace("/\{slug\}/i", $input, $permalink); ?>
                     </p>
                     <p>
-                        <label for="text" class="visuallyhidden"><?php _e('文章内容'); ?></label>
+                        <label for="text" class="sr-only"><?php _e('文章内容'); ?></label>
                         <textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text" name="text" class="w-100 mono"><?php echo htmlspecialchars($post->text); ?></textarea>
                     </p>
                     
@@ -100,24 +100,24 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         <div id="advance-panel">
                             <?php if($user->pass('editor', true)): ?>
                             <section class="typecho-post-option visibility-option">
-                                <label class="typecho-label"><?php _e('公开度'); ?></label>
-                                <ul>
+                                <label for="visibility" class="typecho-label"><?php _e('公开度'); ?></label>
+                                <p>
+                                <select id="visibility" name="visibility">
                                     <?php if ($user->pass('editor', true)): ?>
-                                    <li><input id="publish" value="publish" name="visibility" type="radio"<?php if (($post->status == 'publish' && !$post->password) || !$post->status) { ?> checked="true"<?php } ?> /> <label for="publish"><?php _e('公开'); ?></label></li>
-                                    <li><input id="hidden" value="hidden" name="visibility" type="radio"<?php if ($post->status == 'hidden') { ?> checked="true"<?php } ?> /> <label for="hidden"><?php _e('隐藏'); ?></label></li>
-                                    <li><input id="password" value="password" name="visibility" type="radio"<?php if ($post->password) { ?> checked="true"<?php } ?> /> <label for="password"><?php _e('密码保护'); ?> <input type="text" id="post-password" name="password" class="text-s" value="<?php $post->password(); ?>" size="16" /></label></li>
-                                    <li><input id="private" value="private" name="visibility" type="radio"<?php if ($post->status == 'private') { ?> checked="true"<?php } ?> /> <label for="private"><?php _e('私密'); ?></label></li>
+                                    <option value="publish"<?php if (($post->status == 'publish' && !$post->password) || !$post->status): ?> selected<?php endif; ?>><?php _e('公开'); ?></option>
+                                    <option value="hidden"<?php if ($post->status == 'hidden'): ?> selected<?php endif; ?>><?php _e('隐藏'); ?></option>
+                                    <option value="password"<?php if (strlen($post->password) > 0): ?> selected<?php endif; ?>><?php _e('密码保护'); ?></option>
+                                    <option value="private"<?php if ($post->status == 'private'): ?> selected<?php endif; ?>><?php _e('私密'); ?></option>
                                     <?php endif; ?>
-                                    <li><input id="waiting" value="waiting" name="visibility" type="radio"<?php if (!$user->pass('editor', true) || $post->status == 'waiting') { ?> checked="true"<?php } ?> /> <label for="waiting"><?php _e('待审核'); ?></label></li>
-                                </ul>
+                                    <option value="waiting"<?php if (!$user->pass('editor', true) || $post->status == 'waiting'): ?> selected<?php endif; ?>><?php _e('待审核'); ?></option>
+                                </select>
+                                </p>
+                                <p id="post-password"<?php if (strlen($post->password) == 0): ?> class="hidden"<?php endif; ?>>
+                                    <label for="protect-pwd" class="sr-only">内容密码</label>
+                                    <input type="text" name="password" id="protect-pwd" class="text-s" value="<?php $post->password(); ?>" size="16" placeholder="<?php _e('内容密码'); ?>" />
+                                </p>
                             </section>
                             <?php endif; ?>
-
-                            <section class="typecho-post-option">
-                                <label for="trackback" class="typecho-label"><?php _e('引用通告'); ?></label>
-                                <p><textarea id="trackback" class="w-100 mono" name="trackback" rows="3"></textarea></p>
-                                <p class="description"><?php _e('每一行一个引用地址, 用回车隔开'); ?></p>
-                            </section>
 
                             <section class="typecho-post-option allow-option">
                                 <label class="typecho-label"><?php _e('权限控制'); ?></label>
@@ -130,6 +130,13 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                                     <label for="allowFeed"><?php _e('允许在聚合中出现'); ?></label></li>
                                 </ul>
                             </section>
+                            
+                            <section class="typecho-post-option">
+                                <label for="trackback" class="typecho-label"><?php _e('引用通告'); ?></label>
+                                <p><textarea id="trackback" class="w-100 mono" name="trackback" rows="2"></textarea></p>
+                                <p class="description"><?php _e('每一行一个引用地址, 用回车隔开'); ?></p>
+                            </section>
+
                             <?php Typecho_Plugin::factory('admin/write-post.php')->advanceOption($post); ?>
                         </div><!-- end #advance-panel -->
 

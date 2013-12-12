@@ -1070,5 +1070,22 @@ Typecho_Date::setTimezoneOffset($options->timezone);
         $db->query($db->insert('table.options')
             ->rows(array('name' => 'commentsMarkdown', 'user' => 0, 'value' => 0)));
     }
+
+    /**
+     * v0_9r13_11_24  
+     * 
+     * @param mixed $db 
+     * @param mixed $options 
+     * @access public
+     * @return void
+     */
+    public function v0_9r13_12_6($db, $options)
+    {
+        $frontArchive = $db->fetchRow($db->select()->from('table.options')->where('name = ?', 'frontArchive'));
+        if (empty($frontArchive)) {
+            $db->query($db->insert('table.options')
+                ->rows(array('name' => 'frontArchive', 'user' => 0, 'value' => 0)));
+        }
+    }
 }
 

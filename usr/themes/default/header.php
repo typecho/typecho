@@ -29,6 +29,9 @@
     <?php $this->header(); ?>
 </head>
 <body>
+<!--[if lt IE 8]>
+    <div class="browsehappy"><?php _e('当前网页 <strong>不支持</strong> 你正在使用的浏览器. 为了正常的访问, 请 <a href="http://browsehappy.com/">升级你的浏览器</a>'); ?>.</div>
+<![endif]-->
 
 <header id="header" class="clearfix">
     <div class="container">
@@ -43,13 +46,14 @@
         	    <p class="description"><?php $this->options->description() ?></p>
             </div>
             <div class="site-search col-3 kit-hidden-tb">
-                <form id="search" method="post" action="./">
+                <form id="search" method="post" action="./" role="search">
+                    <label for="s" class="sr-only"><?php _e('搜索关键字'); ?></label>
                     <input type="text" name="s" class="text" placeholder="<?php _e('输入关键字搜索'); ?>" />
                     <button type="submit" class="submit"><?php _e('搜索'); ?></button>
                 </form>
             </div>
             <div class="col-mb-12">
-                <nav id="nav-menu" class="clearfix">
+                <nav id="nav-menu" class="clearfix" role="navigation">
                     <a<?php if($this->is('index')): ?> class="current"<?php endif; ?> href="<?php $this->options->siteUrl(); ?>"><?php _e('首页'); ?></a>
                     <?php $this->widget('Widget_Contents_Page_List')->to($pages); ?>
                     <?php while($pages->next()): ?>

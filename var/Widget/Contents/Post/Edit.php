@@ -21,6 +21,14 @@
 class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widget_Interface_Do
 {
     /**
+     * 自定义字段的hook名称 
+     * 
+     * @var string
+     * @access protected
+     */
+    protected $themeCustomFieldsHook = 'themePostFields';
+
+    /**
      * 将tags取出
      *
      * @access protected
@@ -489,6 +497,10 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             if (function_exists('themeFields')) {
                 themeFields($layout); 
             }
+
+            if (function_exists($this->themeCustomFieldsHook)) {
+                call_user_func($this->themeCustomFieldsHook, $layout);
+            }
         }
 
         $items = $layout->getItems(); 
@@ -496,20 +508,31 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             if ($item instanceof Typecho_Widget_Helper_Form_Element) {
                 $name = $item->input->getAttribute('name');
 
-                if (preg_match("/^fields\[(.+)\]$/", $name, $matches)) {
-                    $name = $matches[1];
-                } else {
-                    $item->input->setAttribute('name', 'fields[' . $name . ']');
-                }
-
                 $isFieldReadOnly = $this->pluginHandle('Widget_Abstract_Contents')
                     ->trigger($plugged)->isFieldReadOnly($name);
                 if ($plugged && $isFieldReadOnly) {
-                    $item->input->setAttribute('readonly', 'readonly');
+                    continue;
+                }
+
+                if (preg_match("/^fields\[(.+)\]$/", $name, $matches)) {
+                    $name = $matches[1];
+                } else {
+                    foreach ($item->inputs as $input) {
+                        $input->setAttribute('name', 'fields[' . $name . ']');
+                    }
                 }
 
                 $item->value($fields->{$name});
-                $defaultFields[$name] = array($item->label, $item->input);
+
+                $elements = $item->container->getItems();
+                array_shift($elements);
+                $div = new Typecho_Widget_Helper_Layout('div');
+
+                foreach ($elements as $el) {
+                    $div->addItem($el);
+                }
+                
+                $defaultFields[$name] = array($item->label, $div);
             }
         }
 
@@ -532,6 +555,13 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                 ->where('cid = ?', $this->cid));
 
             foreach ($rows as $row) {
+                $isFieldReadOnly = $this->pluginHandle('Widget_Abstract_Contents')
+                    ->trigger($plugged)->isFieldReadOnly($row['name']);
+
+                if ($plugged && $isFieldReadOnly) {
+                    continue;
+                }
+
                 if (!isset($defaultFields[$row['name']])) {
                     $fields[] = $row;
                 }

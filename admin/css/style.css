@@ -25,7 +25,7 @@ a {
   color: #467B96;
   text-decoration: none; }
   a:hover {
-    color: #6DA1BB;
+    color: #499BC3;
     text-decoration: underline; }
 
 code, pre, .mono {
@@ -33,6 +33,9 @@ code, pre, .mono {
 
 .p {
   margin: 1em 0; }
+
+.body-100 {
+  height: 100%; }
 
 a.balloon-button {
   display: inline-block;
@@ -127,10 +130,6 @@ button {
   -ms-border-radius: 2px;
   -o-border-radius: 2px;
   border-radius: 2px;
-  -webkit-transition-duration: 0.4s;
-  -moz-transition-duration: 0.4s;
-  -o-transition-duration: 0.4s;
-  transition-duration: 0.4s;
   display: inline-block;
   padding: 0 12px;
   height: 32px;
@@ -138,9 +137,13 @@ button {
   vertical-align: middle;
   zoom: 1; }
   button:hover {
+    -webkit-transition-duration: 0.4s;
+    -moz-transition-duration: 0.4s;
+    -o-transition-duration: 0.4s;
+    transition-duration: 0.4s;
     background-color: #dbdbd6; }
   button:active, button.active {
-    background-color: #dbdbd6; }
+    background-color: #d6d6d0; }
   button:disabled {
     background-color: #f7f7f6;
     cursor: default; }
@@ -168,15 +171,15 @@ button {
   -ms-border-radius: 2px;
   -o-border-radius: 2px;
   border-radius: 2px;
-  -webkit-transition-duration: 0.4s;
-  -moz-transition-duration: 0.4s;
-  -o-transition-duration: 0.4s;
-  transition-duration: 0.4s;
   color: #FFF; }
   .primary:hover {
+    -webkit-transition-duration: 0.4s;
+    -moz-transition-duration: 0.4s;
+    -o-transition-duration: 0.4s;
+    transition-duration: 0.4s;
     background-color: #3c6a81; }
   .primary:active, .primary.active {
-    background-color: #3c6a81; }
+    background-color: #39647a; }
   .primary:disabled {
     background-color: #508cab;
     cursor: default; }
@@ -193,15 +196,15 @@ button {
   -ms-border-radius: 2px;
   -o-border-radius: 2px;
   border-radius: 2px;
-  -webkit-transition-duration: 0.4s;
-  -moz-transition-duration: 0.4s;
-  -o-transition-duration: 0.4s;
-  transition-duration: 0.4s;
   color: #FFF; }
   .btn-warn:hover {
+    -webkit-transition-duration: 0.4s;
+    -moz-transition-duration: 0.4s;
+    -o-transition-duration: 0.4s;
+    transition-duration: 0.4s;
     background-color: #a4403f; }
   .btn-warn:active, .btn-warn.active {
-    background-color: #a4403f; }
+    background-color: #9c3e3c; }
   .btn-warn:disabled {
     background-color: #c1605e;
     cursor: default; }
@@ -261,10 +264,10 @@ button {
 
 .notice {
   background: #FFF6BF;
-  color: #514721; }
+  color: #8A6D3B; }
 
 .notice a {
-  color: #514721; }
+  color: #8A6D3B; }
 
 .success {
   background: #E6EFC2;
@@ -295,9 +298,9 @@ button {
 */
 .typecho-pager {
   list-style: none;
-  margin: 30px 0 0;
+  float: right;
+  margin: 0;
   padding: 0;
-  font-size: 1.14286em;
   line-height: 1;
   text-align: center;
   zoom: 1; }
@@ -305,12 +308,17 @@ button {
 .typecho-pager li {
   display: inline-block;
   margin: 0 3px;
-  height: 32px;
-  line-height: 32px; }
+  height: 28px;
+  line-height: 28px; }
 
 .typecho-pager a {
   display: block;
-  padding: 0 15px; }
+  padding: 0 10px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px; }
 
 .typecho-pager a:hover {
   text-decoration: none;
@@ -330,7 +338,8 @@ button {
 .typecho-head-nav a {
   color: #BBB; }
 
-.typecho-head-nav a:hover {
+.typecho-head-nav a:hover,
+.typecho-head-nav a:focus {
   color: #FFF;
   text-decoration: none; }
 
@@ -369,17 +378,16 @@ button {
 
 #typecho-nav-list .child {
   position: absolute;
-  left: -9999em;
+  top: 36px;
+  display: none;
   margin: 0;
   min-width: 160px;
   max-width: 240px;
   background: #202328;
-  overflow: hidden;
   z-index: 250; }
 
 #typecho-nav-list .root:hover .child {
-  top: 36px;
-  left: 0; }
+  display: block; }
 
 #typecho-nav-list .child li a {
   color: #BBB;
@@ -391,7 +399,8 @@ button {
   height: 36px;
   line-height: 36px; }
 
-#typecho-nav-list .child li a:hover {
+#typecho-nav-list .child li a:hover,
+#typecho-nav-list .child li a:focus {
   background: #292D33;
   color: #FFF; }
 
@@ -419,17 +428,17 @@ button {
 * 注脚
 */
 .typecho-foot {
-  padding: 4em 0;
+  padding: 4em 0 3em;
   color: #999;
   line-height: 1.8;
   text-align: center; }
-
-.typecho-foot .resource {
-  color: #CCC; }
-
-.typecho-foot .resource a {
-  margin: 0 3px;
-  color: #999; }
+  .typecho-foot .copyright p {
+    margin: 10px 0 0; }
+  .typecho-foot .resource {
+    color: #CCC; }
+  .typecho-foot .resource a {
+    margin: 0 3px;
+    color: #999; }
 
 /* 低版本浏览器升级提示 */
 .browsehappy {
@@ -503,6 +512,10 @@ button {
 .front-archive {
   padding-left: 1.5em; }
 
+.profile-avatar {
+  border: 1px dashed #D9D9D6;
+  max-width: 100%; }
+
 /** 增加配置面板内部的错误样式 by 70 */
 /** 
 * 安装样式
@@ -564,14 +577,57 @@ button {
   padding: 1em 2em;
   background-color: #E9E9E6; }
 
+.welcome-board {
+  color: #999;
+  font-size: 1.15em; }
+  .welcome-board em {
+    color: #444;
+    font-size: 2em;
+    font-style: normal;
+    font-family: Georgia, serif; }
+
+#start-link {
+  margin-bottom: 25px;
+  padding: 0 0 35px;
+  border-bottom: 1px solid #ECECEC; }
+  #start-link li {
+    float: left;
+    margin-right: 1.5em; }
+  #start-link .balloon {
+    margin-top: 2px; }
+
+.latest-link li {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; }
+.latest-link span {
+  display: inline-block;
+  margin-right: 4px;
+  padding-right: 8px;
+  border-right: 1px solid #ECECEC;
+  width: 37px;
+  text-align: right;
+  color: #999; }
+
+.update-check {
+  font-size: 14px; }
+
 /**
 * 登录框
 */
+.typecho-login-wrap {
+  display: table;
+  margin: 0 auto;
+  height: 100%; }
+
 .typecho-login {
-  margin: 150px auto 0;
+  display: table-cell;
+  padding-bottom: 100px;
   width: 280px;
-  height: 100%;
-  text-align: center; }
+  text-align: center;
+  vertical-align: middle; }
+  .typecho-login h1 {
+    margin: 0 0 1em; }
 
 .typecho-login .more-link {
   margin-top: 2em;
@@ -934,10 +990,13 @@ a.operate-reply {
     #custom-field .description button {
       float: left; }
   #custom-field .typecho-label {
-    margin: 0;
-    cursor: pointer; }
-    #custom-field .typecho-label:hover {
-      color: #467B96; }
+    margin: 0; }
+    #custom-field .typecho-label a {
+      display: block;
+      color: #444; }
+      #custom-field .typecho-label a:hover {
+        color: #467B96;
+        text-decoration: none; }
   #custom-field table {
     margin-top: 10px; }
   #custom-field td {
@@ -1159,6 +1218,33 @@ a.operate-reply {
 
 .mime-unknow {
   background-position: 0 -160px; }
+
+/* Logo 图标 */
+.i-logo, .i-logo-s {
+  width: 169px;
+  height: 40px;
+  display: inline-block;
+  background: url("../img/typecho-logo.svg") no-repeat;
+  text-indent: -9999em;
+  -webkit-background-size: auto 40px;
+  -moz-background-size: auto 40px;
+  -o-background-size: auto 40px;
+  background-size: auto 40px;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=30);
+  opacity: 0.3; }
+  .i-logo:hover, .i-logo-s:hover {
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=20);
+    opacity: 0.2; }
+
+.i-logo-s {
+  width: 26px;
+  height: 26px;
+  -webkit-background-size: auto 26px;
+  -moz-background-size: auto 26px;
+  -o-background-size: auto 26px;
+  background-size: auto 26px;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=10);
+  opacity: 0.1; }
 
 /*
 * Editor
@@ -1543,7 +1629,7 @@ div.token-input-dropdown ul li.token-input-selected-dropdown-item {
 /*
 * Hide only visually, but have it available for screenreaders: h5bp.com/v
 */
-.visuallyhidden {
+.sr-only {
   border: 0;
   height: 1px;
   margin: -1px;
@@ -1553,11 +1639,11 @@ div.token-input-dropdown ul li.token-input-selected-dropdown-item {
   width: 1px; }
 
 /*
-* Extends the .visuallyhidden class to allow the element to be focusable
+* Extends the .sr-only class to allow the element to be focusable
 * when navigated to via the keyboard: h5bp.com/p
 */
-.visuallyhidden.focusable:active,
-.visuallyhidden.focusable:focus {
+.sr-only.focusable:active,
+.sr-only.focusable:focus {
   clip: auto;
   height: auto;
   margin: 0;

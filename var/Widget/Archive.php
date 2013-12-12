@@ -78,7 +78,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      * @access private
      * @var array
      */
-    private $_pageRow;
+    private $_pageRow = array();
 
     /**
      * 聚合器对象
@@ -216,8 +216,11 @@ class Widget_Archive extends Widget_Abstract_Contents
     {
         parent::__construct($request, $response, $params);
 
-        $this->parameter->setDefault(array('pageSize' => $this->options->pageSize,
-        'type' => NULL));
+        $this->parameter->setDefault(array(
+            'pageSize'          =>  $this->options->pageSize,
+            'type'              =>  NULL,
+            'checkPermalink'    =>  true
+        ));
 
         /** 用于判断是路由调用还是外部调用 */
         if (NULL == $this->parameter->type) {
@@ -587,6 +590,43 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
+     * 检查链接是否正确
+     * 
+     * @access private
+     * @return void
+     */
+    private function checkPermalink()
+    {
+        $type = $this->parameter->type;
+
+        if (in_array($type, array('index', 'comment_page', 404))
+            || $this->_makeSinglePageAsFrontPage    // 自定义首页不处理
+            || !$this->parameter->checkPermalink) { // 强制关闭
+            return;
+        }
+        
+        if ($this->_archiveSingle) {
+            $permalink = $this->permalink;
+        } else {
+            $value = array_merge($this->_pageRow, array(
+                'page'  =>  $this->_currentPage
+            ));
+
+            $path = Typecho_Router::url($type, $value);
+            $permalink = Typecho_Common::url($path, $this->options->index);
+        }
+
+        $requestUrl = $this->request->getRequestUrl();
+
+        $src = parse_url($permalink);
+        $target = parse_url($requestUrl);
+
+        if ($src['host'] != $target['host'] || $src['path'] != $target['path']) {
+            $this->response->redirect($permalink, true);
+        }
+    }
+
+    /**
      * 导入对象
      *
      * @access private
@@ -756,12 +796,6 @@ class Widget_Archive extends Widget_Abstract_Contents
             }
         }
 
-        /** 设置关键词 */
-        $this->_keywords = implode(',', Typecho_Common::arrayFlatten($this->tags, 'name'));
-
-        /** 设置描述 */
-        $this->_description = $this->description;
-
         /** 设置模板 */
         if ($this->template) {
             /** 应用自定义模板 */
@@ -783,6 +817,12 @@ class Widget_Archive extends Widget_Abstract_Contents
 
             /** 设置标题 */
             $this->_archiveTitle = $this->title;
+
+            /** 设置关键词 */
+            $this->_keywords = implode(',', Typecho_Common::arrayFlatten($this->tags, 'name'));
+
+            /** 设置描述 */
+            $this->_description = $this->description;
         }
 
         /** 设置归档类型 */
@@ -839,7 +879,9 @@ class Widget_Archive extends Widget_Abstract_Contents
         ->where('table.contents.type = ?', 'post');
 
         /** 设置分页 */
-        $this->_pageRow = $category;
+        $this->_pageRow = array_merge($category, array(
+            'slug'  =>  urlencode($category['slug'])
+        ));
 
         /** 设置关键词 */
         $this->_keywords = $category['name'];
@@ -905,7 +947,9 @@ class Widget_Archive extends Widget_Abstract_Contents
         ->where('table.contents.type = ?', 'post');
 
         /** 设置分页 */
-        $this->_pageRow = $tag;
+        $this->_pageRow = array_merge($tag, array(
+            'slug'  =>  urlencode($tag['slug'])
+        ));
 
         /** 设置关键词 */
         $this->_keywords = $tag['name'];
@@ -1098,7 +1142,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->_keywords = $keywords;
 
         /** 设置分页 */
-        $this->_pageRow = array('keywords' => $keywords);
+        $this->_pageRow = array('keywords' => urlencode($keywords));
 
         /** 设置头部feed */
         /** RSS 2.0 */
@@ -1239,7 +1283,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                             (table.contents.status = ? AND table.contents.authorId = ?)',
                             'publish', 'hidden', 'private', $this->user->uid);
                 } else {
-                    $select = $this->select()->where('table.contents.status = ? OR table.contents.status',
+                    $select = $this->select()->where('table.contents.status = ? OR table.contents.status = ?',
                             'publish', 'hidden');
                 }
             } else {
@@ -1319,16 +1363,18 @@ class Widget_Archive extends Widget_Abstract_Contents
     {
         if ($this->have()) {
             $hasNav = false;
-            $this->pluginHandle()->trigger($hasNav)->pageNav($prev, $next, $splitPage, $splitWord);
+            $this->_total = (false === $this->_total ? $this->size($this->_countSql) : $this->_total);
+            $this->pluginHandle()->trigger($hasNav)->pageNav($this->_currentPage, $this->_total, 
+                $this->parameter->pageSize, $prev, $next, $splitPage, $splitWord);
 
-            if (!$hasNav) {
+            if (!$hasNav && $this->_total > $this->parameter->pageSize) {
                 $query = Typecho_Router::url($this->parameter->type .
                 (false === strpos($this->parameter->type, '_page') ? '_page' : NULL),
                 $this->_pageRow, $this->options->index);
 
                 /** 使用盒状分页 */
-                $nav = new Typecho_Widget_Helper_PageNavigator_Box(false === $this->_total ? $this->_total = $this->size($this->_countSql) : $this->_total,
-                $this->_currentPage, $this->parameter->pageSize, $query);
+                $nav = new Typecho_Widget_Helper_PageNavigator_Box($this->_total, 
+                    $this->_currentPage, $this->parameter->pageSize, $query);
                 
                 echo '<ol class="' . $class . '">';
                 $nav->render($prev, $next, $splitPage, $splitWord, $currentClass);
@@ -1518,6 +1564,8 @@ class Widget_Archive extends Widget_Abstract_Contents
             $allows = array_merge($allows, $rules);
         }
 
+        $allows = $this->pluginHandle()->headerOptions($allows, $this);
+
         $header = '';
         if (!empty($allows['description'])) {
             $header .= '<meta name="description" content="' . $allows['description'] . '" />' . "\n";
@@ -1641,7 +1689,7 @@ var TypechoComment = {
         }
 
         /** 插件支持 */
-        $header = $this->pluginHandle()->header($header, $this);
+        $this->pluginHandle()->header($header, $this);
 
         /** 输出header */
         echo $header;
@@ -1749,6 +1797,9 @@ var TypechoComment = {
      */
     public function render()
     {
+        /** 处理静态链接跳转 */
+        $this->checkPermalink();
+        
         /** 添加Pingback */
         $this->response->setHeader('X-Pingback', $this->options->xmlRpcUrl);
         $validated = false;

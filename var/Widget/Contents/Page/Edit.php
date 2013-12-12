@@ -21,6 +21,14 @@
 class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Widget_Interface_Do
 {
     /**
+     * 自定义字段的hook名称 
+     * 
+     * @var string
+     * @access protected
+     */
+    protected $themeCustomFieldsHook = 'themePageFields';
+    
+    /**
      * 执行函数
      *
      * @access public

@@ -39,14 +39,6 @@ abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_
     protected $message;
 
     /**
-     * 表单元素容器
-     *
-     * @access protected
-     * @var Typecho_Widget_Helper_Layout
-     */
-    protected $container;
-
-    /**
      * 多行输入
      *
      * @access public
@@ -63,12 +55,28 @@ abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_
     protected static $uniqueId = 0;
 
     /**
+     * 表单元素容器
+     *
+     * @access public
+     * @var Typecho_Widget_Helper_Layout
+     */
+    public $container;
+
+    /**
      * 输入栏
      *
      * @access public
      * @var Typecho_Widget_Helper_Layout
      */
     public $input;
+
+    /**
+     * inputs  
+     * 
+     * @var array
+     * @access public
+     */
+    public $inputs = array();
 
     /**
      * 表单标题

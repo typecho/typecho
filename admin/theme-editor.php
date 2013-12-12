@@ -9,7 +9,7 @@ Typecho_Widget::widget('Widget_Themes_Files')->to($files);
 <div class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
-        <div class="colgroup typecho-page-main">
+        <div class="colgroup typecho-page-main" role="main">
             <div class="col-mb-12">
                 <ul class="typecho-option-tabs fix-tabs clearfix">
                     <li><a href="<?php $options->adminUrl('themes.php'); ?>"><?php _e('可以使用的外观'); ?></a></li>
@@ -29,7 +29,7 @@ Typecho_Widget::widget('Widget_Themes_Files')->to($files);
             <div class="typecho-edit-theme">
                 <div class="col-mb-12 col-tb-8 col-9 content">
                     <form method="post" name="theme" id="theme" action="<?php $options->index('/action/themes-edit'); ?>">
-                        <label for="content" class="visuallyhidden"><?php _e('编辑源码'); ?></label>
+                        <label for="content" class="sr-only"><?php _e('编辑源码'); ?></label>
                         <textarea name="content" id="content" class="w-100 mono" <?php if(!$files->currentIsWriteable()): ?>readonly<?php endif; ?>><?php echo $files->currentContent(); ?></textarea>
                         <p class="submit">
                             <?php if($files->currentIsWriteable()): ?>

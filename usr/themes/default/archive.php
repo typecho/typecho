@@ -1,6 +1,6 @@
 <?php $this->need('header.php'); ?>
 
-    <div class="col-mb-12 col-8" id="main">
+    <div class="col-mb-12 col-8" id="main" role="main">
         <h3 class="archive-title"><?php $this->archiveTitle(array(
             'category'  =>  _t('分类 %s 下的文章'),
             'search'    =>  _t('包含关键字 %s 的文章'),

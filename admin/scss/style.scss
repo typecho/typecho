@@ -32,7 +32,7 @@ a {
   color: #467B96;
   text-decoration: none;
   &:hover {
-    color: #6DA1BB;
+    color: #499BC3;
     text-decoration: underline;
   }
 }
@@ -42,6 +42,10 @@ code, pre, .mono {
 }
 
 .p { margin: 1em 0; }
+
+.body-100 {
+  height: 100%;
+}
 
 a.balloon-button {
   display: inline-block;
@@ -166,6 +170,11 @@ a.button:hover, a.balloon-button:hover {
   padding-left: 1.5em;
 }
 
+.profile-avatar {
+  border: 1px dashed #D9D9D6;
+  max-width: 100%;
+}
+
 /** 增加配置面板内部的错误样式 by 70 */
 
 
@@ -238,15 +247,68 @@ a.button:hover, a.balloon-button:hover {
   background-color: #E9E9E6;
 }
 
+.welcome-board {
+  color: #999;
+  font-size: 1.15em;
+  em {
+    color: #444;
+    font-size: 2em;
+    font-style: normal;
+    font-family: Georgia, serif;
+  }
+}
+
+#start-link {
+  margin-bottom: 25px;
+  padding: 0 0 35px;
+  border-bottom: 1px solid #ECECEC;
+  li {
+    float: left;
+    margin-right: 1.5em;
+  }
+  .balloon {
+    margin-top: 2px;
+  }
+}
+
+.latest-link {
+  li {
+    white-space: nowrap;
+    overflow: hidden; 
+    text-overflow: ellipsis;
+  }
+  span {
+    display: inline-block;
+    margin-right: 4px;
+    padding-right: 8px;
+    border-right: 1px solid #ECECEC;
+    width: 37px;
+    text-align: right;
+    color: #999;
+  }
+}
+
+.update-check {
+  font-size: 14px;
+}
 
 /**
 * 登录框
 */
-.typecho-login {
-  margin: 150px auto 0;
-  width: 280px;
+.typecho-login-wrap {
+  display: table;
+  margin: 0 auto;
   height: 100%;
+}
+.typecho-login {
+  display: table-cell;
+  padding-bottom: 100px;
+  width: 280px;
   text-align: center;
+  vertical-align: middle;
+  h1 {
+    margin: 0 0 1em; 
+  }
 }
 
 .typecho-login .more-link {
@@ -693,9 +755,13 @@ a.operate-reply {
 
   .typecho-label {
     margin: 0;
-    cursor: pointer;
-    &:hover {
-      color: #467B96;
+    a {
+      display: block;
+      color: #444;
+      &:hover {
+        color: #467B96;
+        text-decoration: none;
+      }
     }
   }
   table {
