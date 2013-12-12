@@ -29,5 +29,12 @@ include 'menu.php';
 <?php
 include 'copyright.php';
 include 'common-js.php';
-include 'footer.php';
 ?>
+<script>
+(function () {
+    if (window.sessionStorage) {
+        sessionStorage.removeItem('update');
+    }
+})();
+</script>
+<?php include 'footer.php'; ?>
