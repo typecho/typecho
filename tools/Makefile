@@ -56,11 +56,6 @@ theme:
 	make clear
 
 
-typecho:
-	for i in `php list.php "build/var/Typecho/"`; do php tc.php "in=$$i&out=build/var/Typecho.php"; done;
-	rm -Rf build/var/Typecho/
-
-
 install:
 	make update
 	rm -Rf build/tools/
@@ -76,16 +71,6 @@ install:
 	chmod 777 build/usr/uploads/
 	cp -Rf build/* ${DIR}
 	make clear
-
-
-tinymce:
-	wget http://prdownloads.sourceforge.net/tinymce/tinymce_${TINYMCE}.zip?download
-	unzip tinymce_${TINYMCE}.zip
-	for i in `find tinymce/jscripts/ -name '*.js'`; do php mcecp.php "in=$$i&out=../usr/plugins/TinyMCE/tiny_mce/$$i"; done;
-	for i in `find tinymce/jscripts/ -name '*.htm'`; do php mcecp.php "in=$$i&out=../usr/plugins/TinyMCE/tiny_mce/$$i"; done;
-	rm -Rf tinymce/
-	rm -Rf tinymce_${TINYMCE}.zip
-	svn ci ../usr/plugins/TinyMCE/tiny_mce/ -m "upgrade tiny_mce to ${TINYMCE}"
 
 
 all:
