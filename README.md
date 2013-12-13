@@ -1,4 +1,15 @@
 Typecho Blogging Platform
 =========================
 
-Please visit http://typecho.org for more information.
+####Homepage
+http://typecho.org/
+
+####Document
+http://docs.typecho.org/
+
+####Forum
+http://forum.typecho.org/
+
+####Download
+http://typecho.org/download
+
