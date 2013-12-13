@@ -12,6 +12,7 @@ update:
 	git clone https://github.com/typecho/typecho-replica.git build
 	rm -Rf build/.git
 	rm -Rf build/.gitignore
+	rm -Rf build/.gitattributes
 	for i in `find build/ -name '*.css'`; do echo $$i && java -Xmx32m -jar yuicompressor-2.4.2.jar $$i --charset UTF-8 -o $$i; done;
 	for i in `find build/admin/js/ -name '*.js'`; do echo $$i && java -Xmx32m -jar yuicompressor-2.4.2.jar $$i --charset UTF-8 -o $$i; done;
 	for i in `find build/ -name '*.php'`; do php -l $$i; done;
@@ -21,6 +22,9 @@ package:
 	@echo 'package'
 	rm -Rf build/tools/
 	rm -Rf build/todo.txt
+	rm -Rf build/changelog.txt
+	rm -Rf build/.travis.yml
+	rm -Rf build/README.md
 	rm -Rf build/admin/scss
 	rm -Rf build/admin/img/editor
 	rm -Rf build/admin/img/icons
@@ -61,6 +65,9 @@ install:
 	make update
 	rm -Rf build/tools/
 	rm -Rf build/todo.txt
+	rm -Rf build/changelog.txt
+	rm -Rf build/.travis.yml
+	rm -Rf build/README.md
 	rm -Rf build/admin/scss
 	rm -Rf build/admin/img/editor
 	rm -Rf build/admin/img/icons
