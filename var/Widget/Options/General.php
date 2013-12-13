@@ -113,7 +113,7 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
         );
         
         $attachmentTypes = new Typecho_Widget_Helper_Form_Element_Checkbox('attachmentTypes', $attachmentTypesOptions,
-        $attachmentTypesOptionsValue, _t('允许上传的文件类型'), _t('用逗号 "," 将后缀名隔开, 例如: <code>cpp, h, mak</code>'));
+        $attachmentTypesOptionsValue, _t('允许上传的文件类型'), _t('用逗号 "," 将后缀名隔开, 例如: %s', '<code>cpp, h, mak</code>'));
         $form->addInput($attachmentTypes->multiMode());
 
         /** 提交按钮 */
