@@ -1,0 +1,14 @@
+language: php
+
+php:
+  - 5.5
+  - 5.4
+  - 5.3
+  - 5.2
+
+jdk:
+  - openjdk7
+
+install: make get-deps
+script: cd ./tools/ && make all
+
