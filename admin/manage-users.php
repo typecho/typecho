@@ -13,7 +13,7 @@ include 'menu.php';
                         <div class="operate">
                             <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox" class="typecho-table-select-all" /></label>
                             <div class="btn-group btn-drop">
-                            <button class="dropdown-toggle btn-s" type="button"><?php _e('<i class="sr-only">操作</i>选中项'); ?> <i class="i-caret-down"></i></button>
+                            <button class="dropdown-toggle btn-s" type="button"><i class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i class="i-caret-down"></i></button>
                             <ul class="dropdown-menu">
                                 <li><a lang="<?php _e('你确认要删除这些用户吗?'); ?>" href="<?php $options->index('/action/users-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
                             </ul>
@@ -92,7 +92,7 @@ include 'menu.php';
                         <div class="operate">
                             <input type="checkbox" class="typecho-table-select-all" />
                             <div class="btn-group btn-drop">
-                            <button class="dropdown-toggle btn-s" type="button"><?php _e('<i class="sr-only">操作</i>选中项'); ?> <i class="i-caret-down"></i></button>
+                            <button class="dropdown-toggle btn-s" type="button"><i class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i class="i-caret-down"></i></button>
                             <ul class="dropdown-menu">
                                 <li><a lang="<?php _e('你确认要删除这些用户吗?'); ?>" href="<?php $options->index('/action/users-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
                             </ul>

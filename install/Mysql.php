@@ -97,7 +97,7 @@ $baeDbPassword = "getenv('HTTP_BAE_ENV_SK')";
 <li>
 <label class="typecho-label" for="dbHost"><?php _e('数据库地址'); ?></label>
 <input type="text" class="text" name="dbHost" id="dbHost" value="<?php _v('dbHost', 'localhost'); ?>"/>
-<p class="description"><?php _e('您可能会使用 "localhost"'); ?></p>
+<p class="description"><?php _e('您可能会使用 "%s"', 'localhost'); ?></p>
 </li>
 <li>
 <label class="typecho-label" for="dbPort"><?php _e('数据库端口'); ?></label>
@@ -107,7 +107,7 @@ $baeDbPassword = "getenv('HTTP_BAE_ENV_SK')";
 <li>
 <label class="typecho-label" for="dbUser"><?php _e('数据库用户名'); ?></label>
 <input type="text" class="text" name="dbUser" id="dbUser" value="<?php _v('dbUser', 'root'); ?>" />
-<p class="description"><?php _e('您可能会使用 "root"'); ?></p>
+<p class="description"><?php _e('您可能会使用 "%s"', 'root'); ?></p>
 </li>
 <li>
 <label class="typecho-label" for="dbPassword"><?php _e('数据库密码'); ?></label>
