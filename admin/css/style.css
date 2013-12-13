@@ -1263,6 +1263,7 @@ a.operate-reply {
     margin-right: 4px;
     padding: 3px;
     cursor: pointer;
+    vertical-align: middle;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     -ms-border-radius: 2px;
@@ -1273,7 +1274,7 @@ a.operate-reply {
     .wmd-button-row li.wmd-spacer {
       height: 20px;
       margin: 0 10px 0 6px;
-      padding: 3px 0;
+      padding: 0;
       width: 1px;
       background: #E9E9E6;
       cursor: default; }
