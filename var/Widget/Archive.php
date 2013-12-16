@@ -621,7 +621,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         $src = parse_url($permalink);
         $target = parse_url($requestUrl);
 
-        if ($src['host'] != $target['host'] || $src['path'] != $target['path']) {
+        if ($src['host'] != $target['host'] || urldecode($src['path']) != urldecode($target['path'])) {
             $this->response->redirect($permalink, true);
         }
     }
