@@ -78,17 +78,14 @@ class Typecho_I18n_GetText
 
         // Caching can be turned off
         $this->enable_cache = $enable_cache;
-
-        // $MAGIC1 = (int)0x950412de; //bug in PHP 5
-        $MAGIC1 = (int) - 1794895138;
-        // $MAGIC2 = (int)0xde120495; //bug
-        $MAGIC2 = (int) - 569244523;
-
         $this->STREAM = @fopen($file, 'rb');
-        $magic = $this->readint();
-        if ($magic == $MAGIC1) {
+        
+        $unpacked = unpack('c', $this->read(4));
+        $magic = array_shift($unpacked);
+
+        if (-34 == $magic) {
             $this->BYTEORDER = 0;
-        } elseif ($magic == $MAGIC2) {
+        } elseif (-107 == $magic) {
             $this->BYTEORDER = 1;
         } else {
             $this->error = 1; // not MO file
@@ -104,6 +101,24 @@ class Typecho_I18n_GetText
     }
 
     /**
+     * read  
+     * 
+     * @param mixed $count 
+     * @access private
+     * @return void
+     */
+    private function read($count)
+    {
+        $count = abs($count);
+
+        if ($count > 0) {
+            return fread($this->STREAM, $count);
+        }
+
+        return NULL;
+    }
+
+    /**
      * Reads a 32bit Integer from the Stream
      *
      * @access private
@@ -111,7 +126,7 @@ class Typecho_I18n_GetText
      */
     private function readint()
     {
-        $end = unpack($this->BYTEORDER == 0 ? 'V' : 'N', fread($this->STREAM, 4));
+        $end = unpack($this->BYTEORDER == 0 ? 'V' : 'N', $this->read(4));
         return array_shift($end);
     }
 
@@ -123,7 +138,7 @@ class Typecho_I18n_GetText
      */
     private function readintarray($count)
     {
-        return unpack(($this->BYTEORDER == 0 ? 'V' : 'N') . $count, fread($this->STREAM, 4 * $count));
+        return unpack(($this->BYTEORDER == 0 ? 'V' : 'N') . $count, $this->read(4 * $count));
     }
 
     /**

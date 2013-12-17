@@ -214,7 +214,7 @@ $(document).ready(function () {
 
 
     // 编辑预览切换
-    var edittab = $('.editor').prepend('<div class="wmd-edittab"><a href="#wmd-editarea" class="active">撰写</a><a href="#wmd-preview">预览</a></div>'),
+    var edittab = $('.editor').prepend('<div class="wmd-edittab"><a href="#wmd-editarea" class="active"><?php _e('撰写'); ?></a><a href="#wmd-preview"><?php _e('预览'); ?></a></div>'),
         editarea = $(textarea.parent()).attr("id", "wmd-editarea");
 
     $(".wmd-edittab a").click(function() {
