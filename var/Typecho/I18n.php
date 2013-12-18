@@ -13,8 +13,7 @@
  * @param string $string 需要翻译的文字
  * @return string
  */
-function _t($string)
-{
+function _t($string) {
     if (func_num_args() <= 1) {
         return Typecho_I18n::translate($string);
     } else {
@@ -30,8 +29,7 @@ function _t($string)
  * @param string $string 需要翻译并输出的文字
  * @return void
  */
-function _e()
-{
+function _e() {
     $args = func_get_args();
     echo call_user_func_array('_t', $args);
 }
@@ -44,8 +42,7 @@ function _e()
  * @param integer $number 数字
  * @return string
  */
-function _n($single, $plural, $number)
-{
+function _n($single, $plural, $number) {
     return Typecho_I18n::ngettext($single, $plural, $number);
 }
 
