@@ -719,6 +719,10 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             /** 发送ping */
             $trackback = array_unique(preg_split("/(\r|\n|\r\n)/", trim($this->request->trackback)));
             $this->widget('Widget_Service')->sendPing($this->cid, $trackback);
+            
+            if ('publish' == $this->status) {
+                $this->pluginHandle()->finishWritePost($contents, $this);
+            }
 
             /** 设置提示信息 */
             $this->widget('Widget_Notice')->set('post' == $this->type ?
@@ -814,6 +818,8 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
 
                 unset($condition);
             }
+            
+            $this->pluginHandle()->finishDeletePost($cid, $this);
         }
 
         /** 设置提示信息 */
