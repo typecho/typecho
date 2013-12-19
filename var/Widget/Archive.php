@@ -779,7 +779,7 @@ class Widget_Archive extends Widget_Abstract_Contents
 
         /** 保存密码至cookie */
         if ($this->request->isPost() && isset($this->request->protectPassword)) {
-            Typecho_Cookie::set('protectPassword', $this->request->protectPassword, 0, $this->options->siteUrl);
+            Typecho_Cookie::set('protectPassword', $this->request->protectPassword, 0);
         }
 
         /** 匹配类型 */
