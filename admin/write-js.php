@@ -111,11 +111,13 @@ $(document).ready(function() {
     if (slug.length > 0) {
         var sw = slug.width();
         if (slug.val().length > 0) {
-            slug.css('width', 'auto').attr('size', slug.val().length);
+            // 中文算两个字符
+            slug.css('width', 'auto').attr('size', slug.val().replace(/[^\x00-\xff]/g, 'xx').length);
         }
 
         slug.bind('input propertychange', function () {
-            var t = $(this), l = t.val().length;
+            // 中文算两个字符
+            var t = $(this), l = t.val().replace(/[^\x00-\xff]/g, 'xx').length;
 
             if (l > 0) {
                 t.css('width', 'auto').attr('size', l);
