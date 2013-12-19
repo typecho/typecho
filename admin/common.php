@@ -3,6 +3,8 @@ if (!defined('__DIR__')) {
     define('__DIR__', dirname(__FILE__));
 }
 
+define('__TYPECHO_ADMIN__', true);
+
 /** 载入配置文件 */
 if (!@include_once __DIR__ . '/../config.inc.php') {
     file_exists(__DIR__ . '/../install.php') ? header('Location: ../install.php') : print('Missing Config File');

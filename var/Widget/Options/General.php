@@ -34,10 +34,20 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
 
         /** 站点名称 */
         $title = new Typecho_Widget_Helper_Form_Element_Text('title', NULL, $this->options->title, _t('站点名称'), _t('站点的名称将显示在网页的标题处.'));
-        $form->addInput($title);
+        $title->input->setAttribute('class', 'w-40');
+        $form->addInput($title->addRule('required', _t('请填写站点名称')));
+
+        /** 站点地址 */
+        $siteUrl = new Typecho_Widget_Helper_Form_Element_Text('siteUrl', NULL, $this->options->originalSiteUrl, _t('站点地址'), _t('站点地址主要用于生成内容的永久链接.') 
+            . ($this->options->originalSiteUrl == $this->options->rootUrl ? 
+                '' : '</p><p class="message notice mono">' . _t('当前地址 <strong>%s</strong> 与上述设定值不一致',
+                    $this->options->rootUrl)));
+        $siteUrl->input->setAttribute('class', 'w-60 mono');
+        $form->addInput($siteUrl->addRule('required', _t('请填写站点地址'))
+            ->addRule('url', _t('请填写一个合法的URL地址')));
 
         /** 站点描述 */
-        $description = new Typecho_Widget_Helper_Form_Element_Textarea('description', NULL, $this->options->description, _t('站点描述'), _t('站点描述将显示在网页代码的头部.'));
+        $description = new Typecho_Widget_Helper_Form_Element_Text('description', NULL, $this->options->description, _t('站点描述'), _t('站点描述将显示在网页代码的头部.'));
         $form->addInput($description);
 
         /** 关键词 */
@@ -137,8 +147,9 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
             $this->response->goBack();
         }
 
-        $settings = $this->request->from('title', 'description', 'keywords', 'allowRegister', 'timezone', 'attachmentTypes');
-        
+        $settings = $this->request->from('title', 'siteUrl', 'description', 'keywords', 'allowRegister', 'timezone', 'attachmentTypes');
+        $settings['siteUrl'] = rtrim('/', $settings['url']);
+
         $attachmentTypes = array();
         if ($this->isEnableByCheckbox($settings['attachmentTypes'], '@image@')) {
             $attachmentTypes[] = '@image@';

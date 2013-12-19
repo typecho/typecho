@@ -135,9 +135,8 @@ class Widget_User extends Typecho_Widget
                 $authCode = sha1(Typecho_Common::randString(20));
                 $user['authCode'] = $authCode;
 
-                Typecho_Cookie::set('__typecho_uid', $user['uid'], $expire, $this->options->siteUrl);
-                Typecho_Cookie::set('__typecho_authCode', Typecho_Common::hash($authCode),
-                $expire, $this->options->siteUrl);
+                Typecho_Cookie::set('__typecho_uid', $user['uid'], $expire);
+                Typecho_Cookie::set('__typecho_authCode', Typecho_Common::hash($authCode), $expire);
 
                 //更新最后登录时间以及验证码
                 $this->db->query($this->db
@@ -196,10 +195,8 @@ class Widget_User extends Typecho_Widget
             return;
         }
 
-        Typecho_Cookie::delete('__typecho_uid', $this->options->siteUrl);
-        Typecho_Cookie::delete('__typecho_authCode', $this->options->siteUrl);
-        Typecho_Cookie::delete('__typecho_feed');
-        Typecho_Cookie::delete('__typecho_check_version');
+        Typecho_Cookie::delete('__typecho_uid');
+        Typecho_Cookie::delete('__typecho_authCode');
     }
 
     /**

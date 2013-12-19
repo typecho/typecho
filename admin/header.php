@@ -1,5 +1,5 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) {
+if (!defined('__TYPECHO_ADMIN__')) {
     exit;
 }
 

@@ -1087,5 +1087,22 @@ Typecho_Date::setTimezoneOffset($options->timezone);
                 ->rows(array('name' => 'frontArchive', 'user' => 0, 'value' => 0)));
         }
     }
+
+    /**
+     * v0_9r13_12_20
+     * 
+     * @param mixed $db 
+     * @param mixed $options 
+     * @access public
+     * @return void
+     */
+    public function v0_9r13_12_20($db, $options)
+    {
+        $commentsWhitelist = $db->fetchRow($db->select()->from('table.options')->where('name = ?', 'commentsWhitelist'));
+        if (empty($commentsWhitelist)) {
+            $db->query($db->insert('table.options')
+                ->rows(array('name' => 'commentsWhitelist', 'user' => 0, 'value' => 0)));
+        }
+    }
 }
 

@@ -1,4 +1,4 @@
-<?php if(!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
+<?php if(!defined('__TYPECHO_ADMIN__')) exit; ?>
 <?php $content = !empty($post) ? $post : $page; if ($options->markdown): ?>
 <script src="<?php $options->adminUrl('js/pagedown.js?v=' . $suffixVersion); ?>"></script>
 <script src="<?php $options->adminUrl('js/pagedown-extra.js?v=' . $suffixVersion); ?>"></script>
