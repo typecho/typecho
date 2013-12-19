@@ -1,5 +1,5 @@
 <?php if(!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
-<?php $content = !empty($post) ? $post : $page; if ($options->markdown && (!$content->have() || $content->isMarkdown)): ?>
+<?php $content = !empty($post) ? $post : $page; if ($options->markdown): ?>
 <script src="<?php $options->adminUrl('js/pagedown.js?v=' . $suffixVersion); ?>"></script>
 <script src="<?php $options->adminUrl('js/pagedown-extra.js?v=' . $suffixVersion); ?>"></script>
 <script src="<?php $options->adminUrl('js/diff.js?v=' . $suffixVersion); ?>"></script>
@@ -9,7 +9,7 @@ $(document).ready(function () {
         toolbar = $('<div class="editor" id="wmd-button-bar" />').insertBefore(textarea.parent())
         preview = $('<div id="wmd-preview" class="wmd-hidetab" />').insertAfter('.editor');
 
-    var options = {};
+    var options = {}, isMarkdown = <?php echo intval($content->isMarkdown); ?>;
 
     options.strings = {
         bold: '<?php _e('加粗'); ?> <strong> Ctrl+B',
@@ -192,51 +192,72 @@ $(document).ready(function () {
         preview.height(ph);
     });
 
-    editor.run();
+    function initMarkdown() {
+        editor.run();
 
-    var imageButton = $('#wmd-image-button'),
-        linkButton = $('#wmd-link-button');
+        var imageButton = $('#wmd-image-button'),
+            linkButton = $('#wmd-link-button');
 
-    Typecho.insertFileToEditor = function (file, url, isImage) {
-        var button = isImage ? imageButton : linkButton;
+        Typecho.insertFileToEditor = function (file, url, isImage) {
+            var button = isImage ? imageButton : linkButton;
 
-        options.strings[isImage ? 'imagename' : 'linkname'] = file;
-        button.trigger('click');
+            options.strings[isImage ? 'imagename' : 'linkname'] = file;
+            button.trigger('click');
 
-        var checkDialog = setInterval(function () {
-            if ($('.wmd-prompt-dialog').length > 0) {
-                $('.wmd-prompt-dialog input').val(url).select();
-                clearInterval(checkDialog);
-                checkDialog = null;
-            }
-        }, 10);
-    };
+            var checkDialog = setInterval(function () {
+                if ($('.wmd-prompt-dialog').length > 0) {
+                    $('.wmd-prompt-dialog input').val(url).select();
+                    clearInterval(checkDialog);
+                    checkDialog = null;
+                }
+            }, 10);
+        };
 
 
-    // 编辑预览切换
-    var edittab = $('.editor').prepend('<div class="wmd-edittab"><a href="#wmd-editarea" class="active"><?php _e('撰写'); ?></a><a href="#wmd-preview"><?php _e('预览'); ?></a></div>'),
-        editarea = $(textarea.parent()).attr("id", "wmd-editarea");
+        // 编辑预览切换
+        var edittab = $('.editor').prepend('<div class="wmd-edittab"><a href="#wmd-editarea" class="active"><?php _e('撰写'); ?></a><a href="#wmd-preview"><?php _e('预览'); ?></a></div>'),
+            editarea = $(textarea.parent()).attr("id", "wmd-editarea");
 
-    $(".wmd-edittab a").click(function() {
-        $(".wmd-edittab a").removeClass('active');
-        $(this).addClass("active");
-        $("#wmd-editarea, #wmd-preview").addClass("wmd-hidetab");
+        $(".wmd-edittab a").click(function() {
+            $(".wmd-edittab a").removeClass('active');
+            $(this).addClass("active");
+            $("#wmd-editarea, #wmd-preview").addClass("wmd-hidetab");
         
-        var selected_tab = $(this).attr("href"),
-            selected_el = $(selected_tab).removeClass("wmd-hidetab");
+            var selected_tab = $(this).attr("href"),
+                selected_el = $(selected_tab).removeClass("wmd-hidetab");
 
-        // 预览时隐藏编辑器按钮
-        if (selected_tab == "#wmd-preview") {
-            $("#wmd-button-row").addClass("wmd-visualhide");
-        } else {
-            $("#wmd-button-row").removeClass("wmd-visualhide");
-        }
+            // 预览时隐藏编辑器按钮
+            if (selected_tab == "#wmd-preview") {
+                $("#wmd-button-row").addClass("wmd-visualhide");
+            } else {
+                $("#wmd-button-row").removeClass("wmd-visualhide");
+            }
 
-        // 预览和编辑窗口高度一致
-        $("#wmd-preview").outerHeight($("#wmd-editarea").innerHeight());
+            // 预览和编辑窗口高度一致
+            $("#wmd-preview").outerHeight($("#wmd-editarea").innerHeight());
 
-        return false;
-    });
+            return false;
+        });
+    }
+
+    if (isMarkdown) {
+        initMarkdown();
+    } else {
+        var notice = $('<div class="message notice"><?php _e('这篇文章不是由Markdown语法创建的, 继续使用Markdown编辑它吗?'); ?> '
+            + '<button class="btn-xs primary yes"><?php _e('是'); ?></button> ' 
+            + '<button class="btn-xs no"><?php _e('否'); ?></button></div>')
+            .hide().insertBefore(textarea).slideDown();
+
+        $('.yes', notice).click(function () {
+            notice.remove();
+            $('<input type="hidden" name="markdown" value="1" />').appendTo('.submit');
+            initMarkdown();
+        });
+
+        $('.no', notice).click(function () {
+            notice.remove();
+        });
+    }
 });
 </script>
 <?php endif; ?>
