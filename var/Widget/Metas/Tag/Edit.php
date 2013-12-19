@@ -330,7 +330,10 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
         if ($tags && is_array($tags)) {
             foreach ($tags as $tag) {
                 $this->refreshCountByTypeAndStatus($tag, 'post', 'publish');
-            }
+            } 
+
+            // 自动清理标签
+            $this->clearTags();
 
             $this->widget('Widget_Notice')->set(_t('标签刷新已经完成'), 'success');
         } else {

@@ -6,7 +6,7 @@
             checkEl     :   'input[type=checkbox]',
             rowEl       :   'tr',
             selectAllEl :   '.typecho-table-select-all',
-            actionEl    :   '.dropdown-menu a'
+            actionEl    :   '.dropdown-menu a,button.btn-operate'
         });
 
         $('.btn-drop').dropdownMenu({

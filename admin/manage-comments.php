@@ -55,11 +55,11 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == Typ
                                 <li><a href="<?php $options->index('/action/comments-edit?do=approved'); ?>"><?php _e('通过'); ?></a></li>
                                 <li><a href="<?php $options->index('/action/comments-edit?do=waiting'); ?>"><?php _e('待审核'); ?></a></li>
                                 <li><a href="<?php $options->index('/action/comments-edit?do=spam'); ?>"><?php _e('标记垃圾'); ?></a></li>
-                                <li><a lang="<?php _e('你确认要删除这些评论吗?'); ?>" href="<?php $options->index('/action/comments-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
-                                <?php if('spam' == $request->get('status')): ?>
-                                <li><a lang="<?php _e('你确认要删除所有垃圾评论吗?'); ?>" href="<?php $options->index('/action/comments-edit?do=delete-spam'); ?>"><?php _e('删除所有垃圾评论'); ?></a></li>
-                                <?php endif; ?>
+                                <li><a lang="<?php _e('你确认要删除这些评论吗?'); ?>" href="<?php $options->index('/action/comments-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li> 
                             </ul>
+                            <?php if('spam' == $request->get('status')): ?>
+                                <button lang="<?php _e('你确认要删除所有垃圾评论吗?'); ?>" class="btn-s btn-warn btn-operate" href="<?php $options->index('/action/comments-edit?do=delete-spam'); ?>"><?php _e('删除所有垃圾评论'); ?></button>
+                            <?php endif; ?>
                             </div>
                         </div>
                         <div class="search" role="search">
@@ -198,10 +198,10 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == Typ
                                 <li><a href="<?php $options->index('/action/comments-edit?do=waiting'); ?>"><?php _e('待审核'); ?></a></li>
                                 <li><a href="<?php $options->index('/action/comments-edit?do=spam'); ?>"><?php _e('标记垃圾'); ?></a></li>
                                 <li><a lang="<?php _e('你确认要删除这些评论吗?'); ?>" href="<?php $options->index('/action/comments-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
-                                <?php if('spam' == $request->get('status')): ?>
-                                <li><a lang="<?php _e('你确认要删除所有垃圾评论吗?'); ?>" href="<?php $options->index('/action/comments-edit?do=delete-spam'); ?>"><?php _e('删除所有垃圾评论'); ?></a></li>
-                                <?php endif; ?>
                             </ul>
+                            <?php if('spam' == $request->get('status')): ?>
+                                <button lang="<?php _e('你确认要删除所有垃圾评论吗?'); ?>" class="btn-s btn-warn btn-operate" href="<?php $options->index('/action/comments-edit?do=delete-spam'); ?>"><?php _e('删除所有垃圾评论'); ?></button>
+                            <?php endif; ?>
                             </div>
                         </div>
                         <?php if($comments->have()): ?>

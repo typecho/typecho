@@ -777,7 +777,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             $posts = is_array($cid) ? $cid : array($cid);
             foreach ($posts as $post) {
                 // 删除插件接口
-                $this->pluginHandle->delete($post, $this);
+                $this->pluginHandle()->delete($post, $this);
 
                 $condition = $this->db->sql()->where('cid = ?', $post);
                 $postObject = $this->db->fetchObject($this->db->select('status', 'type')
@@ -824,6 +824,11 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                 }
 
                 unset($condition);
+            }
+
+            // 清理标签
+            if ($deleteCount > 0) {
+                $this->widget('Widget_Abstract_Metas')->clearTags();
             }
         }
 

@@ -236,6 +236,31 @@ class Widget_Abstract_Metas extends Widget_Abstract
     }
 
     /**
+     * 清理没有任何内容的标签
+     * 
+     * @access public
+     * @return void
+     */
+    public function clearTags()
+    {
+        // 取出count为0的标签
+        $tags = Typecho_Common::arrayFlatten($this->db->fetchAll($this->db->select('mid')
+            ->from('table.metas')->where('count = ?', 0)), 'mid');
+
+        foreach ($tags as $tag) {
+            // 确认是否已经没有关联了
+            $content = $this->db->fetchRow($this->db->select('cid')
+                ->from('table.relationships')->where('mid = ?', $tag)
+                ->limit(1));
+
+            if (empty($content)) {
+                $this->db->query($this->db->delete('table.metas')
+                    ->where('mid = ?', $tag));
+            }
+        }
+    }
+
+    /**
      * 根据内容的指定类别和状态更新相关meta的计数信息
      *
      * @access public

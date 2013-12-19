@@ -22,7 +22,8 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <ul class="dropdown-menu">
                                 <li><a lang="<?php _e('你确认要删除这些文件吗?'); ?>" href="<?php $options->index('/action/contents-attachment-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
                             </ul>
-                            </div>  
+                            <button class="btn-s btn-warn btn-operate" href="<?php $options->index('/action/contents-attachment-edit?do=clear'); ?>" lang="<?php _e('您确认要清理未归档的文件吗?'); ?>"><?php _e('清理未归档文件'); ?></button>
+                            </div>
                         </div>
                         <div class="search" role="search">
                             <?php if ('' != $request->keywords): ?>
@@ -98,6 +99,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                                     <li><a lang="<?php _e('你确认要删除这些文件吗?'); ?>" href="<?php $options->index('/action/contents-attachment-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
                                 </ul>
                             </div>
+                            <button class="btn-s btn-warn btn-operate" href="<?php $options->index('/action/contents-attachment-edit?do=clear'); ?>" lang="<?php _e('您确认要清理未归档的文件吗?'); ?>"><?php _e('清理未归档文件'); ?></button>
                         </div>
                         <?php if($attachments->have()): ?>
                         <ul class="typecho-pager">

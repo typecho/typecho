@@ -140,7 +140,7 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
             $pages = is_array($cid) ? $cid : array($cid);
             foreach ($pages as $page) {
                 // 删除插件接口
-                $this->pluginHandle->delete($page, $this);
+                $this->pluginHandle()->delete($page, $this);
 
                 if ($this->delete($this->db->sql()->where('cid = ?', $page))) {
                     /** 删除评论 */
