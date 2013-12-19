@@ -18,7 +18,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
 
                     <p class="title">
                         <label for="title" class="sr-only"><?php _e('标题'); ?></label>
-                        <input type="text" id="title" name="title" autocomplete="off" value="<?php echo htmlspecialchars($post->title); ?>" placeholder="<?php _e('标题'); ?>" class="w-100 text title" />
+                        <input type="text" id="title" name="title" autocomplete="off" value="<?php $post->title(); ?>" placeholder="<?php _e('标题'); ?>" class="w-100 text title" />
                     </p>
                     <?php $permalink = Typecho_Common::url($options->routingTable['post']['url'], $options->index);
                     list ($scheme, $permalink) = explode(':', $permalink, 2);
