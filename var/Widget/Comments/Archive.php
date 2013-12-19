@@ -388,30 +388,34 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
      */
     public function listComments($singleCommentOptions = NULL)
     {
-        if ($this->have()) {
-            //初始化一些变量
-            $parsedSingleCommentOptions = Typecho_Config::factory($singleCommentOptions);
-            $parsedSingleCommentOptions->setDefault(array(
-                'before'        =>  '<ol class="comment-list">',
-                'after'         =>  '</ol>',
-                'beforeAuthor'  =>  '',
-                'afterAuthor'   =>  '',
-                'beforeDate'    =>  '',
-                'afterDate'     =>  '',
-                'dateFormat'    =>  $this->options->commentDateFormat,
-                'replyWord'     =>  _t('回复'),
-                'commentStatus' =>  _t('您的评论正等待审核！'),
-                'avatarSize'    =>  32,
-                'defaultAvatar' =>  NULL
-            ));
+        $this->pluginHandle->trigger($plugged)->listComments($singleCommentOptions, $this);
+
+        if (!$plugged) {
+            if ($this->have()) {
+                //初始化一些变量
+                $parsedSingleCommentOptions = Typecho_Config::factory($singleCommentOptions);
+                $parsedSingleCommentOptions->setDefault(array(
+                    'before'        =>  '<ol class="comment-list">',
+                    'after'         =>  '</ol>',
+                    'beforeAuthor'  =>  '',
+                    'afterAuthor'   =>  '',
+                    'beforeDate'    =>  '',
+                    'afterDate'     =>  '',
+                    'dateFormat'    =>  $this->options->commentDateFormat,
+                    'replyWord'     =>  _t('回复'),
+                    'commentStatus' =>  _t('您的评论正等待审核！'),
+                    'avatarSize'    =>  32,
+                    'defaultAvatar' =>  NULL
+                ));
         
-            echo $parsedSingleCommentOptions->before;
+                echo $parsedSingleCommentOptions->before;
             
-            while ($this->next()) {
-                $this->threadedCommentsCallback($parsedSingleCommentOptions);
+                while ($this->next()) {
+                    $this->threadedCommentsCallback($parsedSingleCommentOptions);
+                }
+            
+                echo $parsedSingleCommentOptions->after;
             }
-            
-            echo $parsedSingleCommentOptions->after;
         }
     }
     
