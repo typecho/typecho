@@ -9,7 +9,7 @@ $(document).ready(function () {
         toolbar = $('<div class="editor" id="wmd-button-bar" />').insertBefore(textarea.parent())
         preview = $('<div id="wmd-preview" class="wmd-hidetab" />').insertAfter('.editor');
 
-    var options = {}, isMarkdown = <?php echo intval($content->isMarkdown); ?>;
+    var options = {}, isMarkdown = <?php echo intval($content->isMarkdown || !$content->have()); ?>;
 
     options.strings = {
         bold: '<?php _e('加粗'); ?> <strong> Ctrl+B',
