@@ -85,6 +85,9 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
             $contents['type'] = 'page';
             $this->publish($contents);
 
+            // 完成发布插件接口
+            $this->pluginHandle()->finishPublish($contents, $this);
+
             /** 发送ping */
             $this->widget('Widget_Service')->sendPing($this->cid);
 
@@ -100,6 +103,9 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
             /** 保存文章 */
             $contents['type'] = 'page_draft';
             $this->save($contents);
+
+            // 完成发布插件接口
+            $this->pluginHandle()->finishSave($contents, $this);
 
             if ($this->request->isAjax()) {
                 $created = new Typecho_Date($this->options->gmtTime);
@@ -133,6 +139,9 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
             /** 格式化页面主键 */
             $pages = is_array($cid) ? $cid : array($cid);
             foreach ($pages as $page) {
+                // 删除插件接口
+                $this->pluginHandle->delete($page, $this);
+
                 if ($this->delete($this->db->sql()->where('cid = ?', $page))) {
                     /** 删除评论 */
                     $this->db->query($this->db->delete('table.comments')
@@ -162,6 +171,9 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
                         $this->deleteDraft($draft['cid']);
                         $this->deleteFields($draft['cid']);
                     }
+
+                    // 完成删除插件接口
+                    $this->pluginHandle()->finishDelete($page, $this);
 
                     $deleteCount ++;
                 }
