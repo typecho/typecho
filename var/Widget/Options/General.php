@@ -148,7 +148,7 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
         }
 
         $settings = $this->request->from('title', 'siteUrl', 'description', 'keywords', 'allowRegister', 'timezone', 'attachmentTypes');
-        $settings['siteUrl'] = rtrim('/', $settings['url']);
+        $settings['siteUrl'] = rtrim('/', $settings['siteUrl']);
 
         $attachmentTypes = array();
         if ($this->isEnableByCheckbox($settings['attachmentTypes'], '@image@')) {
