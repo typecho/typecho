@@ -1666,6 +1666,9 @@ else
                                                   * its own image insertion dialog, this hook should return true, and the callback should be called with the chosen
                                                   * image url (or null if the user cancelled). If this hook returns false, the default dialog will be used.
                                                   */
+
+        hooks.addNoop("makeButton");
+
         hooks.addNoop("enterFullScreen");
         hooks.addNoop("enterFakeFullScreen");
         hooks.addNoop("exitFullScreen");
@@ -1699,7 +1702,7 @@ else
             }
             
             fullScreenManager = new FullScreenManager(hooks, getString);
-            uiManager = new UIManager(idPostfix, panels, undoManager, previewManager, commandManager, fullScreenManager, options.helpButton, getString);
+            uiManager = new UIManager(idPostfix, panels, hooks, undoManager, previewManager, commandManager, fullScreenManager, options.helpButton, getString);
             uiManager.setUndoRedoButtonStates();
 
             var forceRefresh = that.refreshPreview = function () { previewManager.refresh(true); };
@@ -2788,7 +2791,7 @@ else
         }, 0);
     };
 
-    function UIManager(postfix, panels, undoManager, previewManager, commandManager, fullScreenManager, helpOptions, getString) {
+    function UIManager(postfix, panels, hooks, undoManager, previewManager, commandManager, fullScreenManager, helpOptions, getString) {
 
         var inputBox = panels.input,
             buttons = {}; // buttons.undo, buttons.link, etc. The actual DOM elements.
@@ -3093,6 +3096,9 @@ else
             buttons.exitFullscreen = makeButton("wmd-exit-fullscreen-button", getString("exitFullscreen"), "-260px", null);
             buttons.exitFullscreen.style.display = 'none';
             buttons.exitFullscreen.execute = function () { fullScreenManager.doFullScreen(buttons, false); };
+
+            // button hooks
+            hooks.makeButton(buttons, makeButton, bindCommand, ui);
 
             if (helpOptions) {
                 var helpButton = document.createElement("li");
