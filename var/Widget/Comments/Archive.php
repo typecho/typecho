@@ -388,7 +388,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
      */
     public function listComments($singleCommentOptions = NULL)
     {
-        $this->pluginHandle->trigger($plugged)->listComments($singleCommentOptions, $this);
+        $this->pluginHandle()->trigger($plugged)->listComments($singleCommentOptions, $this);
 
         if (!$plugged) {
             if ($this->have()) {
