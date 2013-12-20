@@ -2617,6 +2617,132 @@ else
         return background;
     };
 
+    // 扩展了原来ui的功能
+    // 允许创建一个自定义html的对话框
+    ui.dialog = function (html, callback, ok, cancel) {
+
+        // These variables need to be declared at this level since they are used
+        // in multiple functions.
+        var dialog;         // The dialog box.
+
+        // Used as a keydown event handler. Esc dismisses the prompt.
+        // Key code 27 is ESC.
+        var checkEscape = function (key) {
+            var code = (key.charCode || key.keyCode);
+            if (code === 27) {
+                close(true);
+            }
+        };
+
+        // Dismisses the hyperlink input box.
+        // isCancel is true if we don't care about the input text.
+        // isCancel is false if we are going to keep the text.
+        var close = function (isCancel) {
+            util.removeEvent(doc.body, "keydown", checkEscape);
+            dialog.parentNode.removeChild(dialog);
+
+            callback(isCancel);
+            return false;
+        };
+
+
+
+        // Create the text input box form/window.
+        var createDialog = function () {
+
+            // The main dialog box.
+            dialog = doc.createElement("div");
+            dialog.className = "wmd-prompt-dialog";
+            dialog.setAttribute("role", "dialog");
+            /*
+            dialog.style.padding = "10px;";
+            dialog.style.position = "fixed";
+            dialog.style.width = "400px";
+            dialog.style.zIndex = "1001";
+            */
+
+            // The dialog text.
+            var question = doc.createElement("div");
+
+            // The web form container for the text box and buttons.
+            var form = doc.createElement("form"),
+                style = form.style;
+            form.onsubmit = function () { return close(false); };
+            /*
+            style.padding = "0";
+            style.margin = "0";
+            style.cssFloat = "left";
+            style.width = "100%";
+            style.textAlign = "center";
+            style.position = "relative";
+            */
+            dialog.appendChild(form);
+            form.appendChild(question);
+
+            if ('function' == typeof(html)) {
+                html.call(this, question);
+            } else {
+                question.innerHTML = html;
+            }
+
+            // The ok button
+            var okButton = doc.createElement("button");
+            okButton.type = "button";
+            okButton.className = "btn-s primary";
+            okButton.onclick = function () { return close(false); };
+            okButton.innerHTML = ok;
+            /*
+            style = okButton.style;
+            style.margin = "10px";
+            style.display = "inline";
+            style.width = "7em";
+            */
+
+            // The cancel button
+            var cancelButton = doc.createElement("button");
+            cancelButton.type = "button";
+            cancelButton.className = "btn-s";
+            cancelButton.onclick = function () { return close(true); };
+            cancelButton.innerHTML = cancel;
+            /*
+            style = cancelButton.style;
+            style.margin = "10px";
+            style.display = "inline";
+            style.width = "7em";
+            */
+
+            form.appendChild(okButton);
+            form.appendChild(cancelButton);
+
+            util.addEvent(doc.body, "keydown", checkEscape);
+            /*
+            dialog.style.top = "50%";
+            dialog.style.left = "50%";
+            dialog.style.display = "block";
+            if (uaSniffed.isIE_5or6) {
+                dialog.style.position = "absolute";
+                dialog.style.top = doc.documentElement.scrollTop + 200 + "px";
+                dialog.style.left = "50%";
+            }
+            */
+            doc.body.appendChild(dialog);
+
+            // This has to be done AFTER adding the dialog to the form if you
+            // want it to be centered.
+            /*
+            dialog.style.marginTop = -(position.getHeight(dialog) / 2) + "px";
+            dialog.style.marginLeft = -(position.getWidth(dialog) / 2) + "px";
+            */
+
+        };
+
+        // Why is this in a zero-length timeout?
+        // Is it working around a browser bug?
+        setTimeout(function () {
+            createDialog();
+        }, 0);
+    }
+
     // This simulates a modal dialog box and asks for the URL when you
     // click the hyperlink or image buttons.
     //
