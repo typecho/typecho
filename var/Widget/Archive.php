@@ -1359,7 +1359,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      * @return void
      */
     public function pageNav($prev = '&laquo;', $next = '&raquo;', $splitPage = 3, $splitWord = '...',
-        $class = 'page-navigator', $currentClass = 'current', $htmlTag = 'ol')
+        $class = 'page-navigator', $currentClass = 'current', $label = 'ol')
     {
         if ($this->have()) {
             $hasNav = false;
@@ -1377,10 +1377,10 @@ class Widget_Archive extends Widget_Abstract_Contents
                     $this->_currentPage, $this->parameter->pageSize, $query);
                 
                 /** 添加判断防止输入错误的标签，判断逻辑：如果为 <ul>，使用 <ul>；否则，使用 <ol> */
-                $htmlTag = ($htmlTag == 'ul') ? 'ul' : 'ol';
-                echo '<' . $htmlTag . ' class="' . $class . '">';
+                $label = ($label == 'ul') ? 'ul' : 'ol';
+                echo '<' . $label . ' class="' . $class . '">';
                 $nav->render($prev, $next, $splitPage, $splitWord, $currentClass);
-                echo '</' . $htmlTag . '>';
+                echo '</' . $label . '>';
             }
         }
     }
