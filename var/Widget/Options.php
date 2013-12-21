@@ -145,7 +145,7 @@ class Widget_Options extends Typecho_Widget
      */
     protected function ___index()
     {
-        return $this->rewrite ? $this->siteUrl : Typecho_Common::url('index.php', $this->siteUrl);
+        return $this->rewrite ? $this->rootUrl : Typecho_Common::url('index.php', $this->rootUrl);
     }
 
     /**
@@ -179,7 +179,7 @@ class Widget_Options extends Typecho_Widget
     protected function ___adminUrl()
     {
         return Typecho_Common::url(defined('__TYPECHO_ADMIN_DIR__') ?
-        __TYPECHO_ADMIN_DIR__ : '/admin/', $this->siteUrl);
+        __TYPECHO_ADMIN_DIR__ : '/admin/', $this->rootUrl);
     }
 
     /**
@@ -202,7 +202,7 @@ class Widget_Options extends Typecho_Widget
     protected function ___loginAction()
     {
         return Typecho_Router::url('do', array('action' => 'login', 'widget' => 'Login'),
-        Typecho_Common::url('index.php', $this->siteUrl));
+        Typecho_Common::url('index.php', $this->rootUrl));
     }
 
     /**
@@ -353,9 +353,17 @@ class Widget_Options extends Typecho_Widget
         $this->stack[] = &$this->row;
 
         /** 初始化站点信息 */
+        $this->originalSiteUrl = $this->siteUrl;
         $this->siteUrl = Typecho_Common::url(NULL, $this->siteUrl);
         $this->plugins = unserialize($this->plugins);
-        
+
+        /** 动态获取根目录 */
+        $this->rootUrl = $this->request->getRequestRoot();
+        if (defined('__TYPECHO_ADMIN__')) {
+            $adminDir = '/' . trim(defined('__TYPECHO_ADMIN_DIR__') ? __TYPECHO_ADMIN_DIR__ : '/admin/', '/');
+            $this->rootUrl = substr($this->rootUrl, 0, - strlen($adminDir));
+        }
+
         /** 增加对SSL连接的支持 */
         if ($this->request->isSecure() && 0 === strpos($this->siteUrl, 'http://')) {
             $this->siteUrl = substr_replace($this->siteUrl, 'https', 0, 4);

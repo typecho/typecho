@@ -94,23 +94,23 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         Typecho_Widget_Helper_Form::POST_METHOD);
 
         /** 用户名称 */
-        $name = new Typecho_Widget_Helper_Form_Element_Text('name', NULL, NULL, _t('用户名 *'), _t('此用户名将作为用户登录时所用的名称.<br />
-        请不要与系统中现有的用户名重复.'));
+        $name = new Typecho_Widget_Helper_Form_Element_Text('name', NULL, NULL, _t('用户名 *'), _t('此用户名将作为用户登录时所用的名称.')
+            . '<br />' . _t('请不要与系统中现有的用户名重复.'));
         $form->addInput($name);
 
         /** 电子邮箱地址 */
-        $mail = new Typecho_Widget_Helper_Form_Element_Text('mail', NULL, NULL, _t('电子邮箱地址 *'), _t('电子邮箱地址将作为此用户的主要联系方式.<br />
-        请不要与系统中现有的电子邮箱地址重复.'));
+        $mail = new Typecho_Widget_Helper_Form_Element_Text('mail', NULL, NULL, _t('电子邮箱地址 *'), _t('电子邮箱地址将作为此用户的主要联系方式.')
+            . '<br />' . _t('请不要与系统中现有的电子邮箱地址重复.'));
         $form->addInput($mail);
 
         /** 用户昵称 */
-        $screenName = new Typecho_Widget_Helper_Form_Element_Text('screenName', NULL, NULL, _t('用户昵称'), _t('用户昵称可以与用户名不同, 用于前台显示.<br />
-        如果你将此项留空, 将默认使用用户名.'));
+        $screenName = new Typecho_Widget_Helper_Form_Element_Text('screenName', NULL, NULL, _t('用户昵称'), _t('用户昵称可以与用户名不同, 用于前台显示.')
+            . '<br />' . _t('如果你将此项留空, 将默认使用用户名.'));
         $form->addInput($screenName);
 
         /** 用户密码 */
-        $password = new Typecho_Widget_Helper_Form_Element_Password('password', NULL, NULL, _t('用户密码'), _t('为此用户分配一个密码.<br />
-        建议使用特殊字符与字母的混编样式,以增加系统安全性.'));
+        $password = new Typecho_Widget_Helper_Form_Element_Password('password', NULL, NULL, _t('用户密码'), _t('为此用户分配一个密码.')
+            . '<br />' . _t('建议使用特殊字符与字母、数字的混编样式,以增加系统安全性.'));
         $password->input->setAttribute('class', 'w-60');
         $form->addInput($password);
 
@@ -126,8 +126,8 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         /** 用户组 */
         $group =  new Typecho_Widget_Helper_Form_Element_Select('group', array('visitor' => _t('访问者'),
         'subscriber' => _t('关注者'), 'contributor' => _t('贡献者'), 'editor' => _t('编辑'), 'administrator' => _t('管理员')),
-        NULL, _t('用户组'), _t('不同的用户组拥有不同的权限.<br />
-        具体的权限分配表请<a href="http://docs.typecho.org/develop/acl">参考这里</a>.'));
+        NULL, _t('用户组'), _t('不同的用户组拥有不同的权限.')
+            . '<br />' . _t('具体的权限分配表请<a href="http://docs.typecho.org/develop/acl">参考这里</a>.'));
         $form->addInput($group);
 
         /** 用户动作 */

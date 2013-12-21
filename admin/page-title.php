@@ -1,4 +1,4 @@
-<?php if(!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
+<?php if(!defined('__TYPECHO_ADMIN__')) exit; ?>
 <div class="colgroup">
     <div class="typecho-page-title col-mb-12">
         <h2><?php echo $menu->title; ?><?php 

@@ -1,4 +1,4 @@
-<?php if(!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
+<?php if(!defined('__TYPECHO_ADMIN__')) exit; ?>
 <?php Typecho_Plugin::factory('admin/write-js.php')->write(); ?>
 <?php Typecho_Widget::widget('Widget_Metas_Tag_Cloud', 'sort=count&desc=1&limit=200')->to($tags); ?>
 
@@ -109,20 +109,32 @@ $(document).ready(function() {
     var slug = $('#slug');
 
     if (slug.length > 0) {
-        var sw = slug.width();
-        if (slug.val().length > 0) {
-            slug.css('width', 'auto').attr('size', slug.val().length);
+        var justifySlug = $('<div />').css(slug.css()).css({
+            'display'   :   'none',
+            'width'     :   'auto'
+        }).insertAfter(slug), originalWidth = slug.width();
+
+        function justifySlugWidth() {
+            var html = slug.val().replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/'/g, '&#039;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/ /g, '&nbsp;')
+                    .replace(/((&nbsp;)*)&nbsp;/g, '$1 ')
+                    .replace(/\n/g, '<br />')
+                    .replace(/<br \/>[ ]*$/, '<br />-')
+                    .replace(/<br \/> /g, '<br />&nbsp;');
+
+            justifySlug.css('min-width', html.length > 0
+                ? 'inherit' : originalWidth);
+
+            justifySlug.html(html);
+            slug.width(justifySlug.width());
         }
 
-        slug.bind('input propertychange', function () {
-            var t = $(this), l = t.val().length;
-
-            if (l > 0) {
-                t.css('width', 'auto').attr('size', l);
-            } else {
-                t.css('width', sw).removeAttr('size');
-            }
-        }).width();
+        slug.bind('input propertychange', justifySlugWidth);
+        justifySlugWidth();
     }
 
     // 原始的插入图片和文件

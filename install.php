@@ -333,11 +333,11 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
 
                                         /** 初始内容 */
                                         $installDb->query($installDb->insert('table.contents')->rows(array('title' => _t('欢迎使用 Typecho'), 'slug' => 'start', 'created' => Typecho_Date::gmtTime(), 'modified' => Typecho_Date::gmtTime(),
-                                        'text' => _t('如果您看到这篇文章,表示您的 blog 已经安装成功.'), 'authorId' => 1, 'type' => 'post', 'status' => 'publish', 'commentsNum' => 1, 'allowComment' => 1,
+                                        'text' => '<!--markdown-->' . _t('如果您看到这篇文章,表示您的 blog 已经安装成功.'), 'authorId' => 1, 'type' => 'post', 'status' => 'publish', 'commentsNum' => 1, 'allowComment' => 1,
                                         'allowPing' => 1, 'allowFeed' => 1, 'parent' => 0)));
 
                                         $installDb->query($installDb->insert('table.contents')->rows(array('title' => _t('关于'), 'slug' => 'start-page', 'created' => Typecho_Date::gmtTime(), 'modified' => Typecho_Date::gmtTime(),
-                                        'text' => _t('本页面由 Typecho 创建, 这只是个测试页面.'), 'authorId' => 1, 'order' => 0, 'type' => 'page', 'status' => 'publish', 'commentsNum' => 0, 'allowComment' => 1,
+                                        'text' => '<!--markdown-->' . _t('本页面由 Typecho 创建, 这只是个测试页面.'), 'authorId' => 1, 'order' => 0, 'type' => 'page', 'status' => 'publish', 'commentsNum' => 0, 'allowComment' => 1,
                                         'allowPing' => 1, 'allowFeed' => 1, 'parent' => 0)));
 
                                         /** 初始评论 */
@@ -594,15 +594,11 @@ Typecho_Db::set(\$db);
                 <h2><?php _e('安装说明'); ?></h2>
                 <p><strong><?php _e('本安装程序将自动检测服务器环境是否符合最低配置需求. 如果不符合, 将在上方出现提示信息, 请按照提示信息检查您的主机配置. 如果服务器环境符合要求, 将在下方出现 "开始下一步" 的按钮, 点击此按钮即可一步完成安装.'); ?></strong></p>
                 <h2><?php _e('许可及协议'); ?></h2>
-                <p><?php _e('Typecho 基于 <a href="http://www.gnu.org/copyleft/gpl.html">GPL</a> 协议发布,我们允许用户在 GPL 协议许可的范围内使用,拷贝,修改和分发此程序.
-您可以自由地将其用于商业以及非商业用途.'); ?></p>
-                <p><?php _e('Typecho 软件由其社区提供支持,核心开发团队负责维护程序日常开发工作以及新特性的制定.如果您遇到使用上的问题,
-程序中的 BUG,以及期许的新功能,欢迎您在社区中交流或者直接向我们贡献代码.对于贡献突出者,他的名字将出现在贡献者名单中.'); ?></p>
-                <h3><?php _e('此版本贡献者(排名不分先后)'); ?></h3>
-                <ol>
-
-                </ol>
-                <p><a href="http://typecho.org"><?php _e('查看所有贡献者'); ?></a></p>
+                <p><?php _e('Typecho 基于 <a href="http://www.gnu.org/copyleft/gpl.html">GPL</a> 协议发布, 我们允许用户在 GPL 协议许可的范围内使用, 拷贝, 修改和分发此程序.'); ?>
+                <?php _e('在GPL许可的范围内，您可以自由地将其用于商业以及非商业用途.'); ?></p>
+                <p><?php _e('Typecho 软件由其社区提供支持, 核心开发团队负责维护程序日常开发工作以及新特性的制定.'); ?>
+                <?php _e('如果您遇到使用上的问题, 程序中的 BUG, 以及期许的新功能, 欢迎您在社区中交流或者直接向我们贡献代码.'); ?>
+                <?php _e('对于贡献突出者, 他的名字将出现在贡献者名单中.'); ?></p>
                 </div>
                 <p class="submit"><button type="submit" class="primary"><?php _e('我准备好了, 开始下一步 &raquo;'); ?></button></p>
                 </form>

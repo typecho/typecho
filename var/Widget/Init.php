@@ -26,7 +26,7 @@ class Widget_Init extends Typecho_Widget
         $options = $this->widget('Widget_Options'); 
 
         /** cookie初始化 */
-        Typecho_Cookie::setPrefix($options->siteUrl);
+        Typecho_Cookie::setPrefix($options->rootUrl);
 
         /** 初始化charset */
         Typecho_Common::$charset = $options->charset;

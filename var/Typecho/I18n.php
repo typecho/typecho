@@ -13,8 +13,7 @@
  * @param string $string 需要翻译的文字
  * @return string
  */
-function _t($string)
-{
+function _t($string) {
     if (func_num_args() <= 1) {
         return Typecho_I18n::translate($string);
     } else {
@@ -30,8 +29,7 @@ function _t($string)
  * @param string $string 需要翻译并输出的文字
  * @return void
  */
-function _e()
-{
+function _e() {
     $args = func_get_args();
     echo call_user_func_array('_t', $args);
 }
@@ -44,8 +42,7 @@ function _e()
  * @param integer $number 数字
  * @return string
  */
-function _n($single, $plural, $number)
-{
+function _n($single, $plural, $number) {
     return Typecho_I18n::ngettext($single, $plural, $number);
 }
 
@@ -126,40 +123,41 @@ class Typecho_I18n
         $between = $now - $from;
 
         /** 如果是一天 */
-        if ($between > 0 && $between < 86400 && idate('d', $from) == idate('d', $now)) {
+        if ($between >= 0 && $between < 86400 && date('d', $from) == date('d', $now)) {
             /** 如果是一小时 */
-            if ($between < 3600 && idate('H', $from) == idate('H', $now)) {
+            if ($between < 3600) {
                 /** 如果是一分钟 */
-                if ($between < 60 && idate('i', $from) == idate('i', $now)) {
-                    $second = idate('s', $now) - idate('s', $from);
-                    if (0 == $second) {
+                if ($between < 60) {
+                    if (0 == $between) {
                         return _t('刚刚');
                     } else {
-                        return sprintf(_n('%d秒前', '%d秒前', $second), $second);
+                        return str_replace('%d', $between, _n('一秒前', '%d秒前', $between));
                     }
                 }
 
-                $min = idate('i', $now) - idate('i', $from);
-                return sprintf(_n('%d分钟前', '%d分钟前', $min), $min);
+                $min = floor($between / 60);
+                return str_replace('%d', $min, _n('一分钟前', '%d分钟前', $min));
             }
 
-            $hour = idate('H', $now) - idate('H', $from);
-            return sprintf(_n('%d小时前', '%d小时前', $hour), $hour);
+            $hour = floor($between / 3600);
+            return str_replace('%d', $hour, _n('一小时前', '%d小时前', $hour));
         }
 
         /** 如果是昨天 */
-        if ($between > 0 && $between < 172800 && (idate('z', $from) + 1 == idate('z', $now) || idate('z', $from) > 2 + idate('z', $now))) {
+        if ($between > 0 && $between < 172800 
+        && (date('z', $from) + 1 == date('z', $now)                             // 在同一年的情况 
+            || date('z', $from) + 1 == date('L') + 365 + date('z', $now))) {    // 跨年的情况
             return _t('昨天 %s', date('H:i', $from));
         }
 
         /** 如果是一个星期 */
-        if ($between > 0 && $between < 604800 && idate('W', $from) == idate('W', $now)) {
-            $day = intval($between / (3600 * 24));
-            return sprintf(_n('%d天前', '%d天前', $day), $day);
+        if ($between > 0 && $between < 604800) {
+            $day = floor($between / 86400);
+            return str_replace('%d', $day, _n('一天前', '%天前', $day));
         }
 
         /** 如果是 */
-        if ($between > 0 && $between < 31622400 && idate('Y', $from) == idate('Y', $now)) {
+        if (date('Y', $from) == date('Y', $now)) {
             return date(_t('n月j日'), $from);
         }
 

@@ -716,6 +716,9 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             $contents['type'] = 'post';
             $this->publish($contents);
 
+            // 完成发布插件接口
+            $this->pluginHandle()->finishPublish($contents, $this);
+
             /** 发送ping */
             $trackback = array_unique(preg_split("/(\r|\n|\r\n)/", trim($this->request->trackback)));
             $this->widget('Widget_Service')->sendPing($this->cid, $trackback);
@@ -737,6 +740,9 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             /** 保存文章 */
             $contents['type'] = 'post_draft';
             $this->save($contents);
+
+            // 完成保存插件接口
+            $this->pluginHandle()->finishSave($contents, $this);
 
             if ($this->request->isAjax()) {
                 $created = new Typecho_Date($this->options->gmtTime);
@@ -770,6 +776,8 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             /** 格式化文章主键 */
             $posts = is_array($cid) ? $cid : array($cid);
             foreach ($posts as $post) {
+                // 删除插件接口
+                $this->pluginHandle()->delete($post, $this);
 
                 $condition = $this->db->sql()->where('cid = ?', $post);
                 $postObject = $this->db->fetchObject($this->db->select('status', 'type')
@@ -809,10 +817,18 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                         $this->deleteFields($draft['cid']);
                     }
 
+                    // 完成删除插件接口
+                    $this->pluginHandle()->finishDelete($post, $this);
+
                     $deleteCount ++;
                 }
 
                 unset($condition);
+            }
+
+            // 清理标签
+            if ($deleteCount > 0) {
+                $this->widget('Widget_Abstract_Metas')->clearTags();
             }
         }
 

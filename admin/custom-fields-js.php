@@ -1,3 +1,4 @@
+<?php if(!defined('__TYPECHO_ADMIN__')) exit; ?>
 <script>
 $(document).ready(function () {
     // 自定义字段

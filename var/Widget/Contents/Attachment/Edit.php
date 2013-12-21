@@ -221,6 +221,8 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
             /** 格式化文章主键 */
             $posts = is_array($cid) ? $cid : array($cid);
             foreach ($posts as $post) {
+                // 删除插件接口
+                $this->pluginHandle()->delete($post, $this);
 
                 $condition = $this->db->sql()->where('cid = ?', $post);
                 $row = $this->db->fetchRow($this->select()
@@ -237,6 +239,9 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
                     ->where('cid = ?', $post));
 
                     $status = $this->status;
+
+                    // 完成删除插件接口
+                    $this->pluginHandle()->finishDelete($post, $this);
 
                     $deleteCount ++;
                 }
@@ -259,6 +264,61 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
     }
 
     /**
+     * clearAttachment  
+     * 
+     * @access public
+     * @return void
+     */
+    public function clearAttachment()
+    {
+        $page = 1;
+        
+        do {
+            $posts = Typecho_Common::arrayFlatten($this->db->fetchAll($this->select('cid')
+                ->from('table.contents')
+                ->where('type = ? AND parent = ?', 'attachment', 0)
+                ->page($page, 100)), 'cid');
+            $page ++;
+            
+            foreach ($posts as $post) {
+                // 删除插件接口
+                $this->pluginHandle()->delete($post, $this);
+
+                $condition = $this->db->sql()->where('cid = ?', $post);
+                $row = $this->db->fetchRow($this->select()
+                ->where('table.contents.type = ?', 'attachment')
+                ->where('table.contents.cid = ?', $post)
+                ->limit(1), array($this, 'push'));
+
+                if ($this->isWriteable($condition) && $this->delete($condition)) {
+                    /** 删除文件 */
+                    Widget_Upload::deleteHandle($row);
+
+                    /** 删除评论 */
+                    $this->db->query($this->db->delete('table.comments')
+                    ->where('cid = ?', $post));
+
+                    $status = $this->status;
+
+                    // 完成删除插件接口
+                    $this->pluginHandle()->finishDelete($post, $this);
+
+                    $deleteCount ++;
+                }
+
+                unset($condition);
+            }
+        } while (count($posts) == 100);
+
+        /** 设置提示信息 */
+        $this->widget('Widget_Notice')->set($deleteCount > 0 ? _t('未归档文件已经被清理') : _t('没有未归档文件被清理'), 
+            $deleteCount > 0 ? 'success' : 'notice');
+
+        /** 返回原网页 */
+        $this->response->redirect(Typecho_Common::url('manage-medias.php', $this->options->adminUrl));
+    }
+
+    /**
      * 绑定动作
      *
      * @access public
@@ -268,6 +328,7 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
     {
         $this->on($this->request->is('do=delete'))->deleteAttachment();
         $this->on($this->request->is('do=update'))->updateAttachment();
+        $this->on($this->request->is('do=clear'))->clearAttachment();
         $this->response->redirect($this->options->adminUrl);
     }
 }

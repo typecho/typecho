@@ -48,6 +48,22 @@ class Typecho_Request
     private $_requestUri = NULL;
 
     /**
+     * _requestRoot  
+     * 
+     * @var mixed
+     * @access private
+     */
+    private $_requestRoot = NULL;
+
+    /**
+     * 获取baseurl
+     * 
+     * @var string
+     * @access private
+     */
+    private $_baseUrl = NULL;
+
+    /**
      * 客户端ip地址
      *
      * @access private
@@ -306,6 +322,30 @@ class Typecho_Request
     }
 
     /**
+     * getRequestRoot 
+     * 
+     * @access public
+     * @return void
+     */
+    public function getRequestRoot()
+    {
+        if (NULL === $this->_requestRoot) {
+            $root = rtrim(($this->isSecure() ? 'https' : 'http')
+                . '://' . $_SERVER['HTTP_HOST']
+                . $this->getBaseUrl(), '/') . '/';
+            
+            $pos = strrpos($root, '.php/');
+            if ($pos) {
+                $root = dirname(substr($root, 0, $pos));
+            }
+
+            $this->_requestRoot = rtrim($root, '/');
+        }
+
+        return $this->_requestRoot;
+    }
+
+    /**
      * 获取当前请求url
      * 
      * @access public
@@ -360,6 +400,69 @@ class Typecho_Request
         }
 
         return $this->_requestUri = $requestUri;
+    }
+
+    /**
+     * getBaseUrl  
+     * 
+     * @access public
+     * @return string
+     */
+    public function getBaseUrl()
+    {
+        if (NULL !== $this->_baseUrl) {
+            return $this->_baseUrl;
+        }
+
+        //处理baseUrl
+        $filename = (isset($_SERVER['SCRIPT_FILENAME'])) ? basename($_SERVER['SCRIPT_FILENAME']) : '';
+
+        if (isset($_SERVER['SCRIPT_NAME']) && basename($_SERVER['SCRIPT_NAME']) === $filename) {
+            $baseUrl = $_SERVER['SCRIPT_NAME'];
+        } elseif (isset($_SERVER['PHP_SELF']) && basename($_SERVER['PHP_SELF']) === $filename) {
+            $baseUrl = $_SERVER['PHP_SELF'];
+        } elseif (isset($_SERVER['ORIG_SCRIPT_NAME']) && basename($_SERVER['ORIG_SCRIPT_NAME']) === $filename) {
+            $baseUrl = $_SERVER['ORIG_SCRIPT_NAME']; // 1and1 shared hosting compatibility
+        } else {
+            // Backtrack up the script_filename to find the portion matching
+            // php_self
+            $path    = isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : '';
+            $file    = isset($_SERVER['SCRIPT_FILENAME']) ? $_SERVER['SCRIPT_FILENAME'] : '';
+            $segs    = explode('/', trim($file, '/'));
+            $segs    = array_reverse($segs);
+            $index   = 0;
+            $last    = count($segs);
+            $baseUrl = '';
+            do {
+                $seg     = $segs[$index];
+                $baseUrl = '/' . $seg . $baseUrl;
+                ++$index;
+            } while (($last > $index) && (false !== ($pos = strpos($path, $baseUrl))) && (0 != $pos));
+        }
+
+        // Does the baseUrl have anything in common with the request_uri?
+        $finalBaseUrl = NULL;
+        $requestUri = $this->getRequestUri();
+
+        if (0 === strpos($requestUri, $baseUrl)) {
+            // full $baseUrl matches
+            $finalBaseUrl = $baseUrl;
+        } else if (0 === strpos($requestUri, dirname($baseUrl))) {
+            // directory portion of $baseUrl matches
+            $finalBaseUrl = rtrim(dirname($baseUrl), '/');
+        } else if (!strpos($requestUri, basename($baseUrl))) {
+            // no match whatsoever; set it blank
+            $finalBaseUrl = '';
+        } else if ((strlen($requestUri) >= strlen($baseUrl))
+            && ((false !== ($pos = strpos($requestUri, $baseUrl))) && ($pos !== 0)))
+        {
+            // If using mod_rewrite or ISAPI_Rewrite strip the script filename
+            // out of baseUrl. $pos !== 0 makes sure it is not matching a value
+            // from PATH_INFO or QUERY_STRING
+            $baseUrl = substr($requestUri, 0, $pos + strlen($baseUrl));
+        }
+
+        return ($this->_baseUrl = (NULL === $finalBaseUrl) ? rtrim($baseUrl, '/') : $finalBaseUrl);
     }
 
     /**
@@ -418,55 +521,7 @@ class Typecho_Request
 
         //处理requestUri
         $requestUri = $this->getRequestUri();
-
-        //处理baseUrl
-        $filename = (isset($_SERVER['SCRIPT_FILENAME'])) ? basename($_SERVER['SCRIPT_FILENAME']) : '';
-
-        if (isset($_SERVER['SCRIPT_NAME']) && basename($_SERVER['SCRIPT_NAME']) === $filename) {
-            $baseUrl = $_SERVER['SCRIPT_NAME'];
-        } elseif (isset($_SERVER['PHP_SELF']) && basename($_SERVER['PHP_SELF']) === $filename) {
-            $baseUrl = $_SERVER['PHP_SELF'];
-        } elseif (isset($_SERVER['ORIG_SCRIPT_NAME']) && basename($_SERVER['ORIG_SCRIPT_NAME']) === $filename) {
-            $baseUrl = $_SERVER['ORIG_SCRIPT_NAME']; // 1and1 shared hosting compatibility
-        } else {
-            // Backtrack up the script_filename to find the portion matching
-            // php_self
-            $path    = isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : '';
-            $file    = isset($_SERVER['SCRIPT_FILENAME']) ? $_SERVER['SCRIPT_FILENAME'] : '';
-            $segs    = explode('/', trim($file, '/'));
-            $segs    = array_reverse($segs);
-            $index   = 0;
-            $last    = count($segs);
-            $baseUrl = '';
-            do {
-                $seg     = $segs[$index];
-                $baseUrl = '/' . $seg . $baseUrl;
-                ++$index;
-            } while (($last > $index) && (false !== ($pos = strpos($path, $baseUrl))) && (0 != $pos));
-        }
-
-        // Does the baseUrl have anything in common with the request_uri?
-        $finalBaseUrl = NULL;
-
-        if (0 === strpos($requestUri, $baseUrl)) {
-            // full $baseUrl matches
-            $finalBaseUrl = $baseUrl;
-        } else if (0 === strpos($requestUri, dirname($baseUrl))) {
-            // directory portion of $baseUrl matches
-            $finalBaseUrl = rtrim(dirname($baseUrl), '/');
-        } else if (!strpos($requestUri, basename($baseUrl))) {
-            // no match whatsoever; set it blank
-            $finalBaseUrl = '';
-        } else if ((strlen($requestUri) >= strlen($baseUrl))
-            && ((false !== ($pos = strpos($requestUri, $baseUrl))) && ($pos !== 0)))
-        {
-            // If using mod_rewrite or ISAPI_Rewrite strip the script filename
-            // out of baseUrl. $pos !== 0 makes sure it is not matching a value
-            // from PATH_INFO or QUERY_STRING
-            $baseUrl = substr($requestUri, 0, $pos + strlen($baseUrl));
-        }
-
-        $finalBaseUrl = (NULL === $finalBaseUrl) ? rtrim($baseUrl, '/') : $finalBaseUrl;
+        $finalBaseUrl = $this->getBaseUrl();
 
         // Remove the query string from REQUEST_URI
         if ($pos = strpos($requestUri, '?')) {
