@@ -166,6 +166,8 @@ $(document).ready(function () {
         }
     });
 
+    <?php Typecho_Plugin::factory('admin/editor-js.php')->markdownEditor($content); ?>
+
     var input = $('#text'), th = textarea.height(), ph = preview.height();
 
     editor.hooks.chain('enterFakeFullScreen', function () {

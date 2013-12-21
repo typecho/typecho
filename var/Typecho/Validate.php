@@ -110,7 +110,8 @@ class Typecho_Validate
         // Cycle through the rules and test for errors
         foreach ($rules as $key => $rules) {
             $this->_key = $key;
-            $data[$key] = (0 == strlen($data[$key])) ? NULL : $data[$key];
+            $data[$key] = (is_array($data[$key]) ? 0 == count($data[$key])
+                : 0 == strlen($data[$key])) ? NULL : $data[$key];
 
             foreach ($rules as $params) {
                 $method = $params[0];
