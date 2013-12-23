@@ -153,7 +153,7 @@ class Typecho_I18n
         /** 如果是一个星期 */
         if ($between > 0 && $between < 604800) {
             $day = floor($between / 86400);
-            return str_replace('%d', $day, _n('一天前', '%天前', $day));
+            return str_replace('%d', $day, _n('一天前', '%d天前', $day));
         }
 
         /** 如果是 */
