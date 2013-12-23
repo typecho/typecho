@@ -19,7 +19,7 @@
 class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface_Do
 {
     //上传文件目录
-    const UPLOAD_PATH = '/usr/uploads';
+    public static $UPLOAD_PATH = '/usr/uploads';
 
     /**
      * 创建上传路径
@@ -74,8 +74,10 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         }
 
         $options = Typecho_Widget::widget('Widget_Options');
+        //获取上传路径
+        self::$UPLOAD_PATH=$options->uploadPath;
         $date = new Typecho_Date($options->gmtTime);
-        $path = Typecho_Common::url(self::UPLOAD_PATH, __TYPECHO_ROOT_DIR__)
+        $path = Typecho_Common::url(self::$UPLOAD_PATH, __TYPECHO_ROOT_DIR__)
             . '/' . $date->year . '/' . $date->month;
 
         //创建上传目录
@@ -112,7 +114,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         //返回相对存储路径
         return array(
             'name' => $file['name'],
-            'path' => self::UPLOAD_PATH . '/' . $date->year . '/' . $date->month . '/' . $fileName,
+            'path' => self::$UPLOAD_PATH . '/' . $date->year . '/' . $date->month . '/' . $fileName,
             'size' => $file['size'],
             'type' => $ext,
             'mime' => Typecho_Common::mimeContentType($path)

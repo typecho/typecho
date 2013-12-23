@@ -20,6 +20,20 @@
  */
 class Widget_Options_General extends Widget_Abstract_Options implements Widget_Interface_Do
 {
+
+    /**
+     * 检查uploadPath格式是否正确
+     * 
+     * @param mixed $value 
+     * @access public
+     * @return void
+     */
+    public function checkUploadPath($value)
+    {
+        //目前只判断是否以"/"开头与结尾
+        return preg_match("/^\/.+\/$/",$value);
+    }
+
     /**
      * 输出表单结构
      *
@@ -116,7 +130,7 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
         }
         
         $attachmentTypesOptions = array(
-            '@image@'    =>  _t('图片文件') . ' <code>(gif jpg png tiff bmp)</code>',
+            '@image@'    =>  _t('图片文件') . ' <code>(gif jpg jpeg png tiff bmp)</code>',
             '@media@'    =>  _t('多媒体文件') . ' <code>(mp3 wmv wma rmvb rm avi flv)</code>',
             '@doc@'      =>  _t('常用档案文件') . ' <code>(txt doc docx xls xlsx ppt pptx zip rar pdf)</code>',
             '@other@'    =>  _t('其他格式 %s', ' <input type="text" class="w-50 text-s mono" name="attachmentTypesOther" value="' . htmlspecialchars($attachmentTypesOtherValue) . '" />'),
@@ -125,6 +139,12 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
         $attachmentTypes = new Typecho_Widget_Helper_Form_Element_Checkbox('attachmentTypes', $attachmentTypesOptions,
         $attachmentTypesOptionsValue, _t('允许上传的文件类型'), _t('用逗号 "," 将后缀名隔开, 例如: %s', '<code>cpp, h, mak</code>'));
         $form->addInput($attachmentTypes->multiMode());
+
+        /** 上传路径 */
+        $uploadPath = new Typecho_Widget_Helper_Form_Element_Text('uploadPath', NULL, $this->options->uploadPath, _t('上传路径'), _t('相对于网站目录,以"/"开头和结尾.'));
+        $uploadPath->input->setAttribute('class', 'mono w-60');
+        $form->addInput($uploadPath->addRule(array($this, 'checkUploadPath'), _t('上传路径中没有以"/"开头和结尾'))
+                                                         ->addRule('required', _t('请填写上传路径')));
 
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Element_Submit('submit', NULL, _t('保存设置'));
@@ -147,7 +167,7 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
             $this->response->goBack();
         }
 
-        $settings = $this->request->from('title', 'siteUrl', 'description', 'keywords', 'allowRegister', 'timezone', 'attachmentTypes');
+        $settings = $this->request->from('title', 'siteUrl', 'description', 'keywords', 'allowRegister', 'timezone', 'attachmentTypes','uploadPath');
         $settings['siteUrl'] = rtrim($settings['siteUrl'], '/');
 
         $attachmentTypes = array();
