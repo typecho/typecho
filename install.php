@@ -517,7 +517,7 @@ Typecho_Db::set(\$db);
                                     ?>
 <div class="message notice"><p><?php _e('安装程序无法自动创建 <strong>config.inc.php</strong> 文件'); ?><br />
 <?php _e('您可以在网站根目录下手动创建 <strong>config.inc.php</strong> 文件, 并复制如下代码至其中'); ?></p>
-<p><textarea rows="5" onmouseover="this.select();" class="w-100" readonly><?php echo htmlspecialchars($contents); ?></textarea></p>
+<p><textarea rows="5" onmouseover="this.select();" class="w-100 mono" readonly><?php echo htmlspecialchars($contents); ?></textarea></p>
 <p><button name="created" value="1" type="submit" class="primary">创建完毕, 继续安装 &raquo;</button></p></div>
                                     <?php
                                     } else { 

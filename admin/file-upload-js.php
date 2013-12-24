@@ -65,6 +65,7 @@ $(document).ready(function() {
         attachInsertEvent(li);
         attachDeleteEvent(li);
         updateAttacmentNumber();
+        Typecho.uploadComplete(data);
     }
 
     $('#tab-files').bind('init', function () {
