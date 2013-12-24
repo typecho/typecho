@@ -5,19 +5,13 @@
 $icons: sprite-map("icons/*.png");
 $icons-2x: sprite-map("icons-2x/*.png");
 
-.icon-sprite-hack {
-  background: $icons;
-}
-// .icon-2x-sprite-hack {
-//   background: $icons-2x;
-// }
-
 %i-16 {
   width: 16px;
   height: 16px;
   display: inline-block;
   vertical-align: text-bottom;
-  background: url(../img/icons.png) no-repeat;
+  background: $icons no-repeat;
+  text-indent: -9999em;
   &:hover {
     @include opacity(0.75);
   }
@@ -30,6 +24,10 @@ $icons-2x: sprite-map("icons-2x/*.png");
 .i-delete {
   @extend %i-16;
   background-position: sprite-position($icons, icon-delete);
+}
+.i-upload {
+  @extend %i-16;
+  background-position: sprite-position($icons, icon-upload);
 }
 
 // 小箭头

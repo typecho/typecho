@@ -116,7 +116,7 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
         }
         
         $attachmentTypesOptions = array(
-            '@image@'    =>  _t('图片文件') . ' <code>(gif jpg png tiff bmp)</code>',
+            '@image@'    =>  _t('图片文件') . ' <code>(gif jpg jpeg png tiff bmp)</code>',
             '@media@'    =>  _t('多媒体文件') . ' <code>(mp3 wmv wma rmvb rm avi flv)</code>',
             '@doc@'      =>  _t('常用档案文件') . ' <code>(txt doc docx xls xlsx ppt pptx zip rar pdf)</code>',
             '@other@'    =>  _t('其他格式 %s', ' <input type="text" class="w-50 text-s mono" name="attachmentTypesOther" value="' . htmlspecialchars($attachmentTypesOtherValue) . '" />'),
@@ -148,7 +148,7 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
         }
 
         $settings = $this->request->from('title', 'siteUrl', 'description', 'keywords', 'allowRegister', 'timezone', 'attachmentTypes');
-        $settings['siteUrl'] = rtrim('/', $settings['siteUrl']);
+        $settings['siteUrl'] = rtrim($settings['siteUrl'], '/');
 
         $attachmentTypes = array();
         if ($this->isEnableByCheckbox($settings['attachmentTypes'], '@image@')) {

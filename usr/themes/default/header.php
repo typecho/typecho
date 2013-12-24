@@ -13,13 +13,13 @@
         ), '', ' - '); ?><?php $this->options->title(); ?></title>
 
     <!-- 使用url函数转换相关路径 -->
-    <link rel="stylesheet" href="<?php $this->options->adminUrl('css/normalize.css'); ?>">
-    <link rel="stylesheet" href="<?php $this->options->adminUrl('css/grid.css'); ?>">
+    <link rel="stylesheet" href="http://cdn.staticfile.org/normalize/2.1.3/normalize.min.css">
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('grid.css'); ?>">
     <link rel="stylesheet" href="<?php $this->options->themeUrl('style.css'); ?>">
 
     <!--[if lt IE 9]>
-    <script src="<?php $this->options->adminUrl('js/html5shiv.js'); ?>"></script>
-    <script src="<?php $this->options->adminUrl('js/respond.js'); ?>"></script>
+    <script src="http://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="http://cdn.staticfile.org/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
 
     <!-- 通过自有函数输出HTML头部信息 -->

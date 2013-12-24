@@ -256,6 +256,13 @@ $(document).ready(function() {
 
         return false;
     });
+
+    // 全屏上传按钮控制
+    // $('#btn-fullscreen-upload').click(function() {
+    //     $(this).toggleClass('active');
+    //     $('#tab-files').toggle();
+    //     return false;
+    // });
 });
 </script>
 
