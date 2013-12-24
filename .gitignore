@@ -2,7 +2,6 @@
 .*.swo
 ._*
 .DS_Store
-/Debug/
 /ImgCache/
 /Backup_rar/
 /Debug/

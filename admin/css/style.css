@@ -209,6 +209,11 @@ button {
     background-color: #c1605e;
     cursor: default; }
 
+.btn-text {
+  background: transparent; }
+  .btn-text:hover, .btn-text:active, .btn-text.active {
+    background: #F3F3F0; }
+
 /* 下拉菜单 */
 .btn-drop {
   position: relative; }
@@ -1022,6 +1027,8 @@ a.operate-reply {
   list-style: none;
   border: 1px solid #D9D9D6;
   padding: 6px 12px;
+  max-height: 240px;
+  overflow: auto;
   background-color: #FFF;
   border-radius: 2px; }
 
@@ -1103,7 +1110,8 @@ a.operate-reply {
 #file-list {
   list-style: none;
   margin: 0 10px;
-  padding: 0; }
+  padding: 0;
+  word-break: break-all; }
   #file-list li {
     padding: 8px 0;
     border-top: 1px dashed #D9D9D6; }
@@ -1117,6 +1125,9 @@ a.operate-reply {
     text-overflow: ellipsis; }
   #file-list .info {
     text-transform: uppercase; }
+
+#btn-fullscreen-upload {
+  visibility: hidden; }
 
 /**
 * 附件管理
@@ -1148,24 +1159,25 @@ a.operate-reply {
 /**
  * icons
  */
-.icon-sprite-hack {
-  background: url('../img/icons-s2ebed63329.png'); }
-
-.i-edit, .i-delete, .i-exlink, .mime-office, .mime-text, .mime-image, .mime-html, .mime-archive, .mime-application, .mime-audio, .mime-script, .mime-video, .mime-unknow {
+.i-edit, .i-delete, .i-upload, .i-exlink, .mime-office, .mime-text, .mime-image, .mime-html, .mime-archive, .mime-application, .mime-audio, .mime-script, .mime-video, .mime-unknow {
   width: 16px;
   height: 16px;
   display: inline-block;
   vertical-align: text-bottom;
-  background: url(../img/icons.png) no-repeat; }
-  .i-edit:hover, .i-delete:hover, .i-exlink:hover, .mime-office:hover, .mime-text:hover, .mime-image:hover, .mime-html:hover, .mime-archive:hover, .mime-application:hover, .mime-audio:hover, .mime-script:hover, .mime-video:hover, .mime-unknow:hover {
+  background: url('../img/icons-s93f9ba6074.png') no-repeat;
+  text-indent: -9999em; }
+  .i-edit:hover, .i-delete:hover, .i-upload:hover, .i-exlink:hover, .mime-office:hover, .mime-text:hover, .mime-image:hover, .mime-html:hover, .mime-archive:hover, .mime-application:hover, .mime-audio:hover, .mime-script:hover, .mime-video:hover, .mime-unknow:hover {
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=75);
     opacity: 0.75; }
 
 .i-edit {
-  background-position: 0 -32px; }
+  background-position: 0 -48px; }
 
 .i-delete {
-  background-position: 0 -16px; }
+  background-position: 0 -32px; }
+
+.i-upload {
+  background-position: 0 0; }
 
 .i-caret-up, .i-caret-down, .i-caret-left, .i-caret-right {
   display: inline-block;
@@ -1186,35 +1198,35 @@ a.operate-reply {
   border-width: 4px 3px 4px 5px; }
 
 .i-exlink {
-  background-position: 0 0; }
+  background-position: 0 -16px; }
 
 /* 文件类型图标 */
 .mime-office {
-  background-position: 0 -80px; }
+  background-position: 0 -96px; }
 
 .mime-text {
   background-position: 0 -176px; }
 
 .mime-image {
-  background-position: 0 -48px; }
+  background-position: 0 -64px; }
 
 .mime-html {
-  background-position: 0 -96px; }
+  background-position: 0 -112px; }
 
 .mime-archive {
   background-position: 0 -192px; }
 
 .mime-application {
-  background-position: 0 -112px; }
+  background-position: 0 -128px; }
 
 .mime-audio {
-  background-position: 0 -224px; }
+  background-position: 0 -208px; }
 
 .mime-script {
   background-position: 0 -144px; }
 
 .mime-video {
-  background-position: 0 -64px; }
+  background-position: 0 -80px; }
 
 .mime-unknow {
   background-position: 0 -160px; }
@@ -1350,7 +1362,7 @@ a.operate-reply {
     background: #F3F3F0;
     font-size: .92857em; }
   #wmd-preview code {
-    color: #B94A48; }
+    color: #C13; }
   #wmd-preview pre {
     padding: 1em; }
     #wmd-preview pre code {
@@ -1417,18 +1429,24 @@ a.operate-reply {
   margin: 0;
   padding: 10px 20px;
   border-bottom: 1px solid #F3F3F0; }
+.fullscreen #tab-files {
+  position: absolute;
+  top: 52px;
+  right: 20px;
+  width: 280px;
+  z-index: 1001; }
 .fullscreen .wmd-edittab,
 .fullscreen .typecho-post-option,
 .fullscreen .title,
 .fullscreen .url-slug,
 .fullscreen .typecho-page-title,
 .fullscreen .typecho-head-nav,
-.fullscreen .message,
-.fullscreen #upload-panel {
+.fullscreen .message {
   display: none; }
 .fullscreen .wmd-hidetab {
   display: block; }
-.fullscreen .wmd-visualhide {
+.fullscreen .wmd-visualhide,
+.fullscreen #btn-fullscreen-upload {
   visibility: visible; }
 
 /**

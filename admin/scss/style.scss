@@ -10,7 +10,6 @@
 */
 
 @import "compass";
-@import "mixin";
 
 /**
 * Typecho 全局样式
@@ -794,6 +793,8 @@ background: #FFF1A8;
   list-style: none;
   border: 1px solid #D9D9D6;
   padding: 6px 12px;
+  max-height: 240px;
+  overflow: auto;
   background-color: #FFF;
   border-radius: 2px;
 }
@@ -878,6 +879,7 @@ background: #FFF1A8;
   list-style: none;
   margin: 0 10px;
   padding: 0;
+  word-break: break-all;
   li {
     padding: 8px 0;
     border-top: 1px dashed #D9D9D6;
@@ -895,6 +897,10 @@ background: #FFF1A8;
   .info {
     text-transform: uppercase;
   }
+}
+
+#btn-fullscreen-upload {
+  visibility: hidden;
 }
 
 
