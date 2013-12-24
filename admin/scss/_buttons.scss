@@ -65,6 +65,13 @@ button {
   color: #FFF;
 }
 
+.btn-text {
+  background: transparent;
+  &:hover, &:active, &.active {
+    background: #F3F3F0;
+  }
+}
+
 /* 下拉菜单 */
 .btn-drop {
   position: relative;
