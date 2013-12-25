@@ -7,7 +7,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
 <div class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
-        <div class="colgroup typecho-page-main typecho-post-area" role="form">
+        <div class="row typecho-page-main typecho-post-area" role="form">
             <form action="<?php $options->index('/action/contents-post-edit'); ?>" method="post" name="write_post">
                 <div class="col-mb-12 col-tb-9" role="main">
                     <?php if ($post->draft && $post->draft['cid'] != $post->cid): ?>

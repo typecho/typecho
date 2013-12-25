@@ -32,7 +32,7 @@
 
 <header id="header" class="clearfix">
     <div class="container">
-        <div class="colgroup">
+        <div class="row">
             <div class="site-name col-mb-12 col-9">
                 <a id="logo" href="<?php $this->options->siteUrl(); ?>">
                     <?php if ($this->options->logoUrl): ?>
@@ -58,12 +58,12 @@
                     <?php endwhile; ?>
                 </nav>
             </div>
-        </div><!-- end .colgroup -->
+        </div><!-- end .row -->
     </div>
 </header><!-- end #header -->
 <div id="body">
     <div class="container">
-        <div class="colgroup">
+        <div class="row">
 
     
     

@@ -34,7 +34,7 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
 
         /** 站点名称 */
         $title = new Typecho_Widget_Helper_Form_Element_Text('title', NULL, $this->options->title, _t('站点名称'), _t('站点的名称将显示在网页的标题处.'));
-        $title->input->setAttribute('class', 'w-40');
+        $title->input->setAttribute('class', 'w-100');
         $form->addInput($title->addRule('required', _t('请填写站点名称')));
 
         /** 站点地址 */
@@ -42,7 +42,7 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
             . ($this->options->originalSiteUrl == $this->options->rootUrl ? 
                 '' : '</p><p class="message notice mono">' . _t('当前地址 <strong>%s</strong> 与上述设定值不一致',
                     $this->options->rootUrl)));
-        $siteUrl->input->setAttribute('class', 'w-60 mono');
+        $siteUrl->input->setAttribute('class', 'w-100 mono');
         $form->addInput($siteUrl->addRule('required', _t('请填写站点地址'))
             ->addRule('url', _t('请填写一个合法的URL地址')));
 

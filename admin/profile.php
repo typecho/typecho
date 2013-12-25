@@ -9,7 +9,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
 <div class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
-        <div class="colgroup typecho-page-main">
+        <div class="row typecho-page-main">
             <div class="col-mb-12 col-tb-3">
                 <p><a href="http://gravatar.com/emails/" title="<?php _e('在 Gravatar 上修改头像'); ?>"><?php echo '<img class="profile-avatar" src="'
                     . ($request->isSecure() ? 'https://secure' : 'http://www') . '.gravatar.com/avatar/' . md5($user->mail) . '?s=220&r=X' .

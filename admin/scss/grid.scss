@@ -37,13 +37,13 @@ $screen-wide: 1200px;
 }
 
 // Column group
-.colgroup {
+.row {
   margin-right: $gutter-width / -2;
   margin-left: $gutter-width / -2;
   @extend .clearfix;
 }
 
-.colgroup [class*="col-"] {
+.row [class*="col-"] {
   float: left;
   min-height: 1px;
   padding-right: $gutter-width / 2;
@@ -51,8 +51,8 @@ $screen-wide: 1200px;
   @extend %box-sizing;
 }
 
-.colgroup [class*="-push-"],
-.colgroup [class*="-pull-"] {
+.row [class*="-push-"],
+.row [class*="-pull-"] {
   position: relative;
 }
 

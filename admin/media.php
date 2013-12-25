@@ -9,7 +9,7 @@ Typecho_Widget::widget('Widget_Contents_Attachment_Edit')->to($attachment);
 <div class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
-        <div class="colgroup typecho-page-main">
+        <div class="row typecho-page-main">
             <div class="col-mb-12 col-tb-8" role="main">
                 <?php if ($attachment->attachment->isImage): ?>
                 <p><img src="<?php $attachment->attachment->url(); ?>" alt="<?php $attachment->attachment->name(); ?>" class="typecho-attachment-photo" /></p>

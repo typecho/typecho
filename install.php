@@ -185,7 +185,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
     </ol>
 </div>
 <div class="container">
-    <div class="colgroup">
+    <div class="row">
         <div class="col-mb-12 col-tb-8 col-tb-offset-2">
             <div class="column-14 start-06 typecho-install">
             <?php if (isset($_GET['finish'])) : ?>
