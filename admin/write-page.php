@@ -124,7 +124,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                         <?php endif; ?>
                     </div><!-- end #tab-advance -->
 
-                    <div id="tab-files" class="tab-content">
+                    <div id="tab-files" class="tab-content hidden">
                         <?php include 'file-upload.php'; ?>
                     </div><!-- end #tab-files -->
                 </div>
