@@ -52,6 +52,12 @@ $(document).ready(function() {
     }
 
     function fileUploadComplete (id, url, data) {
+        // 拖拽上传的错误提示
+        if (!data) {
+            alert(errorWord);
+            return;
+        }
+
         var li = $('#' + id).removeClass('loading').data('cid', data.cid)
             .data('url', data.url)
             .data('image', data.isImage)
