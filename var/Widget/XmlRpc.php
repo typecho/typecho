@@ -811,7 +811,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         
         return array(
             'standard' => _t('标准')
-            );
+        );
     }
     
     /**
@@ -1296,9 +1296,9 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 'caption'               => $attachments->slug,
                 'description'           => $attachments->attachment->description,
                 'metadata'              => array(
-                                                'file'=>$attachments->attachment->path,
-                                                'size'=>$attachments->attachment->size,
-                                            ),
+                    'file'  =>  $attachments->attachment->path,
+                    'size'  =>  $attachments->attachment->size,
+                ),
                 'thumbnail'             => $attachments->attachment->url,
 
             );
@@ -1334,9 +1334,9 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             'caption'               => $attachment->slug,
             'description'           => $attachment->attachment->description,
             'metadata'              => array(
-                                            'file'=>$attachment->attachment->path,
-                                            'size'=>$attachment->attachment->size,
-                                        ),
+                'file'  =>  $attachment->attachment->path,
+                'size'  =>  $attachment->attachment->size,
+            ),
             'thumbnail'             => $attachment->attachment->url,
 
         );
