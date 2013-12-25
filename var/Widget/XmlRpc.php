@@ -217,27 +217,27 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 				'readonly'		=> true,
 				'option'		=> 'siteUrl'
 			),
-                                    'home_url'          => array(
-                                        'desc'          => _t( '博客首页地址' ),
-                                        'readonly'      => true,
-                                        'option'        => 'siteUrl'
-                                    ),
-                                    'login_url'          => array(
-                                        'desc'          => _t( '登录地址' ),
-                                        'readonly'      => true,
-                                        'value'        => $this->options->siteUrl.'admin/login.php'
-                                    ),
-                                     'admin_url'          => array(
-                                        'desc'          => _t( '管理区域的地址' ),
-                                        'readonly'      => true,
-                                        'value'        => $this->options->siteUrl.'admin/'
-                                    ),
-                                   
-                                    'post_thumbnail'          => array(
-                                        'desc'          => _t( '文章缩略图' ),
-                                        'readonly'      => true,
-                                        'value'        => true
-                                    ),
+            'home_url'          => array(
+                'desc'          => _t( '博客首页地址' ),
+                'readonly'      => true,
+                'option'        => 'siteUrl'
+            ),
+            'login_url'         => array(
+                'desc'          => _t( '登录地址' ),
+                'readonly'      => true,
+                'value'         => $this->options->siteUrl.'admin/login.php'
+            ),
+             'admin_url'        => array(
+                'desc'          => _t( '管理区域的地址' ),
+                'readonly'      => true,
+                'value'         => $this->options->siteUrl.'admin/'
+            ),
+
+            'post_thumbnail'    => array(
+                'desc'          => _t( '文章缩略图' ),
+                'readonly'      => true,
+                'value'         => false
+            ),
 
 			// Updatable options
 			'time_zone'			=> array(
@@ -2063,7 +2063,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
     public function action()
     {
 
-       // $this->log($GLOBALS['HTTP_RAW_POST_DATA']);
+        //$this->log($GLOBALS['HTTP_RAW_POST_DATA']);
 
         if (isset($this->request->rsd)) {
             echo
@@ -2157,8 +2157,8 @@ EOF;
                 'wp.getCommentStatusList'   => array($this, 'wpGetCommentStatusList'),
 
                 /** New Wordpress API after 2.9.2 */
-                'wp.getProfile'   => array($this, 'wpGetProfile'),
-                'wp.getPostFormats'   => array($this, 'wpGetPostFormats'),
+                'wp.getProfile'             => array($this, 'wpGetProfile'),
+                'wp.getPostFormats'         => array($this, 'wpGetPostFormats'),
 
 
 
@@ -2197,7 +2197,7 @@ EOF;
                 'pingback.extensions.getPingbacks' => array($this,'pingbackExtensionsGetPingbacks'),
                 
                 /** hook after */
-                'hook.afterCall'       => array($this, 'hookAfterCall'),
+                'hook.afterCall'            => array($this, 'hookAfterCall'),
             ));
         }
     }
