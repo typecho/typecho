@@ -481,6 +481,38 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         $this->mwEditPost($blogId, $pageId, $userName, $password, $content, $publish);
     }
 
+
+    /**
+     * 编辑postId指定的post 
+     *
+     * @param int $blogId
+     * @param string $userName
+     * @param string $password
+     * @param int $postId
+     * @param struct $content
+     * @access public
+     * @return bool
+     */
+    public function wpEditPost($blogId, $userName, $password, $postId, $content)
+    {
+
+        $post = $this->singletonWidget('Widget_Archive', 'type=single', 'cid=' . $postId, false);
+        if ($post->type=='attachment') {
+            $attachment['title'] = $content['post_title'];
+            $attachment['slug'] = $content['post_excerpt'];
+
+            $text = unserialize($post->text);
+            $text['description'] = $content['description'];
+
+            $attachment['text'] = serialize($text);
+
+            /** 更新数据 */
+            $updateRows = $this->update($attachment, $this->db->sql()->where('cid = ?', $postId));
+            return true;
+        }
+        return $this->mwEditPost($blogId, $postId, $userName, $password, $content, $publish);
+    }
+
     /**
      * 获取page列表，没有wpGetPages获得的详细
      *
@@ -1153,9 +1185,9 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      * @param integer $blogId
      * @param string $userName
      * @param string $password
-     * @param mixed $post
+     * @param mixed $path
      * @param array $struct
-     * @return boolean
+     * @return int
      */
     public function wpNewComment($blogId, $userName, $password, $path, $struct)
     {
@@ -1212,6 +1244,104 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         return new IXR_Error(403, _t('无法添加评论'));
     }
 
+
+
+    /**
+     * 获取媒体文件
+     * 
+     * @access public
+     * @param integer $blogId
+     * @param string $userName
+     * @param string $password
+     * @param struct $struct
+     * @return boolean
+     */
+    public function wpGetMediaLibrary($blogId, $userName, $password, $struct)
+    {
+        /** 检查权限*/
+        if (!$this->checkAccess($userName, $password)) {
+            return $this->error;
+        }
+        
+
+        $input = array();
+
+        if (!empty($struct['parent_id'])) {
+            $input['parent'] = $struct['parent_id'];
+        }
+
+        if (!empty($struct['mime_type'])) {
+            $input['mime'] = $struct['mime_type'];
+        }
+        
+        $pageSize = 10;
+        if (!empty($struct['number'])) {
+            $pageSize = abs(intval($struct['number']));
+        }
+        
+        if (!empty($struct['offset'])) {
+            $input['page'] = abs(intval($struct['offset']))+1;
+        }
+        
+        $attachments = $this->singletonWidget('Widget_Contents_Attachment_Admin', 'pageSize=' . $pageSize, $input, false);
+        $attachmentsStruct = array();
+        
+        while ($attachments->next()) {
+            $attachmentsStruct[] = array(
+                'attachment_id'         => $attachments->cid,
+                'date_created_gmt'      => new IXR_Date($this->options->timezone + $attachments->created),
+                'parent'                => $attachments->parent,
+                'link'                  => $attachments->attachment->url,
+                'title'                 => $attachments->title,
+                'caption'               => $attachments->slug,
+                'description'           => $attachments->attachment->description,
+                'metadata'              => array(
+                                                'file'=>$attachments->attachment->path,
+                                                'size'=>$attachments->attachment->size,
+                                            ),
+                'thumbnail'             => $attachments->attachment->url,
+
+            );
+        }
+        return $attachmentsStruct;
+    }
+
+    /**
+     * 获取媒体文件
+     * 
+     * @access public
+     * @param integer $blogId
+     * @param string $userName
+     * @param string $password
+     * @param int $attachmentId
+     * @return boolean
+     */
+    public function wpGetMediaItem($blogId, $userName, $password, $attachmentId)
+    {
+        /** 检查权限*/
+        if (!$this->checkAccess($userName, $password)) {
+            return $this->error;
+        }
+        
+        
+        $attachment = $this->singletonWidget('Widget_Contents_Attachment_Edit', NULL, "cid={$attachmentId}");
+        $struct = array(
+            'attachment_id'         => $attachment->cid,
+            'date_created_gmt'      => new IXR_Date($this->options->timezone + $attachment->created),
+            'parent'                => $attachment->parent,
+            'link'                  => $attachment->attachment->url,
+            'title'                 => $attachment->title,
+            'caption'               => $attachment->slug,
+            'description'           => $attachment->attachment->description,
+            'metadata'              => array(
+                                            'file'=>$attachment->attachment->path,
+                                            'size'=>$attachment->attachment->size,
+                                        ),
+            'thumbnail'             => $attachment->attachment->url,
+
+        );
+        return $struct;
+    }
 
 
 
@@ -2159,8 +2289,11 @@ EOF;
                 /** New Wordpress API after 2.9.2 */
                 'wp.getProfile'             => array($this, 'wpGetProfile'),
                 'wp.getPostFormats'         => array($this, 'wpGetPostFormats'),
+                'wp.getMediaLibrary'        => array($this, 'wpGetMediaLibrary'),
+                'wp.getMediaItem'           => array($this, 'wpGetMediaItem'),
+                'wp.editPost'           => array($this, 'wpEditPost'),
 
-
+                
 
                 /** Blogger API */
                 'blogger.getUsersBlogs'     => array($this, 'bloggerGetUsersBlogs'),
