@@ -1,20 +1,32 @@
 /*
  * Bento Grid System
  * Source: https://github.com/fenbox/bento
- * Version: 1.2.7
- * Update: 2013.11.15
+ * Version: 1.2.8
+ * Update: 2013.11.25
  */
-.colgroup [class*="col-"] {
-  float: left;
-  min-height: 1px;
-  padding-right: 10px;
-  padding-left: 10px;
+.container, .colgroup [class*="col-"] {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box; }
 
-.colgroup [class*="push-"],
-.colgroup [class*="pull-"] {
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 10px;
+  padding-right: 10px; }
+
+.colgroup {
+  margin-right: -10px;
+  margin-left: -10px; }
+
+.colgroup [class*="col-"] {
+  float: left;
+  min-height: 1px;
+  padding-right: 10px;
+  padding-left: 10px; }
+
+.colgroup [class*="-push-"],
+.colgroup [class*="-pull-"] {
   position: relative; }
 
 /*
@@ -61,8 +73,6 @@
  */
 @media (min-width: 768px) {
   .container {
-    margin-left: auto;
-    margin-right: auto;
     max-width: 728px; }
 
   .col-tb-1 {
@@ -216,11 +226,7 @@
     left: 91.66667%; }
 
   .col-tb-push-12 {
-    left: 100%; }
-
-  .colgroup {
-    margin-right: -10px;
-    margin-left: -10px; } }
+    left: 100%; } }
 /*
  * Desktop and up
  */
