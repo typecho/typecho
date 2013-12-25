@@ -1040,9 +1040,6 @@ a.operate-reply {
   list-style: none;
   padding: 0; }
 
-#edit-secondary #tab-files {
-  display: none; }
-
 /**
 * 标签列表
 */
@@ -1112,17 +1109,19 @@ a.operate-reply {
   margin: 0 10px;
   padding: 0;
   word-break: break-all; }
-  #file-list li {
-    padding: 8px 0;
-    border-top: 1px dashed #D9D9D6; }
-  #file-list .file {
-    margin-left: 5px; }
+  #file-list li,
   #file-list .insert {
-    display: block;
-    max-width: 100%;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis; }
+  #file-list li {
+    padding: 8px 0;
+    border-top: 1px dashed #D9D9D6; }
+  #file-list .insert {
+    display: block;
+    max-width: 100%; }
+  #file-list .file {
+    margin-left: 5px; }
   #file-list .info {
     text-transform: uppercase; }
 
@@ -1429,12 +1428,6 @@ a.operate-reply {
   margin: 0;
   padding: 10px 20px;
   border-bottom: 1px solid #F3F3F0; }
-.fullscreen #tab-files {
-  position: absolute;
-  top: 52px;
-  right: 20px;
-  width: 280px;
-  z-index: 1001; }
 .fullscreen .wmd-edittab,
 .fullscreen .typecho-post-option,
 .fullscreen .title,

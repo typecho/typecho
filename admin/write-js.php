@@ -214,13 +214,13 @@ $(document).ready(function() {
 
     // 控制选项和附件的切换
     var fileUploadInit = false;
-    $("#edit-secondary .typecho-option-tabs li").click(function() {
-        $("#edit-secondary .typecho-option-tabs li").removeClass('active');
-        $(this).addClass("active");
-        $(".tab-content").hide();
+    $('#edit-secondary .typecho-option-tabs li').click(function() {
+        $('#edit-secondary .typecho-option-tabs li').removeClass('active');
+        $(this).addClass('active');
+        $('.tab-content').addClass('hidden');
         
-        var selected_tab = $(this).find("a").attr("href"),
-            selected_el = $(selected_tab).show();
+        var selected_tab = $(this).find('a').attr('href'),
+            selected_el = $(selected_tab).removeClass('hidden');
 
         if (!fileUploadInit) {
             selected_el.trigger('init');

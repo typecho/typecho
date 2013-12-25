@@ -808,9 +808,6 @@ background: #FFF1A8;
   padding: 0;
 }
 
-#edit-secondary {
-  #tab-files { display: none; }
-}
 
 /**
 * 标签列表
@@ -880,19 +877,22 @@ background: #FFF1A8;
   margin: 0 10px;
   padding: 0;
   word-break: break-all;
+  li,
+  .insert {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
   li {
     padding: 8px 0;
     border-top: 1px dashed #D9D9D6;
   }
-  .file {
-    margin-left: 5px;
-  }
   .insert {
     display: block;
     max-width: 100%;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+  }
+  .file {
+    margin-left: 5px;
   }
   .info {
     text-transform: uppercase;
