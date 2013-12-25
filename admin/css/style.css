@@ -210,9 +210,7 @@ button {
     cursor: default; }
 
 .btn-text {
-  background: transparent; }
-  .btn-text:hover, .btn-text:active, .btn-text.active {
-    background: #F3F3F0; }
+  background-color: transparent !important; }
 
 /* 下拉菜单 */
 .btn-drop {
@@ -974,8 +972,7 @@ a.operate-reply {
   color: #666; }
 
 .typecho-post-area #text {
-  resize: none;
-  font-size: .92857em; }
+  resize: none; }
 
 #advance-panel-btn {
   font-size: .92857em; }
@@ -1428,6 +1425,12 @@ a.operate-reply {
   margin: 0;
   padding: 10px 20px;
   border-bottom: 1px solid #F3F3F0; }
+.fullscreen #tab-files {
+  position: absolute;
+  top: 52px;
+  right: 20px;
+  width: 280px;
+  z-index: 1001; }
 .fullscreen .wmd-edittab,
 .fullscreen .typecho-post-option,
 .fullscreen .title,
@@ -1635,8 +1638,7 @@ div.token-input-dropdown ul li.token-input-selected-dropdown-item {
 * Hide from both screenreaders and browsers: h5bp.com/u
 */
 .hidden {
-  display: none !important;
-  visibility: hidden; }
+  display: none; }
 
 /*
 * Hide only visually, but have it available for screenreaders: h5bp.com/v
