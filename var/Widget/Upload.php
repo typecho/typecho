@@ -30,15 +30,28 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
      */
     private static function makeUploadDir($path)
     {
-        if (!@mkdir($path, 0777, true)) {
+        $path = preg_replace("/\\\+/", '/', $path);
+        $current = rtrim($path, '/');
+        $last = $current;
+
+        while (!is_dir($current) && false !== strpos($path, '/')) {
+            $last = $current;
+            $current = dirname($current);
+        }
+
+        if ($last == $current) {
+            return true;
+        }
+
+        if (!@mkdir($last)) {
             return false;
         }
 
-        $stat = @stat($path);
+        $stat = @stat($last);
         $perms = $stat['mode'] & 0007777;
-        @chmod($path, $perms);
+        @chmod($last, $perms);
 
-        return true;
+        return self::makeUploadDir($path);
     }
 
     /**
