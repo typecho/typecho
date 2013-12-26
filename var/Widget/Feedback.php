@@ -277,7 +277,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
                 }
                 
                 /** 检查来源 */
-                if ($this->options->commentsCheckReferer&&'false'!=$this->parameter->checkReferer) {
+                if ($this->options->commentsCheckReferer && 'false' != $this->parameter->checkReferer) {
                     $referer = $this->request->getReferer();
 
                     if (empty($referer)) {

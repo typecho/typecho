@@ -737,7 +737,7 @@ class Widget_Archive extends Widget_Abstract_Contents
 
         /** 匹配类型 */
         
-        if ('single'!=$this->parameter->type) {
+        if ('single' != $this->parameter->type) {
             $select->where('table.contents.type = ?', $this->parameter->type);
         }
 
@@ -1218,7 +1218,7 @@ class Widget_Archive extends Widget_Abstract_Contents
             'archive'                   =>  'error404Handle',
             'archive_page'              =>  'error404Handle',
             404                         =>  'error404Handle',
-            'single'                      =>  'singleHandle',
+            'single'                    =>  'singleHandle',
             'page'                      =>  'singleHandle',
             'post'                      =>  'singleHandle',
             'attachment'                =>  'singleHandle',
