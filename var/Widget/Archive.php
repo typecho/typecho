@@ -736,7 +736,10 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->_archiveType = 'single';
 
         /** 匹配类型 */
-        $select->where('table.contents.type = ?', $this->parameter->type);
+        
+        if ('single'!=$this->parameter->type) {
+            $select->where('table.contents.type = ?', $this->parameter->type);
+        }
 
         /** 如果是单篇文章或独立页面 */
         if (isset($this->request->cid)) {
@@ -1215,6 +1218,7 @@ class Widget_Archive extends Widget_Abstract_Contents
             'archive'                   =>  'error404Handle',
             'archive_page'              =>  'error404Handle',
             404                         =>  'error404Handle',
+            'single'                      =>  'singleHandle',
             'page'                      =>  'singleHandle',
             'post'                      =>  'singleHandle',
             'attachment'                =>  'singleHandle',
@@ -1359,7 +1363,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      * @return void
      */
     public function pageNav($prev = '&laquo;', $next = '&raquo;', $splitPage = 3, $splitWord = '...',
-        $class = 'page-navigator', $currentClass = 'current')
+        $class = 'page-navigator', $currentClass = 'current', $label = 'ol')
     {
         if ($this->have()) {
             $hasNav = false;
@@ -1376,9 +1380,11 @@ class Widget_Archive extends Widget_Abstract_Contents
                 $nav = new Typecho_Widget_Helper_PageNavigator_Box($this->_total, 
                     $this->_currentPage, $this->parameter->pageSize, $query);
                 
-                echo '<ol class="' . $class . '">';
+                /** 添加判断防止输入错误的标签，判断逻辑：如果为 <ul>，使用 <ul>；否则，使用 <ol> */
+                $label = ($label == 'ul') ? 'ul' : 'ol';
+                echo '<' . $label . ' class="' . $class . '">';
                 $nav->render($prev, $next, $splitPage, $splitWord, $currentClass);
-                echo '</ol>';
+                echo '</' . $label . '>';
             }
         }
     }

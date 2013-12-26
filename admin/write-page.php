@@ -7,7 +7,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
 <div class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
-        <div class="colgroup typecho-page-main typecho-post-area" role="form">
+        <div class="row typecho-page-main typecho-post-area" role="form">
             <form action="<?php $options->index('/action/contents-page-edit'); ?>" method="post" name="write_page">
                 <div class="col-mb-12 col-tb-9" role="main">
                     <?php if ($page->draft && $page->draft['cid'] != $page->cid): ?>
@@ -41,6 +41,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                     <?php include 'custom-fields.php'; ?>
                     <p class="submit clearfix">
                         <span class="right">
+                            <button type="button" class="btn-text" id="btn-fullscreen-upload"><i class="i-upload"><?php _e('附件'); ?></i></button>
                             <input type="hidden" name="cid" value="<?php $page->cid(); ?>" />
                             <button type="submit" name="do" value="save" id="btn-save"><?php _e('保存草稿'); ?></button>
                             <button type="submit" name="do" value="publish" class="primary" id="btn-submit"><?php _e('发布页面'); ?></button>
@@ -124,7 +125,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                         <?php endif; ?>
                     </div><!-- end #tab-advance -->
 
-                    <div id="tab-files" class="tab-content">
+                    <div id="tab-files" class="tab-content hidden">
                         <?php include 'file-upload.php'; ?>
                     </div><!-- end #tab-files -->
                 </div>

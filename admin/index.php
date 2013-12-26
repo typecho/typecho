@@ -8,7 +8,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
 <div class="main">
     <div class="container typecho-dashboard">
         <?php include 'page-title.php'; ?>
-        <div class="colgroup typecho-page-main">
+        <div class="row typecho-page-main">
             <div class="col-mb-12 welcome-board" role="main">
                 <p><?php _e('目前有 <em>%s</em> 篇日志, 并有 <em>%s</em> 条关于你的评论在 <em>%s</em> 个分类中.',
                 $stat->myPublishedPostsNum, $stat->myPublishedCommentsNum, $stat->categoriesNum); ?>

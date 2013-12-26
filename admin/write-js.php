@@ -175,7 +175,7 @@ $(document).ready(function() {
                     savedData = data;
                     lastSaveTime = o.time;
                     cid = o.cid;
-                    autoSave.text('<?php _e('内容已经保存'); ?>' + ' (' + o.time + ')').effect('highlight', 1000);
+                    autoSave.text('<?php _e('已保存'); ?>' + ' (' + o.time + ')').effect('highlight', 1000);
                     locked = false;
                 }, 'json');
             }
@@ -189,7 +189,7 @@ $(document).ready(function() {
 
     $('#text').bind('input propertychange', function () {
         if (!locked) {
-            autoSave.text('<?php _e('内容尚未保存'); ?>' + (lastSaveTime ? ' (<?php _e('上次保存时间'); ?>: ' + lastSaveTime + ')' : ''));
+            autoSave.text('<?php _e('尚未保存'); ?>' + (lastSaveTime ? ' (<?php _e('上次保存时间'); ?>: ' + lastSaveTime + ')' : ''));
         }
 
         if (!autoSaveOnce) {
@@ -214,13 +214,13 @@ $(document).ready(function() {
 
     // 控制选项和附件的切换
     var fileUploadInit = false;
-    $("#edit-secondary .typecho-option-tabs li").click(function() {
-        $("#edit-secondary .typecho-option-tabs li").removeClass('active');
-        $(this).addClass("active");
-        $(".tab-content").hide();
+    $('#edit-secondary .typecho-option-tabs li').click(function() {
+        $('#edit-secondary .typecho-option-tabs li').removeClass('active');
+        $(this).addClass('active');
+        $('.tab-content').addClass('hidden');
         
-        var selected_tab = $(this).find("a").attr("href"),
-            selected_el = $(selected_tab).show();
+        var selected_tab = $(this).find('a').attr('href'),
+            selected_el = $(selected_tab).removeClass('hidden');
 
         if (!fileUploadInit) {
             selected_el.trigger('init');
@@ -258,11 +258,13 @@ $(document).ready(function() {
     });
 
     // 全屏上传按钮控制
-    // $('#btn-fullscreen-upload').click(function() {
-    //     $(this).toggleClass('active');
-    //     $('#tab-files').toggle();
-    //     return false;
-    // });
+    $('#btn-fullscreen-upload').click(function() {
+        $(this).toggleClass('active');
+        $('.tab-content').toggleClass('hidden');
+        $('.typecho-option-tabs li').toggleClass('active');
+
+        return false;
+    });
 });
 </script>
 

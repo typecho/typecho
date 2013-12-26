@@ -10,7 +10,7 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == Typ
 <div class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
-        <div class="colgroup typecho-page-main" role="main">
+        <div class="row typecho-page-main" role="main">
             <div class="col-mb-12 typecho-list">
                 <div class="clearfix">
                     <ul class="typecho-option-tabs right">

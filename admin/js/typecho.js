@@ -8,7 +8,8 @@
                     $.post(url, {size : h});
                 }
             })
-        }
+        },
+        uploadComplete      :   function (file) {}
     };
 })(window);
 

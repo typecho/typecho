@@ -1,20 +1,32 @@
 /*
  * Bento Grid System
  * Source: https://github.com/fenbox/bento
- * Version: 1.2.7
- * Update: 2013.11.15
+ * Version: 1.2.8
+ * Update: 2013.11.25
  */
-.colgroup [class*="col-"] {
-  float: left;
-  min-height: 1px;
-  padding-right: 10px;
-  padding-left: 10px;
+.container, .row [class*="col-"] {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box; }
 
-.colgroup [class*="push-"],
-.colgroup [class*="pull-"] {
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 10px;
+  padding-right: 10px; }
+
+.row {
+  margin-right: -10px;
+  margin-left: -10px; }
+
+.row [class*="col-"] {
+  float: left;
+  min-height: 1px;
+  padding-right: 10px;
+  padding-left: 10px; }
+
+.row [class*="-push-"],
+.row [class*="-pull-"] {
   position: relative; }
 
 /*
@@ -61,8 +73,6 @@
  */
 @media (min-width: 768px) {
   .container {
-    margin-left: auto;
-    margin-right: auto;
     max-width: 728px; }
 
   .col-tb-1 {
@@ -216,11 +226,7 @@
     left: 91.66667%; }
 
   .col-tb-push-12 {
-    left: 100%; }
-
-  .colgroup {
-    margin-right: -10px;
-    margin-left: -10px; } }
+    left: 100%; } }
 /*
  * Desktop and up
  */
@@ -554,10 +560,10 @@
 /*
  * Clearfix
  */
-.clearfix, .colgroup {
+.clearfix, .row {
   zoom: 1; }
-  .clearfix:before, .colgroup:before, .clearfix:after, .colgroup:after {
+  .clearfix:before, .row:before, .clearfix:after, .row:after {
     content: " ";
     display: table; }
-  .clearfix:after, .colgroup:after {
+  .clearfix:after, .row:after {
     clear: both; }

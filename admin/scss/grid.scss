@@ -1,8 +1,8 @@
 /*
  * Bento Grid System
  * Source: https://github.com/fenbox/bento
- * Version: 1.2.7
- * Update: 2013.11.15
+ * Version: 1.2.8
+ * Update: 2013.11.25
  */
 
 //
@@ -18,23 +18,41 @@ $screen-tablet:  768px;
 $screen-desktop: 992px;
 $screen-wide: 1200px;
 
-// Column group
-.colgroup {
-  @extend .clearfix;
-}
 
-.colgroup [class*="col-"] {
-  float: left;
-  min-height: 1px;
-  padding-right: $gutter-width / 2;
-  padding-left: $gutter-width / 2;
+// Mixins
+%box-sizing {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 
-.colgroup [class*="push-"],
-.colgroup [class*="pull-"] {
+
+// Container
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: $gutter-width / 2;
+  padding-right: $gutter-width / 2;
+  @extend %box-sizing;
+}
+
+// Column group
+.row {
+  margin-right: $gutter-width / -2;
+  margin-left: $gutter-width / -2;
+  @extend .clearfix;
+}
+
+.row [class*="col-"] {
+  float: left;
+  min-height: 1px;
+  padding-right: $gutter-width / 2;
+  padding-left: $gutter-width / 2;
+  @extend %box-sizing;
+}
+
+.row [class*="-push-"],
+.row [class*="-pull-"] {
   position: relative;
 }
 
@@ -56,10 +74,7 @@ $screen-wide: 1200px;
 
 @media (min-width: $screen-tablet) {
   .container {
-    margin-left: auto;
-    margin-right: auto;
     max-width: $screen-tablet - ($gutter-width * 2);
-    @extend .center-block;
   }
 
   // Colunms
@@ -88,12 +103,6 @@ $screen-wide: 1200px;
     .col-tb-push-#{$index} {
       left: $column-width * $index;
     }
-  }
-
-  // Groups
-  .colgroup {
-    margin-right: $gutter-width / -2;
-    margin-left: $gutter-width / -2;
   }
 }
 
