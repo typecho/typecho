@@ -275,9 +275,9 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
                 if (!$this->_content->allow('comment')) {
                     throw new Typecho_Widget_Exception(_t('对不起,此内容的反馈被禁止.'), 403);
                 }
-
+                
                 /** 检查来源 */
-                if ($this->options->commentsCheckReferer) {
+                if ($this->options->commentsCheckReferer && 'false' != $this->parameter->checkReferer) {
                     $referer = $this->request->getReferer();
 
                     if (empty($referer)) {

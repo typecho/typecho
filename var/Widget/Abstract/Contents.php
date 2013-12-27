@@ -405,7 +405,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     public function deleteFields($cid)
     {
-        return $this->db->query($this->db->delete('table.contents')
+        return $this->db->query($this->db->delete('table.fields')
             ->where('cid = ?', $cid));
     }
 
