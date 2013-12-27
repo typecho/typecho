@@ -1238,8 +1238,8 @@ a.operate-reply {
   -moz-background-size: auto 40px;
   -o-background-size: auto 40px;
   background-size: auto 40px;
-  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=30);
-  opacity: 0.3; }
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=15);
+  opacity: 0.15; }
   .i-logo:hover, .i-logo-s:hover {
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=20);
     opacity: 0.2; }
@@ -1251,8 +1251,8 @@ a.operate-reply {
   -moz-background-size: auto 26px;
   -o-background-size: auto 26px;
   background-size: auto 26px;
-  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=10);
-  opacity: 0.1; }
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=15);
+  opacity: 0.15; }
 
 /*
 * Editor

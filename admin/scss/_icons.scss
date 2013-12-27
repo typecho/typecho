@@ -117,7 +117,7 @@ $icons-2x: sprite-map("icons-2x/*.png");
   background: url("../img/typecho-logo.svg") no-repeat;
   text-indent: -9999em;
   @include background-size(auto 40px);
-  @include opacity(.3);
+  @include opacity(.15);
   &:hover {
     @include opacity(.2);
   }
@@ -126,6 +126,6 @@ $icons-2x: sprite-map("icons-2x/*.png");
   width: 26px;
   height: 26px;
   @include background-size(auto 26px);
-  @include opacity(.1);
+  @include opacity(.15);
 }
 
