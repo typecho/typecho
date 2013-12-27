@@ -1250,9 +1250,7 @@ a.operate-reply {
   -webkit-background-size: auto 26px;
   -moz-background-size: auto 26px;
   -o-background-size: auto 26px;
-  background-size: auto 26px;
-  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=15);
-  opacity: 0.15; }
+  background-size: auto 26px; }
 
 /*
 * Editor
