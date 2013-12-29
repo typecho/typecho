@@ -89,7 +89,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                         <button type="button" id="advance-panel-btn" class="btn-xs"><?php _e('高级选项'); ?> <i class="i-caret-down"></i></button>
                         <div id="advance-panel">
                             <section class="typecho-post-option visibility-option">
-                                <label class="typecho-label"><?php _e('公开度'); ?></label>
+                                <label for="visibility" class="typecho-label"><?php _e('公开度'); ?></label>
                                 <p>
                                 <select id="visibility" name="visibility">
                                     <option value="publish"<?php if ($page->status == 'publish' || !$page->status): ?> selected<?php endif; ?>><?php _e('公开'); ?></option>
