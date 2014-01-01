@@ -82,8 +82,8 @@
                     $('#typecho-nav-list').find('.child').hide();
                     $(this).parents('.root').find('.child').show();
                 });
-                $('#typecho-nav-list').find('.child li:last-child a').blur(function() {
-                    $(this).parents('.child').hide();
+                $('.operate').find('a').focus(function() {
+                    $('#typecho-nav-list').find('.child').hide();
                 });
             })();
 
