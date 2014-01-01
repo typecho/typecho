@@ -81,7 +81,7 @@ textarea {
 .post-meta a:hover,
 .post-content a:hover,
 .widget a:hover,
-.comment-content a {
+.comment-content a:hover {
   border-bottom-color: transparent;
 }
 
