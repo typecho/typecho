@@ -95,7 +95,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
         
         $commentLevelClass = $this->levels > 0 ? ' comment-child' : ' comment-parent';
 ?>
-<li id="<?php $this->theId(); ?>" class="comment-body<?php
+<li itemscope itemtype="http://schema.org/UserComments" id="<?php $this->theId(); ?>" class="comment-body<?php
     if ($this->levels > 0) {
         echo ' comment-child';
         $this->levelsAlt(' comment-level-odd', ' comment-level-even');
@@ -105,28 +105,28 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
     $this->alt(' comment-odd', ' comment-even');
     echo $commentClass;
 ?>">
-    <div class="comment-author">
-        <?php $this->gravatar($singleCommentOptions->avatarSize, $singleCommentOptions->defaultAvatar); ?>
-        <cite class="fn"><?php $singleCommentOptions->beforeAuthor();
+    <div class="comment-author" itemprop="creator" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="image"><?php $this->gravatar($singleCommentOptions->avatarSize, $singleCommentOptions->defaultAvatar); ?></span>
+        <cite class="fn" itemprop="name"><?php $singleCommentOptions->beforeAuthor();
         $this->author();
         $singleCommentOptions->afterAuthor(); ?></cite>
     </div>
     <div class="comment-meta">
-        <a href="<?php $this->permalink(); ?>"><?php $singleCommentOptions->beforeDate();
+        <a href="<?php $this->permalink(); ?>"><time itemprop="commentTime" datetime="<?php $this->date('c'); ?>"><?php $singleCommentOptions->beforeDate();
         $this->date($singleCommentOptions->dateFormat);
-        $singleCommentOptions->afterDate(); ?></a>
+        $singleCommentOptions->afterDate(); ?></time></a>
         <?php if ('waiting' == $this->status) { ?>
         <em class="comment-awaiting-moderation"><?php $singleCommentOptions->commentStatus(); ?></em>
         <?php } ?>
     </div>
-    <div class="comment-content">
+    <div class="comment-content" itemprop="commentText">
     <?php $this->content(); ?>
     </div>
     <div class="comment-reply">
         <?php $this->reply($singleCommentOptions->replyWord); ?>
     </div>
     <?php if ($this->children) { ?>
-    <div class="comment-children">
+    <div class="comment-children" itemprop="discusses">
         <?php $this->threadedComments($singleCommentOptions); ?>
     </div>
     <?php } ?>
