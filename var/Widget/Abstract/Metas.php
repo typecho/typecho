@@ -245,7 +245,7 @@ class Widget_Abstract_Metas extends Widget_Abstract
     {
         // 取出count为0的标签
         $tags = Typecho_Common::arrayFlatten($this->db->fetchAll($this->db->select('mid')
-            ->from('table.metas')->where('count = ?', 0)), 'mid');
+            ->from('table.metas')->where('type = ? AND count = ?', 'tags', 0)), 'mid');
 
         foreach ($tags as $tag) {
             // 确认是否已经没有关联了
