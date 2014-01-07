@@ -1362,11 +1362,23 @@ class Widget_Archive extends Widget_Abstract_Contents
      * @param string $splitWord 分割字符
      * @return void
      */
-    public function pageNav($prev = '&laquo;', $next = '&raquo;', $splitPage = 3, $splitWord = '...',
-        $class = 'page-navigator', $currentClass = 'current', $label = 'ol')
+    public function pageNav($prev = '&laquo;', $next = '&raquo;', $splitPage = 3, $splitWord = '...', $template = '')
     {
         if ($this->have()) {
             $hasNav = false;
+            $default = array(
+                'wrapTag'       =>  'ol',
+                'wrapClass'     =>  'page-navigator'
+            );
+
+            if (is_string($template)) {
+                parse_str($template, $config);
+            } else {
+                $config = $template;
+            }
+
+            $template = array_merge($default, $config);
+            
             $this->_total = (false === $this->_total ? $this->size($this->_countSql) : $this->_total);
             $this->pluginHandle()->trigger($hasNav)->pageNav($this->_currentPage, $this->_total, 
                 $this->parameter->pageSize, $prev, $next, $splitPage, $splitWord);
@@ -1380,11 +1392,10 @@ class Widget_Archive extends Widget_Abstract_Contents
                 $nav = new Typecho_Widget_Helper_PageNavigator_Box($this->_total, 
                     $this->_currentPage, $this->parameter->pageSize, $query);
                 
-                /** 添加判断防止输入错误的标签，判断逻辑：如果为 <ul>，使用 <ul>；否则，使用 <ol> */
-                $label = ($label == 'ul') ? 'ul' : 'ol';
-                echo '<' . $label . ' class="' . $class . '">';
-                $nav->render($prev, $next, $splitPage, $splitWord, $currentClass);
-                echo '</' . $label . '>';
+                echo '<' . $template['wrapTag'] . (empty($template['wrapClass']) 
+                    ? '' : ' class="' . $template['wrapClass'] . '"') . '>';
+                $nav->render($prev, $next, $splitPage, $splitWord, $template);
+                echo '</' . $template['wrapTag'] . '>';
             }
         }
     }
