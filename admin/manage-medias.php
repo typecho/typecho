@@ -18,11 +18,11 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <div class="operate">
                             <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox" class="typecho-table-select-all" /></label>
                             <div class="btn-group btn-drop">
-                            <button class="dropdown-toggle btn-s" type="button"><i class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i class="i-caret-down"></i></button>
+                            <button class="btn dropdown-toggle btn-s" type="button"><i class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i class="i-caret-down"></i></button>
                             <ul class="dropdown-menu">
                                 <li><a lang="<?php _e('你确认要删除这些文件吗?'); ?>" href="<?php $options->index('/action/contents-attachment-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
                             </ul>
-                            <button class="btn-s btn-warn btn-operate" href="<?php $options->index('/action/contents-attachment-edit?do=clear'); ?>" lang="<?php _e('您确认要清理未归档的文件吗?'); ?>"><?php _e('清理未归档文件'); ?></button>
+                            <button class="btn btn-s btn-warn btn-operate" href="<?php $options->index('/action/contents-attachment-edit?do=clear'); ?>" lang="<?php _e('您确认要清理未归档的文件吗?'); ?>"><?php _e('清理未归档文件'); ?></button>
                             </div>
                         </div>
                         <div class="search" role="search">
@@ -30,7 +30,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <a href="<?php $options->adminUrl('manage-medias.php'); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
                             <?php endif; ?>
                             <input type="text" class="text-s" placeholder="<?php _e('请输入关键字'); ?>" value="<?php echo htmlspecialchars($request->keywords); ?>"<?php if ('' == $request->keywords): ?> onclick="value='';name='keywords';" <?php else: ?> name="keywords"<?php endif; ?>/>
-                            <button type="submit" class="btn-s"><?php _e('筛选'); ?></button>
+                            <button type="submit" class="btn btn-s"><?php _e('筛选'); ?></button>
                         </div>
                     </form>
                 </div><!-- end .typecho-list-operate -->
@@ -94,12 +94,12 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <div class="operate">
                             <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox" class="typecho-table-select-all" /></label>
                             <div class="btn-group btn-drop">
-                                <button class="dropdown-toggle btn-s" type="button"><i class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i class="i-caret-down"></i></button>
+                                <button class="btn dropdown-toggle btn-s" type="button"><i class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i class="i-caret-down"></i></button>
                                 <ul class="dropdown-menu">
                                     <li><a lang="<?php _e('你确认要删除这些文件吗?'); ?>" href="<?php $options->index('/action/contents-attachment-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
                                 </ul>
                             </div>
-                            <button class="btn-s btn-warn btn-operate" href="<?php $options->index('/action/contents-attachment-edit?do=clear'); ?>" lang="<?php _e('您确认要清理未归档的文件吗?'); ?>"><?php _e('清理未归档文件'); ?></button>
+                            <button class="btn btn-s btn-warn btn-operate" href="<?php $options->index('/action/contents-attachment-edit?do=clear'); ?>" lang="<?php _e('您确认要清理未归档的文件吗?'); ?>"><?php _e('清理未归档文件'); ?></button>
                         </div>
                         <?php if($attachments->have()): ?>
                         <ul class="typecho-pager">

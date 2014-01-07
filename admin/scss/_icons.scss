@@ -5,9 +5,7 @@
 $icons: sprite-map("icons/*.png");
 $icons-2x: sprite-map("icons-2x/*.png");
 
-%i-16 {
-  width: 16px;
-  height: 16px;
+%i-base {
   display: inline-block;
   vertical-align: text-bottom;
   background: $icons no-repeat;
@@ -15,6 +13,18 @@ $icons-2x: sprite-map("icons-2x/*.png");
   &:hover {
     @include opacity(0.75);
   }
+}
+
+%i-16 {
+  @extend %i-base;
+  width: 16px;
+  height: 16px;
+}
+
+%i-24 {
+  @extend %i-base;
+  width: 24px;
+  height: 24px;
 }
 
 .i-edit {
@@ -25,9 +35,18 @@ $icons-2x: sprite-map("icons-2x/*.png");
   @extend %i-16;
   background-position: sprite-position($icons, icon-delete);
 }
+
+
+// 大号上传按钮
+
 .i-upload {
-  @extend %i-16;
+  @extend %i-24;
   background-position: sprite-position($icons, icon-upload);
+}
+
+.i-upload-active {
+  @extend %i-24;
+  background-position: sprite-position($icons, icon-upload-active);
 }
 
 // 小箭头

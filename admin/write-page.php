@@ -42,8 +42,8 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                     <p class="submit clearfix">
                         <span class="right"> 
                             <input type="hidden" name="cid" value="<?php $page->cid(); ?>" />
-                            <button type="submit" name="do" value="save" id="btn-save"><?php _e('保存草稿'); ?></button>
-                            <button type="submit" name="do" value="publish" class="primary" id="btn-submit"><?php _e('发布页面'); ?></button>
+                            <button type="submit" name="do" value="save" id="btn-save" class="btn"><?php _e('保存草稿'); ?></button>
+                            <button type="submit" name="do" value="publish" class="btn primary" id="btn-submit"><?php _e('发布页面'); ?></button>
                             <?php if ($options->markdown && (!$page->have() || $page->isMarkdown)): ?>
                             <input type="hidden" name="markdown" value="1" />
                             <?php endif; ?>
@@ -85,7 +85,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
 
                         <?php Typecho_Plugin::factory('admin/write-page.php')->option($page); ?>
 
-                        <button type="button" id="advance-panel-btn" class="btn-xs"><?php _e('高级选项'); ?> <i class="i-caret-down"></i></button>
+                        <button type="button" id="advance-panel-btn" class="btn btn-xs"><?php _e('高级选项'); ?> <i class="i-caret-down"></i></button>
                         <div id="advance-panel">
                             <section class="typecho-post-option visibility-option">
                                 <label for="visibility" class="typecho-label"><?php _e('公开度'); ?></label>

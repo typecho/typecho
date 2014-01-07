@@ -47,8 +47,8 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                     <p class="submit clearfix">
                         <span class="right">
                             <input type="hidden" name="cid" value="<?php $post->cid(); ?>" />
-                            <button type="submit" name="do" value="save" id="btn-save"><?php _e('保存草稿'); ?></button>
-                            <button type="submit" name="do" value="publish" class="primary" id="btn-submit"><?php _e('发布文章'); ?></button>
+                            <button type="submit" name="do" value="save" id="btn-save" class="btn"><?php _e('保存草稿'); ?></button>
+                            <button type="submit" name="do" value="publish" class="btn primary" id="btn-submit"><?php _e('发布文章'); ?></button>
                             <?php if ($options->markdown && (!$post->have() || $post->isMarkdown)): ?>
                             <input type="hidden" name="markdown" value="1" />
                             <?php endif; ?>
@@ -96,7 +96,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
 
                         <?php Typecho_Plugin::factory('admin/write-post.php')->option($post); ?>
 
-                        <button type="button" id="advance-panel-btn" class="btn-xs"><?php _e('高级选项'); ?> <i class="i-caret-down"></i></button>
+                        <button type="button" id="advance-panel-btn" class="btn btn-xs"><?php _e('高级选项'); ?> <i class="i-caret-down"></i></button>
                         <div id="advance-panel">
                             <?php if($user->pass('editor', true)): ?>
                             <section class="typecho-post-option visibility-option">

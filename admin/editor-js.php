@@ -169,11 +169,12 @@ $(document).ready(function () {
     <?php Typecho_Plugin::factory('admin/editor-js.php')->markdownEditor($content); ?>
 
     var input = $('#text'), th = textarea.height(), ph = preview.height(),
-        uploadBtn = $('<button type="button" id="btn-fullscreen-upload">'
+        uploadBtn = $('<button type="button" id="btn-fullscreen-upload" class="btn btn-link">'
             + '<i class="i-upload"><?php _e('附件'); ?></i></button>')
             .prependTo('.submit .right')
             .click(function() {
                 $(this).toggleClass('active');
+                $(this).find('i').toggleClass('i-upload-active');
                 $('.tab-content').toggleClass('hidden');
                 $('.typecho-option-tabs li').toggleClass('active');
 
@@ -259,8 +260,8 @@ $(document).ready(function () {
         initMarkdown();
     } else {
         var notice = $('<div class="message notice"><?php _e('这篇文章不是由Markdown语法创建的, 继续使用Markdown编辑它吗?'); ?> '
-            + '<button class="btn-xs primary yes"><?php _e('是'); ?></button> ' 
-            + '<button class="btn-xs no"><?php _e('否'); ?></button></div>')
+            + '<button class="btn btn-xs primary yes"><?php _e('是'); ?></button> ' 
+            + '<button class="btn btn-xs no"><?php _e('否'); ?></button></div>')
             .hide().insertBefore(textarea).slideDown();
 
         $('.yes', notice).click(function () {

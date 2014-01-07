@@ -38,7 +38,7 @@ $defaultFields = isset($post) ? $post->getDefaultFieldItems() : $page->getDefaul
                                     <textarea name="fieldValues[]" id="fieldvalue" class="text-s w-100" rows="2"><?php echo htmlspecialchars($field[$field['type'] . '_value']); ?></textarea>
                                 </td>
                                 <td>
-                                    <button type="button" class="btn-xs"><?php _e('删除'); ?></button>
+                                    <button type="button" class="btn btn-xs"><?php _e('删除'); ?></button>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
@@ -61,13 +61,13 @@ $defaultFields = isset($post) ? $post->getDefaultFieldItems() : $page->getDefaul
                                     <textarea name="fieldValues[]" placeholder="<?php _e('字段值'); ?>" id="fieldvalue" class="text-s w-100" rows="2"></textarea>
                                 </td>
                                 <td>
-                                    <button type="button" class="btn-xs"><?php _e('删除'); ?></button>
+                                    <button type="button" class="btn btn-xs"><?php _e('删除'); ?></button>
                                 </td>
                             </tr>
                             <?php endif; ?>
                         </table>
                         <div class="description clearfix">
-                            <button type="button" class="btn-xs operate-add"><?php _e('+添加字段'); ?></button>
+                            <button type="button" class="btn btn-xs operate-add"><?php _e('+添加字段'); ?></button>
                             <?php _e('自定义字段可以扩展你的模板功能, 使用方法参见 <a href="http://docs.typecho.org/help/custom-fields">帮助文档</a>'); ?>
                         </div>
                     </section>

@@ -25,7 +25,7 @@
   }
 }
 
-button {
+.btn {
   @include button(#E9E9E6);
 
   display: inline-block;
@@ -65,8 +65,12 @@ button {
   color: #FFF;
 }
 
-.btn-text {
-  background-color: transparent !important;
+.btn-link,
+.btn-link:hover,
+.btn-link:focus,
+.btn-link:active,
+.btn-link.active {
+  background-color: transparent;
 }
 
 /* 下拉菜单 */

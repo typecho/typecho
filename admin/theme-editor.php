@@ -35,7 +35,7 @@ Typecho_Widget::widget('Widget_Themes_Files')->to($files);
                             <?php if($files->currentIsWriteable()): ?>
                             <input type="hidden" name="theme" value="<?php echo $files->currentTheme(); ?>" />
                             <input type="hidden" name="edit" value="<?php echo $files->currentFile(); ?>" />
-                            <button type="submit" class="primary"><?php _e('保存文件'); ?></button>
+                            <button type="submit" class="btn primary"><?php _e('保存文件'); ?></button>
                             <?php else: ?>
                                 <em><?php _e('此文件无法写入'); ?></em>
                             <?php endif; ?>

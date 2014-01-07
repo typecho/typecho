@@ -26,7 +26,7 @@ include 'header.php';
                 <input type="email" id="mail" name="mail" placeholder="<?php _e('Email'); ?>" value="<?php echo $rememberMail; ?>" class="text-l w-100" />
             </p>
             <p class="submit">
-                <button type="submit" class="btn-l w-100 primary"><?php _e('注册'); ?></button>
+                <button type="submit" class="btn btn-l w-100 primary"><?php _e('注册'); ?></button>
             </p>
         </form>
         

@@ -24,7 +24,7 @@ include 'header.php';
                 <input type="password" id="password" name="password" class="text-l w-100" placeholder="<?php _e('密码'); ?>" />
             </p>
             <p class="submit">
-                <button type="submit" class="btn-l w-100 primary"><?php _e('登录'); ?></button>
+                <button type="submit" class="btn btn-l w-100 primary"><?php _e('登录'); ?></button>
                 <input type="hidden" name="referer" value="<?php echo htmlspecialchars($request->get('referer')); ?>" />
             </p>
             <p>
