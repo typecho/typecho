@@ -40,8 +40,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                         
                     <?php include 'custom-fields.php'; ?>
                     <p class="submit clearfix">
-                        <span class="right">
-                            <button type="button" class="btn-text" id="btn-fullscreen-upload"><i class="i-upload"><?php _e('附件'); ?></i></button>
+                        <span class="right"> 
                             <input type="hidden" name="cid" value="<?php $page->cid(); ?>" />
                             <button type="submit" name="do" value="save" id="btn-save"><?php _e('保存草稿'); ?></button>
                             <button type="submit" name="do" value="publish" class="primary" id="btn-submit"><?php _e('发布页面'); ?></button>

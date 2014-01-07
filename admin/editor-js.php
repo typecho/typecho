@@ -168,7 +168,17 @@ $(document).ready(function () {
 
     <?php Typecho_Plugin::factory('admin/editor-js.php')->markdownEditor($content); ?>
 
-    var input = $('#text'), th = textarea.height(), ph = preview.height();
+    var input = $('#text'), th = textarea.height(), ph = preview.height(),
+        uploadBtn = $('<button type="button" id="btn-fullscreen-upload">'
+            + '<i class="i-upload"><?php _e('附件'); ?></i></button>')
+            .prependTo('.submit .right')
+            .click(function() {
+                $(this).toggleClass('active');
+                $('.tab-content').toggleClass('hidden');
+                $('.typecho-option-tabs li').toggleClass('active');
+
+                return false;
+            });
 
     editor.hooks.chain('enterFakeFullScreen', function () {
         th = textarea.height();

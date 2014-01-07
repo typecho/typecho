@@ -46,7 +46,6 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
 
                     <p class="submit clearfix">
                         <span class="right">
-                            <button type="button" class="btn-text" id="btn-fullscreen-upload"><i class="i-upload"><?php _e('附件'); ?></i></button>
                             <input type="hidden" name="cid" value="<?php $post->cid(); ?>" />
                             <button type="submit" name="do" value="save" id="btn-save"><?php _e('保存草稿'); ?></button>
                             <button type="submit" name="do" value="publish" class="primary" id="btn-submit"><?php _e('发布文章'); ?></button>

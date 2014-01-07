@@ -256,15 +256,6 @@ $(document).ready(function() {
 
         return false;
     });
-
-    // 全屏上传按钮控制
-    $('#btn-fullscreen-upload').click(function() {
-        $(this).toggleClass('active');
-        $('.tab-content').toggleClass('hidden');
-        $('.typecho-option-tabs li').toggleClass('active');
-
-        return false;
-    });
 });
 </script>
 
