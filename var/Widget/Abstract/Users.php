@@ -239,7 +239,7 @@ class Widget_Abstract_Users extends Widget_Abstract
     public function gravatar($size = 40, $rating = 'X', $default = NULL, $class = NULL)
     {
         echo '<img' . (empty($class) ? '' : ' class="' . $class . '"') . ' src="http://www.gravatar.com/avatar/' .
-        md5($this->mail) . '?s=' . $size . '&amp;r=' . $rating . '&amp;d=' . $default . '" alt="' .
+        md5(strtolower($this->mail)) . '?s=' . $size . '&amp;r=' . $rating . '&amp;d=' . $default . '" alt="' .
         $this->screenName . '" width="' . $size . '" height="' . $size . '" />';
     }
 }
