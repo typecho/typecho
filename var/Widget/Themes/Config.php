@@ -85,7 +85,7 @@ class Widget_Themes_Config extends Widget_Abstract_Options
         }
 
         $submit = new Typecho_Widget_Helper_Form_Element_Submit(NULL, NULL, _t('保存设置'));
-        $submit->input->setAttribute('class', 'primary');
+        $submit->input->setAttribute('class', 'btn primary');
         $form->addItem($submit);
         return $form;
     }

@@ -140,7 +140,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
 
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Element_Submit();
-        $submit->input->setAttribute('class', 'primary');
+        $submit->input->setAttribute('class', 'btn primary');
         $form->addItem($submit);
 
         if (NULL != $this->request->uid) {
