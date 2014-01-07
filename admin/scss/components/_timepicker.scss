@@ -71,10 +71,14 @@
   padding-top: 10px;
   border-top: 1px solid #EEE;
 }
-#ui-datepicker-div button { height: 28px; }
-#ui-datepicker-div .ui-datepicker-current {
+#ui-datepicker-div .ui-datepicker-current,
+#ui-datepicker-div .ui-datepicker-close {
   float: left;
+  @extend .btn;
+  @extend .btn-xs;
 }
-#ui-datepicker-div .ui-datepicker-close { float: right; }
+#ui-datepicker-div .ui-datepicker-close {
+  float: right;
+}
 
 .ui-effects-transfer { border: 2px dotted #ccc; }
