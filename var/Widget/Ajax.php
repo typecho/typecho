@@ -106,7 +106,7 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
                         'date'   =>  date('n.j', strtotime($matches[3][$key]))
                     );
 
-                    if ($key > 3) {
+                    if ($key > 8) {
                         break;
                     }
                 }
