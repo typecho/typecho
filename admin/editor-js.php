@@ -173,12 +173,17 @@ $(document).ready(function () {
             + '<i class="i-upload"><?php _e('附件'); ?></i></button>')
             .prependTo('.submit .right')
             .click(function() {
-                $(this).toggleClass('active');
-                $('.tab-content').toggleClass('hidden');
-                $('.typecho-option-tabs li').toggleClass('active');
-
+                $('a', $('.typecho-option-tabs li').not('.active')).trigger('click');
                 return false;
             });
+
+    $('.typecho-option-tabs li').click(function () {
+        if ($('#tab-files-btn', this).length) {
+            uploadBtn.addClass('active');
+        } else {
+            uploadBtn.removeClass('active');
+        }
+    });
 
     editor.hooks.chain('enterFakeFullScreen', function () {
         th = textarea.height();
