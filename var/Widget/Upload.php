@@ -331,7 +331,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                         )));
                     } else {
                         echo "<script>parent.fileUploadComplete('" . $this->request->_id
-                            . "', '" . $this->attachment->url . "', " . json_encode(array(
+                            . "', '" . $this->attachment->url . "', " . Json::encode(array(
                             'cid'       =>  $insertId,
                             'title'     =>  $this->attachment->name,
                             'type'      =>  $this->attachment->type,
@@ -407,7 +407,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                         )));
                     } else {
                         echo "<script>parent.fileUploadComplete('" . $this->request->_id
-                            . "', '" . $this->attachment->url . "', " . json_encode(array(
+                            . "', '" . $this->attachment->url . "', " . Json::encode(array(
                             'cid'       =>  $this->cid,
                             'title'     =>  $this->attachment->name,
                             'type'      =>  $this->attachment->type,

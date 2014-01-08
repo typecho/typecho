@@ -112,7 +112,7 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == Typ
                             'text'      =>  $comments->text
                         );
 
-                        echo htmlspecialchars(json_encode($comment));
+                        echo htmlspecialchars(Json::encode($comment));
                         ?>">
                             <td valign="top">
                                 <input type="checkbox" value="<?php $comments->coid(); ?>" name="coid[]"/>

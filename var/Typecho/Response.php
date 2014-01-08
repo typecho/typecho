@@ -229,7 +229,7 @@ class Typecho_Response
         /** 设置http头信息 */
         $this->setContentType('application/json');
 
-        echo json_encode($message);
+        echo Json::encode($message);
 
         /** 终止后续输出 */
         exit;

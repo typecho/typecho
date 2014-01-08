@@ -174,16 +174,12 @@ $(document).ready(function () {
             .prependTo('.submit .right')
             .click(function() {
                 $('a', $('.typecho-option-tabs li').not('.active')).trigger('click');
-                $(this).find('i').toggleClass('i-upload-active');
                 return false;
             });
 
     $('.typecho-option-tabs li').click(function () {
-        if ($('#tab-files-btn', this).length) {
-            uploadBtn.addClass('active');
-        } else {
-            uploadBtn.removeClass('active');
-        }
+        uploadBtn.find('i').toggleClass('i-upload-active',
+            $('#tab-files-btn', this).length > 0);
     });
 
     editor.hooks.chain('enterFakeFullScreen', function () {
