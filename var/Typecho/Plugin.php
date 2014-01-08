@@ -421,9 +421,38 @@ class Typecho_Plugin
      */
     public function __set($component, $value)
     {
+        $weight = 0;
+
+        if (strpos($component, '_') > 0) {
+            $parts = explode('_', $component, 2);
+            list($component, $weight) = $parts;
+            $weight = intval($weight) - 10;
+        }
+        
         $component = $this->_handle . ':' . $component;
-        self::$_plugins['handles'][$component][] = $value;
+
+        if (!isset(self::$_plugins['handles'][$component])) {
+            self::$_plugins['handles'][$component] = array();
+        }
+
+        if (!isset(self::$_tmp['handles'][$component])) {
+            self::$_tmp['handles'][$component] = array();
+        }
+
+        foreach (self::$_plugins['handles'][$component] as $key => $val) {
+            $key = floatval($key);
+
+            if ($weight > $key) {
+                break;
+            } else if ($weight == $key) {
+                $weight += 0.001;
+            }
+        }
+
+        self::$_plugins['handles'][$component][strval($weight)] = $value;
         self::$_tmp['handles'][$component][] = $value;
+
+        ksort(self::$_plugins['handles'][$component], SORT_NUMERIC);
     }
 
     /**
