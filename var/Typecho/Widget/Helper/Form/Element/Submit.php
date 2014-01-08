@@ -32,7 +32,7 @@ class Typecho_Widget_Helper_Form_Element_Submit extends Typecho_Widget_Helper_Fo
      */
     public function input($name = NULL, array $options = NULL)
     {
-        $this->setAttribute('class', 'btn typecho-option typecho-option-submit');
+        $this->setAttribute('class', 'typecho-option typecho-option-submit');
         $input = new Typecho_Widget_Helper_Layout('button', array('type' => 'submit'));
         $this->container($input);
         $this->inputs[] = $input;
