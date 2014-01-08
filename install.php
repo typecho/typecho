@@ -353,7 +353,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                                         unset($_SESSION['typecho']);
                                         Typecho_Cookie::delete('__typecho_config');
                                         header('Location: ./install.php?finish&user=' . urlencode($config['userName']) 
-                                            . '&password=' . $password);
+                                            . '&password=' . urlencode($password));
                                     } catch (Typecho_Db_Exception $e) {
                                         $success = false;
                                         $code = $e->getCode();
