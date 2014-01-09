@@ -162,6 +162,8 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
             ->where('coid = ?', $coid)->limit(1), array($this, 'push'));
 
             if ($comment && $this->commentIsWriteable()) {
+                $this->pluginHandle()->delete($comment, $this);
+
                 /** 删除评论 */
                 $this->db->query($this->db->delete('table.comments')->where('coid = ?', $coid));
 
@@ -170,6 +172,8 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
                     $this->db->query($this->db->update('table.contents')
                     ->expression('commentsNum', 'commentsNum - 1')->where('cid = ?', $comment['cid']));
                 }
+                
+                $this->pluginHandle()->finishDelete($comment, $this);
 
                 $deleteRows ++;
             }
