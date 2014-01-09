@@ -72,8 +72,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
             return $result;
         }
 
-        $fileName = preg_split("(\/|\\|:)", $file['name']);
-        $file['name'] = array_pop($fileName);
+        $file['name'] = basename($file['name']);
         
         //获取扩展名
         $ext = '';
@@ -152,8 +151,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
             return $result;
         }
 
-        $fileName = preg_split("(\/|\\|:)", $file['name']);
-        $file['name'] = array_pop($fileName);
+        $file['name'] = basename($file['name']);
         
         //获取扩展名
         $ext = '';
