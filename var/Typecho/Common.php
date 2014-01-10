@@ -731,15 +731,26 @@ EOF;
      */
     public static function subStr($str, $start, $length, $trim = "...")
     {
-        if (function_exists('mb_get_info')) {
-            $iLength = mb_strlen($str, self::$charset);
-            $str = mb_substr($str, $start, $length, self::$charset);
-            return ($length < $iLength - $start) ? $str . $trim : $str;
-        } else {
-            preg_match_all("/[\x01-\x7f]|[\xc2-\xdf][\x80-\xbf]|\xe0[\xa0-\xbf][\x80-\xbf]|[\xe1-\xef][\x80-\xbf][\x80-\xbf]|\xf0[\x90-\xbf][\x80-\xbf][\x80-\xbf]|[\xf1-\xf7][\x80-\xbf][\x80-\xbf][\x80-\xbf]/", $str, $info);
-            $str = join("", array_slice($info[0], $start, $length));
-            return ($length < (sizeof($info[0]) - $start)) ? $str . $trim : $str;
+        if (!strlen($str)) {
+            return '';
         }
+
+        $iLength = self::strLen($str) - $start;
+        $tLength = $length < $iLength ? ($length - self::strLen($trim)) : $length;
+
+        if (function_exists('mb_get_info')) {
+            $str = mb_substr($str, $start, $tLength, self::$charset);
+        } else {
+            if ('UTF-8' == strtoupper(self::$charset)) {
+                if (preg_match_all("/./u", $str, $matches)) {
+                    $str = implode('', array_slice($matches[0], $start, $tLength));
+                }
+            } else {
+                $str = substr($str, $start, $tLength);
+            }
+        }
+        
+        return $length < $iLength ? ($str . $trim) : $str;
     }
 
     /**
@@ -754,8 +765,8 @@ EOF;
         if (function_exists('mb_get_info')) {
             return mb_strlen($str, self::$charset);
         } else {
-            preg_match_all("/[\x01-\x7f]|[\xc2-\xdf][\x80-\xbf]|\xe0[\xa0-\xbf][\x80-\xbf]|[\xe1-\xef][\x80-\xbf][\x80-\xbf]|\xf0[\x90-\xbf][\x80-\xbf][\x80-\xbf]|[\xf1-\xf7][\x80-\xbf][\x80-\xbf][\x80-\xbf]/", $str, $info);
-            return sizeof($info[0]);
+            return 'UTF-8' == strtoupper(self::$charset) 
+                ? strlen(utf8_decode($str)) : strlen($info[0]);
         }
     }
 
@@ -792,12 +803,16 @@ EOF;
             }
 
             $str = $return;
+        } else if ('UTF-8' == strtoupper(self::$charset)) {
+            if (preg_match_all("/[\w" . preg_quote('_-') . "]+/u", $str, $matches)) {
+                $str = implode('-', $matches[0]);
+            }
         } else {
             $str = str_replace(array("'", ":", "\\", "/", '"'), "", $str);
             $str = str_replace(array("+", ",", ' ', '，', ' ', ".", "?", "=", "&", "!", "<", ">", "(", ")", "[", "]", "{", "}"), "-", $str);
-            $str = trim($str, '-');
         }
 
+        $str = trim($str, '-_');
         $str = !strlen($str) ? $default : $str;
         return substr($str, 0, $maxLength);
     }
