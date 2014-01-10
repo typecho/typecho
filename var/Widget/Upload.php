@@ -55,6 +55,19 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
     }
 
     /**
+     * 获取安全的文件名 
+     * 
+     * @param string $name 
+     * @static
+     * @access private
+     * @return string
+     */
+    private static function getSafeName($name)
+    {
+        preg_split("/(\/|\\\|:)/"
+    }
+
+    /**
      * 上传文件处理函数,如果需要实现自己的文件哈希或者特殊的文件系统,请在options表里把uploadHandle改成自己的函数
      *
      * @access public
@@ -72,8 +85,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
             return $result;
         }
 
-        $fileName = preg_split("(\/|\\|:)", $file['name']);
-        $file['name'] = array_pop($fileName);
+        $file['name'] = basename($file['name']);
         
         //获取扩展名
         $ext = '';
@@ -152,8 +164,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
             return $result;
         }
 
-        $fileName = preg_split("(\/|\\|:)", $file['name']);
-        $file['name'] = array_pop($fileName);
+        $file['name'] = basename($file['name']);
         
         //获取扩展名
         $ext = '';
