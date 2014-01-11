@@ -288,6 +288,10 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         if (!empty($_FILES)) {
             $file = array_pop($_FILES);
             if (0 == $file['error'] && is_uploaded_file($file['tmp_name'])) {
+                // xhr的send无法支持utf8
+                if ($this->request->isAjax()) {
+                    $file['name'] = urldecode($file['name']);
+                }
                 $result = self::uploadHandle($file);
 
                 if (false !== $result) {
@@ -379,6 +383,11 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                 if (!$this->allow('edit')) {
                     $this->response->setStatus(403);
                     exit;
+                }
+
+                // xhr的send无法支持utf8
+                if ($this->request->isAjax()) {
+                    $file['name'] = urldecode($file['name']);
                 }
 
                 $result = self::modifyHandle($this->row, $file);
