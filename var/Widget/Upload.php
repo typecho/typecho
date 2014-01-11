@@ -62,9 +62,14 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
      * @access private
      * @return string
      */
-    private static function getSafeName($name)
+    private static function getSafeName(&$name)
     {
-        preg_split("/(\/|\\\|:)/"
+        $name = str_replace('\\', '/', $name);
+        $name = false === strpos($name, '/') ? ('a' . $name) : str_replace('/', '/a', $name);
+        $info = pathinfo($name);
+        $name = substr($info['basename'], 1);
+    
+        return isset($info['extension']) ? $info['extension'] : '';
     }
 
     /**
@@ -85,14 +90,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
             return $result;
         }
 
-        $file['name'] = basename($file['name']);
-        
-        //获取扩展名
-        $ext = '';
-        $part = explode('.', $file['name']);
-        if (($length = count($part)) > 1) {
-            $ext = strtolower($part[$length - 1]);
-        }
+        $ext = self::getSafeName($file['name']);
 
         if (!self::checkFileType($ext)) {
             return false;
@@ -164,15 +162,8 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
             return $result;
         }
 
-        $file['name'] = basename($file['name']);
+        $ext = self::getSafeName($file['name']);
         
-        //获取扩展名
-        $ext = '';
-        $part = explode('.', $file['name']);
-        if (($length = count($part)) > 1) {
-            $ext = strtolower($part[$length - 1]);
-        }
-
         if ($content['attachment']->type != $ext) {
             return false;
         }
