@@ -73,6 +73,7 @@ class Typecho_Db_Query
             'offset' => NULL,
             'order'  => NULL,
             'group'  => NULL,
+            'having'  => NULL,
             'rows'   => array(),
         );
     }
@@ -336,6 +337,28 @@ class Typecho_Db_Query
     public function group($key)
     {
         $this->_sqlPreBuild['group'] = ' GROUP BY ' . $this->filterColumn($key);
+        return $this;
+    }
+
+    /**
+     * HAVING (HAVING)
+     *
+     * @return Typecho_Db_Query
+     */
+    public function having()
+    {
+        $condition = func_get_arg(0);
+        $condition = str_replace('?', "%s", $this->filterColumn($condition));
+        $operator = empty($this->_sqlPreBuild['having']) ? ' HAVING ' : ' AND';
+
+        if (func_num_args() <= 1) {
+            $this->_sqlPreBuild['having'] .= $operator . ' (' . $condition . ')';
+        } else {
+            $args = func_get_args();
+            array_shift($args);
+            $this->_sqlPreBuild['having'] .= $operator . ' (' . vsprintf($condition, array_map(array($this->_adapter, 'quoteValue'), $args)) . ')';
+        }
+
         return $this;
     }
 
