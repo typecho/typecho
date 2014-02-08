@@ -3247,7 +3247,13 @@ class MarkdownExtraExtended extends MarkdownExtra {
 		//$codeblock = "<pre><code>$codeblock</code></pre>";
 		//$cb = "<pre><code";
 		$cb = empty($matches[3]) ? "<pre><code" : "<pre class=\"linenums:$matches[3]\"><code"; 
-		$cb .= empty($matches[2]) ? ">" : " class=\"lang-$matches[2]\">";
+		if (empty($matches[2])) {
+        		$cb .= ">";
+    		} else if (in_array($matches[2], array("plain", "text", "txt"))) {
+        		$cb .= " class=\"no-highlight\">";
+    		} else {
+        		$cb .= " class=\"lang-$matches[2]\">";
+    		}
 		$cb .= "$codeblock</code></pre>";
 		return "\n\n".$this->hashBlock($cb)."\n\n";
 	}
