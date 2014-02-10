@@ -606,9 +606,12 @@ a.operate-reply {
   height: 100px;
 }
 
-.typecho-page-main .typecho-option span.multiline {
+.typecho-page-main .typecho-option .multiline {
   display: block;
   margin: .3em 0;
+  &.hidden {
+    display: none;
+  }
 }
 
 
