@@ -10,9 +10,6 @@
  * @version $Id$
  */
 
-/** Typecho_Http_Client_Adapter */
-require_once 'Typecho/Http/Client/Adapter.php';
-
 /**
  * CURL适配器
  *
@@ -111,8 +108,6 @@ class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
 
         $response = curl_exec($ch);
         if (false === $response) {
-            /** Typecho_Http_Client_Exception */
-            require_once 'Typecho/Http/Client/Exception.php';
             throw new Typecho_Http_Client_Exception(curl_error($ch), 500);
         }
 

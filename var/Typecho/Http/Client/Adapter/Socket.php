@@ -10,9 +10,6 @@
  * @version $Id$
  */
 
-/** Typecho_Http_Client_Adapter */
-require_once 'Typecho/Http/Client/Adapter.php';
-
 /**
  * Socket适配器
  *

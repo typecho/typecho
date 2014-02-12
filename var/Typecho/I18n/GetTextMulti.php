@@ -7,9 +7,6 @@
  * @version    $Id$
  */
 
-/** Typecho_I18n_GetText */
-require_once 'Typecho/I18n/GetText.php';
-
 /**
  * 用于解决一个多个mo文件带来的读写问题
  * 我们重写了一个文件读取类

@@ -9,9 +9,6 @@
  * @version $Id$
  */
 
-/** 载入api支持 */
-require_once 'Typecho/Common.php';
-
 /**
  * cookie支持
  *

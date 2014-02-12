@@ -16,9 +16,6 @@
  * @version    $Id: Validation.php 106 2008-04-11 02:23:54Z magike.net $
  */
 
-/** Typecho_Common */
-require_once 'Typecho/Common.php';
-
 /**
  * 验证类
  *

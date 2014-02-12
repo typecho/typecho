@@ -7,12 +7,6 @@
  * @version    $Id: Widget.php 107 2008-04-11 07:14:43Z magike.net $
  */
 
-/** Typecho_Config */
-require_once 'Typecho/Config.php';
-
-/** Typecho_Plugin */
-require_once 'Typecho/Plugin.php';
-
 /**
  * Typecho组件基类
  *
@@ -132,8 +126,6 @@ abstract class Typecho_Widget
         if ($condition) {
             return $this;
         } else {
-            /** Typecho_Widget_Helper_Null */
-            require_once 'Typecho/Widget/Helper/Empty.php';
             return new Typecho_Widget_Helper_Empty();
         }
     }
@@ -171,8 +163,6 @@ abstract class Typecho_Widget
 
             /** 如果类不存在 */
             if (!class_exists($className)) {
-                /** Typecho_Exception */
-                require_once 'Typecho/Widget/Exception.php';
                 throw new Typecho_Widget_Exception($className);
             }
 

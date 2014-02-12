@@ -7,9 +7,6 @@
  * @version    $Id$
  */
 
-/** 数据库适配器接口 */
-require_once 'Typecho/Db/Adapter/Pdo.php';
-
 /**
  * 数据库Pdo_SQLite适配器
  *

@@ -7,9 +7,6 @@
  * @version    $Id: DbException.php 52 2008-03-18 08:04:01Z magike.net $
  */
 
-/** 异常基类 */
-require_once 'Typecho/Exception.php';
-
 /**
  * Http客户端异常类
  *

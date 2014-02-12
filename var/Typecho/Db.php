@@ -7,12 +7,6 @@
  * @version    $Id: Db.php 107 2008-04-11 07:14:43Z magike.net $
  */
 
-/** 配置管理 */
-require_once 'Typecho/Config.php';
-
-/** sql构建器 */
-require_once 'Typecho/Db/Query.php';
-
 /**
  * 包含获取数据支持方法的类.
  * 必须定义__TYPECHO_DB_HOST__, __TYPECHO_DB_PORT__, __TYPECHO_DB_NAME__,
@@ -123,7 +117,6 @@ class Typecho_Db
         $this->_adapterName = $adapterName;
 
         /** 数据库适配器 */
-        require_once 'Typecho/Db/Adapter/' . str_replace('_', '/', $adapterName) . '.php';
         $adapterName = 'Typecho_Db_Adapter_' . $adapterName;
 
         if (!call_user_func(array($adapterName, 'isAvailable'))) {
@@ -233,7 +226,6 @@ class Typecho_Db
     {
         if (empty(self::$_instance)) {
             /** Typecho_Db_Exception */
-            require_once 'Typecho/Db/Exception.php';
             throw new Typecho_Db_Exception('Missing Database Object');
         }
 
@@ -310,7 +302,6 @@ class Typecho_Db
         if (!isset($this->_connectedPool[$op])) {
             if (empty($this->_pool[$op])) {
                 /** Typecho_Db_Exception */
-                require_once 'Typecho/Db/Exception.php';
                 throw new Typecho_Db_Exception('Missing Database Connection');
             }
 

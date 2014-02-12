@@ -7,9 +7,6 @@
  * @version    $Id: Mysql.php 89 2008-03-31 00:10:57Z magike.net $
  */
 
-/** 数据库适配器接口 */
-require_once 'Typecho/Db/Adapter/Pdo.php';
-
 /**
  * 数据库Pdo_Mysql适配器
  *

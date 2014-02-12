@@ -7,9 +7,6 @@
  * @version    $Id: Mysql.php 103 2008-04-09 16:22:43Z magike.net $
  */
 
-/** 数据库适配器接口 */
-require_once 'Typecho/Db/Adapter.php';
-
 /**
  * 数据库Mysql适配器
  *
@@ -56,7 +53,6 @@ class Typecho_Db_Adapter_Mysql implements Typecho_Db_Adapter
         }
 
         /** 数据库异常 */
-        require_once 'Typecho/Db/Adapter/Exception.php';
         throw new Typecho_Db_Adapter_Exception(@mysql_error($this->_dbLink));
     }
 
@@ -77,7 +73,6 @@ class Typecho_Db_Adapter_Mysql implements Typecho_Db_Adapter
         }
 
         /** 数据库异常 */
-        require_once 'Typecho/Db/Query/Exception.php';
         throw new Typecho_Db_Query_Exception(@mysql_error($this->_dbLink), mysql_errno($this->_dbLink));
     }
 

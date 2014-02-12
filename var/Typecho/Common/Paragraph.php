@@ -8,9 +8,6 @@
  * @license GNU General Public License 2.0
  * @version $Id$
  */
- 
-/** 载入api支持 */
-require_once 'Typecho/Common.php';
 
 /**
  * 用于对自动分段做处理

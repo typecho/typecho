@@ -7,9 +7,6 @@
  * @version    $Id: DbQuery.php 97 2008-04-04 04:39:54Z magike.net $
  */
 
-/** Typecho_Config */
-require_once 'Typecho/Config.php';
-
 /**
  * Typecho数据库查询语句构建类
  * 使用方法:

@@ -7,9 +7,6 @@
  * @version    $Id$
  */
 
-/** Typecho_Widget_Helper_PageNavigator */
-require_once 'Typecho/Widget/Helper/PageNavigator.php';
-
 /**
  * 盒状分页样式
  *
