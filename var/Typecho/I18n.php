@@ -78,7 +78,6 @@ class Typecho_I18n
     private static function init()
     {
         /** GetText支持 */
-        require_once 'Typecho/I18n/GetTextMulti.php';
         self::$_loaded = new Typecho_I18n_GetTextMulti(self::$_lang);
         return true;
     }

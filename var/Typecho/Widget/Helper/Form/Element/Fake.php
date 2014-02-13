@@ -1,6 +1,6 @@
 <?php
 /**
- * 密码输入表单项帮手
+ * 虚拟域帮手类
  *
  * @category typecho
  * @package Widget
@@ -10,15 +10,49 @@
  */
 
 /**
- * 密码输入表单项帮手类
+ * 虚拟域帮手类
  *
  * @category typecho
  * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Typecho_Widget_Helper_Form_Element_Password extends Typecho_Widget_Helper_Form_Element
+class Typecho_Widget_Helper_Form_Element_Fake extends Typecho_Widget_Helper_Form_Element
 {
+    /**
+     * 构造函数
+     *
+     * @access public
+     * @param string $name 表单输入项名称
+     * @param mixed $value 表单默认值
+     * @return void
+     */
+    public function __construct($name, $value)
+    {
+        $this->name = $name;
+        self::$uniqueId ++;
+
+        /** 运行自定义初始函数 */
+        $this->init();
+
+        /** 初始化表单项 */
+        $this->input = $this->input($name, $options);
+
+        /** 初始化表单值 */
+        if (NULL !== $value) {
+            $this->value($value);
+        }
+    }
+
+    /**
+     * 自定义初始函数
+     *
+     * @access public
+     * @return void
+     */
+    public function init()
+    {}
+
     /**
      * 初始化当前输入项
      *
@@ -29,10 +63,7 @@ class Typecho_Widget_Helper_Form_Element_Password extends Typecho_Widget_Helper_
      */
     public function input($name = NULL, array $options = NULL)
     {
-        $input = new Typecho_Widget_Helper_Layout('input', array('id' => $name . '-0-' . self::$uniqueId,
-        'name' => $name, 'type' => 'password', 'class' => 'password'));
-        $this->label->setAttribute('for', $name . '-0-' . self::$uniqueId);
-        $this->container($input);
+        $input = new Typecho_Widget_Helper_Layout('input');
         $this->inputs[] = $input;
         return $input;
     }
@@ -49,3 +80,4 @@ class Typecho_Widget_Helper_Form_Element_Password extends Typecho_Widget_Helper_
         $this->input->setAttribute('value', $value);
     }
 }
+

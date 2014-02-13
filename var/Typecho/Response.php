@@ -9,9 +9,6 @@
  * @version $Id$
  */
 
-/** 载入api支持 */
-require_once 'Typecho/Common.php';
-
 /**
  * Typecho公用方法
  *
@@ -246,7 +243,6 @@ class Typecho_Response
     public function redirect($location, $isPermanently = false)
     {
         /** Typecho_Common */
-        require_once 'Typecho/Common.php';
         $location = Typecho_Common::safeUrl($location);
 
         if ($isPermanently) {

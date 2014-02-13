@@ -295,7 +295,6 @@ class Typecho_Common
             $code = $exception;
         }
 
-        require_once 'Typecho/Response.php';
         $charset = self::$charset;
 
         if ($isException && $exception instanceof Typecho_Db_Exception) {
@@ -330,7 +329,6 @@ class Typecho_Common
 
         /** 设置http code */
         if (is_numeric($code) && $code > 200) {
-            require_once 'Typecho/Response.php';
             Typecho_Response::setStatus($code);
         }
 
@@ -876,7 +874,6 @@ EOF;
     {
         static $loaded;
         if (!$loaded) {
-            require_once 'Typecho/Common/Paragraph.php';
             $loaded = true;
         }
         

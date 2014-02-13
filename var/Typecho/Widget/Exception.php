@@ -7,9 +7,6 @@
  * @version    $Id: WidgetException.php 46 2008-03-10 13:59:36Z magike.net $
  */
 
-/** 异常基类 */
-require_once 'Typecho/Exception.php';
-
 /**
  * 组件异常类
  *

@@ -10,9 +10,6 @@
  * @version $Id$
  */
 
-/** Typecho_Common */
-require_once 'Typecho/Common.php';
-
 /**
  * Http客户端
  *
@@ -50,7 +47,6 @@ class Typecho_Http_Client
         }
 
         foreach ($adapters as $adapter) {
-            require_once 'Typecho/Http/Client/Adapter/' . $adapter . '.php';
             $adapterName = 'Typecho_Http_Client_Adapter_' . $adapter;
             if (Typecho_Common::isAvailableClass($adapterName) && call_user_func(array($adapterName, 'isAvailable'))) {
                 return new $adapterName();

@@ -7,9 +7,6 @@
  * @version    $Id: RouteException.php 104 2008-04-10 07:58:09Z magike.net $
  */
 
-/** 异常基类 */
-require_once 'Typecho/Exception.php';
-
 /**
  * 路由异常类
  *
