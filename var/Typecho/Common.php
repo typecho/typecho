@@ -435,6 +435,23 @@ EOF;
     }
 
     /**
+     * 检测是否在app engine上运行，屏蔽某些功能 
+     * 
+     * @static
+     * @access public
+     * @return boolean
+     */
+    public static function isAppEngine()
+    {
+        return !empty($_SERVER['HTTP_APPNAME'])     // SAE
+            || !!getenv('HTTP_BAE_ENV_APPID')       // BAE
+            || !!getenv('HTTP_BAE_LOGID')           // BAE 3.0
+            || ini_get('acl.app_url')               // ACE
+            || (isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false) // GAE
+            ;
+    }
+
+    /**
      * 递归去掉数组反斜线
      *
      * @access public
