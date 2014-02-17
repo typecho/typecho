@@ -324,41 +324,22 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                     /** 增加插件接口 */
                     $this->pluginHandle()->upload($this);
 
-                    if ($this->request->isAjax()) {
-                        $this->response->throwJson(array($this->attachment->url, array(
-                            'cid'       =>  $insertId,
-                            'title'     =>  $this->attachment->name,
-                            'type'      =>  $this->attachment->type,
-                            'size'      =>  $this->attachment->size,
-                            'bytes'      =>  number_format(ceil($this->attachment->size / 1024)) . ' Kb',
-                            'isImage'   =>  $this->attachment->isImage,
-                            'url'       =>  $this->attachment->url,
-                            'permalink' =>  $this->permalink
-                        )));
-                    } else {
-                        echo "<script>parent.fileUploadComplete('" . $this->request->_id
-                            . "', '" . $this->attachment->url . "', " . Json::encode(array(
-                            'cid'       =>  $insertId,
-                            'title'     =>  $this->attachment->name,
-                            'type'      =>  $this->attachment->type,
-                            'size'      =>  $this->attachment->size,
-                            'bytes'      =>  number_format(ceil($this->attachment->size / 1024)) . ' Kb',
-                            'isImage'   =>  $this->attachment->isImage,
-                            'url'       =>  $this->attachment->url,
-                            'permalink' =>  $this->permalink
-                        )) . ');</script>';
-                        
-                        return;
-                    }
+                    $this->response->throwJson(array($this->attachment->url, array(
+                        'cid'       =>  $insertId,
+                        'title'     =>  $this->attachment->name,
+                        'type'      =>  $this->attachment->type,
+                        'size'      =>  $this->attachment->size,
+                        'bytes'      =>  number_format(ceil($this->attachment->size / 1024)) . ' Kb',
+                        'isImage'   =>  $this->attachment->isImage,
+                        'url'       =>  $this->attachment->url,
+                        'permalink' =>  $this->permalink
+                    )));
+
                 }
             }
         }
 
-        if ($this->request->isAjax()) {
-            $this->response->throwJson(false);
-        } else {
-            echo "<script>parent.fileUploadError('" . $this->request->_id . "');</script>";
-        }
+        $this->response->throwJson(false);
     }
 
     /**
@@ -405,41 +386,21 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                     /** 增加插件接口 */
                     $this->pluginHandle()->modify($this);
 
-                    if ($this->request->isAjax()) {
-                        $this->response->throwJson(array($this->attachment->url, array(
-                            'cid'       =>  $this->cid,
-                            'title'     =>  $this->attachment->name,
-                            'type'      =>  $this->attachment->type,
-                            'size'      =>  $this->attachment->size,
-                            'bytes'      =>  number_format(ceil($this->attachment->size / 1024)) . ' Kb',
-                            'isImage'   =>  $this->attachment->isImage,
-                            'url'       =>  $this->attachment->url,
-                            'permalink' =>  $this->permalink
-                        )));
-                    } else {
-                        echo "<script>parent.fileUploadComplete('" . $this->request->_id
-                            . "', '" . $this->attachment->url . "', " . Json::encode(array(
-                            'cid'       =>  $this->cid,
-                            'title'     =>  $this->attachment->name,
-                            'type'      =>  $this->attachment->type,
-                            'size'      =>  $this->attachment->size,
-                            'bytes'      =>  number_format(ceil($this->attachment->size / 1024)) . ' Kb',
-                            'isImage'   =>  $this->attachment->isImage,
-                            'url'       =>  $this->attachment->url,
-                            'permalink' =>  $this->permalink
-                        )) . ');</script>';
-                        
-                        return;
-                    }
+                    $this->response->throwJson(array($this->attachment->url, array(
+                        'cid'       =>  $this->cid,
+                        'title'     =>  $this->attachment->name,
+                        'type'      =>  $this->attachment->type,
+                        'size'      =>  $this->attachment->size,
+                        'bytes'      =>  number_format(ceil($this->attachment->size / 1024)) . ' Kb',
+                        'isImage'   =>  $this->attachment->isImage,
+                        'url'       =>  $this->attachment->url,
+                        'permalink' =>  $this->permalink
+                    )));
                 }
             }
         }
 
-        if ($this->request->isAjax()) {
-            $this->response->throwJson(false);
-        } else {
-            echo "<script>parent.fileUploadError('" . $this->request->_id . "');</script>";
-        }
+        $this->response->throwJson(false);
     }
 
     /**
