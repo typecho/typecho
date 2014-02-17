@@ -267,7 +267,7 @@ $(document).ready(function () {
             var form = $('<form method="post" action="'
                 + t.attr('rel') + '" class="comment-reply">'
                 + '<p><label for="text" class="sr-only"><?php _e('内容'); ?></label><textarea id="text" name="text" class="w-90 mono" rows="3"></textarea></p>'
-                + '<p><button type="submit" class="btn btn-s primary"><?php _e('回复'); ?></button> <button type="button" class="btn-s cancel"><?php _e('取消'); ?></button></p>'
+                + '<p><button type="submit" class="btn btn-s primary"><?php _e('回复'); ?></button> <button type="button" class="btn btn-s cancel"><?php _e('取消'); ?></button></p>'
                 + '</form>').insertBefore($('.comment-action', td));
 
             $('.cancel', form).click(function () {

@@ -169,7 +169,7 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
         $sql['offset'] = (0 == strlen($sql['offset'])) ? NULL : ' OFFSET ' . $sql['offset'];
 
         return 'SELECT ' . $sql['fields'] . ' FROM ' . $sql['table'] .
-        $sql['where'] . $sql['group'] . $sql['order'] . $sql['limit'] . $sql['offset'];
+        $sql['where'] . $sql['group'] . $sql['having'] . $sql['order'] . $sql['limit'] . $sql['offset'];
     }
 
     /**
