@@ -1341,41 +1341,43 @@ a.operate-reply {
   list-style: none;
   margin: 0 10px;
   padding: 0;
+  max-height: 450px;
+  overflow: auto;
   word-break: break-all; }
-  /* line 879, ../scss/style.scss */
+  /* line 881, ../scss/style.scss */
   #file-list li,
   #file-list .insert {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis; }
-  /* line 884, ../scss/style.scss */
+  /* line 886, ../scss/style.scss */
   #file-list li {
     padding: 8px 0;
     border-top: 1px dashed #D9D9D6; }
-  /* line 888, ../scss/style.scss */
+  /* line 890, ../scss/style.scss */
   #file-list .insert {
     display: block;
     max-width: 100%; }
-  /* line 892, ../scss/style.scss */
+  /* line 894, ../scss/style.scss */
   #file-list .file {
     margin-left: 5px; }
-  /* line 895, ../scss/style.scss */
+  /* line 897, ../scss/style.scss */
   #file-list .info {
     text-transform: uppercase; }
 
-/* line 900, ../scss/style.scss */
+/* line 902, ../scss/style.scss */
 #btn-fullscreen-upload {
   visibility: hidden; }
 
 /**
 * 附件管理
 */
-/* line 908, ../scss/style.scss */
+/* line 910, ../scss/style.scss */
 .edit-media button {
   margin-right: 6px; }
 
 /* 拖动调整 textarea 大小 */
-/* line 911, ../scss/style.scss */
+/* line 913, ../scss/style.scss */
 .resize {
   display: block;
   margin: 2px auto 0;
@@ -1384,14 +1386,14 @@ a.operate-reply {
   border-width: 1px 0;
   width: 60px;
   cursor: row-resize; }
-  /* line 919, ../scss/style.scss */
+  /* line 921, ../scss/style.scss */
   .resize i {
     display: block;
     height: 1px;
     background-color: #D9D9D6; }
 
 /* 拖动排序 */
-/* line 927, ../scss/style.scss */
+/* line 929, ../scss/style.scss */
 .tDnD_whileDrag {
   background-color: #FFFBCC; }
 
