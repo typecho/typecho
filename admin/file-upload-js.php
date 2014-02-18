@@ -20,7 +20,7 @@ $(document).ready(function() {
     function updateAttacmentNumber () {
         var btn = $('#tab-files-btn'),
             balloon = $('.balloon', btn),
-            count = $('#file-list li').length;
+            count = $('#file-list li .insert').length;
 
         if (count > 0) {
             if (!balloon.length) {
@@ -33,6 +33,28 @@ $(document).ready(function() {
             balloon.remove();
         }
     }
+
+    $('.upload-area').bind({
+        dragenter   :   function () {
+            $(this).parent().addClass('drag');
+        },
+
+        dragover    :   function (e) {
+            $(this).parent().addClass('drag');
+        },
+
+        drop        :   function () {
+            $(this).parent().removeClass('drag');
+        },
+        
+        dragend     :   function () {
+            $(this).parent().removeClass('drag');
+        },
+
+        dragleave   :   function () {
+            $(this).parent().removeClass('drag');
+        }
+    });
 
     updateAttacmentNumber();
 

@@ -33,7 +33,7 @@ Typecho_Widget::widget('Widget_Contents_Attachment_Edit')->to($attachment);
                 </p>
 
                 <div id="upload-panel" class="p">
-                    <div class="upload-area"><?php _e('拖放文件到这里<br>或者 %s选择文件上传%s', '<a href="###" class="upload-file">', '</a>'); ?></div>
+                    <div class="upload-area" draggable="true"><?php _e('拖放文件到这里<br>或者 %s选择文件上传%s', '<a href="###" class="upload-file">', '</a>'); ?></div>
                     <ul id="file-list"></ul>
                 </div>
             </div>
@@ -64,6 +64,28 @@ $(document).ready(function() {
         }
 
         return false;
+    });
+
+    $('.upload-area').bind({
+        dragenter   :   function () {
+            $(this).parent().addClass('drag');
+        },
+
+        dragover    :   function (e) {
+            $(this).parent().addClass('drag');
+        },
+
+        drop        :   function () {
+            $(this).parent().removeClass('drag');
+        },
+        
+        dragend     :   function () {
+            $(this).parent().removeClass('drag');
+        },
+
+        dragleave   :   function () {
+            $(this).parent().removeClass('drag');
+        }
     });
 
     function fileUploadStart (file) {
