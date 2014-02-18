@@ -157,7 +157,7 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
             ->where('type = ?', 'tag')->limit(1));
 
             if (!$meta) {
-                $this->response->redirect(Typecho_Common::url('manage-metas.php?type=tag', $this->options->adminUrl));
+                $this->response->redirect(Typecho_Common::url('manage-tags.php', $this->options->adminUrl));
             }
 
             $name->value($meta['name']);
@@ -221,7 +221,7 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
         $this->permalink, $this->name), 'success');
 
         /** 转向原页 */
-        $this->response->redirect(Typecho_Common::url('manage-metas.php?type=tag', $this->options->adminUrl));
+        $this->response->redirect(Typecho_Common::url('manage-tags.php', $this->options->adminUrl));
     }
 
     /**
@@ -253,7 +253,7 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
         $this->permalink, $this->name), 'success');
 
         /** 转向原页 */
-        $this->response->redirect(Typecho_Common::url('manage-metas.php?type=tag', $this->options->adminUrl));
+        $this->response->redirect(Typecho_Common::url('manage-tags.php', $this->options->adminUrl));
     }
 
     /**
@@ -281,7 +281,7 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
         $deleteCount > 0 ? 'success' : 'notice');
 
         /** 转向原页 */
-        $this->response->redirect(Typecho_Common::url('manage-metas.php?type=tag', $this->options->adminUrl));
+        $this->response->redirect(Typecho_Common::url('manage-tags.php', $this->options->adminUrl));
     }
 
     /**
@@ -315,7 +315,7 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
         }
 
         /** 转向原页 */
-        $this->response->redirect(Typecho_Common::url('manage-metas.php?type=tag', $this->options->adminUrl));
+        $this->response->redirect(Typecho_Common::url('manage-tags.php', $this->options->adminUrl));
     }
 
     /**

@@ -160,7 +160,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
             ->where('type = ?', 'category')->limit(1));
 
             if (!$meta) {
-                $this->response->redirect(Typecho_Common::url('manage-metas.php', $this->options->adminUrl));
+                $this->response->redirect(Typecho_Common::url('manage-tags.php', $this->options->adminUrl));
             }
 
             $name->value($meta['name']);
@@ -228,7 +228,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $this->permalink, $this->name), 'success');
 
         /** 转向原页 */
-        $this->response->redirect(Typecho_Common::url('manage-metas.php', $this->options->adminUrl));
+        $this->response->redirect(Typecho_Common::url('manage-tags.php', $this->options->adminUrl));
     }
 
     /**
@@ -261,7 +261,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $this->permalink, $this->name), 'success');
 
         /** 转向原页 */
-        $this->response->redirect(Typecho_Common::url('manage-metas.php', $this->options->adminUrl));
+        $this->response->redirect(Typecho_Common::url('manage-tags.php', $this->options->adminUrl));
     }
 
     /**
@@ -289,7 +289,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $deleteCount > 0 ? 'success' : 'notice');
 
         /** 转向原页 */
-        $this->response->redirect(Typecho_Common::url('manage-metas.php', $this->options->adminUrl));
+        $this->response->redirect(Typecho_Common::url('manage-tags.php', $this->options->adminUrl));
     }
 
     /**
@@ -341,7 +341,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
 
         if (!$this->request->isAjax()) {
             /** 转向原页 */
-            $this->response->redirect(Typecho_Common::url('manage-metas.php', $this->options->adminUrl));
+            $this->response->redirect(Typecho_Common::url('manage-tags.php', $this->options->adminUrl));
         } else {
             $this->response->throwJson(array('success' => 1, 'message' => _t('分类排序已经完成')));
         }
@@ -403,7 +403,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         }
 
         /** 转向原页 */
-        $this->response->redirect(Typecho_Common::url('manage-metas.php', $this->options->adminUrl));
+        $this->response->redirect(Typecho_Common::url('manage-tags.php', $this->options->adminUrl));
     }
 
     /**
