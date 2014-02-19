@@ -64,7 +64,7 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
         ->where('table.contents.parent = ? AND (table.contents.type = ? OR table.contents.type = ?)',
             $this->cid, 'post_draft', 'page_draft')
         ->limit(1));
-        
+
         if ($savedPost) {
             $this->modified = $savedPost['modified'];
             return true;

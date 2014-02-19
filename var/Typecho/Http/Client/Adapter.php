@@ -10,9 +10,6 @@
  * @version $Id$
  */
 
-/** Typecho_Http_Client */
-require_once 'Typecho/Http/Client.php';
-
 /**
  * 客户端适配器
  *
@@ -307,8 +304,6 @@ abstract class Typecho_Http_Client_Adapter
         if (!empty($params['host'])) {
             $this->host = $params['host'];
         } else {
-            /** Typecho_Http_Client_Exception */
-            require_once 'Typecho/Http/Client/Exception.php';
             throw new Typecho_Http_Client_Exception('Unknown Host', 500);
         }
 

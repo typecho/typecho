@@ -7,15 +7,6 @@
  * @version    $Id: Route.php 107 2008-04-11 07:14:43Z magike.net $
  */
 
-/** 载入api支持 */
-require_once 'Typecho/Common.php';
-
-/** Typecho_Ruquest */
-require_once 'Typecho/Request.php';
-
-/** Typecho_Widget */
-require_once 'Typecho/Widget.php';
-
 /**
  * Typecho组件基类
  *
@@ -161,7 +152,6 @@ class Typecho_Router
         }
 
         /** 载入路由异常支持 */
-        require_once 'Typecho/Router/Exception.php';
         throw new Typecho_Router_Exception("Path '{$pathInfo}' not found", 404);
     }
 
@@ -195,9 +185,6 @@ class Typecho_Router
      */
     public static function setRoutes($routes)
     {
-        /** 载入路由解析支持 */
-        require_once 'Typecho/Router/Parser.php';
-
         if (isset($routes[0])) {
             self::$_routingTable = $routes[0];
         } else {

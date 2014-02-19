@@ -9,9 +9,6 @@
  * @version $Id$
  */
 
-/** Typecho_Widget_Helper_Form_Element */
-require_once 'Typecho/Widget/Helper/Form/Element.php';
-
 /**
  * 单选框帮手类
  *

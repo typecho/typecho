@@ -1,8 +1,5 @@
 <?php
 
-/** Typecho_I18n */
-require_once 'Typecho/I18n.php';
-
 /**
  * 日期处理
  *

@@ -528,7 +528,7 @@ class Json
     {
         if (function_exists('json_decode')) {
             /** from php 5.1 */
-            $result = json_decode($var);
+            return json_decode($var, $assoc);
         } else {
             $result = self::_decode($var);
         }

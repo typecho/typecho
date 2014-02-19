@@ -295,7 +295,6 @@ class Typecho_Common
             $code = $exception;
         }
 
-        require_once 'Typecho/Response.php';
         $charset = self::$charset;
 
         if ($isException && $exception instanceof Typecho_Db_Exception) {
@@ -330,7 +329,6 @@ class Typecho_Common
 
         /** 设置http code */
         if (is_numeric($code) && $code > 200) {
-            require_once 'Typecho/Response.php';
             Typecho_Response::setStatus($code);
         }
 
@@ -434,6 +432,23 @@ EOF;
         }
 
         return false;
+    }
+
+    /**
+     * 检测是否在app engine上运行，屏蔽某些功能 
+     * 
+     * @static
+     * @access public
+     * @return boolean
+     */
+    public static function isAppEngine()
+    {
+        return !empty($_SERVER['HTTP_APPNAME'])     // SAE
+            || !!getenv('HTTP_BAE_ENV_APPID')       // BAE
+            || !!getenv('HTTP_BAE_LOGID')           // BAE 3.0
+            || ini_get('acl.app_url')               // ACE
+            || (isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false) // GAE
+            ;
     }
 
     /**
@@ -876,7 +891,6 @@ EOF;
     {
         static $loaded;
         if (!$loaded) {
-            require_once 'Typecho/Common/Paragraph.php';
             $loaded = true;
         }
         

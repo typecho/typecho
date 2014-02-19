@@ -61,20 +61,6 @@ if (!isset($_GET['finish']) && file_exists(__TYPECHO_ROOT_DIR__ . '/config.inc.p
 }
 
 /**
- * 检测是否为应用引擎 
- * 
- * @access protected
- * @return void
- */
-function _engine()
-{
-    return !empty($_SERVER['HTTP_APPNAME']) // SAE
-        || !!getenv('HTTP_BAE_ENV_APPID')   // BAE
-        || !!getenv('HTTP_BAE_LOGID')   // BAE 3.0
-        || (isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false); // GAE
-}
-
-/**
  * 获取传递参数
  *
  * @param string $name 参数名称
@@ -506,7 +492,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
 Typecho_Db::set(\$db);
 ";
                                     $contents = implode('', $lines);
-                                    if (!_engine()) {
+                                    if (!Typecho_Common::isAppEngine()) {
                                         @file_put_contents('./config.inc.php', $contents);
                                     }
 

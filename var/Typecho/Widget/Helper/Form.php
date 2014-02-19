@@ -9,12 +9,6 @@
  * @version $Id$
  */
 
-/** Typecho_Widget_Helper_Layout */
-require_once 'Typecho/Widget/Helper/Layout.php';
-
-/** Typecho_Validate */
-require_once 'Typecho/Validate.php';
-
 /**
  * 表单处理帮手
  *

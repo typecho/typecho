@@ -7,9 +7,6 @@
  * @version    $Id$
  */
 
-/** 数据库适配器接口 */
-require_once 'Typecho/Db/Adapter/Pdo.php';
-
 /**
  * 数据库Pdo_SQLite适配器
  *
@@ -73,6 +70,6 @@ class Typecho_Db_Adapter_Pdo_SQLite extends Typecho_Db_Adapter_Pdo
         $sql['offset'] = (0 == strlen($sql['offset'])) ? NULL : ' OFFSET ' . $sql['offset'];
 
         return 'SELECT ' . $sql['fields'] . ' FROM ' . $sql['table'] .
-        $sql['where'] . $sql['group'] . $sql['order'] . $sql['limit'] . $sql['offset'];
+        $sql['where'] . $sql['group'] . $sql['having'] . $sql['order'] . $sql['limit'] . $sql['offset'];
     }
 }
