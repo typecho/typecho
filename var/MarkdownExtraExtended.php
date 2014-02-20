@@ -354,8 +354,8 @@ class Markdown {
 	}
 	protected function _hashHTMLBlocks_callback($matches) {
 		$text = $matches[1];
-		$key  = $this->hashBlock($text);
-		return "\n\n$key\n\n";
+		return $this->hashBlock($text);
+		// return "\n\n$key\n\n";
 	}
 	
 	
@@ -947,7 +947,7 @@ class Markdown {
 		return $text;
 	}
 	protected function _doCodeBlocks_callback($matches) {
-		$codeblock = $this->unhashHTMLBlocks($matches[1]);
+		$codeblock = $this->unhash($matches[1]);
 
 		$codeblock = $this->outdent($codeblock);
 		$codeblock = htmlspecialchars($codeblock, ENT_NOQUOTES);
@@ -1549,11 +1549,6 @@ class Markdown {
 	protected function _unhash_callback($matches) {
 		return $this->html_hashes[trim($matches[0])];
 	}
-
-    protected function unhashHTMLBlocks($text) {
-		return preg_replace_callback("/\n\n(.)\\x1A[0-9]+\\1\n\n/", 
-			array($this, '_unhash_callback'), $text);
-    }
 }
 
 #
@@ -3240,7 +3235,7 @@ class MarkdownExtraExtended extends MarkdownExtra {
 	}
 	
 	public function _doFencedCodeBlocks_callback($matches) {
-		$codeblock = $this->unhashHTMLBlocks($matches[4]);
+		$codeblock = $this->unhash($matches[4]);
 		$codeblock = htmlspecialchars($codeblock, ENT_NOQUOTES);
 		$codeblock = preg_replace_callback('/^\n+/',
 			array($this, '_doFencedCodeBlocks_newlines'), $codeblock);
