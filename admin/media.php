@@ -147,13 +147,14 @@ $(document).ready(function() {
         url             :   '<?php $options->index('/action/upload?do=modify&cid=' . $attachment->cid); ?>',
         runtimes        :   'html5,flash,silverlight,html4',
         flash_swf_url   :   '<?php $options->adminUrl('js/Moxie.swf'); ?>',
-        silverlight_swf_url     :   '<?php $options->adminUrl('js/Moxie.xap'); ?>',
+        silverlight_xap_url     :   '<?php $options->adminUrl('js/Moxie.xap'); ?>',
         drop_element    :   $('.upload-area').get(0),
         filters         :   {
             max_file_size       :   '<?php echo $phpMaxFilesize ?>',
             mime_types          :   [{'title' : '<?php _e('允许上传的文件'); ?>', 'extensions' : '<?php $attachment->attachment->type(); ?>'}],
             prevent_duplicates  :   true
         },
+        multi_selection :   false,
 
         init            :   {
             FilesAdded      :   function (up, files) {

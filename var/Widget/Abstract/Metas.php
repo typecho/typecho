@@ -136,6 +136,21 @@ class Widget_Abstract_Metas extends Widget_Abstract
     }
 
     /**
+     * 获取最大排序
+     * 
+     * @param mixed $type 
+     * @param int $parent 
+     * @access public
+     * @return void
+     */
+    public function getMaxOrder($type, $parent = 0)
+    {
+        return $this->db->fetchObject($this->db->select(array('MAX(order)' => 'maxOrder'))
+        ->from('table.metas')
+        ->where('type = ? AND parent = ?', 'category', $parent))->maxOrder;
+    }
+
+    /**
      * 对数据按照sort字段排序
      *
      * @access public
@@ -183,6 +198,7 @@ class Widget_Abstract_Metas extends Widget_Abstract
                     $contents[] = $content;
                 }
 
+                $this->update(array('parent' => $mid), $this->db->sql()->where('parent = ?', $meta));
                 unset($existsContents);
             }
         }

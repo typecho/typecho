@@ -3,7 +3,7 @@ include 'common.php';
 include 'header.php';
 include 'menu.php';
 
-Typecho_Widget::widget('Widget_Metas_Tag_Cloud', 'sort=mid&desc=0')->to($tags);
+Typecho_Widget::widget('Widget_Metas_Tag_Admin')->to($tags);
 ?>
 
 <div class="main">

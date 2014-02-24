@@ -29,8 +29,9 @@ class Widget_Options_Permalink extends Widget_Abstract_Options implements Widget
      */
     protected function encodeRule($rule)
     {
-        return str_replace(array('{cid}', '{slug}', '{category}', '{year}', '{month}', '{day}', '{mid}'),
-            array('[cid:digital]', '[slug]', '[category]', '[year:digital:4]', '[month:digital:2]', '[day:digital:2]', '[mid:digital]'), $rule);
+        return str_replace(array('{cid}', '{slug}', '{category}', '{category_parents}', '{year}', '{month}', '{day}', '{mid}'),
+            array('[cid:digital]', '[slug]', '[category]', '[category_parents:split:0]',
+                '[year:digital:4]', '[month:digital:2]', '[day:digital:2]', '[mid:digital]'), $rule);
     }
 
     /**
@@ -242,7 +243,7 @@ RewriteRule . {$basePath}index.php [L]
         $patterns['custom'] = _t('个性化定义') . ' <input type="text" class="w-50 text-s mono" name="customPattern" value="' . $customPatternValue . '" />';
 
         $postPattern = new Typecho_Widget_Helper_Form_Element_Radio('postPattern', $patterns,
-        $postPatternValue, _t('自定义文章路径'), _t('可用参数: <code>{cid}</code> 日志 ID, <code>{slug}</code> 日志缩略名, <code>{category}</code> 分类, <code>{year}</code> 年, <code>{month}</code> 月, <code>{day}</code> 日')
+        $postPatternValue, _t('自定义文章路径'), _t('可用参数: <code>{cid}</code> 日志 ID, <code>{slug}</code> 日志缩略名, <code>{category}</code> 分类, <code>{category_parents}</code> 父级分类, <code>{year}</code> 年, <code>{month}</code> 月, <code>{day}</code> 日')
             . '<br />' . _t('选择一种合适的文章静态路径风格, 使得你的网站链接更加友好.') 
             . '<br />' . _t('一旦你选择了某种链接风格请不要轻易修改它.'));
         if ($customPatternValue) {
@@ -251,13 +252,13 @@ RewriteRule . {$basePath}index.php [L]
         $form->addInput($postPattern->multiMode());
 
         /** 独立页面后缀名 */
-        $pagePattern = new Typecho_Widget_Helper_Form_Element_Text('pagePattern', NULL, $this->decodeRule($this->options->routingTable['page']['url']), _t('独立页面路径'), _t('可用参数: <code>{cid}</code> 页面 ID、<code>{slug}</code> 页面缩略名')
+        $pagePattern = new Typecho_Widget_Helper_Form_Element_Text('pagePattern', NULL, $this->decodeRule($this->options->routingTable['page']['url']), _t('独立页面路径'), _t('可用参数: <code>{cid}</code> 页面 ID, <code>{slug}</code> 页面缩略名')
             . '<br />' . _t('请在路径中至少包含上述的一项参数.'));
         $pagePattern->input->setAttribute('class', 'mono w-60');
         $form->addInput($pagePattern->addRule(array($this, 'checkPagePattern'), _t('独立页面路径中没有包含 {cid} 或者 {slug} ')));
 
         /** 分类页面 */
-        $categoryPattern = new Typecho_Widget_Helper_Form_Element_Text('categoryPattern', NULL, $this->decodeRule($this->options->routingTable['category']['url']), _t('分类路径'), _t('可用参数: <code>{mid}</code> 分类 ID、<code>{slug}</code> 分类缩略名')
+        $categoryPattern = new Typecho_Widget_Helper_Form_Element_Text('categoryPattern', NULL, $this->decodeRule($this->options->routingTable['category']['url']), _t('分类路径'), _t('可用参数: <code>{mid}</code> 分类 ID, <code>{slug}</code> 分类缩略名, <code>{category_parents}</code> 父级分类')
             . '<br />' . _t('请在路径中至少包含上述的一项参数.'));
         $categoryPattern->input->setAttribute('class', 'mono w-60');
         $form->addInput($categoryPattern->addRule(array($this, 'checkCategoryPattern'), _t('分类路径中没有包含 {mid} 或者 {slug} ')));

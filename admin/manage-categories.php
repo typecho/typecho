@@ -3,7 +3,7 @@ include 'common.php';
 include 'header.php';
 include 'menu.php';
 
-Typecho_Widget::widget('Widget_Metas_Category_List')->to($categories);
+Typecho_Widget::widget('Widget_Metas_Category_Admin')->to($categories);
 ?>
 
 <div class="main">
@@ -11,7 +11,7 @@ Typecho_Widget::widget('Widget_Metas_Category_List')->to($categories);
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main manage-metas">
             
-                <div class="col-mb-12 col-tb-8" role="main">
+                <div class="col-mb-12" role="main">
                     
                     <form method="post" name="manage_categories" class="operate-form">
                     <div class="typecho-list-operate clearfix">
@@ -31,21 +31,26 @@ Typecho_Widget::widget('Widget_Metas_Category_List')->to($categories);
                                 </ul>
                             </div>
                         </div>
+                        <div class="search" role="search">
+                            <?php $categories->backLink(); ?>
+                        </div>
                     </div>
 
                     <div class="typecho-table-wrap">
                         <table class="typecho-list-table">
                             <colgroup>
                                 <col width="20"/>
-                                <col width="35%"/>
                                 <col width="30%"/>
-                                <col width=""/>
                                 <col width="15%"/>
+                                <col width="25%"/>
+                                <col width=""/>
+                                <col width="10%"/>
                             </colgroup>
                             <thead>
                                 <tr>
                                     <th> </th>
                                     <th><?php _e('名称'); ?></th>
+                                    <th><?php _e('子分类'); ?></th>
                                     <th><?php _e('缩略名'); ?></th>
                                     <th> </th>
                                     <th><?php _e('文章数'); ?></th>
@@ -56,8 +61,16 @@ Typecho_Widget::widget('Widget_Metas_Category_List')->to($categories);
                                 <?php while ($categories->next()): ?>
                                 <tr id="mid-<?php $categories->theId(); ?>">
                                     <td><input type="checkbox" value="<?php $categories->mid(); ?>" name="mid[]"/></td>
-                                    <td><a href="<?php echo $request->makeUriByRequest('mid=' . $categories->mid); ?>"><?php $categories->name(); ?></a>
+                                    <td><a href="<?php $options->adminUrl('category.php?mid=' . $categories->mid); ?>"><?php $categories->name(); ?></a> 
                                     <a href="<?php $categories->permalink(); ?>" title="<?php _e('浏览 %s', $categories->name); ?>"><i class="i-exlink"></i></a>
+                                    </td>
+                                    <td>
+                                    
+                                    <?php if ($categories->children > 0): ?>
+                                    <a href="<?php $options->adminUrl('manage-categories.php?parent=' . $categories->mid); ?>"><?php echo _n('一个分类', '%n个分类', $categories->children); ?></a>
+                                    <?php else: ?>
+                                    <a href="<?php $options->adminUrl('category.php?parent=' . $categories->mid); ?>"><?php echo _e('新增'); ?></a>
+                                    <?php endif; ?>
                                     </td>
                                     <td><?php $categories->slug(); ?></td>
                                     <td>
@@ -72,7 +85,7 @@ Typecho_Widget::widget('Widget_Metas_Category_List')->to($categories);
                                 <?php endwhile; ?>
                                 <?php else: ?>
                                 <tr>
-                                    <td colspan="5"><h6 class="typecho-list-table-title"><?php _e('没有任何分类'); ?></h6></td>
+                                    <td colspan="6"><h6 class="typecho-list-table-title"><?php _e('没有任何分类'); ?></h6></td>
                                 </tr>
                                 <?php endif; ?>
                             </tbody>
@@ -80,9 +93,6 @@ Typecho_Widget::widget('Widget_Metas_Category_List')->to($categories);
                     </div>
                     </form>
                     
-                </div>
-                <div class="col-mb-12 col-tb-4" role="form">
-                    <?php Typecho_Widget::widget('Widget_Metas_Category_Edit')->form()->render(); ?>
                 </div>
         </div>
     </div>
@@ -117,41 +127,12 @@ include 'common-js.php';
             }
         });
 
-        if (table.length > 0) {
-            table.tableSelectable({
-                checkEl     :   'input[type=checkbox]',
-                rowEl       :   'tr',
-                selectAllEl :   '.typecho-table-select-all',
-                actionEl    :   '.dropdown-menu a'
-            });
-        } else {
-            $('.typecho-list-notable').tableSelectable({
-                checkEl     :   'input[type=checkbox]',
-                rowEl       :   'li',
-                selectAllEl :   '.typecho-table-select-all',
-                actionEl    :   '.dropdown-menu a'
-            });
-
-            // $('.typecho-table-select-all').click(function () {
-            //     var selection = $('.tag-selection');
-
-            //     if (0 == selection.length) {
-            //         selection = $('<div class="tag-selection clearfix" />').prependTo('.typecho-mini-panel');
-            //     }
-
-            //     selection.html('');
-
-            //     if ($(this).prop('checked')) {
-            //         $('.typecho-list-notable li').each(function () {
-            //             var span = $('span', this),
-            //                 a = $('<a class="button" href="' + span.attr('rel') + '">' + span.text() + '</a>');
-                        
-            //             this.aHref = a;
-            //             selection.append(a);
-            //         });
-            //     }
-            // });
-        }
+        table.tableSelectable({
+            checkEl     :   'input[type=checkbox]',
+            rowEl       :   'tr',
+            selectAllEl :   '.typecho-table-select-all',
+            actionEl    :   '.dropdown-menu a'
+        });
 
         $('.btn-drop').dropdownMenu({
             btnEl       :   '.dropdown-toggle',
@@ -162,23 +143,6 @@ include 'common-js.php';
             var btn = $(this);
             btn.parents('form').attr('action', btn.attr('rel')).submit();
         });
-
-        // $('.typecho-list-notable li').click(function () {
-        //     var selection = $('.tag-selection'), span = $('span', this),
-        //         a = $('<a class="button" href="' + span.attr('rel') + '">' + span.text() + '</a>'),
-        //         li = $(this);
-
-        //     if (0 == selection.length) {
-        //         selection = $('<div class="tag-selection clearfix" />').prependTo('.typecho-mini-panel');
-        //     }
-
-        //     if (li.hasClass('checked')) {
-        //         this.aHref = a;
-        //         a.appendTo(selection);
-        //     } else {
-        //         this.aHref.remove();
-        //     }
-        // });
 
         <?php if (isset($request->mid)): ?>
         $('.typecho-mini-panel').effect('highlight', '#AACB36');

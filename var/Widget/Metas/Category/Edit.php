@@ -132,12 +132,25 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
 
         /** 分类缩略名 */
         $slug = new Typecho_Widget_Helper_Form_Element_Text('slug', NULL, NULL, _t('分类缩略名'),
-        _t('分类缩略名用于创建友好的链接形式,建议使用字母,数字,下划线和横杠.'));
+        _t('分类缩略名用于创建友好的链接形式, 建议使用字母, 数字, 下划线和横杠.'));
         $form->addInput($slug);
+
+        /** 父级分类 */
+        $options = array(0 => _t('不选择'));
+        $parents = $this->widget('Widget_Metas_Category_List@options', 'levelWalk=1' 
+            . (isset($this->request->mid) ? '&ignore=' . $this->request->mid : ''));
+
+        while ($parents->next()) {
+            $options[$parents->mid] = $parents->nameByLevel;
+        }
+
+        $parent = new Typecho_Widget_Helper_Form_Element_Select('parent', $options, $this->request->parent, _t('父级分类'),
+        _t('此分类将归档在您选择的父级分类下.'));
+        $form->addInput($parent);
 
         /** 分类描述 */
         $description =  new Typecho_Widget_Helper_Form_Element_Textarea('description', NULL, NULL,
-        _t('分类描述'), _t('此文字用于描述分类,在有的主题中它会被显示.'));
+        _t('分类描述'), _t('此文字用于描述分类, 在有的主题中它会被显示.'));
         $form->addInput($description);
 
         /** 分类动作 */
@@ -160,7 +173,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
             ->where('type = ?', 'category')->limit(1));
 
             if (!$meta) {
-                $this->response->redirect(Typecho_Common::url('manage-tags.php', $this->options->adminUrl));
+                $this->response->redirect(Typecho_Common::url('manage-categories.php', $this->options->adminUrl));
             }
 
             $name->value($meta['name']);
@@ -206,15 +219,15 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
     {
         if ($this->form('insert')->validate()) {
             $this->response->goBack();
-        }
+        } 
 
         /** 取出数据 */
-        $category = $this->request->from('name', 'slug', 'description');
+        $category = $this->request->from('name', 'slug', 'description', 'parent');
+        $parent = 0;
+
         $category['slug'] = Typecho_Common::slugName(empty($category['slug']) ? $category['name'] : $category['slug']);
         $category['type'] = 'category';
-        $category['order'] = $this->db->fetchObject($this->db->select(array('MAX(order)' => 'maxOrder'))
-        ->from('table.metas')
-        ->where('type = ?', 'category'))->maxOrder + 1;
+        $category['order'] = $this->getMaxOrder('category', $category['parent']) + 1;
 
         /** 插入数据 */
         $category['mid'] = $this->insert($category);
@@ -228,7 +241,8 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $this->permalink, $this->name), 'success');
 
         /** 转向原页 */
-        $this->response->redirect(Typecho_Common::url('manage-tags.php', $this->options->adminUrl));
+        $this->response->redirect(Typecho_Common::url('manage-categories.php'
+            . ($category['parent'] ? '?parent=' . $category['parent'] : ''), $this->options->adminUrl));
     }
 
     /**
@@ -244,13 +258,17 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         }
 
         /** 取出数据 */
-        $category = $this->request->from('name', 'slug', 'description');
+        $category = $this->request->from('name', 'slug', 'description', 'parent');
         $category['slug'] = Typecho_Common::slugName(empty($category['slug']) ? $category['name'] : $category['slug']);
         $category['type'] = 'category';
+        $category['mid'] = $this->request->mid;
+
+        if ($this->fetchObject($this->select()->where('mid = ?', $category['mid']))->parent != $category['parent']) {
+            $category['order'] = $this->getMaxOrder('category', $category['parent']) + 1;
+        }
 
         /** 更新数据 */
         $this->update($category, $this->db->sql()->where('mid = ?', $this->request->filter('int')->mid));
-        $category['mid'] = $this->request->mid;
         $this->push($category);
 
         /** 设置高亮 */
@@ -261,7 +279,8 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $this->permalink, $this->name), 'success');
 
         /** 转向原页 */
-        $this->response->redirect(Typecho_Common::url('manage-tags.php', $this->options->adminUrl));
+        $this->response->redirect(Typecho_Common::url('manage-categories.php'
+            . ($category['parent'] ? '?parent=' . $category['parent'] : ''), $this->options->adminUrl));
     }
 
     /**
@@ -277,8 +296,11 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
 
         if ($categories && is_array($categories)) {
             foreach ($categories as $category) {
+                $parent = $this->fetchObject($this->select()->where('mid = ?', $category))->parent;
+
                 if ($this->delete($this->db->sql()->where('mid = ?', $category))) {
                     $this->db->query($this->db->sql()->delete('table.relationships')->where('mid = ?', $category));
+                    $this->update(array('parent' => $parent), $this->db->sql()->where('parent = ?', $category));
                     $deleteCount ++;
                 }
             }
@@ -289,7 +311,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $deleteCount > 0 ? 'success' : 'notice');
 
         /** 转向原页 */
-        $this->response->redirect(Typecho_Common::url('manage-tags.php', $this->options->adminUrl));
+        $this->response->goBack();
     }
 
     /**
@@ -341,7 +363,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
 
         if (!$this->request->isAjax()) {
             /** 转向原页 */
-            $this->response->redirect(Typecho_Common::url('manage-tags.php', $this->options->adminUrl));
+            $this->response->redirect(Typecho_Common::url('manage-categories.php', $this->options->adminUrl));
         } else {
             $this->response->throwJson(array('success' => 1, 'message' => _t('分类排序已经完成')));
         }
@@ -403,7 +425,38 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         }
 
         /** 转向原页 */
-        $this->response->redirect(Typecho_Common::url('manage-tags.php', $this->options->adminUrl));
+        $this->response->redirect(Typecho_Common::url('manage-categories.php', $this->options->adminUrl));
+    }
+
+    /**
+     * 获取菜单标题
+     *
+     * @access public
+     * @return string
+     */
+    public function getMenuTitle()
+    {
+        if (isset($this->request->mid)) {
+            $category = $this->db->fetchRow($this->select()
+                ->where('type = ? AND mid = ?', 'category', $this->request->mid));
+
+            if (!empty($category)) {
+                return _t('编辑分类 %s', $category['name']);
+            }
+        
+        } if (isset($this->request->parent)) {
+            $category = $this->db->fetchRow($this->select()
+                ->where('type = ? AND mid = ?', 'category', $this->request->parent));
+
+            if (!empty($category)) {
+                return _t('新增 %s 的子分类', $category['name']);
+            }
+        
+        } else {
+            return;
+        }
+
+        throw new Typecho_Widget_Exception(_t('分类不存在'), 404);
     }
 
     /**

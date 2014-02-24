@@ -771,6 +771,8 @@ Typecho_Date::setTimezoneOffset($options->timezone);
 "parent" int(10) default \'0\' )', Typecho_Db::WRITE);
                 $db->query('INSERT INTO ' . $prefix . 'contents SELECT * FROM ' . $prefix . 'contents_tmp', Typecho_Db::WRITE);
                 $db->query('DROP TABLE  ' . $prefix . 'contents_tmp', Typecho_Db::WRITE);
+                $db->query('CREATE UNIQUE INDEX ' . $prefix . 'contents_slug ON ' . $prefix . 'contents ("slug")', Typecho_Db::WRITE);
+                $db->query('CREATE INDEX ' . $prefix . 'contents_created ON ' . $prefix . 'contents ("created")', Typecho_Db::WRITE);
 
                 break;
 
@@ -1102,6 +1104,61 @@ Typecho_Date::setTimezoneOffset($options->timezone);
         if (empty($commentsWhitelist)) {
             $db->query($db->insert('table.options')
                 ->rows(array('name' => 'commentsWhitelist', 'user' => 0, 'value' => 0)));
+        }
+    }
+
+    /**
+     * v0_9r14_2_24
+     * 
+     * @param mixed $db 
+     * @param mixed $options 
+     * @access public
+     * @return void
+     */
+    public function v0_9r14_2_24($db, $options)
+    {
+        /** 修改数据库字段 */
+        $adapterName = $db->getAdapterName();
+        $prefix  = $db->getPrefix();
+
+        switch (true) {
+            case false !== strpos($adapterName, 'Mysql'):
+                $db->query('ALTER TABLE  `' . $prefix . 'metas` ADD  `parent` INT(10) UNSIGNED NULL DEFAULT \'0\'', Typecho_Db::WRITE);
+                break;
+
+            case false !== strpos($adapterName, 'Pgsql'):
+                $db->query('ALTER TABLE  "' . $prefix . 'metas" ADD COLUMN  "parent" INT NULL DEFAULT \'0\'', Typecho_Db::WRITE);
+                break;
+
+            case false !== strpos($adapterName, 'SQLite'):
+                $uuid = uniqid();
+                $db->query('CREATE TABLE ' . $prefix . 'metas' . $uuid . ' ( "mid" INTEGER NOT NULL PRIMARY KEY,
+        "name" varchar(200) default NULL ,
+        "slug" varchar(200) default NULL ,
+        "type" varchar(32) NOT NULL ,
+        "description" varchar(200) default NULL ,
+        "count" int(10) default \'0\' ,
+        "order" int(10) default \'0\' ,
+        "parent" int(10) default \'0\')', Typecho_Db::WRITE);
+                $db->query('INSERT INTO ' . $prefix . 'metas' . $uuid . ' ("mid", "name", "slug", "type", "description", "count", "order") 
+                    SELECT "mid", "name", "slug", "type", "description", "count", "order" FROM ' . $prefix . 'metas', Typecho_Db::WRITE);
+                $db->query('DROP TABLE  ' . $prefix . 'metas', Typecho_Db::WRITE);
+                $db->query('CREATE TABLE ' . $prefix . 'metas ( "mid" INTEGER NOT NULL PRIMARY KEY,
+        "name" varchar(200) default NULL ,
+        "slug" varchar(200) default NULL ,
+        "type" varchar(32) NOT NULL ,
+        "description" varchar(200) default NULL ,
+        "count" int(10) default \'0\' ,
+        "order" int(10) default \'0\' ,
+        "parent" int(10) default \'0\')', Typecho_Db::WRITE);
+                $db->query('INSERT INTO ' . $prefix . 'metas SELECT * FROM ' . $prefix . 'metas' . $uuid, Typecho_Db::WRITE);
+                $db->query('DROP TABLE  ' . $prefix . 'metas' . $uuid, Typecho_Db::WRITE);
+                $db->query('CREATE INDEX ' . $prefix . 'metas_slug ON ' . $prefix . 'metas ("slug")', Typecho_Db::WRITE);
+
+                break;
+
+            default:
+                break;
         }
     }
 }

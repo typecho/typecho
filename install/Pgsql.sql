@@ -82,6 +82,7 @@ CREATE TABLE "typecho_metas" (  "mid" INT NOT NULL DEFAULT nextval('typecho_meta
   "description" VARCHAR(200) NULL DEFAULT NULL,
   "count" INT NULL DEFAULT '0',
   "order" INT NULL DEFAULT '0',
+  "parent" INT NULL DEFAULT '0',
   PRIMARY KEY ("mid")
 );
 

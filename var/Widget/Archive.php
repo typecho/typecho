@@ -1360,6 +1360,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      * @param string $next 下一页文字
      * @param int $splitPage 分割范围
      * @param string $splitWord 分割字符
+     * @param string $template 展现配置信息
      * @return void
      */
     public function pageNav($prev = '&laquo;', $next = '&raquo;', $splitPage = 3, $splitWord = '...', $template = '')
