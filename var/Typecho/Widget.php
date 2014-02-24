@@ -350,8 +350,6 @@ abstract class Typecho_Widget
      */
     public function __get($name)
     {
-        $method = '___' . $name;
-
         if (array_key_exists($name, $this->row)) {
             return $this->row[$name];
         } else {
