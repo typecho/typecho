@@ -27,6 +27,26 @@ class Typecho_Db_Query
     const KEYWORDS = '*PRIMARY|AND|OR|LIKE|BINARY|BY|DISTINCT|AS|IN|IS|NULL';
 
     /**
+     * 默认字段 
+     * 
+     * @var array
+     * @access private
+     */
+    private $_default = array(
+        'action' => NULL,
+        'table'  => NULL,
+        'fields' => '*',
+        'join'   => array(),
+        'where'  => NULL,
+        'limit'  => NULL,
+        'offset' => NULL,
+        'order'  => NULL,
+        'group'  => NULL,
+        'having'  => NULL,
+        'rows'   => array(),
+    );
+
+    /**
      * 数据库适配器
      *
      * @var Typecho_Db_Adapter
@@ -60,19 +80,7 @@ class Typecho_Db_Query
         $this->_adapter = &$adapter;
         $this->_prefix = $prefix;
 
-        $this->_sqlPreBuild = array(
-            'action' => NULL,
-            'table'  => NULL,
-            'fields' => '*',
-            'join'   => array(),
-            'where'  => NULL,
-            'limit'  => NULL,
-            'offset' => NULL,
-            'order'  => NULL,
-            'group'  => NULL,
-            'having'  => NULL,
-            'rows'   => array(),
-        );
+        $this->_sqlPreBuild = $this->_default;
     }
 
     /**
@@ -201,6 +209,21 @@ class Typecho_Db_Query
     public function getAttribute($attributeName)
     {
         return isset($this->_sqlPreBuild[$attributeName]) ? $this->_sqlPreBuild[$attributeName] : NULL;
+    }
+
+    /**
+     * 清除查询字串属性值
+     *
+     * @access public
+     * @param string $attributeName 属性名称
+     * @return Typecho_Db_Query
+     */
+    public function cleanAttribute($attributeName)
+    {
+        if (isset($this->_sqlPreBuild[$attributeName])) {
+            $this->_sqlPreBuild[$attributeName] = $this->_default[$attributeName];
+        }
+        return $this;
     }
 
     /**

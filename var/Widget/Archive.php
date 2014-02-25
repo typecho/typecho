@@ -890,7 +890,8 @@ class Widget_Archive extends Widget_Abstract_Contents
         /** fix sql92 by 70 */
         $select->join('table.relationships', 'table.contents.cid = table.relationships.cid')
         ->where('table.relationships.mid IN ?', $children)
-        ->where('table.contents.type = ?', 'post');
+        ->where('table.contents.type = ?', 'post')
+        ->group('table.contents.cid');
 
         /** 设置分页 */
         $this->_pageRow = array_merge($category, array(

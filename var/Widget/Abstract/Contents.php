@@ -576,7 +576,10 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     public function size(Typecho_Db_Query $condition)
     {
-        return $this->db->fetchObject($condition->select(array('COUNT(table.contents.cid)' => 'num'))->from('table.contents'))->num;
+        return $this->db->fetchObject($condition
+            ->select(array('COUNT(DISTINCT table.contents.cid)' => 'num'))
+            ->from('table.contents')
+            ->cleanAttribute('group'))->num;
     }
     
     /**
@@ -612,18 +615,24 @@ class Widget_Abstract_Contents extends Widget_Abstract
     public function filter(array $value)
     {
         /** 取出所有分类 */
-        $value['categories'] = $this->db->fetchAll($this->db
-        ->select()->from('table.metas')
-        ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
-        ->where('table.relationships.cid = ?', $value['cid'])
-        ->where('table.metas.type = ?', 'category')
-        ->order('table.metas.order', Typecho_Db::SORT_ASC), array($this->widget('Widget_Metas_Category_List'), 'filter'));
+        if ('post' == $value['type']) {
+            $value['categories'] = $this->db->fetchAll($this->db
+            ->select()->from('table.metas')
+            ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
+            ->where('table.relationships.cid = ?', $value['cid'])
+            ->where('table.metas.type = ?', 'category')
+            ->order('table.metas.order', Typecho_Db::SORT_ASC), array($this->widget('Widget_Metas_Category_List'), 'filter'));
+        }
+        $value['category'] = NULL;
+        $value['directory'] = array();
 
         /** 取出第一个分类作为slug条件 */
-        $value['category'] = $value['categories'][0]['slug'];
+        if (!empty($value['categories'])) {
+            $value['category'] = $value['categories'][0]['slug'];
 
-        $value['directory'] = $this->widget('Widget_Metas_Category_List')->getAllParents($value['category']['mid']);
-        $value['directory'][] = $value['category'];
+            $value['directory'] = $this->widget('Widget_Metas_Category_List')->getAllParents($value['categories'][0]['mid']);
+            $value['directory'][] = $value['category'];
+        }
 
         $value['date'] = new Typecho_Date($value['created']);
 
