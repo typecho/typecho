@@ -83,7 +83,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                                 }
                                 ?>
                                 <?php while($category->next()): ?>
-                                <li><input type="checkbox" id="category-<?php $category->mid(); ?>" value="<?php $category->mid(); ?>" name="category[]" <?php if(in_array($category->mid, $categories)): ?>checked="true"<?php endif; ?>/>
+                                <li><?php echo str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;', $category->levels); ?><input type="checkbox" id="category-<?php $category->mid(); ?>" value="<?php $category->mid(); ?>" name="category[]" <?php if(in_array($category->mid, $categories)): ?>checked="true"<?php endif; ?>/>
                                 <label for="category-<?php $category->mid(); ?>"><?php $category->name(); ?></label></li>
                                 <?php endwhile; ?>
                             </ul>

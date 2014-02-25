@@ -1988,3 +1988,4 @@ var TypechoComment = {
         echo $this->_feed->__toString();
     }
 }
+

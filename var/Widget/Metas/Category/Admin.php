@@ -75,5 +75,20 @@ class Widget_Metas_Category_Admin extends Widget_Metas_Category_List
 
         throw new Typecho_Widget_Exception(_t('分类不存在'), 404);
     }
+
+    /**
+     * 获取菜单标题
+     *
+     * @access public
+     * @return string
+     */
+    public function getAddLink()
+    {
+        if (isset($this->request->parent)) {
+            return 'category.php?parent=' . $this->request->filter('int')->parent;
+        } else {
+            return 'category.php';
+        }
+    }
 }
 

@@ -60,6 +60,14 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
     private $_map = array();
 
     /**
+     * 顺序流
+     * 
+     * @var array
+     * @access private
+     */
+    private $_orders = array();
+
+    /**
      * 所有子节点列表 
      * 
      * @var array
@@ -188,6 +196,7 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
         }
         
         foreach ($categories as $mid) {
+            $this->_orders[] = $mid;
             $parent = $this->_map[$mid]['parent'];
 
             if (0 != $parent && isset($this->_map[$parent])) {
@@ -218,17 +227,6 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
     }
 
     /**
-     * 基于level的名称
-     * 
-     * @access protected
-     * @return string
-     */
-    protected function ___nameByLevel()
-    {
-        return str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;', $this->levels) . $this->name;
-    }
-
-    /**
      * 执行函数
      *
      * @access public
@@ -236,7 +234,7 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
      */
     public function execute()
     {
-        $this->stack = $this->_map;
+        $this->stack = $this->getCategories($this->_orders);
     }
 
     /**

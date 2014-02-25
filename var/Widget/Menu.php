@@ -132,7 +132,7 @@ class Widget_Menu extends Typecho_Widget
             array(array('Widget_Comments_Admin', 'getMenuTitle'), array('Widget_Comments_Admin', 'getMenuTitle'), 'manage-comments.php?cid=', 'contributor', true),
             array(_t('分类'), _t('管理分类'), 'manage-categories.php', 'editor', false, 'category.php'),
             array(_t('新增分类'), _t('新增分类'), 'category.php', 'editor', true),
-            array(array('Widget_Metas_Category_Admin', 'getMenuTitle'), array('Widget_Metas_Category_Admin', 'getMenuTitle'), 'manage-categories.php?parent=', 'editor', true, 'category.php'),
+            array(array('Widget_Metas_Category_Admin', 'getMenuTitle'), array('Widget_Metas_Category_Admin', 'getMenuTitle'), 'manage-categories.php?parent=', 'editor', true, array('Widget_Metas_Category_Admin', 'getAddLink')),
             array(array('Widget_Metas_Category_Edit', 'getMenuTitle'), array('Widget_Metas_Category_Edit', 'getMenuTitle'), 'category.php?mid=', 'editor', true),
             array(array('Widget_Metas_Category_Edit', 'getMenuTitle'), array('Widget_Metas_Category_Edit', 'getMenuTitle'), 'category.php?parent=', 'editor', true),
             array(_t('标签'), _t('管理标签'), 'manage-tags.php', 'editor'),
@@ -243,6 +243,11 @@ class Widget_Menu extends Typecho_Widget
                     if (is_array($title)) {
                         list($widget, $method) = $title;
                         $title = Typecho_Widget::widget($widget)->$method();
+                    }
+
+                    if (is_array($addLink)) {
+                        list($widget, $method) = $addLink;
+                        $addLink = Typecho_Widget::widget($widget)->$method();
                     }
                 }
 

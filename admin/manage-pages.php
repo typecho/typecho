@@ -44,7 +44,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <col width="16%"/>
                         </colgroup>
                         <thead>
-                            <tr>
+                            <tr class="nodrag">
                                 <th> </th>
                                 <th> </th>
                                 <th><?php _e('标题'); ?></th>

@@ -141,7 +141,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
             (isset($this->request->mid) ? 'ignore=' . $this->request->mid : ''));
 
         while ($parents->next()) {
-            $options[$parents->mid] = $parents->nameByLevel;
+            $options[$parents->mid] = str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;', $parents->levels) . $parents->name;
         }
 
         $parent = new Typecho_Widget_Helper_Form_Element_Select('parent', $options, $this->request->parent, _t('父级分类'),

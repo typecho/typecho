@@ -43,7 +43,7 @@ function _e() {
  * @return string
  */
 function _n($single, $plural, $number) {
-    return Typecho_I18n::ngettext($single, $plural, $number);
+    return str_replace('%d', $number, Typecho_I18n::ngettext($single, $plural, $number));
 }
 
 /**

@@ -894,3 +894,4 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         $this->response->redirect($this->options->adminUrl);
     }
 }
+

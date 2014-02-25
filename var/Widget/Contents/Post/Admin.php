@@ -155,3 +155,4 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
         $nav->render('&laquo;', '&raquo;');
     }
 }
+

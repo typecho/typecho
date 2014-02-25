@@ -47,7 +47,7 @@ Typecho_Widget::widget('Widget_Metas_Category_Admin')->to($categories);
                                 <col width="10%"/>
                             </colgroup>
                             <thead>
-                                <tr>
+                                <tr class="nodrag">
                                     <th> </th>
                                     <th><?php _e('名称'); ?></th>
                                     <th><?php _e('子分类'); ?></th>
