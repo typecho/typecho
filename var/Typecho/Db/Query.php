@@ -172,6 +172,26 @@ class Typecho_Db_Query
     }
 
     /**
+     * 转义参数 
+     * 
+     * @param array $values 
+     * @access protected
+     * @return array
+     */
+    protected function quoteValues(array $values)
+    {
+        foreach ($values as &$value) {
+            if (is_array($value)) {
+                $value = '(' . implode(',', array_map(array($this->_adapter, 'quoteValue'), $value)) . ')';
+            } else {
+                $value = $this->_adapter->quoteValue($value);
+            }
+        }
+
+        return $values;
+    }
+
+    /**
      * 获取查询字串属性值
      *
      * @access public
@@ -215,7 +235,7 @@ class Typecho_Db_Query
         } else {
             $args = func_get_args();
             array_shift($args);
-            $this->_sqlPreBuild['where'] .= $operator . ' (' . vsprintf($condition, array_map(array($this->_adapter, 'quoteValue'), $args)) . ')';
+            $this->_sqlPreBuild['where'] .= $operator . ' (' . vsprintf($condition, $this->quoteValues($args)) . ')';
         }
 
         return $this;
@@ -239,7 +259,7 @@ class Typecho_Db_Query
         } else {
             $args = func_get_args();
             array_shift($args);
-            $this->_sqlPreBuild['where'] .= $operator . ' (' . vsprintf($condition, array_map(array($this->_adapter, 'quoteValue'), $args)) . ')';
+            $this->_sqlPreBuild['where'] .= $operator . ' (' . vsprintf($condition, $this->quoteValues($args)) . ')';
         }
 
         return $this;
@@ -353,7 +373,7 @@ class Typecho_Db_Query
         } else {
             $args = func_get_args();
             array_shift($args);
-            $this->_sqlPreBuild['having'] .= $operator . ' (' . vsprintf($condition, array_map(array($this->_adapter, 'quoteValue'), $args)) . ')';
+            $this->_sqlPreBuild['having'] .= $operator . ' (' . vsprintf($condition, $this->quoteValues($args)) . ')';
         }
 
         return $this;

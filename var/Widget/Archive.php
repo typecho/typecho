@@ -789,7 +789,9 @@ class Widget_Archive extends Widget_Abstract_Contents
         $select->limit(1);
         $this->query($select);
 
-        if (!$this->have() || (isset($this->request->category) && $this->category != $this->request->category)) {
+        if (!$this->have() 
+            || (isset($this->request->category) && $this->category != $this->request->category)
+            || (isset($this->request->directory) && $this->request->directory != implode('/', $this->directory))) {
             if (!$this->_invokeFromOutside) {
                 /** 对没有索引情况下的判断 */
                 throw new Typecho_Widget_Exception(_t('请求的地址不存在'), 404);
@@ -869,21 +871,31 @@ class Widget_Archive extends Widget_Abstract_Contents
             $categorySelect->where('slug = ?', $this->request->slug);
         }
 
-        $category = $this->db->fetchRow($categorySelect,
-        array($this->widget('Widget_Abstract_Metas'), 'filter'));
+        if (isset($this->request->directory)) {
+            $directory = explode('/', $this->request->directory);
+            $categorySelect->where('slug = ?', $directory[count($directory) - 1]);
+        }
 
-        if (!$category) {
+        $category = $this->db->fetchRow($categorySelect,
+        array($this->widget('Widget_Metas_Category_List'), 'filter'));
+
+        if (!$category
+            || (isset($directory) && ($this->request->directory != implode('/', $category['directory'])))) {
             throw new Typecho_Widget_Exception(_t('分类不存在'), 404);
         }
 
+        $children = $this->widget('Widget_Metas_Category_List')->getAllChildren($category['mid']);
+        $children[] = $category['mid'];
+
         /** fix sql92 by 70 */
         $select->join('table.relationships', 'table.contents.cid = table.relationships.cid')
-        ->where('table.relationships.mid = ?', $category['mid'])
+        ->where('table.relationships.mid IN ?', $children)
         ->where('table.contents.type = ?', 'post');
 
         /** 设置分页 */
         $this->_pageRow = array_merge($category, array(
-            'slug'  =>  urlencode($category['slug'])
+            'slug'          =>  urlencode($category['slug']),
+            'directory'     =>  implode('/', array_map('urlencode', $category['directory']))
         ));
 
         /** 设置关键词 */

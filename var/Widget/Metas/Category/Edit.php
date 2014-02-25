@@ -137,8 +137,8 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
 
         /** 父级分类 */
         $options = array(0 => _t('不选择'));
-        $parents = $this->widget('Widget_Metas_Category_List@options', 'levelWalk=1' 
-            . (isset($this->request->mid) ? '&ignore=' . $this->request->mid : ''));
+        $parents = $this->widget('Widget_Metas_Category_List@options', 
+            (isset($this->request->mid) ? 'ignore=' . $this->request->mid : ''));
 
         while ($parents->next()) {
             $options[$parents->mid] = $parents->nameByLevel;
@@ -258,13 +258,24 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         }
 
         /** 取出数据 */
+        $current = $this->fetchRow($this->select()->where('mid = ?', $category['mid']));
         $category = $this->request->from('name', 'slug', 'description', 'parent');
         $category['slug'] = Typecho_Common::slugName(empty($category['slug']) ? $category['name'] : $category['slug']);
         $category['type'] = 'category';
         $category['mid'] = $this->request->mid;
 
-        if ($this->fetchObject($this->select()->where('mid = ?', $category['mid']))->parent != $category['parent']) {
-            $category['order'] = $this->getMaxOrder('category', $category['parent']) + 1;
+        if ($current['parent'] != $category['parent']) {
+            $parent = $this->fetchRow($this->select()->where('mid = ?', $category['parent']));
+
+            if ($parent['mid'] == $category['mid']) {
+                $category['order'] = $parent['order'];
+                $this->update(array(
+                    'parent'    =>  $current['parent'],
+                    'order'     =>  $current['order']
+                ), $this->db->sql()->where('mid = ?', $parent['mid']));
+            } else {
+                $category['order'] = $this->getMaxOrder('category', $category['parent']) + 1;
+            }
         }
 
         /** 更新数据 */
@@ -299,7 +310,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
                 $parent = $this->fetchObject($this->select()->where('mid = ?', $category))->parent;
 
                 if ($this->delete($this->db->sql()->where('mid = ?', $category))) {
-                    $this->db->query($this->db->sql()->delete('table.relationships')->where('mid = ?', $category));
+                    $this->db->query($this->db->delete('table.relationships')->where('mid = ?', $category));
                     $this->update(array('parent' => $parent), $this->db->sql()->where('parent = ?', $category));
                     $deleteCount ++;
                 }

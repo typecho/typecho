@@ -66,8 +66,8 @@ Typecho_Widget::widget('Widget_Metas_Category_Admin')->to($categories);
                                     </td>
                                     <td>
                                     
-                                    <?php if ($categories->children > 0): ?>
-                                    <a href="<?php $options->adminUrl('manage-categories.php?parent=' . $categories->mid); ?>"><?php echo _n('一个分类', '%n个分类', $categories->children); ?></a>
+                                    <?php if (count($categories->children) > 0): ?>
+                                    <a href="<?php $options->adminUrl('manage-categories.php?parent=' . $categories->mid); ?>"><?php echo _n('一个分类', '%d个分类', count($categories->children)); ?></a>
                                     <?php else: ?>
                                     <a href="<?php $options->adminUrl('category.php?parent=' . $categories->mid); ?>"><?php echo _e('新增'); ?></a>
                                     <?php endif; ?>

@@ -3,25 +3,13 @@
 /**
  * Widget_Metas_Category_Admin  
  * 
- * @uses Widget_Abstract_Metas
+ * @uses Widget_Metas_Category_List
  * @copyright Copyright (c) 2012 Typecho Team. (http://typecho.org)
  * @author Joyqi <magike.net@gmail.com> 
  * @license GNU General Public License 2.0
  */
-class Widget_Metas_Category_Admin extends Widget_Abstract_Metas
+class Widget_Metas_Category_Admin extends Widget_Metas_Category_List
 {
-    /**
-     * 子评论
-     *
-     * @access protected
-     * @return array
-     */
-    protected function ___children()
-    {
-        return $this->size($this->db->sql()
-            ->where('type = ? AND parent = ?', 'category', $this->mid));
-    }
-
    /**
      * 执行函数
      *
@@ -30,11 +18,11 @@ class Widget_Metas_Category_Admin extends Widget_Abstract_Metas
      */
     public function execute()
     {
-        $select = $this->select()->where('type = ?', 'category');
+        $select = $this->db->select('mid')->from('table.metas')->where('type = ?', 'category');
         $select->where('parent = ?', $this->request->parent ? $this->request->parent : 0);
 
-        $this->db->fetchAll($select->order('table.metas.order', Typecho_Db::SORT_ASC),
-            array($this, 'push'));
+        $this->stack = $this->getCategories(Typecho_Common::arrayFlatten(
+            $this->db->fetchAll($select->order('table.metas.order', Typecho_Db::SORT_ASC)), 'mid'));
     }
 
     /**

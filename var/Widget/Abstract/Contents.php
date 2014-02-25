@@ -617,10 +617,13 @@ class Widget_Abstract_Contents extends Widget_Abstract
         ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
         ->where('table.relationships.cid = ?', $value['cid'])
         ->where('table.metas.type = ?', 'category')
-        ->order('table.metas.order', Typecho_Db::SORT_ASC), array($this->widget('Widget_Abstract_Metas'), 'filter'));
+        ->order('table.metas.order', Typecho_Db::SORT_ASC), array($this->widget('Widget_Metas_Category_List'), 'filter'));
 
         /** 取出第一个分类作为slug条件 */
-        $value['category'] = current(Typecho_Common::arrayFlatten($value['categories'], 'slug'));
+        $value['category'] = $value['categories'][0]['slug'];
+
+        $value['directory'] = $this->widget('Widget_Metas_Category_List')->getAllParents($value['category']['mid']);
+        $value['directory'][] = $value['category'];
 
         $value['date'] = new Typecho_Date($value['created']);
 
@@ -638,8 +641,10 @@ class Widget_Abstract_Contents extends Widget_Abstract
 
         $tmpSlug = $value['slug'];
         $tmpCategory = $value['category'];
+        $tmpDirectory = $value['directory'];
         $value['slug'] = urlencode($value['slug']);
         $value['category'] = urlencode($value['category']);
+        $value['directory'] = implode('/', array_map('urlencode', $value['directory']));
 
         /** 生成静态路径 */
         $value['pathinfo'] = $routeExists ? Typecho_Router::url($type, $value) : '#';
@@ -683,6 +688,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
 
         $value['slug'] = $tmpSlug;
         $value['category'] = $tmpCategory;
+        $value['directory'] = $tmpDirectory;
         
         /** 处理密码保护流程 */
         if (!empty($value['password']) &&

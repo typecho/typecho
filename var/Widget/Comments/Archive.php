@@ -324,7 +324,6 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
         /** 重载push函数,使用coid作为数组键值,便于索引 */
         $this->stack[$value['coid']] = $value;
         $this->length ++;
-        $this->row = $value;
         
         return $value;
     }
