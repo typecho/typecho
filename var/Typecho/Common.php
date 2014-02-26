@@ -781,7 +781,7 @@ EOF;
             return mb_strlen($str, self::$charset);
         } else {
             return 'UTF-8' == strtoupper(self::$charset) 
-                ? strlen(utf8_decode($str)) : strlen($info[0]);
+                ? strlen(utf8_decode($str)) : strlen($str);
         }
     }
 

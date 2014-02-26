@@ -258,8 +258,8 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         }
 
         /** 取出数据 */
-        $current = $this->fetchRow($this->select()->where('mid = ?', $category['mid']));
         $category = $this->request->from('name', 'slug', 'description', 'parent');
+        $current = $this->fetchRow($this->select()->where('mid = ?', $category['mid']));
         $category['slug'] = Typecho_Common::slugName(empty($category['slug']) ? $category['name'] : $category['slug']);
         $category['type'] = 'category';
         $category['mid'] = $this->request->mid;
@@ -338,8 +338,8 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $validator->addRule('merge', 'required', _t('分类主键不存在'));
         $validator->addRule('merge', array($this, 'categoryExists'), _t('请选择需要合并的分类'));
 
-        if ($validator->run($this->request->from('merge'))) {
-            $this->widget('Widget_Notice')->set($e->getMessages(), 'error');
+        if ($error = $validator->run($this->request->from('merge'))) {
+            $this->widget('Widget_Notice')->set($error, 'error');
             $this->response->goBack();
         }
 
