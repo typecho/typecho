@@ -50,7 +50,6 @@ class Widget_Options extends Typecho_Widget
      * @param mixed $request request对象
      * @param mixed $response response对象
      * @param mixed $params 参数列表
-     * @return void
      */
     public function __construct($request, $response, $params = NULL)
     {
@@ -470,7 +469,8 @@ class Widget_Options extends Typecho_Widget
      * 获取插件系统参数
      *
      * @param mixed $pluginName 插件名称
-     * @return void
+     * @return mixed
+     * @throws Typecho_Plugin_Exception
      */
     public function plugin($pluginName)
     {
@@ -490,7 +490,8 @@ class Widget_Options extends Typecho_Widget
      * 获取个人插件系统参数
      *
      * @param mixed $pluginName 插件名称
-     * @return void
+     * @return mixed
+     * @throws Typecho_Plugin_Exception
      */
     public function personalPlugin($pluginName)
     {

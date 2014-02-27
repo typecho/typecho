@@ -510,7 +510,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             $updateRows = $this->update($attachment, $this->db->sql()->where('cid = ?', $postId));
             return true;
         }
-        return $this->mwEditPost($blogId, $postId, $userName, $password, $content, $publish);
+        return $this->mwEditPost($blogId, $postId, $userName, $password, $content);
     }
 
     /**
@@ -968,7 +968,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 }
             
                 if (!$this->_wpOptions[$option]['readonly'] && isset($this->_wpOptions[$option]['option'])) {
-                    if ($db->query($db->update('table.options')
+                    if ($this->db->query($this->db->update('table.options')
                     ->rows(array('value' => $value))
                     ->where('name = ?', $this->_wpOptions[$option]['option'])) > 0) {
                         $struct[$option]['value'] = $value;

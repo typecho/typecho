@@ -20,9 +20,9 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <div class="btn-group btn-drop">
                             <button class="btn dropdown-toggle btn-s" type="button"><i class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i class="i-caret-down"></i></button>
                             <ul class="dropdown-menu">
-                                <li><a lang="<?php _e('你确认要删除这些文件吗?'); ?>" href="<?php $options->index('/action/contents-attachment-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
+                                <li><a lang="<?php _e('你确认要删除这些文件吗?'); ?>" href="<?php $security->index('/action/contents-attachment-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
                             </ul>
-                            <button class="btn btn-s btn-warn btn-operate" href="<?php $options->index('/action/contents-attachment-edit?do=clear'); ?>" lang="<?php _e('您确认要清理未归档的文件吗?'); ?>"><?php _e('清理未归档文件'); ?></button>
+                            <button class="btn btn-s btn-warn btn-operate" href="<?php $security->index('/action/contents-attachment-edit?do=clear'); ?>" lang="<?php _e('您确认要清理未归档的文件吗?'); ?>"><?php _e('清理未归档文件'); ?></button>
                             </div>
                         </div>
                         <div class="search" role="search">
@@ -96,10 +96,10 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <div class="btn-group btn-drop">
                                 <button class="btn dropdown-toggle btn-s" type="button"><i class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i class="i-caret-down"></i></button>
                                 <ul class="dropdown-menu">
-                                    <li><a lang="<?php _e('你确认要删除这些文件吗?'); ?>" href="<?php $options->index('/action/contents-attachment-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
+                                    <li><a lang="<?php _e('你确认要删除这些文件吗?'); ?>" href="<?php $security->index('/action/contents-attachment-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
                                 </ul>
                             </div>
-                            <button class="btn btn-s btn-warn btn-operate" href="<?php $options->index('/action/contents-attachment-edit?do=clear'); ?>" lang="<?php _e('您确认要清理未归档的文件吗?'); ?>"><?php _e('清理未归档文件'); ?></button>
+                            <button class="btn btn-s btn-warn btn-operate" href="<?php $security->index('/action/contents-attachment-edit?do=clear'); ?>" lang="<?php _e('您确认要清理未归档的文件吗?'); ?>"><?php _e('清理未归档文件'); ?></button>
                         </div>
                         <?php if($attachments->have()): ?>
                         <ul class="typecho-pager">

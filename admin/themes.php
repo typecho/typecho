@@ -44,7 +44,7 @@ include 'menu.php';
                                     <?php if($options->theme != $themes->name): ?>
                                         <p>
                                             <a class="edit" href="<?php $options->adminUrl('theme-editor.php?theme=' . $themes->name); ?>"><?php _e('编辑'); ?></a> &nbsp;
-                                            <a class="activate" href="<?php $options->index('/action/themes-edit?change=' . $themes->name); ?>"><?php _e('启用'); ?></a>
+                                            <a class="activate" href="<?php $security->index('/action/themes-edit?change=' . $themes->name); ?>"><?php _e('启用'); ?></a>
                                         </p>
                                     <?php endif; ?>
                                 </td>
@@ -61,73 +61,5 @@ include 'menu.php';
 <?php
 include 'copyright.php';
 include 'common-js.php';
+include 'footer.php';
 ?>
-
-<script type="text/javascript">
-    (function () {
-        window.addEvent('domready', function() {
-            $(document).getElements('table.typecho-list-table tr td').each(function (item, index) {
-                var _a = item.getElement('a.activate'),
-                _e = item.getElement('a.edit');
-                
-                if (_a && _e) {
-                    item.addEvents({
-                    
-                        'mouseover': function () {
-                            this.addClass('hover');
-                            
-                            if (0 == index % 2) {
-                                _a.setStyles({
-                                
-                                    'right': _a.getParent('td').getNext('td').getSize().x + 1,
-                                    
-                                    'top': _a.getParent('td').getPosition(_a.getParent('.col-12')).y
-                                
-                                });
-                                
-                                _a.addClass('typecho-radius-bottomleft');
-                                
-                                _e.setStyles({
-                                
-                                    'right': _e.getParent('td').getNext('td').getSize().x + 1,
-                                    
-                                    'top': _e.getParent('td').getPosition(_e.getParent('.col-12')).y + _e.getParent('td').getSize().y - _e.getSize().y - 1
-                                
-                                });
-                                
-                                _e.addClass('typecho-radius-topleft');
-                            } else {
-                                _a.setStyles({
-                                
-                                    'left': _a.getParent('td').getPosition(_a.getParent('.col-12')).x,
-                                    
-                                    'top': _a.getParent('td').getPosition(_a.getParent('.col-12')).y
-                                
-                                });
-                                
-                                _a.addClass('typecho-radius-bottomright');
-                                
-                                _e.setStyles({
-                                
-                                    'left': _e.getParent('td').getPosition(_e.getParent('.col-12')).x,
-                                    
-                                    'top': _e.getParent('td').getPosition(_e.getParent('.col-12')).y + _e.getParent('td').getSize().y - _e.getSize().y - 1
-                                
-                                });
-                                
-                                _e.addClass('typecho-radius-topright');
-                            }
-                        },
-                        
-                        'mouseleave': function () {
-                            this.removeClass('hover');
-                        }
-                    
-                    });
-                }
-            });
-        });
-    })();
-</script>
-
-<?php include 'footer.php'; ?>

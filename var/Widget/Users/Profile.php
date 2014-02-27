@@ -41,7 +41,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
     public function profileForm()
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/action/users-profile', $this->options->index),
+        $form = new Typecho_Widget_Helper_Form($this->security->getIndex('/action/users-profile'),
         Typecho_Widget_Helper_Form::POST_METHOD);
 
         /** 用户昵称 */
@@ -90,7 +90,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
     public function optionsForm()
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/action/users-profile', $this->options->index),
+        $form = new Typecho_Widget_Helper_Form($this->security->getIndex('/action/users-profile'),
         Typecho_Widget_Helper_Form::POST_METHOD);
 
         /** 自动保存 */
@@ -151,7 +151,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
     public function personalForm($pluginName, $className, $pluginFileName, &$group)
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/action/users-profile', $this->options->index),
+        $form = new Typecho_Widget_Helper_Form($this->security->getIndex('/action/users-profile'),
         Typecho_Widget_Helper_Form::POST_METHOD);
         $form->setAttribute('name', $pluginName);
         $form->setAttribute('id', $pluginName);
@@ -206,7 +206,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
     public function passwordForm()
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/action/users-profile', $this->options->index),
+        $form = new Typecho_Widget_Helper_Form($this->security->getIndex('/action/users-profile'),
         Typecho_Widget_Helper_Form::POST_METHOD);
 
         /** 用户密码 */
@@ -415,6 +415,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
      */
     public function action()
     {
+        $this->security->protect();
         $this->on($this->request->is('do=profile'))->updateProfile();
         $this->on($this->request->is('do=options'))->updateOptions();
         $this->on($this->request->is('do=password'))->updatePassword();

@@ -8,12 +8,12 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main typecho-post-area" role="form">
-            <form action="<?php $options->index('/action/contents-post-edit'); ?>" method="post" name="write_post">
+            <form action="<?php $security->index('/action/contents-post-edit'); ?>" method="post" name="write_post">
                 <div class="col-mb-12 col-tb-9" role="main">
                     <?php if ($post->draft && $post->draft['cid'] != $post->cid): ?>
                     <?php $postModifyDate = new Typecho_Date($post->draft['modified']); ?>
                     <cite class="edit-draft-notice"><?php _e('你正在编辑的是保存于 %s 的草稿, 你也可以 <a href="%s">删除它</a>', $postModifyDate->word(), 
-                    Typecho_Common::url('/action/contents-post-edit?do=deleteDraft&cid=' . $post->cid, $options->index)); ?></cite>
+                    $security->getIndex('/action/contents-post-edit?do=deleteDraft&cid=' . $post->cid)); ?></cite>
                     <?php endif; ?>
 
                     <p class="title">

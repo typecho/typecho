@@ -887,6 +887,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      */
     public function action()
     {
+        $this->security->protect();
         $this->on($this->request->is('do=publish') || $this->request->is('do=save'))->writePost();
         $this->on($this->request->is('do=delete'))->deletePost();
         $this->on($this->request->is('do=deleteDraft'))->deletePostDraft();

@@ -260,6 +260,7 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
      */
     public function action()
     {
+        $this->security->protect();
         $this->on($this->request->is('do=publish') || $this->request->is('do=save'))->writePage();
         $this->on($this->request->is('do=delete'))->deletePage();
         $this->on($this->request->is('do=deleteDraft'))->deletePageDraft();

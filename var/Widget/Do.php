@@ -35,7 +35,6 @@ class Widget_Do extends Typecho_Widget
         'contents-attachment-edit'  =>  'Widget_Contents_Attachment_Edit',
         'metas-category-edit'       =>  'Widget_Metas_Category_Edit',
         'metas-tag-edit'            =>  'Widget_Metas_Tag_Edit',
-        'metas-tag-edit'            =>  'Widget_Metas_Tag_Edit',
         'options-discussion'        =>  'Widget_Options_Discussion',
         'options-general'           =>  'Widget_Options_General',
         'options-permalink'         =>  'Widget_Options_Permalink',

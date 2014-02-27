@@ -36,14 +36,6 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
     private $_total = false;
 
     /**
-     * 分页大小
-     *
-     * @access private
-     * @var integer
-     */
-    private $pageSize;
-
-    /**
      * 当前页
      *
      * @access private

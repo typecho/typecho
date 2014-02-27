@@ -22,13 +22,10 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
 {
     /**
      * 手动配置插件变量
-     * 
-     * @access public
-     * @static
-     * @param mixed $pluginName 插件名称
-     * @param mixed array $settings 变量键值对
-     * @param bool $isPersonal. (default: false) 是否为私人变量
-     * @return void
+     *
+     * @param       $pluginName 插件名称
+     * @param array $settings 变量键值对
+     * @param bool  $isPersonal 是否为私人变量
      */
     public static function configPlugin($pluginName, array $settings, $isPersonal = false)
     {
@@ -69,8 +66,8 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
     /**
      * 启用插件
      *
-     * @access public
-     * @return void
+     * @param $pluginName
+     * @throws Typecho_Widget_Exception
      */
     public function activate($pluginName)
     {
@@ -143,8 +140,10 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
     /**
      * 禁用插件
      *
-     * @access public
-     * @return void
+     * @param $pluginName
+     * @throws Typecho_Widget_Exception
+     * @throws Exception
+     * @throws Typecho_Plugin_Exception
      */
     public function deactivate($pluginName)
     {
@@ -210,6 +209,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
     /**
      * 配置插件
      *
+     * @param $pluginName
      * @access public
      * @return void
      */
@@ -287,6 +287,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
     public function action()
     {
         $this->user->pass('administrator');
+        $this->security->protect();
         $this->on($this->request->is('activate'))->activate($this->request->activate);
         $this->on($this->request->is('deactivate'))->deactivate($this->request->deactivate);
         $this->on($this->request->is('config'))->config($this->request->config);

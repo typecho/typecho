@@ -137,7 +137,7 @@ class Typecho_Request
      *
      * @access private
      * @param mixed $value
-     * @return void
+     * @return mixed
      */
     private function _applyFilter($value)
     {
@@ -156,8 +156,7 @@ class Typecho_Request
      * 设置过滤器
      *
      * @access public
-     * @param mixed $filter 过滤器名称
-     * @return Typecho_Widget_Request
+     * @return Typecho_Request
      */
     public function filter()
     {
@@ -176,7 +175,7 @@ class Typecho_Request
      *
      * @access public
      * @param string $key 指定参数
-     * @return void
+     * @return mixed
      */
     public function __get($key)
     {
@@ -188,13 +187,12 @@ class Typecho_Request
      *
      * @access public
      * @param string $key 指定参数
-     * @return void
+     * @return boolean
      */
     public function __isset($key)
     {
         return isset($_GET[$key])
         || isset($_POST[$key])
-        || isset($_COOKIE[$key])
         || $this->isSetParam($key);
     }
 
@@ -204,12 +202,10 @@ class Typecho_Request
      * @access public
      * @param string $key 指定参数
      * @param mixed $default 默认参数 (default: NULL)
-     * @return void
+     * @return mixed
      */
     public function get($key, $default = NULL)
     {
-        $value = $default;
-
         switch (true) {
             case isset($this->_params[$key]):
                 $value = $this->_params[$key];
@@ -219,9 +215,6 @@ class Typecho_Request
                 break;
             case isset($_POST[$key]):
                 $value = $_POST[$key];
-                break;
-            case isset($_COOKIE[$key]):
-                $value = $_COOKIE[$key];
                 break;
             default:
                 $value = $default;
@@ -236,7 +229,7 @@ class Typecho_Request
      * 从参数列表指定的值中获取http传递参数
      *
      * @access public
-     * @param mixed $parameter 指定的参数
+     * @param mixed $params 指定的参数
      * @return array
      */
     public function from($params)
@@ -325,7 +318,7 @@ class Typecho_Request
      * getRequestRoot 
      * 
      * @access public
-     * @return void
+     * @return string
      */
     public function getRequestRoot()
     {
@@ -595,8 +588,7 @@ class Typecho_Request
      * 设置ip地址
      *
      * @access public
-     * @param unknown $ip
-     * @return unknown
+     * @param string $ip
      */
     public function setIp($ip = NULL)
     {
@@ -648,7 +640,7 @@ class Typecho_Request
      * 获取客户端
      *
      * @access public
-     * @return void
+     * @return string
      */
     public function getAgent()
     {
@@ -675,7 +667,7 @@ class Typecho_Request
      * 获取客户端
      *
      * @access public
-     * @return void
+     * @return string
      */
     public function getReferer()
     {

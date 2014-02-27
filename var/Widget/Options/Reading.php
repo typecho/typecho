@@ -29,8 +29,8 @@ class Widget_Options_Reading extends Widget_Options_Permalink
     public function form()
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/action/options-reading', $this->options->index),
-        Typecho_Widget_Helper_Form::POST_METHOD);
+        $form = new Typecho_Widget_Helper_Form($this->security->getIndex('/action/options-reading'),
+            Typecho_Widget_Helper_Form::POST_METHOD);
 
         /** 文章日期格式 */
         $postDateFormat = new Typecho_Widget_Helper_Form_Element_Text('postDateFormat', NULL, $this->options->postDateFormat,
@@ -209,6 +209,7 @@ class Widget_Options_Reading extends Widget_Options_Permalink
     public function action()
     {
         $this->user->pass('administrator');
+        $this->security->protect();
         $this->on($this->request->isPost())->updateReadingSettings();
         $this->response->redirect($this->options->adminUrl);
     }

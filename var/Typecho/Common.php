@@ -23,28 +23,12 @@ class Typecho_Common
     const VERSION = '0.9/14.2.24';
 
     /**
-     * 缓存的包含路径
-     *
-     * @access private
-     * @var array
-     */
-    private static $_cachedIncludePath = false;
-
-    /**
      * 锁定的代码块
      *
      * @access private
      * @var array
      */
     private static $_lockedBlocks = array('<p></p>' => '');
-    
-    /**
-     * 允许的标签
-     * 
-     * @access private
-     * @var array
-     */
-    private static $_allowableTags = '';
     
     /**
      * 允许的属性
@@ -522,6 +506,7 @@ EOF;
      * </code>
      *
      * @access public
+     * @param int $count
      * @return string
      */
     public static function splitByCount($count)
@@ -602,14 +587,12 @@ EOF;
      * </code>
      *
      * @access public
-     * @param string $string 需要处理的字符串
+     * @param string $html 需要处理的字符串
      * @param string $allowableTags 需要忽略的html标签
      * @return string
      */
     public static function stripTags($html, $allowableTags = NULL)
     {
-        static $dom;
-
         $normalizeTags = '';
         $allowableAttributes = array();
 
@@ -645,8 +628,7 @@ EOF;
     /**
      * 将url中的非法字符串
      *
-     * @access private
-     * @param string $string 需要过滤的url
+     * @param string $url 需要过滤的url
      * @return string
      */
     public static function safeUrl($url)

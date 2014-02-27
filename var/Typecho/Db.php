@@ -109,7 +109,7 @@ class Typecho_Db
      *
      * @param mixed $adapterName 适配器名称
      * @param string $prefix 前缀
-     * @return void
+     * @throws Typecho_Db_Exception
      */
     public function __construct($adapterName, $prefix = 'typecho_')
     {

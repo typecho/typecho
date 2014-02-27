@@ -32,7 +32,6 @@ class Typecho_Config implements Iterator
      *
      * @access public
      * @param mixed $config 配置列表
-     * @return void
      */
     public function __construct($config = array())
     {
@@ -45,7 +44,7 @@ class Typecho_Config implements Iterator
      *
      * @access public
      * @param array $config 配置列表
-     * @return void
+     * @return Typecho_Config
      */
     public static function factory($config = array())
     {
@@ -118,7 +117,7 @@ class Typecho_Config implements Iterator
      * 获取当前指针
      *
      * @access public
-     * @return void
+     * @return mixed
      */
     public function key()
     {

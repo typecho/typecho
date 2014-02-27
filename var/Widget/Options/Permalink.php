@@ -203,7 +203,7 @@ RewriteRule . {$basePath}index.php [L]
     public function form()
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('index.php/action/options-permalink', $this->options->rootUrl),
+        $form = new Typecho_Widget_Helper_Form($this->security->getRootUrl('index.php/action/options-permalink'),
         Typecho_Widget_Helper_Form::POST_METHOD);
 
         /** 是否使用地址重写功能 */
@@ -342,6 +342,7 @@ RewriteRule . {$basePath}index.php [L]
     public function action()
     {
         $this->user->pass('administrator');
+        $this->security->protect();
         $this->on($this->request->isGet() && $this->request->is('do=enableRewriteAnyway'))->enableRewriteAnyway();
         $this->on($this->request->isPost())->updatePermalinkSettings();
         $this->response->redirect($this->options->adminUrl);

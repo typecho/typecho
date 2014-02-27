@@ -90,7 +90,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
     public function form($action = NULL)
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/action/users-edit', $this->options->index),
+        $form = new Typecho_Widget_Helper_Form($this->security->getIndex('/action/users-edit'),
         Typecho_Widget_Helper_Form::POST_METHOD);
 
         /** 用户名称 */
@@ -298,6 +298,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
     public function action()
     {
         $this->user->pass('administrator');
+        $this->security->protect();
         $this->on($this->request->is('do=insert'))->insertUser();
         $this->on($this->request->is('do=update'))->updateUser();
         $this->on($this->request->is('do=delete'))->deleteUser();

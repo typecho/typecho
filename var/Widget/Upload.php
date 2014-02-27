@@ -413,6 +413,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
     public function action()
     {
         if ($this->user->pass('contributor', true) && $this->request->isPost()) {
+            $this->security->protect();
             if ($this->request->is('do=modify&cid')) {
                 $this->modify();
             } else {

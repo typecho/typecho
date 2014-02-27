@@ -38,7 +38,7 @@ $(document).ready(function() {
     $('#title').select();
 
     // text 自动拉伸
-    Typecho.editorResize('text', '<?php $options->index('/action/ajax?do=editorResize'); ?>');
+    Typecho.editorResize('text', '<?php $security->index('/action/ajax?do=editorResize'); ?>');
 
     // tag autocomplete 提示
     var tags = $('#tags'), tagsPre = [];
@@ -171,7 +171,7 @@ $(document).ready(function() {
                 locked = true;
 
                 autoSave.text('<?php _e('正在保存'); ?>');
-                $.post(formAction + '?do=save', data, function (o) {
+                $.post(formAction, data + '&do=save', function (o) {
                     savedData = data;
                     lastSaveTime = o.time;
                     cid = o.cid;

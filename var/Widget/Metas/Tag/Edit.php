@@ -124,8 +124,8 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
     public function form($action = NULL)
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/action/metas-tag-edit', $this->options->index),
-        Typecho_Widget_Helper_Form::POST_METHOD);
+        $form = new Typecho_Widget_Helper_Form($this->security->getIndex('/action/metas-tag-edit'),
+            Typecho_Widget_Helper_Form::POST_METHOD);
 
         /** 标签名称 */
         $name = new Typecho_Widget_Helper_Form_Element_Text('name', NULL, NULL,
@@ -352,6 +352,7 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
      */
     public function action()
     {
+        $this->security->protect();
         $this->on($this->request->is('do=insert'))->insertTag();
         $this->on($this->request->is('do=update'))->updateTag();
         $this->on($this->request->is('do=delete'))->deleteTag();

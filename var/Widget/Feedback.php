@@ -258,6 +258,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
      *
      * @access public
      * @return void
+     * @throws Typecho_Widget_Exception
      */
     public function action()
     {

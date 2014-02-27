@@ -10,8 +10,9 @@ include 'menu.php';
         <div class="row typecho-page-main" role="main">
             <div class="col-mb-12">
                 <div id="typecho-welcome">
-                    <form action="<?php echo Typecho_Router::url('do', array('action' => 'upgrade', 'widget' => 'Upgrade'), 
-                    Typecho_Common::url('index.php', $options->rootUrl)); ?>" method="post">
+                    <form action="<?php echo $security->getTokenUrl(
+                        Typecho_Router::url('do', array('action' => 'upgrade', 'widget' => 'Upgrade'),
+                        Typecho_Common::url('index.php', $options->rootUrl))); ?>" method="post">
                     <h3><?php _e('检测到新版本!'); ?></h3>
                     <ul>
                         <li><?php _e('您已经更新了系统程序, 我们还需要执行一些后续步骤来完成升级'); ?></li>

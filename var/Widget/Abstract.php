@@ -36,6 +36,13 @@ abstract class Widget_Abstract extends Typecho_Widget
     protected $user;
 
     /**
+     * 安全模块
+     *
+     * @var Widget_Security
+     */
+    protected $security;
+
+    /**
      * 数据库对象
      *
      * @access protected
@@ -61,6 +68,7 @@ abstract class Widget_Abstract extends Typecho_Widget
         /** 初始化常用组件 */
         $this->options = $this->widget('Widget_Options');
         $this->user = $this->widget('Widget_User');
+        $this->security = $this->widget('Widget_Security');
     }
 
     /**

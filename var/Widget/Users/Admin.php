@@ -35,14 +35,6 @@ class Widget_Users_Admin extends Widget_Abstract_Users
     private $_total = false;
 
     /**
-     * 分页大小
-     *
-     * @access private
-     * @var integer
-     */
-    private $_pageSize;
-
-    /**
      * 当前页
      *
      * @access private

@@ -41,6 +41,7 @@ class Widget_Themes_Files extends Typecho_Widget
      *
      * @access public
      * @return void
+     * @throws Typecho_Widget_Exception
      */
     public function execute()
     {

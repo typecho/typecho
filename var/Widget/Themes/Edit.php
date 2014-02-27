@@ -26,6 +26,7 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
      * @access public
      * @param string $theme 外观名称
      * @return void
+     * @throws Typecho_Widget_Exception
      */
     public function changeTheme($theme)
     {
@@ -76,6 +77,7 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
      * @param string $theme 外观名称
      * @param string $file 文件名
      * @return void
+     * @throws Typecho_Widget_Exception
      */
     public function editThemeFile($theme, $file)
     {
@@ -141,7 +143,6 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
      * 用自有函数处理配置信息
      *
      * @access public
-     * @param string $pluginName 插件名称
      * @param array $settings 配置值
      * @param boolean $isInit 是否为初始化
      * @return boolean
@@ -166,6 +167,7 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
     {
         /** 需要管理员权限 */
         $this->user->pass('administrator');
+        $this->security->protect();
         $this->on($this->request->is('change'))->changeTheme($this->request->change);
         $this->on($this->request->is('edit&theme'))->editThemeFile($this->request->theme, $this->request->edit);
         $this->on($this->request->is('config'))->config($this->options->theme);

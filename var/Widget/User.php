@@ -63,7 +63,6 @@ class Widget_User extends Typecho_Widget
      * @param mixed $request request对象
      * @param mixed $response response对象
      * @param mixed $params 参数列表
-     * @return void
      */
     public function __construct($request, $response, $params = NULL)
     {
@@ -132,7 +131,8 @@ class Widget_User extends Typecho_Widget
         if ($user && $hashValidate) {
 
             if (!$temporarily) {
-                $authCode = sha1(Typecho_Common::randString(20));
+                $authCode = function_exists('openssl_random_pseudo_bytes') ?
+                    bin2hex(openssl_random_pseudo_bytes(16)) : sha1(Typecho_Common::randString(20));
                 $user['authCode'] = $authCode;
 
                 Typecho_Cookie::set('__typecho_uid', $user['uid'], $expire);
@@ -203,7 +203,7 @@ class Widget_User extends Typecho_Widget
      * 判断用户是否已经登录
      *
      * @access public
-     * @return void
+     * @return boolean
      */
     public function hasLogin()
     {
@@ -237,7 +237,7 @@ class Widget_User extends Typecho_Widget
      * @param string $group 用户组
      * @param boolean $return 是否为返回模式
      * @return boolean
-     * @throws TypechoWidgetException
+     * @throws Typecho_Widget_Exception
      */
     public function pass($group, $return = false)
     {

@@ -28,7 +28,7 @@ Typecho_Widget::widget('Widget_Themes_Files')->to($files);
                 
             <div class="typecho-edit-theme">
                 <div class="col-mb-12 col-tb-8 col-9 content">
-                    <form method="post" name="theme" id="theme" action="<?php $options->index('/action/themes-edit'); ?>">
+                    <form method="post" name="theme" id="theme" action="<?php $security->index('/action/themes-edit'); ?>">
                         <label for="content" class="sr-only"><?php _e('编辑源码'); ?></label>
                         <textarea name="content" id="content" class="w-100 mono" <?php if(!$files->currentIsWriteable()): ?>readonly<?php endif; ?>><?php echo $files->currentContent(); ?></textarea>
                         <p class="submit">

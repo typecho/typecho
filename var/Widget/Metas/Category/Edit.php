@@ -123,8 +123,8 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
     public function form($action = NULL)
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/action/metas-category-edit', $this->options->index),
-        Typecho_Widget_Helper_Form::POST_METHOD);
+        $form = new Typecho_Widget_Helper_Form($this->security->getIndex('/action/metas-category-edit'),
+            Typecho_Widget_Helper_Form::POST_METHOD);
 
         /** 分类名称 */
         $name = new Typecho_Widget_Helper_Form_Element_Text('name', NULL, NULL, _t('分类名称 *'));
@@ -478,6 +478,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
      */
     public function action()
     {
+        $this->security->protect();
         $this->on($this->request->is('do=insert'))->insertCategory();
         $this->on($this->request->is('do=update'))->updateCategory();
         $this->on($this->request->is('do=delete'))->deleteCategory();

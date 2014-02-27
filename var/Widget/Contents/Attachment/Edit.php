@@ -107,13 +107,12 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
      * 生成表单
      *
      * @access public
-     * @param string $action 表单动作
      * @return Typecho_Widget_Helper_Form_Element
      */
-    public function form($action = NULL)
+    public function form()
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/action/contents-attachment-edit', $this->options->index),
+        $form = new Typecho_Widget_Helper_Form($this->security->getIndex('/action/contents-attachment-edit'),
         Typecho_Widget_Helper_Form::POST_METHOD);
 
         /** 文件名称 */
@@ -141,10 +140,11 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Element_Submit(NULL, NULL, _t('提交修改'));
         $submit->input->setAttribute('class', 'btn primary');
-        $delete = new Typecho_Widget_Helper_Layout('a', array('href' =>
-        Typecho_Common::url('/action/contents-attachment-edit?do=delete&cid=' . $this->cid, $this->options->index),
-        'class' => 'operate-delete',
-        'lang'  => _t('你确认删除文件 %s 吗?', $this->attachment->name)));
+        $delete = new Typecho_Widget_Helper_Layout('a', array(
+            'href'  => $this->security->getIndex('/action/contents-attachment-edit?do=delete&cid=' . $this->cid),
+            'class' => 'operate-delete',
+            'lang'  => _t('你确认删除文件 %s 吗?', $this->attachment->name)
+        ));
         $submit->container($delete->html(_t('删除文件')));
         $form->addItem($submit);
 
@@ -326,6 +326,7 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
      */
     public function action()
     {
+        $this->security->protect();
         $this->on($this->request->is('do=delete'))->deleteAttachment();
         $this->on($this->request->is('do=update'))->updateAttachment();
         $this->on($this->request->is('do=clear'))->clearAttachment();

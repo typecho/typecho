@@ -368,6 +368,7 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
     public function action()
     {
         $this->user->pass('contributor');
+        $this->security->protect();
         $this->on($this->request->is('do=waiting'))->waitingComment();
         $this->on($this->request->is('do=spam'))->spamComment();
         $this->on($this->request->is('do=approved'))->approvedComment();

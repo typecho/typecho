@@ -23,6 +23,7 @@ class Widget_Themes_Config extends Widget_Abstract_Options
      *
      * @access public
      * @return void
+     * @throws Typecho_Widget_Exception
      */
     public function execute()
     {
@@ -52,7 +53,8 @@ class Widget_Themes_Config extends Widget_Abstract_Options
      */
     public static function isExists()
     {
-        $configFile = __TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . '/' . Typecho_Widget::widget('Widget_Options')->theme . '/functions.php';
+        $configFile = __TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__
+            . '/' . Typecho_Widget::widget('Widget_Options')->theme . '/functions.php';
         
         if (file_exists($configFile)) {
             require_once $configFile;
@@ -69,12 +71,12 @@ class Widget_Themes_Config extends Widget_Abstract_Options
      * 配置外观
      *
      * @access public
-     * @return void
+     * @return Typecho_Widget_Helper_Form
      */
     public function config()
     {
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/action/themes-edit?config',
-        $this->options->index), Typecho_Widget_Helper_Form::POST_METHOD);
+        $form = new Typecho_Widget_Helper_Form($this->security->getIndex('/action/themes-edit?config'),
+            Typecho_Widget_Helper_Form::POST_METHOD);
         themeConfig($form);
         $inputs = $form->getInputs();
         

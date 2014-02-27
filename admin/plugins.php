@@ -43,15 +43,11 @@ include 'menu.php';
                                 . '">' . $activatedPlugins->author . '</a>'; ?></td>
                                 <td>
                                     <?php if ($activatedPlugins->activate || $activatedPlugins->deactivate || $activatedPlugins->config || $activatedPlugins->personalConfig): ?>
-                                        <?php if ($activatedPlugins->activated): ?>
-                                            <?php if ($activatedPlugins->config): ?>
-                                                <a href="<?php $options->adminUrl('options-plugin.php?config=' . $activatedPlugins->name); ?>"><?php _e('设置'); ?></a> 
-                                                &bull; 
-                                            <?php endif; ?>
-                                            <a lang="<?php _e('你确认要禁用插件 %s 吗?', $activatedPlugins->name); ?>" href="<?php $options->index('/action/plugins-edit?deactivate=' . $activatedPlugins->name); ?>"><?php _e('禁用'); ?></a>
-                                        <?php else: ?>
-                                            <a href="<?php $options->index('/action/plugins-edit?activate=' . $activatedPlugins->name); ?>"><?php _e('启用'); ?></a>
+                                        <?php if ($activatedPlugins->config): ?>
+                                            <a href="<?php $options->adminUrl('options-plugin.php?config=' . $activatedPlugins->name); ?>"><?php _e('设置'); ?></a>
+                                            &bull;
                                         <?php endif; ?>
+                                        <a lang="<?php _e('你确认要禁用插件 %s 吗?', $activatedPlugins->name); ?>" href="<?php $security->index('/action/plugins-edit?deactivate=' . $activatedPlugins->name); ?>"><?php _e('禁用'); ?></a>
                                     <?php else: ?>
                                         <span class="important"><?php _e('即插即用'); ?></span>
                                     <?php endif; ?>
@@ -105,17 +101,7 @@ include 'menu.php';
                                 <td><?php echo empty($deactivatedPlugins->homepage) ? $deactivatedPlugins->author : '<a href="' . $deactivatedPlugins->homepage
                                 . '">' . $deactivatedPlugins->author . '</a>'; ?></td>
                                 <td>
-                                    <?php if ($deactivatedPlugins->activate || $deactivatedPlugins->deactivate || $deactivatedPlugins->config || $deactivatedPlugins->personalConfig): ?>
-                                        <?php if ($deactivatedPlugins->activated): ?>
-                                            <?php if ($deactivatedPlugins->config): ?>
-                                                <a href="<?php $options->adminUrl('options-plugin.php?config=' . $deactivatedPlugins->name); ?>"><?php _e('设置'); ?></a> 
-                                                | 
-                                            <?php endif; ?>
-                                            <a href="<?php $options->index('/action/plugins-edit?deactivate=' . $deactivatedPlugins->name); ?>"><?php _e('禁用'); ?></a>
-                                        <?php else: ?>
-                                            <a href="<?php $options->index('/action/plugins-edit?activate=' . $deactivatedPlugins->name); ?>"><?php _e('启用'); ?></a>
-                                        <?php endif; ?>
-                                    <?php endif; ?>
+                                    <a href="<?php $security->index('/action/plugins-edit?activate=' . $deactivatedPlugins->name); ?>"><?php _e('启用'); ?></a>
                                 </td>
                             </tr>
                             <?php endwhile; ?>
