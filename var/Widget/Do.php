@@ -51,6 +51,7 @@ class Widget_Do extends Typecho_Widget
      *
      * @access public
      * @return void
+     * @throws Typecho_Widget_Exception
      */
     public function execute()
     {

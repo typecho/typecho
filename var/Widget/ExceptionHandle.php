@@ -20,10 +20,6 @@ class Widget_ExceptionHandle extends Widget_Archive
 {
     /**
      * 重载构造函数
-     *
-     * @access public
-     * @param Exception $excepiton 抛出的异常
-     * @return void
      */
     public function __construct()
     {

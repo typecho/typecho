@@ -23,7 +23,7 @@ class Widget_Abstract_Metas extends Widget_Abstract
      * 锚点id
      *
      * @access protected
-     * @return void
+     * @return string
      */
     protected function ___theId()
     {
@@ -141,7 +141,7 @@ class Widget_Abstract_Metas extends Widget_Abstract
      * @param mixed $type 
      * @param int $parent 
      * @access public
-     * @return void
+     * @return integer
      */
     public function getMaxOrder($type, $parent = 0)
     {
@@ -280,7 +280,7 @@ class Widget_Abstract_Metas extends Widget_Abstract
      * 根据内容的指定类别和状态更新相关meta的计数信息
      *
      * @access public
-     * @param Tint $mid meta id
+     * @param int $mid meta id
      * @param string $type 类别
      * @param string $status 状态
      * @return void

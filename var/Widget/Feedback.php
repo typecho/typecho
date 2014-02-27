@@ -30,8 +30,9 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
     /**
      * 评论处理函数
      *
-     * @access private
-     * @return void
+     * @throws Typecho_Widget_Exception
+     * @throws Exception
+     * @throws Typecho_Exception
      */
     private function comment()
     {

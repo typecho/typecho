@@ -84,7 +84,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      * 聚合器对象
      *
      * @access private
-     * @var Typecho_Feed_Writer
+     * @var Typecho_Feed
      */
     private $_feed;
 
@@ -202,15 +202,13 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     private $_pageNav;
 
-
     /**
      * 构造函数,初始化组件
      *
-     * @access public
-     * @param mixed $request request对象
-     * @param mixed $response response对象
-     * @param mixed $params 参数列表
-     * @return void
+     * @param mixed $request
+     * @param mixed $response
+     * @param mixed $params
+     * @throws Typecho_Widget_Exception
      */
     public function __construct($request, $response, $params = NULL)
     {

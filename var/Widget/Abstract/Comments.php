@@ -393,7 +393,8 @@ class Widget_Abstract_Comments extends Widget_Abstract
             
             $this->pluginHandle(__CLASS__)->trigger($plugged)->gravatar($size, $rating, $default, $this);
             if (!$plugged) {
-            
+
+                $mailHash = NULL;
                 if (!empty($this->mail)) {
                     $mailHash = md5(strtolower($this->mail));
                 }

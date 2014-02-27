@@ -34,8 +34,7 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
     /**
      * 获取最新版本
      *
-     * @access public
-     * @return void
+     * @throws Typecho_Widget_Exception
      */
     public function checkVersion()
     {
@@ -81,8 +80,7 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
     /**
      * 远程请求代理
      *
-     * @access public
-     * @return void
+     * @throws Typecho_Widget_Exception
      */
     public function feed()
     {

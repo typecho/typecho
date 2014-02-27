@@ -23,7 +23,7 @@ class Widget_Abstract_Users extends Widget_Abstract
      * ___options  
      * 
      * @access protected
-     * @return Config
+     * @return Typecho_Config
      */
     protected function ___options()
     {
@@ -234,6 +234,7 @@ class Widget_Abstract_Users extends Widget_Abstract
      * @param integer $size 头像尺寸
      * @param string $rating 头像评级
      * @param string $default 默认输出头像
+     * @param string $class 默认css class
      * @return void
      */
     public function gravatar($size = 40, $rating = 'X', $default = NULL, $class = NULL)

@@ -44,7 +44,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      * 获取词义化日期
      *
      * @access protected
-     * @return void
+     * @return string
      */
     protected function ___dateWord()
     {
@@ -55,7 +55,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      * 获取父id
      *
      * @access protected
-     * @return void
+     * @return string
      */
     protected function ___parentId()
     {
@@ -79,7 +79,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      * ___fields
      * 
      * @access protected
-     * @return void
+     * @return Typecho_Config
      */
     protected function ___fields()
     {
@@ -144,7 +144,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      * 锚点id
      *
      * @access protected
-     * @return void
+     * @return string
      */
     protected function ___theId()
     {
@@ -155,7 +155,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      * 回复框id
      * 
      * @access protected
-     * @return void
+     * @return string
      */
     protected function ___respondId()
     {
@@ -166,7 +166,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      * 评论地址
      * 
      * @access protected
-     * @return void
+     * @return string
      */
     protected function ___commentUrl()
     {
@@ -180,7 +180,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      * trackback地址
      * 
      * @access protected
-     * @return void
+     * @return string
      */
     protected function ___trackbackUrl()
     {
@@ -192,7 +192,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      * 回复地址
      * 
      * @access protected
-     * @return void
+     * @return string
      */
     protected function ___responseUrl()
     {
@@ -336,7 +336,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
 
         /** 更新缩略名 */
         if ($updateRows > 0 && isset($content['slug'])) {
-            $this->applySlug(empty($content['slug']) ? NULL : $content['slug'], $condition);
+            $this->applySlug(empty($content['slug']) ? NULL : $content['slug'], $updateCondition);
         }
 
         return $updateRows;
@@ -611,6 +611,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      * @access public
      * @param array $value 需要过滤的行数据
      * @return array
+     * @throws Typecho_Widget_Exception
      */
     public function filter(array $value)
     {
@@ -748,7 +749,6 @@ class Widget_Abstract_Contents extends Widget_Abstract
      *
      * @access public
      * @param string $format 日期格式
-     * @return void
      */
     public function date($format = NULL)
     {
@@ -759,8 +759,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      * 输出文章内容
      *
      * @access public
-     * @param string $more 文章截取后缀
-     * @return void
+     * @param mixed $more 文章截取后缀
      */
     public function content($more = false)
     {
@@ -774,7 +773,6 @@ class Widget_Abstract_Contents extends Widget_Abstract
      * @access public
      * @param integer $length 摘要截取长度
      * @param string $trim 摘要后缀
-     * @return void
      */
     public function excerpt($length = 100, $trim = '...')
     {
@@ -787,13 +785,14 @@ class Widget_Abstract_Contents extends Widget_Abstract
      * @access public
      * @param integer $length 标题截取长度
      * @param string $trim 截取后缀
-     * @return void
      */
     public function title($length = 0, $trim = '...')
     {
         $title = $this->pluginHandle()->trigger($plugged)->title($this->title, $this);
         if (!$plugged) {
             echo $length > 0 ? Typecho_Common::subStr($this->title, 0, $length, $trim) : $this->title;
+        } else {
+            echo $title;
         }
     }
 
@@ -801,8 +800,6 @@ class Widget_Abstract_Contents extends Widget_Abstract
      * 输出文章评论数
      *
      * @access public
-     * @param string $string 评论数格式化数据
-     * @return void
      */
     public function commentsNum()
     {
@@ -820,8 +817,6 @@ class Widget_Abstract_Contents extends Widget_Abstract
      * 获取文章权限
      *
      * @access public
-     * @param string $permission 权限
-     * @return unknown
      */
     public function allow()
     {

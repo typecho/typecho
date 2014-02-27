@@ -188,7 +188,7 @@ class Typecho_Plugin
      *
      * @access public
      * @param string $pluginFile 插件文件路径
-     * @return void
+     * @return array
      */
     public static function parseInfo($pluginFile)
     {
