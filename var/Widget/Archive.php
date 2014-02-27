@@ -560,6 +560,10 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     public function getTotal()
     {
+        if (false === $this->_total) {
+            $this->_total = $this->size($this->_countSql);
+        }
+
         return $this->_total;
     }
 
@@ -569,6 +573,16 @@ class Widget_Archive extends Widget_Abstract_Contents
     public function getCurrentPage()
     {
         return $this->_currentPage;
+    }
+
+    /**
+     * 获取页数
+     * 
+     * @return integer
+     */
+    public function getTotalPage()
+    {
+        return ceil($this->getTotal() / $this->parameter->pageSize);
     }
 
     /**
@@ -1391,17 +1405,17 @@ class Widget_Archive extends Widget_Abstract_Contents
 
             $template = array_merge($default, $config);
             
-            $this->_total = (false === $this->_total ? $this->size($this->_countSql) : $this->_total);
-            $this->pluginHandle()->trigger($hasNav)->pageNav($this->_currentPage, $this->_total, 
+            $total = $this->getTotal();
+            $this->pluginHandle()->trigger($hasNav)->pageNav($this->_currentPage, $total, 
                 $this->parameter->pageSize, $prev, $next, $splitPage, $splitWord);
 
-            if (!$hasNav && $this->_total > $this->parameter->pageSize) {
+            if (!$hasNav && $total > $this->parameter->pageSize) {
                 $query = Typecho_Router::url($this->parameter->type .
                 (false === strpos($this->parameter->type, '_page') ? '_page' : NULL),
                 $this->_pageRow, $this->options->index);
 
                 /** 使用盒状分页 */
-                $nav = new Typecho_Widget_Helper_PageNavigator_Box($this->_total, 
+                $nav = new Typecho_Widget_Helper_PageNavigator_Box($total, 
                     $this->_currentPage, $this->parameter->pageSize, $query);
                 
                 echo '<' . $template['wrapTag'] . (empty($template['wrapClass']) 
@@ -1429,7 +1443,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                 $this->_pageRow, $this->options->index);
 
                 /** 使用盒状分页 */
-                $this->_pageNav = new Typecho_Widget_Helper_PageNavigator_Classic(false === $this->_total ? $this->_total = $this->size($this->_countSql) : $this->_total,
+                $this->_pageNav = new Typecho_Widget_Helper_PageNavigator_Classic($this->getTotal(),
                 $this->_currentPage, $this->parameter->pageSize, $query);
             }
 
