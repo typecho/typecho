@@ -1754,14 +1754,14 @@ var TypechoComment = {
      *
      * @access public
      * @param string $cookieName 已经记忆的cookie名称
-     * @param string $return 是否返回
+     * @param boolean $return 是否返回
      * @return string
      */
     public function remember($cookieName, $return = false)
     {
         $cookieName = strtolower($cookieName);
         if (!in_array($cookieName, array('author', 'mail', 'url'))) {
-            return;
+            return '';
         }
     
         $value = Typecho_Cookie::get('__typecho_remember_' . $cookieName);
@@ -1797,7 +1797,6 @@ var TypechoComment = {
      * 输出关键字
      *
      * @access public
-     * @return unknown
      */
     public function keywords($split = ',', $default = '')
     {

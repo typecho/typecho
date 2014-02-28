@@ -4,8 +4,8 @@ include 'common.php';
 if ($user->hasLogin() || !$options->allowRegister) {
     $response->redirect($options->siteUrl);
 }
-$rememberName = Typecho_Cookie::get('__typecho_remember_name');
-$rememberMail = Typecho_Cookie::get('__typecho_remember_mail');
+$rememberName = htmlspecialchars(Typecho_Cookie::get('__typecho_remember_name'));
+$rememberMail = htmlspecialchars(Typecho_Cookie::get('__typecho_remember_mail'));
 Typecho_Cookie::delete('__typecho_remember_name');
 Typecho_Cookie::delete('__typecho_remember_mail');
 
