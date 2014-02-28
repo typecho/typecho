@@ -62,6 +62,8 @@ class HelloWorld_Plugin implements Typecho_Plugin_Interface
      */
     public static function render()
     {
-        echo '<span class="message success">' . Typecho_Widget::widget('Widget_Options')->plugin('HelloWorld')->word . '</span>';
+        echo '<span class="message success">'
+            . htmlspecialchars(Typecho_Widget::widget('Widget_Options')->plugin('HelloWorld')->word)
+            . '</span>';
     }
 }
