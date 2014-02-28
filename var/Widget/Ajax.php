@@ -42,7 +42,8 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
         $client = Typecho_Http_Client::get();
         if ($client) {
             $client->setHeader('User-Agent', $this->options->generator)
-            ->send('https://github.com/typecho/typecho/releases.atom');
+                ->setTimeout(10)
+                ->send('https://github.com/typecho/typecho/releases.atom');
 
             /** 匹配内容体 */
             $response = $client->getResponseBody();
@@ -88,7 +89,8 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
         $client = Typecho_Http_Client::get();
         if ($client) {
             $client->setHeader('User-Agent', $this->options->generator)
-            ->send('http://typecho.org/feed/');
+                ->setTimeout(10)
+                ->send('http://typecho.org/feed/');
 
             /** 匹配内容体 */
             $response = $client->getResponseBody();
