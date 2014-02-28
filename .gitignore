@@ -17,6 +17,9 @@
 *.exp
 *.pdb
 *.rar
+*.mo
+*.po
+*.pot
 .smbdelete*
 *.sublime*
 .sass-cache

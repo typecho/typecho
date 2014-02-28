@@ -23,7 +23,13 @@ class Widget_Init extends Typecho_Widget
     public function execute()
     {
         /** 对变量赋值 */
-        $options = $this->widget('Widget_Options'); 
+        $options = $this->widget('Widget_Options');
+
+        /** 语言包初始化 */
+        if (defined('__TYPECHO_LANG__')) {
+            $dir = defined('__TYPECHO_LANG_DIR__') ? __TYPECHO_LANG_DIR__ : __TYPECHO_ROOT_DIR__ . '/usr/langs';
+            Typecho_I18n::setLang($dir . '/' . __TYPECHO_LANG__ . '.mo');
+        }
 
         /** cookie初始化 */
         Typecho_Cookie::setPrefix($options->rootUrl);

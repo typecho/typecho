@@ -27,6 +27,7 @@ package:
 	rm -Rf build/admin/img/editor
 	rm -Rf build/admin/img/icons
 	rm -Rf build/admin/img/icons-2x
+	rm -Rf build/usr/langs/*
 	mkdir build/usr/uploads/
 	chmod 777 build/usr/uploads/
 	tar -cvvzf build.tar.gz build/

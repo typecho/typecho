@@ -1,0 +1,3 @@
+[submodule "usr/langs"]
+	path = usr/langs
+	url = https://github.com/typecho/languages.git
