@@ -179,7 +179,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                 <h1 class="typecho-install-title"><?php _e('安装失败!'); ?></h1>
                 <div class="typecho-install-body">
                     <form method="post" action="?config" name="config">
-                    <p class="message error"><?php _e('您没有上传 config.inc.php 文件，请您重新安装！'); ?> <button type="submit"><?php _e('重新安装 &raquo;'); ?></button></p>
+                    <p class="message error"><?php _e('您没有上传 config.inc.php 文件，请您重新安装！'); ?> <button class="btn primary" type="submit"><?php _e('重新安装 &raquo;'); ?></button></p>
                     </form>
                 </div>
                 <?php else : ?>
@@ -224,7 +224,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                 <h1 class="typecho-install-title"><?php _e('安装失败!'); ?></h1>
                 <div class="typecho-install-body">
                     <form method="post" action="?config" name="config">
-                    <p class="message error"><?php _e('您没有上传 config.inc.php 文件，请您重新安装！'); ?> <button type="submit"><?php _e('重新安装 &raquo;'); ?></button></p>
+                    <p class="message error"><?php _e('您没有上传 config.inc.php 文件，请您重新安装！'); ?> <button class="btn primary" type="submit"><?php _e('重新安装 &raquo;'); ?></button></p>
                     </form>
                 </div>
                 <?php else : ?>
@@ -364,7 +364,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                                                         $installDb->query("DROP TABLE {$table}");
                                                     }
                                                 }
-                                                echo '<p class="message success">' . _t('已经删除完原有数据') . '<br /><br /><button type="submit" class="primary">'
+                                                echo '<p class="message success">' . _t('已经删除完原有数据') . '<br /><br /><button class="btn primary" type="submit" class="primary">'
                                                     . _t('继续安装 &raquo;') . '</button></p>';
                                             } elseif (_r('goahead')) {
                                                 //使用原有数据
@@ -376,8 +376,8 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                                                 exit;
                                             } else {
                                                  echo '<p class="message error">' . _t('安装程序检查到原有数据表已经存在.') 
-                                                    . '<br /><br />' . '<button type="submit" name="delete" value="1" class="btn-warn">' . _t('删除原有数据') . '</button> '
-                                                    . _t('或者') . ' <button type="submit" name="goahead" value="1" class="primary">' . _t('使用原有数据') . '</button></p>';
+                                                    . '<br /><br />' . '<button type="submit" name="delete" value="1" class="btn btn-warn">' . _t('删除原有数据') . '</button> '
+                                                    . _t('或者') . ' <button type="submit" name="goahead" value="1" class="btn primary">' . _t('使用原有数据') . '</button></p>';
                                             }
                                         } else {
                                             echo '<p class="message error">' . _t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.',$e->getMessage()) . '</p>';
@@ -504,7 +504,7 @@ Typecho_Db::set(\$db);
 <div class="message notice"><p><?php _e('安装程序无法自动创建 <strong>config.inc.php</strong> 文件'); ?><br />
 <?php _e('您可以在网站根目录下手动创建 <strong>config.inc.php</strong> 文件, 并复制如下代码至其中'); ?></p>
 <p><textarea rows="5" onmouseover="this.select();" class="w-100 mono" readonly><?php echo htmlspecialchars($contents); ?></textarea></p>
-<p><button name="created" value="1" type="submit" class="primary">创建完毕, 继续安装 &raquo;</button></p></div>
+<p><button name="created" value="1" type="submit" class="btn primary">创建完毕, 继续安装 &raquo;</button></p></div>
                                     <?php
                                     } else { 
                                         header('Location: ./install.php?start');
@@ -571,7 +571,7 @@ Typecho_Db::set(\$db);
                         </ul>
                     </div>
                     <input type="hidden" name="action" value="config" />
-                    <p class="submit"><button type="submit" class="primary"><?php _e('确认, 开始安装 &raquo;'); ?></button></p>
+                    <p class="submit"><button type="submit" class="btn primary"><?php _e('确认, 开始安装 &raquo;'); ?></button></p>
                 </form>
             <?php  else: ?>
                 <form method="post" action="?config">
@@ -586,7 +586,7 @@ Typecho_Db::set(\$db);
                 <?php _e('如果您遇到使用上的问题, 程序中的 BUG, 以及期许的新功能, 欢迎您在社区中交流或者直接向我们贡献代码.'); ?>
                 <?php _e('对于贡献突出者, 他的名字将出现在贡献者名单中.'); ?></p>
                 </div>
-                <p class="submit"><button type="submit" class="primary"><?php _e('我准备好了, 开始下一步 &raquo;'); ?></button></p>
+                <p class="submit"><button type="submit" class="btn primary"><?php _e('我准备好了, 开始下一步 &raquo;'); ?></button></p>
                 </form>
             <?php endif; ?>
 
