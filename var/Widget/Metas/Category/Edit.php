@@ -223,7 +223,6 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
 
         /** 取出数据 */
         $category = $this->request->from('name', 'slug', 'description', 'parent');
-        $parent = 0;
 
         $category['slug'] = Typecho_Common::slugName(empty($category['slug']) ? $category['name'] : $category['slug']);
         $category['type'] = 'category';
@@ -259,13 +258,13 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
 
         /** 取出数据 */
         $category = $this->request->from('name', 'slug', 'description', 'parent');
-        $current = $this->fetchRow($this->select()->where('mid = ?', $category['mid']));
+        $current = $this->db->fetchRow($this->select()->where('mid = ?', $category['mid']));
         $category['slug'] = Typecho_Common::slugName(empty($category['slug']) ? $category['name'] : $category['slug']);
         $category['type'] = 'category';
         $category['mid'] = $this->request->mid;
 
         if ($current['parent'] != $category['parent']) {
-            $parent = $this->fetchRow($this->select()->where('mid = ?', $category['parent']));
+            $parent = $this->db->fetchRow($this->select()->where('mid = ?', $category['parent']));
 
             if ($parent['mid'] == $category['mid']) {
                 $category['order'] = $parent['order'];
@@ -307,7 +306,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
 
         if ($categories && is_array($categories)) {
             foreach ($categories as $category) {
-                $parent = $this->fetchObject($this->select()->where('mid = ?', $category))->parent;
+                $parent = $this->db->fetchObject($this->select()->where('mid = ?', $category))->parent;
 
                 if ($this->delete($this->db->sql()->where('mid = ?', $category))) {
                     $this->db->query($this->db->delete('table.relationships')->where('mid = ?', $category));

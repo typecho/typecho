@@ -120,7 +120,7 @@ $(document).ready(function() {
     $('#tab-files').bind('init', function () {
         var uploader = new plupload.Uploader({
             browse_button   :   $('.upload-file').get(0),
-            url             :   '<?php $security->index('/action/upload'
+            url             :   '<?php $options->index('/action/upload'
                 . (isset($fileParentContent) ? '?cid=' . $fileParentContent->cid : '')); ?>',
             runtimes        :   'html5,flash,silverlight,html4',
             flash_swf_url   :   '<?php $options->adminUrl('js/Moxie.swf'); ?>',

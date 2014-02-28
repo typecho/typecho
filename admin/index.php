@@ -10,9 +10,9 @@ $stat = Typecho_Widget::widget('Widget_Stat');
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main">
             <div class="col-mb-12 welcome-board" role="main">
-                <p><?php _e('目前有 <em>%s</em> 篇日志, 并有 <em>%s</em> 条关于你的评论在 <em>%s</em> 个分类中.',
+                <p><?php _e('目前有 <em>%s</em> 篇文章, 并有 <em>%s</em> 条关于你的评论在 <em>%s</em> 个分类中.',
                 $stat->myPublishedPostsNum, $stat->myPublishedCommentsNum, $stat->categoriesNum); ?>
-                <br><?php _e('使用下面的链接开始你的故事吧:'); ?></p>
+                <br><?php _e('点击下面的链接快速开始:'); ?></p>
 
                 <ul id="start-link" class="clearfix">
                     <?php if($user->pass('contributor', true)): ?>
