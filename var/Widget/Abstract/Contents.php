@@ -616,14 +616,12 @@ class Widget_Abstract_Contents extends Widget_Abstract
     public function filter(array $value)
     {
         /** 取出所有分类 */
-        if ('post' == $value['type']) {
-            $value['categories'] = $this->db->fetchAll($this->db
+        $value['categories'] = $this->db->fetchAll($this->db
             ->select()->from('table.metas')
             ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
             ->where('table.relationships.cid = ?', $value['cid'])
             ->where('table.metas.type = ?', 'category')
             ->order('table.metas.order', Typecho_Db::SORT_ASC), array($this->widget('Widget_Metas_Category_List'), 'filter'));
-        }
         $value['category'] = NULL;
         $value['directory'] = array();
 
