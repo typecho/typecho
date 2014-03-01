@@ -178,6 +178,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
 
             $name->value($meta['name']);
             $slug->value($meta['slug']);
+            $parent->value($meta['parent']);
             $description->value($meta['description']);
             $do->value('update');
             $mid->value($meta['mid']);
@@ -258,10 +259,10 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
 
         /** 取出数据 */
         $category = $this->request->from('name', 'slug', 'description', 'parent');
-        $current = $this->db->fetchRow($this->select()->where('mid = ?', $category['mid']));
+        $category['mid'] = $this->request->mid;
         $category['slug'] = Typecho_Common::slugName(empty($category['slug']) ? $category['name'] : $category['slug']);
         $category['type'] = 'category';
-        $category['mid'] = $this->request->mid;
+        $current = $this->db->fetchRow($this->select()->where('mid = ?', $category['mid']));
 
         if ($current['parent'] != $category['parent']) {
             $parent = $this->db->fetchRow($this->select()->where('mid = ?', $category['parent']));
