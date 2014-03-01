@@ -32,8 +32,7 @@ class Widget_Security extends Typecho_Widget
         $token = uniqid();
         if ($user->hasLogin()) {
             $token = $user->authCode . '&' . $user->uid
-                . '&' . $this->request->getRequestUrl()
-                . '&' . $this->request->getIp();
+                . '&' . $this->request->getRequestUrl();
         }
 
         $this->_token = md5($token);
@@ -70,8 +69,7 @@ class Widget_Security extends Typecho_Widget
         $token = uniqid();
         if ($user->hasLogin()) {
             $token = $user->authCode . '&' . $user->uid
-                . '&' . $this->request->getReferer()
-                . '&' . $this->request->getIp();
+                . '&' . $this->request->getReferer();
         }
 
         if ($this->request->get('_') != md5($token)) {
