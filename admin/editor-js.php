@@ -61,7 +61,8 @@ $(document).ready(function () {
         editor = new Markdown.Editor(converter, '', options),
         diffMatch = new diff_match_patch(), last = '', preview = $('#wmd-preview'),
         mark = '@mark' + Math.ceil(Math.random() * 100000000) + '@',
-        span = '<span class="diff" />';
+        span = '<span class="diff" />',
+        cache = {};
     
     // 设置markdown
     Markdown.Extra.init(converter, {
@@ -139,19 +140,58 @@ $(document).ready(function () {
             }
         }
 
+        // 替换img
+        html = html.replace(/<(img)\s+([^>]*)\s*src="([^"]+)"([^>]*)>/ig, function (all, tag, prefix, src, suffix) {
+            if (!cache[src]) {
+                cache[src] = false;
+            } else {
+                return '<span class="cache" data-width="' + cache[src][0] + '" data-height="' + cache[src][1] + '" '
+                    + 'style="background:url(' + src + ') no-repeat left top; width:'
+                    + cache[src][0] + 'px; height:' + cache[src][1] + 'px; display: inline-block; max-width: 100%;'
+                    + '-webkit-background-size: contain;-moz-background-size: contain;-o-background-size: contain;background-size: contain;" />';
+            }
+
+            return all;
+        });
+
+        // 替换block
+        html = html.replace(/<(iframe|embed)\s+([^>]*)>/ig, function (all, tag, src) {
+            if (src[src.length - 1] == '/') {
+                src = src.substring(0, src.length - 1);
+            }
+
+            return '<div style="background: #ddd; height: 40px; line-height: 40px; text-align: center; font-size: 12px; color: #777">'
+                + tag + ' : ' + $.trim(src) + '</div>';
+        });
+
         return html;
     });
+
+    function cacheResize() {
+        var t = $(this), w = parseInt(t.data('width')), h = parseInt(t.data('height')),
+            ow = t.width();
+
+        t.height(h * ow / w);
+    }
 
     editor.hooks.chain('onPreviewRefresh', function () {
         var diff = $('.diff', preview), scrolled = false;
 
         $('img', preview).load(function () {
+            var t = $(this), src = t.attr('src');
+
             if (scrolled) {
                 preview.scrollTo(diff, {
                     offset  :   - 50
                 });
             }
+
+            if (!!src && !cache[src]) {
+                cache[src] = [this.width, this.height];
+            }
         });
+
+        $('.cache', preview).resize(cacheResize).each(cacheResize);
 
         if (diff.length > 0) {
             var p = diff.position(), lh = diff.parent().css('line-height');
