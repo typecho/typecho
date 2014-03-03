@@ -67,8 +67,7 @@ if (!isset($_GET['finish']) && file_exists(__TYPECHO_ROOT_DIR__ . '/config.inc.p
  * @param string $default 默认值
  * @return string
  */
-function _r($name, $default = NULL)
-{
+function _r($name, $default = NULL) {
     return isset($_REQUEST[$name]) ? $_REQUEST[$name] : $default;
 }
 
@@ -77,8 +76,7 @@ function _r($name, $default = NULL)
  * 
  * @return array
  */
-function _rFrom()
-{
+function _rFrom() {
     $result = array();
     $params = func_get_args();
     
@@ -96,8 +94,7 @@ function _rFrom()
  * @param string $default 默认值
  * @return string
  */
-function _v($name, $default = '')
-{
+function _v($name, $default = '') {
     echo _r($name, $default);
 }
 
@@ -107,8 +104,7 @@ function _v($name, $default = '')
  * @param string $adapter 适配器
  * @return boolean
  */
-function _p($adapter)
-{
+function _p($adapter) {
     switch ($adapter) {
         case 'Mysql':
             return Typecho_Db_Adapter_Mysql::isAvailable();
@@ -132,8 +128,7 @@ function _p($adapter)
  *
  * @return string
  */
-function _u()
-{
+function _u() {
     $url = "http://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
     if (isset($_SERVER["QUERY_STRING"])) {
         $url = str_replace("?" . $_SERVER["QUERY_STRING"], "", $url);
@@ -141,6 +136,7 @@ function _u()
 
     return dirname($url);
 }
+
 
 $options = new stdClass();
 $options->generator = 'Typecho ' . Typecho_Common::VERSION;

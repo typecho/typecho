@@ -186,7 +186,7 @@ $(document).ready(function() {
         $('.delete', el).click(function () {
             if (confirm('<?php _e('确认要删除文件 %s 吗?'); ?>'.replace('%s', file))) {
                 var cid = $(this).parents('li').data('cid');
-                $.post('<?php $options->index('/action/contents-attachment-edit'); ?>',
+                $.post('<?php $secure->index('/action/contents-attachment-edit'); ?>',
                     {'do' : 'delete', 'cid' : cid},
                     function () {
                         $(el).fadeOut(function () {
