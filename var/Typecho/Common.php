@@ -192,6 +192,16 @@ class Typecho_Common
     }
 
     /**
+     * 自动载入类
+     *
+     * @param $className
+     */
+    public static function __autoLoad($className)
+    {
+        @include_once str_replace(array('\\', '_'), '/', $className) . '.php';
+    }
+
+    /**
      * 程序初始化方法
      *
      * @access public
@@ -200,14 +210,12 @@ class Typecho_Common
     public static function init()
     {
         /** 设置自动载入函数 */
-        function __autoLoad($className)
-        {
-            /**
-             * 自动载入函数并不判断此类的文件是否存在, 我们认为当你显式的调用它时, 你已经确认它存在了
-             * 如果真的无法被加载, 那么系统将出现一个严重错误(Fetal Error)
-             * 如果你需要判断一个类能否被加载, 请使用 Typecho_Common::isAvailableClass 方法
-             */
-            @include_once str_replace('_', '/', $className) . '.php';
+        if (function_exists('spl_autoload_register')) {
+            spl_autoload_register(array('Typecho_Common', '__autoLoad'));
+        } else {
+            function __autoLoad($className) {
+                Typecho_Common::__autoLoad($className);
+            }
         }
 
         /** 兼容php6 */
@@ -427,10 +435,10 @@ EOF;
      */
     public static function isAppEngine()
     {
-        return !empty($_SERVER['HTTP_APPNAME'])     // SAE
-            || !!getenv('HTTP_BAE_ENV_APPID')       // BAE
-            || !!getenv('HTTP_BAE_LOGID')           // BAE 3.0
-            || ini_get('acl.app_url')               // ACE
+        return !empty($_SERVER['HTTP_APPNAME'])                     // SAE
+            || !!getenv('HTTP_BAE_ENV_APPID')                       // BAE
+            || !!getenv('HTTP_BAE_LOGID')                           // BAE 3.0
+            || (ini_get('acl.app_id') && class_exists('Alibaba'))   // ACE
             || (isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false) // GAE
             ;
     }

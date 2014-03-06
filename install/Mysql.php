@@ -7,7 +7,7 @@ if (defined('SAE_MYSQL_DB')) {
     $engine = 'SAE';
 } else if (!!getenv('HTTP_BAE_ENV_ADDR_SQL_IP')) {
     $engine = 'BAE';
-} else if (ini_get('acl.app_url')) {
+} else if (ini_get('acl.app_id') && class_exists('Alibaba')) {
     $engine = 'ACE';
 } else if (isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false) {
     $engine = 'GAE';
