@@ -124,6 +124,10 @@ class Widget_User extends Typecho_Widget
         ->where((strpos($name, '@') ? 'mail' : 'name') . ' = ?', $name)
         ->limit(1));
 
+        if (empty($user)) {
+            return false;
+        }
+
         $hashValidate = $this->pluginHandle()->trigger($hashPluggable)->hashValidate($password, $user['password']);
         if (!$hashPluggable) {
             $hashValidate = Typecho_Common::hashValidate($password, $user['password']);
