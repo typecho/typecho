@@ -1522,7 +1522,7 @@ class Widget_Archive extends Widget_Abstract_Contents
 
             if ($word != NULL) {
                 $class = $class ? ' class="' . $class . '"' : '';
-                $link = '<a ' . $class . 'href="' . $content['permalink'] . '" title="' . $content['title'] . '">' . $word . '</a>';
+                $link = '<a' . $class . ' href="' . $content['permalink'] . '" title="' . $content['title'] . '">' . $word . '</a>';
                 echo $link;
             } else {
                 $link = '<a href="' . $content['permalink'] . '" title="' . $content['title'] . '">' . $content['title'] . '</a>';
@@ -1556,7 +1556,7 @@ class Widget_Archive extends Widget_Abstract_Contents
 
             if ($word != NULL) {
                 $class = $class ? ' class="' . $class . '"' : '';
-                $link = '<a ' . $class . 'href="' . $content['permalink'] . '" title="' . $content['title'] . '">' . $word . '</a>';
+                $link = '<a' . $class . ' href="' . $content['permalink'] . '" title="' . $content['title'] . '">' . $word . '</a>';
                 echo $link;
             } else {
                 $link = '<a href="' . $content['permalink'] . '" title="' . $content['title'] . '">' . $content['title'] . '</a>';
