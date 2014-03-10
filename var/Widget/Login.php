@@ -37,6 +37,7 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Do
         /** 初始化验证类 */
         $validator = new Typecho_Validate();
         $validator->addRule('name', 'required', _t('请输入用户名'));
+        $validator->addRule('name', 'xssCheck', _t('请不要使用特殊字符'));
         $validator->addRule('password', 'required', _t('请输入密码'));
 
         /** 截获验证异常 */
