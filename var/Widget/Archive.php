@@ -1502,11 +1502,12 @@ class Widget_Archive extends Widget_Abstract_Contents
      * 显示下一个内容的标题链接
      *
      * @access public
-     * @param string $format 格式
+     * @param string $wrod 链接文字
+     * @param string $class 类选择器
      * @param string $default 如果没有下一篇,显示的默认文字
      * @return void
      */
-    public function theNext($format = '%s', $default = NULL)
+    public function theNext($word = NULL, $class = NULL,$default = NULL)
     {
         $content = $this->db->fetchRow($this->select()->where('table.contents.created > ? AND table.contents.created < ?',
         $this->created, $this->options->gmtTime)
@@ -1518,8 +1519,15 @@ class Widget_Archive extends Widget_Abstract_Contents
 
         if ($content) {
             $content = $this->filter($content);
-            $link = '<a href="' . $content['permalink'] . '" title="' . $content['title'] . '">' . $content['title'] . '</a>';
-            printf($format, $link);
+
+            if ($word != NULL) {
+                $class = $class ? ' class="' . $class . '"' : '';
+                $link = '<a ' . $class . 'href="' . $content['permalink'] . '" title="' . $content['title'] . '">' . $word . '</a>';
+                echo $link;
+            } else {
+                $link = '<a href="' . $content['permalink'] . '" title="' . $content['title'] . '">' . $content['title'] . '</a>';
+                printf('%s', $link);
+            }
         } else {
             echo $default;
         }
@@ -1529,11 +1537,12 @@ class Widget_Archive extends Widget_Abstract_Contents
      * 显示上一个内容的标题链接
      *
      * @access public
-     * @param string $format 格式
+     * @param string $wrod 链接文字
+     * @param string $class 类选择器
      * @param string $default 如果没有上一篇,显示的默认文字
      * @return void
      */
-    public function thePrev($format = '%s', $default = NULL)
+    public function thePrev($word = NULL, $class = NULL, $default = NULL)
     {
         $content = $this->db->fetchRow($this->select()->where('table.contents.created < ?', $this->created)
         ->where('table.contents.status = ?', 'publish')
@@ -1544,8 +1553,15 @@ class Widget_Archive extends Widget_Abstract_Contents
 
         if ($content) {
             $content = $this->filter($content);
-            $link = '<a href="' . $content['permalink'] . '" title="' . $content['title'] . '">' . $content['title'] . '</a>';
-            printf($format, $link);
+
+            if ($word != NULL) {
+                $class = $class ? ' class="' . $class . '"' : '';
+                $link = '<a ' . $class . 'href="' . $content['permalink'] . '" title="' . $content['title'] . '">' . $word . '</a>';
+                echo $link;
+            } else {
+                $link = '<a href="' . $content['permalink'] . '" title="' . $content['title'] . '">' . $content['title'] . '</a>';
+                printf('%s', $link);
+            }
         } else {
             echo $default;
         }
