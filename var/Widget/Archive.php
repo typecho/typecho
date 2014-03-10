@@ -1507,7 +1507,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      * @param string $default 如果没有下一篇,显示的默认文字
      * @return void
      */
-    public function theNext($word = NULL, $class = NULL,$default = NULL)
+    public function theNext($word = NULL, $class = NULL, $default = NULL)
     {
         $content = $this->db->fetchRow($this->select()->where('table.contents.created > ? AND table.contents.created < ?',
         $this->created, $this->options->gmtTime)
