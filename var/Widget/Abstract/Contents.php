@@ -142,6 +142,22 @@ class Widget_Abstract_Contents extends Widget_Abstract
     }
 
     /**
+     * 输出文章的第一行作为摘要
+     *
+     * @return string
+     */
+    protected function ___summary()
+    {
+        $content = $this->content;
+        $parts = preg_split("/<\/\s*(?:p|blockquote|q|pre)\s*>/i", $content, 2);
+        if (!empty($parts)) {
+            $content = $parts[0] . '</p>';
+        }
+
+        return $content;
+    }
+
+    /**
      * 锚点id
      *
      * @access protected
