@@ -144,10 +144,9 @@ $(document).ready(function() {
 
     var uploader = new plupload.Uploader({
         browse_button   :   $('.upload-file').get(0),
-        url             :   '<?php $options->index('/action/upload?do=modify&cid=' . $attachment->cid); ?>',
-        runtimes        :   'html5,flash,silverlight,html4',
+        url             :   '<?php $security->index('/action/upload?do=modify&cid=' . $attachment->cid); ?>',
+        runtimes        :   'html5,flash,html4',
         flash_swf_url   :   '<?php $options->adminUrl('js/Moxie.swf'); ?>',
-        silverlight_xap_url     :   '<?php $options->adminUrl('js/Moxie.xap'); ?>',
         drop_element    :   $('.upload-area').get(0),
         filters         :   {
             max_file_size       :   '<?php echo $phpMaxFilesize ?>',

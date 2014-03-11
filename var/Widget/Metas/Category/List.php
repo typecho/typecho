@@ -1,4 +1,5 @@
 <?php
+if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
  * 分类输出
  *
@@ -36,12 +37,12 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
     private $_treeViewCategories = array();
 
     /**
-     * _singleCategoryOptions  
+     * _categoryOptions
      * 
      * @var mixed
      * @access private
      */
-    private $_singleCategoryOptions = NULL;
+    private $_categoryOptions = NULL;
 
     /**
      * 顶层分类
@@ -132,26 +133,24 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
     /**
      * 列出分类回调
      * 
-     * @param mixed $singleCategoryOptions 
      * @access private
-     * @return void
      */
     private function treeViewCategoriesCallback()
     {
-        $singleCategoryOptions = $this->_singleCategoryOptions;
+        $categoryOptions = $this->_categoryOptions;
         if ($this->_customTreeViewCategoriesCallback) {
-            return treeViewCategories($this, $singleCategoryOptions);
+            return treeViewCategories($this, $categoryOptions);
         }
 
         $classes = array();
 
-        if ($singleCategoryOptions->itemClass) {
+        if ($categoryOptions->itemClass) {
             $classes[] = $singleCommentOptions->itemClass;
         }
 
         $classes[] = 'category-level-' . $this->levels;
 
-        echo '<' . $singleCategoryOptions->itemTag . ' class="'
+        echo '<' . $categoryOptions->itemTag . ' class="'
             . implode(' ', $classes);
         
         if ($this->levels > 0) {
@@ -163,12 +162,12 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
 
         echo '"><a href="' . $this->permalink . '">' . $this->name . '</a>';
 
-        if ($singleCategoryOptions->showCount) {
-            printf($singleCategoryOptions->countTemplate, intval($this->count));
+        if ($categoryOptions->showCount) {
+            printf($categoryOptions->countTemplate, intval($this->count));
         }
 
-        if ($singleCategoryOptions->showFeed) {
-            printf($singleCategoryOptions->feedTemplate, $this->feedUrl);
+        if ($categoryOptions->showFeed) {
+            printf($categoryOptions->feedTemplate, $this->feedUrl);
         }
 
         if ($this->children) {
@@ -181,9 +180,9 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
     /**
      * 预处理分类迭代
      * 
-     * @param array $categories 
+     * @param array $categories
+     * @param array $parents
      * @access private
-     * @return void
      */
     private function levelWalkCallback(array $categories, $parents = array())
     {
@@ -252,8 +251,8 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
             $this->sequence ++;
 
             //在子评论之前输出
-            echo '<' . $this->_singleCategoryOptions->wrapTag . (empty($this->_singleCategoryOptions->wrapClass) 
-                ? '' : ' class="' . $this->_singleCategoryOptions->wrapClass . '"') . '>';
+            echo '<' . $this->_categoryOptions->wrapTag . (empty($this->_categoryOptions->wrapClass)
+                ? '' : ' class="' . $this->_categoryOptions->wrapClass . '"') . '>';
 
             foreach ($children as $child) {
                 $this->row = $child;
@@ -262,7 +261,7 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
             }
 
             //在子评论之后输出
-            echo '</' . $this->_singleCategoryOptions->wrapTag . '>';
+            echo '</' . $this->_categoryOptions->wrapTag . '>';
 
             $this->sequence --;
         }
@@ -270,15 +269,16 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
 
     /**
      * treeViewCategories  
-     * 
+     *
+     * @param $categoryOptions 输出选项
      * @access public
      * @return void
      */
-    public function listCategories($singleCategoryOptions = NULL)
+    public function listCategories($categoryOptions = NULL)
     {
         //初始化一些变量
-        $this->_singleCategoryOptions = Typecho_Config::factory($singleCategoryOptions);
-        $this->_singleCategoryOptions->setDefault(array(
+        $this->_categoryOptions = Typecho_Config::factory($categoryOptions);
+        $this->_categoryOptions->setDefault(array(
             'wrapTag'           =>  'ul',
             'wrapClass'         =>  '',
             'itemTag'           =>  'li',
@@ -290,18 +290,18 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
         ));
 
         // 插件插件接口
-        $this->pluginHandle()->trigger($plugged)->listCategories($this->_singleCategoryOptions, $this);
+        $this->pluginHandle()->trigger($plugged)->listCategories($this->_categoryOptions, $this);
 
         if (!$plugged) {
             $this->stack = $this->getCategories($this->_top);
 
             if ($this->have()) { 
-                echo '<' . $this->_singleCategoryOptions->wrapTag . (empty($this->_singleCategoryOptions->wrapClass) 
-                    ? '' : ' class="' . $this->_singleCategoryOptions->wrapClass . '"') . '>';
+                echo '<' . $this->_categoryOptions->wrapTag . (empty($this->_categoryOptions->wrapClass)
+                    ? '' : ' class="' . $this->_categoryOptions->wrapClass . '"') . '>';
                 while ($this->next()) {
                     $this->treeViewCategoriesCallback();
                 }
-                echo '</' . $this->_singleCategoryOptions->wrapTag . '>';
+                echo '</' . $this->_categoryOptions->wrapTag . '>';
             }
 
             $this->stack = $this->_map;

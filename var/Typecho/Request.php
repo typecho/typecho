@@ -153,6 +153,34 @@ class Typecho_Request
     }
 
     /**
+     * 检查ip地址是否合法
+     *
+     * @param string $ip ip地址
+     * @return boolean
+     */
+    private function _checkIp($ip)
+    {
+        if (function_exists('filter_var')) {
+            return filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)
+                || filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
+        }
+
+        return preg_match("/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/", $ip)
+            || preg_match("/^[0-9a-f:]+$/i", $ip);
+    }
+
+    /**
+     * 检查ua是否合法
+     *
+     * @param $agent ua字符串
+     * @return boolean
+     */
+    private function _checkAgent($agent)
+    {
+        return preg_match("/^[_a-z0-9- ,:;=#@\.\(\)\/\+\*\?]+$/i", $agent);
+    }
+
+    /**
      * 设置过滤器
      *
      * @access public
@@ -592,21 +620,27 @@ class Typecho_Request
      */
     public function setIp($ip = NULL)
     {
-        switch (true) {
-            case NULL !== $this->getServer('HTTP_X_FORWARDED_FOR'):
-                list($this->_ip) = array_map('trim', explode(',', $this->getServer('HTTP_X_FORWARDED_FOR')));
-                return;
-            case NULL !== $this->getServer('HTTP_CLIENT_IP'):
-                $this->_ip = $this->getServer('HTTP_CLIENT_IP');
-                return;
-            case NULL !== $this->getServer('REMOTE_ADDR'):
-                $this->_ip = $this->getServer('REMOTE_ADDR');
-                return;
-            default:
-                break;
+        if (!empty($ip)) {
+            $this->_ip = $ip;
+        } else {
+            switch (true) {
+                case NULL !== $this->getServer('HTTP_X_FORWARDED_FOR'):
+                    list($this->_ip) = array_map('trim', explode(',', $this->getServer('HTTP_X_FORWARDED_FOR')));
+                    break;
+                case NULL !== $this->getServer('HTTP_CLIENT_IP'):
+                    $this->_ip = $this->getServer('HTTP_CLIENT_IP');
+                    break;
+                case NULL !== $this->getServer('REMOTE_ADDR'):
+                    $this->_ip = $this->getServer('REMOTE_ADDR');
+                    break;
+                default:
+                    break;
+            }
         }
 
-        $this->_ip = 'unknown';
+        if (empty($this->_ip) || !self::_checkIp($this->_ip)) {
+            $this->_ip = 'unknown';
+        }
     }
 
     /**
@@ -633,7 +667,8 @@ class Typecho_Request
      */
     public function setAgent($agent = NULL)
     {
-        $this->_agent = (NULL === $agent) ? $this->getServer('HTTP_USER_AGENT') : $agent;
+        $agent = (NULL === $agent) ? $this->getServer('HTTP_USER_AGENT') : $agent;
+        $this->_agent = self::_checkAgent($agent) ? $agent : '';
     }
 
     /**

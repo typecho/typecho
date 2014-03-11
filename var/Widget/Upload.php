@@ -1,4 +1,5 @@
 <?php
+if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
  * 上传动作
  *
@@ -64,6 +65,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
      */
     private static function getSafeName(&$name)
     {
+        $name = str_replace(array('"', '<', '>'), '', $name);
         $name = str_replace('\\', '/', $name);
         $name = false === strpos($name, '/') ? ('a' . $name) : str_replace('/', '/a', $name);
         $info = pathinfo($name);
@@ -413,6 +415,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
     public function action()
     {
         if ($this->user->pass('contributor', true) && $this->request->isPost()) {
+            $this->security->protect();
             if ($this->request->is('do=modify&cid')) {
                 $this->modify();
             } else {

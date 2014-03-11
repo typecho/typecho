@@ -1,4 +1,5 @@
 <?php
+if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 
 /**
  * 当前登录用户
@@ -122,6 +123,10 @@ class Widget_User extends Typecho_Widget
         ->from('table.users')
         ->where((strpos($name, '@') ? 'mail' : 'name') . ' = ?', $name)
         ->limit(1));
+
+        if (empty($user)) {
+            return false;
+        }
 
         $hashValidate = $this->pluginHandle()->trigger($hashPluggable)->hashValidate($password, $user['password']);
         if (!$hashPluggable) {
