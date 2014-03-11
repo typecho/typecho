@@ -167,6 +167,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         /** 给表单增加规则 */
         if ('insert' == $action || 'update' == $action) {
             $screenName->addRule(array($this, 'screenNameExists'), _t('昵称已经存在'));
+            $screenName->addRule('xssCheck', _t('请不要在昵称中使用特殊字符'));
             $url->addRule('url', _t('个人主页地址格式错误'));
             $mail->addRule('required', _t('必须填写电子邮箱'));
             $mail->addRule(array($this, 'mailExists'), _t('电子邮箱地址已经存在'));
