@@ -45,7 +45,7 @@
 (min-resolution: 192dpi) {
   #wmd-button-row span {
     background-image: url(../img/editor@2x.png);
-    @include background-size(320px 60px);
+    @include background-size(320px auto);
   }
 }
 

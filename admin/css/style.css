@@ -1408,112 +1408,177 @@ a.operate-reply {
 /**
  * icons
  */
-/* line 8, ../scss/_icons.scss */
+/* line 29, ../scss/_icons.scss */
 .i-edit, .i-delete, .i-exlink, .mime-office, .mime-text, .mime-image, .mime-html, .mime-archive, .mime-application, .mime-audio, .mime-script, .mime-video, .mime-unknow, .i-upload, .i-upload-active {
   display: inline-block;
   vertical-align: text-bottom;
-  background: url('../img/icons-sba2b1299ac.png') no-repeat;
-  text-indent: -9999em; }
-  /* line 13, ../scss/_icons.scss */
+  text-indent: -9999em;
+  background-image: url('../img/icons-sba2b1299ac.png');
+  background-repeat: no-repeat; }
+  /* line 35, ../scss/_icons.scss */
   .i-edit:hover, .i-delete:hover, .i-exlink:hover, .mime-office:hover, .mime-text:hover, .mime-image:hover, .mime-html:hover, .mime-archive:hover, .mime-application:hover, .mime-audio:hover, .mime-script:hover, .mime-video:hover, .mime-unknow:hover, .i-upload:hover, .i-upload-active:hover {
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=75);
     opacity: 0.75; }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* line 29, ../scss/_icons.scss */
+    .i-edit, .i-delete, .i-exlink, .mime-office, .mime-text, .mime-image, .mime-html, .mime-archive, .mime-application, .mime-audio, .mime-script, .mime-video, .mime-unknow, .i-upload, .i-upload-active {
+      -webkit-background-size: auto 256px;
+      -moz-background-size: auto 256px;
+      -o-background-size: auto 256px;
+      background-size: auto 256px;
+      background-image: url('../img/icons-2x-se223d6d340.png'); } }
 
-/* line 18, ../scss/_icons.scss */
+/* line 47, ../scss/_icons.scss */
 .i-edit, .i-delete, .i-exlink, .mime-office, .mime-text, .mime-image, .mime-html, .mime-archive, .mime-application, .mime-audio, .mime-script, .mime-video, .mime-unknow {
   width: 16px;
   height: 16px; }
 
-/* line 24, ../scss/_icons.scss */
+/* line 53, ../scss/_icons.scss */
 .i-upload, .i-upload-active {
   width: 24px;
   height: 24px; }
 
-/* line 30, ../scss/_icons.scss */
+/* line 59, ../scss/_icons.scss */
 .i-edit {
   background-position: 0 -80px; }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* line 59, ../scss/_icons.scss */
+    .i-edit {
+      background-position: 0 -80px; } }
 
-/* line 34, ../scss/_icons.scss */
+/* line 63, ../scss/_icons.scss */
 .i-delete {
   background-position: 0 -64px; }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* line 63, ../scss/_icons.scss */
+    .i-delete {
+      background-position: 0 -64px; } }
 
-/* line 42, ../scss/_icons.scss */
+/* line 71, ../scss/_icons.scss */
 .i-upload {
   background-position: 0 -24px; }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* line 71, ../scss/_icons.scss */
+    .i-upload {
+      background-position: 0 -24px; } }
 
-/* line 47, ../scss/_icons.scss */
+/* line 76, ../scss/_icons.scss */
 .i-upload-active {
   background-position: 0 0; }
 
-/* line 53, ../scss/_icons.scss */
+/* line 82, ../scss/_icons.scss */
 .i-caret-up, .i-caret-down, .i-caret-left, .i-caret-right {
   display: inline-block;
   border-style: solid;
   border-color: transparent transparent #BBB transparent;
   border-width: 3px 4px 5px; }
 
-/* line 59, ../scss/_icons.scss */
+/* line 88, ../scss/_icons.scss */
 .i-caret-down {
   border-color: #BBB transparent transparent transparent;
   border-width: 5px 4px 3px; }
 
-/* line 63, ../scss/_icons.scss */
+/* line 92, ../scss/_icons.scss */
 .i-caret-left {
   border-color: transparent #BBB transparent transparent;
   border-width: 4px 5px 4px 3px; }
 
-/* line 67, ../scss/_icons.scss */
+/* line 96, ../scss/_icons.scss */
 .i-caret-right {
   border-color: transparent transparent transparent #BBB;
   border-width: 4px 3px 4px 5px; }
 
-/* line 72, ../scss/_icons.scss */
+/* line 101, ../scss/_icons.scss */
 .i-exlink {
   background-position: 0 -48px; }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* line 101, ../scss/_icons.scss */
+    .i-exlink {
+      background-position: 0 -48px; } }
 
 /* 文件类型图标 */
-/* line 80, ../scss/_icons.scss */
+/* line 109, ../scss/_icons.scss */
 .mime-office {
   background-position: 0 -128px; }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* line 109, ../scss/_icons.scss */
+    .mime-office {
+      background-position: 0 -112px; } }
 
-/* line 85, ../scss/_icons.scss */
+/* line 114, ../scss/_icons.scss */
 .mime-text {
   background-position: 0 -208px; }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* line 114, ../scss/_icons.scss */
+    .mime-text {
+      background-position: 0 -208px; } }
 
-/* line 90, ../scss/_icons.scss */
+/* line 119, ../scss/_icons.scss */
 .mime-image {
   background-position: 0 -96px; }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* line 119, ../scss/_icons.scss */
+    .mime-image {
+      background-position: 0 -96px; } }
 
-/* line 95, ../scss/_icons.scss */
+/* line 124, ../scss/_icons.scss */
 .mime-html {
   background-position: 0 -144px; }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* line 124, ../scss/_icons.scss */
+    .mime-html {
+      background-position: 0 -144px; } }
 
-/* line 100, ../scss/_icons.scss */
+/* line 129, ../scss/_icons.scss */
 .mime-archive {
   background-position: 0 -224px; }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* line 129, ../scss/_icons.scss */
+    .mime-archive {
+      background-position: 0 -224px; } }
 
-/* line 105, ../scss/_icons.scss */
+/* line 134, ../scss/_icons.scss */
 .mime-application {
   background-position: 0 -160px; }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* line 134, ../scss/_icons.scss */
+    .mime-application {
+      background-position: 0 -176px; } }
 
-/* line 110, ../scss/_icons.scss */
+/* line 139, ../scss/_icons.scss */
 .mime-audio {
   background-position: 0 -240px; }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* line 139, ../scss/_icons.scss */
+    .mime-audio {
+      background-position: 0 -240px; } }
 
-/* line 115, ../scss/_icons.scss */
+/* line 144, ../scss/_icons.scss */
 .mime-script {
   background-position: 0 -176px; }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* line 144, ../scss/_icons.scss */
+    .mime-script {
+      background-position: 0 -160px; } }
 
-/* line 120, ../scss/_icons.scss */
+/* line 149, ../scss/_icons.scss */
 .mime-video {
   background-position: 0 -112px; }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* line 149, ../scss/_icons.scss */
+    .mime-video {
+      background-position: 0 -128px; } }
 
-/* line 125, ../scss/_icons.scss */
+/* line 154, ../scss/_icons.scss */
 .mime-unknow {
   background-position: 0 -192px; }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* line 154, ../scss/_icons.scss */
+    .mime-unknow {
+      background-position: 0 -192px; } }
 
 /* Logo 图标 */
-/* line 132, ../scss/_icons.scss */
+/* line 161, ../scss/_icons.scss */
 .i-logo, .i-logo-s {
   width: 169px;
   height: 40px;
@@ -1526,12 +1591,12 @@ a.operate-reply {
   background-size: auto 40px;
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=15);
   opacity: 0.15; }
-  /* line 140, ../scss/_icons.scss */
+  /* line 169, ../scss/_icons.scss */
   .i-logo:hover, .i-logo-s:hover {
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=20);
     opacity: 0.2; }
 
-/* line 144, ../scss/_icons.scss */
+/* line 173, ../scss/_icons.scss */
 .i-logo-s {
   width: 26px;
   height: 26px;
@@ -1589,10 +1654,10 @@ a.operate-reply {
   /* line 46, ../scss/components/_editor.scss */
   #wmd-button-row span {
     background-image: url(../img/editor@2x.png);
-    -webkit-background-size: 320px 60px;
-    -moz-background-size: 320px 60px;
-    -o-background-size: 320px 60px;
-    background-size: 320px 60px; } }
+    -webkit-background-size: 320px auto;
+    -moz-background-size: 320px auto;
+    -o-background-size: 320px auto;
+    background-size: 320px auto; } }
 /* line 53, ../scss/components/_editor.scss */
 .wmd-edittab {
   float: right;
