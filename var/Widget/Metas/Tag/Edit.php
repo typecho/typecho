@@ -182,7 +182,9 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
             $name->addRule('required', _t('必须填写标签名称'));
             $name->addRule(array($this, 'nameExists'), _t('标签名称已经存在'));
             $name->addRule(array($this, 'nameToSlug'), _t('标签名称无法被转换为缩略名'));
+            $name->addRule('xssCheck', _t('请不要标签名称中使用特殊字符'));
             $slug->addRule(array($this, 'slugExists'), _t('缩略名已经存在'));
+            $slug->addRule('xssCheck', _t('请不要在缩略名中使用特殊字符'));
         }
 
         if ('update' == $action) {

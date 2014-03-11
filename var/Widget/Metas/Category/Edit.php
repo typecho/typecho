@@ -200,7 +200,9 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
             $name->addRule('required', _t('必须填写分类名称'));
             $name->addRule(array($this, 'nameExists'), _t('分类名称已经存在'));
             $name->addRule(array($this, 'nameToSlug'), _t('分类名称无法被转换为缩略名'));
+            $name->addRule('xssCheck', _t('请不要在分类名称中使用特殊字符'));
             $slug->addRule(array($this, 'slugExists'), _t('缩略名已经存在'));
+            $slug->addRule('xssCheck', _t('请不要在缩略名中使用特殊字符'));
         }
 
         if ('update' == $action) {
