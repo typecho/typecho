@@ -79,6 +79,6 @@ class Widget_Register extends Widget_Abstract_Users implements Widget_Interface_
         Typecho_Cookie::delete('__typecho_remember_mail');
 
         $this->widget('Widget_Notice')->set(_t('用户 <strong>%s</strong> 已经成功注册, 密码为 <strong>%s</strong>', $this->screenName, $generatedPassword), 'success');
-        $this->response->goBack();
+        $this->response->redirect($this->options->adminUrl);
     }
 }
