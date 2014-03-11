@@ -336,6 +336,11 @@ textarea {
   margin: 5px 0;
   line-height: 1.5;
 }
+
+.widget-list li ul {
+  margin-left: 15px;
+}
+
 .widget-list a:hover {
 }
 

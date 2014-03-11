@@ -25,10 +25,7 @@
     <?php if (!empty($this->options->sidebarBlock) && in_array('ShowCategory', $this->options->sidebarBlock)): ?>
     <section class="widget">
 		<h3 class="widget-title"><?php _e('分类'); ?></h3>
-        <ul class="widget-list">
-            <?php $this->widget('Widget_Metas_Category_List')
-            ->parse('<li><a href="{permalink}">{name}</a> ({count})</li>'); ?>
-        </ul>
+        <?php $this->widget('Widget_Metas_Category_List')->listCategoies('wrapClass=widget-list'); ?>
 	</section>
     <?php endif; ?>
 
