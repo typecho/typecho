@@ -305,18 +305,16 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
      */
     public function deleteCategory()
     {
-        $categories = $this->request->filter('int')->mid;
+        $categories = $this->request->filter('int')->getArray('mid');
         $deleteCount = 0;
 
-        if ($categories && is_array($categories)) {
-            foreach ($categories as $category) {
-                $parent = $this->db->fetchObject($this->select()->where('mid = ?', $category))->parent;
+        foreach ($categories as $category) {
+            $parent = $this->db->fetchObject($this->select()->where('mid = ?', $category))->parent;
 
-                if ($this->delete($this->db->sql()->where('mid = ?', $category))) {
-                    $this->db->query($this->db->delete('table.relationships')->where('mid = ?', $category));
-                    $this->update(array('parent' => $parent), $this->db->sql()->where('parent = ?', $category));
-                    $deleteCount ++;
-                }
+            if ($this->delete($this->db->sql()->where('mid = ?', $category))) {
+                $this->db->query($this->db->delete('table.relationships')->where('mid = ?', $category));
+                $this->update(array('parent' => $parent), $this->db->sql()->where('parent = ?', $category));
+                $deleteCount ++;
             }
         }
 
@@ -347,9 +345,9 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         }
 
         $merge = $this->request->merge;
-        $categories = $this->request->filter('int')->mid;
+        $categories = $this->request->filter('int')->getArray('mid');
 
-        if ($categories && is_array($categories)) {
+        if ($categories) {
             $this->merge($merge, 'category', $categories);
 
             /** 提示信息 */
@@ -370,8 +368,8 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
      */
     public function sortCategory()
     {
-        $categories = $this->request->filter('int')->mid;
-        if ($categories && is_array($categories)) {
+        $categories = $this->request->filter('int')->getArray('mid');
+        if ($categories) {
             $this->sort($categories, 'category');
         }
 
@@ -391,8 +389,8 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
      */
     public function refreshCategory()
     {
-        $categories = $this->request->filter('int')->mid;
-        if ($categories && is_array($categories)) {
+        $categories = $this->request->filter('int')->getArray('mid');
+        if ($categories) {
             foreach ($categories as $category) {
                 $this->refreshCountByTypeAndStatus($category, 'post', 'publish');
             }
@@ -445,8 +443,8 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
     /**
      * 获取菜单标题
      *
-     * @access public
      * @return string
+     * @throws Typecho_Widget_Exception
      */
     public function getMenuTitle()
     {

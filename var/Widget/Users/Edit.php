@@ -268,18 +268,16 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
      */
     public function deleteUser()
     {
-        $users = $this->request->uid;
+        $users = $this->request->filter('int')->getArray('uid');
         $deleteCount = 0;
 
-        if ($users && is_array($users)) {
-            foreach ($users as $user) {
-                if (1 == $user) {
-                    continue;
-                }
+        foreach ($users as $user) {
+            if (1 == $user || $user == $this->user->id) {
+                continue;
+            }
 
-                if ($this->delete($this->db->sql()->where('uid = ?', $user))) {
-                    $deleteCount ++;
-                }
+            if ($this->delete($this->db->sql()->where('uid = ?', $user))) {
+                $deleteCount ++;
             }
         }
 

@@ -68,7 +68,8 @@ if (!isset($_GET['finish']) && file_exists(__TYPECHO_ROOT_DIR__ . '/config.inc.p
  * @return string
  */
 function _r($name, $default = NULL) {
-    return isset($_REQUEST[$name]) ? $_REQUEST[$name] : $default;
+    return isset($_REQUEST[$name]) ?
+        (is_array($_REQUEST[$name]) ? $default : $_REQUEST[$name]) : $default;
 }
 
 /**
@@ -81,7 +82,8 @@ function _rFrom() {
     $params = func_get_args();
     
     foreach ($params as $param) {
-        $result[$param] = isset($_REQUEST[$param]) ? $_REQUEST[$param] : NULL;
+        $result[$param] = isset($_REQUEST[$param]) ?
+            (is_array($_REQUEST[$param]) ? NULL : $_REQUEST[$param]) : NULL;
     }
     
     return $result;

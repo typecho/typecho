@@ -249,8 +249,34 @@ class Typecho_Request
                 break;
         }
 
-        $value = is_array($value) || strlen($value) > 0 ? $value : $default;
+        $value = !is_array($value) && strlen($value) > 0 ? $value : $default;
         return $this->_filter ? $this->_applyFilter($value) : $value;
+    }
+
+    /**
+     * 获取一个数组
+     *
+     * @param $key
+     * @return array
+     */
+    public function getArray($key)
+    {
+        $result = array();
+
+        switch (true) {
+            case isset($_GET[$key]):
+                $result = $_GET[$key];
+                break;
+            case isset($_POST[$key]):
+                $result = $_POST[$key];
+                break;
+            default:
+                break;
+        }
+
+        $result = is_array($result) ? $result
+            : (strlen($result) > 0 ? array($result) : array());
+        return $this->_filter ? $this->_applyFilter($result) : $result;
     }
 
     /**

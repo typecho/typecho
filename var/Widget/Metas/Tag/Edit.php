@@ -306,9 +306,9 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
             $this->response->goBack();
         }
 
-        $tags = $this->request->filter('int')->mid;
+        $tags = $this->request->filter('int')->getArray('mid');
 
-        if ($tags && is_array($tags)) {
+        if ($tags) {
             $this->merge($merge, 'tag', $tags);
 
             /** 提示信息 */
@@ -329,8 +329,8 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
      */
     public function refreshTag()
     {
-        $tags = $this->request->filter('int')->mid;
-        if ($tags && is_array($tags)) {
+        $tags = $this->request->filter('int')->getArray('mid');
+        if ($tags) {
             foreach ($tags as $tag) {
                 $this->refreshCountByTypeAndStatus($tag, 'post', 'publish');
             } 
