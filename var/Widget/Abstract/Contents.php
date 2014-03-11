@@ -151,7 +151,21 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $content = $this->content;
         $parts = preg_split("/<\/\s*(?:p|blockquote|q|pre)\s*>/i", $content, 2);
         if (!empty($parts)) {
-            $content = $parts[0] . '</p>';
+            preg_match("/<\s*(?:p|blockquote|q|pre)\s*>/i", $parts[0], $tags);
+            switch ($tags[0]) {
+                case '<pre>':
+                    $content = $parts[0] . '</pre>';
+                    break;
+                case '<blockquote>':
+                    $content = $parts[0] . '</blockquote>';
+                    break;
+                case '<q>':
+                    $content = $parts[0] . '</q>';
+                    break;
+                default:
+                    $content = $parts[0] . '</p>';
+                    break;
+            }
         }
 
         return $content;
