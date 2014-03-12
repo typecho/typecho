@@ -22,6 +22,16 @@ class Helper
     }
 
     /**
+     * 获取Widget_Security对象
+     *
+     * @return Widget_Security
+     */
+    public static function security()
+    {
+        return Typecho_Widget::widget('Widget_Security');
+    }
+
+    /**
      * 强行删除某个插件
      *
      * @access public
