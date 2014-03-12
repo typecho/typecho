@@ -209,7 +209,7 @@ class Typecho_Validate
      */
     public function email($str)
     {
-        return preg_match("/^[^@\s<&>]+@([-a-z0-9]+\.)+[a-z]{2,}$/i", $str);
+        return preg_match("/^[_a-z0-9-\.]+@([-a-z0-9]+\.)+[a-z]{2,}$/i", $str);
     }
 
     /**
