@@ -92,7 +92,11 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         $fields = array();
 
         if (!empty($this->request->fieldNames)) {
-            $data = $this->request->from('fieldNames', 'fieldTypes', 'fieldValues');
+            $data = array(
+                'fieldNames'    =>  $this->request->getArray('fieldNames'),
+                'fieldTypes'    =>  $this->request->getArray('fieldTypes'),
+                'fieldValues'   =>  $this->request->getArray('fieldValues')
+            );
             foreach ($data['fieldNames'] as $key => $val) {
                 if (empty($val)) {
                     continue;
@@ -701,8 +705,9 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     public function writePost()
     {
         $contents = $this->request->from('password', 'allowComment',
-            'allowPing', 'allowFeed', 'slug', 'category', 'tags', 'text', 'visibility');
+            'allowPing', 'allowFeed', 'slug', 'tags', 'text', 'visibility');
 
+        $contents['category'] = $this->request->getArray('category');
         $contents['title'] = $this->request->get('title', _t('未命名文档'));
         $contents['created'] = $this->getCreated();
 

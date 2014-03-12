@@ -142,7 +142,7 @@ class Typecho_Response
      * 获取字符集
      *
      * @access public
-     * @return void
+     * @return string
      */
     public function getCharset()
     {
@@ -258,9 +258,8 @@ class Typecho_Response
      * 返回来路
      *
      * @access public
-     * @param string $anchor 附加地址
+     * @param string $suffix 附加地址
      * @param string $default 默认来路
-     * @return void
      */
     public function goBack($suffix = NULL, $default = NULL)
     {

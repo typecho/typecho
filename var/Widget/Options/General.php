@@ -148,7 +148,8 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
             $this->response->goBack();
         }
 
-        $settings = $this->request->from('title', 'siteUrl', 'description', 'keywords', 'allowRegister', 'timezone', 'attachmentTypes');
+        $settings = $this->request->from('title', 'siteUrl', 'description', 'keywords', 'allowRegister', 'timezone');
+        $settings['attachmentTypes'] = $this->request->getArray('attachmentTypes');
         $settings['siteUrl'] = rtrim($settings['siteUrl'], '/');
 
         $attachmentTypes = array();

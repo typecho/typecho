@@ -7,6 +7,8 @@
  * @version    $Id$
  */
 
+define('__TYPECHO_FILTER_SUPPORTED__', function_exists('filter_var'));
+
 /**
  * 服务器请求处理类
  *
@@ -22,6 +24,13 @@ class Typecho_Request
      * @var array
      */
     private $_params = array();
+
+    /**
+     * 参数是否已经处理过
+     *
+     * @var bool
+     */
+    private $_paramsParsed = false;
 
     /**
      * 路径信息
@@ -96,6 +105,13 @@ class Typecho_Request
     private static $_instance = NULL;
 
     /**
+     * 全部的http数据
+     *
+     * @var bool|array
+     */
+    private static $_httpParams = false;
+
+    /**
      * 当前过滤器
      *
      * @access private
@@ -146,9 +162,10 @@ class Typecho_Request
                 $value = is_array($value) ? array_map($filter, $value) :
                 call_user_func($filter, $value);
             }
+
+            $this->_filter = array();
         }
 
-        $this->_filter = array();
         return $value;
     }
 
@@ -160,9 +177,9 @@ class Typecho_Request
      */
     private function _checkIp($ip)
     {
-        if (function_exists('filter_var')) {
-            return filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)
-                || filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
+        if (__TYPECHO_FILTER_SUPPORTED__) {
+            return false !== (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)
+                || filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6));
         }
 
         return preg_match("/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/", $ip)
@@ -178,6 +195,17 @@ class Typecho_Request
     private function _checkAgent($agent)
     {
         return preg_match("/^[_a-z0-9- ,:;=#@\.\(\)\/\+\*\?]+$/i", $agent);
+    }
+
+    /**
+     * 初始化变量
+     */
+    public function __construct()
+    {
+        if (false === self::$_httpParams) {
+            self::$_httpParams = array_filter(array_merge($_POST, $_GET),
+                array('Typecho_Common', 'checkStrEncoding'));
+        }
     }
 
     /**
@@ -219,9 +247,8 @@ class Typecho_Request
      */
     public function __isset($key)
     {
-        return isset($_GET[$key])
-        || isset($_POST[$key])
-        || $this->isSetParam($key);
+        return isset(self::$_httpParams[$key])
+        || isset($this->_params[$key]);
     }
 
     /**
@@ -238,11 +265,8 @@ class Typecho_Request
             case isset($this->_params[$key]):
                 $value = $this->_params[$key];
                 break;
-            case isset($_GET[$key]):
-                $value = $_GET[$key];
-                break;
-            case isset($_POST[$key]):
-                $value = $_POST[$key];
+            case isset(self::$_httpParams[$key]):
+                $value = self::$_httpParams[$key];
                 break;
             default:
                 $value = $default;
@@ -250,7 +274,7 @@ class Typecho_Request
         }
 
         $value = !is_array($value) && strlen($value) > 0 ? $value : $default;
-        return $this->_filter ? $this->_applyFilter($value) : $value;
+        return $this->_applyFilter($value);
     }
 
     /**
@@ -261,22 +285,11 @@ class Typecho_Request
      */
     public function getArray($key)
     {
-        $result = array();
-
-        switch (true) {
-            case isset($_GET[$key]):
-                $result = $_GET[$key];
-                break;
-            case isset($_POST[$key]):
-                $result = $_POST[$key];
-                break;
-            default:
-                break;
-        }
+        $result = isset(self::$_httpParams[$key]) ? self::$_httpParams[$key] : array();
 
         $result = is_array($result) ? $result
             : (strlen($result) > 0 ? array($result) : array());
-        return $this->_filter ? $this->_applyFilter($result) : $result;
+        return $this->_applyFilter($result);
     }
 
     /**
@@ -299,21 +312,6 @@ class Typecho_Request
     }
 
     /**
-     * 获取指定的http传递参数
-     *
-     * @access public
-     * @param string $key 指定的参数
-     * @param mixed $default 默认的参数
-     * @return mixed
-     */
-    public function getParam($key, $default = NULL)
-    {
-        $value = isset($this->_params[$key]) ? $this->_params[$key] : $default;
-        $value = is_array($value) || strlen($value) > 0 ? $value : $default;
-        return $this->_filter ? $this->_applyFilter($value) : $value;
-    }
-
-    /**
      * 设置http传递参数
      *
      * @access public
@@ -323,31 +321,9 @@ class Typecho_Request
      */
     public function setParam($name, $value)
     {
-        $this->_params[$name] = $value;
-    }
-
-    /**
-     * 删除参数
-     *
-     * @access public
-     * @param string $name 指定的参数
-     * @return void
-     */
-    public function unSetParam($name)
-    {
-        unset($this->_params[$name]);
-    }
-
-    /**
-     * 参数是否存在
-     *
-     * @access public
-     * @param string $key 指定的参数
-     * @return boolean
-     */
-    public function isSetParam($key)
-    {
-        return isset($this->_params[$key]);
+        if (Typecho_Common::checkStrEncoding($value)) {
+            $this->_params[$name] = $value;
+        }
     }
 
     /**
@@ -365,7 +341,8 @@ class Typecho_Request
             $params = $out;
         }
 
-        $this->_params = array_merge($this->_params, $params);
+        $this->_params = array_merge($this->_params,
+            array_filter($params, array('Typecho_Common', 'checkStrEncoding')));
     }
 
     /**

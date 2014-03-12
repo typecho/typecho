@@ -78,7 +78,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         ->from('table.users')
         ->where('uid = ?', $uid)->limit(1));
 
-        return $user ? true : false;
+        return !empty($user);
     }
 
     /**
