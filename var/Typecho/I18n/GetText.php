@@ -162,7 +162,7 @@ class Typecho_I18n_GetText
         $this->table_translations = $this->readintarray($this->total * 2);
 
         if ($this->enable_cache) {
-            $this->cache_translations = array ();
+            $this->cache_translations = array ('' => NULL);
             /* read all strings in the cache */
             for ($i = 0; $i < $this->total; $i++) {
                 if ($this->table_originals[$i * 2 + 1] > 0) {
@@ -303,7 +303,7 @@ class Typecho_I18n_GetText
             } else {
                 $header = $this->get_translation_string(0);
             }
-            if (eregi("plural-forms: ([^\n]*)\n", $header, $regs))
+            if (preg_match("/plural\-forms: ([^\n]*)\n/i", $header, $regs))
                 $expr = $regs[1];
             else
                 $expr = "nplurals=2; plural=n == 1 ? 0 : 1;";
