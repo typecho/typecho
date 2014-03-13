@@ -105,7 +105,7 @@ class Helper
      * @param string $widget 组件名称
      * @param string $action 组件动作
      * @param string $after 在某个路由后面
-     * @return void
+     * @return integer
      */
     public static function addRoute($name, $url, $widget, $action = NULL, $after = NULL)
     {
@@ -183,8 +183,8 @@ class Helper
      * 删除action扩展
      *
      * @access public
-     * @param unknown $actionName
-     * @return unknown
+     * @param string $actionName
+     * @return Typecho_Widget
      */
     public static function removeAction($actionName)
     {
@@ -255,7 +255,7 @@ class Helper
      * @param string $subTitle 面板副标题
      * @param string $level 进入权限
      * @param boolean $hidden 是否隐藏
-     * @param boolean $addLink 新增项目链接, 会显示在页面标题之后
+     * @param string $addLink 新增项目链接, 会显示在页面标题之后
      * @return integer
      */
     public static function addPanel($index, $fileName, $title, $subTitle, $level, $hidden = false, $addLink = '')
@@ -316,7 +316,8 @@ class Helper
      * 获取面板url
      *
      * @access public
-     * @return unknown
+     * @param string $fileName
+     * @return string
      */
     public static function url($fileName)
     {
@@ -329,7 +330,7 @@ class Helper
      * @access public
      * @static
      * @param mixed $pluginName 插件名称
-     * @param mixed array $settings 变量键值对
+     * @param array $settings 变量键值对
      * @param bool $isPersonal. (default: false) 是否为私人变量
      * @return void
      */

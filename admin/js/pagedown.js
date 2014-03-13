@@ -1296,7 +1296,10 @@ else
 
             //  autolink anything like <http://example.com>
             
-            var replacer = function (wholematch, m1) { return "<a href=\"" + m1 + "\">" + pluginHooks.plainLinkText(m1) + "</a>"; }
+            var replacer = function (wholematch, m1) {
+                var html = "<a href=\"" + m1 + "\">" + pluginHooks.plainLinkText(m1) + "</a>";
+                return "~K" + (g_html_blocks.push(html) - 1) + "K";
+            }
             text = text.replace(/<((https?|ftp):[^'">\s]+)>/gi, replacer);
 
             // Email addresses: <address@domain.foo>
