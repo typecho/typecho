@@ -137,6 +137,17 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
     }
 
     /**
+     * 过滤掉可执行的后缀名
+     *
+     * @param string $ext
+     * @return boolean
+     */
+    public function removeShell($ext)
+    {
+        return !preg_match("/^(php|php4|php5|sh|asp|jsp|rb|py|pl|dll|exe|bat)$/i", $ext);
+    }
+
+    /**
      * 执行更新动作
      *
      * @access public
@@ -166,9 +177,10 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
             $attachmentTypes[] = '@doc@';
         }
         
-        $attachmentTypesOther = $this->request->filter('trim')->attachmentTypesOther;
+        $attachmentTypesOther = $this->request->filter('trim', 'strtolower')->attachmentTypesOther;
         if ($this->isEnableByCheckbox($settings['attachmentTypes'], '@other@') && !empty($attachmentTypesOther)) {
-            $attachmentTypes[] = implode(',', array_map('trim', explode(',', $attachmentTypesOther)));
+            $attachmentTypes[] = implode(',',
+                array_filter(array_map('trim', explode(',', $attachmentTypesOther)), array($this, 'removeShell')));
         }
         
         $settings['attachmentTypes'] = implode(',', $attachmentTypes);
