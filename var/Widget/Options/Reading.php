@@ -39,7 +39,7 @@ class Widget_Options_Reading extends Widget_Options_Permalink
             . _t('在某些主题中这个格式可能不会生效, 因为主题作者可以自定义日期格式.') . '<br />'
             . _t('请参考 <a href="http://www.php.net/manual/zh/function.date.php">PHP 日期格式写法</a>.'));
         $postDateFormat->input->setAttribute('class', 'w-40 mono');
-        $form->addInput($postDateFormat);
+        $form->addInput($postDateFormat->addRule('xssCheck', _t('请不要在日期格式中使用特殊字符')));
 
         //首页显示
         $frontPageParts = explode(':', $this->options->frontPage);
