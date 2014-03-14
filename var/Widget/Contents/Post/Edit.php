@@ -90,8 +90,9 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     protected function getFields()
     {
         $fields = array();
+        $fieldNames = $this->request->getArray('fieldNames');
 
-        if (!empty($this->request->fieldNames)) {
+        if (!empty($fieldNames)) {
             $data = array(
                 'fieldNames'    =>  $this->request->getArray('fieldNames'),
                 'fieldTypes'    =>  $this->request->getArray('fieldTypes'),
