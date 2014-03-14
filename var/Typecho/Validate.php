@@ -144,7 +144,7 @@ class Typecho_Validate
      * @param integer $length 最小长度
      * @return boolean
      */
-    public function minLength($str, $length)
+    public static function minLength($str, $length)
     {
         return (Typecho_Common::strLen($str) >= $length);
     }
@@ -182,7 +182,7 @@ class Typecho_Validate
      * @param array $params 枚举值
      * @return unknown
      */
-    public function enum($str, array $params)
+    public static function enum($str, array $params)
     {
         $keys = array_flip($params);
         return isset($keys[$str]);
@@ -191,11 +191,11 @@ class Typecho_Validate
     /**
      * Max Length
      *
-     * @access public
-     * @param string
-     * @return boolean
+     * @param $str
+     * @param $length
+     * @return bool
      */
-    public function maxLength($str, $length)
+    public static function maxLength($str, $length)
     {
         return (Typecho_Common::strLen($str) < $length);
     }
@@ -207,7 +207,7 @@ class Typecho_Validate
      * @param string
      * @return boolean
      */
-    public function email($str)
+    public static function email($str)
     {
         return preg_match("/^[_a-z0-9-\.]+@([-a-z0-9]+\.)+[a-z]{2,}$/i", $str);
     }
@@ -219,7 +219,7 @@ class Typecho_Validate
      * @param string $str
      * @return boolean
      */
-    public function url($str)
+    public static function url($str)
     {
         $parts = @parse_url($str);
         if (!$parts) {
@@ -238,7 +238,7 @@ class Typecho_Validate
      * @param string
      * @return boolean
      */
-    public function alpha($str)
+    public static function alpha($str)
     {
         return preg_match("/^([a-z])+$/i", $str) ? true : false;
     }
@@ -250,7 +250,7 @@ class Typecho_Validate
      * @param string
      * @return boolean
      */
-    public function alphaNumeric($str)
+    public static function alphaNumeric($str)
     {
         return preg_match("/^([a-z0-9])+$/i", $str);
     }
@@ -262,7 +262,7 @@ class Typecho_Validate
      * @param string
      * @return boolean
      */
-    public function alphaDash($str)
+    public static function alphaDash($str)
     {
         return preg_match("/^([_a-z0-9-])+$/i", $str) ? true : false;
     }
@@ -274,7 +274,7 @@ class Typecho_Validate
      * @param string $str
      * @return boolean
      */
-    public function xssCheck($str)
+    public static function xssCheck($str)
     {
         $search = 'abcdefghijklmnopqrstuvwxyz';
         $search .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -291,7 +291,7 @@ class Typecho_Validate
             $str = preg_replace('/(&#0{0,8}'.ord($search[$i]).';?)/', $search[$i], $str); // with a ;
         }
 
-        return !preg_match('/(\(|\)|\\\|"|<|>|[\x00-\x08]|[\x0b-\x0c]|[\x0e-\x19])/', $str);
+        return !preg_match('/(\(|\)|\\\|"|<|>|[\x00-\x08]|[\x0b-\x0c]|[\x0e-\x19]|' . "\r|\n|\t" . ')/', $str);
     }
 
     /**
@@ -301,9 +301,9 @@ class Typecho_Validate
      * @param integer
      * @return boolean
      */
-    public function isFloat($str)
+    public static function isFloat($str)
     {
-        return ereg("^[0-9\.]+$", $str);
+        return preg_match("/^[0-9\.]+$/", $str);
     }
 
     /**
@@ -313,7 +313,7 @@ class Typecho_Validate
      * @param string
      * @return boolean
      */
-    public function isInteger($str)
+    public static function isInteger($str)
     {
         return is_numeric($str);
     }

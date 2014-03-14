@@ -635,12 +635,12 @@ EOF;
     {
         //~ 针对location的xss过滤, 因为其特殊性无法使用removeXSS函数
         //~ fix issue 66
-        $params = parse_url(str_replace(array("\r", "\n"), '', $url));
+        $params = parse_url(str_replace(array("\r", "\n", "\t", ' '), '', $url));
 
         /** 禁止非法的协议跳转 */
         if (isset($params['scheme'])) {
             if (!in_array($params['scheme'], array('http', 'https'))) {
-                return;
+                return '/';
             }
         }
 
@@ -904,7 +904,7 @@ EOF;
      *
      * @access public
      * @param integer $length 字符串长度
-     * @param string $specialChars 是否有特殊字符
+     * @param boolean $specialChars 是否有特殊字符
      * @return string
      */
     public static function randString($length, $specialChars = false)

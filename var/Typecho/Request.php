@@ -12,7 +12,6 @@ define('__TYPECHO_FILTER_SUPPORTED__', function_exists('filter_var'));
 /**
  * 服务器请求处理类
  *
- * TODO getSiteUrl
  * @package Request
  */
 class Typecho_Request
@@ -24,13 +23,6 @@ class Typecho_Request
      * @var array
      */
     private $_params = array();
-
-    /**
-     * 参数是否已经处理过
-     *
-     * @var bool
-     */
-    private $_paramsParsed = false;
 
     /**
      * 路径信息

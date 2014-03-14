@@ -589,6 +589,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     {
         $tags = str_replace('，', ',', $tags);
         $tags = array_unique(array_map('trim', explode(',', $tags)));
+        $tags = array_filter($tags, array('Typecho_Validate', 'xssCheck'));
 
         /** 取出已有tag */
         $existTags = Typecho_Common::arrayFlatten($this->db->fetchAll(
@@ -601,6 +602,10 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         /** 删除已有tag */
         if ($existTags) {
             foreach ($existTags as $tag) {
+                if (0 == strlen($tag)) {
+                    continue;
+                }
+
                 $this->db->query($this->db->delete('table.relationships')
                 ->where('cid = ?', $cid)
                 ->where('mid = ?', $tag));
@@ -619,6 +624,10 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         /** 插入tag */
         if ($insertTags) {
             foreach ($insertTags as $tag) {
+                if (0 == strlen($tag)) {
+                    continue;
+                }
+
                 $this->db->query($this->db->insert('table.relationships')
                 ->rows(array(
                     'mid'  =>   $tag,

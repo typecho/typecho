@@ -267,7 +267,7 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
      */
     public function deleteTag()
     {
-        $tags = $this->request->filter('int')->mid;
+        $tags = $this->request->filter('int')->getArray('mid');
         $deleteCount = 0;
 
         if ($tags && is_array($tags)) {
