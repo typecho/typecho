@@ -30,13 +30,21 @@ class Widget_Security extends Typecho_Widget
         $this->_options = $this->widget('Widget_Options');
         $user = $this->widget('Widget_User');
 
-        $token = uniqid();
+        $this->_token = $this->_options->secret;
         if ($user->hasLogin()) {
-            $token = $user->authCode . '&' . $user->uid
-                . '&' . $this->request->getRequestUrl();
+            $this->_token .= '&' . $user->authCode . '&' . $user->uid;
         }
+    }
 
-        $this->_token = md5($token);
+    /**
+     * 获取token
+     *
+     * @param string $suffix 后缀
+     * @return string
+     */
+    public function getToken($suffix)
+    {
+        return md5($this->_token . '&' . $suffix);
     }
 
     /**
@@ -54,7 +62,7 @@ class Widget_Security extends Typecho_Widget
             parse_str($parts['query'], $params);
         }
 
-        $params['_'] = $this->_token;
+        $params['_'] = $this->getToken($this->request->getRequestUrl());
         $parts['query'] = http_build_query($params);
 
         return Typecho_Common::buildUrl($parts);
@@ -66,16 +74,8 @@ class Widget_Security extends Typecho_Widget
      */
     public function protect()
     {
-        $user = $this->widget('Widget_User');
-        $token = uniqid();
-        if ($user->hasLogin()) {
-            $token = $user->authCode . '&' . $user->uid
-                . '&' . $this->request->getReferer();
-        }
-
-        if ($this->request->get('_') != md5($token)) {
-            $this->widget('Widget_Notice')->set(_t('一次不安全的跳转已经被阻止'));
-            $this->response->redirect($this->_options->adminUrl);
+        if ($this->request->get('_') != $this->getToken($this->request->getReferer())) {
+            $this->response->goBack();
         }
     }
 

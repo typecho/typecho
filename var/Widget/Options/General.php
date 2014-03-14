@@ -179,8 +179,12 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
         
         $attachmentTypesOther = $this->request->filter('trim', 'strtolower')->attachmentTypesOther;
         if ($this->isEnableByCheckbox($settings['attachmentTypes'], '@other@') && !empty($attachmentTypesOther)) {
-            $attachmentTypes[] = implode(',',
-                array_filter(array_map('trim', explode(',', $attachmentTypesOther)), array($this, 'removeShell')));
+            $types = implode(',', array_filter(array_map('trim',
+                explode(',', $attachmentTypesOther)), array($this, 'removeShell')));
+
+            if (!empty($types)) {
+                $attachmentTypes[] = $types;
+            }
         }
         
         $settings['attachmentTypes'] = implode(',', $attachmentTypes);

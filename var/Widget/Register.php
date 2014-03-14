@@ -17,6 +17,9 @@ class Widget_Register extends Widget_Abstract_Users implements Widget_Interface_
      */
     public function action()
     {
+        // protect
+        $this->security->protect();
+
         /** 如果已经登录 */
         if ($this->user->hasLogin() || !$this->options->allowRegister) {
             /** 直接返回 */

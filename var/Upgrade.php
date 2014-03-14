@@ -1161,5 +1161,19 @@ Typecho_Date::setTimezoneOffset($options->timezone);
                 break;
         }
     }
-}
 
+
+    /**
+     * v0_9r14_3_14
+     *
+     * @param mixed $db
+     * @param mixed $options
+     * @access public
+     * @return void
+     */
+    public function v0_9r14_3_14($db, $options)
+    {
+        $db->query($db->insert('table.options')
+            ->rows(array('name' => 'secret', 'user' => 0, 'value' => Typecho_Common::randString(32, true))));
+    }
+}

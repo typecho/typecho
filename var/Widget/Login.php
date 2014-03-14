@@ -28,6 +28,9 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Do
      */
     public function action()
     {
+        // protect
+        $this->security->protect();
+
         /** 如果已经登录 */
         if ($this->user->hasLogin()) {
             /** 直接返回 */

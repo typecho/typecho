@@ -717,7 +717,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
         
         /** 处理密码保护流程 */
         if (!empty($value['password']) &&
-        $value['password'] != $this->request->protectPassword &&
+        $value['password'] != Typecho_Cookie::get('protectPassword') &&
         $value['authorId'] != $this->user->uid && 
         !$this->user->pass('editor', true)) {
             $value['hidden'] = true;
@@ -732,7 +732,8 @@ class Widget_Abstract_Contents extends Widget_Abstract
 
         /** 如果访问权限被禁止 */
         if ($value['hidden']) {
-            $value['text'] = '<form class="protected" action="' . $value['permalink'] . '" method="post">' .
+            $value['text'] = '<form class="protected" action="' . $this->security->getTokenUrl($value['permalink'])
+                . '" method="post">' .
             '<p class="word">' . _t('请输入密码访问') . '</p>' .
             '<p><input type="password" class="text" name="protectPassword" />
             <input type="submit" class="submit" value="' . _t('提交') . '" /></p>' .
