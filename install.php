@@ -60,6 +60,18 @@ if (!isset($_GET['finish']) && file_exists(__TYPECHO_ROOT_DIR__ . '/config.inc.p
     exit;
 }
 
+// 挡掉可能的跨站请求
+if (!empty($_GET) || !empty($_POST)) {
+    if (empty($_SERVER['HTTP_REFERER')) {
+        exit;
+    }
+
+    $parts = parse_url($_SERVER);
+    if (empty($parts['host']) || $_SERVER['HTTP_HOST'] != $parts['host']) {
+        exit;
+    }
+}
+
 /**
  * 获取传递参数
  *
@@ -205,6 +217,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                         if (isset($_REQUEST['user']) && isset($_REQUEST['password'])) {
                             $loginUrl = _u() . '/index.php/action/login?name=' . urlencode(_r('user')) . '&password=' 
                             . urlencode(_r('password')) . '&referer=' . _u() . '/admin/index.php';
+                            $loginUrl = Typecho_Widget::widget('Widget_Security')->getTokenUrl($loginUrl);
                         } else {
                             $loginUrl = _u() . '/admin/index.php';
                         }
