@@ -43,11 +43,11 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
     {
         /** 构建表格 */
         $form = new Typecho_Widget_Helper_Form($this->security->getIndex('/action/users-profile'),
-        Typecho_Widget_Helper_Form::POST_METHOD);
+                                               Typecho_Widget_Helper_Form::POST_METHOD);
 
         /** 用户昵称 */
         $screenName = new Typecho_Widget_Helper_Form_Element_Text('screenName', NULL, NULL, _t('昵称'), _t('用户昵称可以与用户名不同, 用于前台显示.')
-            . '<br />' . _t('如果你将此项留空, 将默认使用用户名.'));
+                                                                                                      . '<br />' . _t('如果你将此项留空, 将默认使用用户名.'));
         $form->addInput($screenName);
 
         /** 个人主页地址 */
@@ -56,7 +56,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
 
         /** 电子邮箱地址 */
         $mail = new Typecho_Widget_Helper_Form_Element_Text('mail', NULL, NULL, _t('电子邮箱地址 *'), _t('电子邮箱地址将作为此用户的主要联系方式.')
-            . '<br />' . _t('请不要与系统中现有的电子邮箱地址重复.'));
+                                                                                                . '<br />' . _t('请不要与系统中现有的电子邮箱地址重复.'));
         $form->addInput($mail);
 
         /** 用户动作 */
@@ -93,20 +93,20 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
     {
         /** 构建表格 */
         $form = new Typecho_Widget_Helper_Form($this->security->getIndex('/action/users-profile'),
-        Typecho_Widget_Helper_Form::POST_METHOD);
+                                               Typecho_Widget_Helper_Form::POST_METHOD);
 
-        /** 自动保存 */
+        /** 撰写设置 */
         $markdown = new Typecho_Widget_Helper_Form_Element_Radio('markdown',
-        array('0' => _t('关闭'), '1' => _t('打开')),
-        $this->options->markdown, _t('使用 Markdown 语法编辑和解析内容'), 
-            _t('使用 <a href="http://daringfireball.net/projects/markdown/">Markdown</a> 语法能够使您的撰写过程更加简便直观.')
-                . '<br />' . _t('此功能开启不会影响以前没有使用 Markdown 语法编辑的内容.'));
+                                                                 array('0' => _t('关闭'), '1' => _t('打开')),
+                                                                 $this->options->markdown, _t('使用 Markdown 语法编辑和解析内容'),
+                                                                 _t('使用 <a href="http://daringfireball.net/projects/markdown/">Markdown</a> 语法能够使您的撰写过程更加简便直观.')
+                                                                 . '<br />' . _t('此功能开启不会影响以前没有使用 Markdown 语法编辑的内容.'));
         $form->addInput($markdown);
 
         /** 自动保存 */
         $autoSave = new Typecho_Widget_Helper_Form_Element_Radio('autoSave',
-        array('0' => _t('关闭'), '1' => _t('打开')),
-        $this->options->autoSave, _t('自动保存'), _t('自动保存功能可以更好地保护你的文章不会丢失.'));
+                                                                 array('0' => _t('关闭'), '1' => _t('打开')),
+                                                                 $this->options->autoSave, _t('自动保存'), _t('自动保存功能可以更好地保护你的文章不会丢失.'));
         $form->addInput($autoSave);
 
         /** 默认允许 */
@@ -124,8 +124,8 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         }
 
         $defaultAllow = new Typecho_Widget_Helper_Form_Element_Checkbox('defaultAllow',
-        array('comment' => _t('可以被评论'), 'ping' => _t('可以被引用'), 'feed' => _t('出现在聚合中')),
-        $allow, _t('默认允许'), _t('设置你经常使用的默认允许权限'));
+                                                                        array('comment' => _t('可以被评论'), 'ping' => _t('可以被引用'), 'feed' => _t('出现在聚合中')),
+                                                                        $allow, _t('默认允许'), _t('设置你经常使用的默认允许权限'));
         $form->addInput($defaultAllow);
 
         /** 用户动作 */
@@ -154,7 +154,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
     {
         /** 构建表格 */
         $form = new Typecho_Widget_Helper_Form($this->security->getIndex('/action/users-profile'),
-        Typecho_Widget_Helper_Form::POST_METHOD);
+                                               Typecho_Widget_Helper_Form::POST_METHOD);
         $form->setAttribute('name', $pluginName);
         $form->setAttribute('id', $pluginName);
 
@@ -189,7 +189,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
             if ($plugins->personalConfig) {
                 echo '<h3>' . $plugins->title . '</h3>';
                 list($pluginFileName, $className) = Typecho_Plugin::portal($plugins->name,
-                __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
+                                                                           __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
 
                 $form = $this->personalForm($plugins->name, $className, $pluginFileName, $group);
                 if ($this->user->pass($group, true)) {
@@ -209,11 +209,11 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
     {
         /** 构建表格 */
         $form = new Typecho_Widget_Helper_Form($this->security->getIndex('/action/users-profile'),
-        Typecho_Widget_Helper_Form::POST_METHOD);
+                                               Typecho_Widget_Helper_Form::POST_METHOD);
 
         /** 用户密码 */
         $password = new Typecho_Widget_Helper_Form_Element_Password('password', NULL, NULL, _t('用户密码'), _t('为此用户分配一个密码.')
-            . '<br />' . _t('建议使用特殊字符与字母、数字的混编样式,以增加系统安全性.'));
+                                                                                                        . '<br />' . _t('建议使用特殊字符与字母、数字的混编样式,以增加系统安全性.'));
         $password->input->setAttribute('class', 'w-60');
         $form->addInput($password);
 
@@ -277,27 +277,23 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
     {
         $settings['autoSave'] = $this->request->autoSave ? 1 : 0;
         $settings['markdown'] = $this->request->markdown ? 1 : 0;
+        $defaultAllow = $this->request->getArray('defaultAllow');
 
-        $settings['defaultAllowComment'] = is_array($this->request->defaultAllow)
-        && in_array('comment', $this->request->defaultAllow) ? 1 : 0;
-
-        $settings['defaultAllowPing'] = is_array($this->request->defaultAllow)
-        && in_array('ping', $this->request->defaultAllow) ? 1 : 0;
-
-        $settings['defaultAllowFeed'] = is_array($this->request->defaultAllow)
-        && in_array('feed', $this->request->defaultAllow) ? 1 : 0;
+        $settings['defaultAllowComment'] = in_array('comment', $defaultAllow) ? 1 : 0;
+        $settings['defaultAllowPing'] = in_array('ping', $defaultAllow) ? 1 : 0;
+        $settings['defaultAllowFeed'] = in_array('feed', $defaultAllow) ? 1 : 0;
 
         foreach ($settings as $name => $value) {
             if ($this->db->fetchObject($this->db->select(array('COUNT(*)' => 'num'))
-            ->from('table.options')->where('name = ? AND user = ?', $name, $this->user->uid))->num > 0) {
+                                                ->from('table.options')->where('name = ? AND user = ?', $name, $this->user->uid))->num > 0) {
                 $this->widget('Widget_Abstract_Options')
-                ->update(array('value' => $value), $this->db->sql()->where('name = ? AND user = ?', $name, $this->user->uid));
+                     ->update(array('value' => $value), $this->db->sql()->where('name = ? AND user = ?', $name, $this->user->uid));
             } else {
                 $this->widget('Widget_Abstract_Options')->insert(array(
-                    'name'  =>  $name,
-                    'value' =>  $value,
-                    'user'  =>  $this->user->uid
-                ));
+                                                                     'name'  =>  $name,
+                                                                     'value' =>  $value,
+                                                                     'user'  =>  $this->user->uid
+                                                                 ));
             }
         }
 
@@ -322,7 +318,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
 
         /** 更新数据 */
         $this->update(array('password' => $password),
-        $this->db->sql()->where('uid = ?', $this->user->uid));
+                      $this->db->sql()->where('uid = ?', $this->user->uid));
 
         /** 设置高亮 */
         $this->widget('Widget_Notice')->highlight('user-' . $this->user->uid);
@@ -351,7 +347,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
 
         /** 获取插件入口 */
         list($pluginFileName, $className) = Typecho_Plugin::portal($this->request->plugin,
-        __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
+                                                                   __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
         $info = Typecho_Plugin::parseInfo($pluginFileName);
 
         if (!$info['personalConfig'] || !isset($activatedPlugins[$pluginName])) {
@@ -372,15 +368,15 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
 
         if (!$this->personalConfigHandle($className, $settings)) {
             if ($this->db->fetchObject($this->db->select(array('COUNT(*)' => 'num'))
-            ->from('table.options')->where('name = ? AND user = ?', $name, $this->user->uid))->num > 0) {
+                                                ->from('table.options')->where('name = ? AND user = ?', $name, $this->user->uid))->num > 0) {
                 $this->widget('Widget_Abstract_Options')
-                ->update(array('value' => serialize($settings)), $this->db->sql()->where('name = ? AND user = ?', $name, $this->user->uid));
+                     ->update(array('value' => serialize($settings)), $this->db->sql()->where('name = ? AND user = ?', $name, $this->user->uid));
             } else {
                 $this->widget('Widget_Abstract_Options')->insert(array(
-                    'name'  =>  $name,
-                    'value' =>  serialize($settings),
-                    'user'  =>  $this->user->uid
-                ));
+                                                                     'name'  =>  $name,
+                                                                     'value' =>  serialize($settings),
+                                                                     'user'  =>  $this->user->uid
+                                                                 ));
             }
         }
 
