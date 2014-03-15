@@ -95,7 +95,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         $form = new Typecho_Widget_Helper_Form($this->security->getIndex('/action/users-profile'),
         Typecho_Widget_Helper_Form::POST_METHOD);
 
-        /** 自动保存 */
+        /** 撰写设置 */
         $markdown = new Typecho_Widget_Helper_Form_Element_Radio('markdown',
         array('0' => _t('关闭'), '1' => _t('打开')),
         $this->options->markdown, _t('使用 Markdown 语法编辑和解析内容'), 
@@ -277,15 +277,11 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
     {
         $settings['autoSave'] = $this->request->autoSave ? 1 : 0;
         $settings['markdown'] = $this->request->markdown ? 1 : 0;
+        $defaultAllow = $this->request->getArray('defaultAllow');
 
-        $settings['defaultAllowComment'] = is_array($this->request->defaultAllow)
-        && in_array('comment', $this->request->defaultAllow) ? 1 : 0;
-
-        $settings['defaultAllowPing'] = is_array($this->request->defaultAllow)
-        && in_array('ping', $this->request->defaultAllow) ? 1 : 0;
-
-        $settings['defaultAllowFeed'] = is_array($this->request->defaultAllow)
-        && in_array('feed', $this->request->defaultAllow) ? 1 : 0;
+        $settings['defaultAllowComment'] = in_array('comment', $defaultAllow) ? 1 : 0;
+        $settings['defaultAllowPing'] = in_array('ping', $defaultAllow) ? 1 : 0;
+        $settings['defaultAllowFeed'] = in_array('feed', $defaultAllow) ? 1 : 0;
 
         foreach ($settings as $name => $value) {
             if ($this->db->fetchObject($this->db->select(array('COUNT(*)' => 'num'))
