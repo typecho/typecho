@@ -967,9 +967,9 @@ EOF;
     {
         if ('$T$' == substr($to, 0, 3)) {
             $salt = substr($to, 3, 9);
-            return self::hash($from, $salt) == $to;
+            return self::hash($from, $salt) === $to;
         } else {
-            return md5($from) == $to;
+            return md5($from) === $to;
         }
     }
 

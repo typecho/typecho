@@ -717,7 +717,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
         
         /** 处理密码保护流程 */
         if (!empty($value['password']) &&
-        $value['password'] != Typecho_Cookie::get('protectPassword') &&
+        $value['password'] !== Typecho_Cookie::get('protectPassword') &&
         $value['authorId'] != $this->user->uid && 
         !$this->user->pass('editor', true)) {
             $value['hidden'] = true;
