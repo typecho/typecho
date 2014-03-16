@@ -214,41 +214,34 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
      */
     public function deleteAttachment()
     {
-        $cid = $this->request->filter('int')->cid;
+        $posts = $this->request->filter('int')->getArray('cid');
         $deleteCount = 0;
-        $status = 'publish';
 
-        if ($cid) {
-            /** 格式化文章主键 */
-            $posts = is_array($cid) ? $cid : array($cid);
-            foreach ($posts as $post) {
-                // 删除插件接口
-                $this->pluginHandle()->delete($post, $this);
+        foreach ($posts as $post) {
+            // 删除插件接口
+            $this->pluginHandle()->delete($post, $this);
 
-                $condition = $this->db->sql()->where('cid = ?', $post);
-                $row = $this->db->fetchRow($this->select()
+            $condition = $this->db->sql()->where('cid = ?', $post);
+            $row = $this->db->fetchRow($this->select()
                 ->where('table.contents.type = ?', 'attachment')
                 ->where('table.contents.cid = ?', $post)
                 ->limit(1), array($this, 'push'));
 
-                if ($this->isWriteable($condition) && $this->delete($condition)) {
-                    /** 删除文件 */
-                    Widget_Upload::deleteHandle($row);
+            if ($this->isWriteable($condition) && $this->delete($condition)) {
+                /** 删除文件 */
+                Widget_Upload::deleteHandle($row);
 
-                    /** 删除评论 */
-                    $this->db->query($this->db->delete('table.comments')
+                /** 删除评论 */
+                $this->db->query($this->db->delete('table.comments')
                     ->where('cid = ?', $post));
 
-                    $status = $this->status;
+                // 完成删除插件接口
+                $this->pluginHandle()->finishDelete($post, $this);
 
-                    // 完成删除插件接口
-                    $this->pluginHandle()->finishDelete($post, $this);
-
-                    $deleteCount ++;
-                }
-
-                unset($condition);
+                $deleteCount ++;
             }
+
+            unset($condition);
         }
 
         if ($this->request->isAjax()) {
@@ -273,7 +266,8 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
     public function clearAttachment()
     {
         $page = 1;
-        
+        $deleteCount = 0;
+
         do {
             $posts = Typecho_Common::arrayFlatten($this->db->fetchAll($this->select('cid')
                 ->from('table.contents')

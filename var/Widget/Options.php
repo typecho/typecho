@@ -201,8 +201,9 @@ class Widget_Options extends Typecho_Widget
      */
     protected function ___loginAction()
     {
-        return Typecho_Router::url('do', array('action' => 'login', 'widget' => 'Login'),
-        Typecho_Common::url('index.php', $this->rootUrl));
+        return $this->widget('Widget_Security')->getTokenUrl(
+            Typecho_Router::url('do', array('action' => 'login', 'widget' => 'Login'),
+            Typecho_Common::url('index.php', $this->rootUrl)));
     }
 
     /**
@@ -224,7 +225,8 @@ class Widget_Options extends Typecho_Widget
      */
     protected function ___registerAction()
     {
-        return Typecho_Router::url('do', array('action' => 'register', 'widget' => 'Register'), $this->index);
+        return $this->widget('Widget_Security')->getTokenUrl(
+            Typecho_Router::url('do', array('action' => 'register', 'widget' => 'Register'), $this->index));
     }
 
     /**

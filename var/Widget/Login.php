@@ -28,6 +28,9 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Do
      */
     public function action()
     {
+        // protect
+        $this->security->protect();
+
         /** 如果已经登录 */
         if ($this->user->hasLogin()) {
             /** 直接返回 */
@@ -73,7 +76,7 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Do
             $this->response->redirect($this->request->referer);
         } else if (!$this->user->pass('contributor', true)) {
             /** 不允许普通用户直接跳转后台 */
-            $this->response->redirect($this->options->siteUrl);
+            $this->response->redirect($this->options->profileUrl);
         } else {
             $this->response->redirect($this->options->adminUrl);
         }

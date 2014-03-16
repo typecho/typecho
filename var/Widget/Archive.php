@@ -292,7 +292,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      * 评论地址
      * 
      * @access protected
-     * @return void
+     * @return string
      */
     protected function ___commentUrl()
     {
@@ -306,7 +306,7 @@ class Widget_Archive extends Widget_Abstract_Contents
             $commentUrl .= '?parent=' . $reply;
         }
         
-        return $commentUrl;
+        return $this->security->getTokenUrl($commentUrl);
     }
 
     /**
@@ -320,7 +320,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
-     * @param $_archiveSlug the $_archiveSlug to set
+     * @param string $archiveSlug the $_archiveSlug to set
      */
     public function setArchiveSlug($archiveSlug)
     {
@@ -328,7 +328,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
-     * @param $_archiveSingle the $_archiveSingle to set
+     * @param string $archiveSingle the $_archiveSingle to set
      */
     public function setArchiveSingle($archiveSingle)
     {
@@ -795,6 +795,7 @@ class Widget_Archive extends Widget_Abstract_Contents
 
         /** 保存密码至cookie */
         if ($this->request->isPost() && isset($this->request->protectPassword)) {
+            $this->security->protect();
             Typecho_Cookie::set('protectPassword', $this->request->protectPassword, 0);
         }
 
@@ -1475,7 +1476,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      * 获取回响归档对象 
      * 
      * @access public
-     * @return void
+     * @return Widget_Comments_Ping
      */
     public function pings()
     {

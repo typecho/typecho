@@ -9,6 +9,8 @@
  * @version $Id$
  */
 
+define('__TYPECHO_MB_SUPPORTED__', function_exists('mb_get_info'));
+
 /**
  * Typecho公用方法
  *
@@ -20,7 +22,7 @@
 class Typecho_Common
 {
     /** 程序版本 */
-    const VERSION = '0.9/14.2.24';
+    const VERSION = '0.9/14.3.14';
 
     /**
      * 锁定的代码块
@@ -103,7 +105,7 @@ class Typecho_Common
      * @param mixed $matches 
      * @static
      * @access public
-     * @return void
+     * @return bool
      */
     public static function __filterAttrs($matches)
     {
@@ -242,20 +244,9 @@ class Typecho_Common
      */
     public static function exceptionHandle(Exception $exception)
     {
-        //$obHandles = ob_list_handlers();
-
         @ob_end_clean();
 
-        /*
-        if (in_array('ob_gzhandler', $obHandles)) {
-            ob_start('ob_gzhandler');
-        } else {
-            ob_start();
-        }
-        */
-
         if (defined('__TYPECHO_DEBUG__')) {
-            //@ob_clean();
             echo nl2br($exception->__toString());
         } else {
             if (404 == $exception->getCode() && !empty(self::$exceptionHandle)) {
@@ -279,6 +270,7 @@ class Typecho_Common
     public static function error($exception)
     {
         $isException = is_object($exception);
+        $message = '';
 
         if ($isException) {
             $code = $exception->getCode();
@@ -643,12 +635,12 @@ EOF;
     {
         //~ 针对location的xss过滤, 因为其特殊性无法使用removeXSS函数
         //~ fix issue 66
-        $params = parse_url(str_replace(array("\r", "\n"), '', $url));
+        $params = parse_url(str_replace(array("\r", "\n", "\t", ' '), '', $url));
 
         /** 禁止非法的协议跳转 */
         if (isset($params['scheme'])) {
             if (!in_array($params['scheme'], array('http', 'https'))) {
-                return;
+                return '/';
             }
         }
 
@@ -743,7 +735,7 @@ EOF;
         $iLength = self::strLen($str) - $start;
         $tLength = $length < $iLength ? ($length - self::strLen($trim)) : $length;
 
-        if (function_exists('mb_get_info')) {
+        if (__TYPECHO_MB_SUPPORTED__) {
             $str = mb_substr($str, $start, $tLength, self::$charset);
         } else {
             if ('UTF-8' == strtoupper(self::$charset)) {
@@ -767,11 +759,31 @@ EOF;
      */
     public static function strLen($str)
     {
-        if (function_exists('mb_get_info')) {
+        if (__TYPECHO_MB_SUPPORTED__) {
             return mb_strlen($str, self::$charset);
         } else {
             return 'UTF-8' == strtoupper(self::$charset) 
                 ? strlen(utf8_decode($str)) : strlen($str);
+        }
+    }
+
+    /**
+     * 检查是否为合法的编码数据
+     *
+     * @param string|array $str
+     * @return boolean
+     */
+    public static function checkStrEncoding($str)
+    {
+        if (is_array($str)) {
+            return array_map(array('Typecho_Common', 'checkStrEncoding'), $str);
+        }
+
+        if (__TYPECHO_MB_SUPPORTED__) {
+            return mb_check_encoding($str, self::$charset);
+        } else {
+            // just support utf-8
+            return preg_match('//u', $str);
         }
     }
 
@@ -792,7 +804,7 @@ EOF;
             return $default;
         }
         
-        if (function_exists('mb_regex_encoding')) {
+        if (__TYPECHO_MB_SUPPORTED__) {
             mb_regex_encoding(self::$charset);
             mb_ereg_search_init($str, "[\w" . preg_quote('_-') . "]+");
             $result = mb_ereg_search();
@@ -892,7 +904,7 @@ EOF;
      *
      * @access public
      * @param integer $length 字符串长度
-     * @param string $specialChars 是否有特殊字符
+     * @param boolean $specialChars 是否有特殊字符
      * @return string
      */
     public static function randString($length, $specialChars = false)
@@ -955,9 +967,9 @@ EOF;
     {
         if ('$T$' == substr($to, 0, 3)) {
             $salt = substr($to, 3, 9);
-            return self::hash($from, $salt) == $to;
+            return self::hash($from, $salt) === $to;
         } else {
-            return md5($from) == $to;
+            return md5($from) === $to;
         }
     }
 

@@ -47,6 +47,6 @@ class Typecho_Widget_Helper_Form_Element_Textarea extends Typecho_Widget_Helper_
      */
     protected function _value($value)
     {
-        $this->input->html($value);
+        $this->input->html(htmlspecialchars($value));
     }
 }

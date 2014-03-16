@@ -78,7 +78,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         ->from('table.users')
         ->where('uid = ?', $uid)->limit(1));
 
-        return $user ? true : false;
+        return !empty($user);
     }
 
     /**
@@ -125,9 +125,9 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         $form->addInput($url);
 
         /** 用户组 */
-        $group =  new Typecho_Widget_Helper_Form_Element_Select('group', array('visitor' => _t('访问者'),
-        'subscriber' => _t('关注者'), 'contributor' => _t('贡献者'), 'editor' => _t('编辑'), 'administrator' => _t('管理员')),
-        NULL, _t('用户组'), _t('不同的用户组拥有不同的权限.')
+        $group =  new Typecho_Widget_Helper_Form_Element_Select('group', array('subscriber' => _t('关注者'),
+                'contributor' => _t('贡献者'), 'editor' => _t('编辑'), 'administrator' => _t('管理员')),
+                NULL, _t('用户组'), _t('不同的用户组拥有不同的权限.')
             . '<br />' . _t('具体的权限分配表请<a href="http://docs.typecho.org/develop/acl">参考这里</a>.'));
         $form->addInput($group);
 
@@ -167,6 +167,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         /** 给表单增加规则 */
         if ('insert' == $action || 'update' == $action) {
             $screenName->addRule(array($this, 'screenNameExists'), _t('昵称已经存在'));
+            $screenName->addRule('xssCheck', _t('请不要在昵称中使用特殊字符'));
             $url->addRule('url', _t('个人主页地址格式错误'));
             $mail->addRule('required', _t('必须填写电子邮箱'));
             $mail->addRule(array($this, 'mailExists'), _t('电子邮箱地址已经存在'));
@@ -267,18 +268,16 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
      */
     public function deleteUser()
     {
-        $users = $this->request->uid;
+        $users = $this->request->filter('int')->getArray('uid');
         $deleteCount = 0;
 
-        if ($users && is_array($users)) {
-            foreach ($users as $user) {
-                if (1 == $user) {
-                    continue;
-                }
+        foreach ($users as $user) {
+            if (1 == $user || $user == $this->user->id) {
+                continue;
+            }
 
-                if ($this->delete($this->db->sql()->where('uid = ?', $user))) {
-                    $deleteCount ++;
-                }
+            if ($this->delete($this->db->sql()->where('uid = ?', $user))) {
+                $deleteCount ++;
             }
         }
 

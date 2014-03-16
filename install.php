@@ -60,6 +60,18 @@ if (!isset($_GET['finish']) && file_exists(__TYPECHO_ROOT_DIR__ . '/config.inc.p
     exit;
 }
 
+// 挡掉可能的跨站请求
+if (!empty($_GET) || !empty($_POST)) {
+    if (empty($_SERVER['HTTP_REFERER')) {
+        exit;
+    }
+
+    $parts = parse_url($_SERVER);
+    if (empty($parts['host']) || $_SERVER['HTTP_HOST'] != $parts['host']) {
+        exit;
+    }
+}
+
 /**
  * 获取传递参数
  *
@@ -68,7 +80,8 @@ if (!isset($_GET['finish']) && file_exists(__TYPECHO_ROOT_DIR__ . '/config.inc.p
  * @return string
  */
 function _r($name, $default = NULL) {
-    return isset($_REQUEST[$name]) ? $_REQUEST[$name] : $default;
+    return isset($_REQUEST[$name]) ?
+        (is_array($_REQUEST[$name]) ? $default : $_REQUEST[$name]) : $default;
 }
 
 /**
@@ -81,7 +94,8 @@ function _rFrom() {
     $params = func_get_args();
     
     foreach ($params as $param) {
-        $result[$param] = isset($_REQUEST[$param]) ? $_REQUEST[$param] : NULL;
+        $result[$param] = isset($_REQUEST[$param]) ?
+            (is_array($_REQUEST[$param]) ? NULL : $_REQUEST[$param]) : NULL;
     }
     
     return $result;
@@ -203,6 +217,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                         if (isset($_REQUEST['user']) && isset($_REQUEST['password'])) {
                             $loginUrl = _u() . '/index.php/action/login?name=' . urlencode(_r('user')) . '&password=' 
                             . urlencode(_r('password')) . '&referer=' . _u() . '/admin/index.php';
+                            $loginUrl = Typecho_Widget::widget('Widget_Security')->getTokenUrl($loginUrl);
                         } else {
                             $loginUrl = _u() . '/admin/index.php';
                         }
@@ -305,6 +320,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'actionTable', 'user' => 0, 'value' => 'a:0:{}')));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'panelTable', 'user' => 0, 'value' => 'a:0:{}')));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'attachmentTypes', 'user' => 0, 'value' => '@image@')));
+                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'secret', 'user' => 0, 'value' => Typecho_Common::randString(32, true))));
 
                                         /** 初始分类 */
                                         $installDb->query($installDb->insert('table.metas')->rows(array('name' => _t('默认分类'), 'slug' => 'default', 'type' => 'category', 'description' => _t('只是一个默认分类'),

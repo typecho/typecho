@@ -222,7 +222,8 @@ RewriteRule . {$basePath}index.php [L]
                 . _t('请调整你的目录权限, 或者手动创建一个.htaccess文件.') . '</strong>';
         }
 
-        $errorStr .= '<br />' . _t('如果你仍然想启用此功能, <a href="%s">请点击这里</a>', Typecho_Common::url('index.php/action/options-permalink?do=enableRewriteAnyway', $this->options->siteUrl));
+        $errorStr .= '<br />' . _t('如果你仍然想启用此功能, <a href="%s">请点击这里</a>',
+                $this->security->getTokenUrl(Typecho_Common::url('index.php/action/options-permalink?do=enableRewriteAnyway', $this->options->siteUrl)));
 
         $form->addInput($rewrite->addRule(array($this, 'checkRewrite'), $errorStr));
         $patterns = array('/archives/[cid:digital]/' => _t('默认风格') . ' <code>/archives/{cid}/</code>',

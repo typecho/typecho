@@ -183,9 +183,11 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
             $this->response->goBack();
         }
 
-        $settings = $this->request->from('commentDateFormat', 'commentsListSize', 'commentsShow', 'commentsPost', 'commentsPageSize', 'commentsPageDisplay', 'commentsAvatar',
+        $settings = $this->request->from('commentDateFormat', 'commentsListSize', 'commentsPageSize', 'commentsPageDisplay', 'commentsAvatar',
                 'commentsOrder', 'commentsMaxNestingLevels', 'commentsUrlNofollow', 'commentsPostTimeout', 'commentsUniqueIpInterval', 'commentsWhitelist', 'commentsRequireMail', 'commentsAvatarRating',
                 'commentsPostTimeout', 'commentsPostInterval', 'commentsRequireModeration', 'commentsRequireURL', 'commentsHTMLTagAllowed', 'commentsStopWords', 'commentsIpBlackList');
+        $settings['commentsShow'] = $this->request->getArray('commentsShow');
+        $settings['commentsPost'] = $this->request->getArray('commentsPost');
 
         $settings['commentsShowCommentOnly'] = $this->isEnableByCheckbox($settings['commentsShow'], 'commentsShowCommentOnly');
         $settings['commentsMarkdown'] = $this->isEnableByCheckbox($settings['commentsShow'], 'commentsMarkdown');

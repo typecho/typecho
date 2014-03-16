@@ -37,6 +37,9 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
      */
     private function comment()
     {
+        // 使用安全模块保护
+        $this->security->protect();
+
         $comment = array(
             'cid'       =>  $this->_content->cid,
             'created'   =>  $this->options->gmtTime,

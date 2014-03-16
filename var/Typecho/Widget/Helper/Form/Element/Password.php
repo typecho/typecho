@@ -47,6 +47,6 @@ class Typecho_Widget_Helper_Form_Element_Password extends Typecho_Widget_Helper_
      */
     protected function _value($value)
     {
-        $this->input->setAttribute('value', $value);
+        $this->input->setAttribute('value', htmlspecialchars($value));
     }
 }

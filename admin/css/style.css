@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* vim: set et sw=2 ts=2 sts=2 fdm=marker ff=unix fenc=utf8 */
 /**
 * Typecho 后台样式
@@ -1407,112 +1408,177 @@ a.operate-reply {
 /**
  * icons
  */
-/* line 8, ../scss/_icons.scss */
+/* line 29, ../scss/_icons.scss */
 .i-edit, .i-delete, .i-exlink, .mime-office, .mime-text, .mime-image, .mime-html, .mime-archive, .mime-application, .mime-audio, .mime-script, .mime-video, .mime-unknow, .i-upload, .i-upload-active {
   display: inline-block;
   vertical-align: text-bottom;
-  background: url('../img/icons-sba2b1299ac.png') no-repeat;
-  text-indent: -9999em; }
-  /* line 13, ../scss/_icons.scss */
+  text-indent: -9999em;
+  background-image: url('../img/icons-sba2b1299ac.png');
+  background-repeat: no-repeat; }
+  /* line 35, ../scss/_icons.scss */
   .i-edit:hover, .i-delete:hover, .i-exlink:hover, .mime-office:hover, .mime-text:hover, .mime-image:hover, .mime-html:hover, .mime-archive:hover, .mime-application:hover, .mime-audio:hover, .mime-script:hover, .mime-video:hover, .mime-unknow:hover, .i-upload:hover, .i-upload-active:hover {
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=75);
     opacity: 0.75; }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* line 29, ../scss/_icons.scss */
+    .i-edit, .i-delete, .i-exlink, .mime-office, .mime-text, .mime-image, .mime-html, .mime-archive, .mime-application, .mime-audio, .mime-script, .mime-video, .mime-unknow, .i-upload, .i-upload-active {
+      -webkit-background-size: auto 256px;
+      -moz-background-size: auto 256px;
+      -o-background-size: auto 256px;
+      background-size: auto 256px;
+      background-image: url('../img/icons-2x-se223d6d340.png'); } }
 
-/* line 18, ../scss/_icons.scss */
+/* line 47, ../scss/_icons.scss */
 .i-edit, .i-delete, .i-exlink, .mime-office, .mime-text, .mime-image, .mime-html, .mime-archive, .mime-application, .mime-audio, .mime-script, .mime-video, .mime-unknow {
   width: 16px;
   height: 16px; }
 
-/* line 24, ../scss/_icons.scss */
+/* line 53, ../scss/_icons.scss */
 .i-upload, .i-upload-active {
   width: 24px;
   height: 24px; }
 
-/* line 30, ../scss/_icons.scss */
+/* line 59, ../scss/_icons.scss */
 .i-edit {
   background-position: 0 -80px; }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* line 59, ../scss/_icons.scss */
+    .i-edit {
+      background-position: 0 -80px; } }
 
-/* line 34, ../scss/_icons.scss */
+/* line 63, ../scss/_icons.scss */
 .i-delete {
   background-position: 0 -64px; }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* line 63, ../scss/_icons.scss */
+    .i-delete {
+      background-position: 0 -64px; } }
 
-/* line 42, ../scss/_icons.scss */
+/* line 71, ../scss/_icons.scss */
 .i-upload {
   background-position: 0 -24px; }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* line 71, ../scss/_icons.scss */
+    .i-upload {
+      background-position: 0 -24px; } }
 
-/* line 47, ../scss/_icons.scss */
+/* line 76, ../scss/_icons.scss */
 .i-upload-active {
   background-position: 0 0; }
 
-/* line 53, ../scss/_icons.scss */
+/* line 82, ../scss/_icons.scss */
 .i-caret-up, .i-caret-down, .i-caret-left, .i-caret-right {
   display: inline-block;
   border-style: solid;
   border-color: transparent transparent #BBB transparent;
   border-width: 3px 4px 5px; }
 
-/* line 59, ../scss/_icons.scss */
+/* line 88, ../scss/_icons.scss */
 .i-caret-down {
   border-color: #BBB transparent transparent transparent;
   border-width: 5px 4px 3px; }
 
-/* line 63, ../scss/_icons.scss */
+/* line 92, ../scss/_icons.scss */
 .i-caret-left {
   border-color: transparent #BBB transparent transparent;
   border-width: 4px 5px 4px 3px; }
 
-/* line 67, ../scss/_icons.scss */
+/* line 96, ../scss/_icons.scss */
 .i-caret-right {
   border-color: transparent transparent transparent #BBB;
   border-width: 4px 3px 4px 5px; }
 
-/* line 72, ../scss/_icons.scss */
+/* line 101, ../scss/_icons.scss */
 .i-exlink {
   background-position: 0 -48px; }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* line 101, ../scss/_icons.scss */
+    .i-exlink {
+      background-position: 0 -48px; } }
 
 /* 文件类型图标 */
-/* line 80, ../scss/_icons.scss */
+/* line 109, ../scss/_icons.scss */
 .mime-office {
   background-position: 0 -128px; }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* line 109, ../scss/_icons.scss */
+    .mime-office {
+      background-position: 0 -112px; } }
 
-/* line 85, ../scss/_icons.scss */
+/* line 114, ../scss/_icons.scss */
 .mime-text {
   background-position: 0 -208px; }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* line 114, ../scss/_icons.scss */
+    .mime-text {
+      background-position: 0 -208px; } }
 
-/* line 90, ../scss/_icons.scss */
+/* line 119, ../scss/_icons.scss */
 .mime-image {
   background-position: 0 -96px; }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* line 119, ../scss/_icons.scss */
+    .mime-image {
+      background-position: 0 -96px; } }
 
-/* line 95, ../scss/_icons.scss */
+/* line 124, ../scss/_icons.scss */
 .mime-html {
   background-position: 0 -144px; }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* line 124, ../scss/_icons.scss */
+    .mime-html {
+      background-position: 0 -144px; } }
 
-/* line 100, ../scss/_icons.scss */
+/* line 129, ../scss/_icons.scss */
 .mime-archive {
   background-position: 0 -224px; }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* line 129, ../scss/_icons.scss */
+    .mime-archive {
+      background-position: 0 -224px; } }
 
-/* line 105, ../scss/_icons.scss */
+/* line 134, ../scss/_icons.scss */
 .mime-application {
   background-position: 0 -160px; }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* line 134, ../scss/_icons.scss */
+    .mime-application {
+      background-position: 0 -176px; } }
 
-/* line 110, ../scss/_icons.scss */
+/* line 139, ../scss/_icons.scss */
 .mime-audio {
   background-position: 0 -240px; }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* line 139, ../scss/_icons.scss */
+    .mime-audio {
+      background-position: 0 -240px; } }
 
-/* line 115, ../scss/_icons.scss */
+/* line 144, ../scss/_icons.scss */
 .mime-script {
   background-position: 0 -176px; }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* line 144, ../scss/_icons.scss */
+    .mime-script {
+      background-position: 0 -160px; } }
 
-/* line 120, ../scss/_icons.scss */
+/* line 149, ../scss/_icons.scss */
 .mime-video {
   background-position: 0 -112px; }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* line 149, ../scss/_icons.scss */
+    .mime-video {
+      background-position: 0 -128px; } }
 
-/* line 125, ../scss/_icons.scss */
+/* line 154, ../scss/_icons.scss */
 .mime-unknow {
   background-position: 0 -192px; }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* line 154, ../scss/_icons.scss */
+    .mime-unknow {
+      background-position: 0 -192px; } }
 
 /* Logo 图标 */
-/* line 132, ../scss/_icons.scss */
+/* line 161, ../scss/_icons.scss */
 .i-logo, .i-logo-s {
   width: 169px;
   height: 40px;
@@ -1525,12 +1591,12 @@ a.operate-reply {
   background-size: auto 40px;
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=15);
   opacity: 0.15; }
-  /* line 140, ../scss/_icons.scss */
+  /* line 169, ../scss/_icons.scss */
   .i-logo:hover, .i-logo-s:hover {
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=20);
     opacity: 0.2; }
 
-/* line 144, ../scss/_icons.scss */
+/* line 173, ../scss/_icons.scss */
 .i-logo-s {
   width: 26px;
   height: 26px;
@@ -1584,40 +1650,48 @@ a.operate-reply {
   height: 20px;
   background: transparent url(../img/editor.png) no-repeat; }
 
-/* line 44, ../scss/components/_editor.scss */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  /* line 46, ../scss/components/_editor.scss */
+  #wmd-button-row span {
+    background-image: url(../img/editor@2x.png);
+    -webkit-background-size: 320px auto;
+    -moz-background-size: 320px auto;
+    -o-background-size: 320px auto;
+    background-size: 320px auto; } }
+/* line 53, ../scss/components/_editor.scss */
 .wmd-edittab {
   float: right;
   margin-top: 3px;
   font-size: .92857em; }
-  /* line 48, ../scss/components/_editor.scss */
+  /* line 57, ../scss/components/_editor.scss */
   .wmd-edittab a {
     display: inline-block;
     padding: 0 8px;
     margin-left: 5px;
     height: 20px;
     line-height: 20px; }
-    /* line 54, ../scss/components/_editor.scss */
+    /* line 63, ../scss/components/_editor.scss */
     .wmd-edittab a:hover {
       text-decoration: none; }
-    /* line 57, ../scss/components/_editor.scss */
+    /* line 66, ../scss/components/_editor.scss */
     .wmd-edittab a.active {
       background: #E9E9E6;
       color: #999; }
 
-/* line 65, ../scss/components/_editor.scss */
+/* line 74, ../scss/components/_editor.scss */
 .wmd-hidetab {
   display: none; }
 
-/* line 69, ../scss/components/_editor.scss */
+/* line 78, ../scss/components/_editor.scss */
 .wmd-visualhide {
   visibility: hidden; }
 
 /* 对话框 */
-/* line 74, ../scss/components/_editor.scss */
+/* line 83, ../scss/components/_editor.scss */
 .wmd-prompt-background {
   background-color: #000; }
 
-/* line 77, ../scss/components/_editor.scss */
+/* line 86, ../scss/components/_editor.scss */
 .wmd-prompt-dialog {
   position: fixed;
   z-index: 1001;
@@ -1628,22 +1702,22 @@ a.operate-reply {
   padding: 20px;
   width: 360px;
   background: #F6F6F3; }
-  /* line 88, ../scss/components/_editor.scss */
+  /* line 97, ../scss/components/_editor.scss */
   .wmd-prompt-dialog p {
     margin: 0 0 5px; }
-  /* line 89, ../scss/components/_editor.scss */
+  /* line 98, ../scss/components/_editor.scss */
   .wmd-prompt-dialog form {
     margin-top: 10px; }
-  /* line 90, ../scss/components/_editor.scss */
+  /* line 99, ../scss/components/_editor.scss */
   .wmd-prompt-dialog input[type="text"] {
     margin-bottom: 10px;
     width: 100%; }
-  /* line 94, ../scss/components/_editor.scss */
+  /* line 103, ../scss/components/_editor.scss */
   .wmd-prompt-dialog button {
     margin-right: 10px; }
 
 /* 预览 */
-/* line 98, ../scss/components/_editor.scss */
+/* line 107, ../scss/components/_editor.scss */
 #wmd-preview {
   background: #FFF;
   margin: 1em 0;
@@ -1655,37 +1729,37 @@ a.operate-reply {
   -ms-border-radius: 2px;
   -o-border-radius: 2px;
   border-radius: 2px; }
-  /* line 105, ../scss/components/_editor.scss */
+  /* line 114, ../scss/components/_editor.scss */
   #wmd-preview img {
     max-width: 100%; }
-  /* line 106, ../scss/components/_editor.scss */
+  /* line 115, ../scss/components/_editor.scss */
   #wmd-preview code, #wmd-preview pre {
     padding: 2px 4px;
     background: #F3F3F0;
     font-size: .92857em; }
-  /* line 111, ../scss/components/_editor.scss */
+  /* line 120, ../scss/components/_editor.scss */
   #wmd-preview code {
     color: #C13; }
-  /* line 112, ../scss/components/_editor.scss */
+  /* line 121, ../scss/components/_editor.scss */
   #wmd-preview pre {
     padding: 1em; }
-    /* line 114, ../scss/components/_editor.scss */
+    /* line 123, ../scss/components/_editor.scss */
     #wmd-preview pre code {
       padding: 0;
       color: #444; }
-  /* line 119, ../scss/components/_editor.scss */
+  /* line 128, ../scss/components/_editor.scss */
   #wmd-preview blockquote {
     margin: 1em 1.5em;
     padding-left: 1.5em;
     border-left: 4px solid #E9E9E6;
     color: #777; }
-  /* line 125, ../scss/components/_editor.scss */
+  /* line 134, ../scss/components/_editor.scss */
   #wmd-preview hr {
     margin: 2em auto;
     width: 100px;
     border: 1px solid #E9E9E6;
     border-width: 2px 0 0 0; }
-  /* line 131, ../scss/components/_editor.scss */
+  /* line 140, ../scss/components/_editor.scss */
   #wmd-preview .summary:after {
     display: block;
     margin: 2em 0;
@@ -1696,7 +1770,7 @@ a.operate-reply {
     content: "- more -"; }
 
 /* 编辑器全屏 */
-/* line 144, ../scss/components/_editor.scss */
+/* line 153, ../scss/components/_editor.scss */
 .fullscreen #wmd-button-bar, .fullscreen #text, .fullscreen #wmd-preview, .fullscreen .submit {
   position: absolute;
   top: 0;
@@ -1711,20 +1785,20 @@ a.operate-reply {
   -ms-border-radius: 0;
   -o-border-radius: 0;
   border-radius: 0; }
-/* line 154, ../scss/components/_editor.scss */
+/* line 163, ../scss/components/_editor.scss */
 .fullscreen #wmd-button-bar {
   left: 0;
   padding: 13px 20px;
   border-bottom: 1px solid #F3F3F0;
   z-index: 1000; }
-/* line 160, ../scss/components/_editor.scss */
+/* line 169, ../scss/components/_editor.scss */
 .fullscreen #text {
   top: 53px;
   left: 0;
   padding: 20px;
   border: none;
   outline: none; }
-/* line 167, ../scss/components/_editor.scss */
+/* line 176, ../scss/components/_editor.scss */
 .fullscreen #wmd-preview {
   top: 53px;
   right: 0;
@@ -1734,23 +1808,23 @@ a.operate-reply {
   border-left: 1px solid #F3F3F0;
   background: #F6F6F3;
   overflow: auto; }
-  /* line 176, ../scss/components/_editor.scss */
+  /* line 185, ../scss/components/_editor.scss */
   .fullscreen #wmd-preview code, .fullscreen #wmd-preview pre {
     background: #F0F0EC; }
-/* line 180, ../scss/components/_editor.scss */
+/* line 189, ../scss/components/_editor.scss */
 .fullscreen .submit {
   right: 0;
   margin: 0;
   padding: 10px 20px;
   border-bottom: 1px solid #F3F3F0; }
-/* line 188, ../scss/components/_editor.scss */
+/* line 197, ../scss/components/_editor.scss */
 .fullscreen #tab-files {
   position: absolute;
   top: 52px;
   right: 20px;
   width: 280px;
   z-index: 1001; }
-/* line 202, ../scss/components/_editor.scss */
+/* line 211, ../scss/components/_editor.scss */
 .fullscreen .wmd-edittab,
 .fullscreen .typecho-post-option,
 .fullscreen .title,
@@ -1759,10 +1833,10 @@ a.operate-reply {
 .fullscreen .typecho-head-nav,
 .fullscreen .message {
   display: none; }
-/* line 203, ../scss/components/_editor.scss */
+/* line 212, ../scss/components/_editor.scss */
 .fullscreen .wmd-hidetab {
   display: block; }
-/* line 205, ../scss/components/_editor.scss */
+/* line 214, ../scss/components/_editor.scss */
 .fullscreen .wmd-visualhide,
 .fullscreen #btn-fullscreen-upload {
   visibility: visible; }

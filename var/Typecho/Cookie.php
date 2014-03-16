@@ -54,7 +54,7 @@ class Typecho_Cookie
      * 获取前缀 
      * 
      * @access public
-     * @return void
+     * @return string
      */
     public static function getPrefix()
     {
@@ -73,7 +73,7 @@ class Typecho_Cookie
     {
         $key = self::$_prefix . $key;
         $value = isset($_COOKIE[$key]) ? $_COOKIE[$key] : (isset($_POST[$key]) ? $_POST[$key] : $default);
-        return $value;
+        return is_array($value) ? $default : $value;
     }
 
     /**
@@ -88,16 +88,7 @@ class Typecho_Cookie
     public static function set($key, $value, $expire = 0)
     {
         $key = self::$_prefix . $key;
-
-        /** 对数组型COOKIE的写入支持 */
-        if (is_array($value)) {
-            foreach ($value as $name => $val) {
-                setrawcookie("{$key}[{$name}]", rawurlencode($val), $expire, self::$_path);
-            }
-        } else {
-            setrawcookie($key, rawurlencode($value), $expire, self::$_path);
-        }
-        
+        setrawcookie($key, rawurlencode($value), $expire, self::$_path);
         $_COOKIE[$key] = $value;
     }
 
@@ -115,15 +106,7 @@ class Typecho_Cookie
             return;
         }
 
-        /** 对数组型COOKIE的删除支持 */
-        if (is_array($_COOKIE[$key])) {
-            foreach ($_COOKIE[$key] as $name => $val) {
-                setcookie("{$key}[{$name}]", '', time() - 2592000, self::$_path);
-            }
-        } else {
-            setcookie($key, '', time() - 2592000, self::$_path);
-        }
-
+        setcookie($key, '', time() - 2592000, self::$_path);
         unset($_COOKIE[$key]);
     }
 }
