@@ -62,11 +62,11 @@ if (!isset($_GET['finish']) && file_exists(__TYPECHO_ROOT_DIR__ . '/config.inc.p
 
 // 挡掉可能的跨站请求
 if (!empty($_GET) || !empty($_POST)) {
-    if (empty($_SERVER['HTTP_REFERER')) {
+    if (empty($_SERVER['HTTP_REFERER'])) {
         exit;
     }
 
-    $parts = parse_url($_SERVER);
+    $parts = parse_url($_SERVER['HTTP_REFERER']);
     if (empty($parts['host']) || $_SERVER['HTTP_HOST'] != $parts['host']) {
         exit;
     }
@@ -86,18 +86,18 @@ function _r($name, $default = NULL) {
 
 /**
  * 获取多个传递参数
- * 
+ *
  * @return array
  */
 function _rFrom() {
     $result = array();
     $params = func_get_args();
-    
+
     foreach ($params as $param) {
         $result[$param] = isset($_REQUEST[$param]) ?
             (is_array($_REQUEST[$param]) ? NULL : $_REQUEST[$param]) : NULL;
     }
-    
+
     return $result;
 }
 
@@ -215,7 +215,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                     <ul>
                     <?php
                         if (isset($_REQUEST['user']) && isset($_REQUEST['password'])) {
-                            $loginUrl = _u() . '/index.php/action/login?name=' . urlencode(_r('user')) . '&password=' 
+                            $loginUrl = _u() . '/index.php/action/login?name=' . urlencode(_r('user')) . '&password='
                             . urlencode(_r('password')) . '&referer=' . _u() . '/admin/index.php';
                             $loginUrl = Typecho_Widget::widget('Widget_Security')->getTokenUrl($loginUrl);
                         } else {
@@ -344,13 +344,13 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
 
                                         /** 初始用户 */
                                         $password = empty($config['userPassword']) ? substr(uniqid(), 7) : $config['userPassword'];
-                                        
+
                                         $installDb->query($installDb->insert('table.users')->rows(array('name' => $config['userName'], 'password' => Typecho_Common::hash($password), 'mail' => $config['userMail'],
                                         'url' => 'http://www.typecho.org', 'screenName' => $config['userName'], 'group' => 'administrator', 'created' => Typecho_Date::gmtTime())));
 
                                         unset($_SESSION['typecho']);
                                         Typecho_Cookie::delete('__typecho_config');
-                                        header('Location: ./install.php?finish&user=' . urlencode($config['userName']) 
+                                        header('Location: ./install.php?finish&user=' . urlencode($config['userName'])
                                             . '&password=' . urlencode($password));
                                     } catch (Typecho_Db_Exception $e) {
                                         $success = false;
@@ -387,7 +387,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                                                 header('Location: ./install.php?finish&use_old');
                                                 exit;
                                             } else {
-                                                 echo '<p class="message error">' . _t('安装程序检查到原有数据表已经存在.') 
+                                                 echo '<p class="message error">' . _t('安装程序检查到原有数据表已经存在.')
                                                     . '<br /><br />' . '<button type="submit" name="delete" value="1" class="btn btn-warn">' . _t('删除原有数据') . '</button> '
                                                     . _t('或者') . ' <button type="submit" name="goahead" value="1" class="btn primary">' . _t('使用原有数据') . '</button></p>';
                                             }
@@ -420,7 +420,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                         <?php
                             if ('config' == _r('action')) {
                                 $success = true;
-                                
+
                                 if (_r('created') && !file_exists('./config.inc.php')) {
                                     echo '<p class="message error">' . _t('没有检测到您手动创建的配置文件, 请检查后再次创建') . '</p>';
                                     $success = false;
@@ -456,7 +456,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                                     $replace = array_keys($dbConfig);
                                     foreach ($replace as &$key) {
                                         $key = '{' . $key . '}';
-                                    } 
+                                    }
 
                                     $config = str_replace($replace, array_values($dbConfig), _r('config'));
                                 }
@@ -471,11 +471,11 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                                         $installDb->query('SELECT 1=1');
                                     } catch (Typecho_Db_Adapter_Exception $e) {
                                         $success = false;
-                                        echo '<p class="message error">' 
+                                        echo '<p class="message error">'
                                         . _t('对不起，无法连接数据库，请先检查数据库配置再继续进行安装') . '</p>';
                                     } catch (Typecho_Db_Exception $e) {
                                         $success = false;
-                                        echo '<p class="message error">' 
+                                        echo '<p class="message error">'
                                         . _t('安装程序捕捉到以下错误: " %s ". 程序被终止, 请检查您的配置信息.',$e->getMessage()) . '</p>';
                                     }
                                 }
@@ -510,7 +510,7 @@ Typecho_Db::set(\$db);
 
                                     // 创建一个用于标识的临时文件
                                     $_SESSION['typecho'] = 1;
-                                    
+
                                     if (!file_exists('./config.inc.php')) {
                                     ?>
 <div class="message notice"><p><?php _e('安装程序无法自动创建 <strong>config.inc.php</strong> 文件'); ?><br />
@@ -518,7 +518,7 @@ Typecho_Db::set(\$db);
 <p><textarea rows="5" onmouseover="this.select();" class="w-100 mono" readonly><?php echo htmlspecialchars($contents); ?></textarea></p>
 <p><button name="created" value="1" type="submit" class="btn primary">创建完毕, 继续安装 &raquo;</button></p></div>
                                     <?php
-                                    } else { 
+                                    } else {
                                         header('Location: ./install.php?start');
                                         exit;
                                     }
