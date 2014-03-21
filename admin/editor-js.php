@@ -160,7 +160,7 @@ $(document).ready(function () {
                 src = src.substring(0, src.length - 1);
             }
 
-            return '<div style="background: #ddd; height: 40px; line-height: 40px; text-align: center; font-size: 12px; color: #777">'
+            return '<div style="background: #ddd; height: 40px; overflow: hidden; line-height: 40px; text-align: center; font-size: 12px; color: #777">'
                 + tag + ' : ' + $.trim(src) + '</div>';
         });
 

@@ -141,12 +141,18 @@
             
             if (checked) {
                 $(s.rowEl, table).each(function () {
-                    $(s.checkEl, this).prop('checked', true);
-                }).addClass('checked');
+                    var t = $(this), el = $(s.checkEl, this).prop('checked', true);
+                    if (el.length > 0) {
+                        t.addClass('checked');
+                    }
+                });
             } else {
                 $(s.rowEl, table).each(function () {
-                    $(s.checkEl, this).prop('checked', false);
-                }).removeClass('checked');
+                    var t = $(this), el = $(s.checkEl, this).prop('checked', false);
+                    if (el.length > 0) {
+                        t.removeClass('checked');
+                    }
+                });
             }
         });
 
