@@ -1508,7 +1508,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      * @param string $default 如果没有下一篇,显示的默认文字
      * @return void
      */
-    public function theNext($format = '%s', $default = NULL)
+    public function theNext($format = '%s', $default = NULL, $custom = array())
     {
         $content = $this->db->fetchRow($this->select()->where('table.contents.created > ? AND table.contents.created < ?',
             $this->created, $this->options->gmtTime)
@@ -1520,7 +1520,17 @@ class Widget_Archive extends Widget_Abstract_Contents
 
         if ($content) {
             $content = $this->filter($content);
-            $link = '<a href="' . $content['permalink'] . '" title="' . $content['title'] . '">' . $content['title'] . '</a>';
+            $default = array(
+                'title' => NULL,
+                'tagClass' => NULL
+            );
+            $custom = array_merge($default, $custom);
+            extract($custom);
+
+            $linkText = empty($title) ? $content['title'] : $title;
+            $linkClass = empty($tagClass) ? '' : 'class="' . $tagClass . '" ';
+            $link = '<a ' . $linkClass . 'href="' . $content['permalink'] . '" title="' . $content['title'] . '">' . $linkText . '</a>';
+
             printf($format, $link);
         } else {
             echo $default;
@@ -1535,7 +1545,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      * @param string $default 如果没有上一篇,显示的默认文字
      * @return void
      */
-    public function thePrev($format = '%s', $default = NULL)
+    public function thePrev($format = '%s', $default = NULL, $custom = array())
     {
         $content = $this->db->fetchRow($this->select()->where('table.contents.created < ?', $this->created)
             ->where('table.contents.status = ?', 'publish')
@@ -1546,7 +1556,17 @@ class Widget_Archive extends Widget_Abstract_Contents
 
         if ($content) {
             $content = $this->filter($content);
-            $link = '<a href="' . $content['permalink'] . '" title="' . $content['title'] . '">' . $content['title'] . '</a>';
+            $default = array(
+                'title' => NULL,
+                'tagClass' => NULL
+            );
+            $custom = array_merge($default, $custom);
+            extract($custom);
+
+            $linkText = empty($title) ? $content['title'] : $title;
+            $linkClass = empty($tagClass) ? '' : 'class="' . $tagClass . '" ';
+            $link = '<a ' . $linkClass . 'href="' . $content['permalink'] . '" title="' . $content['title'] . '">' . $linkText . '</a>';
+
             printf($format, $link);
         } else {
             echo $default;
