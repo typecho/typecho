@@ -1497,7 +1497,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     public function attachments($limit = 0, $offset = 0)
     {
-        return $this->widget('Widget_Contents_Attachment_Related', array(
+        return $this->widget('Widget_Contents_Attachment_Related@' . $this->cid . '-' . uniqid(), array(
             'parentId'  => $this->cid,
             'limit'     => $limit,
             'offset'    => $offset
