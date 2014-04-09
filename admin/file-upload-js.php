@@ -60,7 +60,7 @@ $(document).ready(function() {
 
     function fileUploadStart (file) {
         $('<li id="' + file.id + '" class="loading">'
-            + file.name + '</li>').prependTo('#file-list');
+            + file.name + '</li>').appendTo('#file-list');
     }
 
     function fileUploadError (error) {
@@ -88,7 +88,7 @@ $(document).ready(function() {
         if (exist.length > 0) {
             li = exist.removeClass('loading').html(fileError);
         } else {
-            li = $('<li>' + fileError + '<br />' + word + '</li>').prependTo('#file-list');
+            li = $('<li>' + fileError + '<br />' + word + '</li>').appendTo('#file-list');
         }
 
         li.effect('highlight', {color : '#FBC2C4'}, 2000, function () {

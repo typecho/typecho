@@ -1510,6 +1510,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      * @access public
      * @param string $format 格式
      * @param string $default 如果没有下一篇,显示的默认文字
+     * @param array $custom 定制化样式
      * @return void
      */
     public function theNext($format = '%s', $default = NULL, $custom = array())
@@ -1547,6 +1548,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      * @access public
      * @param string $format 格式
      * @param string $default 如果没有上一篇,显示的默认文字
+     * @param array $custom 定制化样式
      * @return void
      */
     public function thePrev($format = '%s', $default = NULL, $custom = array())
