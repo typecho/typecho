@@ -48,6 +48,10 @@ class Widget_Contents_Attachment_Related extends Widget_Abstract_Contents
             $select->limit($this->parameter->limit);
         }
 
+        if ($this->parameter->offset > 0) {
+            $select->offset($this->parameter->offset);
+        }
+
         $this->db->fetchAll($select, array($this, 'push'));
     }
 }
