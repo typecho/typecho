@@ -727,6 +727,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      * @param Typecho_Db_Query $select 查询对象
      * @param boolean $hasPushed 是否已经压入队列
      * @return void
+     * @throws Typecho_Widget_Exception
      */
     private function singleHandle(Typecho_Db_Query $select, &$hasPushed)
     {
@@ -868,6 +869,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      * @param Typecho_Db_Query $select 查询对象
      * @param boolean $hasPushed 是否已经压入队列
      * @return void
+     * @throws Typecho_Widget_Exception
      */
     private function categoryHandle(Typecho_Db_Query $select, &$hasPushed)
     {
@@ -890,15 +892,19 @@ class Widget_Archive extends Widget_Abstract_Contents
             $categorySelect->where('slug = ?', $directory[count($directory) - 1]);
         }
 
-        $category = $this->db->fetchRow($categorySelect,
-        array($this->widget('Widget_Metas_Category_List'), 'filter'));
-
-        if (!$category
-            || (isset($directory) && ($this->request->directory != implode('/', $category['directory'])))) {
+        $category = $this->db->fetchRow($categorySelect);
+        if (empty($category)) {
             throw new Typecho_Widget_Exception(_t('分类不存在'), 404);
         }
 
-        $children = $this->widget('Widget_Metas_Category_List')->getAllChildren($category['mid']);
+        $categoryListWidget = $this->widget('Widget_Metas_Category_List', 'current=' . $category['mid']);
+        $category = $categoryListWidget->filter($category);
+
+        if (isset($directory) && ($this->request->directory != implode('/', $category['directory']))) {
+            throw new Typecho_Widget_Exception(_t('父级分类不存在'), 404);
+        }
+
+        $children = $categoryListWidget->getAllChildren($category['mid']);
         $children[] = $category['mid'];
 
         /** fix sql92 by 70 */
@@ -949,6 +955,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      * @param Typecho_Db_Query $select 查询对象
      * @param boolean $hasPushed 是否已经压入队列
      * @return void
+     * @throws Typecho_Widget_Exception
      */
     private function tagHandle(Typecho_Db_Query $select, &$hasPushed)
     {
@@ -1017,6 +1024,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      * @param Typecho_Db_Query $select 查询对象
      * @param boolean $hasPushed 是否已经压入队列
      * @return void
+     * @throws Typecho_Widget_Exception
      */
     private function authorHandle(Typecho_Db_Query $select, &$hasPushed)
     {

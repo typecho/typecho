@@ -91,12 +91,11 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
      * @param mixed $request request对象
      * @param mixed $response response对象
      * @param mixed $params 参数列表
-     * @return void
      */
     public function __construct($request, $response, $params = NULL)
     {
         parent::__construct($request, $response, $params);
-        $this->parameter->setDefault('ignore=0');
+        $this->parameter->setDefault('ignore=0&current=');
         
         /** 初始化回调函数 */
         if (function_exists('treeViewCategories')) {
@@ -145,7 +144,7 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
         $classes = array();
 
         if ($categoryOptions->itemClass) {
-            $classes[] = $singleCommentOptions->itemClass;
+            $classes[] = $categoryOptions->itemClass;
         }
 
         $classes[] = 'category-level-' . $this->levels;
@@ -158,6 +157,12 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
             $this->levelsAlt(' category-level-odd', ' category-level-even');
         } else {
             echo ' category-parent';
+        }
+
+        if ($this->mid == $this->parameter->current) {
+            echo ' category-active';
+        } else if (isset($this->_children[$this->mid]) && in_array($this->parameter->current, $this->_children[$this->mid])) {
+            echo ' category-parent-active';
         }
 
         echo '"><a href="' . $this->permalink . '">' . $this->name . '</a>';
@@ -312,7 +317,6 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
      * 根据深度余数输出
      *
      * @access public
-     * @param string $param 需要输出的值
      * @return void
      */
     public function levelsAlt()
