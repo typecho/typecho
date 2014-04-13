@@ -188,7 +188,7 @@ class Typecho_Db
     public function addServer($config, $op)
     {
         $this->_config[] = Typecho_Config::factory($config);
-        $key = key($this->_config);
+        $key = count($this->_config)-1; //获取最后一个key
 
         /** 将连接放入池中 */
         switch ($op) {
@@ -304,16 +304,14 @@ class Typecho_Db
                 /** Typecho_Db_Exception */
                 throw new Typecho_Db_Exception('Missing Database Connection');
             }
-
-            $selectConnection = rand(0, count($this->_pool[$op]) - 1);
-            $selectConnectionConfig = $this->_config[$selectConnection];
+            
+            //获取相应读或写服务器连接池中的一个
+            $selectConnection = rand(0, count($this->_pool[$op]) - 1); 
+            //获取随机获得的连接池配置
+            $selectConnectionConfig = $this->_config[$this->_pool[$op][$selectConnection]];
             $selectConnectionHandle = $this->_adapter->connect($selectConnectionConfig);
-            $other = (self::READ == $op) ? self::WRITE : self::READ;
-
-            if (!empty($this->_pool[$other]) && in_array($selectConnection, $this->_pool[$other])) {
-                $this->_connectedPool[$other] = &$selectConnectionHandle;
-            }
             $this->_connectedPool[$op] = &$selectConnectionHandle;
+            
         }
         $handle = $this->_connectedPool[$op];
 
