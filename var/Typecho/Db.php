@@ -188,7 +188,7 @@ class Typecho_Db
     public function addServer($config, $op)
     {
         $this->_config[] = Typecho_Config::factory($config);
-        $key = count($this->_config)-1; //获取最后一个key
+        $key = count($this->_config) - 1;
 
         /** 将连接放入池中 */
         switch ($op) {
