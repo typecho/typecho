@@ -180,17 +180,21 @@ class Widget_Options_Reading extends Widget_Options_Permalink
 
         if ('recent' != $settings['frontPage']) {
             $settings['frontArchive'] = empty($settings['frontArchive']) ? 0 : 1;
+            $routingTable = $this->options->routingTable;
+
+            if (isset($routingTable[0])) {
+                unset($routingTable[0]);
+            }
+            
             if ($settings['frontArchive']) {
-                $routingTable = $this->options->routingTable;
                 $routingTable['archive']['url'] = '/' . ltrim($this->encodeRule($this->request->archivePattern), '/');
                 $routingTable['archive_page']['url'] = rtrim($routingTable['archive']['url'], '/') . '/page/[page:digital]/';
-
-                if (isset($routingTable[0])) {
-                    unset($routingTable[0]);
-                }
-
-                $settings['routingTable'] = serialize($routingTable);
+            } else {
+                $routingTable['archive']['url'] = '/blog/';
+                $routingTable['archive_page']['url'] = '/blog/page/[page:digital]/';
             }
+            
+            $settings['routingTable'] = serialize($routingTable);
         }
 
         foreach ($settings as $name => $value) {
