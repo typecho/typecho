@@ -154,9 +154,8 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      */
     protected function attach($cid)
     {
-        if ($this->request->attachment && is_array($this->request->attachment)) {
-            $attachments = $this->request->filter('int')->attachment;
-
+        $attachments = $this->request->getArray('attachment');
+        if (!empty($attachments)) {
             foreach ($attachments as $key => $attachment) {
                 $this->db->query($this->db->update('table.contents')->rows(array('parent' => $cid, 'status' => 'publish',
                 'order' => $key + 1))->where('cid = ? AND type = ?', $attachment, 'attachment'));
