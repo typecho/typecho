@@ -66,8 +66,6 @@ class Widget_Options_Permalink extends Widget_Abstract_Options implements Widget
         $currentTable = $parser->parse();
         $regx = $currentTable['custom']['regx'];
 
-        //echo $regx; die;
-
         foreach ($routingTable as $key => $val) {
             if ('post' != $key && 'page' != $key) {
                 $pathInfo = preg_replace("/\[([_a-z0-9-]+)[^\]]*\]/i", "{\\1}", $val['url']);
