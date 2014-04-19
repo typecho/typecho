@@ -55,6 +55,9 @@ class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
         curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
 
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+
         /** 设置HTTP版本 */
         switch ($this->rfc) {
             case 'HTTP/1.0':
