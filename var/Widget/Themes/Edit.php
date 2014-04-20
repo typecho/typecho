@@ -84,7 +84,8 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
     {
         $path = __TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . '/' . trim($theme, './') . '/' . trim($file, './');
 
-        if (file_exists($path) && is_writeable($path) && !Typecho_Common::isAppEngine()) {
+        if (file_exists($path) && is_writeable($path) && !Typecho_Common::isAppEngine()
+            && (!defined('__TYPECHO_THEME_WRITEABLE__') || __TYPECHO_THEME_WRITEABLE__)) {
             $handle = fopen($path, 'wb');
             if ($handle && fwrite($handle, $this->request->content)) {
                 fclose($handle);

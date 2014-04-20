@@ -107,7 +107,8 @@ class Widget_Themes_Files extends Typecho_Widget
     public function currentIsWriteable()
     {
         return is_writeable(__TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . '/' .
-        $this->_currentTheme . '/' . $this->_currentFile) && !Typecho_Common::isAppEngine();
+        $this->_currentTheme . '/' . $this->_currentFile) && !Typecho_Common::isAppEngine()
+        && (!defined('__TYPECHO_THEME_WRITEABLE__') || __TYPECHO_THEME_WRITEABLE__);
     }
 
     /**
