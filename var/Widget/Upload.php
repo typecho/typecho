@@ -101,7 +101,8 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         $options = Typecho_Widget::widget('Widget_Options');
         $date = new Typecho_Date($options->gmtTime);
         $path = Typecho_Common::url(defined('__TYPECHO_UPLOAD_DIR__') ? __TYPECHO_UPLOAD_DIR__ : self::UPLOAD_DIR,
-            __TYPECHO_ROOT_DIR__) . '/' . $date->year . '/' . $date->month;
+            defined('__TYPECHO_UPLOAD_ROOT_DIR__') ? __TYPECHO_UPLOAD_ROOT_DIR__ : __TYPECHO_ROOT_DIR__) 
+            . '/' . $date->year . '/' . $date->month;
 
         //创建上传目录
         if (!is_dir($path)) {
@@ -170,7 +171,8 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
             return false;
         }
 
-        $path = Typecho_Common::url($content['attachment']->path, __TYPECHO_ROOT_DIR__);
+        $path = Typecho_Common::url($content['attachment']->path, 
+            defined('__TYPECHO_UPLOAD_ROOT_DIR__') ? __TYPECHO_UPLOAD_ROOT_DIR__ : __TYPECHO_ROOT_DIR__);
         $dir = dirname($path);
 
         //创建上传目录
@@ -247,7 +249,8 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         }
 
         $options = Typecho_Widget::widget('Widget_Options');
-        return Typecho_Common::url($content['attachment']->path, $options->siteUrl);
+        return Typecho_Common::url($content['attachment']->path, 
+            defined('__TYPECHO_UPLOAD_PREFIX_URL__') ? __TYPECHO_UPLOAD_PREFIX_URL__ : $options->siteUrl);
     }
 
     /**
@@ -264,7 +267,8 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
             return $result;
         }
 
-        return file_get_contents(Typecho_Common::url($content['attachment']->path, __TYPECHO_ROOT_DIR__));
+        return file_get_contents(Typecho_Common::url($content['attachment']->path, 
+            defined('__TYPECHO_UPLOAD_ROOT_DIR__') ? __TYPECHO_UPLOAD_ROOT_DIR__ : __TYPECHO_ROOT_DIR__));
     }
 
     /**
