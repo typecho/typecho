@@ -32,7 +32,7 @@ class Typecho_Db_Query
      * @var array
      * @access private
      */
-    private $_default = array(
+    private static $_default = array(
         'action' => NULL,
         'table'  => NULL,
         'fields' => '*',
@@ -80,7 +80,7 @@ class Typecho_Db_Query
         $this->_adapter = &$adapter;
         $this->_prefix = $prefix;
 
-        $this->_sqlPreBuild = $this->_default;
+        $this->_sqlPreBuild = self::$_default;
     }
 
     /**
@@ -200,6 +200,16 @@ class Typecho_Db_Query
     }
 
     /**
+     * set default params
+     *
+     * @param array $default
+     */
+    public static function setDefault(array $default)
+    {
+        self::$_default = array_merge(self::$_default, $default);
+    }
+
+    /**
      * 获取查询字串属性值
      *
      * @access public
@@ -221,7 +231,7 @@ class Typecho_Db_Query
     public function cleanAttribute($attributeName)
     {
         if (isset($this->_sqlPreBuild[$attributeName])) {
-            $this->_sqlPreBuild[$attributeName] = $this->_default[$attributeName];
+            $this->_sqlPreBuild[$attributeName] = self::$_default[$attributeName];
         }
         return $this;
     }
