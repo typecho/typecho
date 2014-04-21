@@ -145,7 +145,8 @@ class Widget_Options extends Typecho_Widget
      */
     protected function ___index()
     {
-        return $this->rewrite ? $this->rootUrl : Typecho_Common::url('index.php', $this->rootUrl);
+        return ($this->rewrite || (defined('__TYPECHO_REWRITE__') && __TYPECHO_REWRITE__)) 
+            ? $this->rootUrl : Typecho_Common::url('index.php', $this->rootUrl);
     }
 
     /**
@@ -357,6 +358,10 @@ class Widget_Options extends Typecho_Widget
         $this->stack[] = &$this->row;
 
         /** 初始化站点信息 */
+        if (defined('__TYPECHO_SITE_URL__')) {
+            $this->siteUrl = __TYPECHO_SITE_URL__;
+        }
+
         $this->originalSiteUrl = $this->siteUrl;
         $this->siteUrl = Typecho_Common::url(NULL, $this->siteUrl);
         $this->plugins = unserialize($this->plugins);
