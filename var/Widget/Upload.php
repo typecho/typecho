@@ -250,7 +250,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
 
         $options = Typecho_Widget::widget('Widget_Options');
         return Typecho_Common::url($content['attachment']->path, 
-            defined('__TYPECHO_UPLOAD_PREFIX_URL__') ? __TYPECHO_UPLOAD_PREFIX_URL__ : $options->siteUrl);
+            defined('__TYPECHO_UPLOAD_URL__') ? __TYPECHO_UPLOAD_URL__ : $options->siteUrl);
     }
 
     /**
