@@ -196,9 +196,6 @@ abstract class Typecho_Widget
         }
 
         if (!isset(self::$_widgetPool[$alias])) {
-            $fileName = str_replace('_', '/', $className) . '.php';
-            require_once $fileName;
-
             /** 如果类不存在 */
             if (!class_exists($className)) {
                 throw new Typecho_Widget_Exception($className);

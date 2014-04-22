@@ -453,6 +453,29 @@ class Widget_Options extends Typecho_Widget
     }
 
     /**
+     * 获取皮肤文件
+     *
+     * @param string $theme
+     * @param string $file
+     * @return string
+     */
+    public function themeFile($theme, $file = '')
+    {
+        return __TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . '/' . trim($theme, './') . '/' . trim($file, './');
+    }
+
+    /**
+     * 获取插件目录
+     *
+     * @param $plugin
+     * @return string
+     */
+    public function pluginDir($plugin)
+    {
+        return __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__;
+    }
+
+    /**
      * 输出后台路径
      *
      * @access public

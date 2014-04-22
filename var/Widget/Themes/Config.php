@@ -54,9 +54,9 @@ class Widget_Themes_Config extends Widget_Abstract_Options
      */
     public static function isExists()
     {
-        $configFile = __TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__
-            . '/' . Typecho_Widget::widget('Widget_Options')->theme . '/functions.php';
-        
+        $options = Typecho_Widget::widget('Widget_Options');
+        $configFile = $options->themeFile($options->theme, 'functions.php');
+
         if (file_exists($configFile)) {
             require_once $configFile;
             

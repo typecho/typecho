@@ -122,7 +122,8 @@ class Typecho_Request
         'integer'   =>  'intval',
         'search'    =>  array('Typecho_Common', 'filterSearchQuery'),
         'xss'       =>  array('Typecho_Common', 'removeXSS'),
-        'url'       =>  array('Typecho_Common', 'safeUrl')
+        'url'       =>  array('Typecho_Common', 'safeUrl'),
+        'slug'      =>  array('Typecho_Common', 'slugName')
     );
 
     /**

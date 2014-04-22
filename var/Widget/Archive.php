@@ -234,7 +234,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         }
         
         /** 初始化皮肤路径 */
-        $this->_themeDir =  __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/';
+        $this->_themeDir = rtrim($this->options->themeFile($this->options->theme), '/') . '/';
 
         /** 处理feed模式 **/
         if ('feed' == $this->parameter->type) {
@@ -1864,7 +1864,7 @@ var TypechoComment = {
      */
     public function need($fileName)
     {
-        require __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/' . $fileName;
+        require $this->_themeDir . $fileName;
     }
 
     /**
