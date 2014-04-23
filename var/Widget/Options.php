@@ -488,6 +488,24 @@ class Widget_Options extends Typecho_Widget
     }
 
     /**
+     * 获取或输出后台静态文件路径
+     *
+     * @param string $type
+     * @param string $file
+     * @return void|string
+     */
+    public function adminStaticUrl($type, $file = NULL)
+    {
+        $url = Typecho_Common::url($type, $this->adminUrl);
+
+        if (empty($file)) {
+            return $url;
+        }
+
+        echo Typecho_Common::url($file, $url);
+    }
+
+    /**
      * 编码输出允许出现在评论中的html标签
      *
      * @access public

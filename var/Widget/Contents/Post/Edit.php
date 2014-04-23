@@ -486,7 +486,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     public function getDefaultFieldItems()
     {
         $defaultFields = array();
-        $configFile = __TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/functions.php';
+        $configFile = $this->options->themeFile($this->options->theme, 'functions.php');
         $layout = new Typecho_Widget_Helper_Layout();
         $fields = new Typecho_Config();
 
