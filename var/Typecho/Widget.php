@@ -190,7 +190,10 @@ abstract class Typecho_Widget
      */
     public static function widget($alias, $params = NULL, $request = NULL, $enableResponse = true)
     {
-        list($className) = explode('@', $alias);
+        $parts = explode('@', $alias);
+        $className = $parts[0];
+        $alias = empty($parts[1]) ? $className : $parts[1];
+
         if (isset(self::$_widgetAlias[$className])) {
             $className = self::$_widgetAlias[$className];
         }

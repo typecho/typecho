@@ -56,13 +56,14 @@ class Widget_Register extends Widget_Abstract_Users implements Widget_Interface_
             $this->response->goBack();
         }
 
+        $hasher = new PasswordHash(8, true);
         $generatedPassword = Typecho_Common::randString(7);
 
         $dataStruct = array(
             'name'      =>  $this->request->name,
             'mail'      =>  $this->request->mail,
             'screenName'=>  $this->request->name,
-            'password'  =>  Typecho_Common::hash($generatedPassword),
+            'password'  =>  $hasher->HashPassword($generatedPassword),
             'created'   =>  $this->options->gmtTime,
             'group'     =>  'subscriber'
         );

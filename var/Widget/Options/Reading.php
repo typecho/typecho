@@ -80,7 +80,7 @@ class Widget_Options_Reading extends Widget_Options_Permalink
         }
 
         // 自定义文件列表
-        $files = glob(__TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/*.php');
+        $files = glob($this->options->themeFile($this->options->theme, '*.php'));
         $filesSelect = '';
 
         foreach ($files as $file) {

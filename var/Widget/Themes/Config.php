@@ -34,18 +34,7 @@ class Widget_Themes_Config extends Widget_Abstract_Options
             throw new Typecho_Widget_Exception(_t('外观配置功能不存在'), 404);
         }
     }
-    
-    /**
-     * 获取菜单标题
-     *
-     * @access public
-     * @return string
-     */
-    public function getMenuTitle()
-    {
-        return _t('设置外观 %s', $this->options->theme);
-    }
-    
+
     /**
      * 配置功能是否存在
      * 

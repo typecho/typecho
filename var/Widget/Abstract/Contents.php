@@ -607,7 +607,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     public function getTemplates()
     {
-        $files = glob(__TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/*.php');
+        $files = glob($this->options->themeFile($this->options->theme, '*.php'));
         $result = array();
 
         foreach ($files as $file) {

@@ -358,8 +358,9 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
 
                                         /** 初始用户 */
                                         $password = empty($config['userPassword']) ? substr(uniqid(), 7) : $config['userPassword'];
+                                        $hasher = new PasswordHash(8, true);
 
-                                        $installDb->query($installDb->insert('table.users')->rows(array('name' => $config['userName'], 'password' => Typecho_Common::hash($password), 'mail' => $config['userMail'],
+                                        $installDb->query($installDb->insert('table.users')->rows(array('name' => $config['userName'], 'password' => $hasher->HashPassword($password), 'mail' => $config['userMail'],
                                         'url' => 'http://www.typecho.org', 'screenName' => $config['userName'], 'group' => 'administrator', 'created' => Typecho_Date::gmtTime())));
 
                                         unset($_SESSION['typecho']);

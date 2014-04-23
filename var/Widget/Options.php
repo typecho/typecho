@@ -433,11 +433,19 @@ class Widget_Options extends Typecho_Widget
      *
      * @access public
      * @param string $path 子路径
+     * @param string $theme 模版名称
      * @return void
      */
-    public function themeUrl($path = NULL)
+    public function themeUrl($path = NULL, $theme = NULL)
     {
-        echo Typecho_Common::url($path, $this->themeUrl);
+        if (empty($theme)) {
+            echo Typecho_Common::url($path, $this->themeUrl);
+        }
+
+        $url = defined('__TYPECHO_THEME_URL__') ? __TYPECHO_THEME_URL__ :
+            Typecho_Common::url(__TYPECHO_THEME_DIR__ . '/' . $theme, $this->siteUrl);
+
+        return Typecho_Common::url($path, $url);
     }
 
     /**

@@ -70,8 +70,7 @@ class Widget_Themes_List extends Typecho_Widget
 
                     $screen = glob($theme . '/screen*.{jpg,png,gif,bmp,jpeg,JPG,PNG,GIF,BMG,JPEG}', GLOB_BRACE);
                     if ($screen) {
-                        $info['screen'] = Typecho_Common::url(trim(__TYPECHO_THEME_DIR__, '/') .
-                        '/' . $info['name'] . '/' . basename(current($screen)), $siteUrl);
+                        $info['screen'] = $options->themeUrl(basename(current($screen)), $info['name']);
                     } else {
                         $info['screen'] = Typecho_Common::url('noscreen.png', $options->adminStaticUrl('img'));
                     }
