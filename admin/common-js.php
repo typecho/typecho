@@ -1,7 +1,7 @@
 <?php if(!defined('__TYPECHO_ADMIN__')) exit; ?>
-<script src="<?php $options->adminUrl('js/jquery.js?v=' . $suffixVersion); ?>"></script> 
-<script src="<?php $options->adminUrl('js/jquery-ui.js?v=' . $suffixVersion); ?>"></script> 
-<script src="<?php $options->adminUrl('js/typecho.js?v=' . $suffixVersion); ?>"></script>
+<script src="<?php $options->adminStaticUrl('js', 'jquery.js?v=' . $suffixVersion); ?>"></script>
+<script src="<?php $options->adminStaticUrl('js', 'jquery-ui.js?v=' . $suffixVersion); ?>"></script>
+<script src="<?php $options->adminStaticUrl('js', 'typecho.js?v=' . $suffixVersion); ?>"></script>
 <script>
     (function () {
         $(document).ready(function() {

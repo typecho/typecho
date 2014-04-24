@@ -8,7 +8,7 @@ include 'menu.php';
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main" role="main">
             <div class="col-mb-12 typecho-list">
-                <?php Typecho_Widget::widget('Widget_Plugins_List_Activated')->to($activatedPlugins); ?>
+                <?php Typecho_Widget::widget('Widget_Plugins_List@activated', 'activated=1')->to($activatedPlugins); ?>
                 <?php if ($activatedPlugins->have() || !empty($activatedPlugins->activatedPlugins)): ?>
                 <h4 class="typecho-list-table-title"><?php _e('启用的插件'); ?></h4>
                 <div class="typecho-table-wrap">
@@ -70,7 +70,7 @@ include 'menu.php';
                 </div>
                 <?php endif; ?>
                 
-                <?php Typecho_Widget::widget('Widget_Plugins_List_Deactivated')->to($deactivatedPlugins); ?>
+                <?php Typecho_Widget::widget('Widget_Plugins_List@unactivated', 'activated=0')->to($deactivatedPlugins); ?>
                 <?php if ($deactivatedPlugins->have() || !$activatedPlugins->have()): ?>
                 <h4 class="typecho-list-table-title"><?php _e('禁用的插件'); ?></h4>
                 <div class="typecho-table-wrap">

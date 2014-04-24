@@ -51,13 +51,14 @@ class Widget_Plugins_Config extends Widget_Abstract_Options
     public function execute()
     {
         $this->user->pass('administrator');
-        if (!isset($this->request->config)) {
+        $config = $this->request->filter('slug')->config;
+        if (empty($config)) {
             throw new Typecho_Widget_Exception(_t('插件不存在'), 404);
         }
 
         /** 获取插件入口 */
-        list($this->_pluginFileName, $this->_className) = Typecho_Plugin::portal($this->request->config,
-        __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
+        list($this->_pluginFileName, $this->_className) = Typecho_Plugin::portal($config,
+            $this->options->pluginDir($config));
         $this->info = Typecho_Plugin::parseInfo($this->_pluginFileName);
     }
 
@@ -82,7 +83,7 @@ class Widget_Plugins_Config extends Widget_Abstract_Options
     public function config()
     {
         /** 获取插件名称 */
-        $pluginName = $this->request->config;
+        $pluginName = $this->request->filter('slug')->config;
 
         /** 获取已启用插件 */
         $plugins = Typecho_Plugin::export();

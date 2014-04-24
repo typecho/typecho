@@ -22,6 +22,15 @@ abstract class Typecho_Widget
      */
     private static $_widgetPool = array();
 
+
+    /**
+     * widget别名
+     *
+     * @access private
+     * @var array
+     */
+    private static $_widgetAlias = array();
+
     /**
      * 帮手列表
      *
@@ -155,6 +164,20 @@ abstract class Typecho_Widget
     }
 
     /**
+     * widget别名 
+     * 
+     * @param string $widgetClass 
+     * @param string $aliasClass 
+     * @static
+     * @access public
+     * @return void
+     */
+    public static function alias($widgetClass, $aliasClass)
+    {
+        self::$_widgetAlias[$widgetClass] = $aliasClass;
+    }
+
+    /**
      * 工厂方法,将类静态化放置到列表中
      *
      * @access public
@@ -167,12 +190,15 @@ abstract class Typecho_Widget
      */
     public static function widget($alias, $params = NULL, $request = NULL, $enableResponse = true)
     {
-        list($className) = explode('@', $alias);
+        $parts = explode('@', $alias);
+        $className = $parts[0];
+        $alias = empty($parts[1]) ? $className : $parts[1];
+
+        if (isset(self::$_widgetAlias[$className])) {
+            $className = self::$_widgetAlias[$className];
+        }
 
         if (!isset(self::$_widgetPool[$alias])) {
-            $fileName = str_replace('_', '/', $className) . '.php';
-            require_once $fileName;
-
             /** 如果类不存在 */
             if (!class_exists($className)) {
                 throw new Typecho_Widget_Exception($className);

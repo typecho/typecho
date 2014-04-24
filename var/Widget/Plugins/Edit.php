@@ -73,7 +73,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
     public function activate($pluginName)
     {
         /** 获取插件入口 */
-        list($pluginFileName, $className) = Typecho_Plugin::portal($pluginName, __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
+        list($pluginFileName, $className) = Typecho_Plugin::portal($pluginName, $this->options->pluginDir($pluginName));
         $info = Typecho_Plugin::parseInfo($pluginFileName);
 
         /** 检测依赖信息 */
@@ -155,7 +155,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
 
         try {
             /** 获取插件入口 */
-            list($pluginFileName, $className) = Typecho_Plugin::portal($pluginName, __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
+            list($pluginFileName, $className) = Typecho_Plugin::portal($pluginName, $this->options->pluginDir($pluginName));
         } catch (Typecho_Plugin_Exception $e) {
             $pluginFileExist = false;
 
@@ -251,7 +251,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
     public function configHandle($pluginName, array $settings, $isInit)
     {
         /** 获取插件入口 */
-        list($pluginFileName, $className) = Typecho_Plugin::portal($pluginName, __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
+        list($pluginFileName, $className) = Typecho_Plugin::portal($pluginName, $this->options->pluginDir($pluginName));
 
         if (method_exists($className, 'configHandle')) {
             call_user_func(array($className, 'configHandle'), $settings, $isInit);
@@ -289,9 +289,9 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
     {
         $this->user->pass('administrator');
         $this->security->protect();
-        $this->on($this->request->is('activate'))->activate($this->request->activate);
-        $this->on($this->request->is('deactivate'))->deactivate($this->request->deactivate);
-        $this->on($this->request->is('config'))->config($this->request->config);
+        $this->on($this->request->is('activate'))->activate($this->request->filter('slug')->activate);
+        $this->on($this->request->is('deactivate'))->deactivate($this->request->filter('slug')->deactivate);
+        $this->on($this->request->is('config'))->config($this->request->filter('slug')->config);
         $this->response->redirect($this->options->adminUrl);
     }
 }

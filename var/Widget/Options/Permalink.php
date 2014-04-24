@@ -205,29 +205,32 @@ RewriteRule . {$basePath}index.php [L]
         $form = new Typecho_Widget_Helper_Form($this->security->getRootUrl('index.php/action/options-permalink'),
         Typecho_Widget_Helper_Form::POST_METHOD);
 
-        /** 是否使用地址重写功能 */
-        $rewrite = new Typecho_Widget_Helper_Form_Element_Radio('rewrite', array('0' => _t('不启用'), '1' => _t('启用')),
-        $this->options->rewrite, _t('是否使用地址重写功能'), _t('地址重写即 rewrite 功能是某些服务器软件提供的优化内部连接的功能.') . '<br />'
-            . _t('打开此功能可以让你的链接看上去完全是静态地址.')); 
+        if (!defined('__TYPECHO_REWRITE__')) {
+            /** 是否使用地址重写功能 */
+            $rewrite = new Typecho_Widget_Helper_Form_Element_Radio('rewrite', array('0' => _t('不启用'), '1' => _t('启用')),
+                $this->options->rewrite, _t('是否使用地址重写功能'), _t('地址重写即 rewrite 功能是某些服务器软件提供的优化内部连接的功能.') . '<br />'
+                . _t('打开此功能可以让你的链接看上去完全是静态地址.')); 
 
-        // disable rewrite check when rewrite opened
-        if (!$this->options->rewrite && !$this->request->is('enableRewriteAnyway=1')) {
-            $errorStr = _t('重写功能检测失败, 请检查你的服务器设置');
+            // disable rewrite check when rewrite opened
+            if (!$this->options->rewrite && !$this->request->is('enableRewriteAnyway=1')) {
+                $errorStr = _t('重写功能检测失败, 请检查你的服务器设置');
 
-            /** 如果是apache服务器, 可能存在无法写入.htaccess文件的现象 */
-            if (((isset($_SERVER['SERVER_SOFTWARE']) && false !== strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'apache'))
-            || function_exists('apache_get_version')) && !file_exists(__TYPECHO_ROOT_DIR__ . '/.htaccess')
-            && !is_writeable(__TYPECHO_ROOT_DIR__)) {
-                $errorStr .= '<br /><strong>' . _t('我们检测到你使用了apache服务器, 但是程序无法在根目录创建.htaccess文件, 这可能是产生这个错误的原因.')
-                    . _t('请调整你的目录权限, 或者手动创建一个.htaccess文件.') . '</strong>';
+                /** 如果是apache服务器, 可能存在无法写入.htaccess文件的现象 */
+                if (((isset($_SERVER['SERVER_SOFTWARE']) && false !== strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'apache'))
+                    || function_exists('apache_get_version')) && !file_exists(__TYPECHO_ROOT_DIR__ . '/.htaccess')
+                    && !is_writeable(__TYPECHO_ROOT_DIR__)) {
+                    $errorStr .= '<br /><strong>' . _t('我们检测到你使用了apache服务器, 但是程序无法在根目录创建.htaccess文件, 这可能是产生这个错误的原因.')
+                        . _t('请调整你的目录权限, 或者手动创建一个.htaccess文件.') . '</strong>';
+                }
+
+                $errorStr .= '<br /><input type="checkbox" name="enableRewriteAnyway" id="enableRewriteAnyway" value="1" />'
+                    . ' <label for="enableRewriteAnyway">' . _t('如果你仍然想启用此功能, 请勾选这里') . '</label>';
+                $rewrite->addRule(array($this, 'checkRewrite'), $errorStr);
             }
 
-            $errorStr .= '<br /><input type="checkbox" name="enableRewriteAnyway" id="enableRewriteAnyway" value="1" />'
-                . ' <label for="enableRewriteAnyway">' . _t('如果你仍然想启用此功能, 请勾选这里') . '</label>';
-            $rewrite->addRule(array($this, 'checkRewrite'), $errorStr);
+            $form->addInput($rewrite);
         }
 
-        $form->addInput($rewrite);
         $patterns = array('/archives/[cid:digital]/' => _t('默认风格') . ' <code>/archives/{cid}/</code>',
         '/archives/[slug].html' => _t('wordpress风格') . ' <code>/archives/{slug}.html</code>',
         '/[year:digital:4]/[month:digital:2]/[day:digital:2]/[slug].html' => _t('按日期归档') . ' <code>/archives/{year}/{month}/{day}/{slug}.html</code>',
@@ -296,7 +299,7 @@ RewriteRule . {$basePath}index.php [L]
             $this->request->postPattern = '/' . ltrim($this->encodeRule($this->request->customPattern), '/');
         }
 
-        $settings = $this->request->from('rewrite');
+        $settings = defined('__TYPECHO_REWRITE__') ? array() : $this->request->from('rewrite');
         if (isset($this->request->postPattern) && isset($this->request->pagePattern)) {
             $routingTable = $this->options->routingTable;
             $routingTable['post']['url'] = $this->request->postPattern;

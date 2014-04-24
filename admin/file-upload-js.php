@@ -13,8 +13,8 @@ if (preg_match("/^([0-9]+)([a-z]{1,2})$/i", $phpMaxFilesize, $matches)) {
 }
 ?>
 
-<script src="<?php $options->adminUrl('js/moxie.js?v=' . $suffixVersion); ?>"></script>
-<script src="<?php $options->adminUrl('js/plupload.js?v=' . $suffixVersion); ?>"></script>
+<script src="<?php $options->adminStaticUrl('js', 'moxie.js?v=' . $suffixVersion); ?>"></script>
+<script src="<?php $options->adminStaticUrl('js', 'plupload.js?v=' . $suffixVersion); ?>"></script>
 <script>
 $(document).ready(function() {
     function updateAttacmentNumber () {
@@ -123,7 +123,7 @@ $(document).ready(function() {
             url             :   '<?php $security->index('/action/upload'
                 . (isset($fileParentContent) ? '?cid=' . $fileParentContent->cid : '')); ?>',
             runtimes        :   'html5,flash,html4',
-            flash_swf_url   :   '<?php $options->adminUrl('js/Moxie.swf'); ?>',
+            flash_swf_url   :   '<?php $options->adminStaticUrl('js', 'Moxie.swf'); ?>',
             drop_element    :   $('.upload-area').get(0),
             filters         :   {
                 max_file_size       :   '<?php echo $phpMaxFilesize ?>',

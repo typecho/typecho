@@ -48,8 +48,8 @@ Typecho_Widget::widget('Widget_Contents_Attachment_Edit')->to($attachment);
 include 'copyright.php';
 include 'common-js.php';
 ?>
-<script src="<?php $options->adminUrl('js/moxie.js?v=' . $suffixVersion); ?>"></script>
-<script src="<?php $options->adminUrl('js/plupload.js?v=' . $suffixVersion); ?>"></script>
+<script src="<?php $options->adminStaticUrl('js', 'moxie.js?v=' . $suffixVersion); ?>"></script>
+<script src="<?php $options->adminStaticUrl('js', 'plupload.js?v=' . $suffixVersion); ?>"></script>
 <script type="text/javascript">
 $(document).ready(function() {
     $('#attachment-url').click(function () {
@@ -146,7 +146,7 @@ $(document).ready(function() {
         browse_button   :   $('.upload-file').get(0),
         url             :   '<?php $security->index('/action/upload?do=modify&cid=' . $attachment->cid); ?>',
         runtimes        :   'html5,flash,html4',
-        flash_swf_url   :   '<?php $options->adminUrl('js/Moxie.swf'); ?>',
+        flash_swf_url   :   '<?php $options->adminStaticUrl('js', 'Moxie.swf'); ?>',
         drop_element    :   $('.upload-area').get(0),
         filters         :   {
             max_file_size       :   '<?php echo $phpMaxFilesize ?>',

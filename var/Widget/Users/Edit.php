@@ -269,10 +269,11 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
     public function deleteUser()
     {
         $users = $this->request->filter('int')->getArray('uid');
+        $masterUserId = $this->db->fetchObject($this->db->select(array('MIN(uid)' => 'num'))->from('table.users'))->num;
         $deleteCount = 0;
 
         foreach ($users as $user) {
-            if (1 == $user || $user == $this->user->id) {
+            if ($masterUserId == $user || $user == $this->user->id) {
                 continue;
             }
 

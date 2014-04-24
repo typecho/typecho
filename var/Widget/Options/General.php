@@ -40,13 +40,14 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
             ->addRule('xssCheck', _t('请不要在站点名称中使用特殊字符')));
 
         /** 站点地址 */
-        $siteUrl = new Typecho_Widget_Helper_Form_Element_Text('siteUrl', NULL, $this->options->originalSiteUrl, _t('站点地址'), _t('站点地址主要用于生成内容的永久链接.') 
-            . ($this->options->originalSiteUrl == $this->options->rootUrl ? 
-                '' : '</p><p class="message notice mono">' . _t('当前地址 <strong>%s</strong> 与上述设定值不一致',
+        if (!defined('__TYPECHO_SITE_URL__')) {
+            $siteUrl = new Typecho_Widget_Helper_Form_Element_Text('siteUrl', NULL, $this->options->originalSiteUrl, _t('站点地址'), _t('站点地址主要用于生成内容的永久链接.') . ($this->options->originalSiteUrl == $this->options->rootUrl ? 
+                    '' : '</p><p class="message notice mono">' . _t('当前地址 <strong>%s</strong> 与上述设定值不一致',
                     $this->options->rootUrl)));
-        $siteUrl->input->setAttribute('class', 'w-100 mono');
-        $form->addInput($siteUrl->addRule('required', _t('请填写站点地址'))
-            ->addRule('url', _t('请填写一个合法的URL地址')));
+            $siteUrl->input->setAttribute('class', 'w-100 mono');
+            $form->addInput($siteUrl->addRule('required', _t('请填写站点地址'))
+                ->addRule('url', _t('请填写一个合法的URL地址')));
+        }
 
         /** 站点描述 */
         $description = new Typecho_Widget_Helper_Form_Element_Text('description', NULL, $this->options->description, _t('站点描述'), _t('站点描述将显示在网页代码的头部.'));
@@ -160,9 +161,12 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
             $this->response->goBack();
         }
 
-        $settings = $this->request->from('title', 'siteUrl', 'description', 'keywords', 'allowRegister', 'timezone');
+        $settings = $this->request->from('title','description', 'keywords', 'allowRegister', 'timezone');
         $settings['attachmentTypes'] = $this->request->getArray('attachmentTypes');
-        $settings['siteUrl'] = rtrim($settings['siteUrl'], '/');
+
+        if (!defined('__TYPECHO_SITE_URL__')) {
+            $settings['siteUrl'] = rtrim($this->request->siteUrl, '/');
+        }
 
         $attachmentTypes = array();
         if ($this->isEnableByCheckbox($settings['attachmentTypes'], '@image@')) {
