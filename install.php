@@ -471,6 +471,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                                     }
 
                                     $config = str_replace($replace, array_values($dbConfig), _r('config'));
+                                    $dbConfig['dsn'] = str_replace($replace, array_values($dbConfig), $dbConfig['dsn']);
                                 }
 
                                 if (!isset($config) && $success && !_r('created')) {
