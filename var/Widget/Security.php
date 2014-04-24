@@ -75,6 +75,10 @@ class Widget_Security extends Typecho_Widget
     public function protect()
     {
         if ($this->request->get('_') != $this->getToken($this->request->getReferer())) {
+            echo 'Token Error Info:<br />';
+            echo 'RequestToken='.$this->request->get('_').'<br />';
+            echo 'RefererToken='.$this->getToken($this->request->getReferer());
+            exit();
             $this->response->goBack();
         }
     }
