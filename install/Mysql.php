@@ -99,11 +99,20 @@ $baeDbPassword = "getenv('HTTP_BAE_ENV_SK')";
 <?php elseif ('GAE' == $engine): ?>
 <!-- GAE -->
     <h3 class="warning"><?php _e('系统将为您自动匹配 %s 环境的安装选项', 'GAE'); ?></h3>
+<?php if (0 === strpos($adapter, 'Pdo_')): ?>
     <li>
-        <label class="typecho-label" for="dbPort"><?php _e('数据库实例名'); ?></label>
-        <input type="text" class="text" name="dbPort" id="dbPort" value="<?php _v('dbPort'); ?>"/>
-        <p class="description"><?php _e('请填入您在Cloud SQL面板中创建的数据库实例名称'); ?></p>
+        <label class="typecho-label" for="dbHost"><?php _e('数据库实例名'); ?></label>
+        <input type="text" class="text" name="dbHost" id="dbHost" value="<?php _v('dbHost'); ?>"/>
+        <p class="description"><?php _e('请填入您在Cloud SQL面板中创建的数据库实例名称，示例：<em class="warning">/cloudsql/typecho-gae:typecho</em>'); ?></p>
     </li>
+<?php else: ?>
+    <li>
+        <label class="typecho-label" for="dbHost"><?php _e('数据库实例名'); ?></label>
+        <input type="text" class="text" name="dbHost" id="dbHost" value="<?php _v('dbHost'); ?>"/>
+        <p class="description"><?php _e('请填入您在Cloud SQL面板中创建的数据库实例名称，示例：<em class="warning">:/cloudsql/typecho-gae:typecho</em>'); ?></p>
+    </li>
+<?php endif; ?>
+
     <li>
         <label class="typecho-label" for="dbUser"><?php _e('数据库用户名'); ?></label>
         <input type="text" class="text" name="dbUser" id="dbUser" value="<?php _v('dbUser'); ?>" />
@@ -119,20 +128,22 @@ $baeDbPassword = "getenv('HTTP_BAE_ENV_SK')";
     </li>
 
 <?php if (0 === strpos($adapter, 'Pdo_')): ?>
+    <input type="hidden" name="dbDsn" value="mysql:dbname={database};unix_socket={host};charset=<?php _e('utf8'); ?>" />
     <input type="hidden" name="config" value="array (
-    'dsn'       =>  'mysql:dbname={database};unix_socket=/cloudsql/{host}:{port};charset=<?php _e('utf8'); ?>',
+    'dsn'       =>  'mysql:dbname={database};unix_socket={host};charset=<?php _e('utf8'); ?>',
     'user'      =>  '{user}',
     'password'  =>  '{password}'
 )" />
 <?php else: ?>
     <input type="hidden" name="config" value="array (
-    'host'      =>  ':/cloudsql/{host}:{port}',
+    'host'      =>  '{host}',
     'database'  =>  '{database}',
     'user'      =>  '{user}',
     'password'  =>  '{password}'
 )" />
 <?php endif; ?>
-    <input type="hidden" name="dbHost" value="<?php echo $_SERVER['APPLICATION_ID'] ?>" />
+
+
 <?php  else: ?>
     <li>
         <label class="typecho-label" for="dbHost"><?php _e('数据库地址'); ?></label>
