@@ -191,6 +191,8 @@ class Widget_Options_Reading extends Widget_Options_Permalink
 
                 $settings['routingTable'] = serialize($routingTable);
             }
+        } else {
+            $settings['frontArchive'] = 0;
         }
 
         foreach ($settings as $name => $value) {

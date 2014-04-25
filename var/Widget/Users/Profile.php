@@ -314,7 +314,8 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
             $this->response->goBack();
         }
 
-        $password = Typecho_Common::hash($this->request->password);
+        $hasher = new PasswordHash(8, true);
+        $password = $hasher->HashPassword($this->request->password);
 
         /** 更新数据 */
         $this->update(array('password' => $password),

@@ -8,4 +8,6 @@ if (!isset($panelTable['file']) || !in_array(urlencode($panel), $panelTable['fil
     throw new Typecho_Plugin_Exception(_t('页面不存在'), 404);
 }
 
-require_once $panel;
+list ($pluginName, $file) = explode('/', trim('/', $panel), 2);
+
+require_once $options->pluginDir($pluginName) . '/' . $file;

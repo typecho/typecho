@@ -198,7 +198,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         $settings['commentsThreaded'] = $this->isEnableByCheckbox($settings['commentsShow'], 'commentsThreaded');
 
         $settings['commentsPageSize'] = intval($settings['commentsPageSize']);
-        $settings['commentsMaxNestingLevels'] = max(2, intval($settings['commentsMaxNestingLevels']));
+        $settings['commentsMaxNestingLevels'] = min(7, max(2, intval($settings['commentsMaxNestingLevels'])));
         $settings['commentsPageDisplay'] = ('first' == $settings['commentsPageDisplay']) ? 'first' : 'last';
         $settings['commentsOrder'] = ('DESC' == $settings['commentsOrder']) ? 'DESC' : 'ASC';
         $settings['commentsAvatarRating'] = in_array($settings['commentsAvatarRating'], array('G', 'PG', 'R', 'X'))
