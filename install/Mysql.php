@@ -103,13 +103,13 @@ $baeDbPassword = "getenv('HTTP_BAE_ENV_SK')";
     <li>
         <label class="typecho-label" for="dbHost"><?php _e('数据库实例名'); ?></label>
         <input type="text" class="text" name="dbHost" id="dbHost" value="<?php _v('dbHost'); ?>"/>
-        <p class="description"><?php _e('请填入您在Cloud SQL面板中创建的数据库实例名称，示例：<em class="warning">/cloudsql/typecho-gae:typecho</em>'); ?></p>
+        <p class="description"><?php _e('请填入您在Cloud SQL面板中创建的数据库实例名称, 示例: %s', '<em class="warning">/cloudsql/typecho-gae:typecho</em>'); ?></p>
     </li>
 <?php else: ?>
     <li>
         <label class="typecho-label" for="dbHost"><?php _e('数据库实例名'); ?></label>
         <input type="text" class="text" name="dbHost" id="dbHost" value="<?php _v('dbHost'); ?>"/>
-        <p class="description"><?php _e('请填入您在Cloud SQL面板中创建的数据库实例名称，示例：<em class="warning">:/cloudsql/typecho-gae:typecho</em>'); ?></p>
+        <p class="description"><?php _e('请填入您在Cloud SQL面板中创建的数据库实例名称, 示例: %s', '<em class="warning">:/cloudsql/typecho-gae:typecho</em>'); ?></p>
     </li>
 <?php endif; ?>
 
@@ -130,7 +130,7 @@ $baeDbPassword = "getenv('HTTP_BAE_ENV_SK')";
 <?php if (0 === strpos($adapter, 'Pdo_')): ?>
     <input type="hidden" name="dbDsn" value="mysql:dbname={database};unix_socket={host};charset=<?php _e('utf8'); ?>" />
     <input type="hidden" name="config" value="array (
-    'dsn'       =>  'mysql:dbname={database};unix_socket={host};charset=<?php _e('utf8'); ?>',
+    'dsn'       =>  '{dsn}',
     'user'      =>  '{user}',
     'password'  =>  '{password}'
 )" />
