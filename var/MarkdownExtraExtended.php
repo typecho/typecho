@@ -3137,9 +3137,11 @@ class MarkdownExtraExtended extends MarkdownExtra {
 	protected $block_tags_re = 'figure|figcaption|p|div|h[1-6]|blockquote|pre|table|dl|ol|ul|address|form|fieldset|iframe|hr|legend';
 		
 	public function __construct() {
+        /*
 		$this->block_gamut += array(
 			"doFencedFigures"   => 7
 		);
+        */
 
         $this->document_gamut += array(
             "doClearBreaks"     =>  100

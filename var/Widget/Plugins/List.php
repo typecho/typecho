@@ -106,7 +106,7 @@ class Widget_Plugins_List extends Typecho_Widget
                         }
                     }
 
-                    if (!is_bool($this->parameter->activated) || $info['activated']  == $this->parameter->activated) {
+                    if ($info['activated']  == $this->parameter->activated) {
                         $this->push($info);
                     }
                 }

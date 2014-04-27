@@ -1002,7 +1002,7 @@ EOF;
         }
 
         if (function_exists('finfo_open')) {
-            $fInfo = @finfo_open(FILEINFO_MIME);
+            $fInfo = @finfo_open(FILEINFO_MIME_TYPE);
 
             if (false !== $fInfo) {
                 $mimeType = finfo_file($fInfo, $fileName);
