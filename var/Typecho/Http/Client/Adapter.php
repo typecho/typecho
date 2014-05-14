@@ -311,11 +311,14 @@ abstract class Typecho_Http_Client_Adapter
             $this->path = $params['path'];
         }
 
-        if (!empty($params['query'])) {
-            $this->path .= '?' . $params['query'] . (empty($this->query) ? NULL : '&' . $this->query);
-            $url .= (empty($this->query) ? NULL : '&' . $this->query);
-        } else {
-            $url .= (empty($this->query) ? NULL : '?' . $this->query);
+        $query = empty($params['query']) ? '' : $params['query'];
+
+        if (!empty($this->query)) {
+            $query = empty($query) ? $this->query : '&' . $this->query;
+        }
+
+        if (!empty($query)) {
+            $this->path .= '?' . $query;
         }
 
         $this->scheme = $params['scheme'];
