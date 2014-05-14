@@ -315,6 +315,7 @@ abstract class Typecho_Http_Client_Adapter
             $this->path .= '?' . $params['query'] . (empty($this->query) ? NULL : '&' . $this->query);
             $url .= (empty($this->query) ? NULL : '&' . $this->query);
         } else {
+            $this->path .= (empty($this->query) ? NULL : '?' . $this->query);
             $url .= (empty($this->query) ? NULL : '?' . $this->query);
         }
 
