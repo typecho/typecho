@@ -595,6 +595,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         /** 开始接受数据 */
         $input['name'] = $category['name'];
         $input['slug'] = Typecho_Common::slugName(empty($category['slug']) ? $category['name'] : $category['slug']);
+        $input['parent'] = isset($category['parent_id']) ? $category['parent_id'] : 0;
         $input['type'] = 'category';
         $input['description'] = isset($category['description']) ? $category['description'] : $category['name'];
         $input['do'] = 'insert';
@@ -2180,7 +2181,14 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
     public function log($value = '')
     {
         $fp = fopen("log.txt", "a+"); 
-        fwrite($fp, "[" . date('Y-m-d H:i:s') . "]\t" . $value . "\n");
+        if(is_array($value))
+        {
+            fwrite($fp, "[" . date('Y-m-d H:i:s') . "]\t\n".var_export($value, true)."\n");
+        }
+        else
+        {
+            fwrite($fp, "[" . date('Y-m-d H:i:s') . "]\t" . $value . "\n");
+        }
         fclose($fp);
     }
 
