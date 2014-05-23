@@ -516,7 +516,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                                     $lines[] = "
 /** 定义数据库参数 */
 \$db = new Typecho_Db('{$adapter}', '" . _r('dbPrefix') . "');
-\$db->addServer(" . (!isset($config) ? var_export($dbConfig, true) : $config) . ", Typecho_Db::READ | Typecho_Db::WRITE);
+\$db->addServer(" . (empty($config) ? var_export($dbConfig, true) : $config) . ", Typecho_Db::READ | Typecho_Db::WRITE);
 Typecho_Db::set(\$db);
 ";
                                     $contents = implode('', $lines);
