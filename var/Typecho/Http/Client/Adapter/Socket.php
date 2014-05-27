@@ -68,7 +68,7 @@ class Typecho_Http_Client_Adapter_Socket extends Typecho_Http_Client_Adapter
                 $request .= $content;
             } else {
                 $boundary = '---------------------------' . substr(md5(uniqid()), 0, 16);
-                $content .= $eol . $boundary;
+                $content = $eol . $boundary;
 
                 if (!empty($this->data)) {
                     foreach ($this->data as $key => $val) {

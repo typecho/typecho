@@ -319,10 +319,12 @@ abstract class Typecho_Http_Client_Adapter
 
         if (!empty($query)) {
             $this->path .= '?' . $query;
+            $params['query'] = $query;
         }
 
         $this->scheme = $params['scheme'];
         $this->port = ('https' == $params['scheme']) ? 443 : 80;
+        $url = Typecho_Common::buildUrl($params);
 
         if (!empty($params['port'])) {
             $this->port = $params['port'];

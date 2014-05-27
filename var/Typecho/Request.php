@@ -278,7 +278,8 @@ class Typecho_Request
      */
     public function getArray($key)
     {
-        $result = isset(self::$_httpParams[$key]) ? self::$_httpParams[$key] : array();
+        $result = isset($this->_params[$key]) ? $this->_params[$key] :
+            (isset(self::$_httpParams[$key]) ? self::$_httpParams[$key] : array());
 
         $result = is_array($result) ? $result
             : (strlen($result) > 0 ? array($result) : array());

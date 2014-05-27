@@ -595,8 +595,8 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         /** 开始接受数据 */
         $input['name'] = $category['name'];
         $input['slug'] = Typecho_Common::slugName(empty($category['slug']) ? $category['name'] : $category['slug']);
-        $input['parent'] = isset($category['parent_id']) ? $category['parent_id'] : 0;
-        $input['type'] = 'category';
+        $input['parent'] = isset($category['parent_id']) ? $category['parent_id'] :
+            (isset($category['parent']) ? $category['parent'] : 0);
         $input['description'] = isset($category['description']) ? $category['description'] : $category['name'];
         $input['do'] = 'insert';
 
@@ -1632,7 +1632,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         while ($categories->next()) {
             $categoryStructs[] = array(
                 'categoryId'            => $categories->mid,
-                'parentId'              => '0',
+                'parentId'              => $categories->parent,
                 'categoryName'          => $categories->name,
                 'categoryDescription'   => $categories->description,
                 'description'           => $categories->name,
@@ -2218,7 +2218,7 @@ EOF;
 
         <supportsCategoriesInline>Yes</supportsCategoriesInline>
         <supportsMultipleCategories>Yes</supportsMultipleCategories>
-        <supportsHierarchicalCategories>No</supportsHierarchicalCategories>
+        <supportsHierarchicalCategories>Yes</supportsHierarchicalCategories>
         <supportsNewCategories>Yes</supportsNewCategories>
         <supportsNewCategoriesInline>Yes</supportsNewCategoriesInline>
         <supportsCommentPolicy>Yes</supportsCommentPolicy>
@@ -2283,8 +2283,6 @@ EOF;
                 'wp.getMediaLibrary'        => array($this, 'wpGetMediaLibrary'),
                 'wp.getMediaItem'           => array($this, 'wpGetMediaItem'),
                 'wp.editPost'               => array($this, 'wpEditPost'),
-
-                
 
                 /** Blogger API */
                 'blogger.getUsersBlogs'     => array($this, 'bloggerGetUsersBlogs'),
