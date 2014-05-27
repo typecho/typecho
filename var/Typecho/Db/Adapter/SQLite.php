@@ -35,40 +35,6 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
     }
 
     /**
-     * 过滤字段名
-     *
-     * @access private
-     * @param mixed $result
-     * @return array
-     */
-    private function filterColumnName($result)
-    {
-        /** 如果结果为空,直接返回 */
-        if (!$result) {
-            return $result;
-        }
-
-        $tResult = array();
-
-        /** 遍历数组 */
-        foreach ($result as $key => $val) {
-            /** 按点分隔 */
-            if (false !== ($pos = strpos($key, '.'))) {
-                $key = substr($key, $pos + 1);
-            }
-
-            /** 按引号分割 */
-            if (false === ($pos = strpos($key, '"'))) {
-                $tResult[$key] = $val;
-            } else {
-                $tResult[substr($key, $pos + 1, -1)] = $val;
-            }
-        }
-
-        return $tResult;
-    }
-
-    /**
      * 数据库连接函数
      *
      * @param Typecho_Config $config 数据库配置
@@ -88,11 +54,12 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
     /**
      * 执行数据库查询
      *
-     * @param string $sql 查询字符串
-     * @param mixed $handle 连接对象
-     * @param boolean $op 查询读写开关
-     * @throws Typecho_Db_Exception
-     * @return resource
+     * @param string $query
+     * @param mixed $handle
+     * @param int $op
+     * @param null $action
+     * @return resource|SQLiteResult
+     * @throws Typecho_Db_Query_Exception
      */
     public function query($query, $handle, $op = Typecho_Db::READ, $action = NULL)
     {
@@ -113,7 +80,7 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
      */
     public function fetch($resource)
     {
-        return $this->filterColumnName(sqlite_fetch_array($resource, SQLITE_ASSOC));
+        return Typecho_Common::filterSQLite2ColumnName(sqlite_fetch_array($resource, SQLITE_ASSOC));
     }
 
     /**
@@ -124,7 +91,7 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
      */
     public function fetchObject($resource)
     {
-        return (object) $this->filterColumnName(sqlite_fetch_array($resource, SQLITE_ASSOC));
+        return (object) $this->fetch($resource);
     }
 
     /**
@@ -169,8 +136,8 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
         $sql['limit'] = (0 == strlen($sql['limit'])) ? NULL : ' LIMIT ' . $sql['limit'];
         $sql['offset'] = (0 == strlen($sql['offset'])) ? NULL : ' OFFSET ' . $sql['offset'];
 
-        return 'SELECT ' . $sql['fields'] . ' FROM ' . $sql['table'] .
-        $sql['where'] . $sql['group'] . $sql['having'] . $sql['order'] . $sql['limit'] . $sql['offset'];
+        return Typecho_Common::filterSQLite2CountQuery('SELECT ' . $sql['fields'] . ' FROM ' . $sql['table'] .
+        $sql['where'] . $sql['group'] . $sql['having'] . $sql['order'] . $sql['limit'] . $sql['offset']);
     }
 
     /**

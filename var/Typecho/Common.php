@@ -988,6 +988,51 @@ EOF;
     }
 
     /**
+     * 过滤字段名
+     *
+     * @access private
+     * @param mixed $result
+     * @return array
+     */
+    public static function filterSQLite2ColumnName($result)
+    {
+        /** 如果结果为空,直接返回 */
+        if (empty($result)) {
+            return $result;
+        }
+
+        $tResult = array();
+
+        /** 遍历数组 */
+        foreach ($result as $key => $val) {
+            /** 按点分隔 */
+            if (false !== ($pos = strpos($key, '.'))) {
+                $key = substr($key, $pos + 1);
+            }
+
+            $tResult[trim($key, '"')] = $val;
+        }
+
+        return $tResult;
+    }
+
+    /**
+     * 处理sqlite2的distinct count
+     *
+     * @param $sql
+     * @return string
+     */
+    public static function filterSQLite2CountQuery($sql)
+    {
+        if (preg_match("/SELECT\s+COUNT\(DISTINCT\s+([^\)]+)\)\s+(AS\s+[^\s]+)?\s*FROM\s+(.+)/is", $sql, $matches)) {
+            return 'SELECT COUNT(' . $matches[1] . ') ' . $matches[2] . ' FROM SELECT DISTINCT '
+                . $matches[1] . ' FROM ' . $matches[3];
+        }
+
+        return $sql;
+    }
+
+    /**
      * 获取图片
      *
      * @access public

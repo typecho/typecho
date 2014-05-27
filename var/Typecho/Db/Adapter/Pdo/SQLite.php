@@ -16,6 +16,11 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 class Typecho_Db_Adapter_Pdo_SQLite extends Typecho_Db_Adapter_Pdo
 {
     /**
+     * @var sqlite version 2.x
+     */
+    private $_isSQLite2 = false;
+
+    /**
      * 判断适配器是否可用
      *
      * @access public
@@ -36,7 +41,26 @@ class Typecho_Db_Adapter_Pdo_SQLite extends Typecho_Db_Adapter_Pdo
     public function init(Typecho_Config $config)
     {
         $pdo = new PDO("sqlite:{$config->file}");
+        $this->_isSQLite2 = version_compare($pdo->getAttribute(PDO::ATTR_SERVER_VERSION), '3.0.0', '<');
         return $pdo;
+    }
+
+    /**
+     * @param resource $resource
+     * @return array
+     */
+    public function fetch($resource)
+    {
+        return Typecho_Common::filterSQLite2ColumnName(parent::fetch($resource));
+    }
+
+    /**
+     * @param resource $resource
+     * @return object
+     */
+    public function fetchObject($resource)
+    {
+        return (object) $this->fetch($resource);
     }
 
     /**
@@ -70,7 +94,13 @@ class Typecho_Db_Adapter_Pdo_SQLite extends Typecho_Db_Adapter_Pdo
         $sql['limit'] = (0 == strlen($sql['limit'])) ? NULL : ' LIMIT ' . $sql['limit'];
         $sql['offset'] = (0 == strlen($sql['offset'])) ? NULL : ' OFFSET ' . $sql['offset'];
 
-        return 'SELECT ' . $sql['fields'] . ' FROM ' . $sql['table'] .
+        $query = 'SELECT ' . $sql['fields'] . ' FROM ' . $sql['table'] .
         $sql['where'] . $sql['group'] . $sql['having'] . $sql['order'] . $sql['limit'] . $sql['offset'];
+
+        if ($this->_isSQLite2) {
+            $query = Typecho_Common::filterSQLite2CountQuery($query);
+        }
+
+        return $query;
     }
 }
