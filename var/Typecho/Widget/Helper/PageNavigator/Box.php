@@ -45,7 +45,7 @@ class Typecho_Widget_Helper_PageNavigator_Box extends Typecho_Widget_Helper_Page
         );
 
         $template = array_merge($default, $template);
-        extract($default);
+        extract($template);
 
         // 定义item
         $itemBegin = empty($itemTag) ? '' : ('<' . $itemTag . '>');
