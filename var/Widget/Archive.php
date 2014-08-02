@@ -1516,7 +1516,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      * 显示下一个内容的标题链接
      *
      * @access public
-     * @param string $format 格式
+     * @param string $format 格式,取值'result'为仅以string类型返回,不作打印
      * @param string $default 如果没有下一篇,显示的默认文字
      * @param array $custom 定制化样式
      * @return void
@@ -1531,22 +1531,45 @@ class Widget_Archive extends Widget_Abstract_Contents
             ->order('table.contents.created', Typecho_Db::SORT_ASC)
             ->limit(1));
 
+        $config = array(
+            'title' => NULL,
+            'tagClass' => NULL,
+            'description' => NULL,
+            'descTag' => 'span',
+            'descTagClass' => NULL,
+            'descPosition' => 'before',
+        );
+        $custom = array_merge($config, $custom);
+        extract($custom);
+
         if ($content) {
             $content = $this->filter($content);
-            $default = array(
-                'title' => NULL,
-                'tagClass' => NULL
-            );
-            $custom = array_merge($default, $custom);
-            extract($custom);
 
             $linkText = empty($title) ? $content['title'] : $title;
             $linkClass = empty($tagClass) ? '' : 'class="' . $tagClass . '" ';
-            $link = '<a ' . $linkClass . 'href="' . $content['permalink'] . '" title="' . $content['title'] . '">' . $linkText . '</a>';
 
-            printf($format, $link);
+            $desc = empty($description) ? '' : '<'.$descTag.' class='.$descTagClass.'>'.$description.'</'.$descTag.'>';
+            if($descPosition == 'before')
+                $linkText = $desc.$linkText;
+            elseif($descPosition == 'after')
+                $linkText = $linkText.$desc;
+
+            $result = '<a ' . $linkClass . 'href="' . $content['permalink'] . '" title="' . $content['title'] . '">' . $linkText . '</a>';
+        } elseif(!empty($default)) {
+            $desc = empty($description) ? '' : '<'.$descTag.' class='.$descTagClass.'>'.$description.'</'.$descTag.'>';
+            if($descPosition == 'before')
+                $result = $desc.$default;
+            elseif($descPosition == 'after')
+                $result = $default.$desc;
         } else {
-            echo $default;
+            $result = $default;
+        }
+        if(empty($result))
+            return $result;
+        if($format == 'result'){
+            return $result;
+        }else{
+            printf($format, $result);
         }
     }
 
@@ -1554,7 +1577,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      * 显示上一个内容的标题链接
      *
      * @access public
-     * @param string $format 格式
+     * @param string $format 格式,取值'result'为仅以string类型返回,不作打印
      * @param string $default 如果没有上一篇,显示的默认文字
      * @param array $custom 定制化样式
      * @return void
@@ -1568,22 +1591,45 @@ class Widget_Archive extends Widget_Abstract_Contents
             ->order('table.contents.created', Typecho_Db::SORT_DESC)
             ->limit(1));
 
+        $config = array(
+            'title' => NULL,
+            'tagClass' => NULL,
+            'description' => NULL,
+            'descTag' => 'span',
+            'descTagClass' => NULL,
+            'descPosition' => 'before',
+        );
+        $custom = array_merge($config, $custom);
+        extract($custom);
+
         if ($content) {
             $content = $this->filter($content);
-            $default = array(
-                'title' => NULL,
-                'tagClass' => NULL
-            );
-            $custom = array_merge($default, $custom);
-            extract($custom);
 
             $linkText = empty($title) ? $content['title'] : $title;
             $linkClass = empty($tagClass) ? '' : 'class="' . $tagClass . '" ';
-            $link = '<a ' . $linkClass . 'href="' . $content['permalink'] . '" title="' . $content['title'] . '">' . $linkText . '</a>';
 
-            printf($format, $link);
+            $desc = empty($description) ? '' : '<'.$descTag.' class='.$descTagClass.'>'.$description.'</'.$descTag.'>';
+            if($descPosition == 'before')
+                $linkText = $desc.$linkText;
+            elseif($descPosition == 'after')
+                $linkText = $linkText.$desc;
+
+            $result = '<a ' . $linkClass . 'href="' . $content['permalink'] . '" title="' . $content['title'] . '">' . $linkText . '</a>';
+        } elseif(!empty($default)) {
+            $desc = empty($description) ? '' : '<'.$descTag.' class='.$descTagClass.'>'.$description.'</'.$descTag.'>';
+            if($descPosition == 'before')
+                $result = $desc.$default;
+            elseif($descPosition == 'after')
+                $result = $default.$desc;
         } else {
-            echo $default;
+            $result = $default;
+        }
+        if(empty($result))
+            return $result;
+        if($format == 'result'){
+            return $result;
+        }else{
+            printf($format, $result);
         }
     }
 
