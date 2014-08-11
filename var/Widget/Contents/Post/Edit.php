@@ -107,8 +107,8 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             }
         }
 
-        if (!empty($this->request->fields)) {
-            $fields = array_merge($fields, $this->request->fields);
+        if (!empty($this->request->getArray('fields'))) {
+            $fields = array_merge($fields, $this->request->getArray('fields'));
         }
 
         return $fields;
