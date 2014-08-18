@@ -67,7 +67,10 @@ if (!empty($_GET) || !empty($_POST)) {
     }
 
     $parts = parse_url($_SERVER['HTTP_REFERER']);
-	if($parts['port'] != 80) $parts['host'] = "{$parts['host']}:{$parts['port']}";
+	if (!empty($parts['port']) && $parts['port'] != 80) {
+        $parts['host'] = "{$parts['host']}:{$parts['port']}";
+    }
+
     if (empty($parts['host']) || $_SERVER['HTTP_HOST'] != $parts['host']) {
         exit;
     }
