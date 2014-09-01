@@ -331,7 +331,7 @@ class Typecho_Common
         <style>
             html {
                 padding: 50px 10px;
-                font-size: 20px;
+                font-size: 16px;
                 line-height: 1.4;
                 color: #666;
                 background: #F6F6F3;
@@ -344,15 +344,10 @@ class Typecho_Common
             body {
                 max-width: 500px;
                 _width: 500px;
-                padding: 30px 20px 50px;
+                padding: 30px 20px;
                 margin: 0 auto;
                 background: #FFF;
             }
-            h1 {
-                font-size: 50px;
-                text-align: center;
-            }
-            h1 span { color: #bbb; }
             ul {
                 padding: 0 0 0 40px;
             }
@@ -365,7 +360,6 @@ class Typecho_Common
     </head>
     <body>
         <div class="container">
-            <h1>{$code}</h1>
             {$message}
         </div>
     </body>
