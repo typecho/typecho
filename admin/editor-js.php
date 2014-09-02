@@ -56,7 +56,8 @@ $(document).ready(function () {
         help: '<?php _e('Markdown语法帮助'); ?>'
     };
 
-    var converter = new Typecho.Markdown('<?php $security->index('/action/contents-' . $content->type . '-edit?do=preview'); ?>'),
+    var converter = new Typecho.Markdown('<?php $security->index('/action/contents-' 
+        . (!empty($post) ? 'post' : 'page') . '-edit?do=preview'); ?>'),
         editor = new Markdown.Editor(converter, '', options),
         diffMatch = new diff_match_patch(), last = '', preview = $('#wmd-preview'),
         mark = '@mark' + Math.ceil(Math.random() * 100000000) + '@',
@@ -190,7 +191,7 @@ $(document).ready(function () {
         
         var changed = $('.diff', preview).parent();
         if (!changed.is(preview)) {
-            changed.effect('highlight', {color : '#DDDDDD'}, 1000);
+            changed.effect('highlight', {color : '#EEEEEE'}, 1000);
         }
 
         if (diff.length > 0) {
