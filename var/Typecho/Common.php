@@ -22,7 +22,7 @@ define('__TYPECHO_MB_SUPPORTED__', function_exists('mb_get_info'));
 class Typecho_Common
 {
     /** 程序版本 */
-    const VERSION = '1.0/14.5.26';
+    const VERSION = '1.0/14.9.2';
 
     /**
      * 锁定的代码块

@@ -103,6 +103,14 @@ class Typecho_Request
      */
     private static $_httpParams = false;
 
+    
+    /**
+     * 域名前缀
+     *
+     * @var string
+     */
+    private static $_urlPrefix = NULL;
+
     /**
      * 当前过滤器
      *
@@ -188,7 +196,7 @@ class Typecho_Request
     private function _checkAgent($agent)
     {
         return preg_match("/^[_a-z0-9- ,:;=#@\.\(\)\/\+\*\?]+$/i", $agent);
-    }
+    } 
 
     /**
      * 初始化变量
@@ -199,6 +207,23 @@ class Typecho_Request
             self::$_httpParams = array_filter(array_merge($_POST, $_GET),
                 array('Typecho_Common', 'checkStrEncoding'));
         }
+    }
+
+    /**
+     * 获取url前缀 
+     * 
+     * @access public
+     * @return string
+     */
+    public static function getUrlPrefix()
+    {
+        if (empty(self::$_urlPrefix)) {
+            self::$_urlPrefix = ($this->isSecure() ? 'https' : 'http') 
+                . '://' . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'])
+                . (in_array($_SERVER['SERVER_PORT'], array(80, 443)) ? '' : ':' . $_SERVER['SERVER_PORT']);
+        }
+
+        return self::$_urlPrefix;
     }
 
     /**
@@ -348,9 +373,7 @@ class Typecho_Request
     public function getRequestRoot()
     {
         if (NULL === $this->_requestRoot) {
-            $root = rtrim(($this->isSecure() ? 'https' : 'http')
-                . '://' . $_SERVER['HTTP_HOST']
-                . $this->getBaseUrl(), '/') . '/';
+            $root = rtrim(self::getUrlPrefix() . $this->getBaseUrl(), '/') . '/';
             
             $pos = strrpos($root, '.php/');
             if ($pos) {
@@ -371,8 +394,7 @@ class Typecho_Request
      */
     public function getRequestUrl()
     {
-        $scheme = $this->isSecure() ? 'https' : 'http';
-        return $scheme . '://' . $_SERVER['HTTP_HOST'] . $this->getRequestUri();
+        return self::getUrlPrefix() . $this->getRequestUri();
     }
 
     /**

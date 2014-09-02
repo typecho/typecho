@@ -147,14 +147,13 @@ function _p($adapter) {
  * @return string
  */
 function _u() {
-    $url = "http://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    if (isset($_SERVER["QUERY_STRING"])) {
-        $url = str_replace("?" . $_SERVER["QUERY_STRING"], "", $url);
+    $url = Typecho_Request::getUrlPrefix() . $_SERVER['REQUEST_URI'];
+    if (isset($_SERVER['QUERY_STRING'])) {
+        $url = str_replace('?' . $_SERVER['QUERY_STRING'], '', $url);
     }
 
     return dirname($url);
 }
-
 
 $options = new stdClass();
 $options->generator = 'Typecho ' . Typecho_Common::VERSION;
@@ -164,6 +163,29 @@ $options->software = $soft;
 $options->version = $currentVersion;
 
 list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
+
+/** 获取语言 */
+$lang = _r('lang', Typecho_Cookie::get('__typecho_lang'));
+$langs = Widget_Options_General::getLangs();
+
+if (empty($lang) && count($langs) > 1) {
+    foreach ($langs as $lang) {
+        if ('zh_CN' != $lang) {
+            break;
+        }
+    }
+}
+
+if (empty($lang)) {
+    $lang = 'zh_CN';
+}
+
+if ('zh_CN' != $lang) {
+    $dir = defined('__TYPECHO_LANG_DIR__') ? __TYPECHO_LANG_DIR__ : __TYPECHO_ROOT_DIR__ . '/usr/langs';
+    Typecho_I18n::setLang($dir . '/' . $lang . '.mo');
+}
+
+Typecho_Cookie::set('__typecho_lang', $lang);
 
 ?><!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -286,7 +308,8 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'theme', 'user' => 0, 'value' => 'default')));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'theme:default', 'user' => 0, 'value' => 'a:2:{s:7:"logoUrl";N;s:12:"sidebarBlock";a:5:{i:0;s:15:"ShowRecentPosts";i:1;s:18:"ShowRecentComments";i:2;s:12:"ShowCategory";i:3;s:11:"ShowArchive";i:4;s:9:"ShowOther";}}')));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'timezone', 'user' => 0, 'value' => _t('28800'))));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'charset', 'user' => 0, 'value' => 'UTF-8')));
+                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'lang', 'user' => 0, 'value' => $lang)));
+                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'charset', 'user' => 0, 'value' => _t('UTF-8'))));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'contentType', 'user' => 0, 'value' => 'text/html')));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'gzip', 'user' => 0, 'value' => 0)));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'generator', 'user' => 0, 'value' => $options->generator)));
@@ -618,7 +641,17 @@ Typecho_Db::set(\$db);
                 <?php _e('如果您遇到使用上的问题, 程序中的 BUG, 以及期许的新功能, 欢迎您在社区中交流或者直接向我们贡献代码.'); ?>
                 <?php _e('对于贡献突出者, 他的名字将出现在贡献者名单中.'); ?></p>
                 </div>
-                <p class="submit"><button type="submit" class="btn primary"><?php _e('我准备好了, 开始下一步 &raquo;'); ?></button></p>
+                <p class="submit">
+                    <button type="submit" class="btn primary"><?php _e('我准备好了, 开始下一步 &raquo;'); ?></button>
+
+                    <?php if (count($langs) > 1): ?>
+                    <select style="float: right" onchange="window.location.href='install.php?lang=' + this.value">
+                        <?php foreach ($langs as $key => $val): ?>
+                        <option value="<?php echo $key; ?>"<?php if ($lang == $val): ?> selected<?php endif; ?>><?php echo $val; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <?php endif; ?>
+                </p>
                 </form>
             <?php endif; ?>
 
