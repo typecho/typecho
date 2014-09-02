@@ -109,7 +109,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
 
         $content = $this->pluginHandle(__CLASS__)->trigger($plugged)->excerpt($this->text, $this);
         if (!$plugged) {
-            $content = $this->isMarkdown ? MarkdownExtraExtended::defaultTransform($content)
+            $content = $this->isMarkdown ? $this->markdown($content)
                 : Typecho_Common::cutParagraph($content);
         }
 
@@ -134,7 +134,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $content = $this->pluginHandle(__CLASS__)->trigger($plugged)->content($this->text, $this);
 
         if (!$plugged) {
-            $content = $this->isMarkdown ? MarkdownExtraExtended::defaultTransform($content)
+            $content = $this->isMarkdown ? $this->markdown($content)
                 : Typecho_Common::cutParagraph($content);
         }
 
@@ -921,6 +921,26 @@ class Widget_Abstract_Contents extends Widget_Abstract
     public function author($item = 'screenName')
     {
         echo $this->author->{$item};
+    }
+
+    /**
+     * markdown  
+     * 
+     * @param mixed $text 
+     * @access public
+     * @return void
+     */
+    public function markdown($text)
+    {
+        $html = $this->pluginHandle(__CLASS__)->trigger($parsed)->markdown($text);
+
+        if (!$parsed) {
+            $parser = new ParsedownExtra();
+            $parser->setBreaksEnabled(true);
+            $html = $parser->text($text);
+        }
+
+        return $html;
     }
 }
 

@@ -1,7 +1,6 @@
 <?php if(!defined('__TYPECHO_ADMIN__')) exit; ?>
 <?php $content = !empty($post) ? $post : $page; if ($options->markdown): ?>
 <script src="<?php $options->adminStaticUrl('js', 'pagedown.js?v=' . $suffixVersion); ?>"></script>
-<script src="<?php $options->adminStaticUrl('js', 'pagedown-extra.js?v=' . $suffixVersion); ?>"></script>
 <script src="<?php $options->adminStaticUrl('js', 'diff.js?v=' . $suffixVersion); ?>"></script>
 <script>
 $(document).ready(function () {
@@ -57,17 +56,13 @@ $(document).ready(function () {
         help: '<?php _e('Markdown语法帮助'); ?>'
     };
 
-    var converter = new Markdown.Converter(),
+    var converter = new Typecho.Markdown('<?php $security->index('/action/contents-' . $content->type . '-edit?do=preview'); ?>'),
         editor = new Markdown.Editor(converter, '', options),
         diffMatch = new diff_match_patch(), last = '', preview = $('#wmd-preview'),
         mark = '@mark' + Math.ceil(Math.random() * 100000000) + '@',
         span = '<span class="diff" />',
         cache = {};
     
-    // 设置markdown
-    Markdown.Extra.init(converter, {
-        extensions  :   ["tables", "fenced_code_gfm", "def_list", "attr_list", "footnotes"]
-    });
 
     // 自动跟随
     converter.hooks.chain('postConversion', function (html) {
@@ -192,6 +187,11 @@ $(document).ready(function () {
         });
 
         $('.cache', preview).resize(cacheResize).each(cacheResize);
+        
+        var changed = $('.diff', preview).parent();
+        if (!changed.is(preview)) {
+            changed.effect('highlight', {color : '#DDDDDD'}, 1000);
+        }
 
         if (diff.length > 0) {
             var p = diff.position(), lh = diff.parent().css('line-height');

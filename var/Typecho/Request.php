@@ -218,7 +218,10 @@ class Typecho_Request
     public static function getUrlPrefix()
     {
         if (empty(self::$_urlPrefix)) {
-            self::$_urlPrefix = ($this->isSecure() ? 'https' : 'http') 
+            $isSecure = (!empty($_SERVER['HTTPS']) && 'off' != strtolower($_SERVER['HTTPS'])) 
+                || (!empty($_SERVER['SERVER_PORT']) && 443 == $_SERVER['SERVER_PORT']);
+
+            self::$_urlPrefix = ($isSecure ? 'https' : 'http') 
                 . '://' . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'])
                 . (in_array($_SERVER['SERVER_PORT'], array(80, 443)) ? '' : ':' . $_SERVER['SERVER_PORT']);
         }

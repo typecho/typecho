@@ -112,7 +112,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
 
         $text = $this->pluginHandle(__CLASS__)->trigger($plugged)->content($text, $this);
         if (!$plugged) {
-            $text = $this->options->commentsMarkdown ? MarkdownExtraExtended::defaultTransform($text)
+            $text = $this->options->commentsMarkdown ? $this->markdown($text)
                 : Typecho_Common::cutParagraph($text);
         }
 
@@ -438,4 +438,25 @@ class Widget_Abstract_Comments extends Widget_Abstract
     {
         echo Typecho_Common::subStr(strip_tags($this->content), 0, $length, $trim);
     }
+
+    /**
+     * markdown  
+     * 
+     * @param mixed $text 
+     * @access public
+     * @return void
+     */
+    public function markdown($text)
+    {
+        $html = $this->pluginHandle(__CLASS__)->trigger($parsed)->markdown($text);
+
+        if (!$parsed) {
+            $parser = new ParsedownExtra();
+            $parser->setBreaksEnabled(true);
+            $html = $parser->text($text);
+        }
+
+        return $html;
+    }
 }
+
