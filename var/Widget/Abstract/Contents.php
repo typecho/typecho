@@ -110,7 +110,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $content = $this->pluginHandle(__CLASS__)->trigger($plugged)->excerpt($this->text, $this);
         if (!$plugged) {
             $content = $this->isMarkdown ? $this->markdown($content)
-                : Typecho_Common::cutParagraph($content);
+                : $this->autoP($content);
         }
 
         $contents = explode('<!--more-->', $content);
@@ -135,7 +135,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
 
         if (!$plugged) {
             $content = $this->isMarkdown ? $this->markdown($content)
-                : Typecho_Common::cutParagraph($content);
+                : $this->autoP($content);
         }
 
         return $this->pluginHandle(__CLASS__)->contentEx($content, $this);
@@ -924,6 +924,30 @@ class Widget_Abstract_Contents extends Widget_Abstract
     }
 
     /**
+     * autoP 
+     * 
+     * @param mixed $text 
+     * @access public
+     * @return void
+     */
+    public function autoP($text)
+    {
+        $html = $this->pluginHandle(__CLASS__)->trigger($parsed)->autoP($text);
+
+        if (!$parsed) {
+            static $parser;
+
+            if (empty($parser)) {
+                $parser = new AutoP();
+            }
+
+            $html = $parser->parse($text);
+        }
+
+        return $html;
+    }
+
+    /**
      * markdown  
      * 
      * @param mixed $text 
@@ -935,8 +959,13 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $html = $this->pluginHandle(__CLASS__)->trigger($parsed)->markdown($text);
 
         if (!$parsed) {
-            $parser = new ParsedownExtra();
-            $parser->setBreaksEnabled(true);
+            static $parser;
+
+            if (empty($parser)) {
+                $parser = new ParsedownExtra();
+                $parser->setBreaksEnabled(true);
+            }
+
             $html = $parser->text($text);
         }
 

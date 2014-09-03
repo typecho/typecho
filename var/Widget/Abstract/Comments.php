@@ -113,7 +113,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
         $text = $this->pluginHandle(__CLASS__)->trigger($plugged)->content($text, $this);
         if (!$plugged) {
             $text = $this->options->commentsMarkdown ? $this->markdown($text)
-                : Typecho_Common::cutParagraph($text);
+                : $this->autoP($text);
         }
 
         $text = $this->pluginHandle(__CLASS__)->contentEx($text, $this);
@@ -440,6 +440,30 @@ class Widget_Abstract_Comments extends Widget_Abstract
     }
 
     /**
+     * autoP 
+     * 
+     * @param mixed $text 
+     * @access public
+     * @return void
+     */
+    public function autoP($text)
+    {
+        $html = $this->pluginHandle(__CLASS__)->trigger($parsed)->autoP($text);
+
+        if (!$parsed) {
+            static $parser;
+
+            if (empty($parser)) {
+                $parser = new AutoP();
+            }
+
+            $html = $parser->parse($text);
+        }
+
+        return $html;
+    }
+
+    /**
      * markdown  
      * 
      * @param mixed $text 
@@ -451,8 +475,13 @@ class Widget_Abstract_Comments extends Widget_Abstract
         $html = $this->pluginHandle(__CLASS__)->trigger($parsed)->markdown($text);
 
         if (!$parsed) {
-            $parser = new ParsedownExtra();
-            $parser->setBreaksEnabled(true);
+            static $parser;
+
+            if (empty($parser)) {
+                $parser = new ParsedownExtra();
+                $parser->setBreaksEnabled(true);
+            }
+
             $html = $parser->text($text);
         }
 

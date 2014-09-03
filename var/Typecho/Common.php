@@ -25,14 +25,6 @@ class Typecho_Common
     const VERSION = '1.0/14.9.2';
 
     /**
-     * 锁定的代码块
-     *
-     * @access private
-     * @var array
-     */
-    private static $_lockedBlocks = array('<p></p>' => '');
-    
-    /**
      * 允许的属性
      * 
      * @access private
@@ -56,19 +48,6 @@ class Typecho_Common
      */
     public static $exceptionHandle;
 
-    /**
-     * 锁定标签回调函数
-     *
-     * @access private
-     * @param array $matches 匹配的值
-     * @return string
-     */
-    public static function __lockHTML(array $matches)
-    {
-        $guid = '<code>' . uniqid(time()) . '</code>';
-        self::$_lockedBlocks[$guid] = $matches[0];
-        return $guid;
-    }
 
     /**
      * 将url中的非法xss去掉时的数组回调过滤函数
@@ -826,71 +805,6 @@ EOF;
         $str = trim($str, '-_');
         $str = !strlen($str) ? $default : $str;
         return substr($str, 0, $maxLength);
-    }
-
-    /**
-     * 去掉html中的分段
-     *
-     * @access public
-     * @param string $html 输入串
-     * @return string
-     */
-    public static function removeParagraph($html)
-    {
-        /** 锁定标签 */
-        $html = self::lockHTML($html);
-        $html = str_replace(array("\r", "\n"), '', $html);
-    
-        $html = trim(preg_replace(
-        array("/\s*<p>(.*?)<\/p>\s*/is", "/\s*<br\s*\/>\s*/is",
-        "/\s*<(div|blockquote|pre|code|script|table|fieldset|ol|ul|dl|h[1-6])([^>]*)>/is",
-        "/<\/(div|blockquote|pre|code|script|table|fieldset|ol|ul|dl|h[1-6])>\s*/is", "/\s*<\!--more-->\s*/is"),
-        array("\n\\1\n", "\n", "\n\n<\\1\\2>", "</\\1>\n\n", "\n\n<!--more-->\n\n"),
-        $html));
-        
-        return trim(self::releaseHTML($html));
-    }
-    
-    /**
-     * 锁定标签
-     * 
-     * @access public
-     * @param string $html 输入串
-     * @return string
-     */
-    public static function lockHTML($html)
-    {
-        return preg_replace_callback("/<(code|pre|script)[^>]*>.*?<\/\\1>/is", array('Typecho_Common', '__lockHTML'), $html);
-    }
-    
-    /**
-     * 释放标签
-     * 
-     * @access public
-     * @param string $html 输入串
-     * @return string
-     */
-    public static function releaseHTML($html)
-    {
-        $html = trim(str_replace(array_keys(self::$_lockedBlocks), array_values(self::$_lockedBlocks), $html));
-        self::$_lockedBlocks = array('<p></p>' => '');
-        return $html;
-    }
-    
-    /**
-     * 文本分段函数
-     *
-     * @param string $string 需要分段的字符串
-     * @return string
-     */
-    public static function cutParagraph($string)
-    {
-        static $loaded;
-        if (!$loaded) {
-            $loaded = true;
-        }
-        
-        return Typecho_Common_Paragraph::process($string);
     }
 
     /**
