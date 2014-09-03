@@ -649,11 +649,11 @@ class Typecho_Request
                 case defined('__TYPECHO_IP_SOURCE__') && NULL !== $this->getServer(__TYPECHO_IP_SOURCE__):
                     list($this->_ip) = array_map('trim', explode(',', $this->getServer(__TYPECHO_IP_SOURCE__)));
                     break;
-                case NULL !== $this->getServer('HTTP_CLIENT_IP'):
-                    $this->_ip = $this->getServer('HTTP_CLIENT_IP');
-                    break;
                 case NULL !== $this->getServer('REMOTE_ADDR'):
                     $this->_ip = $this->getServer('REMOTE_ADDR');
+                    break;
+                case NULL !== $this->getServer('HTTP_CLIENT_IP'):
+                    $this->_ip = $this->getServer('HTTP_CLIENT_IP');
                     break;
                 default:
                     break;
