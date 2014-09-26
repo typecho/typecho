@@ -170,42 +170,19 @@
 
 (function () {
 
-    Typecho.Markdown = function (url) {
-        this.lastHtml = '';
-        this.lastText = '';
-        this.currentTime = new Date().getTime();
-        this.lock = false;
-        this.first = true;
-        this.cb = null;
-
+    Typecho.Markdown = function () {
+        this.writer = new stmd.HtmlRenderer();
+        this.reader = new stmd.DocParser();
+        
         this.hooks = new Markdown.HookCollection()
         this.hooks.addNoop('postConversion');
-
-        var self = this;
-        setInterval(function () {
-            var currentTime = new Date().getTime();
-
-            if (!self.lock && self.cb && (self.first || currentTime - self.currentTime > 1000)) {
-                self.lock = true;
-                self.first = false;
-
-                $.post(url, {text : self.lastText}, function (html) {
-                    html = self.hooks.postConversion(html);
-                    self.cb(html);
-                    self.cb = null;
-                    self.lastHtml = html;
-                    self.lock = false;
-                }, 'json');
-            }
-        }, 500);
     };
 
-    Typecho.Markdown.prototype.makeHtml = function (text, pushPreviewHtml) {
-        this.lastText = text;
-        this.currentTime = new Date().getTime();
-        this.cb = pushPreviewHtml;
+    Typecho.Markdown.prototype.makeHtml = function (text) {
+        var doc = this.reader.parse(text),
+            html = this.writer.renderBlock(doc);
 
-        return this.lastHtml;
+        return this.hooks.postConversion(html);
     };
 
 })();

@@ -257,8 +257,7 @@ else
 
             panels = new PanelCollection(idPostfix);
             var commandManager = new CommandManager(hooks, getString);
-            var previewManager = new PreviewManager(markdownConverter, panels,
-                function () { hooks.onPreviewRefresh(); });
+            var previewManager = new PreviewManager(markdownConverter, panels, function () { hooks.onPreviewRefresh(); });
             var undoManager, uiManager;
 
             if (!/\?noundo/.test(doc.location.href)) {
@@ -368,7 +367,7 @@ else
         var regexText;
         var replacementText;
 
-        // chrome bug ... documented at: http://meta.stackoverflow.com/questions/63307/blockquote-glitch-in-editor-in-chrome-6-and-7/65985#65985
+        // chrome bug ... documented at: http://meta.stackexchange.com/questions/63307/blockquote-glitch-in-editor-in-chrome-6-and-7/65985#65985
         if (navigator.userAgent.match(/Chrome/)) {
             "X".match(/()./);
         }
@@ -1013,14 +1012,14 @@ else
 
             var prevTime = new Date().getTime();
 
-            text = converter.makeHtml(text, pushPreviewHtml);
+            text = converter.makeHtml(text);
 
             // Calculate the processing time of the HTML creation.
             // It's used as the delay time in the event listener.
             var currTime = new Date().getTime();
             elapsedTime = currTime - prevTime;
 
-            // pushPreviewHtml(text);
+            pushPreviewHtml(text);
         };
 
         // setTimeout is already used.  Used as an event listener.
@@ -1159,9 +1158,9 @@ else
 
         var background = doc.createElement("div"),
             style = background.style;
-
+        
         background.className = "wmd-prompt-background";
-
+        
         style.position = "absolute";
         style.top = "0";
 
@@ -1993,14 +1992,39 @@ else
     // sure the URL and the optinal title are "nice".
     function properlyEncoded(linkdef) {
         return linkdef.replace(/^\s*(.*?)(?:\s+"(.+)")?\s*$/, function (wholematch, link, title) {
-            link = link.replace(/\?.*$/, function (querypart) {
-                return querypart.replace(/\+/g, " "); // in the query string, a plus and a space are identical
-            });
-            link = decodeURIComponent(link); // unencode first, to prevent double encoding
-            link = encodeURI(link).replace(/'/g, '%27').replace(/\(/g, '%28').replace(/\)/g, '%29');
-            link = link.replace(/\?.*$/, function (querypart) {
-                return querypart.replace(/\+/g, "%2b"); // since we replaced plus with spaces in the query part, all pluses that now appear where originally encoded
-            });
+            
+            var inQueryString = false;
+
+            // The last alternative, `[^\w\d-./]`, is just a shortcut that lets us skip
+            // the most common characters in URLs. Replacing it with `.` would not change
+            // the result, because encodeURI returns those characters unchanged, but it
+            // would mean lots of unnecessary replacement calls
+            link = link.replace(/%(?:[\da-fA-F]{2})|\?|\+|[^\w\d-./]/g, function (match) {
+                // Valid percent encoding. Could just return it as is, but we follow RFC3986
+                // Section 2.1 which says "For consistency, URI producers and normalizers
+                // should use uppercase hexadecimal digits for all percent-encodings."
+                // Note that we also handle (illegal) stand-alone percent characters by
+                // replacing them with "%25"
+                if (match.length === 3 && match.charAt(0) == "%") {
+                    return match.toUpperCase();
+                }
+                switch (match) {
+                    case "?":
+                        inQueryString = true;
+                        return "?";
+                        break;
+                    
+                    // In the query string, a plus and a space are identical -- normalize.
+                    // Not strictly necessary, but identical behavior to the previous version
+                    // of this function.
+                    case "+":
+                        if (inQueryString)
+                            return "%20";
+                        break;
+                }
+                return encodeURI(match);
+            })
+            
             if (title) {
                 title = title.trim ? title.trim() : title.replace(/^\s*/, "").replace(/\s*$/, "");
                 title = title.replace(/"/g, "quot;").replace(/\(/g, "&#40;").replace(/\)/g, "&#41;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -2023,7 +2047,7 @@ else
 
         }
         else {
-
+            
             // We're moving start and end tag back into the selection, since (as we're in the else block) we're not
             // *removing* a link, but *adding* one, so whatever findTags() found is now back to being part of the
             // link text. linkEnteredCallback takes care of escaping any brackets.
@@ -2061,7 +2085,7 @@ else
                     // would mean a zero-width match at the start. Since zero-width matches advance the string position,
                     // the first bracket could then not act as the "not a backslash" for the second.
                     chunk.selection = (" " + chunk.selection).replace(/([^\\](?:\\\\)*)(?=[[\]])/g, "$1\\").substr(1);
-
+                    
                     var linkDef = " [999]: " + properlyEncoded(link);
 
                     var num = that.addLinkDef(chunk, linkDef);
@@ -2071,18 +2095,10 @@ else
                     if (!chunk.selection) {
                         if (isImage) {
                             var imagename = that.getString("imagename");
-                            if (!!imagename) {
-                                imagename = imagename.replace(/_/g, '\\_');
-                            }
-
                             chunk.selection = imagename || that.getString("imagedescription");
                         }
                         else {
                             var linkname = that.getString("linkname");
-                            if (!!linkname) {
-                                linkname = linkname.replace(/_/g, '\\_');
-                            }
-
                             chunk.selection = linkname || that.getString("linkdescription");
                         }
                     }
@@ -2114,7 +2130,7 @@ else
         chunk.before = chunk.before.replace(/(\n|^)[ ]{0,3}([*+-]|\d+[.])[ \t]*\n$/, "\n\n");
         chunk.before = chunk.before.replace(/(\n|^)[ ]{0,3}>[ \t]*\n$/, "\n\n");
         chunk.before = chunk.before.replace(/(\n|^)[ \t]+\n$/, "\n\n");
-
+        
         // There's no selection, end the cursor wasn't at the end of the line:
         // The user wants to split the current list item / code line / blockquote line
         // (for the latter it doesn't really matter) in two. Temporarily select the
@@ -2142,7 +2158,7 @@ else
                 commandMgr.doCode(chunk);
             }
         }
-
+        
         if (fakeSelection) {
             chunk.after = chunk.selection + chunk.after;
             chunk.selection = "";
@@ -2192,7 +2208,7 @@ else
         //
         // Since this is essentially a backwards-moving regex, it's susceptible to
         // catstrophic backtracking and can cause the browser to hang;
-        // see e.g. http://meta.stackoverflow.com/questions/9807.
+        // see e.g. http://meta.stackexchange.com/questions/9807.
         //
         // Hence we replaced this by a simple state machine that just goes through the
         // lines and checks for a), b), and c).

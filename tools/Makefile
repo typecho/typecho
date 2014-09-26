@@ -7,7 +7,7 @@ DIR=../
 update:
 	@echo 'git update'
 	rm -Rf build/
-	git clone https://github.com/typecho/typecho-replica.git build
+	git clone https://github.com/typecho/typecho.git build
 	rm -Rf build/.git
 	rm -f build/.gitignore
 	rm -f build/.gitattributes
@@ -31,6 +31,21 @@ package:
 	mkdir build/usr/uploads/
 	chmod 777 build/usr/uploads/
 	tar -cvvzf build.tar.gz build/
+
+
+commonmark-php:
+	rm -rf ../var/CommonMark
+	git clone git@github.com:colinodell/commonmark-php.git commonmark
+	php transfer.php commonmark/src CommonMark ColinODell/CommonMark
+	mv commonmark/src ../var/CommonMark
+	rm -rf commonmark
+
+
+commonmark-js:
+	rm -rf ../admin/js/stmd.js
+	git clone https://github.com/jgm/stmd.git
+	cp stmd/js/stmd.js ../admin/js/
+	rm -rf stmd
 
 
 clear:

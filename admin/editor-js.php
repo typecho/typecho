@@ -1,6 +1,7 @@
 <?php if(!defined('__TYPECHO_ADMIN__')) exit; ?>
 <?php $content = !empty($post) ? $post : $page; if ($options->markdown): ?>
 <script src="<?php $options->adminStaticUrl('js', 'pagedown.js?v=' . $suffixVersion); ?>"></script>
+<script src="<?php $options->adminStaticUrl('js', 'stmd.js?v=' . $suffixVersion); ?>"></script>
 <script src="<?php $options->adminStaticUrl('js', 'diff.js?v=' . $suffixVersion); ?>"></script>
 <script>
 $(document).ready(function () {
@@ -56,8 +57,7 @@ $(document).ready(function () {
         help: '<?php _e('Markdown语法帮助'); ?>'
     };
 
-    var converter = new Typecho.Markdown('<?php $security->index('/action/contents-' 
-        . (!empty($post) ? 'post' : 'page') . '-edit?do=preview'); ?>'),
+    var converter = new Typecho.Markdown,
         editor = new Markdown.Editor(converter, '', options),
         diffMatch = new diff_match_patch(), last = '', preview = $('#wmd-preview'),
         mark = '@mark' + Math.ceil(Math.random() * 100000000) + '@',

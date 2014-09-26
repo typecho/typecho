@@ -962,11 +962,10 @@ class Widget_Abstract_Contents extends Widget_Abstract
             static $parser;
 
             if (empty($parser)) {
-                $parser = new ParsedownExtra();
-                $parser->setBreaksEnabled(true);
+                $parser = new CommonMark_CommonMarkConverter();
             }
 
-            $html = $parser->text($text);
+            $html = $parser->convertToHtml($text);
         }
 
         return $html;
