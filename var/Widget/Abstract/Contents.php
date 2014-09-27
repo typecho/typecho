@@ -959,13 +959,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $html = $this->pluginHandle(__CLASS__)->trigger($parsed)->markdown($text);
 
         if (!$parsed) {
-            static $parser;
-
-            if (empty($parser)) {
-                $parser = new CommonMark_CommonMarkConverter();
-            }
-
-            $html = $parser->convertToHtml($text);
+            $html = Markdown::convert($text);
         }
 
         return $html;

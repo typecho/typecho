@@ -11,7 +11,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
+if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 
 /**
  * Inline element

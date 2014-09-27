@@ -168,12 +168,21 @@
     };
 })($);
 
-(function () {
+(function () { 
 
     Typecho.Markdown = function () {
         this.writer = new stmd.HtmlRenderer();
         this.reader = new stmd.DocParser();
-        
+
+
+        /* begin hardbreak hack */
+        var w = this.writer, r = w.renderInline; 
+        w.renderInline = function (inline) {
+            if (inline.t == 'Softbreak') inline.t = 'Hardbreak';
+            return r.call(w, inline);
+        };
+        /* end hardbreak hack */
+
         this.hooks = new Markdown.HookCollection()
         this.hooks.addNoop('postConversion');
     };

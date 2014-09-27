@@ -37,6 +37,7 @@ commonmark-php:
 	rm -rf ../var/CommonMark
 	git clone git@github.com:colinodell/commonmark-php.git commonmark
 	php transfer.php commonmark/src CommonMark ColinODell/CommonMark
+	rm -f commonmark/src/CommonMarkConverter.php
 	mv commonmark/src ../var/CommonMark
 	rm -rf commonmark
 

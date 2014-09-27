@@ -150,23 +150,23 @@
 
 /* 上传面板动画效果 */
 @keyframes fullscreen-upload {
-  0%   {opacity: 0; right: -280px; }
-  100% {opacity: 1; right: -1px; }
+  0%   { right: -280px; }
+  100% { right: -1px; }
 }
 
 @-moz-keyframes fullscreen-upload {
-  0%   {opacity: 0; right: -280px; }
-  100% {opacity: 1; right: -1px; }
+  0%   { right: -280px; }
+  100% { right: -1px; }
 }
 
 @-webkit-keyframes fullscreen-upload {
-  0%   {opacity: 0; right: -280px; }
-  100% {opacity: 1; right: -1px; }
+  0%   { right: -280px; }
+  100% { right: -1px; }
 }
 
 @-o-keyframes fullscreen-upload {
-  0%   {opacity: 0; right: -280px; }
-  100% {opacity: 1; right: -1px; }
+  0%   { right: -280px; }
+  100% { right: -1px; }
 }
 
 /* 编辑器全屏 */

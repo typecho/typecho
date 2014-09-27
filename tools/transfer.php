@@ -49,7 +49,7 @@ foreach ($lists as $file) {
             $current = $matches[1];
         }
 
-        return '';
+        return "if (!defined('__TYPECHO_ROOT_DIR__')) exit;";
     }, $source);
 
     $source = preg_replace_callback("/\nuse\s*([a-z_\\\]+)(?:\s+as\s+([a-z_\\\]+))?;/is", function ($matches) use ($map, &$replace) {
