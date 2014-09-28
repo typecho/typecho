@@ -582,7 +582,7 @@ var parseNewline = function(inlines) {
       if (last && last.t == 'Str' && last.c.slice(-1) == ' ') {
         last.c = last.c.slice(0, -1);
       }
-      inlines.push({ t: 'Hardbreak' });
+      inlines.push({ t: 'Softbreak' });
     }
     return 1;
   } else {

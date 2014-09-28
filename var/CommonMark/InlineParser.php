@@ -82,7 +82,8 @@ class CommonMark_InlineParser
      */
     protected function peek()
     {
-        return substr($this->subject, $this->pos, 1) ? : null;
+        $ch = substr($this->subject, $this->pos, 1);
+        return false !== $ch && strlen($ch) > 0 ? $ch : null;
     }
 
     /**
@@ -448,7 +449,7 @@ class CommonMark_InlineParser
         }
 
         $this->pos++; // Advance past [
-        while (($c = $this->peek()) && ($c != ']' || $nestLevel > 0)) {
+        while (($c = $this->peek()) !== null && ($c != ']' || $nestLevel > 0)) {
             switch ($c) {
                 case '`':
                     $this->parseBackticks(new CommonMark_Util_ArrayCollection());
@@ -480,7 +481,7 @@ class CommonMark_InlineParser
 
             return $this->pos - $startPos;
         } else {
-            if (!$c) {
+            if ($c === null) {
                 $this->labelNestLevel = $nestLevel;
             }
 
