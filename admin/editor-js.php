@@ -170,8 +170,13 @@ $(document).ready(function () {
         t.height(h * ow / w);
     }
 
+    var to;
     editor.hooks.chain('onPreviewRefresh', function () {
         var diff = $('.diff', preview), scrolled = false;
+
+        if (to) {
+            clearTimeout(to);
+        }
 
         $('img', preview).load(function () {
             var t = $(this), src = t.attr('src');
@@ -191,7 +196,10 @@ $(document).ready(function () {
         
         var changed = $('.diff', preview).parent();
         if (!changed.is(preview)) {
-            changed.effect('highlight', {color : '#EEEEEE'}, 1000);
+            changed.css('background-color', 'rgba(255,230,0,0.5)');
+            to = setTimeout(function () {
+                changed.css('background-color', 'transparent');
+            }, 4500);
         }
 
         if (diff.length > 0) {
