@@ -63,6 +63,14 @@ upgrade:
 	cp build/index.php ${DIR}
 	make clear
 
+langs:
+	rm -rf ../usr/langs
+	mkdir ../usr/langs
+	git clone https://github.com/typecho/languages.git
+	for i in `find languages/ -name '*.po'`; do php msgfmt.php $$i; done;
+	cp languages/*.mo ../usr/langs/
+	rm -rf languages
+
 
 theme:
 	make update
