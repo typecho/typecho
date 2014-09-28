@@ -67,7 +67,8 @@ langs:
 	rm -rf ../usr/langs
 	mkdir ../usr/langs
 	git clone https://github.com/typecho/languages.git
-	for i in `find languages/ -name '*.po'`; do php msgfmt.php $$i; done;
+	#for i in `find . -name '*.po'`; do echo $$i && php msgfmt.php $$i; done;
+	cd languages/ && for i in `find . -name '*.po'`; do echo `basename $$i` && msgfmt -o `basename $$i .po`.mo `basename $$i`; done;
 	cp languages/*.mo ../usr/langs/
 	rm -rf languages
 
