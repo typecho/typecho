@@ -62,6 +62,17 @@ class Typecho_Cookie
     }
 
     /**
+     * 获取目录 
+     * 
+     * @access public
+     * @return string
+     */
+    public static function getPath()
+    {
+        return self::$_path;
+    }
+
+    /**
      * 获取指定的COOKIE值
      *
      * @access public

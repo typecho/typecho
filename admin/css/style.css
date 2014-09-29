@@ -1188,44 +1188,47 @@ a.operate-reply {
     #custom-field .description button {
       float: left; }
   /* line 756, ../scss/style.scss */
+  #custom-field p.description {
+    text-align: left; }
+  /* line 760, ../scss/style.scss */
   #custom-field .typecho-label {
     margin: 0; }
-    /* line 758, ../scss/style.scss */
+    /* line 762, ../scss/style.scss */
     #custom-field .typecho-label a {
       display: block;
       color: #444; }
-      /* line 761, ../scss/style.scss */
+      /* line 765, ../scss/style.scss */
       #custom-field .typecho-label a:hover {
         color: #467B96;
         text-decoration: none; }
-  /* line 767, ../scss/style.scss */
+  /* line 771, ../scss/style.scss */
   #custom-field table {
     margin-top: 10px; }
-  /* line 770, ../scss/style.scss */
+  /* line 774, ../scss/style.scss */
   #custom-field td {
     padding: 10px 5px;
     font-size: .92857em;
     border-bottom: 1px solid #F0F0EC;
     vertical-align: top; }
-    /* line 775, ../scss/style.scss */
+    /* line 779, ../scss/style.scss */
     #custom-field td label {
       font-size: 1em;
       font-weight: normal; }
-  /* line 780, ../scss/style.scss */
+  /* line 784, ../scss/style.scss */
   #custom-field select {
     height: 27px; }
 
-/* line 783, ../scss/style.scss */
+/* line 787, ../scss/style.scss */
 .typecho-post-area .is-draft {
   background: #FFF1A8; }
 
-/* line 787, ../scss/style.scss */
+/* line 791, ../scss/style.scss */
 .typecho-post-option .description {
   margin-top: -0.5em;
   color: #999;
   font-size: .92857em; }
 
-/* line 793, ../scss/style.scss */
+/* line 797, ../scss/style.scss */
 .category-option ul {
   list-style: none;
   border: 1px solid #D9D9D6;
@@ -1235,11 +1238,11 @@ a.operate-reply {
   background-color: #FFF;
   border-radius: 2px; }
 
-/* line 802, ../scss/style.scss */
+/* line 806, ../scss/style.scss */
 .category-option li {
   margin: 3px 0; }
 
-/* line 806, ../scss/style.scss */
+/* line 810, ../scss/style.scss */
 .visibility-option ul,
 .allow-option ul {
   list-style: none;
@@ -1248,61 +1251,61 @@ a.operate-reply {
 /**
 * 标签列表
 */
-/* line 817, ../scss/style.scss */
+/* line 821, ../scss/style.scss */
 .typecho-page-main ul.tag-list {
   list-style: none;
   margin: 0;
   padding: 20px;
   background-color: #FFF; }
 
-/* line 824, ../scss/style.scss */
+/* line 828, ../scss/style.scss */
 .typecho-page-main ul.tag-list li {
   display: inline-block;
   margin: 0 0 5px 0;
   padding: 5px 5px 5px 10px;
   cursor: pointer; }
 
-/* line 830, ../scss/style.scss */
+/* line 834, ../scss/style.scss */
 .typecho-page-main ul.tag-list li:hover {
   background-color: #E9E9E6; }
 
-/* line 834, ../scss/style.scss */
+/* line 838, ../scss/style.scss */
 .typecho-page-main ul.tag-list li input {
   display: none; }
 
-/* line 839, ../scss/style.scss */
+/* line 843, ../scss/style.scss */
 .typecho-page-main ul.tag-list li.checked {
   background-color: #FFFBCC; }
 
-/* line 843, ../scss/style.scss */
+/* line 847, ../scss/style.scss */
 .typecho-page-main ul.tag-list li.size-5 {
   font-size: 1em; }
 
-/* line 844, ../scss/style.scss */
+/* line 848, ../scss/style.scss */
 .typecho-page-main ul.tag-list li.size-10 {
   font-size: 1.2em; }
 
-/* line 845, ../scss/style.scss */
+/* line 849, ../scss/style.scss */
 .typecho-page-main ul.tag-list li.size-20 {
   font-size: 1.4em; }
 
-/* line 846, ../scss/style.scss */
+/* line 850, ../scss/style.scss */
 .typecho-page-main ul.tag-list li.size-30 {
   font-size: 1.6em; }
 
-/* line 847, ../scss/style.scss */
+/* line 851, ../scss/style.scss */
 .typecho-page-main ul.tag-list li.size-0 {
   font-size: 1.8em; }
 
-/* line 849, ../scss/style.scss */
+/* line 853, ../scss/style.scss */
 .typecho-page-main .tag-edit-link {
   visibility: hidden; }
 
-/* line 850, ../scss/style.scss */
+/* line 854, ../scss/style.scss */
 .typecho-page-main li:hover .tag-edit-link {
   visibility: visible; }
 
-/* line 852, ../scss/style.scss */
+/* line 856, ../scss/style.scss */
 .typecho-attachment-photo {
   border: 1px solid #E6E6E3;
   max-width: 100%; }
@@ -1310,22 +1313,22 @@ a.operate-reply {
 /*
 * Upload
 */
-/* line 861, ../scss/style.scss */
+/* line 865, ../scss/style.scss */
 #upload-panel {
   border: 1px dashed #D9D9D6;
   background-color: #FFF;
   color: #999;
   font-size: .92857em; }
-  /* line 866, ../scss/style.scss */
+  /* line 870, ../scss/style.scss */
   #upload-panel.drag {
     background-color: #FFFBCC; }
 
-/* line 871, ../scss/style.scss */
+/* line 875, ../scss/style.scss */
 .upload-area {
   padding: 15px;
   text-align: center; }
 
-/* line 876, ../scss/style.scss */
+/* line 880, ../scss/style.scss */
 #file-list {
   list-style: none;
   margin: 0 10px;
@@ -1333,40 +1336,40 @@ a.operate-reply {
   max-height: 450px;
   overflow: auto;
   word-break: break-all; }
-  /* line 883, ../scss/style.scss */
+  /* line 887, ../scss/style.scss */
   #file-list li,
   #file-list .insert {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis; }
-  /* line 889, ../scss/style.scss */
+  /* line 893, ../scss/style.scss */
   #file-list li {
     padding: 8px 0;
     border-top: 1px dashed #D9D9D6; }
-  /* line 893, ../scss/style.scss */
+  /* line 897, ../scss/style.scss */
   #file-list .insert {
     display: block;
     max-width: 100%; }
-  /* line 897, ../scss/style.scss */
+  /* line 901, ../scss/style.scss */
   #file-list .file {
     margin-left: 5px; }
-  /* line 900, ../scss/style.scss */
+  /* line 904, ../scss/style.scss */
   #file-list .info {
     text-transform: uppercase; }
 
-/* line 905, ../scss/style.scss */
+/* line 909, ../scss/style.scss */
 #btn-fullscreen-upload {
   visibility: hidden; }
 
 /**
 * 附件管理
 */
-/* line 913, ../scss/style.scss */
+/* line 917, ../scss/style.scss */
 .edit-media button {
   margin-right: 6px; }
 
 /* 拖动调整 textarea 大小 */
-/* line 916, ../scss/style.scss */
+/* line 920, ../scss/style.scss */
 .resize {
   display: block;
   margin: 2px auto 0;
@@ -1375,14 +1378,14 @@ a.operate-reply {
   border-width: 1px 0;
   width: 60px;
   cursor: row-resize; }
-  /* line 924, ../scss/style.scss */
+  /* line 928, ../scss/style.scss */
   .resize i {
     display: block;
     height: 1px;
     background-color: #D9D9D6; }
 
 /* 拖动排序 */
-/* line 932, ../scss/style.scss */
+/* line 936, ../scss/style.scss */
 .tDnD_whileDrag {
   background-color: #FFFBCC; }
 
