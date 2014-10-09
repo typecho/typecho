@@ -111,8 +111,25 @@ class Typecho_Db_Query
         $split = '';
         $quotes = 0;
 
+        // fix issue #288
+        $inStr = false;
+
         for ($i = 0; $i < $length; $i ++) {
             $cha = $str[$i];
+
+            if (false !== strpos("'\"", $cha)) {
+                $inStr = !$inStr;
+
+                if (!$inStr) {
+                    $result .= $cha;
+                    continue;
+                }
+            }
+
+            if ($inStr) {
+                $result .= $cha;
+                continue;
+            }
 
             if (ctype_alnum($cha) || false !== strpos('_*', $cha)) {
                 if (!$lastIsAlnum) {
