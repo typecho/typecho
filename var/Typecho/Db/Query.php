@@ -111,25 +111,8 @@ class Typecho_Db_Query
         $split = '';
         $quotes = 0;
 
-        // fix issue #288
-        $inStr = false;
-
         for ($i = 0; $i < $length; $i ++) {
             $cha = $str[$i];
-
-            if (false !== strpos("'\"", $cha)) {
-                $inStr = !$inStr;
-
-                if (!$inStr) {
-                    $result .= $cha;
-                    continue;
-                }
-            }
-
-            if ($inStr) {
-                $result .= $cha;
-                continue;
-            }
 
             if (ctype_alnum($cha) || false !== strpos('_*', $cha)) {
                 if (!$lastIsAlnum) {
@@ -374,11 +357,12 @@ class Typecho_Db_Query
      *
      * @param string $key 栏目名称
      * @param mixed $value 指定的值
+     * @param bool $escape 是否转义
      * @return Typecho_Db_Query
      */
-    public function expression($key, $value)
+    public function expression($key, $value, $escape = true)
     {
-        $this->_sqlPreBuild['rows'][$this->filterColumn($key)] = $this->filterColumn($value);
+        $this->_sqlPreBuild['rows'][$this->filterColumn($key)] = $escape ? $this->filterColumn($value) : $value;
         return $this;
     }
 

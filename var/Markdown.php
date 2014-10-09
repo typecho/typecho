@@ -35,7 +35,7 @@ class HtmlRendererExtra extends CommonMark_HtmlRenderer
  * @license GNU General Public License 2.0
  */
 class Markdown
-{
+{ 
     /**
      * convert 
      * 

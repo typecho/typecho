@@ -74,6 +74,9 @@ foreach ($lists as $file) {
         }
     }
 
+    $source = str_replace(array('mb_strtoupper', 'mb_strlen'), 
+        array('Typecho_Common::strToUpper', 'Typecho_Common::strLen'), $source);
+
     $tokens = token_get_all($source);
     $source = '';
 

@@ -48,6 +48,17 @@ class Typecho_Common
      */
     public static $exceptionHandle;
 
+    /**
+     * 将字符串变成大写的回调函数
+     * 
+     * @param array $matches 
+     * @access public
+     * @return string
+     */
+    public static function __strToUpper($matches)
+    {
+        return strtoupper($matches[0]);
+    }
 
     /**
      * 将url中的非法xss去掉时的数组回调过滤函数
@@ -226,6 +237,7 @@ class Typecho_Common
         @ob_end_clean();
 
         if (defined('__TYPECHO_DEBUG__')) {
+            echo '<h1>' . $exception->getMessage() . '</h1>';
             echo nl2br($exception->__toString());
         } else {
             if (404 == $exception->getCode() && !empty(self::$exceptionHandle)) {
@@ -737,6 +749,23 @@ EOF;
         } else {
             return 'UTF-8' == strtoupper(self::$charset) 
                 ? strlen(utf8_decode($str)) : strlen($str);
+        }
+    }
+
+    /**
+     * 获取大写字符串
+     * 
+     * @param string $str 
+     * @access public
+     * @return string
+     */
+    public static function strToUpper($str)
+    {
+        if (__TYPECHO_MB_SUPPORTED__) {
+            return mb_strtoupper($str, self::$charset);
+        } else {
+            return 'UTF-8' == strtoupper(self::$charset)
+                ? preg_replace_callback("/[a-z]+/u", array('Typecho_Common', '__strToUpper'), $str) : strtoupper($str);
         }
     }
 

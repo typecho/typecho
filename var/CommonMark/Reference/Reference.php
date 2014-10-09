@@ -87,6 +87,6 @@ class CommonMark_Reference_Reference
         // leading/trailing whitespace
         $string = preg_replace('/\s+/', '', trim($string));
 
-        return mb_strtoupper($string, 'UTF-8');
+        return Typecho_Common::strToUpper($string, 'UTF-8');
     }
 }

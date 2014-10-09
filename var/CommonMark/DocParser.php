@@ -63,7 +63,7 @@ class CommonMark_DocParser
 
         foreach ($parts as $part) {
             // Calculate number of spaces; insert them followed by the non-tab contents
-            $amount = 4 - mb_strlen($line, 'UTF-8') % 4;
+            $amount = 4 - Typecho_Common::strLen($line, 'UTF-8') % 4;
             $line .= str_repeat(' ', $amount) . $part;
         }
 
