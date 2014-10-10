@@ -306,7 +306,14 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
     public function deleteCategory()
     {
         $categories = $this->request->filter('int')->getArray('mid');
+        $defaultCategory = $this->getDefaultCategory();
         $deleteCount = 0;
+
+        if (in_array($defaultCategory->mid, $categories))
+        {
+            $this->widget('Widget_Notice')->set(_t('无法删除默认分类： %s', $defaultCategory->name), 'error');
+            $this->response->goBack();
+        }
 
         foreach ($categories as $category) {
             $parent = $this->db->fetchObject($this->select()->where('mid = ?', $category))->parent;
@@ -320,7 +327,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
 
         /** 提示信息 */
         $this->widget('Widget_Notice')->set($deleteCount > 0 ? _t('分类已经删除') : _t('没有分类被删除'),
-        $deleteCount > 0 ? 'success' : 'notice');
+            $deleteCount > 0 ? 'success' : 'notice');
 
         /** 转向原页 */
         $this->response->goBack();
@@ -438,6 +445,20 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
 
         /** 转向原页 */
         $this->response->redirect(Typecho_Common::url('manage-categories.php', $this->options->adminUrl));
+    }
+
+    /**
+     * 获取默认分类
+     *
+     * @return stdClass
+     */
+    public function getDefaultCategory()
+    {
+        $mid = $this->db->fetchObject($this->db->select()->from('table.options')
+        ->where('name = ?', 'defaultCategory'));
+        $row = $this->db->fetchObject($this->select()->where('mid = ?', $mid->value));
+
+        return $row;
     }
 
     /**
