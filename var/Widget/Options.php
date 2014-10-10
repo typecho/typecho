@@ -366,6 +366,9 @@ class Widget_Options extends Typecho_Widget
         $this->siteUrl = Typecho_Common::url(NULL, $this->siteUrl);
         $this->plugins = unserialize($this->plugins);
 
+        /** 动态判断皮肤目录 */
+        $this->theme = is_dir($this->themeFile($this->theme)) ? $this->theme : 'default';
+
         /** 动态获取根目录 */
         $this->rootUrl = $this->request->getRequestRoot();
         if (defined('__TYPECHO_ADMIN__')) {
