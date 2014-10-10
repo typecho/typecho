@@ -200,6 +200,23 @@ class CommonMark_DocParser
     }
 
     /**
+     * @param DocParser $self 
+     * @param mixed $oldTip 
+     * @param mixed $lastMatchedContainer 
+     * @param mixed $lineNumber 
+     * @param bool $closeUnmatchedBlocksAlreadyDone 
+     */
+    protected function closeUnmatchedBlocks(CommonMark_DocParser $self, $oldTip, $lastMatchedContainer, $lineNumber, &$closeUnmatchedBlocksAlreadyDone)
+    {
+        // finalize any blocks not matched
+        while (!$closeUnmatchedBlocksAlreadyDone && $oldTip != $lastMatchedContainer && $oldTip !== null) {
+            $self->finalize($oldTip, $lineNumber);
+            $oldTip = $oldTip->getParent();
+        }
+        $closeUnmatchedBlocksAlreadyDone = true;
+    }
+
+    /**
      * @param string $ln
      * @param int    $lineNumber
      */
@@ -319,19 +336,6 @@ class CommonMark_DocParser
         // want to close unmatched blocks.  So we store this closure for
         // use later, when we have more information.
         $closeUnmatchedBlocksAlreadyDone = false;
-        $closeUnmatchedBlocks = function (CommonMark_DocParser $self) use (
-            $oldTip,
-            $lastMatchedContainer,
-            $lineNumber,
-            &$closeUnmatchedBlocksAlreadyDone
-        ) {
-            // finalize any blocks not matched
-            while (!$closeUnmatchedBlocksAlreadyDone && $oldTip != $lastMatchedContainer && $oldTip !== null) {
-                $self->finalize($oldTip, $lineNumber);
-                $oldTip = $oldTip->getParent();
-            }
-            $closeUnmatchedBlocksAlreadyDone = true;
-        };
 
         // Check to see if we've hit 2nd blank line; if so break out of list:
         if ($blank && $container->getIsLastLineBlank()) {
@@ -361,7 +365,7 @@ class CommonMark_DocParser
                 // indented code
                 if ($this->tip->getType() != CommonMark_Element_BlockElement::TYPE_PARAGRAPH && !$blank) {
                     $offset += self::CODE_INDENT;
-                    $closeUnmatchedBlocks($this);
+                    $this->closeUnmatchedBlocks($this, $oldTip, $lastMatchedContainer, $lineNumber, $closeUnmatchedBlocksAlreadyDone);
                     $container = $this->addChild(CommonMark_Element_BlockElement::TYPE_INDENTED_CODE, $lineNumber, $offset);
                 } else { // ident > 4 in a lazy paragraph continuation
                     break;
@@ -373,12 +377,12 @@ class CommonMark_DocParser
                 if (isset($ln[$offset]) && $ln[$offset] === ' ') {
                     $offset++;
                 }
-                $closeUnmatchedBlocks($this);
+                $this->closeUnmatchedBlocks($this, $oldTip, $lastMatchedContainer, $lineNumber, $closeUnmatchedBlocksAlreadyDone);
                 $container = $this->addChild(CommonMark_Element_BlockElement::TYPE_BLOCK_QUOTE, $lineNumber, $offset);
             } elseif ($match = CommonMark_Util_RegexHelper::matchAll('/^#{1,6}(?: +|$)/', $ln, $firstNonSpace)) {
                 // ATX header
                 $offset = $firstNonSpace + strlen($match[0]);
-                $closeUnmatchedBlocks($this);
+                $this->closeUnmatchedBlocks($this, $oldTip, $lastMatchedContainer, $lineNumber, $closeUnmatchedBlocksAlreadyDone);
                 $container = $this->addChild(CommonMark_Element_BlockElement::TYPE_ATX_HEADER, $lineNumber, $firstNonSpace);
                 $container->setExtra('level', strlen(trim($match[0]))); // number of #s
                 // remove trailing ###s
@@ -393,7 +397,7 @@ class CommonMark_DocParser
             } elseif ($match = CommonMark_Util_RegexHelper::matchAll('/^`{3,}(?!.*`)|^~{3,}(?!.*~)/', $ln, $firstNonSpace)) {
                 // fenced code block
                 $fenceLength = strlen($match[0]);
-                $closeUnmatchedBlocks($this);
+                $this->closeUnmatchedBlocks($this, $oldTip, $lastMatchedContainer, $lineNumber, $closeUnmatchedBlocksAlreadyDone);
                 $container = $this->addChild(CommonMark_Element_BlockElement::TYPE_FENCED_CODE, $lineNumber, $firstNonSpace);
                 $container->setExtra('fence_length', $fenceLength);
                 $container->setExtra('fence_char', $match[0][0]);
@@ -407,7 +411,7 @@ class CommonMark_DocParser
                 ) !== null
             ) {
                 // html block
-                $closeUnmatchedBlocks($this);
+                $this->closeUnmatchedBlocks($this, $oldTip, $lastMatchedContainer, $lineNumber, $closeUnmatchedBlocksAlreadyDone);
                 $container = $this->addChild(CommonMark_Element_BlockElement::TYPE_HTML_BLOCK, $lineNumber, $firstNonSpace);
                 // note, we don't adjust offset because the tag is part of the text
                 break;
@@ -416,19 +420,19 @@ class CommonMark_DocParser
                 ($match = CommonMark_Util_RegexHelper::matchAll('/^(?:=+|-+) *$/', $ln, $firstNonSpace))
             ) {
                 // setext header line
-                $closeUnmatchedBlocks($this);
+                $this->closeUnmatchedBlocks($this, $oldTip, $lastMatchedContainer, $lineNumber, $closeUnmatchedBlocksAlreadyDone);
                 $container->setType(CommonMark_Element_BlockElement::TYPE_SETEXT_HEADER);
                 $container->setExtra('level', $match[0][0] === '=' ? 1 : 2);
                 $offset = strlen($ln);
             } elseif (CommonMark_Util_RegexHelper::matchAt(CommonMark_Util_RegexHelper::getInstance()->getHRuleRegex(), $ln, $firstNonSpace) !== null) {
                 // hrule
-                $closeUnmatchedBlocks($this);
+                $this->closeUnmatchedBlocks($this, $oldTip, $lastMatchedContainer, $lineNumber, $closeUnmatchedBlocksAlreadyDone);
                 $container = $this->addChild(CommonMark_Element_BlockElement::TYPE_HORIZONTAL_RULE, $lineNumber, $firstNonSpace);
                 $offset = strlen($ln) - 1;
                 break;
             } elseif (($data = $this->parseListMarker($ln, $firstNonSpace))) {
                 // list item
-                $closeUnmatchedBlocks($this);
+                $this->closeUnmatchedBlocks($this, $oldTip, $lastMatchedContainer, $lineNumber, $closeUnmatchedBlocksAlreadyDone);
                 $data['marker_offset'] = $indent;
                 $offset = $firstNonSpace + $data['padding'];
 
@@ -477,7 +481,7 @@ class CommonMark_DocParser
             $this->addLine($ln, $offset);
         } else { // not a lazy continuation
             //finalize any blocks not matched
-            $closeUnmatchedBlocks($this);
+            $this->closeUnmatchedBlocks($this, $oldTip, $lastMatchedContainer, $lineNumber, $closeUnmatchedBlocksAlreadyDone);
 
             // Block quote lines are never blank as they start with >
             // and we don't count blanks in fenced code for purposes of tight/loose
