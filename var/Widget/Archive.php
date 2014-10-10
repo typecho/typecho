@@ -234,7 +234,10 @@ class Widget_Archive extends Widget_Abstract_Contents
         }
         
         /** 初始化皮肤路径 */
-        $this->_themeDir = rtrim($this->options->themeFile($this->options->theme), '/') . '/';
+        $this->_themeDir = 
+            rtrim($this->options->themeFile(
+                is_dir($this->options->themeFile($this->options->theme)) ?
+                    $this->options->theme : 'default'), '/') . '/';
 
         /** 处理feed模式 **/
         if ('feed' == $this->parameter->type) {
