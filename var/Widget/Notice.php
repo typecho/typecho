@@ -52,7 +52,7 @@ class Widget_Notice extends Typecho_Widget
      * 设定堆栈每一行的值
      *
      * @param string $value 值对应的键值
-     * @param string $type 提示类型
+     * @param string $type 提示类型，可以为 success, notice, error
      * @param string $typeFix 兼容老插件
      * @return array
      */
