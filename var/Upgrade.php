@@ -1189,5 +1189,19 @@ Typecho_Date::setTimezoneOffset($options->timezone);
         $db->query($db->insert('table.options')
             ->rows(array('name' => 'lang', 'user' => 0, 'value' => 'zh_CN')));
     }
+
+    /**
+     * v1_0r14_10_10
+     *
+     * @param mixed $db
+     * @param mixed $options
+     * @access public
+     * @return void
+     */
+    public function v1_0r14_10_10($db, $options)
+    {
+        $db->query($db->insert('table.options')
+            ->rows(array('name' => 'commentsAntiSpam', 'user' => 0, 'value' => 1)));
+    }
 }
 
