@@ -375,8 +375,8 @@ abstract class Typecho_Http_Client_Adapter
             }
         }
 
-        $this->reponseBody = implode("\n", $lines);
-        return $this->reponseBody;
+        $this->responseBody = implode("\n", $lines);
+        return $this->responseBody;
     }
 
     /**
@@ -411,7 +411,7 @@ abstract class Typecho_Http_Client_Adapter
      */
     public function getResponseBody()
     {
-        return $this->reponseBody;
+        return $this->responseBody;
     }
 
     /**
