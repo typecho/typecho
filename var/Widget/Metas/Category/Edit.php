@@ -353,6 +353,13 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
 
         $merge = $this->request->merge;
         $categories = $this->request->filter('int')->getArray('mid');
+        $defaultCategory = $this->getDefaultCategory();
+
+        if (in_array($defaultCategory->mid, $categories))
+        {
+            $this->widget('Widget_Notice')->set(_t('无法合并默认分类： %s', $defaultCategory->name), 'error');
+            $this->response->goBack();
+        }
 
         if ($categories) {
             $this->merge($merge, 'category', $categories);
