@@ -925,6 +925,55 @@ EOF;
     }
 
     /**
+     * 给javascript赋值加入扰码设计 
+     * 
+     * @param string $value 
+     * @return string
+     */
+    public static function shuffleScriptVar($value)
+    {
+        $length = strlen($value);
+        $max = 3;
+        $offset = 0;
+        $result = [];
+        $cut = [];
+
+        while ($length > 0) {
+            $len = rand(0, min($max, $length));
+            $rand = "'" . self::randString(rand(1, $max)) . "'";
+
+            if ($len > 0) {
+                $val = "'" . substr($value, $offset, $len) . "'";
+                $result[] = rand(0, 1) ? "//{$rand}\n{$val}" : "{$val}//{$rand}\n";
+            } else {
+                if (rand(0, 1)) {
+                    $result[] = rand(0, 1) ? "''///*{$rand}*/{$rand}\n" : "/* {$rand}//{$rand} */''";
+                } else {
+                    $result[] = rand(0, 1) ? "//{$rand}\n{$rand}" : "{$rand}//{$rand}\n";
+                    $cut[] = [$offset, strlen($rand) - 2 + $offset];
+                }
+            }
+
+            $offset += $len;
+            $length -= $len;
+        }
+
+        $name = '_' . self::randString(rand(3, 7));
+        $cutName = '_' . self::randString(rand(3, 7));
+        $var = implode('+', $result);
+        $cutVar = Json::encode($cut);
+        return "(function () {
+    var {$name} = {$var}, {$cutName} = {$cutVar};
+    
+    for (var i = 0; i < {$cutName}.length; i ++) {
+        {$name} = {$name}.substring(0, {$cutName}[i][0]) + {$name}.substring({$cutName}[i][1]);
+    }
+
+    return {$name};
+})();";
+    }
+
+    /**
      * 过滤字段名
      *
      * @access private

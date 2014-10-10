@@ -1786,7 +1786,6 @@ class Widget_Archive extends Widget_Abstract_Contents
     };
 
     document[event.add](event.load, function () {
-        console.log('ddd');
         var r = document.getElementById('{$this->respondId}');
 
         if (null != r) {
@@ -1800,7 +1799,8 @@ class Widget_Archive extends Widget_Abstract_Contents
                             var input = document.createElement('input');
                             input.type = 'hidden';
                             input.name = '_';
-                            input.value = '" . $this->security->getToken($this->request->getRequestUrl()) . "';
+                            input.value = " . Typecho_Common::shuffleScriptVar(
+                                $this->security->getToken($this->request->getRequestUrl())) . "
 
                             f.appendChild(input);
                             added = true;

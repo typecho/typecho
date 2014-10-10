@@ -6,7 +6,7 @@
 <script>
 $(document).ready(function () {
     var textarea = $('#text'),
-        toolbar = $('<div class="editor" id="wmd-button-bar" />').insertBefore(textarea.parent())
+        toolbar = $('<div class="editor" id="wmd-button-bar" />').insertBefore(textarea.parent()),
         preview = $('<div id="wmd-preview" class="wmd-hidetab" />').insertAfter('.editor');
 
     var options = {}, isMarkdown = <?php echo intval($content->isMarkdown || !$content->have()); ?>;
