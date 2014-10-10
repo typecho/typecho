@@ -961,8 +961,8 @@ EOF;
         $length = strlen($value);
         $max = 3;
         $offset = 0;
-        $result = [];
-        $cut = [];
+        $result = array();
+        $cut = array();
 
         while ($length > 0) {
             $len = rand(0, min($max, $length));
@@ -976,7 +976,7 @@ EOF;
                     $result[] = rand(0, 1) ? "''///*{$rand}*/{$rand}\n" : "/* {$rand}//{$rand} */''";
                 } else {
                     $result[] = rand(0, 1) ? "//{$rand}\n{$rand}" : "{$rand}//{$rand}\n";
-                    $cut[] = [$offset, strlen($rand) - 2 + $offset];
+                    $cut[] = array($offset, strlen($rand) - 2 + $offset);
                 }
             }
 
