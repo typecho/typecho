@@ -12,8 +12,8 @@ $stat = Typecho_Widget::widget('Widget_Stat');
         <div class="row typecho-page-main">
             <div class="col-mb-12 col-tb-3">
                 <p><a href="http://gravatar.com/emails/" title="<?php _e('在 Gravatar 上修改头像'); ?>"><?php echo '<img class="profile-avatar" src="'
-                    . ($request->isSecure() ? 'https://secure' : 'http://www') . '.gravatar.com/avatar/' . md5(strtolower($user->mail)) . '?s=220&r=X' .
-                '&d=mm" alt="' . $user->screenName . '" />'; ?></a></p>
+                    . Widget_Users_Profile::gravatarUrl($user->mail, 220, $request->isSecure())
+                    . '" alt="' . $user->screenName . '" />'; ?></a></p>
                 <h2><?php $user->screenName(); ?></h2>
                 <p><?php $user->name(); ?></p>
                 <p><?php _e('目前有 <em>%s</em> 篇日志, 并有 <em>%s</em> 条关于你的评论在 <em>%s</em> 个分类中.', 

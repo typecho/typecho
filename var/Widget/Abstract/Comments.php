@@ -387,39 +387,15 @@ class Widget_Abstract_Comments extends Widget_Abstract
      * @param string $default 默认输出头像
      * @return void
      */
-    public function gravatar($size = 32, $default = NULL)
+    public function gravatar($size = 32, $default = 'mm')
     {
         if ($this->options->commentsAvatar && 'comment' == $this->type) {
             $rating = $this->options->commentsAvatarRating;
             
             $this->pluginHandle(__CLASS__)->trigger($plugged)->gravatar($size, $rating, $default, $this);
             if (!$plugged) {
+                $url = Widget_Users_Profile::gravatarUrl($this->mail, $size, $this->request->isSecure(), $rating, $default);
 
-                $mailHash = NULL;
-                if (!empty($this->mail)) {
-                    $mailHash = md5(strtolower($this->mail));
-                }
-                
-                if ($this->request->isSecure()) {
-                    $host = 'https://secure.gravatar.com';
-                } else {
-                    if (empty($this->mail)) {
-                        $host = 'http://0.gravatar.com';
-                    } else {
-                        $host = sprintf( "http://%d.gravatar.com", (hexdec($mailHash{0}) % 2));
-                    }
-                }
-                
-                $url = $host . '/avatar/';
-                
-                if (!empty($this->mail)) {
-                    $url .= $mailHash;
-                }
-                
-                $url .= '?s=' . $size;
-                $url .= '&amp;r=' . $rating;
-                $url .= '&amp;d=' . $default;
-            
                 echo '<img class="avatar" src="' . $url . '" alt="' .
                 $this->author . '" width="' . $size . '" height="' . $size . '" />';
             }
