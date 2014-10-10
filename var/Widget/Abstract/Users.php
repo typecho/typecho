@@ -238,10 +238,40 @@ class Widget_Abstract_Users extends Widget_Abstract
      * @param string $class 默认css class
      * @return void
      */
-    public function gravatar($size = 40, $rating = 'X', $default = NULL, $class = NULL)
+    public function gravatar($size = 40, $rating = 'X', $default = 'mm', $class = NULL)
     {
-        echo '<img' . (empty($class) ? '' : ' class="' . $class . '"') . ' src="http://www.gravatar.com/avatar/' .
-        md5(strtolower($this->mail)) . '?s=' . $size . '&amp;r=' . $rating . '&amp;d=' . $default . '" alt="' .
+        $url = self::gravatarUrl($this->mail, $size, $this->request->isSecure(), $rating, $default);
+        echo '<img' . (empty($class) ? '' : ' class="' . $class . '"') . ' src="' . $url . '" alt="' .
         $this->screenName . '" width="' . $size . '" height="' . $size . '" />';
+    }
+
+    public static function gravatarUrl($mail, $size, $isSecure = FALSE, $rating = 'X', $default = 'mm')
+    {
+        $mailHash = NULL;
+        if (!empty($mail)) {
+            $mailHash = md5(strtolower($mail));
+        }
+
+        if ($isSecure) {
+            $host = 'https://secure.gravatar.com';
+        } else {
+            if (empty($mail)) {
+                $host = 'http://0.gravatar.com';
+            } else {
+                $host = sprintf( "http://%d.gravatar.com", (hexdec($mailHash{0}) % 2));
+            }
+        }
+
+        $url = $host . '/avatar/';
+
+        if (!empty($mail)) {
+            $url .= $mailHash;
+        }
+
+        $url .= '?s=' . $size;
+        $url .= '&amp;r=' . $rating;
+        $url .= '&amp;d=' . $default;
+
+        return $url;
     }
 }
