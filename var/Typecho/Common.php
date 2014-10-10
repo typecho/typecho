@@ -925,6 +925,32 @@ EOF;
     }
 
     /**
+     * 获取gravatar头像地址 
+     * 
+     * @param string $mail 
+     * @param int $size 
+     * @param string $rating 
+     * @param string $default 
+     * @param bool $isSecure 
+     * @return string
+     */
+    public static function gravatarUrl($mail, $size, $rating, $default, $isSecure = false)
+    {
+        $url = $isSecure ? 'https://secure.gravatar.com' : 'http://www.gravatar.com';
+        $url .= '/avatar/';
+
+        if (!empty($mail)) {
+            $url .= md5(strtolower(trim($mail)));
+        }
+
+        $url .= '?s=' . $size;
+        $url .= '&amp;r=' . $rating;
+        $url .= '&amp;d=' . $default;
+
+        return $url;
+    }
+
+    /**
      * 给javascript赋值加入扰码设计 
      * 
      * @param string $value 
