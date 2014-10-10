@@ -39,7 +39,6 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                     </p>
                     <p>
                         <label for="text" class="sr-only"><?php _e('文章内容'); ?></label>
-                        <div class="editor" id="wmd-button-bar"></div>
                         <textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text" name="text" class="w-100 mono"><?php echo htmlspecialchars($post->text); ?></textarea>
                     </p>
                     
