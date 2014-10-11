@@ -44,19 +44,13 @@ class Markdown
      */
     public static function convert($text)
     {
-        static $docParser, $renderer;
+        static $parser;
 
-        if (empty($docParser)) {
-            $docParser = new CommonMark_DocParser();
+        if (empty($parser)) {
+            $parser = new MarkdownExtraExtended();
         }
 
-
-        if (empty($renderer)) {
-            $renderer = new HtmlRendererExtra();
-        }
-
-        $doc = $docParser->parse($text);
-        return $renderer->render($doc);
+        return $parser->transform($text);
     }
 }
 
