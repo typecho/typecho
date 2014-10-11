@@ -227,6 +227,19 @@ class Typecho_Request
     }
 
     /**
+     * 判断是否为https
+     *
+     * @access public
+     * @return boolean
+     */
+    public static function isSecure()
+    {
+        return (!empty($_SERVER['HTTPS']) && 'off' != strtolower($_SERVER['HTTPS'])) 
+            || (!empty($_SERVER['SERVER_PORT']) && 443 == $_SERVER['SERVER_PORT'])
+            || (defined('__TYPECHO_SECURE__') && __TYPECHO_SECURE__);
+    }
+
+    /**
      * 设置过滤器
      *
      * @access public
@@ -763,20 +776,7 @@ class Typecho_Request
     public function isPut()
     {
         return 'PUT' == $this->getServer('REQUEST_METHOD');
-    }
-
-    /**
-     * 判断是否为https
-     *
-     * @access public
-     * @return boolean
-     */
-    public function isSecure()
-    {
-        return (!empty($_SERVER['HTTPS']) && 'off' != strtolower($_SERVER['HTTPS'])) 
-            || (!empty($_SERVER['SERVER_PORT']) && 443 == $_SERVER['SERVER_PORT'])
-            || (defined('__TYPECHO_SECURE__') && __TYPECHO_SECURE__);
-    }
+    } 
 
     /**
      * 判断是否为ajax
