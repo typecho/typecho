@@ -104,9 +104,9 @@ pot:
 
 
 test:
-	for i in `find ../var/ -name '*.php'`; do php -l $$i; done;
-	for i in `find ../usr/ -name '*.php'`; do php -l $$i; done;
-	for i in `find ../admin/ -name '*.php'`; do php -l $$i; done;
+	for i in `find ../var/ -name '*.php'`; do php -l $$i || exit 1; done;
+	for i in `find ../usr/ -name '*.php'`; do php -l $$i || exit 1; done;
+	for i in `find ../admin/ -name '*.php'`; do php -l $$i || exit 1; done;
 
 
 all:
