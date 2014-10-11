@@ -1887,7 +1887,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
         $struct = array(
             'nickname'  => $this->user->screenName,
-            'userid'     => $this->user->uid,
+            'userid'    => $this->user->uid,
             'url'       => $this->user->url,
             'email'     => $this->user->mail,
             'lastname'  => '',

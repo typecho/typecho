@@ -103,6 +103,10 @@ pot:
 	rm -f files.txt
 
 
+test:
+	php test.php
+
+
 all:
 	make update
 	make package

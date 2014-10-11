@@ -4,6 +4,7 @@ php:
   - 5.5
   - 5.4
   - 5.3
+  - 5.2
 
-script: cd ./tools/ && make all
+script: cd ./tools/ && make test
 
