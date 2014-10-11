@@ -6,5 +6,5 @@ php:
   - 5.3
   - 5.2
 
-script: cd ./tools/ && make test
+script: php ./tools/test.php
 
