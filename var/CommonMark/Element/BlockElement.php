@@ -204,7 +204,7 @@ class CommonMark_Element_BlockElement
      */
     public function getParent()
     {
-        return $this->parent ? : null;
+        return $this->parent ? $this->parent : null;
     }
 
     /**

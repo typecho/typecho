@@ -242,7 +242,8 @@ class CommonMark_InlineParser
             $this->pos++;
         }
 
-        $charAfter = $this->peek() ? : "\n";
+        $peek = $this->peek();
+        $charAfter = $peek ? $peek : "\n";
 
         $canOpen = $numDelims > 0 && $numDelims <= 3 && !preg_match('/\s/', $charAfter);
         $canClose = $numDelims > 0 && $numDelims <= 3 && !preg_match('/\s/', $charBefore);
