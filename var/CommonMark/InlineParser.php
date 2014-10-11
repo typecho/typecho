@@ -721,7 +721,8 @@ class CommonMark_InlineParser
                 $res = $this->parseImage($inlines);
                 break;
             case '<':
-                $res = $this->parseAutolink($inlines) ? : $this->parseHtmlTag($inlines);
+                $res = $this->parseAutolink($inlines);
+                $res = $res ? $res : $this->parseHtmlTag($inlines);
                 break;
             case '&':
                 $res = $this->parseEntity($inlines);
@@ -730,7 +731,7 @@ class CommonMark_InlineParser
                 // Nothing
         }
 
-        return $res ? : $this->parseString($inlines);
+        return $res ? $res : $this->parseString($inlines);
     }
 
     /**
