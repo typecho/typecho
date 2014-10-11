@@ -536,7 +536,8 @@ class CommonMark_InlineParser
             ) {
                 // make sure there's a space before the title:
                 if (preg_match('/^\\s/', $this->subject[$this->pos - 1])) {
-                    $title = $this->parseLinkTitle() ? : '';
+                    $title = $this->parseLinkTitle();
+                    $title = $title ? $title : '';
                 } else {
                     $title = null;
                 }
