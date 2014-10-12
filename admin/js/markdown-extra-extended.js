@@ -2970,9 +2970,9 @@ MarkdownExtraExtended_Parser.prototype.doFencedCodeBlocks = function (text) {
         '(?:\\n|\\x02)'          +
         // 1: Opening marker
         '('                      +
-            '~{3,}|`{3,}'              + // Marker: three tilde or more.
+            '~{3,}|`{3,}'        + // Marker: three tilde or more.
         ')'                      +
-        '[ ]?(\\w+)?(?:,[ ]?(\\d+))?[ ]* \\n'                + // Whitespace and newline following marker.
+        '[ ]?(\\w+)?(?:,[ ]?(\\d+))?[ ]*\\n'                + // Whitespace and newline following marker.
         // 2: Content
         '('                      +
             '(?:'                +
