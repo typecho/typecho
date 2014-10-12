@@ -1415,6 +1415,44 @@ Markdown_Parser.prototype.encodeAmpsAndAngles = function(text) {
 
 Markdown_Parser.prototype.doAutoLinks = function(text) {
     var self = this;
+    text = text.replace(/(="|<)?\b(https?|ftp)(:\/\/[-A-Z0-9+&@#\/%?=~_|\[\]\(\)!:,\.;]*[-A-Z0-9+&@#\/%=~_|\[\])])(?=$|\W)/i, function (match, lookbehind, protocol, link) {
+        if (lookbehind) {
+            return match;
+        }
+
+        if (link[link.length - 1] != ')') {
+            return '<' + protocol + link + '>';
+        }
+
+        var level = 0, re = /[()]/;
+        while (matches = re.exec(link)) {
+            if ('(' == matches[0]) {
+                if (level <= 0) {
+                    level = 1;
+                } else {
+                    level ++;
+                }
+            } else {
+                level --;
+            }
+
+            re.lastIndex = matches.index + 1;
+        }
+
+        var tail = '';
+        if (level < 0) {
+            re = new RegExp("\\){1," + (- level) + "}$");
+            link = link.replace(re, function (match) {
+                tail = match;
+                return '';
+            });
+        }
+
+        var url = self.encodeAttribute(protocol, link);
+        link = '<a href="' + url + '">' + url + '</a>';
+        return self.hashPart(link) + tail;
+    });
+
     text = text.replace(/<((https?|ftp|dict):[^'">\s]+)>/i, function(match, address) {
         //console.log(match);
         var url = self.encodeAttribute(address);
