@@ -67,7 +67,7 @@ if (!empty($_GET) || !empty($_POST)) {
     }
 
     $parts = parse_url($_SERVER['HTTP_REFERER']);
-	if (!empty($parts['port']) && $parts['port'] != 80 && !Typecho_Common::isAppEngine()) {
+	if (!empty($parts['port']) && !Typecho_Common::isAppEngine()) {
         $parts['host'] = "{$parts['host']}:{$parts['port']}";
     }
 

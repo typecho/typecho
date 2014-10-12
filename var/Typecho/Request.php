@@ -219,8 +219,9 @@ class Typecho_Request
     {
         if (empty(self::$_urlPrefix)) {
             self::$_urlPrefix = (self::isSecure() ? 'https' : 'http') 
-                . '://' . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'])
-                . (in_array($_SERVER['SERVER_PORT'], array(80, 443)) ? '' : ':' . $_SERVER['SERVER_PORT']);
+                . '://' . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 
+                    ($_SERVER['SERVER_NAME'] . (in_array($_SERVER['SERVER_PORT'], array(80, 443)) ? '' : ':' . $_SERVER['SERVER_PORT']))
+                );
         }
 
         return self::$_urlPrefix;
