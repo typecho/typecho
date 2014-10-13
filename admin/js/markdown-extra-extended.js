@@ -2992,7 +2992,7 @@ MarkdownExtraExtended_Parser.prototype.doFencedCodeBlocks = function (text) {
 
         var cb = !m3 ? "<pre><code" : "<pre class=\"linenums:"  + m3 + "\"><code";
         cb += !m2 ? ">" : " class=\"lang-" + m2 + "\">";
-        cb += codeblock + '</code></pre';
+        cb += codeblock + '</code></pre>';
 
         return "\n\n" + self.hashBlock(cb) + "\n\n";
     });
