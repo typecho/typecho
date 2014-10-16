@@ -239,6 +239,7 @@ Typecho_Date::setTimezoneOffset($options->timezone);
                     $db->query('DROP TABLE  ' . $prefix . 'users_' . $uuid, Typecho_Db::WRITE);
                     $db->query('CREATE UNIQUE INDEX ' . $prefix . 'users_name ON ' . $prefix . 'users ("name")', Typecho_Db::WRITE);
                     $db->query('CREATE UNIQUE INDEX ' . $prefix . 'users_mail ON ' . $prefix . 'users ("mail")', Typecho_Db::WRITE);
+                    $db->flushPool();
 
                     break;
 
@@ -322,6 +323,7 @@ Typecho_Date::setTimezoneOffset($options->timezone);
                     $db->query('INSERT INTO ' . $prefix . 'metas SELECT * FROM ' . $prefix . 'metas' . $uuid, Typecho_Db::WRITE);
                     $db->query('DROP TABLE  ' . $prefix . 'metas' . $uuid, Typecho_Db::WRITE);
                     $db->query('CREATE INDEX ' . $prefix . 'metas_slug ON ' . $prefix . 'metas ("slug")', Typecho_Db::WRITE);
+                    $db->flushPool();
 
                     break;
 
@@ -773,6 +775,7 @@ Typecho_Date::setTimezoneOffset($options->timezone);
                 $db->query('DROP TABLE  ' . $prefix . 'contents_tmp', Typecho_Db::WRITE);
                 $db->query('CREATE UNIQUE INDEX ' . $prefix . 'contents_slug ON ' . $prefix . 'contents ("slug")', Typecho_Db::WRITE);
                 $db->query('CREATE INDEX ' . $prefix . 'contents_created ON ' . $prefix . 'contents ("created")', Typecho_Db::WRITE);
+                $db->flushPool();
 
                 break;
 
@@ -1154,7 +1157,7 @@ Typecho_Date::setTimezoneOffset($options->timezone);
                 $db->query('INSERT INTO ' . $prefix . 'metas SELECT * FROM ' . $prefix . 'metas' . $uuid, Typecho_Db::WRITE);
                 $db->query('DROP TABLE  ' . $prefix . 'metas' . $uuid, Typecho_Db::WRITE);
                 $db->query('CREATE INDEX ' . $prefix . 'metas_slug ON ' . $prefix . 'metas ("slug")', Typecho_Db::WRITE);
-
+                $db->flushPool();
                 break;
 
             default:

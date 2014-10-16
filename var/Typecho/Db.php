@@ -168,6 +168,16 @@ class Typecho_Db
     }
 
     /**
+     * 重置连接池
+     * 
+     * @return void
+     */
+    public function flushPool()
+    {
+        $this->_connectedPool = array();
+    }
+
+    /**
      * 选择数据库
      * 
      * @param int $op 
