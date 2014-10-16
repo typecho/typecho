@@ -111,7 +111,7 @@ class AutoP
         }
         
         /** 没有段落能力的标签 */
-        if (false !== strpos('|a|span|code|cite|strong|sup|sub|small|del|u|i|b|', $tagMatch)) {
+        if (false !== strpos('|a|span|font|code|cite|strong|sup|sub|small|del|u|i|b|', $tagMatch)) {
             $key = '<b' . $matches[2] . '/>';
         } else {
             $key = '<p' . $matches[2] . '/>';
