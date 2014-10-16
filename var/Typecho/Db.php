@@ -168,6 +168,32 @@ class Typecho_Db
     }
 
     /**
+     * 选择数据库
+     * 
+     * @param int $op 
+     * @return Typecho_Db_Adapter
+     */
+    public function selectDb($op)
+    {
+        if (!isset($this->_connectedPool[$op])) {
+            if (empty($this->_pool[$op])) {
+                /** Typecho_Db_Exception */
+                throw new Typecho_Db_Exception('Missing Database Connection');
+            }
+            
+            //获取相应读或写服务器连接池中的一个
+            $selectConnection = rand(0, count($this->_pool[$op]) - 1); 
+            //获取随机获得的连接池配置
+            $selectConnectionConfig = $this->_config[$this->_pool[$op][$selectConnection]];
+            $selectConnectionHandle = $this->_adapter->connect($selectConnectionConfig);
+            $this->_connectedPool[$op] = &$selectConnectionHandle;
+            
+        }
+
+        return $this->_connectedPool[$op];
+    }
+
+    /**
      * 获取SQL词法构建器实例化对象
      *
      * @return Typecho_Db_Query
@@ -201,6 +227,17 @@ class Typecho_Db
                 $this->_pool[self::WRITE][] = $key;
                 break;
         }
+    }
+
+    /**
+     * 获取版本
+     * 
+     * @param int $op 
+     * @return string
+     */
+    public function getVersion($op = self::READ)
+    {
+        return $this->_adapter->getVersion($this->selectDb($op));
     }
 
     /**
@@ -299,21 +336,7 @@ class Typecho_Db
         }
 
         /** 选择连接池 */
-        if (!isset($this->_connectedPool[$op])) {
-            if (empty($this->_pool[$op])) {
-                /** Typecho_Db_Exception */
-                throw new Typecho_Db_Exception('Missing Database Connection');
-            }
-            
-            //获取相应读或写服务器连接池中的一个
-            $selectConnection = rand(0, count($this->_pool[$op]) - 1); 
-            //获取随机获得的连接池配置
-            $selectConnectionConfig = $this->_config[$this->_pool[$op][$selectConnection]];
-            $selectConnectionHandle = $this->_adapter->connect($selectConnectionConfig);
-            $this->_connectedPool[$op] = &$selectConnectionHandle;
-            
-        }
-        $handle = $this->_connectedPool[$op];
+        $handle = $this->selectDb($op);
 
         /** 提交查询 */
         $resource = $this->_adapter->query($query, $handle, $op, $action);
