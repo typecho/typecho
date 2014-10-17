@@ -218,15 +218,22 @@ class Typecho_Request
     public static function getUrlPrefix()
     {
         if (empty(self::$_urlPrefix)) {
-            self::$_urlPrefix = (self::isSecure() ? 'https' : 'http') 
-                . '://' . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 
-                    ($_SERVER['SERVER_NAME'] . (in_array($_SERVER['SERVER_PORT'], array(80, 443)) 
-                        ? '' : ':' . $_SERVER['SERVER_PORT']))
-                );
+            if (strpos($_SERVER['SERVER_SOFTWARE'], "nginx") !== false)
+            { /*无需判断nginx的HTTP_HOST */
+                self::$_urlPrefix = (self::isSecure() ? 'https' : 'http')
+                    . '://' . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME']);
+            }
+            else
+            {
+                self::$_urlPrefix = (self::isSecure() ? 'https' : 'http')
+                    . '://' . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'])
+                    . (in_array($_SERVER['SERVER_PORT'], array(80, 443)) ? '' : ':' . $_SERVER['SERVER_PORT']);
+           }
         }
 
         return self::$_urlPrefix;
     }
+
 
     /**
      * 判断是否为https
