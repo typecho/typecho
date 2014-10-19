@@ -1571,7 +1571,7 @@ else
                 if (window.event) {
                     window.event.returnValue = false;
                 }
-            }else if(key.keyCode==9){
+            }else if(key.keyCode==9 && window.fullScreenEntered){
                 var tab = {};
                 tab.textOp = bindCommand("doTab");
                 doClick(tab);
@@ -2630,6 +2630,8 @@ else
                 self.hooks.enterFakeFullScreen();
                 self.isFakeFullScreen = true;
             }
+
+            window.fullScreenEntered = true;
         } else {
             if (self.isFakeFullScreen) {
                 buttons.exitFullscreen.style.display = 'none';
@@ -2639,6 +2641,7 @@ else
             }
             
             self.isFakeFullScreen = false;
+            window.fullScreenEntered = false;
         }
     };
 })();
