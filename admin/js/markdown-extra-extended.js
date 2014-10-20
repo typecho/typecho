@@ -1997,7 +1997,7 @@ MarkdownExtra_Parser.prototype._hashHTMLBlocks_inMarkdown = function(text, inden
             tag_re = this._php_preg_quote(tag);
             if (
                 text.substr(1).indexOf('`') != -1 && // [portiong note] To avoid JS's RegExp infinity loop.
-                (matches = text.match(new RegExp('^(.+?|\\n[^\\n])*?[^`]' + tag_re + '[^`]')))
+                (matches = text.match(new RegExp('^(.+?|\\n[?!\\n])*?[^`]' + tag_re + '[?!`]')))
             ) {
                 // End marker found: pass text unchanged until marker.
                 parsed += tag + matches[0];
