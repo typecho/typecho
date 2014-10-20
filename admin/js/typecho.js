@@ -171,25 +171,25 @@
 (function () { 
 
     Typecho.Markdown = function () {
-        /*
-        this.writer = new stmd.HtmlRenderer();
-        this.reader = new stmd.DocParser();
-
-
-        var w = this.writer, r = w.renderInline; 
-        w.renderInline = function (inline) {
-            if (inline.t == 'Softbreak') inline.t = 'Hardbreak';
-            return r.call(w, inline);
-        };
-        */
-
         this.hooks = new Markdown.HookCollection();
         this.hooks.addNoop('postConversion');
+        this.lastIt = null;
     };
 
-    Typecho.Markdown.prototype.makeHtml = function (text) {
-        html = MarkdownText(text);
-        return this.hooks.postConversion(html);
+    Typecho.Markdown.prototype.makeHtml = function (text, preview) {
+        var self = this;
+
+        if (this.lastIt) {
+            clearTimeout(this.lastIt);
+            this.lastIt = null;
+        }
+
+        this.lastIt = setTimeout(function () {
+            html = MarkdownText(text);
+            preview(self.hooks.postConversion(html));
+        }, 500);
+
+        return false;
     };
 
 })();
