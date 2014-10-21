@@ -1755,6 +1755,10 @@ class ParsedownExtra extends Parsedown
         return $text;
     }
 
+    protected function sortFootnotes($A, $B) {
+        return $A['number'] - $B['number'];
+    }
+
     #
     # ~
     #
@@ -1777,9 +1781,7 @@ class ParsedownExtra extends Parsedown
             ),
         );
 
-        usort($this->Definitions['Footnote'], function($A, $B) {
-            return $A['number'] - $B['number'];
-        });
+        usort($this->Definitions['Footnote'], array($this, 'sortFootnotes'));
 
         foreach ($this->Definitions['Footnote'] as $name => $Data)
         {

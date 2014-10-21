@@ -168,32 +168,6 @@
     };
 })($);
 
-(function () { 
-
-    Typecho.Markdown = function () {
-        this.hooks = new Markdown.HookCollection();
-        this.hooks.addNoop('postConversion');
-        this.lastIt = null;
-    };
-
-    Typecho.Markdown.prototype.makeHtml = function (text, preview) {
-        var self = this;
-
-        if (this.lastIt) {
-            clearTimeout(this.lastIt);
-            this.lastIt = null;
-        }
-
-        this.lastIt = setTimeout(function () {
-            html = MarkdownText(text);
-            preview(self.hooks.postConversion(html));
-        }, 500);
-
-        return false;
-    };
-
-})();
-
 
 /**
  * TableDnD plug-in for JQuery, allows you to drag and drop table rows

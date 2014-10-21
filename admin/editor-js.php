@@ -64,7 +64,9 @@ $(document).ready(function () {
         span = '<span class="diff" />',
         cache = {};
 
-    Markdown.Extra.init(converter);
+    Markdown.Extra.init(converter, {
+        'extensions' : ["tables", "fenced_code_gfm", "def_list", "attr_list", "footnotes", "strikethrough", "newlines"]
+    });
 
     // 自动跟随
     converter.hooks.chain('postConversion', function (html) {
