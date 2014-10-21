@@ -2045,33 +2045,6 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function pingbackPing($source, $target)
     {
-        /** 检查源地址是否存在*/
-        if (!($http = Typecho_Http_Client::get())) {
-            return new IXR_Error(16, _t('源地址服务器错误'));
-        }
-
-        try {
-
-            $http->setTimeout(5)->send($source);
-            $response = $http->getResponseBody();
-
-            if (200 == $http->getResponseStatus()) {
-
-                if (!$http->getResponseHeader('x-pingback')) {
-                    preg_match_all("/<link[^>]*rel=[\"']([^\"']*)[\"'][^>]*href=[\"']([^\"']*)[\"'][^>]*>/i", $response, $out);
-                    if (!isset($out[1]['pingback'])) {
-                        return new IXR_Error(50, _t('源地址不支持PingBack'));
-                    }
-                }
-
-            } else {
-                return new IXR_Error(16, _t('源地址服务器错误'));
-            }
-
-        } catch (Exception $e) {
-            return new IXR_Error(16, _t('源地址服务器错误'));
-        }
-
         /** 检查目标地址是否正确*/
         $pathInfo = Typecho_Common::url(substr($target, strlen($this->options->index)), '/');
         $post = Typecho_Router::match($pathInfo);
@@ -2091,6 +2064,32 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 $post->cid, $source, 'comment'))->num;
 
                 if ($pingNum <= 0) {
+                    /** 检查源地址是否存在*/
+                    if (!($http = Typecho_Http_Client::get())) {
+                        return new IXR_Error(16, _t('源地址服务器错误'));
+                    }
+
+                    try {
+
+                        $http->setTimeout(5)->send($source);
+                        $response = $http->getResponseBody();
+
+                        if (200 == $http->getResponseStatus()) {
+
+                            if (!$http->getResponseHeader('x-pingback')) {
+                                preg_match_all("/<link[^>]*rel=[\"']([^\"']*)[\"'][^>]*href=[\"']([^\"']*)[\"'][^>]*>/i", $response, $out);
+                                if (!isset($out[1]['pingback'])) {
+                                    return new IXR_Error(50, _t('源地址不支持PingBack'));
+                                }
+                            }
+
+                        } else {
+                            return new IXR_Error(16, _t('源地址服务器错误'));
+                        }
+
+                    } catch (Exception $e) {
+                        return new IXR_Error(16, _t('源地址服务器错误'));
+                    }
 
                     /** 现在开始插入以及邮件提示了 $response就是第一行请求时返回的数组*/
                     preg_match("/\<title\>([^<]*?)\<\/title\\>/is", $response, $matchTitle);
