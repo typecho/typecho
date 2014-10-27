@@ -21,16 +21,10 @@ class Markdown
         static $parser;
 
         if (empty($parser)) {
-            if (class_exists('DOMDocument')) {
-                $parser = new ParsedownExtra();
-            } else if (class_exists('ParsedownExtra')) {
-                $parser = new Parsedown();
-            }
-
-            $parser->setBreaksEnabled(true);
+            $parser = new MarkdownExtraExtended();
         }
 
-        return $parser->text($text);
+        return $parser->transform($text);
     }
 }
 
