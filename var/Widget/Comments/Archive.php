@@ -101,8 +101,6 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
                 $commentClass .= ' comment-by-user';
             }
         }
-        
-        $commentLevelClass = $this->levels > 0 ? ' comment-child' : ' comment-parent';
 ?>
 <li itemscope itemtype="http://schema.org/UserComments" id="<?php $this->theId(); ?>" class="comment-body<?php
     if ($this->levels > 0) {
