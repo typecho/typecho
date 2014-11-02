@@ -4,7 +4,7 @@ include 'common.php';
 if ($user->hasLogin()) {
     $response->redirect($options->adminUrl);
 }
-$rememberName = Typecho_Cookie::get('__typecho_remember_name');
+$rememberName = htmlspecialchars(Typecho_Cookie::get('__typecho_remember_name'));
 Typecho_Cookie::delete('__typecho_remember_name');
 
 $bodyClass = 'body-100';
@@ -17,18 +17,18 @@ include 'header.php';
         <form action="<?php $options->loginAction(); ?>" method="post" name="login" role="form">
             <p>
                 <label for="name" class="sr-only"><?php _e('用户名'); ?></label>
-                <input type="text" id="name" name="name" value="<?php echo $rememberName; ?>" placeholder="<?php _e('用户名'); ?>" class="text-l w-100" />
+                <input type="text" id="name" name="name" value="<?php echo $rememberName; ?>" placeholder="<?php _e('用户名'); ?>" class="text-l w-100" autofocus />
             </p>
             <p>
                 <label for="password" class="sr-only"><?php _e('密码'); ?></label>
                 <input type="password" id="password" name="password" class="text-l w-100" placeholder="<?php _e('密码'); ?>" />
             </p>
             <p class="submit">
-                <button type="submit" class="btn-l w-100 primary"><?php _e('登录'); ?></button>
+                <button type="submit" class="btn btn-l w-100 primary"><?php _e('登录'); ?></button>
                 <input type="hidden" name="referer" value="<?php echo htmlspecialchars($request->get('referer')); ?>" />
             </p>
             <p>
-                <label for="remember"><input type="checkbox" name="remember" class="checkbox" value="1" id="remember" /> <?php _e('记住我'); ?></label>
+                <label for="remember"><input type="checkbox" name="remember" class="checkbox" value="1" id="remember" /> <?php _e('下次自动登录'); ?></label>
             </p>
         </form>
         

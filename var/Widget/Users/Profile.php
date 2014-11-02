@@ -1,4 +1,5 @@
 <?php
+if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
  * 编辑用户
  *
@@ -41,7 +42,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
     public function profileForm()
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/action/users-profile', $this->options->index),
+        $form = new Typecho_Widget_Helper_Form($this->security->getIndex('/action/users-profile'),
         Typecho_Widget_Helper_Form::POST_METHOD);
 
         /** 用户昵称 */
@@ -64,7 +65,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
 
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Element_Submit('submit', NULL, _t('更新我的档案'));
-        $submit->input->setAttribute('class', 'primary');
+        $submit->input->setAttribute('class', 'btn primary');
         $form->addItem($submit);
 
         $screenName->value($this->user->screenName);
@@ -73,6 +74,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
 
         /** 给表单增加规则 */
         $screenName->addRule(array($this, 'screenNameExists'), _t('昵称已经存在'));
+        $screenName->addRule('xssCheck', _t('请不要在昵称中使用特殊字符'));
         $url->addRule('url', _t('个人主页地址格式错误'));
         $mail->addRule('required', _t('必须填写电子邮箱'));
         $mail->addRule(array($this, 'mailExists'), _t('电子邮箱地址已经存在'));
@@ -90,10 +92,10 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
     public function optionsForm()
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/action/users-profile', $this->options->index),
+        $form = new Typecho_Widget_Helper_Form($this->security->getIndex('/action/users-profile'),
         Typecho_Widget_Helper_Form::POST_METHOD);
 
-        /** 自动保存 */
+        /** 撰写设置 */
         $markdown = new Typecho_Widget_Helper_Form_Element_Radio('markdown',
         array('0' => _t('关闭'), '1' => _t('打开')),
         $this->options->markdown, _t('使用 Markdown 语法编辑和解析内容'), 
@@ -132,7 +134,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
 
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Element_Submit('submit', NULL, _t('保存设置'));
-        $submit->input->setAttribute('class', 'primary');
+        $submit->input->setAttribute('class', 'btn primary');
         $form->addItem($submit);
 
         return $form;
@@ -151,7 +153,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
     public function personalForm($pluginName, $className, $pluginFileName, &$group)
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/action/users-profile', $this->options->index),
+        $form = new Typecho_Widget_Helper_Form($this->security->getIndex('/action/users-profile'),
         Typecho_Widget_Helper_Form::POST_METHOD);
         $form->setAttribute('name', $pluginName);
         $form->setAttribute('id', $pluginName);
@@ -182,12 +184,12 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
      */
     public function personalFormList()
     {
-        $this->widget('Widget_Plugins_List_Activated')->to($plugins);
+        $this->widget('Widget_Plugins_List@personalPlugins', 'activated=1')->to($plugins);
         while ($plugins->next()) {
             if ($plugins->personalConfig) {
                 echo '<h3>' . $plugins->title . '</h3>';
                 list($pluginFileName, $className) = Typecho_Plugin::portal($plugins->name,
-                __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
+                    $this->options->pluginDir($plugins->name));
 
                 $form = $this->personalForm($plugins->name, $className, $pluginFileName, $group);
                 if ($this->user->pass($group, true)) {
@@ -206,7 +208,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
     public function passwordForm()
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/action/users-profile', $this->options->index),
+        $form = new Typecho_Widget_Helper_Form($this->security->getIndex('/action/users-profile'),
         Typecho_Widget_Helper_Form::POST_METHOD);
 
         /** 用户密码 */
@@ -226,7 +228,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
 
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Element_Submit('submit', NULL, _t('更新密码'));
-        $submit->input->setAttribute('class', 'primary');
+        $submit->input->setAttribute('class', 'btn primary');
         $form->addItem($submit);
 
         $password->addRule('required', _t('必须填写密码'));
@@ -275,15 +277,11 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
     {
         $settings['autoSave'] = $this->request->autoSave ? 1 : 0;
         $settings['markdown'] = $this->request->markdown ? 1 : 0;
+        $defaultAllow = $this->request->getArray('defaultAllow');
 
-        $settings['defaultAllowComment'] = is_array($this->request->defaultAllow)
-        && in_array('comment', $this->request->defaultAllow) ? 1 : 0;
-
-        $settings['defaultAllowPing'] = is_array($this->request->defaultAllow)
-        && in_array('ping', $this->request->defaultAllow) ? 1 : 0;
-
-        $settings['defaultAllowFeed'] = is_array($this->request->defaultAllow)
-        && in_array('feed', $this->request->defaultAllow) ? 1 : 0;
+        $settings['defaultAllowComment'] = in_array('comment', $defaultAllow) ? 1 : 0;
+        $settings['defaultAllowPing'] = in_array('ping', $defaultAllow) ? 1 : 0;
+        $settings['defaultAllowFeed'] = in_array('feed', $defaultAllow) ? 1 : 0;
 
         foreach ($settings as $name => $value) {
             if ($this->db->fetchObject($this->db->select(array('COUNT(*)' => 'num'))
@@ -316,7 +314,8 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
             $this->response->goBack();
         }
 
-        $password = Typecho_Common::hash($this->request->password);
+        $hasher = new PasswordHash(8, true);
+        $password = $hasher->HashPassword($this->request->password);
 
         /** 更新数据 */
         $this->update(array('password' => $password),
@@ -415,6 +414,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
      */
     public function action()
     {
+        $this->security->protect();
         $this->on($this->request->is('do=profile'))->updateProfile();
         $this->on($this->request->is('do=options'))->updateOptions();
         $this->on($this->request->is('do=password'))->updatePassword();

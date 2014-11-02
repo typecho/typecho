@@ -1,4 +1,5 @@
 <?php
+if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
  * 插件管理
  *
@@ -22,13 +23,10 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
 {
     /**
      * 手动配置插件变量
-     * 
-     * @access public
-     * @static
-     * @param mixed $pluginName 插件名称
-     * @param mixed array $settings 变量键值对
-     * @param bool $isPersonal. (default: false) 是否为私人变量
-     * @return void
+     *
+     * @param       $pluginName 插件名称
+     * @param array $settings 变量键值对
+     * @param bool  $isPersonal 是否为私人变量
      */
     public static function configPlugin($pluginName, array $settings, $isPersonal = false)
     {
@@ -69,13 +67,13 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
     /**
      * 启用插件
      *
-     * @access public
-     * @return void
+     * @param $pluginName
+     * @throws Typecho_Widget_Exception
      */
     public function activate($pluginName)
     {
         /** 获取插件入口 */
-        list($pluginFileName, $className) = Typecho_Plugin::portal($pluginName, __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
+        list($pluginFileName, $className) = Typecho_Plugin::portal($pluginName, $this->options->pluginDir($pluginName));
         $info = Typecho_Plugin::parseInfo($pluginFileName);
 
         /** 检测依赖信息 */
@@ -143,8 +141,10 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
     /**
      * 禁用插件
      *
-     * @access public
-     * @return void
+     * @param $pluginName
+     * @throws Typecho_Widget_Exception
+     * @throws Exception
+     * @throws Typecho_Plugin_Exception
      */
     public function deactivate($pluginName)
     {
@@ -155,7 +155,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
 
         try {
             /** 获取插件入口 */
-            list($pluginFileName, $className) = Typecho_Plugin::portal($pluginName, __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
+            list($pluginFileName, $className) = Typecho_Plugin::portal($pluginName, $this->options->pluginDir($pluginName));
         } catch (Typecho_Plugin_Exception $e) {
             $pluginFileExist = false;
 
@@ -210,6 +210,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
     /**
      * 配置插件
      *
+     * @param $pluginName
      * @access public
      * @return void
      */
@@ -250,7 +251,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
     public function configHandle($pluginName, array $settings, $isInit)
     {
         /** 获取插件入口 */
-        list($pluginFileName, $className) = Typecho_Plugin::portal($pluginName, __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
+        list($pluginFileName, $className) = Typecho_Plugin::portal($pluginName, $this->options->pluginDir($pluginName));
 
         if (method_exists($className, 'configHandle')) {
             call_user_func(array($className, 'configHandle'), $settings, $isInit);
@@ -287,9 +288,10 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
     public function action()
     {
         $this->user->pass('administrator');
-        $this->on($this->request->is('activate'))->activate($this->request->activate);
-        $this->on($this->request->is('deactivate'))->deactivate($this->request->deactivate);
-        $this->on($this->request->is('config'))->config($this->request->config);
+        $this->security->protect();
+        $this->on($this->request->is('activate'))->activate($this->request->filter('slug')->activate);
+        $this->on($this->request->is('deactivate'))->deactivate($this->request->filter('slug')->deactivate);
+        $this->on($this->request->is('config'))->config($this->request->filter('slug')->config);
         $this->response->redirect($this->options->adminUrl);
     }
 }

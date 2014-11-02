@@ -1,3 +1,4 @@
+<?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <!DOCTYPE HTML>
 <html class="no-js">
 <head>
@@ -13,13 +14,13 @@
         ), '', ' - '); ?><?php $this->options->title(); ?></title>
 
     <!-- 使用url函数转换相关路径 -->
-    <link rel="stylesheet" href="<?php $this->options->adminUrl('css/normalize.css'); ?>">
-    <link rel="stylesheet" href="<?php $this->options->adminUrl('css/grid.css'); ?>">
+    <link rel="stylesheet" href="//cdn.staticfile.org/normalize/2.1.3/normalize.min.css">
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('grid.css'); ?>">
     <link rel="stylesheet" href="<?php $this->options->themeUrl('style.css'); ?>">
 
     <!--[if lt IE 9]>
-    <script src="<?php $this->options->adminUrl('js/html5shiv.js'); ?>"></script>
-    <script src="<?php $this->options->adminUrl('js/respond.js'); ?>"></script>
+    <script src="//cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="//cdn.staticfile.org/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
 
     <!-- 通过自有函数输出HTML头部信息 -->
@@ -27,12 +28,12 @@
 </head>
 <body>
 <!--[if lt IE 8]>
-    <div class="browsehappy"><?php _e('当前网页 <strong>不支持</strong> 你正在使用的浏览器. 为了正常的访问, 请 <a href="http://browsehappy.com/">升级你的浏览器</a>'); ?>.</div>
+    <div class="browsehappy" role="dialog"><?php _e('当前网页 <strong>不支持</strong> 你正在使用的浏览器. 为了正常的访问, 请 <a href="http://browsehappy.com/">升级你的浏览器</a>'); ?>.</div>
 <![endif]-->
 
 <header id="header" class="clearfix">
     <div class="container">
-        <div class="colgroup">
+        <div class="row">
             <div class="site-name col-mb-12 col-9">
                 <a id="logo" href="<?php $this->options->siteUrl(); ?>">
                     <?php if ($this->options->logoUrl): ?>
@@ -58,12 +59,12 @@
                     <?php endwhile; ?>
                 </nav>
             </div>
-        </div><!-- end .colgroup -->
+        </div><!-- end .row -->
     </div>
 </header><!-- end #header -->
 <div id="body">
     <div class="container">
-        <div class="colgroup">
+        <div class="row">
 
     
     

@@ -55,7 +55,8 @@ CREATE TABLE typecho_metas ( "mid" INTEGER NOT NULL PRIMARY KEY,
 "type" varchar(32) NOT NULL , 
 "description" varchar(200) default NULL , 
 "count" int(10) default '0' , 
-"order" int(10) default '0' );
+"order" int(10) default '0' ,
+"parent" int(10) default '0');
 
 CREATE INDEX typecho_metas_slug ON typecho_metas ("slug");
 

@@ -1,9 +1,9 @@
-<?php if(!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
+<?php if(!defined('__TYPECHO_ADMIN__')) exit; ?>
 <?php Typecho_Plugin::factory('admin/write-js.php')->write(); ?>
 <?php Typecho_Widget::widget('Widget_Metas_Tag_Cloud', 'sort=count&desc=1&limit=200')->to($tags); ?>
 
-<script src="<?php $options->adminUrl('js/timepicker.js?v=' . $suffixVersion); ?>"></script>
-<script src="<?php $options->adminUrl('js/tokeninput.js?v=' . $suffixVersion); ?>"></script>
+<script src="<?php $options->adminStaticUrl('js', 'timepicker.js?v=' . $suffixVersion); ?>"></script>
+<script src="<?php $options->adminStaticUrl('js', 'tokeninput.js?v=' . $suffixVersion); ?>"></script>
 <script>
 $(document).ready(function() {
     // 日期时间控件
@@ -38,7 +38,7 @@ $(document).ready(function() {
     $('#title').select();
 
     // text 自动拉伸
-    Typecho.editorResize('text', '<?php $options->index('/action/ajax?do=editorResize'); ?>');
+    Typecho.editorResize('text', '<?php $security->index('/action/ajax?do=editorResize'); ?>');
 
     // tag autocomplete 提示
     var tags = $('#tags'), tagsPre = [];
@@ -66,7 +66,7 @@ $(document).ready(function() {
                 'tags'  =>  $tags->name
             );
         }
-        echo json_encode($data);
+        echo Json::encode($data);
         ?>, {
             propertyToSearch:   'tags',
             tokenValue      :   'tags',
@@ -109,20 +109,31 @@ $(document).ready(function() {
     var slug = $('#slug');
 
     if (slug.length > 0) {
-        var sw = slug.width();
-        if (slug.val().length > 0) {
-            slug.css('width', 'auto').attr('size', slug.val().length);
+        var wrap = $('<div />').css({
+            'position'  :   'relative',
+            'display'   :   'inline-block'
+        }),
+        justifySlug = $('<pre />').css({
+            'display'   :   'block',
+            'visibility':   'hidden',
+            'height'    :   slug.height(),
+            'padding'   :   '0 2px',
+            'margin'    :   0
+        }).insertAfter(slug.wrap(wrap).css({
+            'left'      :   0,
+            'top'       :   0,
+            'minWidth'  :   '5px',
+            'position'  :   'absolute',
+            'width'     :   '100%'
+        })), originalWidth = slug.width();
+
+        function justifySlugWidth() {
+            var val = slug.val();
+            justifySlug.text(val.length > 0 ? val : '     ');
         }
 
-        slug.bind('input propertychange', function () {
-            var t = $(this), l = t.val().length;
-
-            if (l > 0) {
-                t.css('width', 'auto').attr('size', l);
-            } else {
-                t.css('width', sw).removeAttr('size');
-            }
-        }).width();
+        slug.bind('input propertychange', justifySlugWidth);
+        justifySlugWidth();
     }
 
     // 原始的插入图片和文件
@@ -159,11 +170,11 @@ $(document).ready(function() {
                 locked = true;
 
                 autoSave.text('<?php _e('正在保存'); ?>');
-                $.post(formAction + '?do=save', data, function (o) {
+                $.post(formAction, data + '&do=save', function (o) {
                     savedData = data;
                     lastSaveTime = o.time;
                     cid = o.cid;
-                    autoSave.text('<?php _e('内容已经保存'); ?>' + ' (' + o.time + ')').effect('highlight', 1000);
+                    autoSave.text('<?php _e('已保存'); ?>' + ' (' + o.time + ')').effect('highlight', 1000);
                     locked = false;
                 }, 'json');
             }
@@ -177,7 +188,7 @@ $(document).ready(function() {
 
     $('#text').bind('input propertychange', function () {
         if (!locked) {
-            autoSave.text('<?php _e('内容尚未保存'); ?>' + (lastSaveTime ? ' (<?php _e('上次保存时间'); ?>: ' + lastSaveTime + ')' : ''));
+            autoSave.text('<?php _e('尚未保存'); ?>' + (lastSaveTime ? ' (<?php _e('上次保存时间'); ?>: ' + lastSaveTime + ')' : ''));
         }
 
         if (!autoSaveOnce) {
@@ -202,13 +213,13 @@ $(document).ready(function() {
 
     // 控制选项和附件的切换
     var fileUploadInit = false;
-    $("#edit-secondary .typecho-option-tabs li").click(function() {
-        $("#edit-secondary .typecho-option-tabs li").removeClass('active');
-        $(this).addClass("active");
-        $(".tab-content").hide();
+    $('#edit-secondary .typecho-option-tabs li').click(function() {
+        $('#edit-secondary .typecho-option-tabs li').removeClass('active');
+        $(this).addClass('active');
+        $('.tab-content').addClass('hidden');
         
-        var selected_tab = $(this).find("a").attr("href"),
-            selected_el = $(selected_tab).show();
+        var selected_tab = $(this).find('a').attr('href'),
+            selected_el = $(selected_tab).removeClass('hidden');
 
         if (!fileUploadInit) {
             selected_el.trigger('init');

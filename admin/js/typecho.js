@@ -8,7 +8,8 @@
                     $.post(url, {size : h});
                 }
             })
-        }
+        },
+        uploadComplete      :   function (file) {}
     };
 })(window);
 
@@ -140,12 +141,18 @@
             
             if (checked) {
                 $(s.rowEl, table).each(function () {
-                    $(s.checkEl, this).prop('checked', true);
-                }).addClass('checked');
+                    var t = $(this), el = $(s.checkEl, this).prop('checked', true);
+                    if (el.length > 0) {
+                        t.addClass('checked');
+                    }
+                });
             } else {
                 $(s.rowEl, table).each(function () {
-                    $(s.checkEl, this).prop('checked', false);
-                }).removeClass('checked');
+                    var t = $(this), el = $(s.checkEl, this).prop('checked', false);
+                    if (el.length > 0) {
+                        t.removeClass('checked');
+                    }
+                });
             }
         });
 
@@ -157,126 +164,6 @@
             }
 
             return false;
-        });
-    };
-
-    $.fn.fileUpload = function (options) {
-        var s  = $.extend({
-            url         :   null,
-            onUpload    :   null,
-            onComplete  :   null,
-            onError     :   null,
-            types       :   [],
-            name        :   'file',
-            typesError  :   'file type error',
-            single      :   false
-        }, options), 
-        p = this.parent().css('position', 'relative'),
-        input = $('<input class="sr-only" name="' + s.name + '" type="file" />').css({
-            opacity     :   0,
-            cursor      :   'pointer',
-            position    :   'absolute',
-            width       :   this.outerWidth(),
-            height      :   this.outerHeight(),
-            left        :   this.offset().left - p.offset().left,
-            top         :   this.offset().top - p.offset().top
-        }).insertAfter(this), queue = {}, prefix = 'queue-',
-        index = 0;
-
-        window.fileUploadComplete = function (id, url, data) {
-            if (s.single) {
-                input.prop('disabled', false);
-            }
-
-            if (!!id && queue[id]) {
-                queue[id].remove();
-                delete queue[id];
-
-                if (s.onComplete) {
-                    s.onComplete.call(input.get(0), id, url, data);
-                }
-            }
-        };
-
-        window.fileUploadError = function (id, word) {
-            if (s.single) {
-                input.prop('disabled', false);
-            }
-
-            if (!!id && queue[id]) {
-                queue[id].remove();
-                delete queue[id];
-
-                if (s.onError) {
-                    s.onError.call(input.get(0), id, word);
-                }
-            }
-        };
-
-        function upload (frame, id) {
-            var form = $('<form action="' + s.url + '" method="post" enctype="multipart/form-data"><input type="hidden" name="_id" value="' + id + '" /></form>'),
-            replace = input.clone(true).val(''),
-            io = frame[0],
-            doc = io.contentWindow ? io.contentWindow.document : io.contentDocument ? io.contentDocument : io.document;
-
-            replace.insertBefore(input);
-            form.append(input);
-            $('body', doc).html('').append(form);
-            input = replace;
-
-            form.submit();
-        }
-
-        function checkTypes (file) {
-            if (!s.types.length) {
-                return true;
-            }
-
-            file = file.toLowerCase();
-            for (var i = 0; i < s.types.length; i ++) {
-                var ext = s.types[i].toLowerCase();
-
-                if (file.length <= ext.length) {
-                    continue;
-                }
-
-                if (ext == file.substring(file.length - ext.length)) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        input.change(function () {
-            var t = $(this), file = t.val();
-
-            if (!file) {
-                return;
-            } else {
-                file = file.split(/\\|\//).pop();
-            }
-
-            if (!checkTypes(file)) {
-                alert(s.typesError.replace('%s', file));
-                return;
-            }
-
-            if (s.single) {
-                t.prop('disabled', true);
-            }
-
-            var id = prefix + index;
-            index ++;
-
-            queue[id] = $('<iframe style="display:none" id ="upload-'
-                + id + '" src="about:blank"></iframe>').appendTo(document.body);
-
-            if (s.onUpload) {
-                s.onUpload.call(this, file, id);
-            }
-
-            upload(queue[id], id);
         });
     };
 })($);
@@ -1317,3 +1204,26 @@ jQuery.cookie = function (key, value, options) {
 	};
 
 })( jQuery );
+
+jQuery.fn.css2 = jQuery.fn.css;
+jQuery.fn.css = function() {
+    if (arguments.length) return jQuery.fn.css2.apply(this, arguments);
+    var attr = ['font-family','font-size','font-weight','font-style','color', 'box-sizing',
+        'text-transform','text-decoration','letter-spacing', 'box-shadow',
+        'line-height','text-align','vertical-align','direction','background-color',
+        'background-image','background-repeat','background-position',
+        'background-attachment','opacity','width','height','top','right','bottom',
+        'left','margin-top','margin-right','margin-bottom','margin-left',
+        'padding-top','padding-right','padding-bottom','padding-left',
+        'border-top-width','border-right-width','border-bottom-width',
+        'border-left-width','border-top-color','border-right-color',
+        'border-bottom-color','border-left-color','border-top-style',
+        'border-right-style','border-bottom-style','border-left-style','position',
+        'display','visibility','z-index','overflow-x','overflow-y','white-space',
+        'clip','float','clear','cursor','list-style-image','list-style-position',
+        'list-style-type','marker-offset'];
+    var len = attr.length, obj = {};
+    for (var i = 0; i < len; i++) 
+        obj[attr[i]] = jQuery.fn.css2.call(this, attr[i]);
+    return obj;
+};

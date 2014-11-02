@@ -7,7 +7,7 @@
  * --------------------------------- */
 
 /* ------------------
- * Gobal style
+ * Global style
  * --------------- */
 body {
   background-color: #FFF;
@@ -24,20 +24,20 @@ a {
 a:hover, a:active {
   color: #444;
 }
-pre, code {
-  padding: 2px 4px;
+pre, code { 
   background: #F3F3F0;
   font-family: Menlo, Monaco, Consolas, "Lucida Console", "Courier New", monospace;
   font-size: .92857em;
 }
-code { color: #B94A48; }
+code { padding: 2px 4px; color: #B94A48; }
 pre {
-  padding: 8px;
+  padding: 0;
+  border: 1px solid #ccc;
   overflow: auto;
   max-height: 400px;
 }
 pre code {
-  padding: 0;
+  padding: 3px;
   color: #444;
 }
 
@@ -47,7 +47,7 @@ blockquote {
   border-left: 4px solid #F3F3F0;
 }
 
-h1, h2, h3 {
+h1, h2, h3, h4, h5, h6 {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
@@ -81,7 +81,7 @@ textarea {
 .post-meta a:hover,
 .post-content a:hover,
 .widget a:hover,
-.comment-content a {
+.comment-content a:hover {
   border-bottom-color: transparent;
 }
 
@@ -156,6 +156,18 @@ textarea {
   background: transparent url(img/icon-search.png) no-repeat center center;
   direction: ltr; /* fix RTL language */
   text-indent: -9999em;
+}
+
+@media 
+(-webkit-min-device-pixel-ratio: 2), 
+(min-resolution: 192dpi) {
+  #search button {
+    background-image: url(img/icon-search@2x.png);
+    -webkit-background-size: 24px 24px;
+    -moz-background-size: 24px 24px;
+    -o-background-size: 24px 24px;
+    background-size: 24px 24px;
+  }
 }
 
 
@@ -336,6 +348,11 @@ textarea {
   margin: 5px 0;
   line-height: 1.5;
 }
+
+.widget-list li ul {
+  margin-left: 15px;
+}
+
 .widget-list a:hover {
 }
 

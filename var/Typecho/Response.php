@@ -9,9 +9,6 @@
  * @version $Id$
  */
 
-/** 载入api支持 */
-require_once 'Typecho/Common.php';
-
 /**
  * Typecho公用方法
  *
@@ -145,7 +142,7 @@ class Typecho_Response
      * 获取字符集
      *
      * @access public
-     * @return void
+     * @return string
      */
     public function getCharset()
     {
@@ -229,7 +226,7 @@ class Typecho_Response
         /** 设置http头信息 */
         $this->setContentType('application/json');
 
-        echo json_encode($message);
+        echo Json::encode($message);
 
         /** 终止后续输出 */
         exit;
@@ -246,7 +243,6 @@ class Typecho_Response
     public function redirect($location, $isPermanently = false)
     {
         /** Typecho_Common */
-        require_once 'Typecho/Common.php';
         $location = Typecho_Common::safeUrl($location);
 
         if ($isPermanently) {
@@ -262,9 +258,8 @@ class Typecho_Response
      * 返回来路
      *
      * @access public
-     * @param string $anchor 附加地址
+     * @param string $suffix 附加地址
      * @param string $default 默认来路
-     * @return void
      */
     public function goBack($suffix = NULL, $default = NULL)
     {

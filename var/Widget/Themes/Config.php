@@ -1,4 +1,5 @@
 <?php
+if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
  * Typecho Blog Platform
  *
@@ -23,6 +24,7 @@ class Widget_Themes_Config extends Widget_Abstract_Options
      *
      * @access public
      * @return void
+     * @throws Typecho_Widget_Exception
      */
     public function execute()
     {
@@ -32,18 +34,7 @@ class Widget_Themes_Config extends Widget_Abstract_Options
             throw new Typecho_Widget_Exception(_t('外观配置功能不存在'), 404);
         }
     }
-    
-    /**
-     * 获取菜单标题
-     *
-     * @access public
-     * @return string
-     */
-    public function getMenuTitle()
-    {
-        return _t('设置外观 %s', $this->options->theme);
-    }
-    
+
     /**
      * 配置功能是否存在
      * 
@@ -52,8 +43,9 @@ class Widget_Themes_Config extends Widget_Abstract_Options
      */
     public static function isExists()
     {
-        $configFile = __TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . '/' . Typecho_Widget::widget('Widget_Options')->theme . '/functions.php';
-        
+        $options = Typecho_Widget::widget('Widget_Options');
+        $configFile = $options->themeFile($options->theme, 'functions.php');
+
         if (file_exists($configFile)) {
             require_once $configFile;
             
@@ -69,12 +61,12 @@ class Widget_Themes_Config extends Widget_Abstract_Options
      * 配置外观
      *
      * @access public
-     * @return void
+     * @return Typecho_Widget_Helper_Form
      */
     public function config()
     {
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/action/themes-edit?config',
-        $this->options->index), Typecho_Widget_Helper_Form::POST_METHOD);
+        $form = new Typecho_Widget_Helper_Form($this->security->getIndex('/action/themes-edit?config'),
+            Typecho_Widget_Helper_Form::POST_METHOD);
         themeConfig($form);
         $inputs = $form->getInputs();
         
@@ -85,7 +77,7 @@ class Widget_Themes_Config extends Widget_Abstract_Options
         }
 
         $submit = new Typecho_Widget_Helper_Form_Element_Submit(NULL, NULL, _t('保存设置'));
-        $submit->input->setAttribute('class', 'primary');
+        $submit->input->setAttribute('class', 'btn primary');
         $form->addItem($submit);
         return $form;
     }

@@ -7,9 +7,6 @@
  * @version    $Id: DbQuery.php 97 2008-04-04 04:39:54Z magike.net $
  */
 
-/** Typecho_Config */
-require_once 'Typecho/Config.php';
-
 /**
  * Typecho数据库查询语句构建类
  * 使用方法:
@@ -28,6 +25,26 @@ class Typecho_Db_Query
 {
     /** 数据库关键字 */
     const KEYWORDS = '*PRIMARY|AND|OR|LIKE|BINARY|BY|DISTINCT|AS|IN|IS|NULL';
+
+    /**
+     * 默认字段 
+     * 
+     * @var array
+     * @access private
+     */
+    private static $_default = array(
+        'action' => NULL,
+        'table'  => NULL,
+        'fields' => '*',
+        'join'   => array(),
+        'where'  => NULL,
+        'limit'  => NULL,
+        'offset' => NULL,
+        'order'  => NULL,
+        'group'  => NULL,
+        'having'  => NULL,
+        'rows'   => array(),
+    );
 
     /**
      * 数据库适配器
@@ -63,18 +80,7 @@ class Typecho_Db_Query
         $this->_adapter = &$adapter;
         $this->_prefix = $prefix;
 
-        $this->_sqlPreBuild = array(
-            'action' => NULL,
-            'table'  => NULL,
-            'fields' => '*',
-            'join'   => array(),
-            'where'  => NULL,
-            'limit'  => NULL,
-            'offset' => NULL,
-            'order'  => NULL,
-            'group'  => NULL,
-            'rows'   => array(),
-        );
+        $this->_sqlPreBuild = self::$_default;
     }
 
     /**
@@ -174,6 +180,36 @@ class Typecho_Db_Query
     }
 
     /**
+     * 转义参数 
+     * 
+     * @param array $values 
+     * @access protected
+     * @return array
+     */
+    protected function quoteValues(array $values)
+    {
+        foreach ($values as &$value) {
+            if (is_array($value)) {
+                $value = '(' . implode(',', array_map(array($this->_adapter, 'quoteValue'), $value)) . ')';
+            } else {
+                $value = $this->_adapter->quoteValue($value);
+            }
+        }
+
+        return $values;
+    }
+
+    /**
+     * set default params
+     *
+     * @param array $default
+     */
+    public static function setDefault(array $default)
+    {
+        self::$_default = array_merge(self::$_default, $default);
+    }
+
+    /**
      * 获取查询字串属性值
      *
      * @access public
@@ -183,6 +219,21 @@ class Typecho_Db_Query
     public function getAttribute($attributeName)
     {
         return isset($this->_sqlPreBuild[$attributeName]) ? $this->_sqlPreBuild[$attributeName] : NULL;
+    }
+
+    /**
+     * 清除查询字串属性值
+     *
+     * @access public
+     * @param string $attributeName 属性名称
+     * @return Typecho_Db_Query
+     */
+    public function cleanAttribute($attributeName)
+    {
+        if (isset($this->_sqlPreBuild[$attributeName])) {
+            $this->_sqlPreBuild[$attributeName] = self::$_default[$attributeName];
+        }
+        return $this;
     }
 
     /**
@@ -217,7 +268,7 @@ class Typecho_Db_Query
         } else {
             $args = func_get_args();
             array_shift($args);
-            $this->_sqlPreBuild['where'] .= $operator . ' (' . vsprintf($condition, array_map(array($this->_adapter, 'quoteValue'), $args)) . ')';
+            $this->_sqlPreBuild['where'] .= $operator . ' (' . vsprintf($condition, $this->quoteValues($args)) . ')';
         }
 
         return $this;
@@ -241,7 +292,7 @@ class Typecho_Db_Query
         } else {
             $args = func_get_args();
             array_shift($args);
-            $this->_sqlPreBuild['where'] .= $operator . ' (' . vsprintf($condition, array_map(array($this->_adapter, 'quoteValue'), $args)) . ')';
+            $this->_sqlPreBuild['where'] .= $operator . ' (' . vsprintf($condition, $this->quoteValues($args)) . ')';
         }
 
         return $this;
@@ -306,11 +357,12 @@ class Typecho_Db_Query
      *
      * @param string $key 栏目名称
      * @param mixed $value 指定的值
+     * @param bool $escape 是否转义
      * @return Typecho_Db_Query
      */
-    public function expression($key, $value)
+    public function expression($key, $value, $escape = true)
     {
-        $this->_sqlPreBuild['rows'][$this->filterColumn($key)] = $this->filterColumn($value);
+        $this->_sqlPreBuild['rows'][$this->filterColumn($key)] = $escape ? $this->filterColumn($value) : $value;
         return $this;
     }
 
@@ -336,6 +388,28 @@ class Typecho_Db_Query
     public function group($key)
     {
         $this->_sqlPreBuild['group'] = ' GROUP BY ' . $this->filterColumn($key);
+        return $this;
+    }
+
+    /**
+     * HAVING (HAVING)
+     *
+     * @return Typecho_Db_Query
+     */
+    public function having()
+    {
+        $condition = func_get_arg(0);
+        $condition = str_replace('?', "%s", $this->filterColumn($condition));
+        $operator = empty($this->_sqlPreBuild['having']) ? ' HAVING ' : ' AND';
+
+        if (func_num_args() <= 1) {
+            $this->_sqlPreBuild['having'] .= $operator . ' (' . $condition . ')';
+        } else {
+            $args = func_get_args();
+            array_shift($args);
+            $this->_sqlPreBuild['having'] .= $operator . ' (' . vsprintf($condition, $this->quoteValues($args)) . ')';
+        }
+
         return $this;
     }
 

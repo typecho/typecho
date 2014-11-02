@@ -2,7 +2,6 @@
 .*.swo
 ._*
 .DS_Store
-/Debug/
 /ImgCache/
 /Backup_rar/
 /Debug/
@@ -18,6 +17,9 @@
 *.exp
 *.pdb
 *.rar
+*.mo
+*.po
+*.pot
 .smbdelete*
 *.sublime*
 .sass-cache

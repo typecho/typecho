@@ -1,4 +1,5 @@
 <?php
+if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
  * 异步调用组件
  *
@@ -34,8 +35,7 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
     /**
      * 获取最新版本
      *
-     * @access public
-     * @return void
+     * @throws Typecho_Widget_Exception
      */
     public function checkVersion()
     {
@@ -43,7 +43,8 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
         $client = Typecho_Http_Client::get();
         if ($client) {
             $client->setHeader('User-Agent', $this->options->generator)
-            ->send('https://github.com/typecho/typecho/releases.atom');
+                ->setTimeout(10)
+                ->send('https://github.com/typecho/typecho/releases.atom');
 
             /** 匹配内容体 */
             $response = $client->getResponseBody();
@@ -81,8 +82,7 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
     /**
      * 远程请求代理
      *
-     * @access public
-     * @return void
+     * @throws Typecho_Widget_Exception
      */
     public function feed()
     {
@@ -90,7 +90,8 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
         $client = Typecho_Http_Client::get();
         if ($client) {
             $client->setHeader('User-Agent', $this->options->generator)
-            ->send('http://typecho.org/feed/');
+                ->setTimeout(10)
+                ->send('http://typecho.org/feed/');
 
             /** 匹配内容体 */
             $response = $client->getResponseBody();
@@ -106,7 +107,7 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
                         'date'   =>  date('n.j', strtotime($matches[3][$key]))
                     );
 
-                    if ($key > 3) {
+                    if ($key > 8) {
                         break;
                     }
                 }

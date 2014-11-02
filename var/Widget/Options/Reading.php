@@ -1,4 +1,5 @@
 <?php
+if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
  * 文章阅读设置
  *
@@ -29,8 +30,8 @@ class Widget_Options_Reading extends Widget_Options_Permalink
     public function form()
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/action/options-reading', $this->options->index),
-        Typecho_Widget_Helper_Form::POST_METHOD);
+        $form = new Typecho_Widget_Helper_Form($this->security->getIndex('/action/options-reading'),
+            Typecho_Widget_Helper_Form::POST_METHOD);
 
         /** 文章日期格式 */
         $postDateFormat = new Typecho_Widget_Helper_Form_Element_Text('postDateFormat', NULL, $this->options->postDateFormat,
@@ -38,7 +39,7 @@ class Widget_Options_Reading extends Widget_Options_Permalink
             . _t('在某些主题中这个格式可能不会生效, 因为主题作者可以自定义日期格式.') . '<br />'
             . _t('请参考 <a href="http://www.php.net/manual/zh/function.date.php">PHP 日期格式写法</a>.'));
         $postDateFormat->input->setAttribute('class', 'w-40 mono');
-        $form->addInput($postDateFormat);
+        $form->addInput($postDateFormat->addRule('xssCheck', _t('请不要在日期格式中使用特殊字符')));
 
         //首页显示
         $frontPageParts = explode(':', $this->options->frontPage);
@@ -79,7 +80,7 @@ class Widget_Options_Reading extends Widget_Options_Permalink
         }
 
         // 自定义文件列表
-        $files = glob(__TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/*.php');
+        $files = glob($this->options->themeFile($this->options->theme, '*.php'));
         $filesSelect = '';
 
         foreach ($files as $file) {
@@ -138,7 +139,7 @@ class Widget_Options_Reading extends Widget_Options_Permalink
 
         /** 提交按钮 */
         $submit = new Typecho_Widget_Helper_Form_Element_Submit('submit', NULL, _t('保存设置'));
-        $submit->input->setAttribute('class', 'primary');
+        $submit->input->setAttribute('class', 'btn primary');
         $form->addItem($submit);
 
         return $form;
@@ -190,6 +191,8 @@ class Widget_Options_Reading extends Widget_Options_Permalink
 
                 $settings['routingTable'] = serialize($routingTable);
             }
+        } else {
+            $settings['frontArchive'] = 0;
         }
 
         foreach ($settings as $name => $value) {
@@ -209,6 +212,7 @@ class Widget_Options_Reading extends Widget_Options_Permalink
     public function action()
     {
         $this->user->pass('administrator');
+        $this->security->protect();
         $this->on($this->request->isPost())->updateReadingSettings();
         $this->response->redirect($this->options->adminUrl);
     }

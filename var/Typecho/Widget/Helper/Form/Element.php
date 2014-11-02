@@ -1,4 +1,5 @@
 <?php
+if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
  * 表单元素抽象帮手
  *
@@ -8,9 +9,6 @@
  * @license GNU General Public License 2.0
  * @version $Id$
  */
-
-/** Typecho_Widget_Helper_Layout */
-require_once 'Typecho/Widget/Helper/Layout.php';
 
 /**
  * 表单元素抽象类

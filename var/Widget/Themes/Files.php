@@ -1,4 +1,5 @@
 <?php
+if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
  * 风格文件列表
  *
@@ -41,15 +42,17 @@ class Widget_Themes_Files extends Typecho_Widget
      *
      * @access public
      * @return void
+     * @throws Typecho_Widget_Exception
      */
     public function execute()
     {
         /** 管理员权限 */
         $this->widget('Widget_User')->pass('administrator');
-        $this->_currentTheme = $this->request->get('theme', $this->widget('Widget_Options')->theme);
+        $this->_currentTheme = $this->request->filter('slug')->get('theme', $this->widget('Widget_Options')->theme);
 
         if (preg_match("/^([_0-9a-z-\.\ ])+$/i", $this->_currentTheme)
-        && is_dir($dir = __TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . '/' . $this->_currentTheme)) {
+            && is_dir($dir = $this->widget('Widget_Options')->themeFile($this->_currentTheme))
+            && (!defined('__TYPECHO_THEME_WRITEABLE__') || __TYPECHO_THEME_WRITEABLE__)) {
             $files = glob($dir . '/*.{php,PHP,js,JS,css,CSS,vbs,VBS}', GLOB_BRACE);
             $this->_currentFile = $this->request->get('file', 'index.php');
 
@@ -92,8 +95,8 @@ class Widget_Themes_Files extends Typecho_Widget
      */
     public function currentContent()
     {
-        return htmlspecialchars(file_get_contents(__TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . '/' .
-        $this->_currentTheme . '/' . $this->_currentFile));
+        return htmlspecialchars(file_get_contents($this->widget('Widget_Options')
+            ->themeFile($this->_currentTheme, $this->_currentFile)));
     }
 
     /**
@@ -104,8 +107,9 @@ class Widget_Themes_Files extends Typecho_Widget
      */
     public function currentIsWriteable()
     {
-        return is_writeable(__TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . '/' .
-        $this->_currentTheme . '/' . $this->_currentFile);
+        return is_writeable($this->widget('Widget_Options')
+            ->themeFile($this->_currentTheme, $this->_currentFile)) && !Typecho_Common::isAppEngine()
+        && (!defined('__TYPECHO_THEME_WRITEABLE__') || __TYPECHO_THEME_WRITEABLE__);
     }
 
     /**

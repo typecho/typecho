@@ -1,11 +1,11 @@
-<?php if(!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
+<?php if(!defined('__TYPECHO_ADMIN__')) exit; ?>
 <script>
 (function () {
     $(document).ready(function () {
         var error = $('.typecho-option .error:first');
 
         if (error.length > 0) {
-            $('html,body').scrollTop(error.offset().top);
+            $('html,body').scrollTop(error.parents('.typecho-option').offset().top);
         }
 
         $('form').submit(function () {

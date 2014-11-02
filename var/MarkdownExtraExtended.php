@@ -16,7 +16,7 @@
 # Markdown Parser Class
 #
 
-class Markdown {
+class _Markdown {
 
 	### Version ###
 
@@ -354,8 +354,8 @@ class Markdown {
 	}
 	protected function _hashHTMLBlocks_callback($matches) {
 		$text = $matches[1];
-		$key  = $this->hashBlock($text);
-		return "\n\n$key\n\n";
+		return $this->hashBlock($text);
+		// return "\n\n$key\n\n";
 	}
 	
 	
@@ -947,7 +947,7 @@ class Markdown {
 		return $text;
 	}
 	protected function _doCodeBlocks_callback($matches) {
-		$codeblock = $this->unhashHTMLBlocks($matches[1]);
+		$codeblock = $this->unhash($matches[1]);
 
 		$codeblock = $this->outdent($codeblock);
 		$codeblock = htmlspecialchars($codeblock, ENT_NOQUOTES);
@@ -1300,7 +1300,7 @@ class Markdown {
 	}
     protected function _doAutoLinks_url_callback_replace($matches) {
         $url = $this->encodeAttribute($matches[1]);
-        $link = "<a rel=\"nofollow\" href=\"$url\">$url</a>";
+        $link = "<a href=\"$url\">$url</a>";
         return $this->hashPart($link);
     }
 
@@ -1339,7 +1339,7 @@ class Markdown {
         }
 
 		$url = $this->encodeAttribute($protocol . $link);
-		$link = "<a rel=\"nofollow\" href=\"$url\">$url</a>";
+		$link = "<a href=\"$url\">$url</a>";
 		return $this->hashPart($link) . $this->tail;
 	}
 
@@ -1549,11 +1549,6 @@ class Markdown {
 	protected function _unhash_callback($matches) {
 		return $this->html_hashes[trim($matches[0])];
 	}
-
-    protected function unhashHTMLBlocks($text) {
-		return preg_replace_callback("/\n\n(.)\\x1A[0-9]+\\1\n\n/", 
-			array($this, '_unhash_callback'), $text);
-    }
 }
 
 #
@@ -1568,7 +1563,7 @@ class Markdown {
 # one.
 #
 
-class MarkdownExtra extends Markdown {
+class MarkdownExtra extends _Markdown {
 
 	### Configuration Variables ###
 
@@ -2323,7 +2318,7 @@ class MarkdownExtra extends Markdown {
 			$url = $this->urls[$link_id];
 			$url = $this->encodeAttribute($url);
 			
-			$result = "<a rel=\"nofollow\" href=\"$url\"";
+			$result = "<a href=\"$url\"";
 			if ( isset( $this->titles[$link_id] ) ) {
 				$title = $this->titles[$link_id];
 				$title = $this->encodeAttribute($title);
@@ -2351,7 +2346,7 @@ class MarkdownExtra extends Markdown {
 
 		$url = $this->encodeAttribute($url);
 
-		$result = "<a rel=\"nofollow\" href=\"$url\"";
+		$result = "<a href=\"$url\"";
 		if (isset($title)) {
 			$title = $this->encodeAttribute($title);
 			$result .=  " title=\"$title\"";
@@ -3142,9 +3137,11 @@ class MarkdownExtraExtended extends MarkdownExtra {
 	protected $block_tags_re = 'figure|figcaption|p|div|h[1-6]|blockquote|pre|table|dl|ol|ul|address|form|fieldset|iframe|hr|legend';
 		
 	public function __construct() {
+        /*
 		$this->block_gamut += array(
 			"doFencedFigures"   => 7
 		);
+        */
 
         $this->document_gamut += array(
             "doClearBreaks"     =>  100
@@ -3240,7 +3237,7 @@ class MarkdownExtraExtended extends MarkdownExtra {
 	}
 	
 	public function _doFencedCodeBlocks_callback($matches) {
-		$codeblock = $this->unhashHTMLBlocks($matches[4]);
+		$codeblock = $this->unhash($matches[4]);
 		$codeblock = htmlspecialchars($codeblock, ENT_NOQUOTES);
 		$codeblock = preg_replace_callback('/^\n+/',
 			array($this, '_doFencedCodeBlocks_newlines'), $codeblock);

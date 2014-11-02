@@ -1,4 +1,5 @@
 <?php
+if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
  * 用户抽象组件
  *
@@ -23,7 +24,7 @@ class Widget_Abstract_Users extends Widget_Abstract
      * ___options  
      * 
      * @access protected
-     * @return Config
+     * @return Typecho_Config
      */
     protected function ___options()
     {
@@ -234,12 +235,13 @@ class Widget_Abstract_Users extends Widget_Abstract
      * @param integer $size 头像尺寸
      * @param string $rating 头像评级
      * @param string $default 默认输出头像
+     * @param string $class 默认css class
      * @return void
      */
     public function gravatar($size = 40, $rating = 'X', $default = NULL, $class = NULL)
     {
-        echo '<img' . (empty($class) ? '' : ' class="' . $class . '"') . ' src="http://www.gravatar.com/avatar/' .
-        md5($this->mail) . '?s=' . $size . '&amp;r=' . $rating . '&amp;d=' . $default . '" alt="' .
+        $url = Typecho_Common::gravatarUrl($this->mail, $size, $rating, $default, $this->request->isSecure());
+        echo '<img' . (empty($class) ? '' : ' class="' . $class . '"') . ' src="' . $url . '" alt="' .
         $this->screenName . '" width="' . $size . '" height="' . $size . '" />';
     }
 }

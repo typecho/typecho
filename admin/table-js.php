@@ -1,4 +1,4 @@
-<?php if(!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
+<?php if(!defined('__TYPECHO_ADMIN__')) exit; ?>
 <script>
 (function () {
     $(document).ready(function () {
@@ -6,7 +6,7 @@
             checkEl     :   'input[type=checkbox]',
             rowEl       :   'tr',
             selectAllEl :   '.typecho-table-select-all',
-            actionEl    :   '.dropdown-menu a'
+            actionEl    :   '.dropdown-menu a,button.btn-operate'
         });
 
         $('.btn-drop').dropdownMenu({

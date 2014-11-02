@@ -9,6 +9,8 @@
  * @version $Id$
  */
 
+define('__TYPECHO_MB_SUPPORTED__', function_exists('mb_get_info'));
+
 /**
  * Typecho公用方法
  *
@@ -20,32 +22,8 @@
 class Typecho_Common
 {
     /** 程序版本 */
-    const VERSION = '0.9/13.12.12';
+    const VERSION = '1.0/14.10.10';
 
-    /**
-     * 缓存的包含路径
-     *
-     * @access private
-     * @var array
-     */
-    private static $_cachedIncludePath = false;
-
-    /**
-     * 锁定的代码块
-     *
-     * @access private
-     * @var array
-     */
-    private static $_lockedBlocks = array('<p></p>' => '');
-    
-    /**
-     * 允许的标签
-     * 
-     * @access private
-     * @var array
-     */
-    private static $_allowableTags = '';
-    
     /**
      * 允许的属性
      * 
@@ -71,17 +49,15 @@ class Typecho_Common
     public static $exceptionHandle;
 
     /**
-     * 锁定标签回调函数
-     *
-     * @access private
-     * @param array $matches 匹配的值
+     * 将字符串变成大写的回调函数
+     * 
+     * @param array $matches 
+     * @access public
      * @return string
      */
-    public static function __lockHTML(array $matches)
+    public static function __strToUpper($matches)
     {
-        $guid = '<code>' . uniqid(time()) . '</code>';
-        self::$_lockedBlocks[$guid] = $matches[0];
-        return $guid;
+        return strtoupper($matches[0]);
     }
 
     /**
@@ -119,7 +95,7 @@ class Typecho_Common
      * @param mixed $matches 
      * @static
      * @access public
-     * @return void
+     * @return bool
      */
     public static function __filterAttrs($matches)
     {
@@ -208,6 +184,16 @@ class Typecho_Common
     }
 
     /**
+     * 自动载入类
+     *
+     * @param $className
+     */
+    public static function __autoLoad($className)
+    {
+        @include_once str_replace(array('\\', '_'), '/', $className) . '.php';
+    }
+
+    /**
      * 程序初始化方法
      *
      * @access public
@@ -216,14 +202,12 @@ class Typecho_Common
     public static function init()
     {
         /** 设置自动载入函数 */
-        function __autoLoad($className)
-        {
-            /**
-             * 自动载入函数并不判断此类的文件是否存在, 我们认为当你显式的调用它时, 你已经确认它存在了
-             * 如果真的无法被加载, 那么系统将出现一个严重错误(Fetal Error)
-             * 如果你需要判断一个类能否被加载, 请使用 Typecho_Common::isAvailableClass 方法
-             */
-            @include_once str_replace('_', '/', $className) . '.php';
+        if (function_exists('spl_autoload_register')) {
+            spl_autoload_register(array('Typecho_Common', '__autoLoad'));
+        } else {
+            function __autoLoad($className) {
+                Typecho_Common::__autoLoad($className);
+            }
         }
 
         /** 兼容php6 */
@@ -250,20 +234,10 @@ class Typecho_Common
      */
     public static function exceptionHandle(Exception $exception)
     {
-        //$obHandles = ob_list_handlers();
-
         @ob_end_clean();
 
-        /*
-        if (in_array('ob_gzhandler', $obHandles)) {
-            ob_start('ob_gzhandler');
-        } else {
-            ob_start();
-        }
-        */
-
         if (defined('__TYPECHO_DEBUG__')) {
-            //@ob_clean();
+            echo '<h1>' . $exception->getMessage() . '</h1>';
             echo nl2br($exception->__toString());
         } else {
             if (404 == $exception->getCode() && !empty(self::$exceptionHandle)) {
@@ -287,6 +261,7 @@ class Typecho_Common
     public static function error($exception)
     {
         $isException = is_object($exception);
+        $message = '';
 
         if ($isException) {
             $code = $exception->getCode();
@@ -295,7 +270,6 @@ class Typecho_Common
             $code = $exception;
         }
 
-        require_once 'Typecho/Response.php';
         $charset = self::$charset;
 
         if ($isException && $exception instanceof Typecho_Db_Exception) {
@@ -330,7 +304,6 @@ class Typecho_Common
 
         /** 设置http code */
         if (is_numeric($code) && $code > 200) {
-            require_once 'Typecho/Response.php';
             Typecho_Response::setStatus($code);
         }
 
@@ -349,7 +322,7 @@ class Typecho_Common
         <style>
             html {
                 padding: 50px 10px;
-                font-size: 20px;
+                font-size: 16px;
                 line-height: 1.4;
                 color: #666;
                 background: #F6F6F3;
@@ -362,15 +335,10 @@ class Typecho_Common
             body {
                 max-width: 500px;
                 _width: 500px;
-                padding: 30px 20px 50px;
+                padding: 30px 20px;
                 margin: 0 auto;
                 background: #FFF;
             }
-            h1 {
-                font-size: 50px;
-                text-align: center;
-            }
-            h1 span { color: #bbb; }
             ul {
                 padding: 0 0 0 40px;
             }
@@ -383,7 +351,6 @@ class Typecho_Common
     </head>
     <body>
         <div class="container">
-            <h1>{$code}</h1>
             {$message}
         </div>
     </body>
@@ -434,6 +401,23 @@ EOF;
         }
 
         return false;
+    }
+
+    /**
+     * 检测是否在app engine上运行，屏蔽某些功能 
+     * 
+     * @static
+     * @access public
+     * @return boolean
+     */
+    public static function isAppEngine()
+    {
+        return !empty($_SERVER['HTTP_APPNAME'])                     // SAE
+            || !!getenv('HTTP_BAE_ENV_APPID')                       // BAE
+            || !!getenv('HTTP_BAE_LOGID')                           // BAE 3.0
+            || (ini_get('acl.app_id') && class_exists('Alibaba'))   // ACE
+            || (isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false) // GAE
+            ;
     }
 
     /**
@@ -507,6 +491,7 @@ EOF;
      * </code>
      *
      * @access public
+     * @param int $count
      * @return string
      */
     public static function splitByCount($count)
@@ -587,14 +572,12 @@ EOF;
      * </code>
      *
      * @access public
-     * @param string $string 需要处理的字符串
+     * @param string $html 需要处理的字符串
      * @param string $allowableTags 需要忽略的html标签
      * @return string
      */
     public static function stripTags($html, $allowableTags = NULL)
     {
-        static $dom;
-
         $normalizeTags = '';
         $allowableAttributes = array();
 
@@ -630,20 +613,19 @@ EOF;
     /**
      * 将url中的非法字符串
      *
-     * @access private
-     * @param string $string 需要过滤的url
+     * @param string $url 需要过滤的url
      * @return string
      */
     public static function safeUrl($url)
     {
         //~ 针对location的xss过滤, 因为其特殊性无法使用removeXSS函数
         //~ fix issue 66
-        $params = parse_url(str_replace(array("\r", "\n"), '', $url));
+        $params = parse_url(str_replace(array("\r", "\n", "\t", ' '), '', $url));
 
         /** 禁止非法的协议跳转 */
         if (isset($params['scheme'])) {
             if (!in_array($params['scheme'], array('http', 'https'))) {
-                return;
+                return '/';
             }
         }
 
@@ -731,15 +713,26 @@ EOF;
      */
     public static function subStr($str, $start, $length, $trim = "...")
     {
-        if (function_exists('mb_get_info')) {
-            $iLength = mb_strlen($str, self::$charset);
-            $str = mb_substr($str, $start, $length, self::$charset);
-            return ($length < $iLength - $start) ? $str . $trim : $str;
-        } else {
-            preg_match_all("/[\x01-\x7f]|[\xc2-\xdf][\x80-\xbf]|\xe0[\xa0-\xbf][\x80-\xbf]|[\xe1-\xef][\x80-\xbf][\x80-\xbf]|\xf0[\x90-\xbf][\x80-\xbf][\x80-\xbf]|[\xf1-\xf7][\x80-\xbf][\x80-\xbf][\x80-\xbf]/", $str, $info);
-            $str = join("", array_slice($info[0], $start, $length));
-            return ($length < (sizeof($info[0]) - $start)) ? $str . $trim : $str;
+        if (!strlen($str)) {
+            return '';
         }
+
+        $iLength = self::strLen($str) - $start;
+        $tLength = $length < $iLength ? ($length - self::strLen($trim)) : $length;
+
+        if (__TYPECHO_MB_SUPPORTED__) {
+            $str = mb_substr($str, $start, $tLength, self::$charset);
+        } else {
+            if ('UTF-8' == strtoupper(self::$charset)) {
+                if (preg_match_all("/./u", $str, $matches)) {
+                    $str = implode('', array_slice($matches[0], $start, $tLength));
+                }
+            } else {
+                $str = substr($str, $start, $tLength);
+            }
+        }
+        
+        return $length < $iLength ? ($str . $trim) : $str;
     }
 
     /**
@@ -751,11 +744,48 @@ EOF;
      */
     public static function strLen($str)
     {
-        if (function_exists('mb_get_info')) {
+        if (__TYPECHO_MB_SUPPORTED__) {
             return mb_strlen($str, self::$charset);
         } else {
-            preg_match_all("/[\x01-\x7f]|[\xc2-\xdf][\x80-\xbf]|\xe0[\xa0-\xbf][\x80-\xbf]|[\xe1-\xef][\x80-\xbf][\x80-\xbf]|\xf0[\x90-\xbf][\x80-\xbf][\x80-\xbf]|[\xf1-\xf7][\x80-\xbf][\x80-\xbf][\x80-\xbf]/", $str, $info);
-            return sizeof($info[0]);
+            return 'UTF-8' == strtoupper(self::$charset) 
+                ? strlen(utf8_decode($str)) : strlen($str);
+        }
+    }
+
+    /**
+     * 获取大写字符串
+     * 
+     * @param string $str 
+     * @access public
+     * @return string
+     */
+    public static function strToUpper($str)
+    {
+        if (__TYPECHO_MB_SUPPORTED__) {
+            return mb_strtoupper($str, self::$charset);
+        } else {
+            return 'UTF-8' == strtoupper(self::$charset)
+                ? preg_replace_callback("/[a-z]+/u", array('Typecho_Common', '__strToUpper'), $str) : strtoupper($str);
+        }
+    }
+
+    /**
+     * 检查是否为合法的编码数据
+     *
+     * @param string|array $str
+     * @return boolean
+     */
+    public static function checkStrEncoding($str)
+    {
+        if (is_array($str)) {
+            return array_map(array('Typecho_Common', 'checkStrEncoding'), $str);
+        }
+
+        if (__TYPECHO_MB_SUPPORTED__) {
+            return mb_check_encoding($str, self::$charset);
+        } else {
+            // just support utf-8
+            return preg_match('//u', $str);
         }
     }
 
@@ -776,7 +806,7 @@ EOF;
             return $default;
         }
         
-        if (function_exists('mb_regex_encoding')) {
+        if (__TYPECHO_MB_SUPPORTED__) {
             mb_regex_encoding(self::$charset);
             mb_ereg_search_init($str, "[\w" . preg_quote('_-') . "]+");
             $result = mb_ereg_search();
@@ -792,80 +822,18 @@ EOF;
             }
 
             $str = $return;
+        } else if ('UTF-8' == strtoupper(self::$charset)) {
+            if (preg_match_all("/[\w" . preg_quote('_-') . "]+/u", $str, $matches)) {
+                $str = implode('-', $matches[0]);
+            }
         } else {
             $str = str_replace(array("'", ":", "\\", "/", '"'), "", $str);
             $str = str_replace(array("+", ",", ' ', '，', ' ', ".", "?", "=", "&", "!", "<", ">", "(", ")", "[", "]", "{", "}"), "-", $str);
-            $str = trim($str, '-');
         }
 
+        $str = trim($str, '-_');
         $str = !strlen($str) ? $default : $str;
         return substr($str, 0, $maxLength);
-    }
-
-    /**
-     * 去掉html中的分段
-     *
-     * @access public
-     * @param string $html 输入串
-     * @return string
-     */
-    public static function removeParagraph($html)
-    {
-        /** 锁定标签 */
-        $html = self::lockHTML($html);
-        $html = str_replace(array("\r", "\n"), '', $html);
-    
-        $html = trim(preg_replace(
-        array("/\s*<p>(.*?)<\/p>\s*/is", "/\s*<br\s*\/>\s*/is",
-        "/\s*<(div|blockquote|pre|code|script|table|fieldset|ol|ul|dl|h[1-6])([^>]*)>/is",
-        "/<\/(div|blockquote|pre|code|script|table|fieldset|ol|ul|dl|h[1-6])>\s*/is", "/\s*<\!--more-->\s*/is"),
-        array("\n\\1\n", "\n", "\n\n<\\1\\2>", "</\\1>\n\n", "\n\n<!--more-->\n\n"),
-        $html));
-        
-        return trim(self::releaseHTML($html));
-    }
-    
-    /**
-     * 锁定标签
-     * 
-     * @access public
-     * @param string $html 输入串
-     * @return string
-     */
-    public static function lockHTML($html)
-    {
-        return preg_replace_callback("/<(code|pre|script)[^>]*>.*?<\/\\1>/is", array('Typecho_Common', '__lockHTML'), $html);
-    }
-    
-    /**
-     * 释放标签
-     * 
-     * @access public
-     * @param string $html 输入串
-     * @return string
-     */
-    public static function releaseHTML($html)
-    {
-        $html = trim(str_replace(array_keys(self::$_lockedBlocks), array_values(self::$_lockedBlocks), $html));
-        self::$_lockedBlocks = array('<p></p>' => '');
-        return $html;
-    }
-    
-    /**
-     * 文本分段函数
-     *
-     * @param string $string 需要分段的字符串
-     * @return string
-     */
-    public static function cutParagraph($string)
-    {
-        static $loaded;
-        if (!$loaded) {
-            require_once 'Typecho/Common/Paragraph.php';
-            $loaded = true;
-        }
-        
-        return Typecho_Common_Paragraph::process($string);
     }
 
     /**
@@ -873,7 +841,7 @@ EOF;
      *
      * @access public
      * @param integer $length 字符串长度
-     * @param string $specialChars 是否有特殊字符
+     * @param boolean $specialChars 是否有特殊字符
      * @return string
      */
     public static function randString($length, $specialChars = false)
@@ -936,9 +904,9 @@ EOF;
     {
         if ('$T$' == substr($to, 0, 3)) {
             $salt = substr($to, 3, 9);
-            return self::hash($from, $salt) == $to;
+            return self::hash($from, $salt) === $to;
         } else {
-            return md5($from) == $to;
+            return md5($from) === $to;
         }
     }
 
@@ -957,6 +925,126 @@ EOF;
     }
 
     /**
+     * 获取gravatar头像地址 
+     * 
+     * @param string $mail 
+     * @param int $size 
+     * @param string $rating 
+     * @param string $default 
+     * @param bool $isSecure 
+     * @return string
+     */
+    public static function gravatarUrl($mail, $size, $rating, $default, $isSecure = false)
+    {
+        $url = $isSecure ? 'https://secure.gravatar.com' : 'http://www.gravatar.com';
+        $url .= '/avatar/';
+
+        if (!empty($mail)) {
+            $url .= md5(strtolower(trim($mail)));
+        }
+
+        $url .= '?s=' . $size;
+        $url .= '&amp;r=' . $rating;
+        $url .= '&amp;d=' . $default;
+
+        return $url;
+    }
+
+    /**
+     * 给javascript赋值加入扰码设计 
+     * 
+     * @param string $value 
+     * @return string
+     */
+    public static function shuffleScriptVar($value)
+    {
+        $length = strlen($value);
+        $max = 3;
+        $offset = 0;
+        $result = array();
+        $cut = array();
+
+        while ($length > 0) {
+            $len = rand(0, min($max, $length));
+            $rand = "'" . self::randString(rand(1, $max)) . "'";
+
+            if ($len > 0) {
+                $val = "'" . substr($value, $offset, $len) . "'";
+                $result[] = rand(0, 1) ? "//{$rand}\n{$val}" : "{$val}//{$rand}\n";
+            } else {
+                if (rand(0, 1)) {
+                    $result[] = rand(0, 1) ? "''///*{$rand}*/{$rand}\n" : "/* {$rand}//{$rand} */''";
+                } else {
+                    $result[] = rand(0, 1) ? "//{$rand}\n{$rand}" : "{$rand}//{$rand}\n";
+                    $cut[] = array($offset, strlen($rand) - 2 + $offset);
+                }
+            }
+
+            $offset += $len;
+            $length -= $len;
+        }
+
+        $name = '_' . self::randString(rand(3, 7));
+        $cutName = '_' . self::randString(rand(3, 7));
+        $var = implode('+', $result);
+        $cutVar = Json::encode($cut);
+        return "(function () {
+    var {$name} = {$var}, {$cutName} = {$cutVar};
+    
+    for (var i = 0; i < {$cutName}.length; i ++) {
+        {$name} = {$name}.substring(0, {$cutName}[i][0]) + {$name}.substring({$cutName}[i][1]);
+    }
+
+    return {$name};
+})();";
+    }
+
+    /**
+     * 过滤字段名
+     *
+     * @access private
+     * @param mixed $result
+     * @return array
+     */
+    public static function filterSQLite2ColumnName($result)
+    {
+        /** 如果结果为空,直接返回 */
+        if (empty($result)) {
+            return $result;
+        }
+
+        $tResult = array();
+
+        /** 遍历数组 */
+        foreach ($result as $key => $val) {
+            /** 按点分隔 */
+            if (false !== ($pos = strpos($key, '.'))) {
+                $key = substr($key, $pos + 1);
+            }
+
+            $tResult[trim($key, '"')] = $val;
+        }
+
+        return $tResult;
+    }
+
+    /**
+     * 处理sqlite2的distinct count
+     *
+     * @param $sql
+     * @return string
+     */
+    public static function filterSQLite2CountQuery($sql)
+    {
+        if (preg_match("/SELECT\s+COUNT\(DISTINCT\s+([^\)]+)\)\s+(AS\s+[^\s]+)?\s*FROM\s+(.+)/is", $sql, $matches)) {
+            return 'SELECT COUNT(' . $matches[1] . ') ' . $matches[2] . ' FROM SELECT DISTINCT '
+                . $matches[1] . ' FROM ' . $matches[3];
+        }
+
+        return $sql;
+    }
+
+    /**
      * 获取图片
      *
      * @access public
@@ -971,7 +1059,7 @@ EOF;
         }
 
         if (function_exists('finfo_open')) {
-            $fInfo = @finfo_open(FILEINFO_MIME);
+            $fInfo = @finfo_open(FILEINFO_MIME_TYPE);
 
             if (false !== $fInfo) {
                 $mimeType = finfo_file($fInfo, $fileName);

@@ -1,4 +1,5 @@
 <?php
+if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
  * 多选框帮手
  *
@@ -8,9 +9,6 @@
  * @license GNU General Public License 2.0
  * @version $Id$
  */
-
-/** Typecho_Widget_Helper_Form_Element */
-require_once 'Typecho/Widget/Helper/Form/Element.php';
 
 /**
  * 多选框帮手类

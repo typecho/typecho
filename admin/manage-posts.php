@@ -8,16 +8,16 @@ $stat = Typecho_Widget::widget('Widget_Stat');
 <div class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
-        <div class="colgroup typecho-page-main" role="main">
+        <div class="row typecho-page-main" role="main">
             <div class="col-mb-12 typecho-list">
                 <div class="typecho-list-operate clearfix">
                     <form method="get">
                         <div class="operate">
                             <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox" class="typecho-table-select-all" /></label>
                             <div class="btn-group btn-drop">
-                                <button class="dropdown-toggle btn-s" type="button"><i class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i class="i-caret-down"></i></button>
+                                <button class="btn dropdown-toggle btn-s" type="button"><i class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i class="i-caret-down"></i></button>
                                 <ul class="dropdown-menu">
-                                    <li><a lang="<?php _e('你确认要删除这些文章吗?'); ?>" href="<?php $options->index('/action/contents-post-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
+                                    <li><a lang="<?php _e('你确认要删除这些文章吗?'); ?>" href="<?php $security->index('/action/contents-post-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
                                 </ul>
                             </div>  
                         </div>
@@ -33,7 +33,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             	<option value="<?php $category->mid(); ?>"<?php if($request->get('category') == $category->mid): ?> selected="true"<?php endif; ?>><?php $category->name(); ?></option>
                             	<?php endwhile; ?>
                             </select>
-                            <button type="submit" class="btn-s"><?php _e('筛选'); ?></button>
+                            <button type="submit" class="btn btn-s"><?php _e('筛选'); ?></button>
                             <?php if(isset($request->uid)): ?>
                             <input type="hidden" value="<?php echo htmlspecialchars($request->get('uid')); ?>" name="uid" />
                             <?php endif; ?>
@@ -123,11 +123,11 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 <div class="typecho-list-operate clearfix">
                     <form method="get">
                         <div class="operate">
-                            <input type="checkbox" class="typecho-table-select-all" />
+                            <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox" class="typecho-table-select-all" /></label>
                             <div class="btn-group btn-drop">
-                                <button class="dropdown-toggle btn-s" type="button"><i class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i class="i-caret-down"></i></button>
+                                <button class="btn dropdown-toggle btn-s" type="button"><i class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i class="i-caret-down"></i></button>
                                 <ul class="dropdown-menu">
-                                    <li><a lang="<?php _e('你确认要删除这些文章吗?'); ?>" href="<?php $options->index('/action/contents-post-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
+                                    <li><a lang="<?php _e('你确认要删除这些文章吗?'); ?>" href="<?php $security->index('/action/contents-post-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
                                 </ul>
                             </div>  
                         </div>

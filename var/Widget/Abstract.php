@@ -1,4 +1,5 @@
 <?php
+if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
  * 纯数据抽象组件
  *
@@ -36,6 +37,13 @@ abstract class Widget_Abstract extends Typecho_Widget
     protected $user;
 
     /**
+     * 安全模块
+     *
+     * @var Widget_Security
+     */
+    protected $security;
+
+    /**
      * 数据库对象
      *
      * @access protected
@@ -50,7 +58,6 @@ abstract class Widget_Abstract extends Typecho_Widget
      * @param mixed $request request对象
      * @param mixed $response response对象
      * @param mixed $params 参数列表
-     * @return void
      */
     public function __construct($request, $response, $params = NULL)
     {
@@ -62,6 +69,7 @@ abstract class Widget_Abstract extends Typecho_Widget
         /** 初始化常用组件 */
         $this->options = $this->widget('Widget_Options');
         $this->user = $this->widget('Widget_User');
+        $this->security = $this->widget('Widget_Security');
     }
 
     /**

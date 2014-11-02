@@ -239,6 +239,7 @@ Typecho_Date::setTimezoneOffset($options->timezone);
                     $db->query('DROP TABLE  ' . $prefix . 'users_' . $uuid, Typecho_Db::WRITE);
                     $db->query('CREATE UNIQUE INDEX ' . $prefix . 'users_name ON ' . $prefix . 'users ("name")', Typecho_Db::WRITE);
                     $db->query('CREATE UNIQUE INDEX ' . $prefix . 'users_mail ON ' . $prefix . 'users ("mail")', Typecho_Db::WRITE);
+                    $db->flushPool();
 
                     break;
 
@@ -322,6 +323,7 @@ Typecho_Date::setTimezoneOffset($options->timezone);
                     $db->query('INSERT INTO ' . $prefix . 'metas SELECT * FROM ' . $prefix . 'metas' . $uuid, Typecho_Db::WRITE);
                     $db->query('DROP TABLE  ' . $prefix . 'metas' . $uuid, Typecho_Db::WRITE);
                     $db->query('CREATE INDEX ' . $prefix . 'metas_slug ON ' . $prefix . 'metas ("slug")', Typecho_Db::WRITE);
+                    $db->flushPool();
 
                     break;
 
@@ -771,6 +773,9 @@ Typecho_Date::setTimezoneOffset($options->timezone);
 "parent" int(10) default \'0\' )', Typecho_Db::WRITE);
                 $db->query('INSERT INTO ' . $prefix . 'contents SELECT * FROM ' . $prefix . 'contents_tmp', Typecho_Db::WRITE);
                 $db->query('DROP TABLE  ' . $prefix . 'contents_tmp', Typecho_Db::WRITE);
+                $db->query('CREATE UNIQUE INDEX ' . $prefix . 'contents_slug ON ' . $prefix . 'contents ("slug")', Typecho_Db::WRITE);
+                $db->query('CREATE INDEX ' . $prefix . 'contents_created ON ' . $prefix . 'contents ("created")', Typecho_Db::WRITE);
+                $db->flushPool();
 
                 break;
 
@@ -1086,6 +1091,120 @@ Typecho_Date::setTimezoneOffset($options->timezone);
             $db->query($db->insert('table.options')
                 ->rows(array('name' => 'frontArchive', 'user' => 0, 'value' => 0)));
         }
+    }
+
+    /**
+     * v0_9r13_12_20
+     * 
+     * @param mixed $db 
+     * @param mixed $options 
+     * @access public
+     * @return void
+     */
+    public function v0_9r13_12_20($db, $options)
+    {
+        $commentsWhitelist = $db->fetchRow($db->select()->from('table.options')->where('name = ?', 'commentsWhitelist'));
+        if (empty($commentsWhitelist)) {
+            $db->query($db->insert('table.options')
+                ->rows(array('name' => 'commentsWhitelist', 'user' => 0, 'value' => 0)));
+        }
+    }
+
+    /**
+     * v0_9r14_2_24
+     * 
+     * @param mixed $db 
+     * @param mixed $options 
+     * @access public
+     * @return void
+     */
+    public function v0_9r14_2_24($db, $options)
+    {
+        /** 修改数据库字段 */
+        $adapterName = $db->getAdapterName();
+        $prefix  = $db->getPrefix();
+
+        switch (true) {
+            case false !== strpos($adapterName, 'Mysql'):
+                $db->query('ALTER TABLE  `' . $prefix . 'metas` ADD  `parent` INT(10) UNSIGNED NULL DEFAULT \'0\'', Typecho_Db::WRITE);
+                break;
+
+            case false !== strpos($adapterName, 'Pgsql'):
+                $db->query('ALTER TABLE  "' . $prefix . 'metas" ADD COLUMN  "parent" INT NULL DEFAULT \'0\'', Typecho_Db::WRITE);
+                break;
+
+            case false !== strpos($adapterName, 'SQLite'):
+                $uuid = uniqid();
+                $db->query('CREATE TABLE ' . $prefix . 'metas' . $uuid . ' ( "mid" INTEGER NOT NULL PRIMARY KEY,
+        "name" varchar(200) default NULL ,
+        "slug" varchar(200) default NULL ,
+        "type" varchar(32) NOT NULL ,
+        "description" varchar(200) default NULL ,
+        "count" int(10) default \'0\' ,
+        "order" int(10) default \'0\' ,
+        "parent" int(10) default \'0\')', Typecho_Db::WRITE);
+                $db->query('INSERT INTO ' . $prefix . 'metas' . $uuid . ' ("mid", "name", "slug", "type", "description", "count", "order") 
+                    SELECT "mid", "name", "slug", "type", "description", "count", "order" FROM ' . $prefix . 'metas', Typecho_Db::WRITE);
+                $db->query('DROP TABLE  ' . $prefix . 'metas', Typecho_Db::WRITE);
+                $db->query('CREATE TABLE ' . $prefix . 'metas ( "mid" INTEGER NOT NULL PRIMARY KEY,
+        "name" varchar(200) default NULL ,
+        "slug" varchar(200) default NULL ,
+        "type" varchar(32) NOT NULL ,
+        "description" varchar(200) default NULL ,
+        "count" int(10) default \'0\' ,
+        "order" int(10) default \'0\' ,
+        "parent" int(10) default \'0\')', Typecho_Db::WRITE);
+                $db->query('INSERT INTO ' . $prefix . 'metas SELECT * FROM ' . $prefix . 'metas' . $uuid, Typecho_Db::WRITE);
+                $db->query('DROP TABLE  ' . $prefix . 'metas' . $uuid, Typecho_Db::WRITE);
+                $db->query('CREATE INDEX ' . $prefix . 'metas_slug ON ' . $prefix . 'metas ("slug")', Typecho_Db::WRITE);
+                $db->flushPool();
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    /**
+     * v0_9r14_3_14
+     *
+     * @param mixed $db
+     * @param mixed $options
+     * @access public
+     * @return void
+     */
+    public function v0_9r14_3_14($db, $options)
+    {
+        $db->query($db->insert('table.options')
+            ->rows(array('name' => 'secret', 'user' => 0, 'value' => Typecho_Common::randString(32, true))));
+    }
+
+    /**
+     * v1_0r14_9_2
+     *
+     * @param mixed $db
+     * @param mixed $options
+     * @access public
+     * @return void
+     */
+    public function v1_0r14_9_2($db, $options)
+    {
+        $db->query($db->insert('table.options')
+            ->rows(array('name' => 'lang', 'user' => 0, 'value' => 'zh_CN')));
+    }
+
+    /**
+     * v1_0r14_10_10
+     *
+     * @param mixed $db
+     * @param mixed $options
+     * @access public
+     * @return void
+     */
+    public function v1_0r14_10_10($db, $options)
+    {
+        $db->query($db->insert('table.options')
+            ->rows(array('name' => 'commentsAntiSpam', 'user' => 0, 'value' => 1)));
     }
 }
 

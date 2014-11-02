@@ -7,27 +7,6 @@
    Made available under the Artistic License: http://www.opensource.org/licenses/artistic-license.php
 */
 
-/** IXR值 */
-require_once 'IXR/Value.php';
-
-/** IXR消息 */
-require_once 'IXR/Message.php';
-
-/** IXR请求体 */
-require_once 'IXR/Request.php';
-
-/** IXR错误 */
-require_once 'IXR/Error.php';
-
-/** IXR日期 */
-require_once 'IXR/Date.php';
-
-/** IXR Base64编码 */
-require_once 'IXR/Base64.php';
-
-/** Typecho_Http_Client */
-require_once 'Typecho/Http/Client.php';
-
 /**
  * IXR客户端
  * reload by typecho team(http://www.typecho.org)

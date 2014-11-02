@@ -1,4 +1,5 @@
 <?php
+if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
  * 通用异步服务
  *
@@ -134,8 +135,8 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
                     $input['trackback'] = $trackback;
                 }
 
-                $client->setCookie('__typecho_uid', Typecho_Cookie::get('__typecho_uid'), 0, $this->options->siteUrl)
-                ->setCookie('__typecho_authCode', Typecho_Cookie::get('__typecho_authCode'), 0, $this->options->siteUrl)
+                $client->setCookie('__typecho_uid', Typecho_Cookie::get('__typecho_uid'))
+                ->setCookie('__typecho_authCode', Typecho_Cookie::get('__typecho_authCode'))
                 ->setHeader('User-Agent', $this->options->generator)
                 ->setTimeout(3)
                 ->setData($input)

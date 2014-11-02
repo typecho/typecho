@@ -1,4 +1,5 @@
 <?php
+if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
  * 升级动作
  *
@@ -117,6 +118,7 @@ class Widget_Upgrade extends Widget_Abstract_Options implements Widget_Interface
     public function action()
     {
         $this->user->pass('administrator');
+        $this->security->protect();
         $this->on($this->request->isPost())->upgrade();
         $this->response->redirect($this->options->adminUrl);
     }

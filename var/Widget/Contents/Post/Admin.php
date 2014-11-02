@@ -1,4 +1,5 @@
 <?php
+if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
  * 文章管理列表
  *
@@ -36,14 +37,6 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
     private $_total = false;
 
     /**
-     * 分页大小
-     *
-     * @access private
-     * @var integer
-     */
-    private $pageSize;
-
-    /**
      * 当前页
      *
      * @access private
@@ -64,7 +57,7 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
         ->where('table.contents.parent = ? AND (table.contents.type = ? OR table.contents.type = ?)',
             $this->cid, 'post_draft', 'page_draft')
         ->limit(1));
-        
+
         if ($savedPost) {
             $this->modified = $savedPost['modified'];
             return true;
@@ -155,3 +148,4 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
         $nav->render('&laquo;', '&raquo;');
     }
 }
+

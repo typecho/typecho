@@ -1,4 +1,5 @@
 <?php
+if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
  * Typecho Blog Platform
  *
@@ -6,9 +7,6 @@
  * @license    GNU General Public License 2.0
  * @version    $Id: Mysql.php 89 2008-03-31 00:10:57Z magike.net $
  */
-
-/** 数据库适配器接口 */
-require_once 'Typecho/Db/Adapter.php';
 
 /**
  * 数据库PDOMysql适配器
@@ -59,9 +57,20 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
             return $this->_object;
         } catch (PDOException $e) {
             /** 数据库异常 */
-            require_once 'Typecho/Db/Adapter/Exception.php';
             throw new Typecho_Db_Adapter_Exception($e->getMessage());
         }
+    }
+
+    /**
+     * 获取数据库版本 
+     * 
+     * @param mixed $handle
+     * @return string
+     */
+    public function getVersion($handle)
+    {
+        return 'pdo:' . $handle->getAttribute(PDO::ATTR_DRIVER_NAME) 
+            . ' ' . $handle->getAttribute(PDO::ATTR_SERVER_VERSION);
     }
 
     /**
@@ -93,7 +102,6 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
             $resource->execute();
         } catch (PDOException $e) {
             /** 数据库异常 */
-            require_once 'Typecho/Db/Query/Exception.php';
             throw new Typecho_Db_Query_Exception($e->getMessage(), $e->getCode());
         }
 

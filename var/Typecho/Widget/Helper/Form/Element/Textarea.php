@@ -1,4 +1,5 @@
 <?php
+if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
  * 多行文字域帮手
  *
@@ -8,9 +9,6 @@
  * @license GNU General Public License 2.0
  * @version $Id$
  */
-
-/** Typecho_Widget_Helper_Form_Element */
-require_once 'Typecho/Widget/Helper/Form/Element.php';
 
 /**
  * 多行文字域帮手类
@@ -49,6 +47,6 @@ class Typecho_Widget_Helper_Form_Element_Textarea extends Typecho_Widget_Helper_
      */
     protected function _value($value)
     {
-        $this->input->html($value);
+        $this->input->html(htmlspecialchars($value));
     }
 }

@@ -1,4 +1,5 @@
 <?php
+if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
  * 编辑页面
  *
@@ -85,6 +86,9 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
             $contents['type'] = 'page';
             $this->publish($contents);
 
+            // 完成发布插件接口
+            $this->pluginHandle()->finishPublish($contents, $this);
+
             /** 发送ping */
             $this->widget('Widget_Service')->sendPing($this->cid);
 
@@ -100,6 +104,9 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
             /** 保存文章 */
             $contents['type'] = 'page_draft';
             $this->save($contents);
+
+            // 完成发布插件接口
+            $this->pluginHandle()->finishSave($contents, $this);
 
             if ($this->request->isAjax()) {
                 $created = new Typecho_Date($this->options->gmtTime);
@@ -126,45 +133,47 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
      */
     public function deletePage()
     {
-        $cid = $this->request->filter('int')->cid;
+        $pages = $this->request->filter('int')->getArray('cid');
         $deleteCount = 0;
 
-        if ($cid) {
-            /** 格式化页面主键 */
-            $pages = is_array($cid) ? $cid : array($cid);
-            foreach ($pages as $page) {
-                if ($this->delete($this->db->sql()->where('cid = ?', $page))) {
-                    /** 删除评论 */
-                    $this->db->query($this->db->delete('table.comments')
+        foreach ($pages as $page) {
+            // 删除插件接口
+            $this->pluginHandle()->delete($page, $this);
+
+            if ($this->delete($this->db->sql()->where('cid = ?', $page))) {
+                /** 删除评论 */
+                $this->db->query($this->db->delete('table.comments')
                     ->where('cid = ?', $page));
 
-                    /** 解除附件关联 */
-                    $this->unAttach($page);
+                /** 解除附件关联 */
+                $this->unAttach($page);
 
-                    /** 解除首页关联 */
-                    if ($this->options->frontPage == 'page:' . $page) {
-                        $this->db->query($this->db->update('table.options')
+                /** 解除首页关联 */
+                if ($this->options->frontPage == 'page:' . $page) {
+                    $this->db->query($this->db->update('table.options')
                         ->rows(array('value' => 'recent'))
                         ->where('name = ?', 'frontPage'));
-                    }
+                }
 
-                    /** 删除草稿 */
-                    $draft = $this->db->fetchRow($this->db->select('cid')
+                /** 删除草稿 */
+                $draft = $this->db->fetchRow($this->db->select('cid')
                     ->from('table.contents')
                     ->where('table.contents.parent = ? AND table.contents.type = ?',
                         $page, 'page_draft')
                     ->limit(1));
 
-                    /** 删除自定义字段 */
-                    $this->deleteFields($page);
+                /** 删除自定义字段 */
+                $this->deleteFields($page);
 
-                    if ($draft) {
-                        $this->deleteDraft($draft['cid']);
-                        $this->deleteFields($draft['cid']);
-                    }
-
-                    $deleteCount ++;
+                if ($draft) {
+                    $this->deleteDraft($draft['cid']);
+                    $this->deleteFields($draft['cid']);
                 }
+
+                // 完成删除插件接口
+                $this->pluginHandle()->finishDelete($page, $this);
+
+                $deleteCount ++;
             }
         }
 
@@ -184,29 +193,24 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
      */
     public function deletePageDraft()
     {
-        $cid = $this->request->filter('int')->cid;
+        $pages = $this->request->filter('int')->getArray('cid');
         $deleteCount = 0;
-        
-        if ($cid) {
-            /** 格式化文章主键 */
-            $pages = is_array($cid) ? $cid : array($cid);
-            
-            foreach ($pages as $page) {
-                /** 删除草稿 */
-                $draft = $this->db->fetchRow($this->db->select('cid')
+
+        foreach ($pages as $page) {
+            /** 删除草稿 */
+            $draft = $this->db->fetchRow($this->db->select('cid')
                 ->from('table.contents')
                 ->where('table.contents.parent = ? AND table.contents.type = ?',
                     $page, 'page_draft')
                 ->limit(1));
 
-                if ($draft) {
-                    $this->deleteDraft($draft['cid']);
-                    $this->deleteFields($draft['cid']);
-                    $deleteCount ++;
-                }
+            if ($draft) {
+                $this->deleteDraft($draft['cid']);
+                $this->deleteFields($draft['cid']);
+                $deleteCount ++;
             }
         }
-        
+
         /** 设置提示信息 */
         $this->widget('Widget_Notice')->set($deleteCount > 0 ? _t('草稿已经被删除') : _t('没有草稿被删除'),
         $deleteCount > 0 ? 'success' : 'notice');
@@ -223,9 +227,9 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
      */
     public function sortPage()
     {
-        $pages = $this->request->filter('int')->cid;
+        $pages = $this->request->filter('int')->getArray('cid');
 
-        if ($pages && is_array($pages)) {
+        if ($pages) {
             foreach ($pages as $sort => $cid) {
                 $this->db->query($this->db->update('table.contents')->rows(array('order' => $sort + 1))
                 ->where('cid = ?', $cid));
@@ -248,6 +252,7 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
      */
     public function action()
     {
+        $this->security->protect();
         $this->on($this->request->is('do=publish') || $this->request->is('do=save'))->writePage();
         $this->on($this->request->is('do=delete'))->deletePage();
         $this->on($this->request->is('do=deleteDraft'))->deletePageDraft();

@@ -7,12 +7,6 @@
  * @version    $Id: Widget.php 107 2008-04-11 07:14:43Z magike.net $
  */
 
-/** Typecho_Config */
-require_once 'Typecho/Config.php';
-
-/** Typecho_Plugin */
-require_once 'Typecho/Plugin.php';
-
 /**
  * Typecho组件基类
  *
@@ -27,6 +21,15 @@ abstract class Typecho_Widget
      * @var array
      */
     private static $_widgetPool = array();
+
+
+    /**
+     * widget别名
+     *
+     * @access private
+     * @var array
+     */
+    private static $_widgetAlias = array();
 
     /**
      * 帮手列表
@@ -114,6 +117,18 @@ abstract class Typecho_Widget
     }
 
     /**
+     * 解析回调
+     * 
+     * @param array $matches 
+     * @access protected
+     * @return string
+     */
+    protected function __parseCallback($matches)
+    {
+        return $this->{$matches[1]};
+    }
+
+    /**
      * execute function.
      *
      * @access public
@@ -132,8 +147,6 @@ abstract class Typecho_Widget
         if ($condition) {
             return $this;
         } else {
-            /** Typecho_Widget_Helper_Null */
-            require_once 'Typecho/Widget/Helper/Empty.php';
             return new Typecho_Widget_Helper_Empty();
         }
     }
@@ -151,6 +164,20 @@ abstract class Typecho_Widget
     }
 
     /**
+     * widget别名 
+     * 
+     * @param string $widgetClass 
+     * @param string $aliasClass 
+     * @static
+     * @access public
+     * @return void
+     */
+    public static function alias($widgetClass, $aliasClass)
+    {
+        self::$_widgetAlias[$widgetClass] = $aliasClass;
+    }
+
+    /**
      * 工厂方法,将类静态化放置到列表中
      *
      * @access public
@@ -163,16 +190,17 @@ abstract class Typecho_Widget
      */
     public static function widget($alias, $params = NULL, $request = NULL, $enableResponse = true)
     {
-        list($className) = explode('@', $alias);
+        $parts = explode('@', $alias);
+        $className = $parts[0];
+        $alias = empty($parts[1]) ? $className : $parts[1];
+
+        if (isset(self::$_widgetAlias[$className])) {
+            $className = self::$_widgetAlias[$className];
+        }
 
         if (!isset(self::$_widgetPool[$alias])) {
-            $fileName = str_replace('_', '/', $className) . '.php';
-            require_once $fileName;
-
             /** 如果类不存在 */
             if (!class_exists($className)) {
-                /** Typecho_Exception */
-                require_once 'Typecho/Widget/Exception.php';
                 throw new Typecho_Widget_Exception($className);
             }
 
@@ -231,33 +259,10 @@ abstract class Typecho_Widget
      */
     public function parse($format)
     {
-        $rowsKey = array();
-
-        /** 过滤数据行 */
-        foreach ($this->row as $key => $val) {
-            if (is_array($val) || is_object($val)) {
-                unset($this->row[$key]);
-            }
+        while ($this->next()) {
+            echo preg_replace_callback("/\{([_a-z0-9]+)\}/i", 
+                array($this, '__parseCallback'), $format);
         }
-
-        //将数据格式化
-        foreach ($this->row as $key => $val) {
-            $rowsKey[] = '{' . $key . '}';
-        }
-
-        foreach ($this->stack as $val) {
-            /** 过滤数据行 */
-            foreach ($val as $inkey => $inval) {
-                if (is_array($inval) || is_object($inval)) {
-                    unset($val[$inkey]);
-                }
-            }
-            echo str_replace($rowsKey, $val, $format) . "\n";
-        }
-
-        /** 重置指针 */
-        reset($this->row);
-        reset($this->stack);
     }
 
     /**
@@ -371,8 +376,6 @@ abstract class Typecho_Widget
      */
     public function __get($name)
     {
-        $method = '___' . $name;
-
         if (array_key_exists($name, $this->row)) {
             return $this->row[$name];
         } else {

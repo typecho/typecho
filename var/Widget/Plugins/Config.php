@@ -1,4 +1,5 @@
 <?php
+if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
  * Typecho Blog Platform
  *
@@ -46,18 +47,18 @@ class Widget_Plugins_Config extends Widget_Abstract_Options
      * 绑定动作
      *
      * @access public
-     * @return unknown
      */
     public function execute()
     {
         $this->user->pass('administrator');
-        if (!isset($this->request->config)) {
+        $config = $this->request->filter('slug')->config;
+        if (empty($config)) {
             throw new Typecho_Widget_Exception(_t('插件不存在'), 404);
         }
 
         /** 获取插件入口 */
-        list($this->_pluginFileName, $this->_className) = Typecho_Plugin::portal($this->request->config,
-        __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
+        list($this->_pluginFileName, $this->_className) = Typecho_Plugin::portal($config,
+            $this->options->pluginDir($config));
         $this->info = Typecho_Plugin::parseInfo($this->_pluginFileName);
     }
 
@@ -76,12 +77,13 @@ class Widget_Plugins_Config extends Widget_Abstract_Options
      * 配置插件
      *
      * @access public
-     * @return void
+     * @return Typecho_Widget_Helper_Form
+     * @throws Typecho_Widget_Exception
      */
     public function config()
     {
         /** 获取插件名称 */
-        $pluginName = $this->request->config;
+        $pluginName = $this->request->filter('slug')->config;
 
         /** 获取已启用插件 */
         $plugins = Typecho_Plugin::export();
@@ -94,8 +96,8 @@ class Widget_Plugins_Config extends Widget_Abstract_Options
 
         /** 载入插件 */
         require_once $this->_pluginFileName;
-        $form = new Typecho_Widget_Helper_Form(Typecho_Common::url('/action/plugins-edit?config=' . $pluginName,
-        $this->options->index), Typecho_Widget_Helper_Form::POST_METHOD);
+        $form = new Typecho_Widget_Helper_Form($this->security->getIndex('/action/plugins-edit?config=' . $pluginName),
+            Typecho_Widget_Helper_Form::POST_METHOD);
         call_user_func(array($this->_className, 'config'), $form);
 
         $options = $this->options->plugin($pluginName);
@@ -107,7 +109,7 @@ class Widget_Plugins_Config extends Widget_Abstract_Options
         }
 
         $submit = new Typecho_Widget_Helper_Form_Element_Submit(NULL, NULL, _t('保存设置'));
-        $submit->input->setAttribute('class', 'primary');
+        $submit->input->setAttribute('class', 'btn primary');
         $form->addItem($submit);
         return $form;
     }

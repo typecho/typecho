@@ -1,35 +1,81 @@
 /**
  * icons
  */
+$sprites: sprite-map("icons/*.png");
+$sprites-retina: sprite-map("icons-2x/*.png");
 
-$icons: sprite-map("icons/*.png");
-$icons-2x: sprite-map("icons-2x/*.png");
-
-.icon-sprite-hack {
-  background: $icons;
+@mixin sprite-background($name) {
+  // background-image: sprite-url($sprites);
+  background-position: sprite-position($sprites, $name);
+  // background-repeat: no-repeat;
+  // display: block;
+  // height: image-height(sprite-file($sprites, $name));
+  // width: image-width(sprite-file($sprites, $name));
+  @media 
+  (-webkit-min-device-pixel-ratio: 2), 
+  (min-resolution: 192dpi) {
+    // Workaround for https://gist.github.com/2140082
+    @if (sprite-position($sprites, $name) != sprite-position($sprites-retina, $name)) {
+      $ypos: round(nth(sprite-position($sprites-retina, $name), 2) / 2);
+      background-position: 0 $ypos;
+    }
+    // Hard coded width of the normal sprite image. There must be a smarter way to do this.
+    // @include background-size(auto 256px);
+    // background-image: sprite-url($sprites-retina);
+  }
 }
-// .icon-2x-sprite-hack {
-//   background: $icons-2x;
-// }
 
-%i-16 {
-  width: 16px;
-  height: 16px;
+
+%i-base {
   display: inline-block;
   vertical-align: text-bottom;
-  background: url(../img/icons.png) no-repeat;
+  text-indent: -9999em;
+  background-image: sprite-url($sprites);
+  background-repeat: no-repeat;
   &:hover {
     @include opacity(0.75);
   }
+  @media
+  (-webkit-min-device-pixel-ratio: 2), 
+  (min-resolution: 192dpi) {
+    // Hard coded width of the normal sprite image. There must be a smarter way to do this.
+    @include background-size(auto 256px);
+    background-image: sprite-url($sprites-retina);
+  }
+}
+
+%i-16 {
+  @extend %i-base;
+  width: 16px;
+  height: 16px;
+}
+
+%i-24 {
+  @extend %i-base;
+  width: 24px;
+  height: 24px;
 }
 
 .i-edit {
   @extend %i-16;
-  background-position: sprite-position($icons, icon-edit);
+  @include sprite-background(icon-edit);
 }
 .i-delete {
   @extend %i-16;
-  background-position: sprite-position($icons, icon-delete);
+  @include sprite-background(icon-delete);
+}
+
+
+// 大号上传按钮
+
+.i-upload {
+  @extend %i-24;
+  @include sprite-background(icon-upload);
+}
+
+.i-upload-active {
+  @extend %i-24;
+  @include sprite-background(icon-upload-active);
 }
 
 // 小箭头
@@ -54,7 +100,7 @@ $icons-2x: sprite-map("icons-2x/*.png");
 
 .i-exlink {
   @extend %i-16;
-  background-position: sprite-position($icons, icon-exlink);
+  @include sprite-background(icon-exlink);
 }
 
 
@@ -62,52 +108,52 @@ $icons-2x: sprite-map("icons-2x/*.png");
 
 .mime-office {
   @extend %i-16;
-  background-position: sprite-position($icons, mime-office);
+  @include sprite-background(mime-office);
 }
 
 .mime-text {
   @extend %i-16;
-  background-position: sprite-position($icons, mime-text);
+  @include sprite-background(mime-text);
 }
 
 .mime-image {
   @extend %i-16;
-  background-position: sprite-position($icons, mime-image);
+  @include sprite-background(mime-image);
 }
 
 .mime-html {
   @extend %i-16;
-  background-position: sprite-position($icons, mime-html);
+  @include sprite-background(mime-html);
 }
 
 .mime-archive {
   @extend %i-16;
-  background-position: sprite-position($icons, mime-archive);
+  @include sprite-background(mime-archive);
 }
 
 .mime-application {
   @extend %i-16;
-  background-position: sprite-position($icons, mime-application);
+  @include sprite-background(mime-application);
 }
 
 .mime-audio {
   @extend %i-16;
-  background-position: sprite-position($icons, mime-audio);
+  @include sprite-background(mime-audio);
 }
 
 .mime-script {
   @extend %i-16;
-  background-position: sprite-position($icons, mime-script);
+  @include sprite-background(mime-script);
 }
 
 .mime-video {
   @extend %i-16;
-  background-position: sprite-position($icons, mime-video);
+  @include sprite-background(mime-video);
 }
 
 .mime-unknow {
   @extend %i-16;
-  background-position: sprite-position($icons, mime-unknow);
+  @include sprite-background(mime-unknow);
 }
 
 
@@ -119,7 +165,7 @@ $icons-2x: sprite-map("icons-2x/*.png");
   background: url("../img/typecho-logo.svg") no-repeat;
   text-indent: -9999em;
   @include background-size(auto 40px);
-  @include opacity(.3);
+  @include opacity(.15);
   &:hover {
     @include opacity(.2);
   }
@@ -128,6 +174,5 @@ $icons-2x: sprite-map("icons-2x/*.png");
   width: 26px;
   height: 26px;
   @include background-size(auto 26px);
-  @include opacity(.1);
 }
 

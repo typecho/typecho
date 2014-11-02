@@ -1,4 +1,5 @@
 <?php
+if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
  * CURL适配器
  *
@@ -9,9 +10,6 @@
  * @license GNU General Public License 2.0
  * @version $Id$
  */
-
-/** Typecho_Http_Client_Adapter */
-require_once 'Typecho/Http/Client/Adapter.php';
 
 /**
  * CURL适配器
@@ -56,6 +54,9 @@ class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
+
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 
         /** 设置HTTP版本 */
         switch ($this->rfc) {
@@ -111,8 +112,6 @@ class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
 
         $response = curl_exec($ch);
         if (false === $response) {
-            /** Typecho_Http_Client_Exception */
-            require_once 'Typecho/Http/Client/Exception.php';
             throw new Typecho_Http_Client_Exception(curl_error($ch), 500);
         }
 

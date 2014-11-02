@@ -1,4 +1,5 @@
 <?php
+if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
  * 注册组件
  *
@@ -16,6 +17,9 @@ class Widget_Register extends Widget_Abstract_Users implements Widget_Interface_
      */
     public function action()
     {
+        // protect
+        $this->security->protect();
+
         /** 如果已经登录 */
         if ($this->user->hasLogin() || !$this->options->allowRegister) {
             /** 直接返回 */
@@ -52,13 +56,14 @@ class Widget_Register extends Widget_Abstract_Users implements Widget_Interface_
             $this->response->goBack();
         }
 
+        $hasher = new PasswordHash(8, true);
         $generatedPassword = Typecho_Common::randString(7);
 
         $dataStruct = array(
             'name'      =>  $this->request->name,
             'mail'      =>  $this->request->mail,
             'screenName'=>  $this->request->name,
-            'password'  =>  Typecho_Common::hash($generatedPassword),
+            'password'  =>  $hasher->HashPassword($generatedPassword),
             'created'   =>  $this->options->gmtTime,
             'group'     =>  'subscriber'
         );
@@ -78,6 +83,6 @@ class Widget_Register extends Widget_Abstract_Users implements Widget_Interface_
         Typecho_Cookie::delete('__typecho_remember_mail');
 
         $this->widget('Widget_Notice')->set(_t('用户 <strong>%s</strong> 已经成功注册, 密码为 <strong>%s</strong>', $this->screenName, $generatedPassword), 'success');
-        $this->response->goBack();
+        $this->response->redirect($this->options->adminUrl);
     }
 }

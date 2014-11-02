@@ -1,4 +1,5 @@
 <?php
+if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
  * Typecho Blog Platform
  *
@@ -33,14 +34,6 @@ class Widget_Users_Admin extends Widget_Abstract_Users
      * @var integer
      */
     private $_total = false;
-
-    /**
-     * 分页大小
-     *
-     * @access private
-     * @var integer
-     */
-    private $_pageSize;
 
     /**
      * 当前页

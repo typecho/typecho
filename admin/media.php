@@ -3,13 +3,19 @@ include 'common.php';
 include 'header.php';
 include 'menu.php';
 
+$phpMaxFilesize = function_exists('ini_get') ? trim(ini_get('upload_max_filesize')) : 0;
+
+if (preg_match("/^([0-9]+)([a-z]{1,2})$/i", $phpMaxFilesize, $matches)) {
+    $phpMaxFilesize = strtolower($matches[1] . $matches[2] . (1 == strlen($matches[2]) ? 'b' : ''));
+}
+
 Typecho_Widget::widget('Widget_Contents_Attachment_Edit')->to($attachment);
 ?>
 
 <div class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
-        <div class="colgroup typecho-page-main">
+        <div class="row typecho-page-main">
             <div class="col-mb-12 col-tb-8" role="main">
                 <?php if ($attachment->attachment->isImage): ?>
                 <p><img src="<?php $attachment->attachment->url(); ?>" alt="<?php $attachment->attachment->name(); ?>" class="typecho-attachment-photo" /></p>
@@ -27,7 +33,7 @@ Typecho_Widget::widget('Widget_Contents_Attachment_Edit')->to($attachment);
                 </p>
 
                 <div id="upload-panel" class="p">
-                    <div class="upload-area">拖放替换文件到这里 或者 <a href="###" class="upload-file">选择文件替换</a></div>
+                    <div class="upload-area" draggable="true"><?php _e('拖放文件到这里<br>或者 %s选择文件上传%s', '<a href="###" class="upload-file">', '</a>'); ?></div>
                     <ul id="file-list"></ul>
                 </div>
             </div>
@@ -42,26 +48,10 @@ Typecho_Widget::widget('Widget_Contents_Attachment_Edit')->to($attachment);
 include 'copyright.php';
 include 'common-js.php';
 ?>
-<script src="<?php $options->adminUrl('js/filedrop.js?v=' . $suffixVersion); ?>"></script>
+<script src="<?php $options->adminStaticUrl('js', 'moxie.js?v=' . $suffixVersion); ?>"></script>
+<script src="<?php $options->adminStaticUrl('js', 'plupload.js?v=' . $suffixVersion); ?>"></script>
 <script type="text/javascript">
 $(document).ready(function() {
-    var errorWord = '<?php $val = function_exists('ini_get') ? trim(ini_get('upload_max_filesize')) : 0;
-        $last = strtolower($val[strlen($val)-1]);
-        switch($last) {
-            // The 'G' modifier is available since PHP 5.1.0
-            case 'g':
-                $val *= 1024;
-            case 'm':
-                $val *= 1024;
-            case 'k':
-                $val *= 1024;
-        }
-
-        $val = number_format(ceil($val / (1024 *1024)));
-        _e('文件上传失败, 请确认文件尺寸没有超过 %s 并且服务器文件目录可以写入', "{$val}Mb"); ?>',
-        loading = $('<img src="<?php $options->adminUrl('img/ajax-loader.gif'); ?>" style="display:none" />')
-            .appendTo(document.body);
-
     $('#attachment-url').click(function () {
         $(this).select();
     });
@@ -76,10 +66,66 @@ $(document).ready(function() {
         return false;
     });
 
-    function fileUploadStart (file, id) {
+    $('.upload-area').bind({
+        dragenter   :   function () {
+            $(this).parent().addClass('drag');
+        },
+
+        dragover    :   function (e) {
+            $(this).parent().addClass('drag');
+        },
+
+        drop        :   function () {
+            $(this).parent().removeClass('drag');
+        },
+        
+        dragend     :   function () {
+            $(this).parent().removeClass('drag');
+        },
+
+        dragleave   :   function () {
+            $(this).parent().removeClass('drag');
+        }
+    });
+
+    function fileUploadStart (file) {
         $('<ul id="file-list"></ul>').appendTo('#upload-panel');
-        $('<li id="' + id + '" class="loading">'
-            + file + '</li>').prependTo('#file-list');
+        $('<li id="' + file.id + '" class="loading">'
+            + file.name + '</li>').prependTo('#file-list');
+    }
+
+    function fileUploadError (error) {
+        var file = error.file, code = error.code, word; 
+        
+        switch (code) {
+            case plupload.FILE_SIZE_ERROR:
+                word = '<?php _e('文件大小超过限制'); ?>';
+                break;
+            case plupload.FILE_EXTENSION_ERROR:
+                word = '<?php _e('文件扩展名不被支持'); ?>';
+                break;
+            case plupload.FILE_DUPLICATE_ERROR:
+                word = '<?php _e('文件已经上传过'); ?>';
+                break;
+            case plupload.HTTP_ERROR:
+            default:
+                word = '<?php _e('上传出现错误'); ?>';
+                break;
+        }
+
+        var fileError = '<?php _e('%s 上传失败'); ?>'.replace('%s', file.name),
+            li, exist = $('#' + file.id);
+
+        if (exist.length > 0) {
+            li = exist.removeClass('loading').html(fileError);
+        } else {
+            $('<ul id="file-list"></ul>').appendTo('#upload-panel');
+            li = $('<li>' + fileError + '<br />' + word + '</li>').prependTo('#file-list');
+        }
+
+        li.effect('highlight', {color : '#FBC2C4'}, 2000, function () {
+            $(this).remove();
+        });
     }
 
     function fileUploadComplete (id, url, data) {
@@ -96,97 +142,51 @@ $(document).ready(function() {
         });
     }
 
-    $('.upload-file').fileUpload({
-        url         :   '<?php $options->index('/action/upload?do=modify&cid=' . $attachment->cid); ?>',
-        types       :   ['.<?php $attachment->attachment->type(); ?>'],
-        typesError  :   '<?php _e('文件 %s 的类型与要替换的原文件不一致'); ?>',
-        onUpload    :   fileUploadStart,
-        onError     :   function (id) {
-            $('#' + id).remove();
-            $('#file-list').remove();
-            alert(errorWord);
+    var uploader = new plupload.Uploader({
+        browse_button   :   $('.upload-file').get(0),
+        url             :   '<?php $security->index('/action/upload?do=modify&cid=' . $attachment->cid); ?>',
+        runtimes        :   'html5,flash,html4',
+        flash_swf_url   :   '<?php $options->adminStaticUrl('js', 'Moxie.swf'); ?>',
+        drop_element    :   $('.upload-area').get(0),
+        filters         :   {
+            max_file_size       :   '<?php echo $phpMaxFilesize ?>',
+            mime_types          :   [{'title' : '<?php _e('允许上传的文件'); ?>', 'extensions' : '<?php $attachment->attachment->type(); ?>'}],
+            prevent_duplicates  :   true
         },
-        onComplete  :   fileUploadComplete
-    });
+        multi_selection :   false,
 
-    $('#upload-panel').filedrop({
-        url             :   '<?php $options->index('/action/upload?do=modify&cid=' . $attachment->cid); ?>',
-        allowedfileextensions   :   ['.<?php $attachment->attachment->type(); ?>'],
+        init            :   {
+            FilesAdded      :   function (up, files) {
+                plupload.each(files, function(file) {
+                    fileUploadStart(file);
+                });
 
-        maxfilesize     :   <?php 
-        $val = function_exists('ini_get') ? trim(ini_get('upload_max_filesize')) : 0;
-        $last = strtolower($val[strlen($val)-1]);
-        switch($last) {
-            // The 'G' modifier is available since PHP 5.1.0
-            case 'g':
-                $val *= 1024;
-            case 'm':
-                $val *= 1024;
-            case 'k':
-                $val *= 1024;
-        }
+                uploader.start();
+            },
 
-        echo ceil($val / (1024 * 1024));
-        ?>,
+            FileUploaded    :   function (up, file, result) {
+                if (200 == result.status) {
+                    var data = $.parseJSON(result.response);
 
-        maxfiles        :   1,
+                    if (data) {
+                        fileUploadComplete(file.id, data[0], data[1]);
+                        return;
+                    }
+                }
 
-        error: function(err, file) {
-            switch(err) {
-                case 'BrowserNotSupported':
-                    alert('<?php _e('浏览器不支持拖拽上传'); ?>');
-                    break;
-                case 'TooManyFiles':
-                    alert('<?php _e('一次只能上传一个文件'); ?>');
-                    break;
-                case 'FileTooLarge':
-                    alert('<?php $val = function_exists('ini_get') ? trim(ini_get('upload_max_filesize')) : 0;
-        $last = strtolower($val[strlen($val)-1]);
-        switch($last) {
-            // The 'G' modifier is available since PHP 5.1.0
-            case 'g':
-                $val *= 1024;
-            case 'm':
-                $val *= 1024;
-            case 'k':
-                $val *= 1024;
-        }
+                fileUploadError({
+                    code : plupload.HTTP_ERROR,
+                    file : file
+                });
+            },
 
-        $val = number_format(ceil($val / (1024 *1024)));
-        _e('文件尺寸不能超过 %s', "{$val}Mb"); ?>');
-                    break;
-                case 'FileTypeNotAllowed':
-                    // The file type is not in the specified list 'allowedfiletypes'
-                    break;
-                case 'FileExtensionNotAllowed':
-                    alert('<?php _e('文件 %s 的类型不被支持'); ?>'.replace('%s', file.name));
-                    break;
-                default:
-                    break;
+            Error           :   function (up, error) {
+                fileUploadError(error);
             }
-        },
-        
-        
-        dragOver : function () {
-            $(this).addClass('drag');
-        },
-
-        dragLeave : function () {
-            $(this).removeClass('drag');
-        },
-
-        drop : function () {
-            $(this).removeClass('drag');
-        },
-
-        uploadStarted   :   function (i, file, len) {
-            fileUploadStart(file.name, 'drag-' + i);
-        },
-
-        uploadFinished  :   function (i, file, response) {
-            fileUploadComplete('drag-' + i, response[0], response[1]);
         }
     });
+
+    uploader.init();
 });
 </script>
 <?php

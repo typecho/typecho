@@ -1,4 +1,5 @@
 <?php
+if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
  * 上传动作
  *
@@ -19,7 +20,7 @@
 class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface_Do
 {
     //上传文件目录
-    const UPLOAD_PATH = '/usr/uploads';
+    const UPLOAD_DIR = '/usr/uploads';
 
     /**
      * 创建上传路径
@@ -30,15 +31,47 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
      */
     private static function makeUploadDir($path)
     {
-        if (!@mkdir($path, 0777, true)) {
+        $path = preg_replace("/\\\+/", '/', $path);
+        $current = rtrim($path, '/');
+        $last = $current;
+
+        while (!is_dir($current) && false !== strpos($path, '/')) {
+            $last = $current;
+            $current = dirname($current);
+        }
+
+        if ($last == $current) {
+            return true;
+        }
+
+        if (!@mkdir($last)) {
             return false;
         }
 
-        $stat = @stat($path);
+        $stat = @stat($last);
         $perms = $stat['mode'] & 0007777;
-        @chmod($path, $perms);
+        @chmod($last, $perms);
 
-        return true;
+        return self::makeUploadDir($path);
+    }
+
+    /**
+     * 获取安全的文件名 
+     * 
+     * @param string $name 
+     * @static
+     * @access private
+     * @return string
+     */
+    private static function getSafeName(&$name)
+    {
+        $name = str_replace(array('"', '<', '>'), '', $name);
+        $name = str_replace('\\', '/', $name);
+        $name = false === strpos($name, '/') ? ('a' . $name) : str_replace('/', '/a', $name);
+        $info = pathinfo($name);
+        $name = substr($info['basename'], 1);
+    
+        return isset($info['extension']) ? $info['extension'] : '';
     }
 
     /**
@@ -59,23 +92,16 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
             return $result;
         }
 
-        $fileName = preg_split("(\/|\\|:)", $file['name']);
-        $file['name'] = array_pop($fileName);
-        
-        //获取扩展名
-        $ext = '';
-        $part = explode('.', $file['name']);
-        if (($length = count($part)) > 1) {
-            $ext = strtolower($part[$length - 1]);
-        }
+        $ext = self::getSafeName($file['name']);
 
-        if (!self::checkFileType($ext)) {
+        if (!self::checkFileType($ext) || Typecho_Common::isAppEngine()) {
             return false;
         }
 
         $options = Typecho_Widget::widget('Widget_Options');
         $date = new Typecho_Date($options->gmtTime);
-        $path = Typecho_Common::url(self::UPLOAD_PATH, __TYPECHO_ROOT_DIR__)
+        $path = Typecho_Common::url(defined('__TYPECHO_UPLOAD_DIR__') ? __TYPECHO_UPLOAD_DIR__ : self::UPLOAD_DIR,
+            defined('__TYPECHO_UPLOAD_ROOT_DIR__') ? __TYPECHO_UPLOAD_ROOT_DIR__ : __TYPECHO_ROOT_DIR__) 
             . '/' . $date->year . '/' . $date->month;
 
         //创建上传目录
@@ -112,7 +138,8 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         //返回相对存储路径
         return array(
             'name' => $file['name'],
-            'path' => self::UPLOAD_PATH . '/' . $date->year . '/' . $date->month . '/' . $fileName,
+            'path' => (defined('__TYPECHO_UPLOAD_DIR__') ? __TYPECHO_UPLOAD_DIR__ : self::UPLOAD_DIR) 
+                . '/' . $date->year . '/' . $date->month . '/' . $fileName,
             'size' => $file['size'],
             'type' => $ext,
             'mime' => Typecho_Common::mimeContentType($path)
@@ -138,21 +165,14 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
             return $result;
         }
 
-        $fileName = preg_split("(\/|\\|:)", $file['name']);
-        $file['name'] = array_pop($fileName);
+        $ext = self::getSafeName($file['name']);
         
-        //获取扩展名
-        $ext = '';
-        $part = explode('.', $file['name']);
-        if (($length = count($part)) > 1) {
-            $ext = strtolower($part[$length - 1]);
-        }
-
-        if ($content['attachment']->type != $ext) {
+        if ($content['attachment']->type != $ext || Typecho_Common::isAppEngine()) {
             return false;
         }
 
-        $path = Typecho_Common::url($content['attachment']->path, __TYPECHO_ROOT_DIR__);
+        $path = Typecho_Common::url($content['attachment']->path, 
+            defined('__TYPECHO_UPLOAD_ROOT_DIR__') ? __TYPECHO_UPLOAD_ROOT_DIR__ : __TYPECHO_ROOT_DIR__);
         $dir = dirname($path);
 
         //创建上传目录
@@ -210,7 +230,8 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
             return $result;
         }
 
-        return @unlink(__TYPECHO_ROOT_DIR__ . '/' . $content['attachment']->path);
+        return !Typecho_Common::isAppEngine() 
+            && @unlink(__TYPECHO_ROOT_DIR__ . '/' . $content['attachment']->path);
     }
 
     /**
@@ -228,7 +249,8 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         }
 
         $options = Typecho_Widget::widget('Widget_Options');
-        return Typecho_Common::url($content['attachment']->path, $options->siteUrl);
+        return Typecho_Common::url($content['attachment']->path, 
+            defined('__TYPECHO_UPLOAD_URL__') ? __TYPECHO_UPLOAD_URL__ : $options->siteUrl);
     }
 
     /**
@@ -245,7 +267,8 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
             return $result;
         }
 
-        return file_get_contents(Typecho_Common::url($content['attachment']->path, __TYPECHO_ROOT_DIR__));
+        return file_get_contents(Typecho_Common::url($content['attachment']->path, 
+            defined('__TYPECHO_UPLOAD_ROOT_DIR__') ? __TYPECHO_UPLOAD_ROOT_DIR__ : __TYPECHO_ROOT_DIR__));
     }
 
     /**
@@ -272,6 +295,10 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         if (!empty($_FILES)) {
             $file = array_pop($_FILES);
             if (0 == $file['error'] && is_uploaded_file($file['tmp_name'])) {
+                // xhr的send无法支持utf8
+                if ($this->request->isAjax()) {
+                    $file['name'] = urldecode($file['name']);
+                }
                 $result = self::uploadHandle($file);
 
                 if (false !== $result) {
@@ -304,41 +331,22 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                     /** 增加插件接口 */
                     $this->pluginHandle()->upload($this);
 
-                    if ($this->request->isAjax()) {
-                        $this->response->throwJson(array($this->attachment->url, array(
-                            'cid'       =>  $insertId,
-                            'title'     =>  $this->attachment->name,
-                            'type'      =>  $this->attachment->type,
-                            'size'      =>  $this->attachment->size,
-                            'bytes'      =>  number_format(ceil($this->attachment->size / 1024)) . ' Kb',
-                            'isImage'   =>  $this->attachment->isImage,
-                            'url'       =>  $this->attachment->url,
-                            'permalink' =>  $this->permalink
-                        )));
-                    } else {
-                        echo "<script>parent.fileUploadComplete('" . $this->request->_id
-                            . "', '" . $this->attachment->url . "', " . json_encode(array(
-                            'cid'       =>  $insertId,
-                            'title'     =>  $this->attachment->name,
-                            'type'      =>  $this->attachment->type,
-                            'size'      =>  $this->attachment->size,
-                            'bytes'      =>  number_format(ceil($this->attachment->size / 1024)) . ' Kb',
-                            'isImage'   =>  $this->attachment->isImage,
-                            'url'       =>  $this->attachment->url,
-                            'permalink' =>  $this->permalink
-                        )) . ');</script>';
-                        
-                        return;
-                    }
+                    $this->response->throwJson(array($this->attachment->url, array(
+                        'cid'       =>  $insertId,
+                        'title'     =>  $this->attachment->name,
+                        'type'      =>  $this->attachment->type,
+                        'size'      =>  $this->attachment->size,
+                        'bytes'      =>  number_format(ceil($this->attachment->size / 1024)) . ' Kb',
+                        'isImage'   =>  $this->attachment->isImage,
+                        'url'       =>  $this->attachment->url,
+                        'permalink' =>  $this->permalink
+                    )));
+
                 }
             }
         }
 
-        if ($this->request->isAjax()) {
-            $this->response->throwJson(false);
-        } else {
-            echo "<script>parent.fileUploadError('" . $this->request->_id . "');</script>";
-        }
+        $this->response->throwJson(false);
     }
 
     /**
@@ -365,6 +373,11 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                     exit;
                 }
 
+                // xhr的send无法支持utf8
+                if ($this->request->isAjax()) {
+                    $file['name'] = urldecode($file['name']);
+                }
+
                 $result = self::modifyHandle($this->row, $file);
 
                 if (false !== $result) {
@@ -380,41 +393,21 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                     /** 增加插件接口 */
                     $this->pluginHandle()->modify($this);
 
-                    if ($this->request->isAjax()) {
-                        $this->response->throwJson(array($this->attachment->url, array(
-                            'cid'       =>  $this->cid,
-                            'title'     =>  $this->attachment->name,
-                            'type'      =>  $this->attachment->type,
-                            'size'      =>  $this->attachment->size,
-                            'bytes'      =>  number_format(ceil($this->attachment->size / 1024)) . ' Kb',
-                            'isImage'   =>  $this->attachment->isImage,
-                            'url'       =>  $this->attachment->url,
-                            'permalink' =>  $this->permalink
-                        )));
-                    } else {
-                        echo "<script>parent.fileUploadComplete('" . $this->request->_id
-                            . "', '" . $this->attachment->url . "', " . json_encode(array(
-                            'cid'       =>  $this->cid,
-                            'title'     =>  $this->attachment->name,
-                            'type'      =>  $this->attachment->type,
-                            'size'      =>  $this->attachment->size,
-                            'bytes'      =>  number_format(ceil($this->attachment->size / 1024)) . ' Kb',
-                            'isImage'   =>  $this->attachment->isImage,
-                            'url'       =>  $this->attachment->url,
-                            'permalink' =>  $this->permalink
-                        )) . ');</script>';
-                        
-                        return;
-                    }
+                    $this->response->throwJson(array($this->attachment->url, array(
+                        'cid'       =>  $this->cid,
+                        'title'     =>  $this->attachment->name,
+                        'type'      =>  $this->attachment->type,
+                        'size'      =>  $this->attachment->size,
+                        'bytes'      =>  number_format(ceil($this->attachment->size / 1024)) . ' Kb',
+                        'isImage'   =>  $this->attachment->isImage,
+                        'url'       =>  $this->attachment->url,
+                        'permalink' =>  $this->permalink
+                    )));
                 }
             }
         }
 
-        if ($this->request->isAjax()) {
-            $this->response->throwJson(false);
-        } else {
-            echo "<script>parent.fileUploadError('" . $this->request->_id . "');</script>";
-        }
+        $this->response->throwJson(false);
     }
 
     /**
@@ -426,6 +419,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
     public function action()
     {
         if ($this->user->pass('contributor', true) && $this->request->isPost()) {
+            $this->security->protect();
             if ($this->request->is('do=modify&cid')) {
                 $this->modify();
             } else {

@@ -1,4 +1,5 @@
 <?php
+if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
  * Typecho Blog Platform
  *
@@ -33,8 +34,7 @@ class Widget_Notice extends Typecho_Widget
     {
         $this->highlight = $theId;
         Typecho_Cookie::set('__typecho_notice_highlight', $theId,
-        $this->widget('Widget_Options')->gmtTime + $this->widget('Widget_Options')->timezone + 86400,
-        $this->widget('Widget_Options')->siteUrl);
+        $this->widget('Widget_Options')->gmtTime + $this->widget('Widget_Options')->timezone + 86400);
     }
 
     /**
@@ -63,11 +63,9 @@ class Widget_Notice extends Typecho_Widget
             $type = $typeFix;
         }
 
-        Typecho_Cookie::set('__typecho_notice', json_encode($notice),
-        $this->widget('Widget_Options')->gmtTime + $this->widget('Widget_Options')->timezone + 86400,
-        $this->widget('Widget_Options')->siteUrl);
+        Typecho_Cookie::set('__typecho_notice', Json::encode($notice),
+        $this->widget('Widget_Options')->gmtTime + $this->widget('Widget_Options')->timezone + 86400);
         Typecho_Cookie::set('__typecho_notice_type', $type,
-        $this->widget('Widget_Options')->gmtTime + $this->widget('Widget_Options')->timezone + 86400,
-        $this->widget('Widget_Options')->siteUrl);
+        $this->widget('Widget_Options')->gmtTime + $this->widget('Widget_Options')->timezone + 86400);
     }
 }

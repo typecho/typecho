@@ -25,7 +25,7 @@
   }
 }
 
-button {
+.btn {
   @include button(#E9E9E6);
 
   display: inline-block;
@@ -43,6 +43,7 @@ button {
 .btn-xs {
   padding: 0 10px;
   height: 25px;
+  font-size: 13px;
 }
 .btn-s { height: 28px; }
 .btn-l {
@@ -63,6 +64,14 @@ button {
 .btn-warn {
   @include button(#B94A48);
   color: #FFF;
+}
+
+.btn-link,
+.btn-link:hover,
+.btn-link:focus,
+.btn-link:active,
+.btn-link.active {
+  background-color: transparent;
 }
 
 /* 下拉菜单 */
