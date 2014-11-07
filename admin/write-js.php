@@ -216,7 +216,7 @@ $(document).ready(function() {
     $('#edit-secondary .typecho-option-tabs li').click(function() {
         $('#edit-secondary .typecho-option-tabs li').removeClass('active');
         $(this).addClass('active');
-        $('.tab-content').addClass('hidden');
+        $(this).parents('#edit-secondary').find('.tab-content').addClass('hidden');
         
         var selected_tab = $(this).find('a').attr('href'),
             selected_el = $(selected_tab).removeClass('hidden');
