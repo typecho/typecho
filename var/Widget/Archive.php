@@ -1832,11 +1832,11 @@ class Widget_Archive extends Widget_Abstract_Contents
             }
         }
 
-        /** 插件支持 */
-        $this->pluginHandle()->header($header, $this);
-
         /** 输出header */
         echo $header;
+
+        /** 插件支持 */
+        $this->pluginHandle()->header($header, $this);
     }
 
     /**

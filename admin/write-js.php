@@ -77,7 +77,7 @@ $(document).ready(function() {
             noResultsText   :   '<?php _e('此标签不存在, 按回车创建'); ?>',
             prePopulate     :   tagsPre,
 
-            onResult        :   function (result, query) {
+            onResult        :   function (result, query, val) {
                 if (!query) {
                     return result;
                 }
@@ -88,8 +88,8 @@ $(document).ready(function() {
 
                 if (!result[0] || result[0]['id'] != query) {
                     result.unshift({
-                        id      :   query,
-                        tags    :   query
+                        id      :   val,
+                        tags    :   val
                     });
                 }
 
