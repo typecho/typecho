@@ -205,6 +205,7 @@ class Typecho_Plugin
         $info = array(
             'description'       => '',
             'title'             => '',
+            'category'          => 'unknow',
             'author'            => '',
             'homepage'          => '',
             'version'           => '',
@@ -216,6 +217,7 @@ class Typecho_Plugin
         );
 
         $map = array(
+            'category'  =>  'category',
             'package'   =>  'title',
             'author'    =>  'author',
             'link'      =>  'homepage',
