@@ -31,7 +31,7 @@ pre, code {
 }
 code { padding: 2px 4px; color: #B94A48; }
 pre {
-  padding: 5px;
+  padding: 8px;
   overflow: auto;
   max-height: 400px;
 }
@@ -41,9 +41,10 @@ pre code {
 }
 
 blockquote {
-  margin: 1em 1.5em;
+  margin: 1em 0;
   padding-left: 1.5em;
-  border-left: 4px solid #F3F3F0;
+  border-left: 4px solid #eee;
+  color: #666;
 }
 
 table {
