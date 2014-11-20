@@ -16,7 +16,7 @@
 # Markdown Parser Class
 #
 
-class Markdown {
+class _Markdown {
 
 	### Version ###
 
@@ -1300,7 +1300,7 @@ class Markdown {
 	}
     protected function _doAutoLinks_url_callback_replace($matches) {
         $url = $this->encodeAttribute($matches[1]);
-        $link = "<a rel=\"nofollow\" href=\"$url\">$url</a>";
+        $link = "<a href=\"$url\">$url</a>";
         return $this->hashPart($link);
     }
 
@@ -1339,7 +1339,7 @@ class Markdown {
         }
 
 		$url = $this->encodeAttribute($protocol . $link);
-		$link = "<a rel=\"nofollow\" href=\"$url\">$url</a>";
+		$link = "<a href=\"$url\">$url</a>";
 		return $this->hashPart($link) . $this->tail;
 	}
 
@@ -1563,7 +1563,7 @@ class Markdown {
 # one.
 #
 
-class MarkdownExtra extends Markdown {
+class MarkdownExtra extends _Markdown {
 
 	### Configuration Variables ###
 
@@ -2318,7 +2318,7 @@ class MarkdownExtra extends Markdown {
 			$url = $this->urls[$link_id];
 			$url = $this->encodeAttribute($url);
 			
-			$result = "<a rel=\"nofollow\" href=\"$url\"";
+			$result = "<a href=\"$url\"";
 			if ( isset( $this->titles[$link_id] ) ) {
 				$title = $this->titles[$link_id];
 				$title = $this->encodeAttribute($title);
@@ -2346,7 +2346,7 @@ class MarkdownExtra extends Markdown {
 
 		$url = $this->encodeAttribute($url);
 
-		$result = "<a rel=\"nofollow\" href=\"$url\"";
+		$result = "<a href=\"$url\"";
 		if (isset($title)) {
 			$title = $this->encodeAttribute($title);
 			$result .=  " title=\"$title\"";

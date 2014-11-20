@@ -263,7 +263,7 @@ $.TokenList = function (input, url_or_data, settings) {
                     }
                     break;
 
-                case KEY.TAB:
+                // case KEY.TAB:
                 case KEY.ENTER:
                 case KEY.NUMPAD_ENTER:
                 case KEY.COMMA:
@@ -750,7 +750,7 @@ $.TokenList = function (input, url_or_data, settings) {
     // Do a search and show the "searching" dropdown if the input is longer
     // than settings.minChars
     function do_search() {
-        var query = input_box.val().toLowerCase();
+        var val = input_box.val(), query = val.toLowerCase();
 
         if(query && query.length) {
             if(selected_token) {
@@ -762,7 +762,7 @@ $.TokenList = function (input, url_or_data, settings) {
                 clearTimeout(timeout);
 
                 timeout = setTimeout(function(){
-                    run_search(query);
+                    run_search(query, val);
                 }, settings.searchDelay);
             } else {
                 hide_dropdown();
@@ -771,8 +771,8 @@ $.TokenList = function (input, url_or_data, settings) {
     }
 
     // Do the actual search
-    function run_search(query) {
-        var cache_key = query + computeURL();
+    function run_search(query, val) {
+        var cache_key = val + computeURL();
         var cached_results = cache.get(cache_key);
         if(cached_results) {
             populate_dropdown(query, cached_results);
@@ -807,7 +807,7 @@ $.TokenList = function (input, url_or_data, settings) {
                 // Attach the success callback
                 ajax_params.success = function(results) {
                   if($.isFunction(settings.onResult)) {
-                      results = settings.onResult.call(hidden_input, results, query);
+                      results = settings.onResult.call(hidden_input, results, query, val);
                   }
                   cache.add(cache_key, settings.jsonContainer ? results[settings.jsonContainer] : results);
 
@@ -826,7 +826,7 @@ $.TokenList = function (input, url_or_data, settings) {
                 });
 
                 if($.isFunction(settings.onResult)) {
-                    results = settings.onResult.call(hidden_input, results, query);
+                    results = settings.onResult.call(hidden_input, results, query, val);
                 }
                 cache.add(cache_key, results);
                 populate_dropdown(query, results);

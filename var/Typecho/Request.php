@@ -103,6 +103,14 @@ class Typecho_Request
      */
     private static $_httpParams = false;
 
+    
+    /**
+     * 域名前缀
+     *
+     * @var string
+     */
+    private static $_urlPrefix = NULL;
+
     /**
      * 当前过滤器
      *
@@ -188,7 +196,7 @@ class Typecho_Request
     private function _checkAgent($agent)
     {
         return preg_match("/^[_a-z0-9- ,:;=#@\.\(\)\/\+\*\?]+$/i", $agent);
-    }
+    } 
 
     /**
      * 初始化变量
@@ -199,6 +207,38 @@ class Typecho_Request
             self::$_httpParams = array_filter(array_merge($_POST, $_GET),
                 array('Typecho_Common', 'checkStrEncoding'));
         }
+    }
+
+    /**
+     * 获取url前缀 
+     * 
+     * @access public
+     * @return string
+     */
+    public static function getUrlPrefix()
+    {
+        if (empty(self::$_urlPrefix)) {
+            self::$_urlPrefix = (self::isSecure() ? 'https' : 'http') 
+                . '://' . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 
+                    ($_SERVER['SERVER_NAME'] . (in_array($_SERVER['SERVER_PORT'], array(80, 443)) 
+                        ? '' : ':' . $_SERVER['SERVER_PORT']))
+                );
+        }
+
+        return self::$_urlPrefix;
+    }
+
+    /**
+     * 判断是否为https
+     *
+     * @access public
+     * @return boolean
+     */
+    public static function isSecure()
+    {
+        return (!empty($_SERVER['HTTPS']) && 'off' != strtolower($_SERVER['HTTPS'])) 
+            || (!empty($_SERVER['SERVER_PORT']) && 443 == $_SERVER['SERVER_PORT'])
+            || (defined('__TYPECHO_SECURE__') && __TYPECHO_SECURE__);
     }
 
     /**
@@ -348,9 +388,7 @@ class Typecho_Request
     public function getRequestRoot()
     {
         if (NULL === $this->_requestRoot) {
-            $root = rtrim(($this->isSecure() ? 'https' : 'http')
-                . '://' . $_SERVER['HTTP_HOST']
-                . $this->getBaseUrl(), '/') . '/';
+            $root = rtrim(self::getUrlPrefix() . $this->getBaseUrl(), '/') . '/';
             
             $pos = strrpos($root, '.php/');
             if ($pos) {
@@ -371,8 +409,7 @@ class Typecho_Request
      */
     public function getRequestUrl()
     {
-        $scheme = $this->isSecure() ? 'https' : 'http';
-        return $scheme . '://' . $_SERVER['HTTP_HOST'] . $this->getRequestUri();
+        return self::getUrlPrefix() . $this->getRequestUri();
     }
 
     /**
@@ -402,13 +439,16 @@ class Typecho_Request
             $requestUri = $_SERVER['UNENCODED_URL'];
         } elseif (isset($_SERVER['REQUEST_URI'])) {
             $requestUri = $_SERVER['REQUEST_URI'];
+            $parts       = @parse_url($requestUri);
+            
             if (isset($_SERVER['HTTP_HOST']) && strstr($requestUri, $_SERVER['HTTP_HOST'])) {
-                $parts       = @parse_url($requestUri);
-
                 if (false !== $parts) {
                     $requestUri  = (empty($parts['path']) ? '' : $parts['path'])
                                  . ((empty($parts['query'])) ? '' : '?' . $parts['query']);
                 }
+            } elseif (!empty($_SERVER['QUERY_STRING']) && empty($parts['query'])) {
+                // fix query missing
+                $requestUri .= '?' . $_SERVER['QUERY_STRING'];
             }
         } elseif (isset($_SERVER['ORIG_PATH_INFO'])) { // IIS 5.0, PHP as CGI
             $requestUri = $_SERVER['ORIG_PATH_INFO'];
@@ -621,14 +661,14 @@ class Typecho_Request
             $this->_ip = $ip;
         } else {
             switch (true) {
-                case NULL !== $this->getServer('HTTP_X_FORWARDED_FOR'):
-                    list($this->_ip) = array_map('trim', explode(',', $this->getServer('HTTP_X_FORWARDED_FOR')));
-                    break;
-                case NULL !== $this->getServer('HTTP_CLIENT_IP'):
-                    $this->_ip = $this->getServer('HTTP_CLIENT_IP');
+                case defined('__TYPECHO_IP_SOURCE__') && NULL !== $this->getServer(__TYPECHO_IP_SOURCE__):
+                    list($this->_ip) = array_map('trim', explode(',', $this->getServer(__TYPECHO_IP_SOURCE__)));
                     break;
                 case NULL !== $this->getServer('REMOTE_ADDR'):
                     $this->_ip = $this->getServer('REMOTE_ADDR');
+                    break;
+                case NULL !== $this->getServer('HTTP_CLIENT_IP'):
+                    $this->_ip = $this->getServer('HTTP_CLIENT_IP');
                     break;
                 default:
                     break;
@@ -741,19 +781,7 @@ class Typecho_Request
     public function isPut()
     {
         return 'PUT' == $this->getServer('REQUEST_METHOD');
-    }
-
-    /**
-     * 判断是否为https
-     *
-     * @access public
-     * @return boolean
-     */
-    public function isSecure()
-    {
-        return (!empty($_SERVER['HTTPS']) && 'off' != strtolower($_SERVER['HTTPS'])) 
-            || (!empty($_SERVER['SERVER_PORT']) && 443 == $_SERVER['SERVER_PORT']);
-    }
+    } 
 
     /**
      * 判断是否为ajax

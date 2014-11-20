@@ -7,7 +7,7 @@ DIR=../
 update:
 	@echo 'git update'
 	rm -Rf build/
-	git clone https://github.com/typecho/typecho-replica.git build
+	git clone https://github.com/typecho/typecho.git build
 	rm -Rf build/.git
 	rm -f build/.gitignore
 	rm -f build/.gitattributes
@@ -48,6 +48,16 @@ upgrade:
 	make clear
 
 
+langs:
+	rm -rf ../usr/langs
+	mkdir ../usr/langs
+	git clone https://github.com/typecho/languages.git
+	#for i in `find . -name '*.po'`; do echo $$i && php msgfmt.php $$i; done;
+	cd languages/ && for i in `find . -name '*.po'`; do echo `basename $$i` && msgfmt -o `basename $$i .po`.mo `basename $$i`; done;
+	cp languages/*.mo ../usr/langs/
+	rm -rf languages
+
+
 theme:
 	make update
 	rm -Rf ${DIR}/usr/themes/default/
@@ -76,6 +86,12 @@ pot:
 	cd ../ && php tools/list.php ./ > tools/files.txt	
 	cd ../ && xgettext --files-from=tools/files.txt -Lphp --from-code=UTF-8 --keyword=_t --keyword=_e --keyword=_n:1,2 --no-location --copyright-holder=Typecho --package-name=Typecho --package-version=`grep -E "VERSION = '(.*)'" ./var/Typecho/Common.php | cut -d "'" -f 2` --no-wrap --output=tools/messages.pot	
 	rm -f files.txt
+
+
+test:
+	for i in `find ../var/ -name '*.php'`; do php -l $$i || exit 1; done;
+	for i in `find ../usr/ -name '*.php'`; do php -l $$i || exit 1; done;
+	for i in `find ../admin/ -name '*.php'`; do php -l $$i || exit 1; done;
 
 
 all:

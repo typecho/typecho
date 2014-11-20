@@ -22,6 +22,45 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 class Widget_Options_General extends Widget_Abstract_Options implements Widget_Interface_Do
 {
     /**
+     * 获取语言列表
+     * 
+     * @access private
+     * @return array
+     */
+    public static function getLangs()
+    {
+        $dir = defined('__TYPECHO_LANG_DIR__') ? __TYPECHO_LANG_DIR__ : __TYPECHO_ROOT_DIR__ . '/usr/langs';
+        $files = glob($dir . '/*.mo');
+        $langs = array('zh_CN' => '简体中文');
+
+        if (!empty($files)) {
+            foreach ($files as $file) {
+                $getText = new Typecho_I18n_GetText($file);
+                list ($name) = explode('.', basename($file));
+                $title = $getText->translate('lang', $count);
+                $langs[$name] = $count > -1 ? $title : $name;
+            }
+            
+            ksort($langs);
+        }
+
+        return $langs;
+    }
+
+    /**
+     * 检查是否在语言列表中 
+     * 
+     * @param mixed $lang 
+     * @access public
+     * @return bool
+     */
+    public function checkLang($lang)
+    {
+        $langs = self::getLangs();
+        return isset($langs[$lang]);
+    }
+
+    /**
      * 输出表单结构
      *
      * @access public
@@ -61,6 +100,17 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
         $allowRegister = new Typecho_Widget_Helper_Form_Element_Radio('allowRegister', array('0' => _t('不允许'), '1' => _t('允许')), $this->options->allowRegister, _t('是否允许注册'),
         _t('允许访问者注册到你的网站, 默认的注册用户不享有任何写入权限.'));
         $form->addInput($allowRegister);
+
+        /** 语言项 */
+        // hack 语言扫描
+        _t('lang');
+
+        $langs = self::getLangs();
+
+        if (count($langs) > 1) {
+            $lang = new Typecho_Widget_Helper_Form_Element_Select('lang', $langs, $this->options->lang, _t('语言'));
+            $form->addInput($lang->addRule(array($this, 'checkLang'), _t('所选择的语言包不存在')));
+        }
 
         /** 时区 */
         $timezoneList = array(
@@ -161,7 +211,7 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
             $this->response->goBack();
         }
 
-        $settings = $this->request->from('title','description', 'keywords', 'allowRegister', 'timezone');
+        $settings = $this->request->from('title','description', 'keywords', 'allowRegister', 'lang', 'timezone');
         $settings['attachmentTypes'] = $this->request->getArray('attachmentTypes');
 
         if (!defined('__TYPECHO_SITE_URL__')) {

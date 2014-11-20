@@ -22,16 +22,8 @@ define('__TYPECHO_MB_SUPPORTED__', function_exists('mb_get_info'));
 class Typecho_Common
 {
     /** 程序版本 */
-    const VERSION = '1.0/14.5.26';
+    const VERSION = '1.0/14.10.10';
 
-    /**
-     * 锁定的代码块
-     *
-     * @access private
-     * @var array
-     */
-    private static $_lockedBlocks = array('<p></p>' => '');
-    
     /**
      * 允许的属性
      * 
@@ -57,17 +49,15 @@ class Typecho_Common
     public static $exceptionHandle;
 
     /**
-     * 锁定标签回调函数
-     *
-     * @access private
-     * @param array $matches 匹配的值
+     * 将字符串变成大写的回调函数
+     * 
+     * @param array $matches 
+     * @access public
      * @return string
      */
-    public static function __lockHTML(array $matches)
+    public static function __strToUpper($matches)
     {
-        $guid = '<code>' . uniqid(time()) . '</code>';
-        self::$_lockedBlocks[$guid] = $matches[0];
-        return $guid;
+        return strtoupper($matches[0]);
     }
 
     /**
@@ -247,6 +237,7 @@ class Typecho_Common
         @ob_end_clean();
 
         if (defined('__TYPECHO_DEBUG__')) {
+            echo '<h1>' . $exception->getMessage() . '</h1>';
             echo nl2br($exception->__toString());
         } else {
             if (404 == $exception->getCode() && !empty(self::$exceptionHandle)) {
@@ -331,7 +322,7 @@ class Typecho_Common
         <style>
             html {
                 padding: 50px 10px;
-                font-size: 20px;
+                font-size: 16px;
                 line-height: 1.4;
                 color: #666;
                 background: #F6F6F3;
@@ -344,15 +335,10 @@ class Typecho_Common
             body {
                 max-width: 500px;
                 _width: 500px;
-                padding: 30px 20px 50px;
+                padding: 30px 20px;
                 margin: 0 auto;
                 background: #FFF;
             }
-            h1 {
-                font-size: 50px;
-                text-align: center;
-            }
-            h1 span { color: #bbb; }
             ul {
                 padding: 0 0 0 40px;
             }
@@ -365,7 +351,6 @@ class Typecho_Common
     </head>
     <body>
         <div class="container">
-            <h1>{$code}</h1>
             {$message}
         </div>
     </body>
@@ -768,6 +753,23 @@ EOF;
     }
 
     /**
+     * 获取大写字符串
+     * 
+     * @param string $str 
+     * @access public
+     * @return string
+     */
+    public static function strToUpper($str)
+    {
+        if (__TYPECHO_MB_SUPPORTED__) {
+            return mb_strtoupper($str, self::$charset);
+        } else {
+            return 'UTF-8' == strtoupper(self::$charset)
+                ? preg_replace_callback("/[a-z]+/u", array('Typecho_Common', '__strToUpper'), $str) : strtoupper($str);
+        }
+    }
+
+    /**
      * 检查是否为合法的编码数据
      *
      * @param string|array $str
@@ -832,71 +834,6 @@ EOF;
         $str = trim($str, '-_');
         $str = !strlen($str) ? $default : $str;
         return substr($str, 0, $maxLength);
-    }
-
-    /**
-     * 去掉html中的分段
-     *
-     * @access public
-     * @param string $html 输入串
-     * @return string
-     */
-    public static function removeParagraph($html)
-    {
-        /** 锁定标签 */
-        $html = self::lockHTML($html);
-        $html = str_replace(array("\r", "\n"), '', $html);
-    
-        $html = trim(preg_replace(
-        array("/\s*<p>(.*?)<\/p>\s*/is", "/\s*<br\s*\/>\s*/is",
-        "/\s*<(div|blockquote|pre|code|script|table|fieldset|ol|ul|dl|h[1-6])([^>]*)>/is",
-        "/<\/(div|blockquote|pre|code|script|table|fieldset|ol|ul|dl|h[1-6])>\s*/is", "/\s*<\!--more-->\s*/is"),
-        array("\n\\1\n", "\n", "\n\n<\\1\\2>", "</\\1>\n\n", "\n\n<!--more-->\n\n"),
-        $html));
-        
-        return trim(self::releaseHTML($html));
-    }
-    
-    /**
-     * 锁定标签
-     * 
-     * @access public
-     * @param string $html 输入串
-     * @return string
-     */
-    public static function lockHTML($html)
-    {
-        return preg_replace_callback("/<(code|pre|script)[^>]*>.*?<\/\\1>/is", array('Typecho_Common', '__lockHTML'), $html);
-    }
-    
-    /**
-     * 释放标签
-     * 
-     * @access public
-     * @param string $html 输入串
-     * @return string
-     */
-    public static function releaseHTML($html)
-    {
-        $html = trim(str_replace(array_keys(self::$_lockedBlocks), array_values(self::$_lockedBlocks), $html));
-        self::$_lockedBlocks = array('<p></p>' => '');
-        return $html;
-    }
-    
-    /**
-     * 文本分段函数
-     *
-     * @param string $string 需要分段的字符串
-     * @return string
-     */
-    public static function cutParagraph($string)
-    {
-        static $loaded;
-        if (!$loaded) {
-            $loaded = true;
-        }
-        
-        return Typecho_Common_Paragraph::process($string);
     }
 
     /**
@@ -985,6 +922,81 @@ EOF;
     {
         $path = (0 === strpos($path, './')) ? substr($path, 2) : $path;
         return rtrim($prefix, '/') . '/' . str_replace('//', '/', ltrim($path, '/'));
+    }
+
+    /**
+     * 获取gravatar头像地址 
+     * 
+     * @param string $mail 
+     * @param int $size 
+     * @param string $rating 
+     * @param string $default 
+     * @param bool $isSecure 
+     * @return string
+     */
+    public static function gravatarUrl($mail, $size, $rating, $default, $isSecure = false)
+    {
+        $url = $isSecure ? 'https://secure.gravatar.com' : 'http://www.gravatar.com';
+        $url .= '/avatar/';
+
+        if (!empty($mail)) {
+            $url .= md5(strtolower(trim($mail)));
+        }
+
+        $url .= '?s=' . $size;
+        $url .= '&amp;r=' . $rating;
+        $url .= '&amp;d=' . $default;
+
+        return $url;
+    }
+
+    /**
+     * 给javascript赋值加入扰码设计 
+     * 
+     * @param string $value 
+     * @return string
+     */
+    public static function shuffleScriptVar($value)
+    {
+        $length = strlen($value);
+        $max = 3;
+        $offset = 0;
+        $result = array();
+        $cut = array();
+
+        while ($length > 0) {
+            $len = rand(0, min($max, $length));
+            $rand = "'" . self::randString(rand(1, $max)) . "'";
+
+            if ($len > 0) {
+                $val = "'" . substr($value, $offset, $len) . "'";
+                $result[] = rand(0, 1) ? "//{$rand}\n{$val}" : "{$val}//{$rand}\n";
+            } else {
+                if (rand(0, 1)) {
+                    $result[] = rand(0, 1) ? "''///*{$rand}*/{$rand}\n" : "/* {$rand}//{$rand} */''";
+                } else {
+                    $result[] = rand(0, 1) ? "//{$rand}\n{$rand}" : "{$rand}//{$rand}\n";
+                    $cut[] = array($offset, strlen($rand) - 2 + $offset);
+                }
+            }
+
+            $offset += $len;
+            $length -= $len;
+        }
+
+        $name = '_' . self::randString(rand(3, 7));
+        $cutName = '_' . self::randString(rand(3, 7));
+        $var = implode('+', $result);
+        $cutVar = Json::encode($cut);
+        return "(function () {
+    var {$name} = {$var}, {$cutName} = {$cutVar};
+    
+    for (var i = 0; i < {$cutName}.length; i ++) {
+        {$name} = {$name}.substring(0, {$cutName}[i][0]) + {$name}.substring({$cutName}[i][1]);
+    }
+
+    return {$name};
+})();";
     }
 
     /**

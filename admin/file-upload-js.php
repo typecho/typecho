@@ -94,6 +94,9 @@ $(document).ready(function() {
         li.effect('highlight', {color : '#FBC2C4'}, 2000, function () {
             $(this).remove();
         });
+
+        // fix issue #341
+        plupload.removeFile(file);
     }
 
     var completeFile = null;
@@ -153,6 +156,7 @@ $(document).ready(function() {
 
                         if (data) {
                             fileUploadComplete(file.id, data[0], data[1]);
+                            plupload.removeFile(file);
                             return;
                         }
                     }

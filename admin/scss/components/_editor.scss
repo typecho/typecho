@@ -148,6 +148,27 @@
   }
 }
 
+/* 上传面板动画效果 */
+@keyframes fullscreen-upload {
+  0%   { right: -280px; }
+  100% { right: -1px; }
+}
+
+@-moz-keyframes fullscreen-upload {
+  0%   { right: -280px; }
+  100% { right: -1px; }
+}
+
+@-webkit-keyframes fullscreen-upload {
+  0%   { right: -280px; }
+  100% { right: -1px; }
+}
+
+@-o-keyframes fullscreen-upload {
+  0%   { right: -280px; }
+  100% { right: -1px; }
+}
+
 /* 编辑器全屏 */
 .fullscreen {
   #wmd-button-bar, #text, #wmd-preview, .submit {
@@ -192,14 +213,24 @@
     padding: 10px 20px;
     border-bottom: 1px solid #F3F3F0;
   }
+  #upload-panel {
+    -webkit-box-shadow: 0 4px 16px rgba(0,0,0,0.225);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.225);
+    border-style: solid;
+  }
 
   // 全屏附件上传
   #tab-files {
     position: absolute;
     top: 52px;
-    right: 20px;
+    right: -1px;
     width: 280px;
     z-index: 1001;
+
+    animation: fullscreen-upload 0.5s;
+    -moz-animation: fullscreen-upload 0.5s;
+    -webkit-animation: fullscreen-upload 0.5s;
+    -o-animation: fullscreen-upload 0.5s;
   }
 
   .wmd-edittab,

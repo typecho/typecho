@@ -58,6 +58,17 @@ class Typecho_Db_Adapter_Mysql implements Typecho_Db_Adapter
     }
 
     /**
+     * 获取数据库版本 
+     * 
+     * @param mixed $handle
+     * @return string
+     */
+    public function getVersion($handle)
+    {
+        return 'ext:mysql ' . mysql_get_server_info($handle);
+    }
+
+    /**
      * 执行数据库查询
      *
      * @param string $query 数据库查询SQL字符串

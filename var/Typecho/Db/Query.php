@@ -357,11 +357,12 @@ class Typecho_Db_Query
      *
      * @param string $key 栏目名称
      * @param mixed $value 指定的值
+     * @param bool $escape 是否转义
      * @return Typecho_Db_Query
      */
-    public function expression($key, $value)
+    public function expression($key, $value, $escape = true)
     {
-        $this->_sqlPreBuild['rows'][$this->filterColumn($key)] = $this->filterColumn($value);
+        $this->_sqlPreBuild['rows'][$this->filterColumn($key)] = $escape ? $this->filterColumn($value) : $value;
         return $this;
     }
 

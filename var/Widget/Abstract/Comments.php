@@ -112,8 +112,8 @@ class Widget_Abstract_Comments extends Widget_Abstract
 
         $text = $this->pluginHandle(__CLASS__)->trigger($plugged)->content($text, $this);
         if (!$plugged) {
-            $text = $this->options->commentsMarkdown ? MarkdownExtraExtended::defaultTransform($text)
-                : Typecho_Common::cutParagraph($text);
+            $text = $this->options->commentsMarkdown ? $this->markdown($text)
+                : $this->autoP($text);
         }
 
         $text = $this->pluginHandle(__CLASS__)->contentEx($text, $this);
@@ -394,32 +394,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
             
             $this->pluginHandle(__CLASS__)->trigger($plugged)->gravatar($size, $rating, $default, $this);
             if (!$plugged) {
-
-                $mailHash = NULL;
-                if (!empty($this->mail)) {
-                    $mailHash = md5(strtolower($this->mail));
-                }
-                
-                if ($this->request->isSecure()) {
-                    $host = 'https://secure.gravatar.com';
-                } else {
-                    if (empty($this->mail)) {
-                        $host = 'http://0.gravatar.com';
-                    } else {
-                        $host = sprintf( "http://%d.gravatar.com", (hexdec($mailHash{0}) % 2));
-                    }
-                }
-                
-                $url = $host . '/avatar/';
-                
-                if (!empty($this->mail)) {
-                    $url .= $mailHash;
-                }
-                
-                $url .= '?s=' . $size;
-                $url .= '&amp;r=' . $rating;
-                $url .= '&amp;d=' . $default;
-            
+                $url = Typecho_Common::gravatarUrl($this->mail, $size, $rating, $default, $this->request->isSecure());
                 echo '<img class="avatar" src="' . $url . '" alt="' .
                 $this->author . '" width="' . $size . '" height="' . $size . '" />';
             }
@@ -438,4 +413,47 @@ class Widget_Abstract_Comments extends Widget_Abstract
     {
         echo Typecho_Common::subStr(strip_tags($this->content), 0, $length, $trim);
     }
+
+    /**
+     * autoP 
+     * 
+     * @param mixed $text 
+     * @access public
+     * @return void
+     */
+    public function autoP($text)
+    {
+        $html = $this->pluginHandle(__CLASS__)->trigger($parsed)->autoP($text);
+
+        if (!$parsed) {
+            static $parser;
+
+            if (empty($parser)) {
+                $parser = new AutoP();
+            }
+
+            $html = $parser->parse($text);
+        }
+
+        return $html;
+    }
+
+    /**
+     * markdown  
+     * 
+     * @param mixed $text 
+     * @access public
+     * @return void
+     */
+    public function markdown($text)
+    {
+        $html = $this->pluginHandle(__CLASS__)->trigger($parsed)->markdown($text);
+
+        if (!$parsed) {
+            $html = Markdown::convert($text);
+        }
+
+        return $html;
+    }
 }
+

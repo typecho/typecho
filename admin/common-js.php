@@ -13,8 +13,7 @@
                         noticeType  :   $.cookie(prefix + '__typecho_notice_type'),
                         highlight   :   $.cookie(prefix + '__typecho_notice_highlight')
                     },
-                    path = '<?php $parts = parse_url($options->siteUrl);
-                        echo empty($parts['path']) ? '/' : $parts['path']; ?>';
+                    path = '<?php echo Typecho_Cookie::getPath(); ?>';
 
                 if (!!cookies.notice && 'success|notice|error'.indexOf(cookies.noticeType) >= 0) {
                     var head = $('.typecho-head-nav'),

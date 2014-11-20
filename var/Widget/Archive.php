@@ -306,7 +306,7 @@ class Widget_Archive extends Widget_Abstract_Contents
             $commentUrl .= '?parent=' . $reply;
         }
         
-        return $this->security->getTokenUrl($commentUrl);
+        return $this->options->commentsAntiSpam ? $commentUrl : $this->security->getTokenUrl($commentUrl);
     }
 
     /**
@@ -684,6 +684,20 @@ class Widget_Archive extends Widget_Abstract_Contents
 
         /** 插件接口 */
         $this->pluginHandle()->indexHandle($this, $select);
+    }
+
+    /**
+     * 默认的非首页归档处理
+     *
+     * @access private
+     * @param Typecho_Db_Query $select 查询对象
+     * @param boolean $hasPushed 是否已经压入队列
+     * @return void
+     * @throws Typecho_Widget_Exception
+     */
+    private function archiveEmptyHandle(Typecho_Db_Query $select, &$hasPushed)
+    {
+        throw new Typecho_Widget_Exception(_t('请求的地址不存在'), 404);
     }
 
     /**
@@ -1250,8 +1264,8 @@ class Widget_Archive extends Widget_Abstract_Contents
         $handles = array(
             'index'                     =>  'indexHandle',
             'index_page'                =>  'indexHandle',
-            'archive'                   =>  'error404Handle',
-            'archive_page'              =>  'error404Handle',
+            'archive'                   =>  'archiveEmptyHandle',
+            'archive_page'              =>  'archiveEmptyHandle',
             404                         =>  'error404Handle',
             'single'                    =>  'singleHandle',
             'page'                      =>  'singleHandle',
@@ -1632,6 +1646,7 @@ class Widget_Archive extends Widget_Abstract_Contents
             'rss2'          =>  $this->_feedUrl,
             'rss1'          =>  $this->_feedRssUrl,
             'commentReply'  =>  1,
+            'antiSpam'      =>  1,
             'atom'          =>  $this->_feedAtomUrl
         );
 
@@ -1690,88 +1705,138 @@ class Widget_Archive extends Widget_Abstract_Contents
             if ('' != $allows['commentReply']) {
                 if (1 == $allows['commentReply']) {
                     $header .= "<script type=\"text/javascript\">
-//<![CDATA[
-var TypechoComment = {
-    dom : function (id) {
-        return document.getElementById(id);
-    },
+(function () {
+    window.TypechoComment = {
+        dom : function (id) {
+            return document.getElementById(id);
+        },
     
-    create : function (tag, attr) {
-        var el = document.createElement(tag);
+        create : function (tag, attr) {
+            var el = document.createElement(tag);
         
-        for (var key in attr) {
-            el.setAttribute(key, attr[key]);
-        }
+            for (var key in attr) {
+                el.setAttribute(key, attr[key]);
+            }
         
-        return el;
-    },
+            return el;
+        },
 
-    reply : function (cid, coid) {
-        var comment = this.dom(cid), parent = comment.parentNode,
-            response = this.dom('" . $this->respondId . "'), input = this.dom('comment-parent'),
-            form = 'form' == response.tagName ? response : response.getElementsByTagName('form')[0],
-            textarea = response.getElementsByTagName('textarea')[0];
+        reply : function (cid, coid) {
+            var comment = this.dom(cid), parent = comment.parentNode,
+                response = this.dom('" . $this->respondId . "'), input = this.dom('comment-parent'),
+                form = 'form' == response.tagName ? response : response.getElementsByTagName('form')[0],
+                textarea = response.getElementsByTagName('textarea')[0];
 
-        if (null == input) {
-            input = this.create('input', {
-                'type' : 'hidden',
-                'name' : 'parent',
-                'id'   : 'comment-parent'
-            });
+            if (null == input) {
+                input = this.create('input', {
+                    'type' : 'hidden',
+                    'name' : 'parent',
+                    'id'   : 'comment-parent'
+                });
 
-            form.appendChild(input);
+                form.appendChild(input);
+            }
+
+            input.setAttribute('value', coid);
+
+            if (null == this.dom('comment-form-place-holder')) {
+                var holder = this.create('div', {
+                    'id' : 'comment-form-place-holder'
+                });
+
+                response.parentNode.insertBefore(holder, response);
+            }
+
+            comment.appendChild(response);
+            this.dom('cancel-comment-reply-link').style.display = '';
+
+            if (null != textarea && 'text' == textarea.name) {
+                textarea.focus();
+            }
+
+            return false;
+        },
+
+        cancelReply : function () {
+            var response = this.dom('{$this->respondId}'),
+            holder = this.dom('comment-form-place-holder'), input = this.dom('comment-parent');
+
+            if (null != input) {
+                input.parentNode.removeChild(input);
+            }
+
+            if (null == holder) {
+                return true;
+            }
+
+            this.dom('cancel-comment-reply-link').style.display = 'none';
+            holder.parentNode.insertBefore(response, holder);
+            return false;
         }
-        
-        input.setAttribute('value', coid);
-
-        if (null == this.dom('comment-form-place-holder')) {
-            var holder = this.create('div', {
-                'id' : 'comment-form-place-holder'
-            });
-            
-            response.parentNode.insertBefore(holder, response);
-        }
-
-        comment.appendChild(response);
-        this.dom('cancel-comment-reply-link').style.display = '';
-        
-        if (null != textarea && 'text' == textarea.name) {
-            textarea.focus();
-        }
-        
-        return false;
-    },
-
-    cancelReply : function () {
-        var response = this.dom('" . $this->respondId . "'),
-        holder = this.dom('comment-form-place-holder'), input = this.dom('comment-parent');
-
-        if (null != input) {
-            input.parentNode.removeChild(input);
-        }
-
-        if (null == holder) {
-            return true;
-        }
-
-        this.dom('cancel-comment-reply-link').style.display = 'none';
-        holder.parentNode.insertBefore(response, holder);
-        return false;
-    }
-}
-//]]>
-</script>";
+    };
+})();
+</script>
+";
                 } else {
                     $header .= '<script src="' . $allows['commentReply'] . '" type="text/javascript"></script>';
                 }
             }
         }
 
-        /** 插件支持 */
-        $this->pluginHandle()->header($header, $this);
+        /** 反垃圾设置 */
+        if ($this->options->commentsAntiSpam && $this->is('single')) {
+            if ('' != $allows['antiSpam']) {
+                if (1 == $allows['antiSpam']) {
+                    $header .= "<script type=\"text/javascript\">
+(function () {
+    var event = document.addEventListener ? {
+        add: 'addEventListener',
+        focus: 'focus',
+        load: 'DOMContentLoaded'
+    } : {
+        add: 'attachEvent',
+        focus: 'onfocus',
+        load: 'onload'
+    };
+
+    document[event.add](event.load, function () {
+        var r = document.getElementById('{$this->respondId}');
+
+        if (null != r) {
+            var forms = r.getElementsByTagName('form');
+            if (forms.length > 0) {
+                var f = forms[0], textarea = f.getElementsByTagName('textarea')[0], added = false;
+
+                if (null != textarea && 'text' == textarea.name) {
+                    textarea[event.add](event.focus, function () {
+                        if (!added) {
+                            var input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = '_';
+                            input.value = " . Typecho_Common::shuffleScriptVar(
+                                $this->security->getToken($this->request->getRequestUrl())) . "
+
+                            f.appendChild(input);
+                            added = true;
+                        }
+                    });
+                }
+            }
+        }
+    });
+})();
+</script>";
+                } else {
+                    $header .= '<script src="' . $allows['antiSpam'] . '" type="text/javascript"></script>';
+                }
+            }
+        }
 
         /** 输出header */
         echo $header;
+
+        /** 插件支持 */
+        $this->pluginHandle()->header($header, $this);
     }
 
     /**

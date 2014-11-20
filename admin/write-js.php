@@ -77,7 +77,7 @@ $(document).ready(function() {
             noResultsText   :   '<?php _e('此标签不存在, 按回车创建'); ?>',
             prePopulate     :   tagsPre,
 
-            onResult        :   function (result, query) {
+            onResult        :   function (result, query, val) {
                 if (!query) {
                     return result;
                 }
@@ -88,8 +88,8 @@ $(document).ready(function() {
 
                 if (!result[0] || result[0]['id'] != query) {
                     result.unshift({
-                        id      :   query,
-                        tags    :   query
+                        id      :   val,
+                        tags    :   val
                     });
                 }
 
@@ -109,28 +109,27 @@ $(document).ready(function() {
     var slug = $('#slug');
 
     if (slug.length > 0) {
-        var justifySlug = $('<div />').css(slug.css()).css({
-            'display'   :   'none',
-            'width'     :   'auto'
-        }).insertAfter(slug), originalWidth = slug.width();
+        var wrap = $('<div />').css({
+            'position'  :   'relative',
+            'display'   :   'inline-block'
+        }),
+        justifySlug = $('<pre />').css({
+            'display'   :   'block',
+            'visibility':   'hidden',
+            'height'    :   slug.height(),
+            'padding'   :   '0 2px',
+            'margin'    :   0
+        }).insertAfter(slug.wrap(wrap).css({
+            'left'      :   0,
+            'top'       :   0,
+            'minWidth'  :   '5px',
+            'position'  :   'absolute',
+            'width'     :   '100%'
+        })), originalWidth = slug.width();
 
         function justifySlugWidth() {
-            var html = slug.val().replace(/&/g, '&amp;')
-                    .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;')
-                    .replace(/'/g, '&#039;')
-                    .replace(/"/g, '&quot;')
-                    .replace(/ /g, '&nbsp;')
-                    .replace(/((&nbsp;)*)&nbsp;/g, '$1 ')
-                    .replace(/\n/g, '<br />')
-                    .replace(/<br \/>[ ]*$/, '<br />-')
-                    .replace(/<br \/> /g, '<br />&nbsp;');
-
-            justifySlug.css('min-width', html.length > 0
-                ? 'inherit' : originalWidth);
-
-            justifySlug.html(html);
-            slug.width(justifySlug.width());
+            var val = slug.val();
+            justifySlug.text(val.length > 0 ? val : '     ');
         }
 
         slug.bind('input propertychange', justifySlugWidth);
@@ -217,7 +216,7 @@ $(document).ready(function() {
     $('#edit-secondary .typecho-option-tabs li').click(function() {
         $('#edit-secondary .typecho-option-tabs li').removeClass('active');
         $(this).addClass('active');
-        $('.tab-content').addClass('hidden');
+        $(this).parents('#edit-secondary').find('.tab-content').addClass('hidden');
         
         var selected_tab = $(this).find('a').attr('href'),
             selected_el = $(selected_tab).removeClass('hidden');

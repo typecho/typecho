@@ -109,8 +109,8 @@ class Widget_Abstract_Contents extends Widget_Abstract
 
         $content = $this->pluginHandle(__CLASS__)->trigger($plugged)->excerpt($this->text, $this);
         if (!$plugged) {
-            $content = $this->isMarkdown ? MarkdownExtraExtended::defaultTransform($content)
-                : Typecho_Common::cutParagraph($content);
+            $content = $this->isMarkdown ? $this->markdown($content)
+                : $this->autoP($content);
         }
 
         $contents = explode('<!--more-->', $content);
@@ -134,8 +134,8 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $content = $this->pluginHandle(__CLASS__)->trigger($plugged)->content($this->text, $this);
 
         if (!$plugged) {
-            $content = $this->isMarkdown ? MarkdownExtraExtended::defaultTransform($content)
-                : Typecho_Common::cutParagraph($content);
+            $content = $this->isMarkdown ? $this->markdown($content)
+                : $this->autoP($content);
         }
 
         return $this->pluginHandle(__CLASS__)->contentEx($content, $this);
@@ -921,6 +921,48 @@ class Widget_Abstract_Contents extends Widget_Abstract
     public function author($item = 'screenName')
     {
         echo $this->author->{$item};
+    }
+
+    /**
+     * autoP 
+     * 
+     * @param mixed $text 
+     * @access public
+     * @return void
+     */
+    public function autoP($text)
+    {
+        $html = $this->pluginHandle(__CLASS__)->trigger($parsed)->autoP($text);
+
+        if (!$parsed) {
+            static $parser;
+
+            if (empty($parser)) {
+                $parser = new AutoP();
+            }
+
+            $html = $parser->parse($text);
+        }
+
+        return $html;
+    }
+
+    /**
+     * markdown  
+     * 
+     * @param mixed $text 
+     * @access public
+     * @return void
+     */
+    public function markdown($text)
+    {
+        $html = $this->pluginHandle(__CLASS__)->trigger($parsed)->markdown($text);
+
+        if (!$parsed) {
+            $html = Markdown::convert($text);
+        }
+
+        return $html;
     }
 }
 

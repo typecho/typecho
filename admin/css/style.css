@@ -71,7 +71,7 @@ a.button:hover, a.balloon-button:hover {
 /**
 * Forms
 */
-/* line 6, ../scss/_forms.scss */
+/* line 5, ../scss/_forms.scss */
 input[type=text], input[type=password], input[type=email],
 textarea {
   background: #FFF;
@@ -151,12 +151,10 @@ select {
 .btn, #ui-datepicker-div .ui-datepicker-current,
 #ui-datepicker-div .ui-datepicker-close {
   border: none;
-  background-color: #e9e9e6;
+  background-color: #E9E9E6;
   cursor: pointer;
-  -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
-  -ms-border-radius: 2px;
-  -o-border-radius: 2px;
+  -webkit-border-radius: 2px;
   border-radius: 2px;
   display: inline-block;
   padding: 0 12px;
@@ -167,9 +165,9 @@ select {
   /* line 15, ../scss/_buttons.scss */
   .btn:hover, #ui-datepicker-div .ui-datepicker-current:hover,
   #ui-datepicker-div .ui-datepicker-close:hover {
-    -webkit-transition-duration: 0.4s;
     -moz-transition-duration: 0.4s;
     -o-transition-duration: 0.4s;
+    -webkit-transition-duration: 0.4s;
     transition-duration: 0.4s;
     background-color: #dbdbd6; }
   /* line 19, ../scss/_buttons.scss */
@@ -207,19 +205,17 @@ select {
 /* line 55, ../scss/_buttons.scss */
 .primary {
   border: none;
-  background-color: #467b96;
+  background-color: #467B96;
   cursor: pointer;
-  -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
-  -ms-border-radius: 2px;
-  -o-border-radius: 2px;
+  -webkit-border-radius: 2px;
   border-radius: 2px;
   color: #FFF; }
   /* line 15, ../scss/_buttons.scss */
   .primary:hover {
-    -webkit-transition-duration: 0.4s;
     -moz-transition-duration: 0.4s;
     -o-transition-duration: 0.4s;
+    -webkit-transition-duration: 0.4s;
     transition-duration: 0.4s;
     background-color: #3c6a81; }
   /* line 19, ../scss/_buttons.scss */
@@ -237,19 +233,17 @@ select {
 /* line 64, ../scss/_buttons.scss */
 .btn-warn {
   border: none;
-  background-color: #b94a48;
+  background-color: #B94A48;
   cursor: pointer;
-  -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
-  -ms-border-radius: 2px;
-  -o-border-radius: 2px;
+  -webkit-border-radius: 2px;
   border-radius: 2px;
   color: #FFF; }
   /* line 15, ../scss/_buttons.scss */
   .btn-warn:hover {
-    -webkit-transition-duration: 0.4s;
     -moz-transition-duration: 0.4s;
     -o-transition-duration: 0.4s;
+    -webkit-transition-duration: 0.4s;
     transition-duration: 0.4s;
     background-color: #a4403f; }
   /* line 19, ../scss/_buttons.scss */
@@ -260,7 +254,7 @@ select {
     background-color: #c1605e;
     cursor: default; }
 
-/* line 73, ../scss/_buttons.scss */
+/* line 69, ../scss/_buttons.scss */
 .btn-link,
 .btn-link:hover,
 .btn-link:focus,
@@ -312,10 +306,8 @@ select {
 /* line 6, ../scss/_messages.scss */
 .message {
   padding: 8px 10px;
-  -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
-  -ms-border-radius: 2px;
-  -o-border-radius: 2px;
+  -webkit-border-radius: 2px;
   border-radius: 2px; }
 
 /* line 11, ../scss/_messages.scss */
@@ -362,10 +354,8 @@ select {
   text-align: center;
   font-size: 12px;
   color: #FFF;
-  -webkit-border-radius: 20px;
   -moz-border-radius: 20px;
-  -ms-border-radius: 20px;
-  -o-border-radius: 20px;
+  -webkit-border-radius: 20px;
   border-radius: 20px; }
 
 /**
@@ -392,10 +382,8 @@ select {
 .typecho-pager a {
   display: block;
   padding: 0 10px;
-  -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
-  -ms-border-radius: 2px;
-  -o-border-radius: 2px;
+  -webkit-border-radius: 2px;
   border-radius: 2px; }
 
 /* line 28, ../scss/_pagenavi.scss */
@@ -420,7 +408,7 @@ select {
 .typecho-head-nav a {
   color: #BBB; }
 
-/* line 13, ../scss/_header.scss */
+/* line 12, ../scss/_header.scss */
 .typecho-head-nav a:hover,
 .typecho-head-nav a:focus {
   color: #FFF;
@@ -454,7 +442,7 @@ select {
   line-height: 36px;
   color: #BBB; }
 
-/* line 48, ../scss/_header.scss */
+/* line 46, ../scss/_header.scss */
 #typecho-nav-list .parent a:hover,
 #typecho-nav-list .focus .parent a,
 #typecho-nav-list .root:hover .parent a {
@@ -492,7 +480,7 @@ select {
   height: 36px;
   line-height: 36px; }
 
-/* line 85, ../scss/_header.scss */
+/* line 84, ../scss/_header.scss */
 #typecho-nav-list .child li a:hover,
 #typecho-nav-list .child li a:focus {
   background: #292D33;
@@ -835,8 +823,8 @@ select {
   height: 26px;
   line-height: 26px;
   color: #666;
-  -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
   box-sizing: border-box; }
 
 /* line 387, ../scss/style.scss */
@@ -850,24 +838,20 @@ select {
   float: left; }
   /* line 395, ../scss/style.scss */
   .typecho-option-tabs li:first-child a {
-    -webkit-border-radius: 2px 0 0 2px;
     -moz-border-radius: 2px 0 0 2px;
-    -ms-border-radius: 2px 0 0 2px;
-    -o-border-radius: 2px 0 0 2px;
+    -webkit-border-radius: 2px;
     border-radius: 2px 0 0 2px; }
   /* line 398, ../scss/style.scss */
   .typecho-option-tabs li:last-child a {
-    -webkit-border-radius: 0 2px 2px 0;
     -moz-border-radius: 0 2px 2px 0;
-    -ms-border-radius: 0 2px 2px 0;
-    -o-border-radius: 0 2px 2px 0;
+    -webkit-border-radius: 0;
     border-radius: 0 2px 2px 0; }
 
 /* line 403, ../scss/style.scss */
 .typecho-option-tabs.right {
   float: right; }
 
-/* line 408, ../scss/style.scss */
+/* line 407, ../scss/style.scss */
 .typecho-option-tabs li.current a,
 .typecho-option-tabs li.active a {
   background-color: #E9E9E6; }
@@ -882,7 +866,7 @@ select {
 .typecho-list-operate {
   margin: 1em 0; }
 
-/* line 429, ../scss/style.scss */
+/* line 427, ../scss/style.scss */
 .typecho-list-operate input,
 .typecho-list-operate button,
 .typecho-list-operate select {
@@ -900,7 +884,7 @@ select {
 .typecho-list-operate .search {
   float: right; }
 
-/* line 446, ../scss/style.scss */
+/* line 445, ../scss/style.scss */
 .typecho-list-operate span.operate-delete, a.operate-delete,
 .typecho-list-operate span.operate-button-delete, a.operate-button-delete {
   color: #B94A48; }
@@ -982,7 +966,7 @@ a.operate-reply {
 
 /* line 521, ../scss/style.scss */
 .typecho-list-table tr:hover td .hidden-by-mouse {
-  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+  filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1; }
 
 /**
@@ -1004,7 +988,7 @@ a.operate-reply {
   border-color: #F0F0EC #F0F0EC transparent transparent;
   content: " "; }
 
-/* line 546, ../scss/style.scss */
+/* line 545, ../scss/style.scss */
 .comment-meta span,
 .comment-date {
   font-size: .92857em;
@@ -1204,44 +1188,47 @@ a.operate-reply {
     #custom-field .description button {
       float: left; }
   /* line 756, ../scss/style.scss */
+  #custom-field p.description {
+    text-align: left; }
+  /* line 760, ../scss/style.scss */
   #custom-field .typecho-label {
     margin: 0; }
-    /* line 758, ../scss/style.scss */
+    /* line 762, ../scss/style.scss */
     #custom-field .typecho-label a {
       display: block;
       color: #444; }
-      /* line 761, ../scss/style.scss */
+      /* line 765, ../scss/style.scss */
       #custom-field .typecho-label a:hover {
         color: #467B96;
         text-decoration: none; }
-  /* line 767, ../scss/style.scss */
+  /* line 771, ../scss/style.scss */
   #custom-field table {
     margin-top: 10px; }
-  /* line 770, ../scss/style.scss */
+  /* line 774, ../scss/style.scss */
   #custom-field td {
     padding: 10px 5px;
     font-size: .92857em;
     border-bottom: 1px solid #F0F0EC;
     vertical-align: top; }
-    /* line 775, ../scss/style.scss */
+    /* line 779, ../scss/style.scss */
     #custom-field td label {
       font-size: 1em;
       font-weight: normal; }
-  /* line 780, ../scss/style.scss */
+  /* line 784, ../scss/style.scss */
   #custom-field select {
     height: 27px; }
 
-/* line 783, ../scss/style.scss */
+/* line 787, ../scss/style.scss */
 .typecho-post-area .is-draft {
   background: #FFF1A8; }
 
-/* line 787, ../scss/style.scss */
+/* line 791, ../scss/style.scss */
 .typecho-post-option .description {
   margin-top: -0.5em;
   color: #999;
   font-size: .92857em; }
 
-/* line 793, ../scss/style.scss */
+/* line 797, ../scss/style.scss */
 .category-option ul {
   list-style: none;
   border: 1px solid #D9D9D6;
@@ -1251,11 +1238,11 @@ a.operate-reply {
   background-color: #FFF;
   border-radius: 2px; }
 
-/* line 802, ../scss/style.scss */
+/* line 806, ../scss/style.scss */
 .category-option li {
   margin: 3px 0; }
 
-/* line 807, ../scss/style.scss */
+/* line 810, ../scss/style.scss */
 .visibility-option ul,
 .allow-option ul {
   list-style: none;
@@ -1264,61 +1251,61 @@ a.operate-reply {
 /**
 * 标签列表
 */
-/* line 817, ../scss/style.scss */
+/* line 821, ../scss/style.scss */
 .typecho-page-main ul.tag-list {
   list-style: none;
   margin: 0;
   padding: 20px;
   background-color: #FFF; }
 
-/* line 824, ../scss/style.scss */
+/* line 828, ../scss/style.scss */
 .typecho-page-main ul.tag-list li {
   display: inline-block;
   margin: 0 0 5px 0;
   padding: 5px 5px 5px 10px;
   cursor: pointer; }
 
-/* line 830, ../scss/style.scss */
+/* line 834, ../scss/style.scss */
 .typecho-page-main ul.tag-list li:hover {
   background-color: #E9E9E6; }
 
-/* line 834, ../scss/style.scss */
+/* line 838, ../scss/style.scss */
 .typecho-page-main ul.tag-list li input {
   display: none; }
 
-/* line 839, ../scss/style.scss */
+/* line 843, ../scss/style.scss */
 .typecho-page-main ul.tag-list li.checked {
   background-color: #FFFBCC; }
 
-/* line 843, ../scss/style.scss */
+/* line 847, ../scss/style.scss */
 .typecho-page-main ul.tag-list li.size-5 {
   font-size: 1em; }
 
-/* line 844, ../scss/style.scss */
+/* line 848, ../scss/style.scss */
 .typecho-page-main ul.tag-list li.size-10 {
   font-size: 1.2em; }
 
-/* line 845, ../scss/style.scss */
+/* line 849, ../scss/style.scss */
 .typecho-page-main ul.tag-list li.size-20 {
   font-size: 1.4em; }
 
-/* line 846, ../scss/style.scss */
+/* line 850, ../scss/style.scss */
 .typecho-page-main ul.tag-list li.size-30 {
   font-size: 1.6em; }
 
-/* line 847, ../scss/style.scss */
+/* line 851, ../scss/style.scss */
 .typecho-page-main ul.tag-list li.size-0 {
   font-size: 1.8em; }
 
-/* line 849, ../scss/style.scss */
+/* line 853, ../scss/style.scss */
 .typecho-page-main .tag-edit-link {
   visibility: hidden; }
 
-/* line 850, ../scss/style.scss */
+/* line 854, ../scss/style.scss */
 .typecho-page-main li:hover .tag-edit-link {
   visibility: visible; }
 
-/* line 852, ../scss/style.scss */
+/* line 856, ../scss/style.scss */
 .typecho-attachment-photo {
   border: 1px solid #E6E6E3;
   max-width: 100%; }
@@ -1326,22 +1313,22 @@ a.operate-reply {
 /*
 * Upload
 */
-/* line 861, ../scss/style.scss */
+/* line 865, ../scss/style.scss */
 #upload-panel {
   border: 1px dashed #D9D9D6;
   background-color: #FFF;
   color: #999;
   font-size: .92857em; }
-  /* line 866, ../scss/style.scss */
+  /* line 870, ../scss/style.scss */
   #upload-panel.drag {
     background-color: #FFFBCC; }
 
-/* line 871, ../scss/style.scss */
+/* line 875, ../scss/style.scss */
 .upload-area {
   padding: 15px;
   text-align: center; }
 
-/* line 876, ../scss/style.scss */
+/* line 880, ../scss/style.scss */
 #file-list {
   list-style: none;
   margin: 0 10px;
@@ -1349,40 +1336,40 @@ a.operate-reply {
   max-height: 450px;
   overflow: auto;
   word-break: break-all; }
-  /* line 884, ../scss/style.scss */
+  /* line 887, ../scss/style.scss */
   #file-list li,
   #file-list .insert {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis; }
-  /* line 889, ../scss/style.scss */
+  /* line 893, ../scss/style.scss */
   #file-list li {
     padding: 8px 0;
     border-top: 1px dashed #D9D9D6; }
-  /* line 893, ../scss/style.scss */
+  /* line 897, ../scss/style.scss */
   #file-list .insert {
     display: block;
     max-width: 100%; }
-  /* line 897, ../scss/style.scss */
+  /* line 901, ../scss/style.scss */
   #file-list .file {
     margin-left: 5px; }
-  /* line 900, ../scss/style.scss */
+  /* line 904, ../scss/style.scss */
   #file-list .info {
     text-transform: uppercase; }
 
-/* line 905, ../scss/style.scss */
+/* line 909, ../scss/style.scss */
 #btn-fullscreen-upload {
   visibility: hidden; }
 
 /**
 * 附件管理
 */
-/* line 913, ../scss/style.scss */
+/* line 917, ../scss/style.scss */
 .edit-media button {
   margin-right: 6px; }
 
 /* 拖动调整 textarea 大小 */
-/* line 916, ../scss/style.scss */
+/* line 920, ../scss/style.scss */
 .resize {
   display: block;
   margin: 2px auto 0;
@@ -1391,14 +1378,14 @@ a.operate-reply {
   border-width: 1px 0;
   width: 60px;
   cursor: row-resize; }
-  /* line 924, ../scss/style.scss */
+  /* line 928, ../scss/style.scss */
   .resize i {
     display: block;
     height: 1px;
     background-color: #D9D9D6; }
 
 /* 拖动排序 */
-/* line 932, ../scss/style.scss */
+/* line 936, ../scss/style.scss */
 .tDnD_whileDrag {
   background-color: #FFFBCC; }
 
@@ -1413,7 +1400,7 @@ a.operate-reply {
   display: inline-block;
   vertical-align: text-bottom;
   text-indent: -9999em;
-  background-image: url('../img/icons-sba2b1299ac.png');
+  background-image: url('../img/icons-s0c4f1c5ae6.png');
   background-repeat: no-repeat; }
   /* line 35, ../scss/_icons.scss */
   .i-edit:hover, .i-delete:hover, .i-exlink:hover, .mime-office:hover, .mime-text:hover, .mime-image:hover, .mime-html:hover, .mime-archive:hover, .mime-application:hover, .mime-audio:hover, .mime-script:hover, .mime-video:hover, .mime-unknow:hover, .i-upload:hover, .i-upload-active:hover {
@@ -1422,11 +1409,11 @@ a.operate-reply {
   @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     /* line 29, ../scss/_icons.scss */
     .i-edit, .i-delete, .i-exlink, .mime-office, .mime-text, .mime-image, .mime-html, .mime-archive, .mime-application, .mime-audio, .mime-script, .mime-video, .mime-unknow, .i-upload, .i-upload-active {
-      -webkit-background-size: auto 256px;
       -moz-background-size: auto 256px;
       -o-background-size: auto 256px;
+      -webkit-background-size: auto 256px;
       background-size: auto 256px;
-      background-image: url('../img/icons-2x-se223d6d340.png'); } }
+      background-image: url('../img/icons-2x-s481937020b.png'); } }
 
 /* line 47, ../scss/_icons.scss */
 .i-edit, .i-delete, .i-exlink, .mime-office, .mime-text, .mime-image, .mime-html, .mime-archive, .mime-application, .mime-audio, .mime-script, .mime-video, .mime-unknow {
@@ -1440,31 +1427,31 @@ a.operate-reply {
 
 /* line 59, ../scss/_icons.scss */
 .i-edit {
-  background-position: 0 -80px; }
+  background-position: 0 -16px; }
   @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     /* line 59, ../scss/_icons.scss */
     .i-edit {
-      background-position: 0 -80px; } }
+      background-position: 0 -16px; } }
 
 /* line 63, ../scss/_icons.scss */
 .i-delete {
-  background-position: 0 -64px; }
-  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    /* line 63, ../scss/_icons.scss */
-    .i-delete {
-      background-position: 0 -64px; } }
+  background-position: 0 0; }
 
 /* line 71, ../scss/_icons.scss */
 .i-upload {
-  background-position: 0 -24px; }
+  background-position: 0 -72px; }
   @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     /* line 71, ../scss/_icons.scss */
     .i-upload {
-      background-position: 0 -24px; } }
+      background-position: 0 -72px; } }
 
 /* line 76, ../scss/_icons.scss */
 .i-upload-active {
-  background-position: 0 0; }
+  background-position: 0 -48px; }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* line 76, ../scss/_icons.scss */
+    .i-upload-active {
+      background-position: 0 -48px; } }
 
 /* line 82, ../scss/_icons.scss */
 .i-caret-up, .i-caret-down, .i-caret-left, .i-caret-right {
@@ -1490,20 +1477,20 @@ a.operate-reply {
 
 /* line 101, ../scss/_icons.scss */
 .i-exlink {
-  background-position: 0 -48px; }
+  background-position: 0 -32px; }
   @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     /* line 101, ../scss/_icons.scss */
     .i-exlink {
-      background-position: 0 -48px; } }
+      background-position: 0 -32px; } }
 
 /* 文件类型图标 */
 /* line 109, ../scss/_icons.scss */
 .mime-office {
-  background-position: 0 -128px; }
+  background-position: 0 -176px; }
   @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     /* line 109, ../scss/_icons.scss */
     .mime-office {
-      background-position: 0 -112px; } }
+      background-position: 0 -176px; } }
 
 /* line 114, ../scss/_icons.scss */
 .mime-text {
@@ -1515,11 +1502,11 @@ a.operate-reply {
 
 /* line 119, ../scss/_icons.scss */
 .mime-image {
-  background-position: 0 -96px; }
+  background-position: 0 -160px; }
   @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     /* line 119, ../scss/_icons.scss */
     .mime-image {
-      background-position: 0 -96px; } }
+      background-position: 0 -160px; } }
 
 /* line 124, ../scss/_icons.scss */
 .mime-html {
@@ -1531,51 +1518,51 @@ a.operate-reply {
 
 /* line 129, ../scss/_icons.scss */
 .mime-archive {
-  background-position: 0 -224px; }
+  background-position: 0 -112px; }
   @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     /* line 129, ../scss/_icons.scss */
     .mime-archive {
-      background-position: 0 -224px; } }
+      background-position: 0 -112px; } }
 
 /* line 134, ../scss/_icons.scss */
 .mime-application {
-  background-position: 0 -160px; }
+  background-position: 0 -96px; }
   @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     /* line 134, ../scss/_icons.scss */
     .mime-application {
-      background-position: 0 -176px; } }
+      background-position: 0 -96px; } }
 
 /* line 139, ../scss/_icons.scss */
 .mime-audio {
-  background-position: 0 -240px; }
+  background-position: 0 -128px; }
   @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     /* line 139, ../scss/_icons.scss */
     .mime-audio {
-      background-position: 0 -240px; } }
+      background-position: 0 -128px; } }
 
 /* line 144, ../scss/_icons.scss */
 .mime-script {
-  background-position: 0 -176px; }
+  background-position: 0 -192px; }
   @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     /* line 144, ../scss/_icons.scss */
     .mime-script {
-      background-position: 0 -160px; } }
+      background-position: 0 -192px; } }
 
 /* line 149, ../scss/_icons.scss */
 .mime-video {
-  background-position: 0 -112px; }
+  background-position: 0 -240px; }
   @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     /* line 149, ../scss/_icons.scss */
     .mime-video {
-      background-position: 0 -128px; } }
+      background-position: 0 -240px; } }
 
 /* line 154, ../scss/_icons.scss */
 .mime-unknow {
-  background-position: 0 -192px; }
+  background-position: 0 -224px; }
   @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     /* line 154, ../scss/_icons.scss */
     .mime-unknow {
-      background-position: 0 -192px; } }
+      background-position: 0 -224px; } }
 
 /* Logo 图标 */
 /* line 161, ../scss/_icons.scss */
@@ -1585,9 +1572,9 @@ a.operate-reply {
   display: inline-block;
   background: url("../img/typecho-logo.svg") no-repeat;
   text-indent: -9999em;
-  -webkit-background-size: auto 40px;
   -moz-background-size: auto 40px;
   -o-background-size: auto 40px;
+  -webkit-background-size: auto 40px;
   background-size: auto 40px;
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=15);
   opacity: 0.15; }
@@ -1600,9 +1587,9 @@ a.operate-reply {
 .i-logo-s {
   width: 26px;
   height: 26px;
-  -webkit-background-size: auto 26px;
   -moz-background-size: auto 26px;
   -o-background-size: auto 26px;
+  -webkit-background-size: auto 26px;
   background-size: auto 26px; }
 
 /*
@@ -1626,10 +1613,8 @@ a.operate-reply {
     padding: 3px;
     cursor: pointer;
     vertical-align: middle;
-    -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
-    -ms-border-radius: 2px;
-    -o-border-radius: 2px;
+    -webkit-border-radius: 2px;
     border-radius: 2px; }
     /* line 22, ../scss/components/_editor.scss */
     .wmd-button-row li:hover {
@@ -1654,9 +1639,9 @@ a.operate-reply {
   /* line 46, ../scss/components/_editor.scss */
   #wmd-button-row span {
     background-image: url(../img/editor@2x.png);
-    -webkit-background-size: 320px auto;
     -moz-background-size: 320px auto;
     -o-background-size: 320px auto;
+    -webkit-background-size: 320px auto;
     background-size: 320px auto; } }
 /* line 53, ../scss/components/_editor.scss */
 .wmd-edittab {
@@ -1724,10 +1709,8 @@ a.operate-reply {
   padding: 0 15px;
   word-wrap: break-word;
   overflow: auto;
-  -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
-  -ms-border-radius: 2px;
-  -o-border-radius: 2px;
+  -webkit-border-radius: 2px;
   border-radius: 2px; }
   /* line 114, ../scss/components/_editor.scss */
   #wmd-preview img {
@@ -1769,36 +1752,55 @@ a.operate-reply {
     text-align: center;
     content: "- more -"; }
 
+/* 上传面板动画效果 */
+@keyframes fullscreen-upload {
+  0% {
+    right: -280px; }
+  100% {
+    right: -1px; } }
+@-moz-keyframes fullscreen-upload {
+  0% {
+    right: -280px; }
+  100% {
+    right: -1px; } }
+@-webkit-keyframes fullscreen-upload {
+  0% {
+    right: -280px; }
+  100% {
+    right: -1px; } }
+@-o-keyframes fullscreen-upload {
+  0% {
+    right: -280px; }
+  100% {
+    right: -1px; } }
 /* 编辑器全屏 */
-/* line 153, ../scss/components/_editor.scss */
+/* line 174, ../scss/components/_editor.scss */
 .fullscreen #wmd-button-bar, .fullscreen #text, .fullscreen #wmd-preview, .fullscreen .submit {
   position: absolute;
   top: 0;
   width: 50%;
   background: #FFF;
   z-index: 999;
-  -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  -webkit-border-radius: 0;
   -moz-border-radius: 0;
-  -ms-border-radius: 0;
-  -o-border-radius: 0;
+  -webkit-border-radius: 0;
   border-radius: 0; }
-/* line 163, ../scss/components/_editor.scss */
+/* line 184, ../scss/components/_editor.scss */
 .fullscreen #wmd-button-bar {
   left: 0;
   padding: 13px 20px;
   border-bottom: 1px solid #F3F3F0;
   z-index: 1000; }
-/* line 169, ../scss/components/_editor.scss */
+/* line 190, ../scss/components/_editor.scss */
 .fullscreen #text {
   top: 53px;
   left: 0;
   padding: 20px;
   border: none;
   outline: none; }
-/* line 176, ../scss/components/_editor.scss */
+/* line 197, ../scss/components/_editor.scss */
 .fullscreen #wmd-preview {
   top: 53px;
   right: 0;
@@ -1808,23 +1810,32 @@ a.operate-reply {
   border-left: 1px solid #F3F3F0;
   background: #F6F6F3;
   overflow: auto; }
-  /* line 185, ../scss/components/_editor.scss */
+  /* line 206, ../scss/components/_editor.scss */
   .fullscreen #wmd-preview code, .fullscreen #wmd-preview pre {
     background: #F0F0EC; }
-/* line 189, ../scss/components/_editor.scss */
+/* line 210, ../scss/components/_editor.scss */
 .fullscreen .submit {
   right: 0;
   margin: 0;
   padding: 10px 20px;
   border-bottom: 1px solid #F3F3F0; }
-/* line 197, ../scss/components/_editor.scss */
+/* line 216, ../scss/components/_editor.scss */
+.fullscreen #upload-panel {
+  -webkit-box-shadow: 0 4px 16px rgba(0, 0, 0, 0.225);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.225);
+  border-style: solid; }
+/* line 223, ../scss/components/_editor.scss */
 .fullscreen #tab-files {
   position: absolute;
   top: 52px;
-  right: 20px;
+  right: -1px;
   width: 280px;
-  z-index: 1001; }
-/* line 211, ../scss/components/_editor.scss */
+  z-index: 1001;
+  animation: fullscreen-upload 0.5s;
+  -moz-animation: fullscreen-upload 0.5s;
+  -webkit-animation: fullscreen-upload 0.5s;
+  -o-animation: fullscreen-upload 0.5s; }
+/* line 236, ../scss/components/_editor.scss */
 .fullscreen .wmd-edittab,
 .fullscreen .typecho-post-option,
 .fullscreen .title,
@@ -1833,10 +1844,10 @@ a.operate-reply {
 .fullscreen .typecho-head-nav,
 .fullscreen .message {
   display: none; }
-/* line 212, ../scss/components/_editor.scss */
+/* line 243, ../scss/components/_editor.scss */
 .fullscreen .wmd-hidetab {
   display: block; }
-/* line 214, ../scss/components/_editor.scss */
+/* line 244, ../scss/components/_editor.scss */
 .fullscreen .wmd-visualhide,
 .fullscreen #btn-fullscreen-upload {
   visibility: visible; }
@@ -1952,7 +1963,7 @@ a.operate-reply {
   padding-top: 10px;
   border-top: 1px solid #EEE; }
 
-/* line 75, ../scss/components/_timepicker.scss */
+/* line 74, ../scss/components/_timepicker.scss */
 #ui-datepicker-div .ui-datepicker-current,
 #ui-datepicker-div .ui-datepicker-close {
   float: left; }
@@ -2089,7 +2100,7 @@ div.token-input-dropdown ul li.token-input-selected-dropdown-item {
 * Extends the .sr-only class to allow the element to be focusable
 * when navigated to via the keyboard: h5bp.com/p
 */
-/* line 31, ../scss/_hidden.scss */
+/* line 30, ../scss/_hidden.scss */
 .sr-only.focusable:active,
 .sr-only.focusable:focus {
   clip: auto;

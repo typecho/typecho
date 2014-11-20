@@ -67,6 +67,10 @@ if (!empty($_GET) || !empty($_POST)) {
     }
 
     $parts = parse_url($_SERVER['HTTP_REFERER']);
+	if (!empty($parts['port'])) {
+        $parts['host'] = "{$parts['host']}:{$parts['port']}";
+    }
+
     if (empty($parts['host']) || $_SERVER['HTTP_HOST'] != $parts['host']) {
         exit;
     }
@@ -143,14 +147,13 @@ function _p($adapter) {
  * @return string
  */
 function _u() {
-    $url = "http://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-    if (isset($_SERVER["QUERY_STRING"])) {
-        $url = str_replace("?" . $_SERVER["QUERY_STRING"], "", $url);
+    $url = Typecho_Request::getUrlPrefix() . $_SERVER['REQUEST_URI'];
+    if (isset($_SERVER['QUERY_STRING'])) {
+        $url = str_replace('?' . $_SERVER['QUERY_STRING'], '', $url);
     }
 
     return dirname($url);
 }
-
 
 $options = new stdClass();
 $options->generator = 'Typecho ' . Typecho_Common::VERSION;
@@ -160,6 +163,29 @@ $options->software = $soft;
 $options->version = $currentVersion;
 
 list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
+
+/** 获取语言 */
+$lang = _r('lang', Typecho_Cookie::get('__typecho_lang'));
+$langs = Widget_Options_General::getLangs();
+
+if (empty($lang) && count($langs) > 1) {
+    foreach ($langs as $lang) {
+        if ('zh_CN' != $lang) {
+            break;
+        }
+    }
+}
+
+if (empty($lang)) {
+    $lang = 'zh_CN';
+}
+
+if ('zh_CN' != $lang) {
+    $dir = defined('__TYPECHO_LANG_DIR__') ? __TYPECHO_LANG_DIR__ : __TYPECHO_ROOT_DIR__ . '/usr/langs';
+    Typecho_I18n::setLang($dir . '/' . $lang . '.mo');
+}
+
+Typecho_Cookie::set('__typecho_lang', $lang);
 
 ?><!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -282,7 +308,8 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'theme', 'user' => 0, 'value' => 'default')));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'theme:default', 'user' => 0, 'value' => 'a:2:{s:7:"logoUrl";N;s:12:"sidebarBlock";a:5:{i:0;s:15:"ShowRecentPosts";i:1;s:18:"ShowRecentComments";i:2;s:12:"ShowCategory";i:3;s:11:"ShowArchive";i:4;s:9:"ShowOther";}}')));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'timezone', 'user' => 0, 'value' => _t('28800'))));
-                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'charset', 'user' => 0, 'value' => 'UTF-8')));
+                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'lang', 'user' => 0, 'value' => $lang)));
+                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'charset', 'user' => 0, 'value' => _t('UTF-8'))));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'contentType', 'user' => 0, 'value' => 'text/html')));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'gzip', 'user' => 0, 'value' => 0)));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'generator', 'user' => 0, 'value' => $options->generator)));
@@ -330,6 +357,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsShowCommentOnly', 'user' => 0, 'value' => 0)));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsAvatar', 'user' => 0, 'value' => 1)));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsAvatarRating', 'user' => 0, 'value' => 'G')));
+                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'commentsAntiSpam', 'user' => 0, 'value' => 1)));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'routingTable', 'user' => 0, 'value' => 'a:25:{s:5:"index";a:3:{s:3:"url";s:1:"/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:7:"archive";a:3:{s:3:"url";s:6:"/blog/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:2:"do";a:3:{s:3:"url";s:22:"/action/[action:alpha]";s:6:"widget";s:9:"Widget_Do";s:6:"action";s:6:"action";}s:4:"post";a:3:{s:3:"url";s:24:"/archives/[cid:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:10:"attachment";a:3:{s:3:"url";s:26:"/attachment/[cid:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:8:"category";a:3:{s:3:"url";s:17:"/category/[slug]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:3:"tag";a:3:{s:3:"url";s:12:"/tag/[slug]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:6:"author";a:3:{s:3:"url";s:22:"/author/[uid:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:6:"search";a:3:{s:3:"url";s:19:"/search/[keywords]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:10:"index_page";a:3:{s:3:"url";s:21:"/page/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:12:"archive_page";a:3:{s:3:"url";s:26:"/blog/page/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:13:"category_page";a:3:{s:3:"url";s:32:"/category/[slug]/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:8:"tag_page";a:3:{s:3:"url";s:27:"/tag/[slug]/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:11:"author_page";a:3:{s:3:"url";s:37:"/author/[uid:digital]/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:11:"search_page";a:3:{s:3:"url";s:34:"/search/[keywords]/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:12:"archive_year";a:3:{s:3:"url";s:18:"/[year:digital:4]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:13:"archive_month";a:3:{s:3:"url";s:36:"/[year:digital:4]/[month:digital:2]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:11:"archive_day";a:3:{s:3:"url";s:52:"/[year:digital:4]/[month:digital:2]/[day:digital:2]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:17:"archive_year_page";a:3:{s:3:"url";s:38:"/[year:digital:4]/page/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:18:"archive_month_page";a:3:{s:3:"url";s:56:"/[year:digital:4]/[month:digital:2]/page/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:16:"archive_day_page";a:3:{s:3:"url";s:72:"/[year:digital:4]/[month:digital:2]/[day:digital:2]/page/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:12:"comment_page";a:3:{s:3:"url";s:53:"[permalink:string]/comment-page-[commentPage:digital]";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:4:"feed";a:3:{s:3:"url";s:20:"/feed[feed:string:0]";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:4:"feed";}s:8:"feedback";a:3:{s:3:"url";s:31:"[permalink:string]/[type:alpha]";s:6:"widget";s:15:"Widget_Feedback";s:6:"action";s:6:"action";}s:4:"page";a:3:{s:3:"url";s:12:"/[slug].html";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}}')));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'actionTable', 'user' => 0, 'value' => 'a:0:{}')));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'panelTable', 'user' => 0, 'value' => 'a:0:{}')));
@@ -614,7 +642,17 @@ Typecho_Db::set(\$db);
                 <?php _e('如果您遇到使用上的问题, 程序中的 BUG, 以及期许的新功能, 欢迎您在社区中交流或者直接向我们贡献代码.'); ?>
                 <?php _e('对于贡献突出者, 他的名字将出现在贡献者名单中.'); ?></p>
                 </div>
-                <p class="submit"><button type="submit" class="btn primary"><?php _e('我准备好了, 开始下一步 &raquo;'); ?></button></p>
+                <p class="submit">
+                    <button type="submit" class="btn primary"><?php _e('我准备好了, 开始下一步 &raquo;'); ?></button>
+
+                    <?php if (count($langs) > 1): ?>
+                    <select style="float: right" onchange="window.location.href='install.php?lang=' + this.value">
+                        <?php foreach ($langs as $key => $val): ?>
+                        <option value="<?php echo $key; ?>"<?php if ($lang == $val): ?> selected<?php endif; ?>><?php echo $val; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <?php endif; ?>
+                </p>
                 </form>
             <?php endif; ?>
 

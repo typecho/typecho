@@ -239,6 +239,7 @@ Typecho_Date::setTimezoneOffset($options->timezone);
                     $db->query('DROP TABLE  ' . $prefix . 'users_' . $uuid, Typecho_Db::WRITE);
                     $db->query('CREATE UNIQUE INDEX ' . $prefix . 'users_name ON ' . $prefix . 'users ("name")', Typecho_Db::WRITE);
                     $db->query('CREATE UNIQUE INDEX ' . $prefix . 'users_mail ON ' . $prefix . 'users ("mail")', Typecho_Db::WRITE);
+                    $db->flushPool();
 
                     break;
 
@@ -322,6 +323,7 @@ Typecho_Date::setTimezoneOffset($options->timezone);
                     $db->query('INSERT INTO ' . $prefix . 'metas SELECT * FROM ' . $prefix . 'metas' . $uuid, Typecho_Db::WRITE);
                     $db->query('DROP TABLE  ' . $prefix . 'metas' . $uuid, Typecho_Db::WRITE);
                     $db->query('CREATE INDEX ' . $prefix . 'metas_slug ON ' . $prefix . 'metas ("slug")', Typecho_Db::WRITE);
+                    $db->flushPool();
 
                     break;
 
@@ -773,6 +775,7 @@ Typecho_Date::setTimezoneOffset($options->timezone);
                 $db->query('DROP TABLE  ' . $prefix . 'contents_tmp', Typecho_Db::WRITE);
                 $db->query('CREATE UNIQUE INDEX ' . $prefix . 'contents_slug ON ' . $prefix . 'contents ("slug")', Typecho_Db::WRITE);
                 $db->query('CREATE INDEX ' . $prefix . 'contents_created ON ' . $prefix . 'contents ("created")', Typecho_Db::WRITE);
+                $db->flushPool();
 
                 break;
 
@@ -1154,14 +1157,13 @@ Typecho_Date::setTimezoneOffset($options->timezone);
                 $db->query('INSERT INTO ' . $prefix . 'metas SELECT * FROM ' . $prefix . 'metas' . $uuid, Typecho_Db::WRITE);
                 $db->query('DROP TABLE  ' . $prefix . 'metas' . $uuid, Typecho_Db::WRITE);
                 $db->query('CREATE INDEX ' . $prefix . 'metas_slug ON ' . $prefix . 'metas ("slug")', Typecho_Db::WRITE);
-
+                $db->flushPool();
                 break;
 
             default:
                 break;
         }
     }
-
 
     /**
      * v0_9r14_3_14
@@ -1176,4 +1178,33 @@ Typecho_Date::setTimezoneOffset($options->timezone);
         $db->query($db->insert('table.options')
             ->rows(array('name' => 'secret', 'user' => 0, 'value' => Typecho_Common::randString(32, true))));
     }
+
+    /**
+     * v1_0r14_9_2
+     *
+     * @param mixed $db
+     * @param mixed $options
+     * @access public
+     * @return void
+     */
+    public function v1_0r14_9_2($db, $options)
+    {
+        $db->query($db->insert('table.options')
+            ->rows(array('name' => 'lang', 'user' => 0, 'value' => 'zh_CN')));
+    }
+
+    /**
+     * v1_0r14_10_10
+     *
+     * @param mixed $db
+     * @param mixed $options
+     * @access public
+     * @return void
+     */
+    public function v1_0r14_10_10($db, $options)
+    {
+        $db->query($db->insert('table.options')
+            ->rows(array('name' => 'commentsAntiSpam', 'user' => 0, 'value' => 1)));
+    }
 }
+

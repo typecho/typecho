@@ -6,7 +6,7 @@
 <script>
 $(document).ready(function () {
     var textarea = $('#text'),
-        toolbar = $('<div class="editor" id="wmd-button-bar" />').insertBefore(textarea.parent())
+        toolbar = $('<div class="editor" id="wmd-button-bar" />').insertBefore(textarea.parent()),
         preview = $('<div id="wmd-preview" class="wmd-hidetab" />').insertAfter('.editor');
 
     var options = {}, isMarkdown = <?php echo intval($content->isMarkdown || !$content->have()); ?>;
@@ -63,10 +63,9 @@ $(document).ready(function () {
         mark = '@mark' + Math.ceil(Math.random() * 100000000) + '@',
         span = '<span class="diff" />',
         cache = {};
-    
-    // 设置markdown
+
     Markdown.Extra.init(converter, {
-        extensions  :   ["tables", "fenced_code_gfm", "def_list", "attr_list", "footnotes"]
+        'extensions' : ["tables", "fenced_code_gfm", "def_list", "attr_list", "footnotes", "strikethrough", "newlines"]
     });
 
     // 自动跟随
@@ -174,8 +173,13 @@ $(document).ready(function () {
         t.height(h * ow / w);
     }
 
+    var to;
     editor.hooks.chain('onPreviewRefresh', function () {
         var diff = $('.diff', preview), scrolled = false;
+
+        if (to) {
+            clearTimeout(to);
+        }
 
         $('img', preview).load(function () {
             var t = $(this), src = t.attr('src');
@@ -192,6 +196,14 @@ $(document).ready(function () {
         });
 
         $('.cache', preview).resize(cacheResize).each(cacheResize);
+        
+        var changed = $('.diff', preview).parent();
+        if (!changed.is(preview)) {
+            changed.css('background-color', 'rgba(255,230,0,0.5)');
+            to = setTimeout(function () {
+                changed.css('background-color', 'transparent');
+            }, 4500);
+        }
 
         if (diff.length > 0) {
             var p = diff.position(), lh = diff.parent().css('line-height');
