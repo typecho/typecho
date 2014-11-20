@@ -48,7 +48,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
 
         $commentsShowOptions = array(
             'commentsShowCommentOnly'   =>  _t('仅显示评论, 不显示 Pingback 和 Trackback'),
-            'commentsMarkdown'      =>  _t('在评论中使用Markdown语法'),
+            'commentsMarkdown'      =>  _t('在评论中使用 Markdown 语法'),
             'commentsShowUrl'       =>  _t('评论者名称显示时自动加上其个人主页链接'),
             'commentsUrlNofollow'   =>  _t('对评论者个人主页链接使用 <a href="http://en.wikipedia.org/wiki/Nofollow">nofollow 属性</a>'),
             'commentsAvatar'        =>  _t('启用 <a href="http://gravatar.com">Gravatar</a> 头像服务, 最高显示评级为 %s 的头像',
