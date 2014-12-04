@@ -218,15 +218,27 @@ class Typecho_Request
     public static function getUrlPrefix()
     {
         if (empty(self::$_urlPrefix)) {
-            $isSecure = (!empty($_SERVER['HTTPS']) && 'off' != strtolower($_SERVER['HTTPS'])) 
-                || (!empty($_SERVER['SERVER_PORT']) && 443 == $_SERVER['SERVER_PORT']);
-
-            self::$_urlPrefix = ($isSecure ? 'https' : 'http') 
-                . '://' . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'])
-                . (in_array($_SERVER['SERVER_PORT'], array(80, 443)) ? '' : ':' . $_SERVER['SERVER_PORT']);
+            self::$_urlPrefix = (self::isSecure() ? 'https' : 'http') 
+                . '://' . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 
+                    ($_SERVER['SERVER_NAME'] . (in_array($_SERVER['SERVER_PORT'], array(80, 443)) 
+                        ? '' : ':' . $_SERVER['SERVER_PORT']))
+                );
         }
 
         return self::$_urlPrefix;
+    }
+
+    /**
+     * 判断是否为https
+     *
+     * @access public
+     * @return boolean
+     */
+    public static function isSecure()
+    {
+        return (!empty($_SERVER['HTTPS']) && 'off' != strtolower($_SERVER['HTTPS'])) 
+            || (!empty($_SERVER['SERVER_PORT']) && 443 == $_SERVER['SERVER_PORT'])
+            || (defined('__TYPECHO_SECURE__') && __TYPECHO_SECURE__);
     }
 
     /**
@@ -427,13 +439,16 @@ class Typecho_Request
             $requestUri = $_SERVER['UNENCODED_URL'];
         } elseif (isset($_SERVER['REQUEST_URI'])) {
             $requestUri = $_SERVER['REQUEST_URI'];
+            $parts       = @parse_url($requestUri);
+            
             if (isset($_SERVER['HTTP_HOST']) && strstr($requestUri, $_SERVER['HTTP_HOST'])) {
-                $parts       = @parse_url($requestUri);
-
                 if (false !== $parts) {
                     $requestUri  = (empty($parts['path']) ? '' : $parts['path'])
                                  . ((empty($parts['query'])) ? '' : '?' . $parts['query']);
                 }
+            } elseif (!empty($_SERVER['QUERY_STRING']) && empty($parts['query'])) {
+                // fix query missing
+                $requestUri .= '?' . $_SERVER['QUERY_STRING'];
             }
         } elseif (isset($_SERVER['ORIG_PATH_INFO'])) { // IIS 5.0, PHP as CGI
             $requestUri = $_SERVER['ORIG_PATH_INFO'];
@@ -766,19 +781,7 @@ class Typecho_Request
     public function isPut()
     {
         return 'PUT' == $this->getServer('REQUEST_METHOD');
-    }
-
-    /**
-     * 判断是否为https
-     *
-     * @access public
-     * @return boolean
-     */
-    public function isSecure()
-    {
-        return (!empty($_SERVER['HTTPS']) && 'off' != strtolower($_SERVER['HTTPS'])) 
-            || (!empty($_SERVER['SERVER_PORT']) && 443 == $_SERVER['SERVER_PORT']);
-    }
+    } 
 
     /**
      * 判断是否为ajax

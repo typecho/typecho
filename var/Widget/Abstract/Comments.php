@@ -394,32 +394,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
             
             $this->pluginHandle(__CLASS__)->trigger($plugged)->gravatar($size, $rating, $default, $this);
             if (!$plugged) {
-
-                $mailHash = NULL;
-                if (!empty($this->mail)) {
-                    $mailHash = md5(strtolower($this->mail));
-                }
-                
-                if ($this->request->isSecure()) {
-                    $host = 'https://secure.gravatar.com';
-                } else {
-                    if (empty($this->mail)) {
-                        $host = 'http://0.gravatar.com';
-                    } else {
-                        $host = sprintf( "http://%d.gravatar.com", (hexdec($mailHash{0}) % 2));
-                    }
-                }
-                
-                $url = $host . '/avatar/';
-                
-                if (!empty($this->mail)) {
-                    $url .= $mailHash;
-                }
-                
-                $url .= '?s=' . $size;
-                $url .= '&amp;r=' . $rating;
-                $url .= '&amp;d=' . $default;
-            
+                $url = Typecho_Common::gravatarUrl($this->mail, $size, $rating, $default, $this->request->isSecure());
                 echo '<img class="avatar" src="' . $url . '" alt="' .
                 $this->author . '" width="' . $size . '" height="' . $size . '" />';
             }

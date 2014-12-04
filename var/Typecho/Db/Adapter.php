@@ -32,6 +32,14 @@ interface Typecho_Db_Adapter
     public function connect(Typecho_Config $config);
 
     /**
+     * 获取数据库版本 
+     * 
+     * @param mixed $handle
+     * @return string
+     */
+    public function getVersion($handle);
+
+    /**
      * 执行数据库查询
      *
      * @param string $query 数据库查询SQL字符串

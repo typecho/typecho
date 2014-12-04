@@ -52,6 +52,17 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
     }
 
     /**
+     * 获取数据库版本 
+     * 
+     * @param mixed $handle
+     * @return string
+     */
+    public function getVersion($handle)
+    {
+        return 'ext:sqlite ' . sqlite_libversion();
+    }
+
+    /**
      * 执行数据库查询
      *
      * @param string $query

@@ -63,6 +63,18 @@ class Typecho_Db_Adapter_Pgsql implements Typecho_Db_Adapter
     }
 
     /**
+     * 获取数据库版本 
+     * 
+     * @param mixed $handle
+     * @return string
+     */
+    public function getVersion($handle)
+    {
+        $version = pg_version($handle);
+        return 'ext:pgsql ' . $version['server'];
+    }
+
+    /**
      * 执行数据库查询
      *
      * @param string $query 数据库查询SQL字符串

@@ -24,27 +24,40 @@ a {
 a:hover, a:active {
   color: #444;
 }
-pre, code {
-  padding: 2px 4px;
-  background: #F3F3F0;
+pre, code { 
+  background: #F3F3F3;
   font-family: Menlo, Monaco, Consolas, "Lucida Console", "Courier New", monospace;
   font-size: .92857em;
 }
-code { color: #B94A48; }
+code { padding: 2px 4px; color: #B94A48; }
 pre {
   padding: 8px;
   overflow: auto;
   max-height: 400px;
 }
 pre code {
-  padding: 0;
+  padding: 3px;
   color: #444;
 }
 
 blockquote {
-  margin: 1em 1.5em;
+  margin: 1em 0;
   padding-left: 1.5em;
-  border-left: 4px solid #F3F3F0;
+  border-left: 4px solid #eee;
+  color: #666;
+}
+
+table {
+  border: 1px solid #ddd;
+  width: 100%;
+}
+table th,
+table td {
+  padding: 5px 10px;
+  border: 1px solid #eee;
+}
+table th {
+  background: #f3f3f3;
 }
 
 h1, h2, h3, h4, h5, h6 {

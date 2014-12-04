@@ -62,6 +62,18 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
     }
 
     /**
+     * 获取数据库版本 
+     * 
+     * @param mixed $handle
+     * @return string
+     */
+    public function getVersion($handle)
+    {
+        return 'pdo:' . $handle->getAttribute(PDO::ATTR_DRIVER_NAME) 
+            . ' ' . $handle->getAttribute(PDO::ATTR_SERVER_VERSION);
+    }
+
+    /**
      * 初始化数据库
      *
      * @param Typecho_Config $config 数据库配置

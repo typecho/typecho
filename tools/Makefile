@@ -33,22 +33,6 @@ package:
 	tar -cvvzf build.tar.gz build/
 
 
-commonmark-php:
-	rm -rf ../var/CommonMark
-	git clone https://github.com/joyqi/commonmark-php.git commonmark
-	php transfer.php commonmark/src CommonMark ColinODell/CommonMark
-	rm -f commonmark/src/CommonMarkConverter.php
-	mv commonmark/src ../var/CommonMark
-	rm -rf commonmark
-
-
-commonmark-js:
-	rm -rf ../admin/js/stmd.js
-	git clone https://github.com/jgm/stmd.git
-	cp stmd/js/stmd.js ../admin/js/
-	rm -rf stmd
-
-
 clear:
 	rm -Rf build/
 
@@ -62,6 +46,7 @@ upgrade:
 	rm -Rf ${DIR}/index.php
 	cp build/index.php ${DIR}
 	make clear
+
 
 langs:
 	rm -rf ../usr/langs
@@ -101,6 +86,12 @@ pot:
 	cd ../ && php tools/list.php ./ > tools/files.txt	
 	cd ../ && xgettext --files-from=tools/files.txt -Lphp --from-code=UTF-8 --keyword=_t --keyword=_e --keyword=_n:1,2 --no-location --copyright-holder=Typecho --package-name=Typecho --package-version=`grep -E "VERSION = '(.*)'" ./var/Typecho/Common.php | cut -d "'" -f 2` --no-wrap --output=tools/messages.pot	
 	rm -f files.txt
+
+
+test:
+	for i in `find ../var/ -name '*.php'`; do php -l $$i || exit 1; done;
+	for i in `find ../usr/ -name '*.php'`; do php -l $$i || exit 1; done;
+	for i in `find ../admin/ -name '*.php'`; do php -l $$i || exit 1; done;
 
 
 all:

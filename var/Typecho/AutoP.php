@@ -49,6 +49,7 @@ class AutoP
     private function cutByBlock($text)
     {
         $space = "( |　)";
+        $text = str_replace("\r\n", "\n", trim($text));
         $text = preg_replace("/{$space}*\n{$space}*/is", "\n", $text);
         $text = preg_replace("/\s*<p:([0-9]{4})\/>\s*/is", "</p><p:\\1/><p>", $text);
         $text = preg_replace("/\n{2,}/", "</p><p>", $text);
@@ -95,7 +96,7 @@ class AutoP
     
         switch (true) {
             /** 用br处理换行 */
-            case false !== strpos('|li|dd|dt|td|p|a|span|code|cite|strong|sup|sub|small|del|u|i|b|ins|h1|h2|h3|h4|h5|h6|', $tagMatch):
+            case false !== strpos('|li|dd|dt|td|p|a|span|cite|strong|sup|sub|small|del|u|i|b|ins|h1|h2|h3|h4|h5|h6|', $tagMatch):
                 $text = nl2br(trim($text));
                 break;
             /** 用段落处理换行 */
@@ -110,7 +111,7 @@ class AutoP
         }
         
         /** 没有段落能力的标签 */
-        if (false !== strpos('|a|span|code|cite|strong|sup|sub|small|del|u|i|b|', $tagMatch)) {
+        if (false !== strpos('|a|span|font|code|cite|strong|sup|sub|small|del|u|i|b|', $tagMatch)) {
             $key = '<b' . $matches[2] . '/>';
         } else {
             $key = '<p' . $matches[2] . '/>';

@@ -48,7 +48,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
 
         $commentsShowOptions = array(
             'commentsShowCommentOnly'   =>  _t('仅显示评论, 不显示 Pingback 和 Trackback'),
-            'commentsMarkdown'      =>  _t('在评论中使用Markdown语法'),
+            'commentsMarkdown'      =>  _t('在评论中使用 Markdown 语法'),
             'commentsShowUrl'       =>  _t('评论者名称显示时自动加上其个人主页链接'),
             'commentsUrlNofollow'   =>  _t('对评论者个人主页链接使用 <a href="http://en.wikipedia.org/wiki/Nofollow">nofollow 属性</a>'),
             'commentsAvatar'        =>  _t('启用 <a href="http://gravatar.com">Gravatar</a> 头像服务, 最高显示评级为 %s 的头像',
@@ -113,6 +113,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
             'commentsRequireMail'           =>  _t('必须填写邮箱'),
             'commentsRequireURL'            =>  _t('必须填写网址'),
             'commentsCheckReferer'          =>  _t('检查评论来源页 URL 是否与文章链接一致'),
+            'commentsAntiSpam'              =>  _t('开启反垃圾保护'),
             'commentsAutoClose'             =>  _t('在文章发布 %s 天以后自动关闭评论',
             '</label><input name="commentsPostTimeout" type="text" class="text num text-s" value="' . intval($this->options->commentsPostTimeout / (24 * 3600)) . '" id="commentsPost-commentsPostTimeout" />
             <label for="commentsPost-commentsPostTimeout">'),
@@ -140,6 +141,10 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
 
         if ($this->options->commentsCheckReferer) {
             $commentsPostOptionsValue[] = 'commentsCheckReferer';
+        }
+
+        if ($this->options->commentsAntiSpam) {
+            $commentsPostOptionsValue[] = 'commentsAntiSpam';
         }
 
         if ($this->options->commentsAutoClose) {
@@ -209,6 +214,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         $settings['commentsRequireMail'] = $this->isEnableByCheckbox($settings['commentsPost'], 'commentsRequireMail');
         $settings['commentsRequireURL'] = $this->isEnableByCheckbox($settings['commentsPost'], 'commentsRequireURL');
         $settings['commentsCheckReferer'] = $this->isEnableByCheckbox($settings['commentsPost'], 'commentsCheckReferer');
+        $settings['commentsAntiSpam'] = $this->isEnableByCheckbox($settings['commentsPost'], 'commentsAntiSpam');
         $settings['commentsAutoClose'] = $this->isEnableByCheckbox($settings['commentsPost'], 'commentsAutoClose');
         $settings['commentsPostIntervalEnable'] = $this->isEnableByCheckbox($settings['commentsPost'], 'commentsPostIntervalEnable');
 
