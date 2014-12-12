@@ -289,9 +289,10 @@ abstract class Typecho_Http_Client_Adapter
      * @param string $referer 客户端字符串
      * @return void
      */
-    public function setReferer($referer = NULL)
+    public function setReferer($referer)
     {
         $this->referer = $referer;
+        return $this;
     }
 
     /**
