@@ -47,10 +47,6 @@ class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
             $this->headers['Rfc'] = $this->method . ' ' . $this->path . ' ' . $this->rfc;
             $this->headers['Host'] = $this->host;
         }
-        
-        if ($this->referer) {
-            curl_setopt($ch, CURLOPT_REFERER, $this->referer);
-        }
 
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_PORT, $this->port);
@@ -80,6 +76,11 @@ class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
             if (isset($this->headers['User-Agent'])) {
                 curl_setopt($ch, CURLOPT_USERAGENT, $this->headers['User-Agent']);
                 unset($this->headers['User-Agent']);
+            }
+
+            if (isset($this->headers['Referer'])) {
+                curl_setopt($ch, CURLOPT_REFERER, $this->headers['Referer']);
+                unset($this->headers['Referer']);
             }
 
             $headers = array();
