@@ -132,14 +132,6 @@ abstract class Typecho_Http_Client_Adapter
     protected $port = 80;
 
     /**
-     * 来源页
-     *
-     * @access private
-     * @var string
-     */
-    protected $referer;
-
-    /**
      * 回执头部信息
      *
      * @access protected
@@ -279,19 +271,6 @@ abstract class Typecho_Http_Client_Adapter
     public function setIp($ip)
     {
         $this->ip = $ip;
-        return $this;
-    }
-    
-    /**
-     * 设置来源页
-     *
-     * @access public
-     * @param string $referer 客户端字符串
-     * @return void
-     */
-    public function setReferer($referer)
-    {
-        $this->referer = $referer;
         return $this;
     }
 
