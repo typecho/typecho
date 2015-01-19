@@ -71,7 +71,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         $info = pathinfo($name);
         $name = substr($info['basename'], 1);
     
-        return isset($info['extension']) ? $info['extension'] : '';
+        return isset($info['extension']) ? strtolower($info['extension']) : '';
     }
 
     /**
