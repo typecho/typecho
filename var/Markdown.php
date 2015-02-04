@@ -1,6 +1,5 @@
 <?php
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-use Michelf\MarkdownExtra;
 /**
  * Markdown解析
  *
@@ -18,7 +17,7 @@ class Markdown
      */
     public static function convert($text)
     {
-        return MarkdownExtra::defaultTransform($text);
+        return Michelf_MarkdownExtra::defaultTransform($text);
     }
 }
 

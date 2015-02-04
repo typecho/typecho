@@ -10,14 +10,13 @@
 # Copyright (c) 2004-2006 John Gruber
 # <http://daringfireball.net/projects/markdown/>
 #
-namespace Michelf;
 
 
 #
 # Markdown Parser Interface
 #
 
-interface MarkdownInterface {
+interface Michelf_MarkdownInterface {
 
   #
   # Initialize the parser and return the result of its transform method.

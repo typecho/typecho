@@ -10,14 +10,13 @@
 # Copyright (c) 2004-2006 John Gruber  
 # <http://daringfireball.net/projects/markdown/>
 #
-namespace Michelf;
 
 
 #
 # Markdown Parser Class
 #
 
-class Markdown implements MarkdownInterface {
+class Michelf_Markdown implements Michelf_MarkdownInterface {
 
 	### Version ###
 
@@ -31,7 +30,7 @@ class Markdown implements MarkdownInterface {
 	# This will work fine for derived classes too.
 	#
 		# Take parser class on which this function was called.
-		$parser_class = \get_called_class();
+		$parser_class = get_called_class();
 
 		# try to take parser from the static parser list
 		static $parser_list;
@@ -1564,7 +1563,7 @@ class Markdown implements MarkdownInterface {
 # one.
 #
 
-abstract class _MarkdownExtra_TmpImpl extends \Michelf\Markdown {
+abstract class Michelf_MarkdownExtra_TmpImpl extends Michelf_Markdown {
 
 	### Configuration Variables ###
 
