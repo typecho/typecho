@@ -417,6 +417,54 @@ textarea {
   border-width: 2px 0 0 0;
 }
 
+.post-content table,
+.comment-content table {
+    margin: 15px 0;
+    padding: 0;
+    border-collapse: collapse;
+}
+
+.post-content table tr,
+.comment-content table tr {
+    border-top: 1px solid #cccccc;
+    background-color: white;
+    margin: 0;
+    padding: 0;
+}
+
+.post-content table tr:nth-child(2n),
+.comment-content table tr:nth-child(2n) {
+    background-color: #f8f8f8;
+}
+
+.post-content table tr th,
+.comment-content table tr th {
+    font-weight: bold;
+    border: 1px solid #cccccc;
+    margin: 0;
+    padding: 6px 13px;
+}
+
+.post-content table tr td,
+.comment-content table tr td {
+    border: 1px solid #cccccc;
+    margin: 0;
+    padding: 6px 13px;
+}
+
+.post-content table tr th :first-child,
+.post-content table tr td :first-child,
+.comment-content table tr th :first-child,
+.comment-content table tr td :first-child {
+    margin-top: 0;
+}
+
+.post-content table tr th :last-child,
+.post-content table tr td :last-child,
+.comment-content table tr th :last-child,
+.comment-content table tr td :last-child {
+    margin-bottom: 0;
+}
 
 /* -----------------
  * Misc
