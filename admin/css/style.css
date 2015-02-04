@@ -1751,6 +1751,45 @@ a.operate-reply {
     font-size: .85714em;
     text-align: center;
     content: "- more -"; }
+  #wmd-preview table {
+    margin: 15px 0;
+    padding: 0;
+    border-collapse: collapse;
+  }
+
+  #wmd-preview table tr {
+    border-top: 1px solid #cccccc;
+    background-color: white;
+    margin: 0;
+    padding: 0;
+  }
+
+  #wmd-preview table tr:nth-child(2n) {
+    background-color: #f8f8f8;
+  }
+
+  #wmd-preview table tr th {
+    font-weight: bold;
+    border: 1px solid #cccccc;
+    margin: 0;
+    padding: 6px 13px;
+  }
+
+  #wmd-preview table tr td {
+    border: 1px solid #cccccc;
+    margin: 0;
+    padding: 6px 13px;
+  }
+
+  #wmd-preview table tr th :first-child,
+  #wmd-preview table tr td :first-child {
+    margin-top: 0;
+  }
+
+  #wmd-preview table tr th :last-child,
+  #wmd-preview table tr td :last-child {
+    margin-bottom: 0;
+  }
 
 /* 上传面板动画效果 */
 @keyframes fullscreen-upload {
