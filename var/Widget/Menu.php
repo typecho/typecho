@@ -306,7 +306,7 @@ class Widget_Menu extends Typecho_Widget
             }
 
             echo "<ul class=\"root" . ($key == $this->_currentParent ? ' ' . $class : NULL) 
-                . "\"><li class=\"parent\"><a href=\"{$node[2]}\">{$node[0]}</a></dt>"
+                . "\"><li class=\"parent\"><a href=\"{$node[2]}\">{$node[0]}</a>"
                 . "</li><ul class=\"child\">";
 
             $last = 0;
