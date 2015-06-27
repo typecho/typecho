@@ -9,7 +9,7 @@
  * @version $Id$
  */
 
-define('__TYPECHO_MB_SUPPORTED__', function_exists('mb_get_info'));
+define('__TYPECHO_MB_SUPPORTED__', function_exists('mb_get_info') && function_exists('mb_regex_encoding'));
 
 /**
  * Typecho公用方法
