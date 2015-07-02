@@ -29,8 +29,26 @@ class Widget_Contents_Page_Admin extends Widget_Contents_Post_Admin
     public function execute()
     {
         /** 过滤状态 */
-        $select = $this->select()->where('table.contents.type = ? OR (table.contents.type = ? AND table.contents.parent = ?)', 'page', 'page_draft', 0);
-
+        $select = $this->select();
+		if ($this->request->status == "publish") {
+			// 显示已发布
+			$select->where('table.contents.type = ? AND table.contents.status = ?', 'page', 'publish');
+		}
+		else if ($this->request->status == "draft") {
+			// 显示草稿
+			$select->where('table.contents.type = ? AND table.contents.status = ?', 'page_draft', 'publish');
+		}
+		else if ($this->request->status == "trash") {
+			// 显示回收站
+			$select->where('table.contents.type = ? OR (table.contents.type = ? AND table.contents.parent = ?)', 'page', 'page_draft', 0);
+			$select->where('table.contents.status = ?', 'trash');
+		}
+		else {
+			// 显示所有（除回收站）
+			$select->where('table.contents.type = ? OR (table.contents.type = ? AND table.contents.parent = ?)', 'page', 'page_draft', 0);
+			$select->where('table.contents.status != ?', 'trash');
+		}
+		
         /** 过滤标题 */
         if (NULL != ($keywords = $this->request->keywords)) {
             $args = array();

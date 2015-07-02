@@ -243,6 +243,32 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
             $this->response->throwJson(array('success' => 1, 'message' => _t('页面排序已经完成')));
         }
     }
+	
+    /**
+     * 将页面移到回收站
+     *
+     * @access public
+     * @return void
+     */
+    public function trashPage($status)
+    {
+        $pages = $this->request->filter('int')->getArray('cid');
+        $deleteCount = 0;
+
+        foreach ($pages as $page) {
+            $this->db->query($this->db->update('table.contents')->rows(array('status' => $status))
+                ->where('cid = ?', $page));
+            $deleteCount++;
+        }
+
+        /** 设置提示信息 */
+        $msg = $status == "trash" ? _t('已经移到回收站') : _t('已经还原');
+        $this->widget('Widget_Notice')->set($deleteCount > 0 ? $msg : _t('没有操作'),
+        $deleteCount > 0 ? 'success' : 'notice');
+        
+        /** 返回原网页 */
+        $this->response->goBack();
+    }
 
     /**
      * 绑定动作
@@ -255,6 +281,8 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
         $this->security->protect();
         $this->on($this->request->is('do=publish') || $this->request->is('do=save'))->writePage();
         $this->on($this->request->is('do=delete'))->deletePage();
+		$this->on($this->request->is('do=trash'))->trashPage('trash');
+		$this->on($this->request->is('do=untrash'))->trashPage('publish');
         $this->on($this->request->is('do=deleteDraft'))->deletePageDraft();
         $this->on($this->request->is('do=sort'))->sortPage();
         $this->response->redirect($this->options->adminUrl);

@@ -937,6 +937,31 @@ background: #FFF1A8;
   background-color: #FFFBCC;
 }
 
+/* 文章/页面筛选 */
+.subsubsub {
+  list-style: none;
+  margin: 0 8px;
+  padding: 0;
+  font-size: 13px;
+  color: #666;
+  display: inline-block;
+  li {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;    
+  }
+  a {
+    line-height: 2;
+    padding: .2em;
+    text-decoration: none;
+  }
+  a.current {
+    color: #000;
+    font-weight: 600;
+    border: none;
+  }
+} 
 
 /**
 * 导入扩展样式
