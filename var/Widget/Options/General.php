@@ -35,7 +35,7 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
 
         if (!empty($files)) {
             foreach ($files as $file) {
-                $getText = new Typecho_I18n_GetText($file);
+                $getText = new Typecho_I18n_GetText($file, false);
                 list ($name) = explode('.', basename($file));
                 $title = $getText->translate('lang', $count);
                 $langs[$name] = $count > -1 ? $title : $name;

@@ -9,7 +9,7 @@
  * @version $Id$
  */
 
-define('__TYPECHO_MB_SUPPORTED__', function_exists('mb_get_info'));
+define('__TYPECHO_MB_SUPPORTED__', function_exists('mb_get_info') && function_exists('mb_regex_encoding'));
 
 /**
  * Typecho公用方法
@@ -936,8 +936,12 @@ EOF;
      */
     public static function gravatarUrl($mail, $size, $rating, $default, $isSecure = false)
     {
-        $url = $isSecure ? 'https://secure.gravatar.com' : 'http://www.gravatar.com';
-        $url .= '/avatar/';
+        if (defined('__TYPECHO_GRAVATAR_PREFIX__')) {
+            $url = __TYPECHO_GRAVATAR_PREFIX__;
+        } else {
+            $url = $isSecure ? 'https://secure.gravatar.com' : 'http://www.gravatar.com';
+            $url .= '/avatar/';
+        }
 
         if (!empty($mail)) {
             $url .= md5(strtolower(trim($mail)));
