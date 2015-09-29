@@ -225,7 +225,7 @@ class Json
 
             case 'array':
                 if (is_array($var) && count($var) && (array_keys($var) !== range(0, sizeof($var) - 1))) {
-                    $properties = array_map(array('Typecho_Json', '_name_value'),
+                    $properties = array_map(array('Json', '_name_value'),
                                             array_keys($var),
                                             array_values($var));
 
@@ -239,7 +239,7 @@ class Json
                 }
 
                 // treat it like a regular array
-                $elements = array_map(array('Typecho_Json', '_encode'), $var);
+                $elements = array_map(array('Json', '_encode'), $var);
 
                 foreach ($elements as $element) {
                     if (self::_is_error($element)) {
@@ -252,7 +252,7 @@ class Json
             case 'object':
                 $vars = get_object_vars($var);
 
-                $properties = array_map(array('Typecho_Json', '_name_value'),
+                $properties = array_map(array('Json', '_name_value'),
                                         array_keys($vars),
                                         array_values($vars));
 
