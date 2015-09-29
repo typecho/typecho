@@ -3146,7 +3146,9 @@ class MarkdownExtraExtended extends MarkdownExtra {
         $this->document_gamut += array(
             "doClearBreaks"     =>  100
         );
-		
+        $this->span_gamut += array(
+            "doStrikethroughs" => -35
+        );
 		parent::__construct();
 	}
 
@@ -3297,6 +3299,22 @@ class MarkdownExtraExtended extends MarkdownExtra {
 		}
 		$res .= "</figure>";		
 		return "\n". $this->hashBlock($res)."\n\n";
+	}
+	
+	public function doStrikethroughs($text) {
+	#
+	# Replace ~~some deleted text~~ with <del>some deleted text</del>
+	#
+		$text = preg_replace_callback('{
+				~~([^~]+)~~
+			}xm',
+			array(&$this, '_doStrikethroughs_callback'), $text);
+		return $text;
+	}
+	
+	public function _doStrikethroughs_callback($matches) {
+		$res = "<del>" . $matches[1] . "</del>";
+		return $this->hashBlock($res);
 	}
 }
 
