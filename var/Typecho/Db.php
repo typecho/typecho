@@ -37,7 +37,7 @@ class Typecho_Db
     /** 表左连接方式 */
     const LEFT_JOIN = 'LEFT';
 
-    /** 表外连接方式 */
+    /** 表右连接方式 */
     const RIGHT_JOIN = 'RIGHT';
 
     /** 数据库查询操作 */
