@@ -117,6 +117,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
         }
 
         $text = $this->pluginHandle(__CLASS__)->contentEx($text, $this);
+        $text = preg_replace("# <(?![/a-z]) | (?<=\s)>(?![a-z]) #exi", "htmlentities('$0')", $text);
         return Typecho_Common::stripTags($text, '<p><br>' . $this->options->commentsHTMLTagAllowed);
     }
 
