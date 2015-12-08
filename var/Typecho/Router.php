@@ -110,9 +110,8 @@ class Typecho_Router
     /**
      * 路由分发函数
      *
-     * @param string $path 目的文件所在目录
      * @return void
-     * @throws Typecho_Route_Exception
+     * @throws Typecho_Router_Exception
      */
     public static function dispatch()
     {
@@ -159,7 +158,7 @@ class Typecho_Router
      * 路由反解析函数
      *
      * @param string $name 路由配置表名称
-     * @param string $value 路由填充值
+     * @param array $value 路由填充值
      * @param string $prefix 最终合成路径的前缀
      * @return string
      */
@@ -200,7 +199,7 @@ class Typecho_Router
      * @param string $routeName 路由名称
      * @static
      * @access public
-     * @return void
+     * @return mixed
      */
     public static function get($routeName)
     {
