@@ -46,6 +46,7 @@ class Typecho_Router
      * @param string $pathInfo 全路径
      * @param mixed $parameter 输入参数
      * @return mixed
+     * @throws Exception
      */
     public static function match($pathInfo, $parameter = NULL)
     {
@@ -111,7 +112,7 @@ class Typecho_Router
      * 路由分发函数
      *
      * @return void
-     * @throws Typecho_Router_Exception
+     * @throws Exception
      */
     public static function dispatch()
     {
