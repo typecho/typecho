@@ -91,7 +91,7 @@ abstract class Typecho_Widget
      * config对象
      *
      * @access public
-     * @var public
+     * @var Typecho_Config
      */
     public $parameter;
 
@@ -102,7 +102,6 @@ abstract class Typecho_Widget
      * @param mixed $request request对象
      * @param mixed $response response对象
      * @param mixed $params 参数列表
-     * @return void
      */
     public function __construct($request, $response, $params = NULL)
     {
@@ -244,7 +243,7 @@ abstract class Typecho_Widget
      * 将类本身赋值
      *
      * @param string $variable 变量名
-     * @return void
+     * @return self
      */
     public function to(&$variable)
     {
@@ -285,7 +284,6 @@ abstract class Typecho_Widget
      * 根据余数输出
      *
      * @access public
-     * @param string $param 需要输出的值
      * @return void
      */
     public function alt()
