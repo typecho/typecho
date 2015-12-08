@@ -48,7 +48,6 @@ class Typecho_Router_Parser
      *
      * @access public
      * @param array $routingTable 路由器映射表
-     * @return void
      */
     public function __construct(array $routingTable)
     {
