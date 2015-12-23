@@ -190,7 +190,7 @@ class Typecho_Request
     /**
      * 检查ua是否合法
      *
-     * @param $agent ua字符串
+     * @param string $agent ua字符串
      * @return boolean
      */
     private function _checkAgent($agent)
