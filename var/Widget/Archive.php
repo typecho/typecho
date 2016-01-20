@@ -933,6 +933,10 @@ class Widget_Archive extends Widget_Abstract_Contents
             'directory'     =>  implode('/', array_map('urlencode', $category['directory']))
         ));
 
+		/** 设置模板 */
+        if ($category['template'])
+			$this->_themeFile = $category['template'];
+		
         /** 设置关键词 */
         $this->_keywords = $category['name'];
 

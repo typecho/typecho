@@ -148,7 +148,18 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $parent = new Typecho_Widget_Helper_Form_Element_Select('parent', $options, $this->request->parent, _t('父级分类'),
         _t('此分类将归档在您选择的父级分类下.'));
         $form->addInput($parent);
-
+		
+		/** 分类模板 */
+		$options = $this->getTemplates();
+		array_unshift($options,_t('不选择'));
+        $template = new Typecho_Widget_Helper_Form_Element_Select('template', $options, $this->request->template, _t('分类渲染模板'),
+        _t('该分类的文章将按照高模板渲染.'));
+        $form->addInput($template);
+		
+		/** 分类关键词 */
+        $keywords = new Typecho_Widget_Helper_Form_Element_Text('keywords', NULL, NULL, _t('关键词（SEO）'));
+        $form->addInput($keywords);
+		
         /** 分类描述 */
         $description =  new Typecho_Widget_Helper_Form_Element_Textarea('description', NULL, NULL,
         _t('分类描述'), _t('此文字用于描述分类, 在有的主题中它会被显示.'));
@@ -180,6 +191,8 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
             $name->value($meta['name']);
             $slug->value($meta['slug']);
             $parent->value($meta['parent']);
+			$keywords->value($meta['keywords']);
+			$template->value($meta['template']);
             $description->value($meta['description']);
             $do->value('update');
             $mid->value($meta['mid']);
@@ -226,7 +239,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         } 
 
         /** 取出数据 */
-        $category = $this->request->from('name', 'slug', 'description', 'parent');
+        $category = $this->request->from('name', 'slug', 'keywords', 'template', 'description', 'parent');
 
         $category['slug'] = Typecho_Common::slugName(empty($category['slug']) ? $category['name'] : $category['slug']);
         $category['type'] = 'category';
@@ -261,7 +274,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         }
 
         /** 取出数据 */
-        $category = $this->request->from('name', 'slug', 'description', 'parent');
+        $category = $this->request->from('name', 'slug', 'keywords', 'template', 'description', 'parent');
         $category['mid'] = $this->request->mid;
         $category['slug'] = Typecho_Common::slugName(empty($category['slug']) ? $category['name'] : $category['slug']);
         $category['type'] = 'category';
