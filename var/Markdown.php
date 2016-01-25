@@ -21,10 +21,10 @@ class Markdown
         static $parser;
 
         if (empty($parser)) {
-            $parser = new MarkdownExtraExtended();
+            $parser = new HyperDown();
         }
 
-        return $parser->transform($text);
+        return $parser->makeHtml($text);
     }
 }
 
