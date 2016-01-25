@@ -714,7 +714,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      */
     public function writePost()
     {
-        $contents = $this->request->from('password', 'allowComment',
+        $contents = $this->request->from('password', 'template', 'allowComment',
             'allowPing', 'allowFeed', 'slug', 'tags', 'text', 'visibility');
 
         $contents['category'] = $this->request->getArray('category');

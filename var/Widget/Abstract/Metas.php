@@ -297,4 +297,28 @@ class Widget_Abstract_Metas extends Widget_Abstract
         $this->db->query($this->db->update('table.metas')->rows(array('count' => $num))
         ->where('mid = ?', $mid));
     }
+	
+	/**
+     * 获取当前所有自定义模板
+     *
+     * @access public
+     * @return array
+     */
+    public function getTemplates($type='category')
+    {
+        $files = glob($this->options->themeFile($this->options->theme, '*.php'));
+        $result = array();
+
+        foreach ($files as $file) {
+            $info = Typecho_Plugin::parseInfo($file);
+            $file = basename($file);
+
+            if ('index.php' != $file && 'custom' == $info['title']) {
+                $result[$file] = $info['description'];
+            }
+        }
+
+        return $result;
+    }
+	
 }

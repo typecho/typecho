@@ -93,6 +93,19 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                             <label for="token-input-tags" class="typecho-label"><?php _e('标签'); ?></label>
                             <p><input id="tags" name="tags" type="text" value="<?php $post->tags(',', false); ?>" class="w-100 text" /></p>
                         </section>
+                        
+                        <section  class="typecho-post-option">
+                            <label for="template" class="typecho-label"><?php _e('自定义模板'); ?></label>
+                                <p>
+                                    <select name="template" id="template">
+                                        <option value=""><?php _e('不选择'); ?></option>
+                                        <?php $templates = $post->getTemplates(); foreach ($templates as $template => $name): ?>
+                                        <option value="<?php echo $template; ?>"<?php if($template == $page->template): ?> selected="true"<?php endif; ?>><?php echo $name; ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </p>
+                                <p class="description"><?php _e('如果你为此页面选择了一个自定义模板, 系统将按照你选择的模板文件展现它'); ?></p>
+                        </section>
 
                         <?php Typecho_Plugin::factory('admin/write-post.php')->option($post); ?>
 
