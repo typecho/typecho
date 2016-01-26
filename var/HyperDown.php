@@ -1,6 +1,4 @@
 <?php
-// replace square brackets with array()
-// vim regex:  %s/= \[\(\_[^;]*\)\];/= array(\1);/g
 
 /**
  * HyperDown
@@ -133,7 +131,7 @@ class HyperDown
      */
     private function initText($text)
     {
-        $text = str_replace(["\t", "\r"], ['    ', ''], $text);
+        $text = str_replace(array("\t", "\r"), array('    ', ''), $text);
         return $text;
     }
 
@@ -264,7 +262,7 @@ class HyperDown
             }
         }, $text);
 
-        $text = str_replace(['<', '>'], ['&lt;', '&gt;'], $text);
+        $text = str_replace(array('<', '>'), array('&lt;', '&gt;'), $text);
 
         // footnote
         $text = preg_replace_callback("/\[\^((?:[^\]]|\\]|\\[)+?)\]/", function ($matches) {
@@ -412,7 +410,7 @@ class HyperDown
                             || strlen($matches[1]) > $space;
                     }
 
-                    $this->startBlock('code', $key, [$matches[1], $matches[3], $isAfterList]);
+                    $this->startBlock('code', $key, array($matches[1], $matches[3], $isAfterList));
                 }
 
                 continue;
@@ -473,7 +471,7 @@ class HyperDown
                 // footnote
                 case preg_match("/^\[\^((?:[^\]]|\\]|\\[)+?)\]:/", $line, $matches):
                     $space = strlen($matches[0]) - 1;
-                    $this->startBlock('footnote', $key, [$space, $matches[1]]);
+                    $this->startBlock('footnote', $key, array($space, $matches[1]));
                     break;
 
                 // definition
@@ -533,7 +531,7 @@ class HyperDown
                             $aligns[] = $align;
                         }
 
-                        $this->setBlock($key, [$head, $aligns]);
+                        $this->setBlock($key, array($head, $aligns));
                     }
                     break;
 
@@ -1010,7 +1008,7 @@ class HyperDown
      */
     private function escapeBracket($str)
     {
-        return str_replace(['\[', '\]', '\(', '\)'], ['[', ']', '(', ')'], $str);
+        return str_replace(array('\[', '\]', '\(', '\)'), array('[', ']', '(', ')'), $str);
     }
 
     /**
