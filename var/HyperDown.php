@@ -1,4 +1,6 @@
 <?php
+// replace square brackets with array()
+// vim regex:  %s/= \[\(\_[^;]*\)\];/= array(\1);/g
 
 /**
  * HyperDown
@@ -22,9 +24,9 @@ class HyperDown
      * @var mixed
      * @access private
      */
-    private $_specialWhiteList = [
+    private $_specialWhiteList = array(
         'table' =>  'table|tbody|thead|tfoot|tr|td|th'
-    ];
+    );
 
     /**
      * _footnotes
@@ -64,7 +66,7 @@ class HyperDown
     /**
      * @var array
      */
-    private $_hooks = [];
+    private $_hooks = array();
 
     /**
      * @var array
@@ -89,12 +91,12 @@ class HyperDown
      */
     public function makeHtml($text)
     {
-        $this->_footnotes = [];
-        $this->_blocks = [];
+        $this->_footnotes = array();
+        $this->_blocks = array();
         $this->_current = 'normal';
         $this->_pos = -1;
-        $this->_definitions = [];
-        $this->_holders = [];
+        $this->_definitions = array();
+        $this->_holders = array();
         $this->_uniqid = md5(uniqid());
         $this->_id = 0;
 
@@ -225,7 +227,7 @@ class HyperDown
         }
 
         if ($clearHolders) {
-            $this->_holders = [];
+            $this->_holders = array();
         }
 
         return $text;
@@ -378,7 +380,7 @@ class HyperDown
     private function parseBlock($text, &$lines)
     {
         $lines = explode("\n", $text);
-        $this->_blocks = [];
+        $this->_blocks = array();
         $this->_current = 'normal';
         $this->_pos = -1;
         $special = implode("|", array_keys($this->_specialWhiteList));
@@ -514,7 +516,7 @@ class HyperDown
                         }
 
                         $rows = preg_split("/(\+|\|)/", $matches[1]);
-                        $aligns = [];
+                        $aligns = array();
                         foreach ($rows as $row) {
                             $align = 'none';
 
@@ -659,13 +661,13 @@ class HyperDown
 
             if ('normal' == $type) {
                 // combine two blocks
-                $types = ['list', 'quote'];
+                $types = array('list', 'quote');
 
                 if ($from == $to && preg_match("/^\s*$/", $lines[$from])
                     && !empty($prevBlock) && !empty($nextBlock)) {
                     if ($prevBlock[0] == $nextBlock[0] && in_array($prevBlock[0], $types)) {
                         // combine 3 blocks
-                        $blocks[$key - 1] = [$prevBlock[0], $prevBlock[1], $nextBlock[2], NULL];
+                        $blocks[$key - 1] = array($prevBlock[0], $prevBlock[1], $nextBlock[2], NULL);
                         array_splice($blocks, $key, 2);
                     }
                 }
@@ -770,7 +772,7 @@ class HyperDown
     {
         $html = '';
         $minSpace = 99999;
-        $rows = [];
+        $rows = array();
 
         // count levels
         foreach ($lines as $key => $line) {
@@ -779,7 +781,7 @@ class HyperDown
                 $type = false !== strpos('+-*', $matches[2]) ? 'ul' : 'ol';
                 $minSpace = min($space, $minSpace);
 
-                $rows[] = [$space, $type, $line, $matches[4]];
+                $rows[] = array($space, $type, $line, $matches[4]);
             } else {
                 $rows[] = $line;
             }
@@ -796,7 +798,7 @@ class HyperDown
         $secondMinSpace = $found ?: $minSpace;
 
         $lastType = '';
-        $leftLines = [];
+        $leftLines = array();
 
         foreach ($rows as $row) {
             if (is_array($row)) {
@@ -817,7 +819,7 @@ class HyperDown
                         $html .= "<{$type}>";
                     }
 
-                    $leftLines = [$text];
+                    $leftLines = array($text);
                     $lastType = $type;
                 }
             } else {
@@ -871,17 +873,17 @@ class HyperDown
                     return trim($row);
                 }
             }, explode('|', $line));
-            $columns = [];
+            $columns = array();
             $last = -1;
 
             foreach ($rows as $row) {
                 if (strlen($row) > 0) {
                     $last ++;
-                    $columns[$last] = [isset($columns[$last]) ? $columns[$last][0] + 1 : 1, $row];
+                    $columns[$last] = array(isset($columns[$last]) ? $columns[$last][0] + 1 : 1, $row);
                 } else if (isset($columns[$last])) {
                     $columns[$last][0] ++;
                 } else {
-                    $columns[0] = [1, $row];
+                    $columns[0] = array(1, $row);
                 }
             }
 
@@ -1024,7 +1026,7 @@ class HyperDown
         $this->_pos ++;
         $this->_current = $type;
 
-        $this->_blocks[$this->_pos] = [$type, $start, $start, $value];
+        $this->_blocks[$this->_pos] = array($type, $start, $start, $value);
 
         return $this;
     }
@@ -1105,7 +1107,7 @@ class HyperDown
         }
 
         $this->_current = $type;
-        $this->_blocks[$this->_pos] = [$type, $last - $step + 1, $last, $value];
+        $this->_blocks[$this->_pos] = array($type, $last - $step + 1, $last, $value);
 
         return $this;
     }
