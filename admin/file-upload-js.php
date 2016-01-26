@@ -96,7 +96,7 @@ $(document).ready(function() {
         });
 
         // fix issue #341
-        plupload.removeFile(file);
+        this.removeFile(file);
     }
 
     var completeFile = null;
@@ -136,9 +136,9 @@ $(document).ready(function() {
 
             init            :   {
                 FilesAdded      :   function (up, files) {
-                    plupload.each(files, function(file) {
-                        fileUploadStart(file);
-                    });
+                    for (var i = 0; i < files.length; i ++) {
+                        fileUploadStart(files[i]);
+                    }
 
                     completeFile = null;
                     uploader.start();
@@ -156,19 +156,19 @@ $(document).ready(function() {
 
                         if (data) {
                             fileUploadComplete(file.id, data[0], data[1]);
-                            plupload.removeFile(file);
+                            uploader.removeFile(file);
                             return;
                         }
                     }
 
-                    fileUploadError({
+                    fileUploadError.call(uploader, {
                         code : plupload.HTTP_ERROR,
                         file : file
                     });
                 },
 
                 Error           :   function (up, error) {
-                    fileUploadError(error);
+                    fileUploadError.call(uploader, error);
                 }
             }
         });
