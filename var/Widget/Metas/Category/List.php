@@ -166,7 +166,7 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
             $this->treeViewCategories();
         }
 
-        echo '</li>';
+        echo '</' . $categoryOptions->itemTag . '>';
     }
 
     /**
