@@ -372,6 +372,7 @@ class Widget_Options extends Typecho_Widget
         /** 动态获取根目录 */
         $this->rootUrl = $this->request->getRequestRoot();
         if (defined('__TYPECHO_ADMIN__')) {
+            /** 识别在admin目录中的情况 */
             $adminDir = '/' . trim(defined('__TYPECHO_ADMIN_DIR__') ? __TYPECHO_ADMIN_DIR__ : '/admin/', '/');
             $this->rootUrl = substr($this->rootUrl, 0, - strlen($adminDir));
         }
