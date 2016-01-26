@@ -599,7 +599,7 @@ class Typecho_Request
                 if (function_exists('mb_convert_encoding')) {
                     $pathInfo = mb_convert_encoding($pathInfo, $outputEncoding, $inputEncoding);
                 } else if (function_exists('iconv')) {
-                    $pathInfo = iconv($pathInfoEncoding, $outputEncoding, $pathInfo);
+                    $pathInfo = iconv($inputEncoding, $outputEncoding, $pathInfo);
                 }
             }
         } else {
