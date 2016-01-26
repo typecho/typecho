@@ -90,9 +90,6 @@ class HyperDown
     public function makeHtml($text)
     {
         $this->_footnotes = array();
-        $this->_blocks = array();
-        $this->_current = 'normal';
-        $this->_pos = -1;
         $this->_definitions = array();
         $this->_holders = array();
         $this->_uniqid = md5(uniqid());
@@ -386,10 +383,11 @@ class HyperDown
 
         // analyze by line
         foreach ($lines as $key => $line) {
+            $block = $this->getBlock();
+            
             // code block is special
             if (preg_match("/^(\s*)(~|`){3,}([^`~]*)$/i", $line, $matches)) {
                 if ($this->isBlock('code')) {
-                    $block = $this->getBlock();
                     $isAfterList = $block[3][2];
 
                     if ($isAfterList) {
@@ -403,7 +401,6 @@ class HyperDown
                     $isAfterList = false;
 
                     if ($this->isBlock('list')) {
-                        $block = $this->getBlock();
                         $space = $block[3];
 
                         $isAfterList = ($space > 0 && strlen($matches[1]) >= $space)
@@ -493,7 +490,6 @@ class HyperDown
                 // table
                 case preg_match("/^((?:(?:(?:[ :]*\-[ :]*)+(?:\||\+))|(?:(?:\||\+)(?:[ :]*\-[ :]*)+)|(?:(?:[ :]*\-[ :]*)+(?:\||\+)(?:[ :]*\-[ :]*)+))+)$/", $line, $matches):
                     if ($this->isBlock('normal')) {
-                        $block = $this->getBlock();
                         $head = false;
 
                         if (empty($block) ||
@@ -544,7 +540,7 @@ class HyperDown
 
                 // multi heading
                 case preg_match("/^\s*((=|-){2,})\s*$/", $line, $matches)
-                    && ($this->getBlock() && $this->getBlock()[0] == "normal" && !preg_match("/^\s*$/", $lines[$this->getBlock()[2]])):    // check if last line isn't empty
+                    && ($block && $block[0] == "normal" && !preg_match("/^\s*$/", $lines[$block[2]])):    // check if last line isn't empty
                     if ($this->isBlock('normal')) {
                         $this->backBlock(1, 'mh', $matches[1][0] == '=' ? 1 : 2)
                             ->setBlock($key)
@@ -578,8 +574,7 @@ class HyperDown
                         }
                     } else if ($this->isBlock('footnote')) {
                         preg_match("/^(\s*)/", $line, $matches);
-
-                        if (strlen($matches[1]) >= $this->getBlock()[3][0]) {
+                        if (strlen($matches[1]) >= $block[3][0]) {
                             $this->setBlock($key);
                         } else {
                             $this->startBlock('normal', $key);
@@ -617,8 +612,6 @@ class HyperDown
                             $this->startBlock('normal', $key);
                         }
                     } else {
-                        $block = $this->getBlock();
-
                         if (empty($block) || $block[0] != 'normal') {
                             $this->startBlock('normal', $key);
                         } else {
