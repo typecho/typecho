@@ -22,9 +22,21 @@ class Markdown
 
         if (empty($parser)) {
             $parser = new HyperDown();
+            $parser->hook('afterParseCode', array('Markdown', 'transerCodeClass'));
         }
 
         return $parser->makeHtml($text);
+    }
+
+    /**
+     * transerCodeClass
+     * 
+     * @param string $html
+     * @return string
+     */
+    public static function transerCodeClass($html)
+    {
+        return preg_replace("/<code class=\"([_a-z0-9-]+)\">/i", "<code class=\"lang-\\1\">", $html);
     }
 }
 
