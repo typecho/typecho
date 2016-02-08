@@ -9,7 +9,12 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * @license GNU General Public License 2.0
  */
 class Markdown
-{ 
+{
+    /**
+     * @var HyperDown
+     */
+    public static $parser;
+
     /**
      * convert 
      * 
@@ -18,14 +23,13 @@ class Markdown
      */
     public static function convert($text)
     {
-        static $parser;
-
-        if (empty($parser)) {
-            $parser = new HyperDown();
-            $parser->hook('afterParseCode', array('Markdown', 'transerCodeClass'));
+        if (empty(self::$parser)) {
+            self::$parser = new HyperDown();
+            self::$parser->hook('afterParseCode', array('Markdown', 'transerCodeClass'));
+            self::$parser->hook('beforeParseInline', array('Markdown', 'transerComment'));
         }
 
-        return $parser->makeHtml($text);
+        return self::$parser->makeHtml($text);
     }
 
     /**
@@ -37,6 +41,24 @@ class Markdown
     public static function transerCodeClass($html)
     {
         return preg_replace("/<code class=\"([_a-z0-9-]+)\">/i", "<code class=\"lang-\\1\">", $html);
+    }
+
+    /**
+     * @param $html
+     * @return mixed
+     */
+    public static function transerComment($html)
+    {
+        return preg_replace_callback("/<!\-\-(.+?)\-\->/s", array('Markdown', 'transerCommentCallback'), $html);
+    }
+
+    /**
+     * @param $matches
+     * @return string
+     */
+    public static function transerCommentCallback($matches)
+    {
+        return self::$parser->makeHolder($matches[0]);
     }
 }
 
