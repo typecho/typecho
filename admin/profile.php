@@ -41,8 +41,12 @@ $stat = Typecho_Widget::widget('Widget_Stat');
 
                 <section id="change-password">
                     <h3><?php _e('密码修改'); ?></h3>
-                    <?php Typecho_Widget::widget('Widget_Users_Profile')->personalFormList(); ?>
                     <?php Typecho_Widget::widget('Widget_Users_Profile')->passwordForm()->render(); ?>
+                </section>
+
+                <br>
+                <section id="personal-form-list">
+                    <?php Typecho_Widget::widget('Widget_Users_Profile')->personalFormList(); ?>
                 </section>
             </div>
         </div>
