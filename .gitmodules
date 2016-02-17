@@ -1,0 +1,3 @@
+[submodule "usr/plugins/TencentCosForTypecho"]
+	path = usr/plugins/TencentCosForTypecho
+	url = https://git.oschina.net/hongyaoxing/TencentCosForTypecho.git
