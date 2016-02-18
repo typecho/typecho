@@ -189,13 +189,17 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         $this->widget('Widget_Plugins_List@personalPlugins', 'activated=1')->to($plugins);
         while ($plugins->next()) {
             if ($plugins->personalConfig) {
-                echo '<h3>' . $plugins->title . '</h3>';
                 list($pluginFileName, $className) = Typecho_Plugin::portal($plugins->name,
                     $this->options->pluginDir($plugins->name));
 
                 $form = $this->personalForm($plugins->name, $className, $pluginFileName, $group);
                 if ($this->user->pass($group, true)) {
+                    echo '<br><section id="personal-' . $plugins->name . '">';
+                    echo '<h3>' . $plugins->title . '</h3>';
+                    
                     $form->render();
+
+                    echo '</section>';
                 }
             }
         }

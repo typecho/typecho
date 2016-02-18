@@ -44,10 +44,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     <?php Typecho_Widget::widget('Widget_Users_Profile')->passwordForm()->render(); ?>
                 </section>
 
-                <br>
-                <section id="personal-form-list">
-                    <?php Typecho_Widget::widget('Widget_Users_Profile')->personalFormList(); ?>
-                </section>
+                <?php Typecho_Widget::widget('Widget_Users_Profile')->personalFormList(); ?>
             </div>
         </div>
     </div>
