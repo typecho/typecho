@@ -510,7 +510,7 @@ Typecho_Cookie::set('__typecho_lang', $lang);
                                     $installDb->addServer($dbConfig, Typecho_Db::READ | Typecho_Db::WRITE);
 
 
-                                    /** 检测数据库配置 */
+                                    // 检测数据库配置
                                     try {
                                         $installDb->query('SELECT 1=1');
                                     } catch (Typecho_Db_Adapter_Exception $e) {
@@ -539,7 +539,7 @@ Typecho_Cookie::set('__typecho_lang', $lang);
                                         exit;
                                     }
 
-                                    /** 初始化配置文件 */
+                                    // 初始化配置文件
                                     $lines = array_slice(file(__FILE__), 0, 52);
                                     $lines[] = "
 /** 定义数据库参数 */
