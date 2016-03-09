@@ -370,10 +370,10 @@ class Helper
      * @param string $formId 表单id
      * @return void
      */
-    public static function cancleCommentReplyLink($word = 'Cancle', $formId = 'respond')
+    public static function cancelCommentReplyLink($word = 'Cancel', $formId = 'respond')
     {
         if (self::options()->commentsThreaded) {
-            echo '<a href="#' . $formId . '" rel="nofollow" onclick="return typechoCancleCommentReply(\'' .
+            echo '<a href="#' . $formId . '" rel="nofollow" onclick="return typechoCancelCommentReply(\'' .
             $formId . '\');">' . $word . '</a>';
         }
     }
@@ -419,7 +419,7 @@ var typechoAddCommentReply = function (cid, coid, cfid, style) {
     return false;
 };
 
-var typechoCancleCommentReply = function (cfid) {
+var typechoCancelCommentReply = function (cfid) {
     var _cf = document.getElementById(cfid),
     _cfh = document.getElementById('comment-form-place-holder');
 
