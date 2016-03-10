@@ -103,7 +103,7 @@ class Typecho_Db_Query
      */
     private function filterColumn($str)
     {
-        $str = $str . ' 0';
+        $str .= ' 0';
         $length = strlen($str);
         $lastIsAlnum = false;
         $result = '';
