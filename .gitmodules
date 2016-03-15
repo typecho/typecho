@@ -1,0 +1,6 @@
+[submodule "usr/plugins/TencentCosForTypecho"]
+	path = usr/plugins/TencentCosForTypecho
+	url = https://git.oschina.net/hongyaoxing/TencentCosForTypecho.git
+[submodule "usr/plugins/DouBanInfo"]
+	path = usr/plugins/DouBanInfo
+	url = https://git.oschina.net/hongyaoxing/DouBanInfo.git
