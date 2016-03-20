@@ -5,11 +5,11 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  *
  * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license    GNU General Public License 2.0
- * @version    $Id: Mysql.php 103 2008-04-09 16:22:43Z magike.net $
+ * @version    $Id: Mysqli.php 103 2008-04-09 16:22:43Z magike.net $
  */
 
 /**
- * 数据库Mysql适配器
+ * 数据库Mysqli适配器
  *
  * @package Db
  */
