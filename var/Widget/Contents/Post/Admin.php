@@ -101,6 +101,11 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
             $select->join('table.relationships', 'table.contents.cid = table.relationships.cid')
             ->where('table.relationships.mid = ?', $category);
         }
+		
+		/** 过滤公开度 */
+		if (NULL != ($status = $this->request->status)) {
+			$select->where('table.contents.status = ?', $status);
+		}
 
         /** 如果具有编辑以上权限,可以查看所有文章,反之只能查看自己的文章 */
         if (!$this->user->pass('editor', true)) {
