@@ -27,8 +27,8 @@ include 'menu.php';
                         </colgroup>
                         
                         <thead>
-                            <th>截图</th>
-                            <th>详情</th>
+                            <th><?php _e('截图'); ?></th>
+                            <th><?php _e('详情'); ?></th>
                         </thead>
 
                         <tbody>
