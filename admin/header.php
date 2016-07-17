@@ -12,7 +12,7 @@ $header = '<link rel="stylesheet" href="' . Typecho_Common::url('normalize.css?v
 <![endif]-->';
 
 /** 注册一个初始化插件 */
-$header = Typecho_Plugin::factory('admin/header.php')->header($header);
+$header = $header . Typecho_Plugin::factory('admin/header.php')->header();
 
 ?><!DOCTYPE HTML>
 <html class="no-js">
