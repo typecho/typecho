@@ -123,6 +123,10 @@ textarea {
   color: #333;
   font-size: 2.5em;
 }
+#logo img {
+    max-height: 64px;
+}
+
 .description {
   margin: .5em 0 0;
   color: #999;
