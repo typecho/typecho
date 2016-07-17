@@ -59,7 +59,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <?php while($pages->next()): ?>
                             <tr id="<?php $pages->theId(); ?>">
                                 <td><input type="checkbox" value="<?php $pages->cid(); ?>" name="cid[]"/></td>
-                                <td><a href="<?php $options->adminUrl('manage-comments.php?cid=' . $pages->cid); ?>" class="balloon-button size-<?php echo Typecho_Common::splitByCount($pages->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $pages->commentsNum(); ?></a></td>
+                                <td><a href="<?php $options->adminUrl('manage-comments.php?cid=' . $pages->cid); ?>" class="balloon-button size-<?php echo Typecho_Common::splitByCount($pages->commentsNum, 1, 10, 20, 50, 100); ?>" title="<?php $pages->commentsNum(); ?> <?php _e('评论'); ?>"><?php $pages->commentsNum(); ?></a></td>
                                 <td>
                                 <a href="<?php $options->adminUrl('write-page.php?cid=' . $pages->cid); ?>"><?php $pages->title(); ?></a>
                                 <?php 
