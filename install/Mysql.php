@@ -167,7 +167,7 @@ $baeDbPassword = "getenv('HTTP_BAE_ENV_SK')";
     <li>
         <label class="typecho-label" for="dbDatabase"><?php _e('数据库名'); ?></label>
         <input type="text" class="text" name="dbDatabase" id="dbDatabase" value="<?php _v('dbDatabase', 'typecho'); ?>" />
-        <p class="description"><?php _e('请您指定数据库名称'); ?></p>
+        <p class="description"><?php _e('请您指定数据库名称,请在使用前确认数据库已经创建'); ?></p>
     </li>
 
 <?php  endif; ?>
