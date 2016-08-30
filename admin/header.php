@@ -11,9 +11,6 @@ $header = '<link rel="stylesheet" href="' . Typecho_Common::url('normalize.css?v
 <script src="' . Typecho_Common::url('respond.js?v=' . $suffixVersion, $options->adminStaticUrl('js')) . '"></script>
 <![endif]-->';
 
-/** 注册一个初始化插件 */
-$header = Typecho_Plugin::factory('admin/header.php')->header($header);
-
 ?><!DOCTYPE HTML>
 <html class="no-js">
     <head>
@@ -23,7 +20,7 @@ $header = Typecho_Plugin::factory('admin/header.php')->header($header);
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title><?php _e('%s - %s - Powered by Typecho', $menu->title, $options->title); ?></title>
         <meta name="robots" content="noindex, nofollow">
-        <?php echo $header; ?>
+        <?php Typecho_Plugin::factory('admin/header.php')->header($header); ?>
     </head>
     <body<?php if (isset($bodyClass)) {echo ' class="' . $bodyClass . '"';} ?>>
     <!--[if lt IE 9]>
