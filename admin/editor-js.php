@@ -68,7 +68,7 @@ $(document).ready(function () {
     // 自动跟随
     converter.hook('makeHtml', function (html) {
         // convert all comment
-        html = html.replace(/&lt;!--(.+?)--&gt/g, '<!--$1-->');
+        html = html.replace(/&lt;!--(.+?)--&gt;/g, '<!--$1-->');
         
         if (html.indexOf('<!--more-->') > 0) {
             var parts = html.split(/\s*<\!\-\-more\-\->\s*/),
