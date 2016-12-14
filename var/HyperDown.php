@@ -242,18 +242,7 @@ class HyperDown
     public function parseInline($text, $whiteList = '', $clearHolders = true, $enableAutoLink = true)
     {
         $self = $this;
-        $text = $this->call('beforeParseInline', $text);
-
-        // escape
-        $text = preg_replace_callback(
-            "/\\\(.)/u",
-            function ($matches) use ($self) {
-                $escaped = htmlspecialchars($matches[1]);
-                $escaped = str_replace('$', '&dollar;', $escaped);
-                return  $self->makeHolder($escaped);
-            },
-            $text
-        );
+        $text = $this->call('beforeParseInline', $text); 
 
         // code
         $text = preg_replace_callback(
@@ -262,6 +251,17 @@ class HyperDown
                 return  $matches[1] . $self->makeHolder(
                     '<code>' . htmlspecialchars($matches[3]) . '</code>'
                 );
+            },
+            $text
+        );
+
+        // escape
+        $text = preg_replace_callback(
+            "/\\\(.)/u",
+            function ($matches) use ($self) {
+                $escaped = htmlspecialchars($matches[1]);
+                $escaped = str_replace('$', '&dollar;', $escaped);
+                return  $self->makeHolder($escaped);
             },
             $text
         );
