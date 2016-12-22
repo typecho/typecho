@@ -1,0 +1,36 @@
+user www-data;
+worker_processes 2;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    sendfile      off;
+    tcp_nopush on;
+    tcp_nodelay on;
+
+    keepalive_timeout  65;
+
+    server {
+        listen 80 default_server;
+        server_name _;
+
+        root /www;
+        index index.html index.php;
+
+        if (!-e $request_filename) {
+            rewrite ^(.*)$ /index.php$1 last;
+        }
+
+        location ~ [^/]\.php(/|$) {
+            fastcgi_split_path_info ^(.+?\.php)(/.*)$;
+            fastcgi_pass unix:/php/var/run/php-fpm.sock;
+            fastcgi_index index.php;
+            include fastcgi_params.modified;
+        }
+    }
+}

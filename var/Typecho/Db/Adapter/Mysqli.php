@@ -31,7 +31,7 @@ class Typecho_Db_Adapter_Mysqli implements Typecho_Db_Adapter
      */
     public static function isAvailable()
     {
-        return function_exists('mysqli_connect');
+        return extension_loaded('mysqli');
     }
 
     /**
@@ -53,6 +53,17 @@ class Typecho_Db_Adapter_Mysqli implements Typecho_Db_Adapter
 
         /** 数据库异常 */
         throw new Typecho_Db_Adapter_Exception(@$this->_dbLink->error);
+    }
+
+    /**
+     * 获取数据库版本 
+     * 
+     * @param mixed $handle
+     * @return string
+     */
+    public function getVersion($handle)
+    {
+        return 'ext:mysqli ' . $this->_dbLink->server_version;
     }
 
     /**
@@ -117,7 +128,7 @@ class Typecho_Db_Adapter_Mysqli implements Typecho_Db_Adapter
      */
     public function quoteColumn($string)
     {
-        return '`' . $string . '`';
+        return $resource->real_escape_string($string);
     }
 
     /**

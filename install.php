@@ -453,9 +453,9 @@ Typecho_Cookie::set('__typecho_lang', $lang);
                         }
                     }
                     $adapter = _r('dbAdapter', $firstAdapter);
-                    list ($type) = explode('_', $adapter);
+                    $parts = explode('_', $adapter);
 
-                    $type = $type == 'Mysqli' ? 'Mysql' : $type;
+                    $type = $adapter == 'Mysqli' ? 'Mysql' : array_pop($parts);
             ?>
                 <form method="post" action="?config" name="config">
                     <h1 class="typecho-install-title"><?php _e('确认您的配置'); ?></h1>
