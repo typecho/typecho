@@ -18,11 +18,11 @@ RUN sed -i 's/archive.ubuntu.com/'$ubuntu_mirror'/g' /etc/apt/sources.list && \
 
 # install mysql
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server && \
-    sed -i -e "s/^bind-address\s*=\s*127.0.0.1/bind-address = 0.0.0.0/" /etc/mysql/mysql.conf.d/mysqld.cnf && \
+#    sed -i -e "s/^bind-address\s*=\s*127.0.0.1/bind-address = 0.0.0.0/" /etc/mysql/mysql.conf.d/mysqld.cnf && \
     sed -i 's/^\(log_error\s.*\)/# \1/' /etc/mysql/my.cnf && \
     echo "mysqld_safe &" > /tmp/mysql_config && \
     echo "mysqladmin --silent --wait=30 ping || exit 1" >> /tmp/mysql_config && \
-    echo "mysql -e 'GRANT ALL PRIVILEGES ON *.* TO \"root\"@\"%\" IDENTIFIED BY \"123456\" WITH GRANT OPTION;'" >> /tmp/mysql_config && \
+    echo "mysql -e \"GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '123456' WITH GRANT OPTION;\"" >> /tmp/mysql_config && \
     bash /tmp/mysql_config && \
     rm -f /tmp/mysql_config
 
@@ -50,7 +50,7 @@ RUN mkdir /php && cd /php && \
     echo "date.timezone="$php_timezone >> /php/etc/php.ini && \
     sed -i 's/error_reporting = /#error_reporting = /g' /php/etc/php.ini && \
     sed -i 's/display_errors = /#display_errors = /g' /php/etc/php.ini && \
-    sed -i -e 's/pdo_mysql.default_socket\s*=/pdo_mysql.default_socket = /var/run/mysqld/mysqld.sock/g' /php/etc/php.ini && \
+    sed -i 's/pdo_mysql.default_socket\s*=/pdo_mysql.default_socket = \/var\/run\/mysqld\/mysqld.sock/g' /php/etc/php.ini && \
     echo "always_populate_raw_post_data=-1" >> /php/etc/php.ini && \
     echo "error_reporting=E_ALL" >> /php/etc/php.ini && \
     echo "display_errors=On" >> /php/etc/php.ini && \

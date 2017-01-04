@@ -229,10 +229,10 @@ class Typecho_Common
      * 异常截获函数
      *
      * @access public
-     * @param Exception $exception 截获的异常
+     * @param $exception 截获的异常
      * @return void
      */
-    public static function exceptionHandle(Exception $exception)
+    public static function exceptionHandle($exception)
     {
         @ob_end_clean();
 
