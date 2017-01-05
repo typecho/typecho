@@ -1227,7 +1227,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      */
     public function select()
     {
-        if ($this->_feed) {
+        if ($this->_invokeByFeed) {
             // 对feed输出加入限制条件
             return parent::select()->where('table.contents.allowFeed = ?', 1)
             ->where('table.contents.password IS NULL');
