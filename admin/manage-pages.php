@@ -69,6 +69,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                                     echo '<em class="status">' . _t('隐藏') . '</em>';
                                 }
                                 ?>
+                                <a href="<?php $options->adminUrl('write-page.php?cid=' . $pages->cid); ?>" title="<?php _e('编辑 %s', htmlspecialchars($pages->title)); ?>"><i class="i-edit"></i></a>
                                 <?php if ('page_draft' != $pages->type): ?>
                                 <a href="<?php $pages->permalink(); ?>" title="<?php _e('浏览 %s', htmlspecialchars($pages->title)); ?>"><i class="i-exlink"></i></a>
                                 <?php endif; ?>

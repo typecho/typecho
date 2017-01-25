@@ -84,6 +84,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                                     echo '<em class="status">' . _t('密码保护') . '</em>';
                                 }
                                 ?>
+                                <a href="<?php $options->adminUrl('write-post.php?cid=' . $posts->cid); ?>" title="<?php _e('编辑 %s', htmlspecialchars($posts->title)); ?>"><i class="i-edit"></i></a>
                                 <?php if ('post_draft' != $posts->type): ?>
                                 <a href="<?php $posts->permalink(); ?>" title="<?php _e('浏览 %s', htmlspecialchars($posts->title)); ?>"><i class="i-exlink"></i></a>
                                 <?php endif; ?>
