@@ -22,7 +22,7 @@ class HyperDown
      * @var mixed
      * @access private
      */
-    private $_specialWhiteList = array(
+    public $_specialWhiteList = array(
         'table'  =>  'table|tbody|thead|tfoot|tr|td|th'
     );
 
