@@ -152,6 +152,20 @@ $(document).ready(function() {
         submitted = true;
     }), savedData = null;
 
+    // 计算夏令时偏移
+    var dstOffset = (function () {
+        var d = new Date(),
+            jan = new Date(d.getFullYear(), 0, 1),
+            jul = new Date(d.getFullYear(), 6, 1),
+            stdOffset = Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
+
+        return stdOffset - d.getTimezoneOffset();
+    })();
+    
+    if (dstOffset > 0) {
+        $('<input name="dst" type="hidden" />').insertTo(form).val(dstOffset);
+    }
+
     // 自动保存
 <?php if ($options->autoSave): ?>
     var locked = false,

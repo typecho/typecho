@@ -127,7 +127,8 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         if (!empty($this->request->created)) {
             $created = $this->request->created;
         } else if (!empty($this->request->date)) {
-            $created = strtotime($this->request->date) - $this->options->timezone + $this->options->serverTimezone;
+            $dstOffset = !empty($this->request->dst) ? $this->request->dst : 0;
+            $created = strtotime($this->request->date) - $this->options->timezone + $this->options->serverTimezone - $dstOffset;
         } else if (!empty($this->request->year) && !empty($this->request->month) && !empty($this->request->day)) {
             $second = intval($this->request->get('sec', date('s')));
             $min = intval($this->request->get('min', date('i')));
