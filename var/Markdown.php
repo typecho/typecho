@@ -27,6 +27,14 @@ class Markdown
             self::$parser = new HyperDown();
             self::$parser->hook('afterParseCode', array('Markdown', 'transerCodeClass'));
             self::$parser->hook('beforeParseInline', array('Markdown', 'transerComment'));
+
+            self::$parser->_commonWhiteList .= '|img|cite|embed|iframe';
+            self::$parser->_specialWhiteList = array_merge(self::$parser->_specialWhiteList, array(
+                'ol'            =>  'ol|li',
+                'ul'            =>  'ul|li',
+                'blockquote'    =>  'blockquote',
+                'pre'           =>  'pre|code'
+            ));
         }
 
         return self::$parser->makeHtml($text);

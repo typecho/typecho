@@ -128,7 +128,7 @@
             var target = $(e.toElement ? e.toElement : e.target),
                 tagName = target.prop('tagName').toLowerCase();
             
-            if ($.inArray(tagName, ['input', 'textarea', 'a', 'button']) >= 0
+            if ($.inArray(tagName, ['input', 'textarea', 'a', 'button', 'i']) >= 0
                 && 'checkbox' != target.attr('type')) {
                 e.stopPropagation();
             } else {

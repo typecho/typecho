@@ -30,6 +30,7 @@ $(document).ready(function() {
         secondText      :   '<?php _e('秒'); ?>',
 
         dateFormat      :   'yy-mm-dd',
+        timezone        :   <?php $options->timezone(); ?> / 60,
         hour            :   (new Date()).getHours(),
         minute          :   (new Date()).getMinutes()
     });

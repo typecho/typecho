@@ -60,7 +60,8 @@ a.balloon-button {
   zoom: 1;
   -moz-border-radius: 30px;
   -webkit-border-radius: 30px;
-  border-radius: 30px; }
+  border-radius: 30px;
+  white-space: nowrap; }
 
 /* line 68, ../scss/style.scss */
 a.button:hover, a.balloon-button:hover {

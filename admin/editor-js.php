@@ -65,6 +65,15 @@ $(document).ready(function () {
         span = '<span class="diff" />',
         cache = {};
 
+    // 修正白名单
+    converter.commonWhiteList += '|img|cite|embed|iframe';
+    converter.specialWhiteList = $.extend(converter.specialWhiteList, {
+        'ol'            :  'ol|li',
+        'ul'            :  'ul|li',
+        'blockquote'    :  'blockquote',
+        'pre'           :  'pre|code'
+    });
+
     // 自动跟随
     converter.hook('makeHtml', function (html) {
         // convert all comment

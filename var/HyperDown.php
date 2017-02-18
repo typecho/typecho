@@ -22,7 +22,7 @@ class HyperDown
      * @var mixed
      * @access private
      */
-    private $_specialWhiteList = array(
+    public $_specialWhiteList = array(
         'table'  =>  'table|tbody|thead|tfoot|tr|td|th'
     );
 
@@ -189,28 +189,6 @@ class HyperDown
     }
 
     /**
-     * @param $type
-     * @param $value
-     * @return mixed
-     */
-    private function call($type, $value)
-    {
-        if (empty($this->_hooks[$type])) {
-            return $value;
-        }
-
-        $args = func_get_args();
-        $args = array_slice($args, 1);
-
-        foreach ($this->_hooks[$type] as $callback) {
-            $value = call_user_func_array($callback, $args);
-            $args[0] = $value;
-        }
-
-        return $value;
-    }
-
-    /**
      * @param $text
      * @param $clearHolders
      * @return string
@@ -228,6 +206,28 @@ class HyperDown
         }
 
         return $text;
+    }
+
+    /**
+     * @param $type
+     * @param $value
+     * @return mixed
+     */
+    public function call($type, $value)
+    {
+        if (empty($this->_hooks[$type])) {
+            return $value;
+        }
+
+        $args = func_get_args();
+        $args = array_slice($args, 1);
+
+        foreach ($this->_hooks[$type] as $callback) {
+            $value = call_user_func_array($callback, $args);
+            $args[0] = $value;
+        }
+
+        return $value;
     }
 
     /**
