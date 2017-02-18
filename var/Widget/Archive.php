@@ -805,7 +805,7 @@ class Widget_Archive extends Widget_Abstract_Contents
             /** 获取起始GMT时间的unix时间戳 */
             $from = mktime(0, 0, 0, $fromMonth, $fromDay, $year) - $this->options->timezone + $this->options->serverTimezone;
             $to = mktime(23, 59, 59, $toMonth, $toDay, $year) - $this->options->timezone + $this->options->serverTimezone;
-            $select->where('table.contents.created > ? AND table.contents.created < ?', $from, $to);
+            $select->where('table.contents.created >= ? AND table.contents.created < ?', $from, $to);
         }
 
         /** 保存密码至cookie */
