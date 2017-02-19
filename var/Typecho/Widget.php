@@ -184,7 +184,7 @@ abstract class Typecho_Widget
      * @param mixed $params 传递的参数
      * @param mixed $request 前端参数
      * @param boolean $enableResponse 是否允许http回执
-     * @return object
+     * @return Typecho_Widget
      * @throws Typecho_Exception
      */
     public static function widget($alias, $params = NULL, $request = NULL, $enableResponse = true)

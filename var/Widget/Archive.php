@@ -336,7 +336,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
-     * @param $_archiveType the $_archiveType to set
+     * @param $archiveType the $_archiveType to set
      */
     public function setArchiveType($archiveType)
     {
@@ -344,7 +344,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
-     * @param $_archiveTitle the $_archiveTitle to set
+     * @param $archiveTitle the $_archiveTitle to set
      */
     public function setArchiveTitle($archiveTitle)
     {
@@ -364,7 +364,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
-     * @param $_feedType the $_feedType to set
+     * @param $feedType the $_feedType to set
      */
     public function setFeedType($feedType)
     {
@@ -372,7 +372,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
-     * @param $_description the $_description to set
+     * @param $description the $_description to set
      */
     public function setDescription($description)
     {
@@ -380,7 +380,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
-     * @param $_keywords the $_keywords to set
+     * @param $keywords the $_keywords to set
      */
     public function setKeywords($keywords)
     {
@@ -388,7 +388,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
-     * @param $_feedAtomUrl the $_feedAtomUrl to set
+     * @param $feedAtomUrl the $_feedAtomUrl to set
      */
     public function setFeedAtomUrl($feedAtomUrl)
     {
@@ -396,7 +396,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
-     * @param $_feedRssUrl the $_feedRssUrl to set
+     * @param $feedRssUrl the $_feedRssUrl to set
      */
     public function setFeedRssUrl($feedRssUrl)
     {
@@ -404,7 +404,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
-     * @param $_feedUrl the $_feedUrl to set
+     * @param $feedUrl the $_feedUrl to set
      */
     public function setFeedUrl($feedUrl)
     {
@@ -412,7 +412,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
-     * @param $_feed the $_feed to set
+     * @param $feed the $_feed to set
      */
     public function setFeed($feed)
     {
@@ -420,7 +420,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
-     * @param $_countSql the $_countSql to set
+     * @param $countSql the $_countSql to set
      */
     public function setCountSql($countSql)
     {
@@ -428,7 +428,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
-     * @param $_total the $_total to set
+     * @param $total the $_total to set
      */
     public function setTotal($total)
     {
@@ -436,7 +436,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
-     * @param $_themeFile the $_themeFile to set
+     * @param $themeFile the $_themeFile to set
      */
     public function setThemeFile($themeFile)
     {
@@ -444,7 +444,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
     
     /**
-     * @param $_themeDir the $_themeDir to set
+     * @param $themeDir the $_themeDir to set
      */
     public function setThemeDir($themeDir)
     {
@@ -461,7 +461,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
-     * @return the $_archiveSlug
+     * @return string
      */
     public function getArchiveSlug()
     {
@@ -469,7 +469,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
-     * @return the $_archiveSingle
+     * @return string
      */
     public function getArchiveSingle()
     {
@@ -477,7 +477,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
-     * @return the $_archiveType
+     * @return string
      */
     public function getArchiveType()
     {
@@ -485,7 +485,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
-     * @return the $_archiveTitle
+     * @return string
      */
     public function getArchiveTitle()
     {
@@ -493,7 +493,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
-     * @return the $_feedType
+     * @return string
      */
     public function getFeedType()
     {
@@ -501,7 +501,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
-     * @return the $_description
+     * @return string
      */
     public function getDescription()
     {
@@ -509,7 +509,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
-     * @return the $_keywords
+     * @return string
      */
     public function getKeywords()
     {
@@ -517,7 +517,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
-     * @return the $_feedAtomUrl
+     * @return string
      */
     public function getFeedAtomUrl()
     {
@@ -525,7 +525,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
-     * @return the $_feedRssUrl
+     * @return string
      */
     public function getFeedRssUrl()
     {
@@ -533,7 +533,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
-     * @return the $_feedUrl
+     * @return string
      */
     public function getFeedUrl()
     {
@@ -541,7 +541,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
-     * @return the $_feed
+     * @return Typecho_Feed
      */
     public function getFeed()
     {
@@ -549,7 +549,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
-     * @return the $_countSql
+     * @return Typecho_Db_Query
      */
     public function getCountSql()
     {
@@ -557,7 +557,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
-     * @return the $_total
+     * @return int
      */
     public function getTotal()
     {
@@ -569,7 +569,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
-     * @return the $_currentPage
+     * @return int
      */
     public function getCurrentPage()
     {
@@ -587,7 +587,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
 
     /**
-     * @return the $_themeFile
+     * @return string
      */
     public function getThemeFile()
     {
@@ -595,7 +595,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     }
     
     /**
-     * @return the $_themeDir
+     * @return string
      */
     public function getThemeDir()
     {
