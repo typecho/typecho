@@ -222,7 +222,8 @@ class Typecho_Request
                 self::$_urlPrefix == __TYPECHO_URL_PREFIX__;
             } else {
                 self::$_urlPrefix = (self::isSecure() ? 'https' : 'http') . '://' 
-                    . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME']);
+                    . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME']
+                      . (in_array($_SERVER['SERVER_PORT'], array(80, 443)) ? '' : ':' . $_SERVER['SERVER_PORT']));
             }
         }
 
