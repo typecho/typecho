@@ -9,7 +9,7 @@ update:
 	rm -Rf build/
 	git clone https://github.com/typecho/typecho.git build
 	rm -Rf build/.git
-    rm -Rf build/.github
+	rm -Rf build/.github
 	rm -f build/.gitignore
 	rm -f build/.gitattributes
 	for i in `find build/ -name '*.css'`; do echo $$i && java -Xmx32m -jar yuicompressor-2.4.2.jar $$i --charset UTF-8 -o $$i; done;
