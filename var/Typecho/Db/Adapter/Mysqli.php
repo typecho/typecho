@@ -128,7 +128,7 @@ class Typecho_Db_Adapter_Mysqli implements Typecho_Db_Adapter
      */
     public function quoteColumn($string)
     {
-        return $resource->real_escape_string($string);
+        return $this->_dbLink->real_escape_string($string);
     }
 
     /**
