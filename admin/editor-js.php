@@ -66,6 +66,7 @@ $(document).ready(function () {
         cache = {};
 
     // 修正白名单
+    converter.enableHtml(true);
     converter.commonWhiteList += '|img|cite|embed|iframe';
     converter.specialWhiteList = $.extend(converter.specialWhiteList, {
         'ol'            :  'ol|li',

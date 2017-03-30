@@ -28,6 +28,7 @@ class Markdown
             self::$parser->hook('afterParseCode', array('Markdown', 'transerCodeClass'));
             self::$parser->hook('beforeParseInline', array('Markdown', 'transerComment'));
 
+            self::$parser->enableHtml(true);
             self::$parser->_commonWhiteList .= '|img|cite|embed|iframe';
             self::$parser->_specialWhiteList = array_merge(self::$parser->_specialWhiteList, array(
                 'ol'            =>  'ol|li',
