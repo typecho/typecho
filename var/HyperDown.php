@@ -82,6 +82,11 @@ class HyperDown
     private $_id;
 
     /**
+     * @var bool
+     */
+    private $_html = false;
+
+    /**
      * makeHtml
      *
      * @param mixed $text
@@ -100,6 +105,14 @@ class HyperDown
         $html = $this->makeFootnotes($html);
 
         return $this->call('makeHtml', $html);
+    }
+
+    /**
+     * @param $html
+     */
+    public function enableHtml($html = true)
+    {
+        $this->_html = $html;
     }
 
     /**
@@ -319,7 +332,7 @@ class HyperDown
         $text = preg_replace_callback(
             "/!\[((?:[^\]]|\\\\\]|\\\\\[)*?)\]\(((?:[^\)]|\\\\\)|\\\\\()+?)\)/",
             function ($matches) use ($self) {
-                $escaped = $self->escapeBracket($matches[1]);
+                $escaped = htmlspecialchars($self->escapeBracket($matches[1]));
                 $url = $self->escapeBracket($matches[2]);
                 $url = $self->cleanUrl($url);
                 return $self->makeHolder(
@@ -332,7 +345,7 @@ class HyperDown
         $text = preg_replace_callback(
             "/!\[((?:[^\]]|\\\\\]|\\\\\[)*?)\]\[((?:[^\]]|\\\\\]|\\\\\[)+?)\]/",
             function ($matches) use ($self) {
-                $escaped = $self->escapeBracket($matches[1]);
+                $escaped = htmlspecialchars($self->escapeBracket($matches[1]));
 
                 $result = isset( $self->_definitions[$matches[2]] ) ?
                     "<img src=\"{$self->_definitions[$matches[2]]}\" alt=\"{$escaped}\" title=\"{$escaped}\">"
@@ -383,7 +396,7 @@ class HyperDown
         // autolink url
         if ($enableAutoLink) {
             $text = preg_replace_callback(
-                "/(^|[^\"])((https?):[x80-xff_a-z0-9-\.\/%#@\?\+=~\|\,&\(\)]+)($|[^\"])/i",
+                "/(^|[^\"])((https?):[x80-xff_a-z0-9-\.\/%#!@\?\+=~\|\,&\(\)]+)($|[^\"])/i",
                 function ($matches) use ($self) {
                     $link = $self->call('parseLink', $matches[2]);
                     return "{$matches[1]}<a href=\"{$matches[2]}\">{$link}</a>{$matches[4]}";
@@ -532,6 +545,22 @@ class HyperDown
             } else if ($this->isBlock('code')) {
                 $this->setBlock($key);
                 continue;
+            }
+
+            // super html mode
+            if ($this->_html) {
+                if (preg_match("/^(\s*)!!!(\s*)$/i", $line, $matches)) {
+                    if ($this->isBlock('shtml')) {
+                        $this->setBlock($key)->endBlock();
+                    } else {
+                        $this->startBlock('shtml', $key);
+                    }
+
+                    continue;
+                } else if ($this->isBlock('shtml')) {
+                    $this->setBlock($key);
+                    continue;
+                }
             }
 
             // html block is special too
@@ -817,7 +846,7 @@ class HyperDown
         $lang = trim($lang);
         $count = strlen($blank);
 
-        if (! preg_match("/^[_a-z0-9-\+\#\:\.]+$/i", $lang)) {
+        if (!preg_match("/^[_a-z0-9-\+\#\:\.]+$/i", $lang)) {
             $lang = NULL;
         } else {
             $parts = explode(':', $lang);
@@ -853,6 +882,17 @@ class HyperDown
         $str = implode("\n", $lines);
 
         return preg_match("/^\s*$/", $str) ? '' : '<pre><code>' . $str . '</code></pre>';
+    }
+
+    /**
+     * parseShtml
+     *
+     * @param array $lines
+     * @return string
+     */
+    private function parseShtml(array $lines)
+    {
+        return trim(implode("\n", array_slice($lines, 1, -1)));
     }
 
     /**
@@ -1149,9 +1189,9 @@ class HyperDown
      */
     public function cleanUrl($url)
     {
-        if (preg_match("/^\s*((http|https|ftp|mailto):[x80-xff_a-z0-9-\.\/%#@\?\+=~\|\,&\(\)]+)/i", $url, $matches)) {
+        if (preg_match("/^\s*((http|https|ftp|mailto):[x80-xff_a-z0-9-\.\/%#!@\?\+=~\|\,&\(\)]+)/i", $url, $matches)) {
             return $matches[1];
-        } else if (preg_match("/^\s*([x80-xff_a-z0-9-\.\/%#@\?\+=~\|\,&]+)/i", $url, $matches)) {
+        } else if (preg_match("/^\s*([x80-xff_a-z0-9-\.\/%#!@\?\+=~\|\,&]+)/i", $url, $matches)) {
             return $matches[1];
         } else {
             return '#';
