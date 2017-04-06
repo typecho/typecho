@@ -163,7 +163,7 @@ $(document).ready(function() {
     })();
     
     if (dstOffset > 0) {
-        $('<input name="dst" type="hidden" />').insertTo(form).val(dstOffset);
+        $('<input name="dst" type="hidden" />').insertAfter(form).val(dstOffset);
     }
 
     // 自动保存
