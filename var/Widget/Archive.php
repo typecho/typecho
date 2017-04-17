@@ -1808,7 +1808,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         if (null != r) {
             var forms = r.getElementsByTagName('form');
             if (forms.length > 0) {
-                var f = forms[0], textarea = f.getElementsByTagName('textarea')[0], added = false;
+                var f = forms[0], textarea = f.getElementsByTagName('textarea')[0] || f.text, added = false;
 
                 if (null != textarea && 'text' == textarea.name) {
                     textarea[event.add](event.focus, function () {
