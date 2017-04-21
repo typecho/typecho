@@ -1433,22 +1433,25 @@ class Widget_Archive extends Widget_Abstract_Contents
             $template = array_merge($default, $config);
             
             $total = $this->getTotal();
-            $this->pluginHandle()->trigger($hasNav)->pageNav($this->_currentPage, $total, 
-                $this->parameter->pageSize, $prev, $next, $splitPage, $splitWord);
 
-            if (!$hasNav && $total > $this->parameter->pageSize) {
+            if ($total > $this->parameter->pageSize) {
                 $query = Typecho_Router::url($this->parameter->type .
                 (false === strpos($this->parameter->type, '_page') ? '_page' : NULL),
                 $this->_pageRow, $this->options->index);
 
-                /** 使用盒状分页 */
-                $nav = new Typecho_Widget_Helper_PageNavigator_Box($total, 
-                    $this->_currentPage, $this->parameter->pageSize, $query);
-                
-                echo '<' . $template['wrapTag'] . (empty($template['wrapClass']) 
-                    ? '' : ' class="' . $template['wrapClass'] . '"') . '>';
-                $nav->render($prev, $next, $splitPage, $splitWord, $template);
-                echo '</' . $template['wrapTag'] . '>';
+                $this->pluginHandle()->trigger($hasNav)->pageNav($this->_currentPage, $total, 
+                    $this->parameter->pageSize, $prev, $next, $splitPage, $splitWord, $query);
+
+                if (!$hasNav) {
+                    /** 使用盒状分页 */
+                    $nav = new Typecho_Widget_Helper_PageNavigator_Box($total, 
+                        $this->_currentPage, $this->parameter->pageSize, $query);
+
+                    echo '<' . $template['wrapTag'] . (empty($template['wrapClass']) 
+                        ? '' : ' class="' . $template['wrapClass'] . '"') . '>';
+                    $nav->render($prev, $next, $splitPage, $splitWord, $template);
+                    echo '</' . $template['wrapTag'] . '>';
+                }
             }
         }
     }
@@ -2104,4 +2107,3 @@ class Widget_Archive extends Widget_Abstract_Contents
         echo $this->_feed->__toString();
     }
 }
-
