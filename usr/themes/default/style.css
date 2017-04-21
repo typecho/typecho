@@ -35,7 +35,7 @@ pre {
   overflow: auto;
   max-height: 400px;
 }
-pre code {
+code {
   padding: 3px;
   color: #444;
 }
