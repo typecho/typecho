@@ -296,10 +296,9 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
     }
 
-    /** about wp xmlrpc api, you can see http://codex.wordpress.org/XML-RPC*/
-
     /**
      * 获取pageId指定的page
+     * about wp xmlrpc api, you can see http://codex.wordpress.org/XML-RPC
      *
      * @param int $blogId
      * @param int $pageId
@@ -1347,14 +1346,14 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
 
 
-    /**about MetaWeblog API, you can see http://www.xmlrpc.com/metaWeblogApi*/
     /**
      * MetaWeblog API
+     * about MetaWeblog API, you can see http://www.xmlrpc.com/metaWeblogApi
      *
      * @param int $blogId
      * @param string $userName
      * @param string $password
-     * @param struct $content
+     * @param mixed $content
      * @param bool $publish
      * @access public
      * @return int
@@ -1831,7 +1830,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         $select = $this->select()->where('table.contents.cid = ? AND table.contents.type = ?', $postId, 'post')->limit(1);
 
         /** 提交查询 */
-        $post = $this->$db->fetchRow($select, array($this, 'push'));
+        $post = $this->db->fetchRow($select, array($this, 'push'));
         if ($this->authorId != $this->user->uid && !$this->checkAccess($userName, $password, 'administrator')) {
             return new IXR_Error(403, '权限不足.');
         }
