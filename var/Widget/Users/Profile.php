@@ -106,7 +106,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         $xmlrpcMarkdown = new Typecho_Widget_Helper_Form_Element_Radio('xmlrpcMarkdown',
         array('0' => _t('关闭'), '1' => _t('打开')),
         $this->options->xmlrpcMarkdown, _t('在 XMLRPC 接口中使用 Markdown 语法'), 
-            _t('对于完全支持 <a href="http://daringfireball.net/projects/markdown/">Markdown</a> 语法写作的编辑器, 打开此选项后将避免内容被转换为 HTML.'));
+            _t('对于完全支持 <a href="http://daringfireball.net/projects/markdown/">Markdown</a> 语法写作的离线编辑器, 打开此选项后将避免内容被转换为 HTML.'));
         $form->addInput($xmlrpcMarkdown);
 
         /** 自动保存 */
