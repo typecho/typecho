@@ -103,6 +103,12 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
                 . '<br />' . _t('此功能开启不会影响以前没有使用 Markdown 语法编辑的内容.'));
         $form->addInput($markdown);
 
+        $xmlrpcMarkdown = new Typecho_Widget_Helper_Form_Element_Radio('xmlrpcMarkdown',
+        array('0' => _t('关闭'), '1' => _t('打开')),
+        $this->options->xmlrpcMarkdown, _t('在 XMLRPC 接口中使用 Markdown 语法'), 
+            _t('对于完全支持 <a href="http://daringfireball.net/projects/markdown/">Markdown</a> 语法写作的编辑器, 打开此选项后将避免内容被转换为 HTML.'));
+        $form->addInput($xmlrpcMarkdown);
+
         /** 自动保存 */
         $autoSave = new Typecho_Widget_Helper_Form_Element_Radio('autoSave',
         array('0' => _t('关闭'), '1' => _t('打开')),
@@ -283,6 +289,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
     {
         $settings['autoSave'] = $this->request->autoSave ? 1 : 0;
         $settings['markdown'] = $this->request->markdown ? 1 : 0;
+        $settings['xmlrpcMarkdown'] = $this->request->xmlrpcMarkdown ? 1 : 0;
         $defaultAllow = $this->request->getArray('defaultAllow');
 
         $settings['defaultAllowComment'] = in_array('comment', $defaultAllow) ? 1 : 0;

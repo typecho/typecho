@@ -61,6 +61,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             case false !== strpos($agent, 'wp-blackberry'):  // 黑莓
             case false !== strpos($agent, 'wp-andriod'):  // andriod
             case false !== strpos($agent, 'plain-text'):  // 这是预留给第三方开发者的接口, 用于强行调用非所见即所得数据
+            case $this->options->xmlrpcMarkdown:
                 $text = $content->text;
                 break;
             default:
@@ -69,7 +70,10 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
     
         $post = explode('<!--more-->', $text, 2);
-        return array(Typecho_Common::fixHtml($post[0]), isset($post[1]) ? Typecho_Common::fixHtml($post[1]) : NULL);
+        return array(
+            $this->options->xmlrpcMarkdown? $post[0] : Typecho_Common::fixHtml($post[0]),
+            isset($post[1]) ? Typecho_Common::fixHtml($post[1]) : NULL
+        );
     }
     
     /**
@@ -1427,6 +1431,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
         $input['allowFeed'] = $this->options->defaultAllowFeed;
         $input['do'] = $publish ? 'publish' : 'save';
+        $input['markdown'] = $this->options->xmlrpcMarkdown;
         
         /** 调整状态 */
         if (isset($content["{$type}_status"])) {
