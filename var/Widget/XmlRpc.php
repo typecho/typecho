@@ -289,6 +289,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         if ($this->user->login($name, $password, true)) {
             /** 验证权限 */
             if ($this->user->pass($level, true)) {
+                $this->user->execute();
                 return true;
             } else {
                 $this->error = new IXR_Error(403, _t('权限不足'));
