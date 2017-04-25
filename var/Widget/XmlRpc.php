@@ -204,6 +204,9 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         if ($run) {
             parent::execute();
         }
+
+        // 临时保护模块
+        $this->security->enable(false);
         
         $this->_wpOptions = array(
 			// Read only options
@@ -1473,7 +1476,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             } else {
                 $this->singletonWidget('Widget_Contents_Post_Edit', NULL, $input, false)->action();
             }
-
+        
             return $this->singletonWidget('Widget_Notice')->getHighlightId();
         } catch (Typecho_Widget_Exception $e) {
             return new IXR_Error($e->getCode(), $e->getMessage());

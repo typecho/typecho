@@ -22,6 +22,11 @@ class Widget_Security extends Typecho_Widget
     private $_options;
 
     /**
+     * @var boolean
+     */
+    private $_enabled = true;
+
+    /**
      * 初始化函数
      *
      */
@@ -34,6 +39,14 @@ class Widget_Security extends Typecho_Widget
         if ($user->hasLogin()) {
             $this->_token .= '&' . $user->authCode . '&' . $user->uid;
         }
+    }
+
+    /**
+     * @param $enabled
+     */
+    public function enable($enabled = true)
+    {
+        $this->_enabled = $enabled;
     }
 
     /**
@@ -74,7 +87,7 @@ class Widget_Security extends Typecho_Widget
      */
     public function protect()
     {
-        if ($this->request->get('_') != $this->getToken($this->request->getReferer())) {
+        if ($this->enabled && $this->request->get('_') != $this->getToken($this->request->getReferer())) {
             $this->response->goBack();
         }
     }
