@@ -14,7 +14,7 @@ class HyperDown
      *
      * @var string
      */
-    public $_commonWhiteList = 'kbd|b|i|strong|em|sup|sub|br|code|del|a|hr|small';
+    public $_commonWhiteList = 'kbd|b|i|strong|em|sup|sub|br|code|del|a|hr|small|center|s';
 
     /**
      * _specialWhiteList
