@@ -899,6 +899,32 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     }
 
     /**
+     * 将页面移到回收站
+     *
+     * @access public
+     * @return void
+     */
+    public function trashPost($status)
+    {
+        $pages = $this->request->filter('int')->getArray('cid');
+        $deleteCount = 0;
+
+        foreach ($pages as $page) {
+            $this->db->query($this->db->update('table.contents')->rows(array('status' => $status))
+                ->where('cid = ?', $page));
+            $deleteCount++;
+        }
+
+        /** 设置提示信息 */
+        $msg = $status == "trash" ? _t('已经移到回收站') : _t('已经还原');
+        $this->widget('Widget_Notice')->set($deleteCount > 0 ? $msg : _t('没有操作'),
+        $deleteCount > 0 ? 'success' : 'notice');
+        
+        /** 返回原网页 */
+        $this->response->goBack();
+    }
+
+    /**
      * 绑定动作
      *
      * @access public
@@ -909,6 +935,8 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         $this->security->protect();
         $this->on($this->request->is('do=publish') || $this->request->is('do=save'))->writePost();
         $this->on($this->request->is('do=delete'))->deletePost();
+		$this->on($this->request->is('do=trash'))->trashPost('trash');
+		$this->on($this->request->is('do=untrash'))->trashPost('publish');
         $this->on($this->request->is('do=deleteDraft'))->deletePostDraft();
         $this->on($this->request->is('do=preview'))->preview();
 

@@ -17,9 +17,20 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <div class="btn-group btn-drop">
                                 <button class="btn dropdown-toggle btn-s" type="button"><i class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i class="i-caret-down"></i></button>
                                 <ul class="dropdown-menu">
-                                    <li><a lang="<?php _e('你确认要删除这些文章吗?'); ?>" href="<?php $security->index('/action/contents-post-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
+                                    <li><a lang="<?php _e('你确认要删除这些文章吗?'); ?>" href="<?php $security->index('/action/contents-post-edit?do=delete'); ?>"><?php _e('彻底删除'); ?></a></li>
+                                    <?php if ($request->status != "trash"): ?>
+                                    <li><a lang="<?php _e('你确认要删除这些文章吗?'); ?>" href="<?php $security->index('/action/contents-post-edit?do=trash'); ?>"><?php _e('移到回收站'); ?></a></li>
+                                    <?php else: ?>
+                                    <li><a lang="<?php _e('你确认要还原这些文章吗?'); ?>" href="<?php $security->index('/action/contents-post-edit?do=untrash'); ?>"><?php _e('还原'); ?></a></li>	
+                                    <?php endif; ?>
                                 </ul>
                             </div>  
+                            <ul class="subsubsub">
+								<li class="all"><a href="<?php $options->adminUrl('manage-posts.php?status=all'); ?>" class="<?= (empty($request->status) || $request->status == "all") ? "current" : "" ?>"><?php _e("全部") ?></a> |</li>
+								<li class="publish"><a href="<?php $options->adminUrl('manage-posts.php?status=publish'); ?>" class="<?= ($request->status == "publish") ? "current" : "" ?>"><?php _e("已发布") ?></a> |</li>
+								<li class="publish"><a href="<?php $options->adminUrl('manage-posts.php?status=draft'); ?>" class="<?= ($request->status == "draft") ? "current" : "" ?>"><?php _e("草稿") ?></a> |</li>
+								<li class="trash"><a href="<?php $options->adminUrl('manage-posts.php?status=trash'); ?>" class="<?= ($request->status == "trash") ? "current" : "" ?>"><?php _e("回收站") ?></a></li>
+							</ul>
                         </div>
                         <div class="search" role="search">
                             <?php if ('' != $request->keywords || '' != $request->category): ?>
