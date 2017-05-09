@@ -23,6 +23,10 @@ class Widget_Init extends Typecho_Widget
      */
     public function execute()
     {
+        if (php_sapi_name() == 'cli') {
+            define('__TYPECHO_CLI__', true);
+        }
+
         /** 对变量赋值 */
         $options = $this->widget('Widget_Options');
 
@@ -30,6 +34,12 @@ class Widget_Init extends Typecho_Widget
         if ($options->lang && $options->lang != 'zh_CN') {
             $dir = defined('__TYPECHO_LANG_DIR__') ? __TYPECHO_LANG_DIR__ : __TYPECHO_ROOT_DIR__ . '/usr/langs';
             Typecho_I18n::setLang($dir . '/' . $options->lang . '.mo');
+        }
+
+        /** 进入命令行格式 */
+        if (defined('__TYPECHO_CLI__')) {
+            new CLI();
+            exit(0);
         }
 
         /** cookie初始化 */
