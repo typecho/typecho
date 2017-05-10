@@ -4,11 +4,47 @@ include 'header.php';
 include 'menu.php';
 
 $stat = Typecho_Widget::widget('Widget_Stat');
+$posts = Typecho_Widget::widget('Widget_Contents_Post_Admin');
+$isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == Typecho_Cookie::get('__typecho_all_posts'));
 ?>
 <div class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main" role="main">
+            <div class="col-mb-12 typecho-list">
+                <div class="clearfix">
+                    <ul class="typecho-option-tabs right">
+                    <?php if($user->pass('editor', true) && !isset($request->uid)): ?>
+                        <li class="<?php if($isAllPosts): ?> current<?php endif; ?>"><a href="<?php echo $request->makeUriByRequest('__typecho_all_posts=on'); ?>"><?php _e('所有'); ?></a></li>
+                        <li class="<?php if(!$isAllPosts): ?> current<?php endif; ?>"><a href="<?php echo $request->makeUriByRequest('__typecho_all_posts=off'); ?>"><?php _e('我的'); ?></a></li>
+                    <?php endif; ?>
+                    </ul>
+                    <ul class="typecho-option-tabs">
+                        <li<?php if(!isset($request->status) || 'all' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-posts.php'
+                        . (isset($request->uid) ? '?uid=' . $request->uid : '')); ?>"><?php _e('可用'); ?></a></li>
+                        <li<?php if('waiting' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-posts.php?status=waiting'
+                        . (isset($request->uid) ? '&uid=' . $request->uid : '')); ?>"><?php _e('待审核'); ?>
+                        <?php if(!$isAllPosts && $stat->myWaitingPostsNum > 0 && !isset($request->uid)): ?>
+                            <span class="balloon"><?php $stat->myWaitingPostsNum(); ?></span>
+                        <?php elseif($isAllPosts && $stat->waitingPostsNum > 0 && !isset($request->uid)): ?>
+                            <span class="balloon"><?php $stat->waitingPostsNum(); ?></span>
+                        <?php elseif(isset($request->uid) && $stat->currentWaitingPostsNum > 0): ?>
+                            <span class="balloon"><?php $stat->currentWaitingPostsNum(); ?></span>
+                        <?php endif; ?>
+                        </a></li>
+                        <li<?php if('draft' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-posts.php?status=draft'
+                        . (isset($request->uid) ? '&uid=' . $request->uid : '')); ?>"><?php _e('草稿'); ?>
+                        <?php if(!$isAllPosts && $stat->myDraftPostsNum > 0 && !isset($request->uid)): ?>
+                            <span class="balloon"><?php $stat->myDraftPostsNum(); ?></span>
+                        <?php elseif($isAllPosts && $stat->draftPostsNum > 0 && !isset($request->uid)): ?>
+                            <span class="balloon"><?php $stat->draftPostsNum(); ?></span>
+                        <?php elseif(isset($request->uid) && $stat->currentDraftPostsNum > 0): ?>
+                            <span class="balloon"><?php $stat->currentDraftPostsNum(); ?></span>
+                        <?php endif; ?>
+                        </a></li>
+                    </ul>
+                </div>
+
             <div class="col-mb-12 typecho-list">
                 <div class="typecho-list-operate clearfix">
                     <form method="get">
@@ -23,7 +59,10 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         </div>
                         <div class="search" role="search">
                             <?php if ('' != $request->keywords || '' != $request->category): ?>
-                            <a href="<?php $options->adminUrl('manage-posts.php' . (isset($request->uid) ? '?uid=' . htmlspecialchars($request->get('uid')) : '')); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
+                            <a href="<?php $options->adminUrl('manage-posts.php'
+                                . (isset($request->status) || isset($request->uid) ? '?' .
+                                    (isset($request->status) ? 'status=' . htmlspecialchars($request->get('status')) : '') .
+                                    (isset($request->uid) ? '?uid=' . htmlspecialchars($request->get('uid')) : '') : '')); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
                             <?php endif; ?>
                             <input type="text" class="text-s" placeholder="<?php _e('请输入关键字'); ?>" value="<?php echo htmlspecialchars($request->keywords); ?>" name="keywords" />
                             <select name="category">
@@ -36,6 +75,9 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <button type="submit" class="btn btn-s"><?php _e('筛选'); ?></button>
                             <?php if(isset($request->uid)): ?>
                             <input type="hidden" value="<?php echo htmlspecialchars($request->get('uid')); ?>" name="uid" />
+                            <?php endif; ?>
+                            <?php if(isset($request->status)): ?>
+                                <input type="hidden" value="<?php echo htmlspecialchars($request->get('status')); ?>" name="status" />
                             <?php endif; ?>
                         </div>
                     </form>
@@ -63,7 +105,6 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             </tr>
                         </thead>
                         <tbody>
-                        	<?php Typecho_Widget::widget('Widget_Contents_Post_Admin')->to($posts); ?>
                         	<?php if($posts->have()): ?>
                             <?php while($posts->next()): ?>
                             <tr id="<?php $posts->theId(); ?>">

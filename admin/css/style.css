@@ -63,7 +63,7 @@ a.balloon-button {
   border-radius: 30px;
   white-space: nowrap; }
 
-/* line 68, ../scss/style.scss */
+/* line 69, ../scss/style.scss */
 a.button:hover, a.balloon-button:hover {
   background-color: #A5CADC;
   color: #FFF;
@@ -532,13 +532,13 @@ select {
     color: #999; }
 
 /* 低版本浏览器升级提示 */
-/* line 84, ../scss/style.scss */
+/* line 85, ../scss/style.scss */
 .browsehappy {
   border: none;
   text-align: center; }
 
 /** 顶部消息样式 by 70 */
-/* line 90, ../scss/style.scss */
+/* line 91, ../scss/style.scss */
 .popup {
   display: none;
   position: absolute;
@@ -554,14 +554,14 @@ select {
   -webkit-border-radius: 0;
   border-radius: 0; }
 
-/* line 107, ../scss/style.scss */
+/* line 108, ../scss/style.scss */
 .popup ul {
   list-style: none;
   margin: 0;
   padding: 0;
   text-align: center; }
 
-/* line 114, ../scss/style.scss */
+/* line 115, ../scss/style.scss */
 .popup ul li {
   display: inline-block;
   margin-right: 10px; }
@@ -572,7 +572,7 @@ select {
 /**
 * 载入状态
 */
-/* line 128, ../scss/style.scss */
+/* line 129, ../scss/style.scss */
 .loading {
   padding-left: 20px !important;
   background: transparent url(../img/ajax-loader.gif) no-repeat left center; }
@@ -580,42 +580,42 @@ select {
 /**
 * 典型配置选项
 */
-/* line 137, ../scss/style.scss */
+/* line 138, ../scss/style.scss */
 .typecho-option {
   list-style: none;
   margin: 1em 0;
   padding: 0; }
 
-/* line 146, ../scss/style.scss */
+/* line 147, ../scss/style.scss */
 .typecho-option-submit li {
   border-bottom: none; }
 
-/* line 150, ../scss/style.scss */
+/* line 151, ../scss/style.scss */
 .typecho-option label.typecho-label {
   display: block;
   margin-bottom: .5em;
   font-weight: bold; }
 
-/* line 155, ../scss/style.scss */
+/* line 156, ../scss/style.scss */
 .typecho-option label.required:after {
   content: " *";
   color: #B94A48; }
 
-/* line 161, ../scss/style.scss */
+/* line 162, ../scss/style.scss */
 .typecho-option span {
   margin-right: 15px; }
 
-/* line 162, ../scss/style.scss */
+/* line 163, ../scss/style.scss */
 .typecho-option .description {
   margin: .5em 0 0;
   color: #999;
   font-size: .92857em; }
 
-/* line 168, ../scss/style.scss */
+/* line 169, ../scss/style.scss */
 .front-archive {
   padding-left: 1.5em; }
 
-/* line 172, ../scss/style.scss */
+/* line 173, ../scss/style.scss */
 .profile-avatar {
   border: 1px dashed #D9D9D6;
   max-width: 100%; }
@@ -630,11 +630,11 @@ select {
 /**
 * 安装向导
 */
-/* line 190, ../scss/style.scss */
+/* line 191, ../scss/style.scss */
 .typecho-install {
   padding-bottom: 2em; }
 
-/* line 193, ../scss/style.scss */
+/* line 194, ../scss/style.scss */
 .typecho-install-patch {
   margin-bottom: 2em;
   padding: 2em 0;
@@ -642,19 +642,19 @@ select {
   color: #FFF;
   text-align: center; }
 
-/* line 201, ../scss/style.scss */
+/* line 202, ../scss/style.scss */
 .typecho-install-patch ol {
   list-style: none;
   margin: 3em 0 1em;
   padding: 0;
   color: #999; }
 
-/* line 207, ../scss/style.scss */
+/* line 208, ../scss/style.scss */
 .typecho-install-patch li {
   display: inline-block;
   margin: 0 .8em; }
 
-/* line 211, ../scss/style.scss */
+/* line 212, ../scss/style.scss */
 .typecho-install-patch span {
   display: inline-block;
   margin-right: 5px;
@@ -665,65 +665,65 @@ select {
   text-align: center;
   border-radius: 2em; }
 
-/* line 221, ../scss/style.scss */
+/* line 222, ../scss/style.scss */
 .typecho-install-patch li.current {
   color: #FFF;
   font-weight: bold; }
 
-/* line 225, ../scss/style.scss */
+/* line 226, ../scss/style.scss */
 .typecho-install-patch li.current span {
   border-color: #FFF; }
 
 /**
 * 安装主体内容
 */
-/* line 234, ../scss/style.scss */
+/* line 235, ../scss/style.scss */
 .typecho-install .typecho-install-body input {
   width: 100%; }
 
-/* line 237, ../scss/style.scss */
+/* line 238, ../scss/style.scss */
 .typecho-install-body .typecho-option li {
   margin: 1em 0; }
 
 /**
 * 欢迎界面
 */
-/* line 246, ../scss/style.scss */
+/* line 247, ../scss/style.scss */
 #typecho-welcome {
   margin: 1em 0;
   padding: 1em 2em;
   background-color: #E9E9E6; }
 
-/* line 252, ../scss/style.scss */
+/* line 253, ../scss/style.scss */
 .welcome-board {
   color: #999;
   font-size: 1.15em; }
-  /* line 255, ../scss/style.scss */
+  /* line 256, ../scss/style.scss */
   .welcome-board em {
     color: #444;
     font-size: 2em;
     font-style: normal;
     font-family: Georgia, serif; }
 
-/* line 263, ../scss/style.scss */
+/* line 264, ../scss/style.scss */
 #start-link {
   margin-bottom: 25px;
   padding: 0 0 35px;
   border-bottom: 1px solid #ECECEC; }
-  /* line 267, ../scss/style.scss */
+  /* line 268, ../scss/style.scss */
   #start-link li {
     float: left;
     margin-right: 1.5em; }
-  /* line 271, ../scss/style.scss */
+  /* line 272, ../scss/style.scss */
   #start-link .balloon {
     margin-top: 2px; }
 
-/* line 277, ../scss/style.scss */
+/* line 278, ../scss/style.scss */
 .latest-link li {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis; }
-/* line 282, ../scss/style.scss */
+/* line 283, ../scss/style.scss */
 .latest-link span {
   display: inline-block;
   margin-right: 4px;
@@ -733,48 +733,48 @@ select {
   text-align: right;
   color: #999; }
 
-/* line 293, ../scss/style.scss */
+/* line 294, ../scss/style.scss */
 .update-check {
   font-size: 14px; }
 
 /**
 * 登录框
 */
-/* line 300, ../scss/style.scss */
+/* line 301, ../scss/style.scss */
 .typecho-login-wrap {
   display: table;
   margin: 0 auto;
   height: 100%; }
 
-/* line 305, ../scss/style.scss */
+/* line 306, ../scss/style.scss */
 .typecho-login {
   display: table-cell;
   padding: 30px 0 100px;
   width: 280px;
   text-align: center;
   vertical-align: middle; }
-  /* line 311, ../scss/style.scss */
+  /* line 312, ../scss/style.scss */
   .typecho-login h1 {
     margin: 0 0 1em; }
 
-/* line 316, ../scss/style.scss */
+/* line 317, ../scss/style.scss */
 .typecho-login .more-link {
   margin-top: 2em;
   color: #CCC; }
 
-/* line 320, ../scss/style.scss */
+/* line 321, ../scss/style.scss */
 .typecho-login .more-link a {
   margin: 0 3px; }
 
 /**
 * 标题
 */
-/* line 327, ../scss/style.scss */
+/* line 328, ../scss/style.scss */
 .typecho-page-title h2 {
   margin: 25px 0 10px;
   font-size: 1.28571em; }
 
-/* line 331, ../scss/style.scss */
+/* line 332, ../scss/style.scss */
 .typecho-page-title h2 a {
   margin-left: 10px;
   padding: 3px 8px;
@@ -782,7 +782,7 @@ select {
   font-size: .8em;
   border-radius: 2px; }
 
-/* line 339, ../scss/style.scss */
+/* line 340, ../scss/style.scss */
 .typecho-page-title h2 a:hover {
   text-decoration: none; }
 
@@ -792,30 +792,30 @@ select {
 /**
 * 主页主体
 */
-/* line 353, ../scss/style.scss */
+/* line 354, ../scss/style.scss */
 .typecho-dashboard ul {
   list-style: none;
   padding: 0; }
 
-/* line 357, ../scss/style.scss */
+/* line 358, ../scss/style.scss */
 .typecho-dashboard li {
   margin-bottom: 5px; }
 
 /**
 * 标签页
 */
-/* line 365, ../scss/style.scss */
+/* line 366, ../scss/style.scss */
 .typecho-option-tabs {
   list-style: none;
   margin: 1em 0 0;
   padding: 0;
   font-size: 13px;
   text-align: center; }
-  /* line 371, ../scss/style.scss */
+  /* line 372, ../scss/style.scss */
   .typecho-option-tabs.fix-tabs {
     margin-bottom: 1em; }
 
-/* line 376, ../scss/style.scss */
+/* line 377, ../scss/style.scss */
 .typecho-option-tabs a {
   display: block;
   margin-right: -1px;
@@ -828,31 +828,31 @@ select {
   -webkit-box-sizing: border-box;
   box-sizing: border-box; }
 
-/* line 387, ../scss/style.scss */
+/* line 388, ../scss/style.scss */
 .typecho-option-tabs a:hover {
   background-color: #E9E9E6;
   color: #666;
   text-decoration: none; }
 
-/* line 393, ../scss/style.scss */
+/* line 394, ../scss/style.scss */
 .typecho-option-tabs li {
   float: left; }
-  /* line 395, ../scss/style.scss */
+  /* line 396, ../scss/style.scss */
   .typecho-option-tabs li:first-child a {
     -moz-border-radius: 2px 0 0 2px;
     -webkit-border-radius: 2px;
     border-radius: 2px 0 0 2px; }
-  /* line 398, ../scss/style.scss */
+  /* line 399, ../scss/style.scss */
   .typecho-option-tabs li:last-child a {
     -moz-border-radius: 0 2px 2px 0;
     -webkit-border-radius: 0;
     border-radius: 0 2px 2px 0; }
 
-/* line 403, ../scss/style.scss */
+/* line 404, ../scss/style.scss */
 .typecho-option-tabs.right {
   float: right; }
 
-/* line 407, ../scss/style.scss */
+/* line 408, ../scss/style.scss */
 .typecho-option-tabs li.current a,
 .typecho-option-tabs li.active a {
   background-color: #E9E9E6; }
@@ -863,42 +863,42 @@ select {
 /**
 * 列表页选项
 */
-/* line 423, ../scss/style.scss */
+/* line 424, ../scss/style.scss */
 .typecho-list-operate {
   margin: 1em 0; }
 
-/* line 427, ../scss/style.scss */
+/* line 428, ../scss/style.scss */
 .typecho-list-operate input,
 .typecho-list-operate button,
 .typecho-list-operate select {
   vertical-align: bottom; }
 
-/* line 433, ../scss/style.scss */
+/* line 434, ../scss/style.scss */
 .typecho-list-operate input[type="checkbox"] {
   vertical-align: text-top; }
 
-/* line 437, ../scss/style.scss */
+/* line 438, ../scss/style.scss */
 .typecho-list-operate .operate {
   float: left; }
 
-/* line 441, ../scss/style.scss */
+/* line 442, ../scss/style.scss */
 .typecho-list-operate .search {
   float: right; }
 
-/* line 445, ../scss/style.scss */
+/* line 446, ../scss/style.scss */
 .typecho-list-operate span.operate-delete, a.operate-delete,
 .typecho-list-operate span.operate-button-delete, a.operate-button-delete {
   color: #B94A48; }
 
-/* line 450, ../scss/style.scss */
+/* line 451, ../scss/style.scss */
 a.operate-edit {
   color: #007700; }
 
-/* line 454, ../scss/style.scss */
+/* line 455, ../scss/style.scss */
 a.operate-reply {
   color: #545c30; }
 
-/* line 458, ../scss/style.scss */
+/* line 459, ../scss/style.scss */
 .typecho-list-operate a:hover {
   text-decoration: none; }
 
@@ -906,66 +906,66 @@ a.operate-reply {
 * 列表表格
 */
 /** 增加表格标题 by 70 */
-/* line 466, ../scss/style.scss */
+/* line 467, ../scss/style.scss */
 .typecho-list-table-title {
   margin: 1em 0;
   color: #999;
   text-align: center; }
 
-/* line 471, ../scss/style.scss */
+/* line 472, ../scss/style.scss */
 .typecho-table-wrap {
   padding: 30px;
   background: #FFF; }
 
-/* line 475, ../scss/style.scss */
+/* line 476, ../scss/style.scss */
 .typecho-list-table {
   width: 100%; }
 
-/* line 479, ../scss/style.scss */
+/* line 480, ../scss/style.scss */
 .typecho-list-table.deactivate {
   color: #999; }
 
-/* line 483, ../scss/style.scss */
+/* line 484, ../scss/style.scss */
 .typecho-list-table .right {
   text-align: right; }
 
-/* line 487, ../scss/style.scss */
+/* line 488, ../scss/style.scss */
 .typecho-list-table th {
   padding: 0 10px 10px;
   border-bottom: 2px solid #F0F0EC;
   text-align: left; }
 
-/* line 493, ../scss/style.scss */
+/* line 494, ../scss/style.scss */
 .typecho-list-table td {
   padding: 10px;
   border-top: 1px solid #F0F0EC;
   word-break: break-all; }
 
-/* line 498, ../scss/style.scss */
+/* line 499, ../scss/style.scss */
 .typecho-list-table .status {
   margin-left: 5px;
   color: #999;
   font-size: .92857em;
   font-style: normal; }
 
-/* line 504, ../scss/style.scss */
+/* line 505, ../scss/style.scss */
 .typecho-list-table tbody tr:hover td {
   background-color: #F6F6F3; }
 
-/* line 508, ../scss/style.scss */
+/* line 509, ../scss/style.scss */
 .typecho-list-table tbody tr.checked td {
   background-color: #FFF9E8; }
 
-/* line 512, ../scss/style.scss */
+/* line 513, ../scss/style.scss */
 .warning {
   color: #B94A48; }
 
-/* line 517, ../scss/style.scss */
+/* line 518, ../scss/style.scss */
 .typecho-list-table tr td .hidden-by-mouse {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0; }
 
-/* line 521, ../scss/style.scss */
+/* line 522, ../scss/style.scss */
 .typecho-list-table tr:hover td .hidden-by-mouse {
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1; }
@@ -973,7 +973,7 @@ a.operate-reply {
 /**
 * 评论管理
 */
-/* line 530, ../scss/style.scss */
+/* line 531, ../scss/style.scss */
 .comment-reply-content {
   position: relative;
   margin: 1em 0;
@@ -981,7 +981,7 @@ a.operate-reply {
   border: 1px solid transparent;
   background-color: #F0F0EC; }
 
-/* line 537, ../scss/style.scss */
+/* line 538, ../scss/style.scss */
 .comment-reply-content:after {
   position: absolute;
   right: 1em;
@@ -989,24 +989,24 @@ a.operate-reply {
   border-color: #F0F0EC #F0F0EC transparent transparent;
   content: " "; }
 
-/* line 545, ../scss/style.scss */
+/* line 546, ../scss/style.scss */
 .comment-meta span,
 .comment-date {
   font-size: .92857em;
   color: #999; }
 
-/* line 551, ../scss/style.scss */
+/* line 552, ../scss/style.scss */
 .comment-action a, .comment-action span {
   margin-right: 4px; }
 
-/* line 553, ../scss/style.scss */
+/* line 554, ../scss/style.scss */
 .comment-edit label {
   display: block; }
 
 /**
 * 评论回复
 */
-/* line 561, ../scss/style.scss */
+/* line 562, ../scss/style.scss */
 #typecho-respond {
   padding: 10px;
   display: none; }
@@ -1014,55 +1014,55 @@ a.operate-reply {
 /**
 * 模板列表
 */
-/* line 579, ../scss/style.scss */
+/* line 580, ../scss/style.scss */
 .typecho-theme-list img {
   margin: 1em 0;
   max-width: 100%;
   max-height: 240px; }
 
-/* line 585, ../scss/style.scss */
+/* line 586, ../scss/style.scss */
 .typecho-theme-list cite {
   font-style: normal;
   color: #999; }
 
-/* line 590, ../scss/style.scss */
+/* line 591, ../scss/style.scss */
 .typecho-theme-list tbody tr.current td {
   background-color: #FFF9E8; }
 
 /**
 * 后台配置项
 */
-/* line 599, ../scss/style.scss */
+/* line 600, ../scss/style.scss */
 .typecho-page-main .typecho-option input.text {
   width: 100%; }
 
-/* line 603, ../scss/style.scss */
+/* line 604, ../scss/style.scss */
 .typecho-page-main .typecho-option input.num {
   width: 40px; }
 
-/* line 607, ../scss/style.scss */
+/* line 608, ../scss/style.scss */
 .typecho-page-main .typecho-option textarea {
   width: 100%;
   height: 100px; }
 
-/* line 612, ../scss/style.scss */
+/* line 613, ../scss/style.scss */
 .typecho-page-main .typecho-option .multiline {
   display: block;
   margin: .3em 0; }
-  /* line 615, ../scss/style.scss */
+  /* line 616, ../scss/style.scss */
   .typecho-page-main .typecho-option .multiline.hidden {
     display: none; }
 
 /**
 * 编辑模板
 */
-/* line 624, ../scss/style.scss */
+/* line 625, ../scss/style.scss */
 .typecho-select-theme {
   height: 25px;
   line-height: 25px;
   margin: 15px 0px; }
 
-/* line 630, ../scss/style.scss */
+/* line 631, ../scss/style.scss */
 .typecho-select-theme h5 {
   color: #E47E00;
   font-weight: bold;
@@ -1071,32 +1071,32 @@ a.operate-reply {
   width: 120px;
   margin-right: 10px; }
 
-/* line 639, ../scss/style.scss */
+/* line 640, ../scss/style.scss */
 .typecho-select-theme select {
   width: 150px; }
 
 /**
 * 编辑模板（编辑详情）
 */
-/* line 647, ../scss/style.scss */
+/* line 648, ../scss/style.scss */
 .typecho-edit-theme ul {
   list-style: none;
   margin: 0;
   padding: 0; }
 
-/* line 653, ../scss/style.scss */
+/* line 654, ../scss/style.scss */
 .typecho-edit-theme li {
   padding: 3px 10px; }
 
-/* line 657, ../scss/style.scss */
+/* line 658, ../scss/style.scss */
 .typecho-edit-theme .current {
   background-color: #E6E6E3; }
 
-/* line 660, ../scss/style.scss */
+/* line 661, ../scss/style.scss */
 .typecho-edit-theme .current a {
   color: #444; }
 
-/* line 664, ../scss/style.scss */
+/* line 665, ../scss/style.scss */
 .typecho-edit-theme textarea {
   font-size: .92857em;
   line-height: 1.2;
@@ -1105,131 +1105,131 @@ a.operate-reply {
 /**
 * 编写页面
 */
-/* line 674, ../scss/style.scss */
+/* line 675, ../scss/style.scss */
 .typecho-post-area .edit-draft-notice {
   color: #999;
   font-size: .92857em; }
 
-/* line 678, ../scss/style.scss */
+/* line 679, ../scss/style.scss */
 .typecho-post-area .edit-draft-notice a {
   color: #B94A48; }
 
-/* line 680, ../scss/style.scss */
+/* line 681, ../scss/style.scss */
 .typecho-post-area .typecho-label {
   display: block;
   margin: 1em 0 -0.5em;
   font-weight: bold; }
 
-/* line 686, ../scss/style.scss */
+/* line 687, ../scss/style.scss */
 .typecho-post-area #auto-save-message {
   display: block;
   margin-top: 0.5em;
   color: #999;
   font-size: .92857em; }
 
-/* line 693, ../scss/style.scss */
+/* line 694, ../scss/style.scss */
 .typecho-post-area .submit .right button {
   margin-left: 5px; }
 
-/* line 697, ../scss/style.scss */
+/* line 698, ../scss/style.scss */
 .typecho-post-area .right {
   float: right;
   padding-left: 24px; }
 
-/* line 702, ../scss/style.scss */
+/* line 703, ../scss/style.scss */
 .typecho-post-area .left {
   float: left; }
 
-/* line 709, ../scss/style.scss */
+/* line 710, ../scss/style.scss */
 .typecho-post-area .out-date {
   border: 1px solid #D3DBB3;
   padding: 3px;
   background: #fff; }
 
-/* line 715, ../scss/style.scss */
+/* line 716, ../scss/style.scss */
 .typecho-post-area input.title {
   font-size: 1.17em;
   font-weight: bold; }
 
-/* line 719, ../scss/style.scss */
+/* line 720, ../scss/style.scss */
 .typecho-post-area .url-slug {
   margin-top: -0.5em;
   color: #AAA;
   font-size: .92857em;
   word-break: break-word; }
 
-/* line 725, ../scss/style.scss */
+/* line 726, ../scss/style.scss */
 .typecho-post-area #slug {
   padding: 2px;
   border: none;
   background: #FFFBCC;
   color: #666; }
 
-/* line 732, ../scss/style.scss */
+/* line 733, ../scss/style.scss */
 .typecho-post-area #text {
   resize: none; }
 
-/* line 736, ../scss/style.scss */
+/* line 737, ../scss/style.scss */
 #advance-panel {
   display: none; }
 
-/* line 740, ../scss/style.scss */
+/* line 741, ../scss/style.scss */
 #custom-field {
   margin: 1em 0;
   padding: 10px 15px;
   background: #FFF; }
-  /* line 745, ../scss/style.scss */
+  /* line 746, ../scss/style.scss */
   #custom-field.fold table, #custom-field.fold .description {
     display: none; }
-  /* line 748, ../scss/style.scss */
+  /* line 749, ../scss/style.scss */
   #custom-field .description {
     margin-top: 10px;
     text-align: right; }
-    /* line 751, ../scss/style.scss */
+    /* line 752, ../scss/style.scss */
     #custom-field .description button {
       float: left; }
-  /* line 756, ../scss/style.scss */
+  /* line 757, ../scss/style.scss */
   #custom-field p.description {
     text-align: left; }
-  /* line 760, ../scss/style.scss */
+  /* line 761, ../scss/style.scss */
   #custom-field .typecho-label {
     margin: 0; }
-    /* line 762, ../scss/style.scss */
+    /* line 763, ../scss/style.scss */
     #custom-field .typecho-label a {
       display: block;
       color: #444; }
-      /* line 765, ../scss/style.scss */
+      /* line 766, ../scss/style.scss */
       #custom-field .typecho-label a:hover {
         color: #467B96;
         text-decoration: none; }
-  /* line 771, ../scss/style.scss */
+  /* line 772, ../scss/style.scss */
   #custom-field table {
     margin-top: 10px; }
-  /* line 774, ../scss/style.scss */
+  /* line 775, ../scss/style.scss */
   #custom-field td {
     padding: 10px 5px;
     font-size: .92857em;
     border-bottom: 1px solid #F0F0EC;
     vertical-align: top; }
-    /* line 779, ../scss/style.scss */
+    /* line 780, ../scss/style.scss */
     #custom-field td label {
       font-size: 1em;
       font-weight: normal; }
-  /* line 784, ../scss/style.scss */
+  /* line 785, ../scss/style.scss */
   #custom-field select {
     height: 27px; }
 
-/* line 787, ../scss/style.scss */
+/* line 788, ../scss/style.scss */
 .typecho-post-area .is-draft {
   background: #FFF1A8; }
 
-/* line 791, ../scss/style.scss */
+/* line 792, ../scss/style.scss */
 .typecho-post-option .description {
   margin-top: -0.5em;
   color: #999;
   font-size: .92857em; }
 
-/* line 797, ../scss/style.scss */
+/* line 798, ../scss/style.scss */
 .category-option ul {
   list-style: none;
   border: 1px solid #D9D9D6;
@@ -1239,11 +1239,11 @@ a.operate-reply {
   background-color: #FFF;
   border-radius: 2px; }
 
-/* line 806, ../scss/style.scss */
+/* line 807, ../scss/style.scss */
 .category-option li {
   margin: 3px 0; }
 
-/* line 810, ../scss/style.scss */
+/* line 811, ../scss/style.scss */
 .visibility-option ul,
 .allow-option ul {
   list-style: none;
@@ -1252,61 +1252,61 @@ a.operate-reply {
 /**
 * 标签列表
 */
-/* line 821, ../scss/style.scss */
+/* line 822, ../scss/style.scss */
 .typecho-page-main ul.tag-list {
   list-style: none;
   margin: 0;
   padding: 20px;
   background-color: #FFF; }
 
-/* line 828, ../scss/style.scss */
+/* line 829, ../scss/style.scss */
 .typecho-page-main ul.tag-list li {
   display: inline-block;
   margin: 0 0 5px 0;
   padding: 5px 5px 5px 10px;
   cursor: pointer; }
 
-/* line 834, ../scss/style.scss */
+/* line 835, ../scss/style.scss */
 .typecho-page-main ul.tag-list li:hover {
   background-color: #E9E9E6; }
 
-/* line 838, ../scss/style.scss */
+/* line 839, ../scss/style.scss */
 .typecho-page-main ul.tag-list li input {
   display: none; }
 
-/* line 843, ../scss/style.scss */
+/* line 844, ../scss/style.scss */
 .typecho-page-main ul.tag-list li.checked {
   background-color: #FFFBCC; }
 
-/* line 847, ../scss/style.scss */
+/* line 848, ../scss/style.scss */
 .typecho-page-main ul.tag-list li.size-5 {
   font-size: 1em; }
 
-/* line 848, ../scss/style.scss */
+/* line 849, ../scss/style.scss */
 .typecho-page-main ul.tag-list li.size-10 {
   font-size: 1.2em; }
 
-/* line 849, ../scss/style.scss */
+/* line 850, ../scss/style.scss */
 .typecho-page-main ul.tag-list li.size-20 {
   font-size: 1.4em; }
 
-/* line 850, ../scss/style.scss */
+/* line 851, ../scss/style.scss */
 .typecho-page-main ul.tag-list li.size-30 {
   font-size: 1.6em; }
 
-/* line 851, ../scss/style.scss */
+/* line 852, ../scss/style.scss */
 .typecho-page-main ul.tag-list li.size-0 {
   font-size: 1.8em; }
 
-/* line 853, ../scss/style.scss */
+/* line 854, ../scss/style.scss */
 .typecho-page-main .tag-edit-link {
   visibility: hidden; }
 
-/* line 854, ../scss/style.scss */
+/* line 855, ../scss/style.scss */
 .typecho-page-main li:hover .tag-edit-link {
   visibility: visible; }
 
-/* line 856, ../scss/style.scss */
+/* line 857, ../scss/style.scss */
 .typecho-attachment-photo {
   border: 1px solid #E6E6E3;
   max-width: 100%; }
@@ -1314,22 +1314,22 @@ a.operate-reply {
 /*
 * Upload
 */
-/* line 865, ../scss/style.scss */
+/* line 866, ../scss/style.scss */
 #upload-panel {
   border: 1px dashed #D9D9D6;
   background-color: #FFF;
   color: #999;
   font-size: .92857em; }
-  /* line 870, ../scss/style.scss */
+  /* line 871, ../scss/style.scss */
   #upload-panel.drag {
     background-color: #FFFBCC; }
 
-/* line 875, ../scss/style.scss */
+/* line 876, ../scss/style.scss */
 .upload-area {
   padding: 15px;
   text-align: center; }
 
-/* line 880, ../scss/style.scss */
+/* line 881, ../scss/style.scss */
 #file-list {
   list-style: none;
   margin: 0 10px;
@@ -1337,40 +1337,40 @@ a.operate-reply {
   max-height: 450px;
   overflow: auto;
   word-break: break-all; }
-  /* line 887, ../scss/style.scss */
+  /* line 888, ../scss/style.scss */
   #file-list li,
   #file-list .insert {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis; }
-  /* line 893, ../scss/style.scss */
+  /* line 894, ../scss/style.scss */
   #file-list li {
     padding: 8px 0;
     border-top: 1px dashed #D9D9D6; }
-  /* line 897, ../scss/style.scss */
+  /* line 898, ../scss/style.scss */
   #file-list .insert {
     display: block;
     max-width: 100%; }
-  /* line 901, ../scss/style.scss */
+  /* line 902, ../scss/style.scss */
   #file-list .file {
     margin-left: 5px; }
-  /* line 904, ../scss/style.scss */
+  /* line 905, ../scss/style.scss */
   #file-list .info {
     text-transform: uppercase; }
 
-/* line 909, ../scss/style.scss */
+/* line 910, ../scss/style.scss */
 #btn-fullscreen-upload {
   visibility: hidden; }
 
 /**
 * 附件管理
 */
-/* line 917, ../scss/style.scss */
+/* line 918, ../scss/style.scss */
 .edit-media button {
   margin-right: 6px; }
 
 /* 拖动调整 textarea 大小 */
-/* line 920, ../scss/style.scss */
+/* line 921, ../scss/style.scss */
 .resize {
   display: block;
   margin: 2px auto 0;
@@ -1379,14 +1379,14 @@ a.operate-reply {
   border-width: 1px 0;
   width: 60px;
   cursor: row-resize; }
-  /* line 928, ../scss/style.scss */
+  /* line 929, ../scss/style.scss */
   .resize i {
     display: block;
     height: 1px;
     background-color: #D9D9D6; }
 
 /* 拖动排序 */
-/* line 936, ../scss/style.scss */
+/* line 937, ../scss/style.scss */
 .tDnD_whileDrag {
   background-color: #FFFBCC; }
 
@@ -1748,7 +1748,7 @@ a.operate-reply {
     display: block;
     margin: 2em 0;
     background: #FFF9E8;
-    color: #ce9900;
+    color: #cf9900;
     font-size: .85714em;
     text-align: center;
     content: "- more -"; }

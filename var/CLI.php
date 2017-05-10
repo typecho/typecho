@@ -13,12 +13,12 @@ class CLI
     /**
      * @var array
      */
-    private $_args = [];
+    private $_args = array();
 
     /**
      * @var array
      */
-    private $_definition = [];
+    private $_definition = array();
 
     /**
      * @var string
@@ -30,14 +30,14 @@ class CLI
      */
     public function __construct()
     {
-        $this->_definition = [
-            'h'             =>  [_t('帮助信息')],
-            'v'             =>  [_t('获取版本信息')],
-            'e'             =>  [_t('导出数据')],
-            'i'             =>  [_t('导入数据')],
-            'with-theme'    =>  [_t('导出时包含现有主题')],
-            'with-plugins'  =>  [_t('导出时包含插件及配置')]
-        ];
+        $this->_definition = array(
+            'h'             =>  array(_t('帮助信息')),
+            'v'             =>  array(_t('获取版本信息')),
+            'e'             =>  array(_t('导出数据')),
+            'i'             =>  array(_t('导入数据')),
+            'with-theme'    =>  array(_t('导出时包含现有主题')),
+            'with-plugins'  =>  array(_t('导出时包含插件及配置'))
+        );
 
         $this->parseArgs();
         $this->parseDefinition();

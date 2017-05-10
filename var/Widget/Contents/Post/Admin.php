@@ -48,7 +48,7 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
      * 当前文章的草稿
      *
      * @access protected
-     * @return array
+     * @return bool
      */
     protected function ___hasSaved()
     {
@@ -69,8 +69,8 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
     /**
      * 获取菜单标题
      *
-     * @access public
      * @return string
+     * @throws Typecho_Widget_Exception
      */
     public function getMenuTitle()
     {
@@ -94,19 +94,41 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
         $this->_currentPage = $this->request->get('page', 1);
 
         /** 构建基础查询 */
-        $select = $this->select()->where('table.contents.type = ? OR (table.contents.type = ? AND table.contents.parent = ?)', 'post', 'post_draft', 0);
+        $select = $this->select();
+
+        /** 如果具有编辑以上权限,可以查看所有文章,反之只能查看自己的文章 */
+        if (!$this->user->pass('editor', true)) {
+            $select->where('table.contents.authorId = ?', $this->user->uid);
+        } else {
+            if ('on' == $this->request->__typecho_all_posts) {
+                Typecho_Cookie::set('__typecho_all_posts', 'on');
+            } else {
+                if ('off' == $this->request->__typecho_all_posts) {
+                    Typecho_Cookie::set('__typecho_all_posts', 'off');
+                }
+
+                if ('on' != Typecho_Cookie::get('__typecho_all_posts')) {
+                    $select->where('table.contents.authorId = ?', isset($this->request->uid) ?
+                        $this->request->filter('int')->uid : $this->user->uid);
+                }
+            }
+        }
+
+        /** 按状态查询 */
+        if ('draft' == $this->request->status) {
+            $select->where('table.contents.type = ?', 'post_draft');
+        } else if ('waiting' == $this->request->status) {
+            $select->where('(table.contents.type = ? OR table.contents.type = ?) AND table.contents.status = ?',
+                'post', 'post_draft', 'waiting');
+        } else {
+            $select->where('table.contents.type = ? OR (table.contents.type = ? AND table.contents.parent = ?)',
+                'post', 'post_draft', 0);
+        }
 
         /** 过滤分类 */
         if (NULL != ($category = $this->request->category)) {
             $select->join('table.relationships', 'table.contents.cid = table.relationships.cid')
             ->where('table.relationships.mid = ?', $category);
-        }
-
-        /** 如果具有编辑以上权限,可以查看所有文章,反之只能查看自己的文章 */
-        if (!$this->user->pass('editor', true)) {
-            $select->where('table.contents.authorId = ?', $this->user->uid);
-        } else if (isset($this->request->uid)) {
-            $select->where('table.contents.authorId = ?', $this->request->filter('int')->uid);
         }
 
         /** 过滤标题 */
