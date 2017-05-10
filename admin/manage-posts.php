@@ -45,7 +45,6 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == Typecho_C
                     </ul>
                 </div>
 
-            <div class="col-mb-12 typecho-list">
                 <div class="typecho-list-operate clearfix">
                     <form method="get">
                         <div class="operate">
