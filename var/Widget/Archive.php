@@ -1387,7 +1387,13 @@ class Widget_Archive extends Widget_Abstract_Contents
         /** 仅输出文章 */
         $this->_countSql = clone $select;
 
-        $select->order('table.contents.created', Typecho_Db::SORT_DESC)
+        /** 排序维度切换 */
+        $orderBy = 'created';
+        if(in_array($this->parameter->orderBy, array('created', 'modified', 'commentsNum'))) {
+            $orderBy = $this->parameter->orderBy;
+        }
+        
+        $select->order('table.contents.' . $orderBy, Typecho_Db::SORT_DESC)
         ->page($this->_currentPage, $this->parameter->pageSize);
         $this->query($select);
     }
