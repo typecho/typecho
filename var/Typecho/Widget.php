@@ -405,6 +405,17 @@ abstract class Typecho_Widget
     }
 
     /**
+     * 删除堆栈某一行的值
+     *
+     * @param string $name 值对应的键值
+     * @return void
+     */
+    public function __unset($name)
+    {
+        unset($this->row[$name]);
+    }
+
+    /**
      * 验证堆栈值是否存在
      *
      * @access public
