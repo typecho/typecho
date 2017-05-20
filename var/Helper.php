@@ -263,7 +263,7 @@ class Helper
         $panelTable = unserialize(self::options()->panelTable);
         $panelTable['child'] = empty($panelTable['child']) ? array() : $panelTable['child'];
         $panelTable['child'][$index] = empty($panelTable['child'][$index]) ? array() : $panelTable['child'][$index];
-        $fileName = urlencode(trim($fileName, '/'));
+        $fileName = str_replace('%2F', '/', urlencode(trim($fileName, '/')));
         $panelTable['child'][$index][] = array($title, $subTitle, 'extending.php?panel=' . $fileName, $level, $hidden, $addLink);
 
         $panelTable['file'] = empty($panelTable['file']) ? array() : $panelTable['file'];
@@ -292,7 +292,7 @@ class Helper
         $panelTable['child'] = empty($panelTable['child']) ? array() : $panelTable['child'];
         $panelTable['child'][$index] = empty($panelTable['child'][$index]) ? array() : $panelTable['child'][$index];
         $panelTable['file'] = empty($panelTable['file']) ? array() : $panelTable['file'];
-        $fileName = urlencode(trim($fileName, '/'));
+        $fileName = str_replace('%2F', '/', urlencode(trim($fileName, '/')));
 
         if (false !== ($key = array_search($fileName, $panelTable['file']))) {
             unset($panelTable['file'][$key]);
