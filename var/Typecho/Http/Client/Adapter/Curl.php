@@ -78,6 +78,11 @@ class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
                 unset($this->headers['User-Agent']);
             }
 
+            if (isset($this->headers['Referer'])) {
+                curl_setopt($ch, CURLOPT_REFERER, $this->headers['Referer']);
+                unset($this->headers['Referer']);
+            }
+
             $headers = array();
 
             if (isset($this->headers['Rfc'])) {
