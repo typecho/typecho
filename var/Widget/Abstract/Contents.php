@@ -71,9 +71,20 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     protected function ___description()
     {
-        $plainTxt = str_replace("\n", '', trim(strip_tags($this->excerpt)));
-        $plainTxt = $plainTxt ? $plainTxt : $this->title;
-        return Typecho_Common::subStr($plainTxt, 0, 100, '...');
+        $cache_content_dir = __TYPECHO_ROOT_DIR__ . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'contents' . DIRECTORY_SEPARATOR;
+        $cache_file_path = $cache_content_dir . 'content_description_' . $this->cid . '.html';
+        if(file_exists($cache_file_path) && (filemtime($cache_file_path) > $this->modified)) {
+            return file_get_contents($cache_file_path);
+        } else {
+            $plainTxt = str_replace("\n", '', trim(strip_tags($this->excerpt)));
+            $plainTxt = $plainTxt ? $plainTxt : $this->title;
+            $description_data = Typecho_Common::subStr($plainTxt, 0, 100, '...');
+            if(is_writable($cache_content_dir)) {
+                @file_put_contents($cache_file_path, $description_data);
+                @chmod($cache_file_path, 0777);
+            }
+            return $description_data;
+        }
     }
 
     /**
@@ -106,17 +117,27 @@ class Widget_Abstract_Contents extends Widget_Abstract
         if ($this->hidden) {
             return $this->text;
         }
+        $cache_content_dir = __TYPECHO_ROOT_DIR__ . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'contents' . DIRECTORY_SEPARATOR;
+        $cache_file_path = $cache_content_dir . 'content_excerpt_' . $this->cid . '.html';
+        if(file_exists($cache_file_path) && (filemtime($cache_file_path) > $this->modified)) {
+            return file_get_contents($cache_file_path);
+        } else {
+            $content = $this->pluginHandle(__CLASS__)->trigger($plugged)->excerpt($this->text, $this);
+            if (!$plugged) {
+                $content = $this->isMarkdown ? $this->markdown($content)
+                    : $this->autoP($content);
+            }
 
-        $content = $this->pluginHandle(__CLASS__)->trigger($plugged)->excerpt($this->text, $this);
-        if (!$plugged) {
-            $content = $this->isMarkdown ? $this->markdown($content)
-                : $this->autoP($content);
+            $contents = explode('<!--more-->', $content);
+            list($excerpt) = $contents;
+
+            $excerpt_data = Typecho_Common::fixHtml($this->pluginHandle(__CLASS__)->excerptEx($excerpt, $this));
+            if(is_writable($cache_content_dir)) {
+                @file_put_contents($cache_file_path, $excerpt_data);
+                @chmod($cache_file_path, 0777);
+            }
+            return $excerpt_data;
         }
-
-        $contents = explode('<!--more-->', $content);
-        list($excerpt) = $contents;
-
-        return Typecho_Common::fixHtml($this->pluginHandle(__CLASS__)->excerptEx($excerpt, $this));
     }
 
     /**
@@ -130,15 +151,23 @@ class Widget_Abstract_Contents extends Widget_Abstract
         if ($this->hidden) {
             return $this->text;
         }
-
-        $content = $this->pluginHandle(__CLASS__)->trigger($plugged)->content($this->text, $this);
-
-        if (!$plugged) {
-            $content = $this->isMarkdown ? $this->markdown($content)
-                : $this->autoP($content);
+        $cache_content_dir = __TYPECHO_ROOT_DIR__ . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'contents' . DIRECTORY_SEPARATOR;
+        $cache_file_path = $cache_content_dir . 'content_' . $this->cid . '.html';
+        if(file_exists($cache_file_path) && (filemtime($cache_file_path) > $this->modified)) {
+            return file_get_contents($cache_file_path);
+        } else {
+            $content = $this->pluginHandle(__CLASS__)->trigger($plugged)->content($this->text, $this);
+            if (!$plugged) {
+                $content = $this->isMarkdown ? $this->markdown($content)
+                    : $this->autoP($content);
+            }
+            $content_data = $this->pluginHandle(__CLASS__)->contentEx($content, $this);
+            if(is_writable($cache_content_dir)) {
+                @file_put_contents($cache_file_path, $content_data);
+                @chmod($cache_file_path, 0777);
+            }
+            return $content_data;
         }
-
-        return $this->pluginHandle(__CLASS__)->contentEx($content, $this);
     }
 
     /**
