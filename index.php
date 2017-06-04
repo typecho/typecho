@@ -7,6 +7,9 @@
  * @version    $Id: index.php 1153 2009-07-02 10:53:22Z magike.net $
  */
 
+/** 网站计时 */
+$start = microtime(true);
+
 /** 载入配置支持 */
 if (!defined('__TYPECHO_ROOT_DIR__') && !@include_once 'config.inc.php') {
     file_exists('./install.php') ? header('Location: install.php') : print('Missing Config File');
@@ -24,3 +27,11 @@ Typecho_Router::dispatch();
 
 /** 注册一个结束插件 */
 Typecho_Plugin::factory('index.php')->end();
+
+/** 网站计时结束 */
+$end = microtime(true);
+
+/** 网站计时输出 */
+$time = $end - $start;
+echo "\n";
+echo '<!-- 网站执行耗时 '.round($time * 1000).' 毫秒 -->';
