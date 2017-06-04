@@ -159,12 +159,10 @@ function _u() {
 
 $options = new stdClass();
 $options->generator = 'Typecho ' . Typecho_Common::VERSION;
-list($soft, $currentVersion) = explode(' ', $options->generator);
+list($options->software, $options->version) = explode(' ', $options->generator);
 
-$options->software = $soft;
-$options->version = $currentVersion;
 
-list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
+list($prefixVersion, $suffixVersion) = explode('/', $options->version);
 
 /** 获取语言 */
 $lang = _r('lang', Typecho_Cookie::get('__typecho_lang'));
@@ -495,7 +493,6 @@ Typecho_Cookie::set('__typecho_lang', $lang);
                                 foreach ($_dbConfig as $key => $val) {
                                     $dbConfig[strtolower (substr($key, 2))] = $val;
                                 }
-
                                 // 在特殊服务器上的特殊安装过程处理
                                 if (_r('config')) {
                                     $replace = array_keys($dbConfig);
