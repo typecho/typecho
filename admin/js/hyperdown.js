@@ -851,7 +851,7 @@
       if (str.match(/^\s*$/)) {
         return '';
       } else {
-        return "<p>" + str + "</p>";
+        return str.match(/^(.*)<\/p><p>(.*)$/) ? "<p>" + str + "</p>" : str;
       }
     };
 

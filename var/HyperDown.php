@@ -1133,7 +1133,7 @@ class HyperDown
         $str = preg_replace("/(\n\s*){2,}/", "</p><p>", $str);
         $str = preg_replace("/\n/", "<br>", $str);
 
-        return preg_match("/^\s*$/", $str) ? '' : "<p>{$str}</p>";
+        return preg_match("/^\s*$/", $str) ? '' : (stripos($str, '</p><p>') ? "<p>{$str}</p>" : $str);
     }
 
     /**
