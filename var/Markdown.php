@@ -21,7 +21,7 @@ class Markdown
      * @param string $text 
      * @return string
      */
-    public static function convert($text)
+    public static function convert($text, $parserConfig)
     {
         if (empty(self::$parser)) {
             self::$parser = new HyperDown();
@@ -38,7 +38,7 @@ class Markdown
             ));
         }
 
-        return self::$parser->makeHtml($text);
+        return self::$parser->makeHtml($text, $parserConfig);
     }
 
     /**

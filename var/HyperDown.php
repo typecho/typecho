@@ -87,18 +87,23 @@ class HyperDown
     private $_html = false;
 
     /**
+     * @var array
+     */
+    private $_config = array();
+    /**
      * makeHtml
      *
      * @param mixed $text
      * @return string
      */
-    public function makeHtml($text)
+    public function makeHtml($text, $config = array())
     {
         $this->_footnotes = array();
         $this->_definitions = array();
         $this->_holders = array();
         $this->_uniqid = md5(uniqid());
         $this->_id = 0;
+        $this->_config = $config;
 
         $text = $this->initText($text);
         $html = $this->parse($text);
@@ -252,8 +257,12 @@ class HyperDown
      * @param bool $enableAutoLink
      * @return string
      */
-    public function parseInline($text, $whiteList = '', $clearHolders = true, $enableAutoLink = true)
+    public function parseInline($text, $whiteList = '', $clearHolders = true, $enableAutoLink = null)
     {
+        if (is_null($enableAutoLink) && isset($this->_config['enableAutoLink'])) {
+            $enableAutoLink = $this->_config['enableAutoLink'];
+        }
+
         $self = $this;
         $text = $this->call('beforeParseInline', $text); 
 
