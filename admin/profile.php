@@ -29,14 +29,6 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     <?php Typecho_Widget::widget('Widget_Users_Profile')->profileForm()->render(); ?>
                 </section>
 
-                <?php if($user->pass('contributor', true)): ?>
-                <br>
-                <section id="writing-option">
-                    <h3><?php _e('撰写设置'); ?></h3>
-                    <?php Typecho_Widget::widget('Widget_Users_Profile')->optionsForm()->render(); ?>
-                </section>
-                <?php endif; ?>
-
                 <br>
 
                 <section id="change-password">

@@ -82,28 +82,32 @@ class HyperDown
     private $_id;
 
     /**
-     * @var bool
-     */
-    private $_html = false;
-
-    /**
      * @var array
      */
     private $_config = array();
+
+    /**
+     * HyperDown constructor.
+     * @param array $config
+     */
+    public function __construct($config = array())
+    {
+        $this->_config = $config;
+    }
+
     /**
      * makeHtml
      *
      * @param mixed $text
      * @return string
      */
-    public function makeHtml($text, $config = array())
+    public function makeHtml($text)
     {
         $this->_footnotes = array();
         $this->_definitions = array();
         $this->_holders = array();
         $this->_uniqid = md5(uniqid());
         $this->_id = 0;
-        $this->_config = $config;
 
         $text = $this->initText($text);
         $html = $this->parse($text);
@@ -117,7 +121,7 @@ class HyperDown
      */
     public function enableHtml($html = true)
     {
-        $this->_html = $html;
+        $this->_config['enableHtml'] = $html;
     }
 
     /**
@@ -557,7 +561,7 @@ class HyperDown
             }
 
             // super html mode
-            if ($this->_html) {
+            if ($this->_config['enableHtml']) {
                 if (preg_match("/^(\s*)!!!(\s*)$/i", $line, $matches)) {
                     if ($this->isBlock('shtml')) {
                         $this->setBlock($key)->endBlock();

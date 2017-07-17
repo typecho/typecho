@@ -24,7 +24,7 @@ class Markdown
     public static function convert($text, $parserConfig)
     {
         if (empty(self::$parser)) {
-            self::$parser = new HyperDown();
+            self::$parser = new HyperDown($parserConfig);
             self::$parser->hook('afterParseCode', array('Markdown', 'transerCodeClass'));
             self::$parser->hook('beforeParseInline', array('Markdown', 'transerComment'));
 
@@ -38,7 +38,7 @@ class Markdown
             ));
         }
 
-        return self::$parser->makeHtml($text, $parserConfig);
+        return self::$parser->makeHtml($text);
     }
 
     /**
