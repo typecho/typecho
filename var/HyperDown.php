@@ -179,9 +179,10 @@ class HyperDown
      * parse
      *
      * @param string $text
+     * @param bool $inline
      * @return string
      */
-    private function parse($text)
+    private function parse($text, $inline = false)
     {
         $blocks = $this->parseBlock($text, $lines);
         $html = '';
@@ -196,6 +197,12 @@ class HyperDown
             $result = $this->call('after' . ucfirst($method), $result, $value);
 
             $html .= $result;
+        }
+
+        // inline mode for single normal block
+        if ($inline && count($blocks) == 1 && $blocks[0][0] == 'normal') {
+            // remove p tag
+            $html = preg_replace("/^\s*<p>(.*)<\/p>\s*$/", "\\1", $html);
         }
 
         return $html;
@@ -982,7 +989,7 @@ class HyperDown
                     $leftLines[] = preg_replace("/^\s{" . $secondMinSpace . "}/", '', $line);
                 } else {
                     if (!empty($leftLines)) {
-                        $html .= "<li>" . $this->parse(implode("\n", $leftLines)) . "</li>";
+                        $html .= "<li>" . $this->parse(implode("\n", $leftLines), true) . "</li>";
                     }
 
                     if ($lastType != $type) {
@@ -1002,7 +1009,7 @@ class HyperDown
         }
 
         if (!empty($leftLines)) {
-            $html .= "<li>" . $this->parse(implode("\n", $leftLines)) . "</li></{$lastType}>";
+            $html .= "<li>" . $this->parse(implode("\n", $leftLines), true) . "</li></{$lastType}>";
         }
 
         return $html;

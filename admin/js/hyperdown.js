@@ -156,8 +156,11 @@
       return html;
     };
 
-    Parser.prototype.parse = function(text) {
+    Parser.prototype.parse = function(text, inline) {
       var block, blocks, end, extract, html, j, len, lines, method, result, start, type, value;
+      if (inline == null) {
+        inline = false;
+      }
       lines = [];
       blocks = this.parseBlock(text, lines);
       html = '';
@@ -170,6 +173,9 @@
         result = this[method](extract, value);
         result = this.call('after' + ucfirst(method), result, value);
         html += result;
+      }
+      if (inline && blocks.length === 1 && blocks[0][0] === 'normal') {
+        html = html.replace(/^\s*<p>(.*)<\/p>\s*$/m, '$1');
       }
       return html;
     };
@@ -735,7 +741,7 @@
             leftLines.push(line.replace(new RegExp("^\\s{" + secondMinSpace + "}"), ''));
           } else {
             if (leftLines.length > 0) {
-              html += '<li>' + (this.parse(leftLines.join("\n"))) + '</li>';
+              html += '<li>' + (this.parse(leftLines.join("\n"), true)) + '</li>';
             }
             if (lastType !== type) {
               if (!!lastType) {
@@ -751,7 +757,7 @@
         }
       }
       if (leftLines.length > 0) {
-        html += '<li>' + (this.parse(leftLines.join("\n"))) + ("</li></" + lastType + ">");
+        html += '<li>' + (this.parse(leftLines.join("\n"), true)) + ("</li></" + lastType + ">");
       }
       return html;
     };
