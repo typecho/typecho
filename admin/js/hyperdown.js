@@ -467,11 +467,11 @@
               this.startBlock('list', key, space);
             }
             break;
-          case !!(matches = line.match(/^\[\^((?:[^\]]|\]|\[)+?)\]:/)):
+          case !!(matches = line.match(/^\[\^((?:[^\]]|\\\]|\\\[)+?)\]:/)):
             space = matches[0].length - 1;
             this.startBlock('footnote', key, [space, matches[1]]);
             break;
-          case !!(matches = line.match(/^\s*\[((?:[^\]]|\]|\[)+?)\]:\s*(.+)$/)):
+          case !!(matches = line.match(/^\s*\[((?:[^\]]|\\\]|\\\[)+?)\]:\s*(.+)$/)):
             this.definitions[matches[1]] = this.cleanUrl(matches[2]);
             this.startBlock('definition', key).endBlock();
             break;
