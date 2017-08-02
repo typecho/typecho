@@ -399,7 +399,7 @@
         if (block != null) {
           block = block.slice(0);
         }
-        if (!!(matches = line.match(/^(\s*)(~|`){3,}([^`~]*)$/i))) {
+        if (!!(matches = line.match(/^(\s*)(~{3,}|`{3,})([^`~]*)$/i))) {
           if (this.isBlock('code')) {
             isAfterList = block[3][2];
             if (isAfterList) {

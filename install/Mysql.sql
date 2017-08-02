@@ -49,7 +49,7 @@ CREATE TABLE `typecho_contents` (
   `slug` varchar(200) default NULL,
   `created` int(10) unsigned default '0',
   `modified` int(10) unsigned default '0',
-  `text` text,
+  `text` longtext,
   `order` int(10) unsigned default '0',
   `authorId` int(10) unsigned default '0',
   `template` varchar(32) default NULL,

@@ -522,7 +522,7 @@ class HyperDown
             $block = $this->getBlock();
 
             // code block is special
-            if (preg_match("/^(\s*)(~|`){3,}([^`~]*)$/i", $line, $matches)) {
+            if (preg_match("/^(\s*)(~{3,}|`{3,})([^`~]*)$/i", $line, $matches)) {
                 if ($this->isBlock('code')) {
                     $isAfterList = $block[3][2];
 
