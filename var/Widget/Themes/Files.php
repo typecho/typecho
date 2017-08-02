@@ -53,7 +53,11 @@ class Widget_Themes_Files extends Typecho_Widget
         if (preg_match("/^([_0-9a-z-\.\ ])+$/i", $this->_currentTheme)
             && is_dir($dir = $this->widget('Widget_Options')->themeFile($this->_currentTheme))
             && (!defined('__TYPECHO_THEME_WRITEABLE__') || __TYPECHO_THEME_WRITEABLE__)) {
-            $files = glob($dir . '/*.{php,PHP,js,JS,css,CSS,vbs,VBS}', GLOB_BRACE);
+            $items = array('php', 'PHP', 'js', 'JS', 'css', 'CSS', 'vbs', 'VBS');
+            $files = array();
+            foreach ($items as $item) {
+                $files = array_merge($files, glob($dir . '/*.' . $item));
+            }
             $this->_currentFile = $this->request->get('file', 'index.php');
 
             if (preg_match("/^([_0-9a-z-\.\ ])+$/i", $this->_currentFile)
