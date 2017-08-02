@@ -146,6 +146,21 @@
     text-align: center;
     content: "- more -";
   }
+
+  table {
+    width: 100%;
+  }
+
+  table th, table td {
+    border: 1px solid #DDD;
+    padding: 5px 8px;
+    word-break: break-all;
+  }
+
+  table th {
+    text-align: left;
+    background: #EEE;
+  }
 }
 
 /* 上传面板动画效果 */
