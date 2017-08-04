@@ -33,10 +33,8 @@ class CLI
         $this->_definition = array(
             'h'             =>  array(_t('帮助信息')),
             'v'             =>  array(_t('获取版本信息')),
-            'e'             =>  array(_t('导出数据')),
-            'i'             =>  array(_t('导入数据')),
-            'with-theme'    =>  array(_t('导出时包含现有主题')),
-            'with-plugins'  =>  array(_t('导出时包含插件及配置'))
+            'x'             =>  array(_t('导出数据')),
+            'i'             =>  array(_t('导入数据'))
         );
 
         $this->parseArgs();

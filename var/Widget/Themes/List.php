@@ -68,7 +68,10 @@ class Widget_Themes_List extends Typecho_Widget
                         $activated = $key;
                     }
 
-                    $screen = glob($theme . '/screen*.{jpg,png,gif,bmp,jpeg,JPG,PNG,GIF,BMG,JPEG}', GLOB_BRACE);
+                    $screen = array_filter(glob($theme . '/*'), function ($path) {
+                        return preg_match("/\.(jpg|png|gif|bmp|jpeg)$/i", $path);
+                    });
+
                     if ($screen) {
                         $info['screen'] = $options->themeUrl(basename(current($screen)), $info['name']);
                     } else {
