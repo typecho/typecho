@@ -646,7 +646,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
         if (!empty($value['categories'])) {
             $value['category'] = $value['categories'][0]['slug'];
 
-            $value['directory'] = $this->widget('Widget_Metas_Category_List')->getAllParents($value['categories'][0]['mid']);
+            $value['directory'] = $this->widget('Widget_Metas_Category_List')->getAllParentsSlug($value['categories'][0]['mid']);
             $value['directory'][] = $value['category'];
         }
 
@@ -899,7 +899,10 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     public function directory($split = '/', $link = true, $default = NULL)
     {
-        $directory = $this->directory;
+        $category = $this->categories[0];
+        $directory = $this->widget('Widget_Metas_Category_List')->getAllParents($category['mid']);
+        $directory[] = $category;
+
         if ($directory) {
             $result = array();
 
