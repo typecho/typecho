@@ -889,6 +889,32 @@ class Widget_Abstract_Contents extends Widget_Abstract
     }
 
     /**
+     * 输出文章多级分类
+     *
+     * @access public
+     * @param string $split 多个分类之间分隔符
+     * @param boolean $link 是否输出链接
+     * @param string $default 如果没有则输出
+     * @return void
+     */
+    public function directory($split = '/', $link = true, $default = NULL)
+    {
+        $directory = $this->directory;
+        if ($directory) {
+            $result = array();
+
+            foreach ($directory as $category) {
+                $result[] = $link ? '<a href="' . $category['permalink'] . '">'
+                . $category['name'] . '</a>' : $category['name'];
+            }
+
+            echo implode($split, $result);
+        } else {
+            echo $default;
+        }
+    }
+
+    /**
      * 输出文章标签
      *
      * @access public
