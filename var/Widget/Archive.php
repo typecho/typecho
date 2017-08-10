@@ -1662,6 +1662,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         }
 
         $allows = $this->pluginHandle()->headerOptions($allows, $this);
+        $title = (empty($this->_archiveTitle) ? '' : $this->_archiveTitle . ' &raquo; ') . $this->options->title;
 
         $header = '';
         if (!empty($allows['description'])) {
@@ -1693,15 +1694,15 @@ class Widget_Archive extends Widget_Abstract_Contents
         }
 
         if (!empty($allows['rss2']) && $allowFeed) {
-            $header .= '<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="' . $allows['rss2'] . '" />' . "\n";
+            $header .= '<link rel="alternate" type="application/rss+xml" title="' . $title . ' &raquo; RSS 2.0" href="' . $allows['rss2'] . '" />' . "\n";
         }
 
         if (!empty($allows['rss1']) && $allowFeed) {
-            $header .= '<link rel="alternate" type="application/rdf+xml" title="RSS 1.0" href="' . $allows['rss1'] . '" />' . "\n";
+            $header .= '<link rel="alternate" type="application/rdf+xml" title="' . $title . ' &raquo; RSS 1.0" href="' . $allows['rss1'] . '" />' . "\n";
         }
 
         if (!empty($allows['atom']) && $allowFeed) {
-            $header .= '<link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="' . $allows['atom'] . '" />' . "\n";
+            $header .= '<link rel="alternate" type="application/atom+xml" title="' . $title . ' &raquo; ATOM 1.0" href="' . $allows['atom'] . '" />' . "\n";
         }
         
         if ($this->options->commentsThreaded && $this->is('single')) {
