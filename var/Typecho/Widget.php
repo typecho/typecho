@@ -362,7 +362,12 @@ abstract class Typecho_Widget
      */
     public function __call($name, $args)
     {
-        echo $this->{$name};
+        $method = 'call' . ucfirst($name);
+        $this->pluginHandle()->trigger($plugged)->{$method}($this, $args);
+
+        if (!$plugged) {
+            echo $this->{$name};
+        }
     }
 
     /**
