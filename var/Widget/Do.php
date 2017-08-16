@@ -43,7 +43,8 @@ class Widget_Do extends Typecho_Widget
         'plugins-edit'              =>  'Widget_Plugins_Edit',
         'themes-edit'               =>  'Widget_Themes_Edit',
         'users-edit'                =>  'Widget_Users_Edit',
-        'users-profile'             =>  'Widget_Users_Profile'
+        'users-profile'             =>  'Widget_Users_Profile',
+        'backup'                    =>  'Widget_Backup'
     );
 
     /**
