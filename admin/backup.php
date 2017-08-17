@@ -56,6 +56,7 @@ $backupFiles = Typecho_Widget::widget('Widget_Backup')->listFiles();
                             <?php if (empty($backupFiles)): ?>
                                 <p class="description"><?php _e('将备份文件手动上传至服务器的 %s 目录下后, 这里会出现文件选项', __TYPECHO_BACKUP_DIR__); ?></p>
                             <?php else: ?>
+                                <label class="typecho-label" for="backup-select-file"><?php _e('选择一个备份文件恢复数据'); ?></label>
                                 <select name="file" id="backup-select-file">
                                     <?php foreach ($backupFiles as $file): ?>
                                         <option value="<?php echo $file; ?>"><?php echo $file; ?></option>
