@@ -21,10 +21,10 @@ class Markdown
      * @param string $text 
      * @return string
      */
-    public static function convert($text)
+    public static function convert($text, $parserConfig)
     {
         if (empty(self::$parser)) {
-            self::$parser = new HyperDown();
+            self::$parser = new HyperDown($parserConfig);
             self::$parser->hook('afterParseCode', array('Markdown', 'transerCodeClass'));
             self::$parser->hook('beforeParseInline', array('Markdown', 'transerComment'));
 

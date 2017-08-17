@@ -990,7 +990,11 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $html = $this->pluginHandle(__CLASS__)->trigger($parsed)->markdown($text);
 
         if (!$parsed) {
-            $html = Markdown::convert($text);
+            $parserConfig = array(
+                'enableAutoLink'    =>  $this->widget('Widget_Options')->markdownAutoLink
+            );
+
+            $html = Markdown::convert($text, $parserConfig);
         }
 
         return $html;

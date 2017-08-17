@@ -82,9 +82,18 @@ class HyperDown
     private $_id;
 
     /**
-     * @var bool
+     * @var array
      */
-    private $_html = false;
+    private $_config = array();
+
+    /**
+     * HyperDown constructor.
+     * @param array $config
+     */
+    public function __construct($config = array())
+    {
+        $this->_config = $config;
+    }
 
     /**
      * makeHtml
@@ -112,7 +121,7 @@ class HyperDown
      */
     public function enableHtml($html = true)
     {
-        $this->_html = $html;
+        $this->_config['enableHtml'] = $html;
     }
 
     /**
@@ -259,8 +268,12 @@ class HyperDown
      * @param bool $enableAutoLink
      * @return string
      */
-    public function parseInline($text, $whiteList = '', $clearHolders = true, $enableAutoLink = true)
+    public function parseInline($text, $whiteList = '', $clearHolders = true, $enableAutoLink = null)
     {
+        if (is_null($enableAutoLink) && isset($this->_config['enableAutoLink'])) {
+            $enableAutoLink = $this->_config['enableAutoLink'];
+        }
+
         $self = $this;
         $text = $this->call('beforeParseInline', $text); 
 
@@ -555,7 +568,7 @@ class HyperDown
             }
 
             // super html mode
-            if ($this->_html) {
+            if ($this->_config['enableHtml']) {
                 if (preg_match("/^(\s*)!!!(\s*)$/i", $line, $matches)) {
                     if ($this->isBlock('shtml')) {
                         $this->setBlock($key)->endBlock();

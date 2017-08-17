@@ -40,6 +40,7 @@ class Widget_Do extends Typecho_Widget
         'options-general'           =>  'Widget_Options_General',
         'options-permalink'         =>  'Widget_Options_Permalink',
         'options-reading'           =>  'Widget_Options_Reading',
+        'options-writing'           =>  'Widget_Options_Writing',
         'plugins-edit'              =>  'Widget_Plugins_Edit',
         'themes-edit'               =>  'Widget_Themes_Edit',
         'users-edit'                =>  'Widget_Users_Edit',
