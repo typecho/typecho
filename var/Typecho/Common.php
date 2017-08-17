@@ -1049,6 +1049,69 @@ EOF;
     }
 
     /**
+     * 创建备份文件缓冲
+     *
+     * @param $type
+     * @param $header
+     * @param $body
+     * @return string
+     */
+    public static function buildBackupBuffer($type, $header, $body)
+    {
+        $buffer = '';
+
+        $buffer .= pack('vvv', $type, strlen($header), strlen($body));
+        $buffer .= $header . $body;
+        $buffer .= md5($buffer);
+
+        return $buffer;
+    }
+
+    /**
+     * 从备份文件中解压
+     *
+     * @param $fp
+     * @param bool $end
+     * @return array|bool
+     */
+    public static function extractBackupBuffer($fp, &$end)
+    {
+        $meta = fread($fp, 6);
+        $metaLen = strlen($meta);
+
+        if (0 == $metaLen) {
+            $end = true;
+            return false;
+        }
+
+        if (false === $meta || $metaLen != 6) {
+            return false;
+        }
+
+        list ($type, $headerLen, $bodyLen) = array_values(unpack('v3', $meta));
+
+        $header = @fread($fp, $headerLen);
+
+        if (false === $header || strlen($header) != $headerLen) {
+            return false;
+        }
+
+        $body = @fread($fp, $bodyLen);
+
+        if (false === $body || strlen($body) != $bodyLen) {
+            return false;
+        }
+
+        $md5 = @fread($fp, 32);
+
+        if (false === $md5 || $md5 != md5($meta . $header . $body)) {
+            return false;
+        }
+
+        return array($type, $header, $body);
+    }
+
+    /**
      * 获取图片
      *
      * @access public

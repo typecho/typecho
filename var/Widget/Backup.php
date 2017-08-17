@@ -45,22 +45,16 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
      */
     private function buildBuffer($type, $data)
     {
-        $buffer = '';
         $body = '';
+        $schema = array();
 
-        $schema = [];
         foreach ($data as $key => $val) {
             $schema[$key] = strlen($val);
             $body .= $val;
         }
-        $schemaHeader = Json::encode($schema);
 
-        $buffer .= pack('v', $type);                    // 写入类型
-        $buffer .= pack('v', strlen($schemaHeader));    // 写入头
-        $buffer .= pack('v', strlen($body));            // 写入头
-        $buffer .= $schemaHeader . $body;
-
-        return $buffer;
+        $header = Json::encode($schema);
+        return Typecho_Common::buildBackupBuffer($type, $header, $body);
     }
 
     /**
@@ -71,6 +65,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
     private function extractData($file)
     {
         $fp = @fopen($file, 'rb');
+        $end = false;
 
         if (!$fp) {
             $this->widget('Widget_Notice')->set(_t('无法读取备份文件'), 'error');
@@ -80,21 +75,30 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
         $fileHeader = @fread($fp, strlen(self::HEADER));
 
         if (!$fileHeader || $fileHeader != self::HEADER) {
+            @fclose($fp);
             $this->widget('Widget_Notice')->set(_t('备份文件格式错误'), 'error');
             $this->response->goBack();
         }
 
-        while (!feof($fp)) {
-            $type = unpack('v', fread($fp, 2))[0];
-            $headerLen = unpack('v', fread($fp, 2))[0];
-            $bodyLen = unpack('v', fread($fp, 2))[0];
-            $header = fread($fp, $headerLen);
-            $body = fread($fp, $bodyLen);
+        while (!feof($fp) && !$end) {
+            $data = Typecho_Common::extractBackupBuffer($fp, $end);
 
+            if ($end) {
+                break;
+            }
+
+            if (!$data) {
+                @fclose($fp);
+                $this->widget('Widget_Notice')->set(_t('恢复数据出现错误'), 'error');
+                $this->response->goBack();
+            }
+
+            list ($type, $header, $body) = $data;
             $this->processData($type, $header, $body);
         }
 
-        $this->widget('Widget_Notice')->set(_t('备份数据倒入完成'), 'success');
+        @fclose($fp);
+        $this->widget('Widget_Notice')->set(_t('数据恢复完成'), 'success');
         $this->response->goBack();
     }
 
@@ -109,7 +113,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
 
         if (!empty($table)) {
             $schema = Json::decode($header, true);
-            $data = [];
+            $data = array();
             $offset = 0;
 
             foreach ($schema as $key => $val) {
@@ -147,7 +151,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
 
             $db->query($db->insert('table.' . $table)->rows($data));
         } catch (Exception $e) {
-            $this->widget('Widget_Notice')->set(_t('备份过程中遇到如下错误: %s', $e->getMessage()), 'error');
+            $this->widget('Widget_Notice')->set(_t('恢复过程中遇到如下错误: %s', $e->getMessage()), 'error');
             $this->response->goBack();
         }
     }
@@ -210,6 +214,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
         }
 
         Typecho_Plugin::factory(__CLASS__)->export();
+        ob_end_flush();
     }
 
     /**
@@ -228,7 +233,12 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
                 $this->widget('Widget_Notice')->set(_t('备份文件上传失败'), 'error');
                 $this->response->goBack();
             }
-        } else if ($this->request->is('file')) {
+        } else {
+            if (!$this->request->is('file')) {
+                $this->widget('Widget_Notice')->set(_t('没有选择任何备份文件'), 'error');
+                $this->response->goBack();
+            }
+
             $path = __TYPECHO_BACKUP_DIR__ . '/' . $this->request->get('file');
 
             if (!file_exists($path)) {
@@ -237,7 +247,17 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
             }
         }
 
-        $this->extractData($file);
+        $this->extractData($path);
+    }
+
+    /**
+     * 列出已有备份文件
+     *
+     * @return array
+     */
+    public function listFiles()
+    {
+        return array_map('basename', glob(__TYPECHO_BACKUP_DIR__ . '/*.dat'));
     }
 
     /**
@@ -251,5 +271,4 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
         $this->on($this->request->is('do=export'))->export();
         $this->on($this->request->is('do=import'))->import();
     }
-
 }
