@@ -275,6 +275,17 @@ class HyperDown
             $text
         );
 
+        // mathjax
+        $text = preg_replace_callback(
+            "/(^|[^\\\])(\\$+)(.+?)\\2/",
+            function ($matches) use ($self) {
+                return  $matches[1] . $self->makeHolder(
+                    $matches[2] . htmlspecialchars($matches[3]) . $matches[2]
+                );
+            },
+            $text
+        );
+
         // escape
         $text = preg_replace_callback(
             "/\\\(.)/u",
@@ -556,7 +567,7 @@ class HyperDown
 
             // super html mode
             if ($this->_html) {
-                if (preg_match("/^(\s*)!!!(\s*)$/i", $line, $matches)) {
+                if (preg_match("/^(\s*)!!!(\s*)$/", $line, $matches)) {
                     if ($this->isBlock('shtml')) {
                         $this->setBlock($key)->endBlock();
                     } else {
@@ -568,6 +579,20 @@ class HyperDown
                     $this->setBlock($key);
                     continue;
                 }
+            }
+
+            // mathjax mode
+            if (preg_match("/^(\s*)\\$\\$(\s*)$/", $line, $matches)) {
+                if ($this->isBlock('math')) {
+                    $this->setBlock($key)->endBlock();
+                } else {
+                    $this->startBlock('math', $key);
+                }
+
+                continue;
+            } else if ($this->isBlock('math')) {
+                $this->setBlock($key);
+                continue;
             }
 
             // html block is special too
@@ -900,6 +925,17 @@ class HyperDown
     private function parseShtml(array $lines)
     {
         return trim(implode("\n", array_slice($lines, 1, -1)));
+    }
+
+    /**
+     * parseMath
+     *
+     * @param array $lines
+     * @return string
+     */
+    private function parseMath(array $lines)
+    {
+        return '<p>' . htmlspecialchars(implode("\n", $lines)) . '</p>';
     }
 
     /**

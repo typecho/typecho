@@ -11,11 +11,6 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 class Markdown
 {
     /**
-     * @var HyperDown
-     */
-    public static $parser;
-
-    /**
      * convert 
      * 
      * @param string $text 
@@ -23,14 +18,24 @@ class Markdown
      */
     public static function convert($text)
     {
-        if (empty(self::$parser)) {
-            self::$parser = new HyperDown();
-            self::$parser->hook('afterParseCode', array('Markdown', 'transerCodeClass'));
-            self::$parser->hook('beforeParseInline', array('Markdown', 'transerComment'));
+        static $parser;
 
-            self::$parser->enableHtml(true);
-            self::$parser->_commonWhiteList .= '|img|cite|embed|iframe';
-            self::$parser->_specialWhiteList = array_merge(self::$parser->_specialWhiteList, array(
+        if (empty($parser)) {
+            $parser = new HyperDown();
+
+            $parser->hook('afterParseCode', function ($html) {
+                return preg_replace("/<code class=\"([_a-z0-9-]+)\">/i", "<code class=\"lang-\\1\">", $html);
+            });
+
+            $parser->hook('beforeParseInline', function ($html) use ($parser) {
+                return preg_replace_callback("/<!\-\-(.+?)\-\->/s", function ($matches) use ($parser) {
+                    return $parser->makeHolder($matches[0]);
+                }, $html);
+            });
+
+            $parser->enableHtml(true);
+            $parser->_commonWhiteList .= '|img|cite|embed|iframe';
+            $parser->_specialWhiteList = array_merge($parser->_specialWhiteList, array(
                 'ol'            =>  'ol|li',
                 'ul'            =>  'ul|li',
                 'blockquote'    =>  'blockquote',
@@ -38,7 +43,7 @@ class Markdown
             ));
         }
 
-        return self::$parser->makeHtml($text);
+        return $parser->makeHtml($text);
     }
 
     /**

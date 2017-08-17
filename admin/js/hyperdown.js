@@ -230,6 +230,13 @@
           return matches[1] + _this.makeHolder('<code>' + (htmlspecialchars(matches[3])) + '</code>');
         };
       })(this));
+      text = text.replace(/(^|[^\\])(\$+)(.+?)\2/mg, (function(_this) {
+        return function() {
+          var matches;
+          matches = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+          return matches[1] + _this.makeHolder(matches[2] + (htmlspecialchars(matches[3])) + matches[2]);
+        };
+      })(this));
       text = text.replace(/\\(.)/g, (function(_this) {
         return function() {
           var escaped, matches;
@@ -421,7 +428,7 @@
           continue;
         }
         if (this.html) {
-          if (!!(matches = line.match(/^(\s*)!!!(\s*)$/i))) {
+          if (!!(matches = line.match(/^(\s*)!!!(\s*)$/))) {
             if (this.isBlock('shtml')) {
               this.setBlock(key).endBlock();
             } else {
@@ -429,6 +436,19 @@
             }
             continue;
           } else if (this.isBlock('shtml')) {
+            this.setBlock(key);
+            continue;
+          }
+        }
+        if (this.html) {
+          if (!!(matches = line.match(/^(\s*)\$\$(\s*)$/))) {
+            if (this.isBlock('math')) {
+              this.setBlock(key).endBlock();
+            } else {
+              this.startBlock('math', key);
+            }
+            continue;
+          } else if (this.isBlock('math')) {
             this.setBlock(key);
             continue;
           }
@@ -676,6 +696,10 @@
 
     Parser.prototype.parseShtml = function(lines) {
       return trim((lines.slice(1, -1)).join("\n"));
+    };
+
+    Parser.prototype.parseMath = function(lines) {
+      return '<p>' + (htmlspecialchars(lines.join("\n"))) + '</p>';
     };
 
     Parser.prototype.parseSh = function(lines, num) {
