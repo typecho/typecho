@@ -49,7 +49,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
         $schema = array();
 
         foreach ($data as $key => $val) {
-            $schema[$key] = strlen($val);
+            $schema[$key] = NULL === $val ? NULL : strlen($val);
             $body .= $val;
         }
 
@@ -117,7 +117,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
             $offset = 0;
 
             foreach ($schema as $key => $val) {
-                $data[$key] = substr($body, $offset, $val);
+                $data[$key] = NULL === $val ? NULL : substr($body, $offset, $val);
                 $offset += $val;
             }
 
