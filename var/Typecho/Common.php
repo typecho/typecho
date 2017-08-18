@@ -1071,18 +1071,14 @@ EOF;
      * 从备份文件中解压
      *
      * @param $fp
-     * @param bool $end
+     * @param bool $offset
      * @return array|bool
      */
-    public static function extractBackupBuffer($fp, &$end)
+    public static function extractBackupBuffer($fp, &$offset)
     {
         $meta = fread($fp, 6);
+        $offset += 6;
         $metaLen = strlen($meta);
-
-        if (0 == $metaLen) {
-            $end = true;
-            return false;
-        }
 
         if (false === $meta || $metaLen != 6) {
             return false;
@@ -1091,18 +1087,21 @@ EOF;
         list ($type, $headerLen, $bodyLen) = array_values(unpack('v3', $meta));
 
         $header = @fread($fp, $headerLen);
+        $offset += $headerLen;
 
         if (false === $header || strlen($header) != $headerLen) {
             return false;
         }
 
         $body = @fread($fp, $bodyLen);
+        $offset += $bodyLen;
 
         if (false === $body || strlen($body) != $bodyLen) {
             return false;
         }
 
         $md5 = @fread($fp, 32);
+        $offset += 32;
 
         if (false === $md5 || $md5 != md5($meta . $header . $body)) {
             return false;

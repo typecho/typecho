@@ -72,7 +72,16 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
             $this->response->goBack();
         }
 
-        $fileHeader = @fread($fp, strlen(self::HEADER));
+        $fileSize = filesize($file);
+        $headerSize = strlen(self::HEADER);
+
+        if ($fileSize < $headerSize) {
+            @fclose($fp);
+            $this->widget('Widget_Notice')->set(_t('备份文件格式错误'), 'error');
+            $this->response->goBack();
+        }
+
+        $fileHeader = @fread($fp, $headerSize);
 
         if (!$fileHeader || $fileHeader != self::HEADER) {
             @fclose($fp);
@@ -80,12 +89,20 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
             $this->response->goBack();
         }
 
-        while (!feof($fp) && !$end) {
-            $data = Typecho_Common::extractBackupBuffer($fp, $end);
+        fseek($fp, $fileSize - $headerSize);
+        $fileFooter = @fread($fp, $headerSize);
 
-            if ($end) {
-                break;
-            }
+        if (!$fileFooter || $fileFooter != self::HEADER) {
+            @fclose($fp);
+            $this->widget('Widget_Notice')->set(_t('备份文件格式错误'), 'error');
+            $this->response->goBack();
+        }
+
+        fseek($fp, $headerSize);
+        $offset = $headerSize;
+
+        while (!feof($fp) && $offset + $headerSize < $fileSize) {
+            $data = Typecho_Common::extractBackupBuffer($fp, $offset);
 
             if (!$data) {
                 @fclose($fp);
@@ -214,6 +231,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
         }
 
         Typecho_Plugin::factory(__CLASS__)->export();
+        echo self::HEADER;
         ob_end_flush();
     }
 
