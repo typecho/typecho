@@ -87,7 +87,7 @@ class Widget_Security extends Typecho_Widget
      */
     public function protect()
     {
-        if ($this->enabled && $this->request->get('_') != $this->getToken($this->request->getReferer())) {
+        if ($this->_enabled && $this->request->get('_') != $this->getToken($this->request->getReferer())) {
             $this->response->goBack();
         }
     }
