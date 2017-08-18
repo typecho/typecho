@@ -306,7 +306,7 @@ class Widget_Archive extends Widget_Abstract_Contents
             $commentUrl .= '?parent=' . $reply;
         }
         
-        return $this->options->commentsAntiSpam ? $commentUrl : $this->security->getTokenUrl($commentUrl);
+        return $commentUrl;
     }
 
     /**
@@ -1795,35 +1795,36 @@ class Widget_Archive extends Widget_Abstract_Contents
 (function () {
     var event = document.addEventListener ? {
         add: 'addEventListener',
-        focus: 'focus',
+        triggers: ['scroll', 'mousemove', 'keyup', 'touchstart'],
         load: 'DOMContentLoaded'
     } : {
         add: 'attachEvent',
-        focus: 'onfocus',
+        triggers: ['onfocus', 'onmousemove', 'onkeyup', 'ontouchstart'],
         load: 'onload'
-    };
+    }, added = false;
 
     document[event.add](event.load, function () {
-        var r = document.getElementById('{$this->respondId}');
+        var r = document.getElementById('{$this->respondId}'),
+            input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = '_';
+        input.value = " . Typecho_Common::shuffleScriptVar(
+            $this->security->getToken($this->request->getRequestUrl())) . "
 
         if (null != r) {
             var forms = r.getElementsByTagName('form');
             if (forms.length > 0) {
-                var f = forms[0], textarea = f.getElementsByTagName('textarea')[0] || f.text, added = false;
-
-                if (null != textarea && 'text' == textarea.name) {
-                    textarea[event.add](event.focus, function () {
-                        if (!added) {
-                            var input = document.createElement('input');
-                            input.type = 'hidden';
-                            input.name = '_';
-                            input.value = " . Typecho_Common::shuffleScriptVar(
-                                $this->security->getToken($this->request->getRequestUrl())) . "
-
-                            f.appendChild(input);
-                            added = true;
-                        }
-                    });
+                function append() {
+                    if (!added) {
+                        forms[0].appendChild(input);
+                        added = true;
+                    }
+                }
+            
+                for (var i = 0; i < event.triggers.length; i ++) {
+                    var trigger = event.triggers[i];
+                    document[event.add](trigger, append);
+                    window[event.add](trigger, append);
                 }
             }
         }

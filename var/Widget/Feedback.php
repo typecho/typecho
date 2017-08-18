@@ -38,6 +38,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
     private function comment()
     {
         // 使用安全模块保护
+        $this->security->enable($this->options->commentsAntiSpam);
         $this->security->protect();
 
         $comment = array(

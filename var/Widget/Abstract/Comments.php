@@ -419,7 +419,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      * 
      * @param mixed $text 
      * @access public
-     * @return void
+     * @return string
      */
     public function autoP($text)
     {
@@ -443,7 +443,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      * 
      * @param mixed $text 
      * @access public
-     * @return void
+     * @return string
      */
     public function markdown($text)
     {
