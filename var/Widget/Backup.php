@@ -145,7 +145,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
     }
 
     /**
-     * 倒入单条数据
+     * 导入单条数据
      *
      * @param $table
      * @param $data
@@ -236,7 +236,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
     }
 
     /**
-     * 倒入数据
+     * 导入数据
      */
     private function import()
     {
