@@ -182,6 +182,7 @@ class Typecho_Db
      * 
      * @param int $op 
      * @return Typecho_Db_Adapter
+     * @throws Typecho_Db_Exception
      */
     public function selectDb($op)
     {
@@ -349,7 +350,7 @@ class Typecho_Db
         $handle = $this->selectDb($op);
 
         /** 提交查询 */
-        $resource = $this->_adapter->query($query, $handle, $op, $action);
+        $resource = $this->_adapter->query($query->prepare($query), $handle, $op, $action);
 
         if ($action) {
             //根据查询动作返回相应资源

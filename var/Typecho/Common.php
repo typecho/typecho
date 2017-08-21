@@ -234,12 +234,13 @@ class Typecho_Common
      */
     public static function exceptionHandle($exception)
     {
-        @ob_end_clean();
-
         if (defined('__TYPECHO_DEBUG__')) {
-            echo '<h1>' . $exception->getMessage() . '</h1>';
-            echo nl2br($exception->__toString());
+            echo '<pre><code>';
+            echo '<h1>' . htmlspecialchars($exception->getMessage()) . '</h1>';
+            echo htmlspecialchars($exception->__toString());
+            echo '</code></pre>';
         } else {
+            @ob_end_clean();
             if (404 == $exception->getCode() && !empty(self::$exceptionHandle)) {
                 $handleClass = self::$exceptionHandle;
                 new $handleClass($exception);
