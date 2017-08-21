@@ -160,7 +160,7 @@ class Typecho_Db
      * getConfig  
      * 
      * @access public
-     * @return void
+     * @return array
      */
     public function getConfig()
     {
@@ -350,7 +350,8 @@ class Typecho_Db
         $handle = $this->selectDb($op);
 
         /** 提交查询 */
-        $resource = $this->_adapter->query($query->prepare($query), $handle, $op, $action);
+        $resource = $this->_adapter->query($query instanceof Typecho_Db_Query ?
+            $query->prepare($query) : $query, $handle, $op, $action);
 
         if ($action) {
             //根据查询动作返回相应资源
@@ -402,7 +403,7 @@ class Typecho_Db
      *
      * @param mixed $query 查询对象
      * @param array $filter 行过滤器函数,将查询的每一行作为第一个参数传入指定的过滤器中
-     * @return stdClass
+     * @return mixed
      */
     public function fetchRow($query, array $filter = NULL)
     {
@@ -423,7 +424,7 @@ class Typecho_Db
      *
      * @param mixed $query 查询对象
      * @param array $filter 行过滤器函数,将查询的每一行作为第一个参数传入指定的过滤器中
-     * @return array
+     * @return mixed
      */
     public function fetchObject($query, array $filter = NULL)
     {
