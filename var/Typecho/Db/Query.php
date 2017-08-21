@@ -506,7 +506,7 @@ class Typecho_Db_Query
         $adapter = $this->_adapter;
 
         return preg_replace_callback("/#param:([0-9]+)#/", function ($matches) use ($params, $adapter) {
-            if (isset($params[$matches[1]])) {
+            if (array_key_exists($matches[1], $params)) {
                 return $adapter->quoteValue($params[$matches[1]]);
             } else {
                 return $matches[0];
