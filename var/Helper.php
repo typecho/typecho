@@ -32,6 +32,38 @@ class Helper
     }
 
     /**
+     * 根据ID获取单个Widget对象
+     *
+     * @param string $table 表名, 支持 contents, comments, metas, users
+     * @return Widget_Abstract
+     */
+    public static function widgetById($table, $pkId)
+    {
+        $table = ucfirst($table);
+        if (!in_array($table, array('Contents', 'Comments', 'Metas', 'Users'))) {
+            return NULL;
+        }
+
+        $keys = array(
+            'Contents'  =>  'cid',
+            'Comments'  =>  'coid',
+            'Metas'     =>  'mid',
+            'Users'     =>  'uid'
+        );
+
+        $className = "Widget_Abstract_{$table}";
+        $key = $keys[$table];
+        $db = Typecho_Db::get();
+        $widget = new $className;
+        
+        $db->fetchRow(
+            $widget->select()->where("{$key} = ?", $pkId)->limit(1),
+                array($widget, 'push'));
+
+        return $widget;
+    }
+
+    /**
      * 强行删除某个插件
      *
      * @access public

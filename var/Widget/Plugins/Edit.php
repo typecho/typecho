@@ -22,6 +22,11 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Interface_Do
 {
     /**
+     * @var bool
+     */
+    private $_configNoticed = false;
+
+    /**
      * 手动配置插件变量
      *
      * @param       $pluginName 插件名称
@@ -232,8 +237,10 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
         /** 设置高亮 */
         $this->widget('Widget_Notice')->highlight('plugin-' . $pluginName);
 
-        /** 提示信息 */
-        $this->widget('Widget_Notice')->set(_t("插件设置已经保存"), 'success');
+        if (!$this->_configNoticed) {
+            /** 提示信息 */
+            $this->widget('Widget_Notice')->set(_t("插件设置已经保存"), 'success');
+        }
 
         /** 转向原页 */
         $this->response->redirect(Typecho_Common::url('plugins.php', $this->options->adminUrl));
@@ -252,6 +259,15 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
     {
         /** 获取插件入口 */
         list($pluginFileName, $className) = Typecho_Plugin::portal($pluginName, $this->options->pluginDir($pluginName));
+
+        if (!$isInit && method_exists($className, 'configCheck')) {
+            $result = call_user_func(array($className, 'configCheck'), $settings);
+
+            if (!empty($result) && is_string($result)) {
+                $this->widget('Widget_Notice')->set($result, 'notice');
+                $this->_configNoticed = true;
+            }
+        }
 
         if (method_exists($className, 'configHandle')) {
             call_user_func(array($className, 'configHandle'), $settings, $isInit);
