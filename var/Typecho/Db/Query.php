@@ -216,6 +216,16 @@ class Typecho_Db_Query
     }
 
     /**
+     * 获取参数
+     *
+     * @return array
+     */
+    public function getParams()
+    {
+        return $this->_params;
+    }
+
+    /**
      * set default params
      *
      * @param array $default
