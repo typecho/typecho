@@ -202,13 +202,7 @@ class Typecho_Common
     public static function init()
     {
         /** 设置自动载入函数 */
-        if (function_exists('spl_autoload_register')) {
-            spl_autoload_register(array('Typecho_Common', '__autoLoad'));
-        } else {
-            function __autoLoad($className) {
-                Typecho_Common::__autoLoad($className);
-            }
-        }
+        spl_autoload_register(array('Typecho_Common', '__autoLoad'));
 
         /** 兼容php6 */
         if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc()) {
