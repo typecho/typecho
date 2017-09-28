@@ -313,9 +313,10 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
 
                 /** 检查ip评论间隔 */
                 if (!$this->user->pass('editor', true) && $this->_content->authorId != $this->user->uid &&
-                $this->options->commentsPostIntervalEnable) {
+                    $this->options->commentsPostIntervalEnable) {
+
                     $latestComment = $this->db->fetchRow($this->db->select('created')->from('table.comments')
-                    ->where('cid = ?', $this->_content->cid)
+                    ->where('cid = ? AND ip = ?', $this->_content->cid, $this->request->getIp())
                     ->order('created', Typecho_Db::SORT_DESC)
                     ->limit(1));
 
