@@ -294,8 +294,8 @@ abstract class Typecho_Http_Client_Adapter
      *
      * @access public
      * @param string $url 请求地址
-     * @param string $rfc 请求协议
      * @return string
+     * @throws Typecho_Http_Client_Exception
      */
     public function send($url)
     {
@@ -305,6 +305,10 @@ abstract class Typecho_Http_Client_Adapter
             $this->host = $params['host'];
         } else {
             throw new Typecho_Http_Client_Exception('Unknown Host', 500);
+        }
+
+        if (!in_array($params['scheme'], array('http', 'https'))) {
+            throw new Typecho_Http_Client_Exception('Unknown Scheme', 500);
         }
 
         if (!empty($params['path'])) {

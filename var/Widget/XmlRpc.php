@@ -2057,6 +2057,16 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         $pathInfo = Typecho_Common::url(substr($target, strlen($this->options->index)), '/');
         $post = Typecho_Router::match($pathInfo);
 
+        /** 检查源地址是否合法 */
+        $params = parse_url($source);
+        if (false === $params || !in_array($params['scheme'], array('http', 'https'))) {
+            return new IXR_Error(16, _t('源地址服务器错误'));
+        }
+
+        if (!Typecho_Common::checkSafeHost($params['host'])) {
+            return new IXR_Error(16, _t('源地址服务器错误'));
+        }
+
         /** 这样可以得到cid或者slug*/
         if (!($post instanceof Widget_Archive) || !$post->have() || !$post->is('single')) {
             return new IXR_Error(33, _t('这个目标地址不存在'));

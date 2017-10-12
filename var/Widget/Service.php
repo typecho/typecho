@@ -140,7 +140,6 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
                 ->setHeader('User-Agent', $this->options->generator)
                 ->setTimeout(3)
                 ->setData($input)
-                ->setIp('127.0.0.1')
                 ->send(Typecho_Common::url('/action/service', $this->options->index));
 
             } catch (Typecho_Http_Client_Exception $e) {
