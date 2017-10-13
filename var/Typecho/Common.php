@@ -1120,7 +1120,7 @@ EOF;
         $address = gethostbyname($host);
         $inet = inet_pton($address);
 
-        if ($inet === false) {
+        if (false === $inet) {
             // 有可能是ipv6的地址
             $records = dns_get_record($host, DNS_AAAA);
 
