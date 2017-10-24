@@ -92,7 +92,7 @@ class Typecho_I18n
     public static function translate($string)
     {
         self::init();
-        return self::$_lang ? self::$_loaded->translate($string) : $string;
+        return self::$_loaded ? self::$_loaded->translate($string) : $string;
     }
 
     /**
@@ -106,7 +106,7 @@ class Typecho_I18n
     public static function ngettext($single, $plural, $number)
     {
         self::init();
-        return self::$_lang ? self::$_loaded->ngettext($single, $plural, $number) : ($number > 1 ? $plural : $single);
+        return self::$_loaded ? self::$_loaded->ngettext($single, $plural, $number) : ($number > 1 ? $plural : $single);
     }
 
     /**
