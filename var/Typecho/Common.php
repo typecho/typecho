@@ -22,7 +22,7 @@ define('__TYPECHO_MB_SUPPORTED__', function_exists('mb_get_info') && function_ex
 class Typecho_Common
 {
     /** 程序版本 */
-    const VERSION = '1.1/17.10.13';
+    const VERSION = '1.1/17.10.24';
 
     /**
      * 允许的属性
@@ -1120,7 +1120,7 @@ EOF;
         $address = gethostbyname($host);
         $inet = inet_pton($address);
 
-        if ($inet === false) {
+        if (false === $inet) {
             // 有可能是ipv6的地址
             $records = dns_get_record($host, DNS_AAAA);
 

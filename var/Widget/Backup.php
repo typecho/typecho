@@ -65,7 +65,6 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
     private function extractData($file)
     {
         $fp = @fopen($file, 'rb');
-        $end = false;
 
         if (!$fp) {
             $this->widget('Widget_Notice')->set(_t('无法读取备份文件'), 'error');
