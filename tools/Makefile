@@ -51,6 +51,7 @@ upgrade:
 	cp -Rf build/var/ ${DIR}
 	rm -Rf ${DIR}/index.php
 	cp build/index.php ${DIR}
+	cp build/install.php ${DIR}
 	make clear
 
 
