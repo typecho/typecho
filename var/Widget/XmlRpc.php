@@ -2203,6 +2203,10 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function action()
     {
+        if (0 == $this->options->allowXmlRpc) {
+            throw new Typecho_Widget_Exception(_t('请求的地址不存在'), 404);
+        }
+
         if (isset($this->request->rsd)) {
             echo
 <<<EOF
@@ -2260,10 +2264,7 @@ EOF;
 EOF;
         } else {
 
-
-
-            /** 直接把初始化放到这里 */
-            new IXR_Server(array(
+            $api = array(
                 /** WordPress API */
                 'wp.getPage'                => array($this, 'wpGetPage'),
                 'wp.getPages'               => array($this, 'wpGetPages'),
@@ -2333,11 +2334,18 @@ EOF;
 
                 /** PingBack */
                 'pingback.ping'             => array($this,'pingbackPing'),
-                'pingback.extensions.getPingbacks' => array($this,'pingbackExtensionsGetPingbacks'),
+                // 'pingback.extensions.getPingbacks' => array($this,'pingbackExtensionsGetPingbacks'),
                 
                 /** hook after */
                 'hook.afterCall'            => array($this, 'hookAfterCall'),
-            ));
+            );
+
+            if (1 == $this->options->allowXmlRpc) {
+                unset($api['pingback.ping']);
+            }
+
+            /** 直接把初始化放到这里 */
+            new IXR_Server($api);
         }
     }
 }

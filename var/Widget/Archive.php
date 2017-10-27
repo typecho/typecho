@@ -1681,15 +1681,15 @@ class Widget_Archive extends Widget_Abstract_Contents
             $header .= '<meta name="template" content="' . $allows['template'] . '" />' . "\n";
         }
 
-        if (!empty($allows['pingback'])) {
+        if (!empty($allows['pingback']) && 2 == $this->options->allowXmlRpc) {
             $header .= '<link rel="pingback" href="' . $allows['pingback'] . '" />' . "\n";
         }
 
-        if (!empty($allows['xmlrpc'])) {
+        if (!empty($allows['xmlrpc']) && 0 < $this->options->allowXmlRpc) {
             $header .= '<link rel="EditURI" type="application/rsd+xml" title="RSD" href="' . $allows['xmlrpc'] . '" />' . "\n";
         }
 
-        if (!empty($allows['wlw'])) {
+        if (!empty($allows['wlw']) && 0 < $this->options->allowXmlRpc) {
             $header .= '<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="' . $allows['wlw'] . '" />' . "\n";
         }
 
@@ -1949,7 +1949,9 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->checkPermalink();
         
         /** 添加Pingback */
-        $this->response->setHeader('X-Pingback', $this->options->xmlRpcUrl);
+        if (2 == $this->options->allowXmlRpc) {
+            $this->response->setHeader('X-Pingback', $this->options->xmlRpcUrl);
+        }
         $validated = false;
 
         //~ 自定义模板

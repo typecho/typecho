@@ -61,6 +61,7 @@ else:
     try {
         $installed = $db->fetchRow($db->select()->from('table.options')->where('name = ?', 'installed'));
         if (empty($installed) || $installed['value'] == 1) {
+            Typecho_Response::setStatus(404);
             exit;
         }
     } catch (Exception $e) {
@@ -371,6 +372,7 @@ Typecho_Cookie::set('__typecho_lang', $lang);
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'attachmentTypes', 'user' => 0, 'value' => '@image@')));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'secret', 'user' => 0, 'value' => Typecho_Common::randString(32, true))));
                                         $installDb->query($installDb->insert('table.options')->rows(array('name' => 'installed', 'user' => 0, 'value' => 0)));
+                                        $installDb->query($installDb->insert('table.options')->rows(array('name' => 'allowXmlRpc', 'user' => 0, 'value' => 2)));
 
                                         /** 初始分类 */
                                         $installDb->query($installDb->insert('table.metas')->rows(array('name' => _t('默认分类'), 'slug' => 'default', 'type' => 'category', 'description' => _t('只是一个默认分类'),

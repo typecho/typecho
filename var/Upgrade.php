@@ -1238,5 +1238,21 @@ Typecho_Date::setTimezoneOffset($options->timezone);
         $db->query($db->insert('table.options')
             ->rows(array('name' => 'installed', 'user' => 0, 'value' => 1)));
     }
+
+    /**
+     * 升级至17.10.27
+     *
+     * @param mixed $db
+     * @param mixed $options
+     * @static
+     * @access public
+     * @return void
+     */
+    public static function v1_1r17_10_27($db, $options)
+    {
+        // 增加installed
+        $db->query($db->insert('table.options')
+            ->rows(array('name' => 'allowXmlRpc', 'user' => 0, 'value' => 2)));
+    }
 }
 

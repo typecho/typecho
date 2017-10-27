@@ -100,6 +100,10 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
         $allowRegister = new Typecho_Widget_Helper_Form_Element_Radio('allowRegister', array('0' => _t('不允许'), '1' => _t('允许')), $this->options->allowRegister, _t('是否允许注册'),
         _t('允许访问者注册到你的网站, 默认的注册用户不享有任何写入权限.'));
         $form->addInput($allowRegister);
+ 
+        /** 注册 */
+        $allowXmlRpc = new Typecho_Widget_Helper_Form_Element_Radio('allowXmlRpc', array('0' => _t('关闭'), '1' => _t('仅关闭 Pingback 接口'), '2' => _t('打开')), $this->options->allowXmlRpc, _t('XMLRPC 接口'));
+        $form->addInput($allowXmlRpc);
 
         /** 语言项 */
         // hack 语言扫描
@@ -211,7 +215,7 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
             $this->response->goBack();
         }
 
-        $settings = $this->request->from('title','description', 'keywords', 'allowRegister', 'lang', 'timezone');
+        $settings = $this->request->from('title','description', 'keywords', 'allowRegister', 'allowXmlRpc', 'lang', 'timezone');
         $settings['attachmentTypes'] = $this->request->getArray('attachmentTypes');
 
         if (!defined('__TYPECHO_SITE_URL__')) {

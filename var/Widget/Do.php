@@ -64,7 +64,7 @@ class Widget_Do extends Typecho_Widget
             $widget = trim($this->request->widget, '/');
             $objectName = 'Widget_' . str_replace('/', '_', $widget);
 
-            if (Typecho_Common::isAvailableClass($objectName)) {
+            if (preg_match("/^[_a-z0-9]$/i", $objectName) && Typecho_Common::isAvailableClass($objectName)) {
                 $widgetName = $objectName;
             }
         } else {

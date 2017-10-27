@@ -26,6 +26,11 @@ class Widget_Init extends Typecho_Widget
         /** 对变量赋值 */
         $options = $this->widget('Widget_Options');
 
+        /** 检查安装状态 */
+        if (!$options->installed) {
+            $this->update(array('value' => 1), $this->db->sql()->where('name = ?', 'installed'));
+        }
+
         /** 语言包初始化 */
         if ($options->lang && $options->lang != 'zh_CN') {
             $dir = defined('__TYPECHO_LANG_DIR__') ? __TYPECHO_LANG_DIR__ : __TYPECHO_ROOT_DIR__ . '/usr/langs';
