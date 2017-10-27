@@ -28,8 +28,8 @@ class Markdown
             });
 
             $parser->hook('beforeParseInline', function ($html) use ($parser) {
-                return preg_replace_callback("/<!\-\-(.+?)\-\->/s", function ($matches) use ($parser) {
-                    return $parser->makeHolder($matches[0]);
+                return preg_replace_callback("/^\s*<!\-\-\s*more\s*\-\->\s*$/s", function ($matches) use ($parser) {
+                    return $parser->makeHolder('<!--more-->');
                 }, $html);
             });
 
@@ -43,7 +43,7 @@ class Markdown
             ));
         }
 
-        return $parser->makeHtml($text);
+        return str_replace('<p><!--more--></p>', '<!--more-->', $parser->makeHtml($text));
     }
 
     /**
