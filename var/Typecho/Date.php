@@ -46,7 +46,6 @@ class Typecho_Date
      *
      * @access public
      * @param integer $gmtTime GMT时间戳
-     * @return void
      */
     public function __construct($gmtTime)
     {

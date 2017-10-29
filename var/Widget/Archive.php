@@ -1223,7 +1223,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      * 重载select
      *
      * @access public
-     * @return void
+     * @return Typecho_Db_Query
      */
     public function select()
     {

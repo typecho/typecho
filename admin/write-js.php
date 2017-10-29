@@ -166,6 +166,9 @@ $(document).ready(function() {
         $('<input name="dst" type="hidden" />').insertAfter(form).val(dstOffset);
     }
 
+    // 时区
+    $('<input name="timezone" type="hidden" />').insertAfter(form).val(Math.floor((Date.now() - Date.UTC()) / 1000));
+
     // 自动保存
 <?php if ($options->autoSave): ?>
     var locked = false,

@@ -218,7 +218,7 @@ class Typecho_Response
      * 抛出json回执信息
      *
      * @access public
-     * @param string $message 消息体
+     * @param mixed $message 消息体
      * @return void
      */
     public function throwJson($message)
