@@ -31,7 +31,7 @@ class Typecho_Db_Adapter_Mysqli implements Typecho_Db_Adapter
      */
     public static function isAvailable()
     {
-        return extension_loaded('mysqli');
+        return class_exists('MySQLi');
     }
 
     /**

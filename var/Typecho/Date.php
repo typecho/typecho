@@ -127,6 +127,6 @@ class Typecho_Date
      */
     public static function time()
     {
-        return self::$serverTimeStamp ? self::$serverTimeStamp : (self::$serverTimeStamp = time() - idate('Z'));
+        return self::$serverTimeStamp ? self::$serverTimeStamp : (self::$serverTimeStamp = time());
     }
 }

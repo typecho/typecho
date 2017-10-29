@@ -536,6 +536,16 @@ Typecho_Cookie::set('__typecho_lang', $lang);
                                 }
 
                                 if($success) {
+                                    // 重置原有数据库状态
+                                    if (isset($installDb)) {
+                                        try {
+                                            $installDb->query($installDb->update('table.options')
+                                                ->rows(array('value' => 0))->where('name = ?', 'installed'));
+                                        } catch (Exception $e) {
+                                            // do nothing
+                                        }
+                                    }
+
                                     Typecho_Cookie::set('__typecho_config', base64_encode(serialize(array_merge(array(
                                         'prefix'    =>  _r('dbPrefix'),
                                         'userName'  =>  _r('userName'),
