@@ -44,31 +44,27 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
         if ($client) {
             $client->setHeader('User-Agent', $this->options->generator)
                 ->setTimeout(10)
-                ->send('https://github.com/typecho/typecho/releases.atom');
+                ->send('http://typecho.org/version.json');
 
             /** 匹配内容体 */
             $response = $client->getResponseBody();
-            preg_match_all("/<link rel=\"alternate\"[^>]+href=\"([^>]*)\"\s*\/>/is", $response, $matches);
-            $result = array('available' => 0);
+            $json = json_decode($response, true);
 
-            list($soft, $version) = explode(' ', $this->options->generator);
-            $current = explode('/', $version);
+            if (!empty($json)) {
+                list($soft, $version) = explode(' ', $this->options->generator);
+                $current = explode('/', $version);
 
-            if ($matches) {
-                foreach ($matches[0] as $key => $val) {
-                    $title = trim($matches[1][$key]);
-                    if (preg_match("/v([0-9\.]+)\-([0-9\.]+)\-release$/is", $title, $out)) {
-                        if (version_compare($out[1], $current[0], '>=')
-                        && version_compare($out[2], $current[1], '>')) {
-                            $result = array(
-                                'available' => 1, 
-                                'latest'    => $out[1] . '-' . $out[2],
-                                'current'   => $current[0] . '-' . $current[1],
-                                'link'      => 'https://github.com' . $matches[1][$key]
-                            );
-                            break;
-                        }
-                    }
+                if (isset($json['release']) && isset($json['version'])
+                    && preg_match("/^[0-9\.]+$/", $json['release'])
+                    && preg_match("/^[0-9\.]+$/", $json['version'])
+                    && version_compare($json['release'], $current[0], '>=')
+                    && version_compare($json['version'], $current[1], '>')) {
+                    $result = array(
+                        'available' => 1,
+                        'latest'    => $json['release'] . '-' . $json['version'],
+                        'current'   => $current[0] . '-' . $current[1],
+                        'link'      => 'http://typecho.org/download'
+                    );
                 }
             }
 
