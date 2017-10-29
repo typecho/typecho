@@ -266,14 +266,27 @@ class Widget_Options extends Typecho_Widget
     }
 
     /**
-     * 获取格林尼治标准时间
+     * 获取GMT标准时间
      *
+     * @deprecated
      * @access protected
      * @return integer
      */
     protected function ___gmtTime()
     {
         return Typecho_Date::gmtTime();
+    }
+
+    /**
+     * 获取时间
+     *
+     * @deprecated
+     * @access protected
+     * @return integer
+     */
+    protected function ___time()
+    {
+        return Typecho_Date::time();
     }
 
     /**

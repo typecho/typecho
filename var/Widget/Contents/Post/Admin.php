@@ -52,6 +52,10 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
      */
     protected function ___hasSaved()
     {
+        if (in_array($this->type, array('post_draft', 'page_draft'))) {
+            return true;
+        }
+
         $savedPost = $this->db->fetchRow($this->db->select('cid', 'modified')
         ->from('table.contents')
         ->where('table.contents.parent = ? AND (table.contents.type = ? OR table.contents.type = ?)',
@@ -80,6 +84,27 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
         }
 
         throw new Typecho_Widget_Exception(_t('用户不存在'), 404);
+    }
+
+    /**
+     * 重载过滤函数
+     *
+     * @param array $value
+     * @return array
+     */
+    public function filter(array $value)
+    {
+        $value = parent::filter($value);
+
+        if (!empty($value['parent'])) {
+            $parent = $this->db->fetchObject($this->select()->where('cid = ?', $value['parent']));
+
+            if (!empty($parent)) {
+                $value['commentsNum'] = $parent->commentsNum;
+            }
+        }
+
+        return $value;
     }
 
     /**

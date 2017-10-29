@@ -167,7 +167,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
         /** 构建插入结构 */
         $insertStruct = array(
             'cid'       =>  $comment['cid'],
-            'created'   =>  empty($comment['created']) ? $this->options->gmtTime : $comment['created'],
+            'created'   =>  empty($comment['created']) ? $this->options->time : $comment['created'],
             'author'    =>  empty($comment['author']) ? NULL : $comment['author'],
             'authorId'  =>  empty($comment['authorId']) ? 0 : $comment['authorId'],
             'ownerId'   =>  empty($comment['ownerId']) ? 0 : $comment['ownerId'],

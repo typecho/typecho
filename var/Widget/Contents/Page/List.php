@@ -31,7 +31,7 @@ class Widget_Contents_Page_List extends Widget_Abstract_Contents
     {
         $select = $this->select()->where('table.contents.type = ?', 'page')
         ->where('table.contents.status = ?', 'publish')
-        ->where('table.contents.created < ?', $this->options->gmtTime)
+        ->where('table.contents.created < ?', $this->options->time)
         ->order('table.contents.order', Typecho_Db::SORT_ASC);
 
         //去掉自定义首页

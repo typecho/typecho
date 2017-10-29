@@ -185,7 +185,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
                 bin2hex(openssl_random_pseudo_bytes(16)) : sha1(Typecho_Common::randString(20));
         }
 
-        $user['activated'] = $this->options->gmtTime;
+        $user['activated'] = $this->options->time;
         $user['logged'] = $user['activated'];
 
         Typecho_Cookie::set('__typecho_uid', $user['uid']);

@@ -272,8 +272,8 @@ class Widget_Abstract_Contents extends Widget_Abstract
         /** 构建插入结构 */
         $insertStruct = array(
             'title'         =>  empty($content['title']) ? NULL : htmlspecialchars($content['title']),
-            'created'       =>  empty($content['created']) ? $this->options->gmtTime : $content['created'],
-            'modified'      =>  $this->options->gmtTime,
+            'created'       =>  empty($content['created']) ? $this->options->time : $content['created'],
+            'modified'      =>  $this->options->time,
             'text'          =>  empty($content['text']) ? NULL : $content['text'],
             'order'         =>  empty($content['order']) ? 0 : intval($content['order']),
             'authorId'      =>  isset($content['authorId']) ? $content['authorId'] : $this->user->uid,
@@ -345,7 +345,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
             $updateStruct['created'] = $content['created'];
         }
 
-        $updateStruct['modified'] = $this->options->gmtTime;
+        $updateStruct['modified'] = $this->options->time;
 
         /** 首先插入部分数据 */
         $updateCondition = clone $condition;
@@ -850,7 +850,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
                 /** 对自动关闭反馈功能的支持 */
                 if (('ping' == $permission || 'comment' == $permission) && $this->options->commentsPostTimeout > 0 &&
                 $this->options->commentsAutoClose) {
-                    if ($this->options->gmtTime - $this->created > $this->options->commentsPostTimeout) {
+                    if ($this->options->time - $this->created > $this->options->commentsPostTimeout) {
                         return false;
                     }
                 }

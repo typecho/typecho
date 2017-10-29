@@ -382,16 +382,16 @@ Typecho_Cookie::set('__typecho_lang', $lang);
                                         $installDb->query($installDb->insert('table.relationships')->rows(array('cid' => 1, 'mid' => 1)));
 
                                         /** 初始内容 */
-                                        $installDb->query($installDb->insert('table.contents')->rows(array('title' => _t('欢迎使用 Typecho'), 'slug' => 'start', 'created' => Typecho_Date::gmtTime(), 'modified' => Typecho_Date::gmtTime(),
+                                        $installDb->query($installDb->insert('table.contents')->rows(array('title' => _t('欢迎使用 Typecho'), 'slug' => 'start', 'created' => Typecho_Date::time(), 'modified' => Typecho_Date::time(),
                                         'text' => '<!--markdown-->' . _t('如果您看到这篇文章,表示您的 blog 已经安装成功.'), 'authorId' => 1, 'type' => 'post', 'status' => 'publish', 'commentsNum' => 1, 'allowComment' => 1,
                                         'allowPing' => 1, 'allowFeed' => 1, 'parent' => 0)));
 
-                                        $installDb->query($installDb->insert('table.contents')->rows(array('title' => _t('关于'), 'slug' => 'start-page', 'created' => Typecho_Date::gmtTime(), 'modified' => Typecho_Date::gmtTime(),
+                                        $installDb->query($installDb->insert('table.contents')->rows(array('title' => _t('关于'), 'slug' => 'start-page', 'created' => Typecho_Date::time(), 'modified' => Typecho_Date::time(),
                                         'text' => '<!--markdown-->' . _t('本页面由 Typecho 创建, 这只是个测试页面.'), 'authorId' => 1, 'order' => 0, 'type' => 'page', 'status' => 'publish', 'commentsNum' => 0, 'allowComment' => 1,
                                         'allowPing' => 1, 'allowFeed' => 1, 'parent' => 0)));
 
                                         /** 初始评论 */
-                                        $installDb->query($installDb->insert('table.comments')->rows(array('cid' => 1, 'created' => Typecho_Date::gmtTime(), 'author' => 'Typecho', 'ownerId' => 1, 'url' => 'http://typecho.org',
+                                        $installDb->query($installDb->insert('table.comments')->rows(array('cid' => 1, 'created' => Typecho_Date::time(), 'author' => 'Typecho', 'ownerId' => 1, 'url' => 'http://typecho.org',
                                         'ip' => '127.0.0.1', 'agent' => $options->generator, 'text' => '欢迎加入 Typecho 大家族', 'type' => 'comment', 'status' => 'approved', 'parent' => 0)));
 
                                         /** 初始用户 */
@@ -399,7 +399,7 @@ Typecho_Cookie::set('__typecho_lang', $lang);
                                         $hasher = new PasswordHash(8, true);
 
                                         $installDb->query($installDb->insert('table.users')->rows(array('name' => $config['userName'], 'password' => $hasher->HashPassword($password), 'mail' => $config['userMail'],
-                                        'url' => 'http://www.typecho.org', 'screenName' => $config['userName'], 'group' => 'administrator', 'created' => Typecho_Date::gmtTime())));
+                                        'url' => 'http://www.typecho.org', 'screenName' => $config['userName'], 'group' => 'administrator', 'created' => Typecho_Date::time())));
 
                                         unset($_SESSION['typecho']);
                                         header('Location: ./install.php?finish&user=' . urlencode($config['userName'])

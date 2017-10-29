@@ -212,7 +212,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         $user = $this->request->from('name', 'mail', 'screenName', 'password', 'url', 'group');
         $user['screenName'] = empty($user['screenName']) ? $user['name'] : $user['screenName'];
         $user['password'] = $hasher->HashPassword($user['password']);
-        $user['created'] = $this->options->gmtTime;
+        $user['created'] = $this->options->time;
 
         /** 插入数据 */
         $user['uid'] = $this->insert($user);

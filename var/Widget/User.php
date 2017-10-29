@@ -95,7 +95,7 @@ class Widget_User extends Typecho_Widget
             //更新最后活动时间
             $this->db->query($this->db
             ->update('table.users')
-            ->rows(array('activated' => $this->options->gmtTime))
+            ->rows(array('activated' => $this->options->time))
             ->where('uid = ?', $this->_user['uid']));
         }
     }

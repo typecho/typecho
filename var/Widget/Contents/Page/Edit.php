@@ -109,7 +109,7 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
             $this->pluginHandle()->finishSave($contents, $this);
 
             if ($this->request->isAjax()) {
-                $created = new Typecho_Date($this->options->gmtTime);
+                $created = new Typecho_Date($this->options->time);
                 $this->response->throwJson(array(
                     'success'   =>  1,
                     'time'      =>  $created->format('H:i:s A'),

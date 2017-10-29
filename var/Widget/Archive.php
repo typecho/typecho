@@ -1350,7 +1350,7 @@ class Widget_Archive extends Widget_Abstract_Contents
                     $select = $this->select()->where('table.contents.status = ?', 'publish');
                 }
             }
-            $select->where('table.contents.created < ?', $this->options->gmtTime);
+            $select->where('table.contents.created < ?', $this->options->time);
         }
 
         /** handle初始化 */
@@ -1541,7 +1541,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     public function theNext($format = '%s', $default = NULL, $custom = array())
     {
         $content = $this->db->fetchRow($this->select()->where('table.contents.created > ? AND table.contents.created < ?',
-            $this->created, $this->options->gmtTime)
+            $this->created, $this->options->time)
             ->where('table.contents.status = ?', 'publish')
             ->where('table.contents.type = ?', $this->type)
             ->where('table.contents.password IS NULL')

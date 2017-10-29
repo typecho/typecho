@@ -2144,7 +2144,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
                     $pingback = array(
                         'cid'       =>  $post->cid,
-                        'created'   =>  $this->options->gmtTime,
+                        'created'   =>  $this->options->time,
                         'agent'     =>  $this->request->getAgent(),
                         'ip'        =>  $this->request->getIp(),
                         'author'    =>  $finalTitle,

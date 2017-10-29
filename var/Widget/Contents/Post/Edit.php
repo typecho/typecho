@@ -56,7 +56,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      */
     protected function ___date()
     {
-        return new Typecho_Date($this->options->gmtTime);
+        return new Typecho_Date();
     }
 
     /**
@@ -85,7 +85,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      * getFields  
      * 
      * @access protected
-     * @return void
+     * @return array
      */
     protected function getFields()
     {
@@ -123,12 +123,13 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      */
     protected function getCreated()
     {
-        $created = $this->options->gmtTime;
+        $created = $this->options->time;
         if (!empty($this->request->created)) {
             $created = $this->request->created;
         } else if (!empty($this->request->date)) {
             $dstOffset = !empty($this->request->dst) ? $this->request->dst : 0;
-            $created = strtotime($this->request->date) - $this->options->timezone + $this->options->serverTimezone - $dstOffset;
+            $timezoneOffset = isset($this->request->timezone) ? intval($this->request->timezone) : $this->options->timezone;
+            $created = strtotime($this->request->date) - $timezoneOffset + $this->options->serverTimezone - $dstOffset;
         } else if (!empty($this->request->year) && !empty($this->request->month) && !empty($this->request->day)) {
             $second = intval($this->request->get('sec', date('s')));
             $min = intval($this->request->get('min', date('i')));
@@ -363,8 +364,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     /**
      * 执行函数
      *
-     * @access public
-     * @return void
+     * @throws Typecho_Widget_Exception
      */
     public function execute()
     {
@@ -437,16 +437,14 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         if (isset($this->created)) {
             parent::date($format);
         } else {
-            echo date($format, $this->options->gmtTime + $this->options->timezone - $this->options->serverTimezone);
+            echo date($format, $this->options->time + $this->options->timezone - $this->options->serverTimezone);
         }
     }
 
     /**
      * 获取文章权限
      *
-     * @access public
-     * @param string $permission 权限
-     * @return unknown
+     * @return bool
      */
     public function allow()
     {
@@ -584,7 +582,8 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      * @access public
      * @param integer $cid
      * @param string $tags
-     * @param boolean $count 是否参与计数
+     * @param boolean $beforeCount 是否参与计数
+     * @param boolean $afterCount 是否参与计数
      * @return string
      */
     public function setTags($cid, $tags, $beforeCount = true, $afterCount = true)
@@ -651,7 +650,8 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      * @access public
      * @param integer $cid 内容id
      * @param array $categories 分类id的集合数组
-     * @param boolean $count 是否参与计数
+     * @param boolean $beforeCount 是否参与计数
+     * @param boolean $afterCount 是否参与计数
      * @return integer
      */
     public function setCategories($cid, array $categories, $beforeCount = true, $afterCount = true)
@@ -762,7 +762,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             $this->pluginHandle()->finishSave($contents, $this);
 
             if ($this->request->isAjax()) {
-                $created = new Typecho_Date($this->options->gmtTime);
+                $created = new Typecho_Date();
                 $this->response->throwJson(array(
                     'success'   =>  1,
                     'time'      =>  $created->format('H:i:s A'),

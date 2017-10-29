@@ -64,7 +64,7 @@ class Widget_Register extends Widget_Abstract_Users implements Widget_Interface_
             'mail'      =>  $this->request->mail,
             'screenName'=>  $this->request->name,
             'password'  =>  $hasher->HashPassword($generatedPassword),
-            'created'   =>  $this->options->gmtTime,
+            'created'   =>  $this->options->time,
             'group'     =>  'subscriber'
         );
 
