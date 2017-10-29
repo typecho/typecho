@@ -101,7 +101,7 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
         _t('允许访问者注册到你的网站, 默认的注册用户不享有任何写入权限.'));
         $form->addInput($allowRegister);
  
-        /** 注册 */
+        /** XMLRPC */
         $allowXmlRpc = new Typecho_Widget_Helper_Form_Element_Radio('allowXmlRpc', array('0' => _t('关闭'), '1' => _t('仅关闭 Pingback 接口'), '2' => _t('打开')), $this->options->allowXmlRpc, _t('XMLRPC 接口'));
         $form->addInput($allowXmlRpc);
 
