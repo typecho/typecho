@@ -370,9 +370,19 @@ class Widget_Options extends Typecho_Widget
         
         $this->stack[] = &$this->row;
 
+        /** 动态获取根目录 */
+        $this->rootUrl = defined('__TYPECHO_ROOT_URL__') ? __TYPECHO_ROOT_URL__ : $this->request->getRequestRoot();
+        if (defined('__TYPECHO_ADMIN__')) {
+            /** 识别在admin目录中的情况 */
+            $adminDir = '/' . trim(defined('__TYPECHO_ADMIN_DIR__') ? __TYPECHO_ADMIN_DIR__ : '/admin/', '/');
+            $this->rootUrl = substr($this->rootUrl, 0, - strlen($adminDir));
+        }
+
         /** 初始化站点信息 */
         if (defined('__TYPECHO_SITE_URL__')) {
             $this->siteUrl = __TYPECHO_SITE_URL__;
+        } else if (defined('__TYPECHO_DYNAMIC_SITE_URL__') && __TYPECHO_DYNAMIC_SITE_URL__) {
+            $this->siteUrl = $this->rootUrl;
         }
 
         $this->originalSiteUrl = $this->siteUrl;
@@ -381,14 +391,6 @@ class Widget_Options extends Typecho_Widget
 
         /** 动态判断皮肤目录 */
         $this->theme = is_dir($this->themeFile($this->theme)) ? $this->theme : 'default';
-
-        /** 动态获取根目录 */
-        $this->rootUrl = $this->request->getRequestRoot();
-        if (defined('__TYPECHO_ADMIN__')) {
-            /** 识别在admin目录中的情况 */
-            $adminDir = '/' . trim(defined('__TYPECHO_ADMIN_DIR__') ? __TYPECHO_ADMIN_DIR__ : '/admin/', '/');
-            $this->rootUrl = substr($this->rootUrl, 0, - strlen($adminDir));
-        }
 
         /** 增加对SSL连接的支持 */
         if ($this->request->isSecure() && 0 === strpos($this->siteUrl, 'http://')) {
@@ -451,7 +453,7 @@ class Widget_Options extends Typecho_Widget
      * @access public
      * @param string $path 子路径
      * @param string $theme 模版名称
-     * @return void
+     * @return string
      */
     public function themeUrl($path = NULL, $theme = NULL)
     {
