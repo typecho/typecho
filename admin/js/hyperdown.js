@@ -444,18 +444,37 @@
             continue;
           }
         }
-        if (this.html) {
-          if (!!(matches = line.match(/^(\s*)\$\$(\s*)$/))) {
-            if (this.isBlock('math')) {
-              this.setBlock(key).endBlock();
-            } else {
-              this.startBlock('math', key);
-            }
-            continue;
-          } else if (this.isBlock('math')) {
-            this.setBlock(key);
-            continue;
+        if (!!(matches = line.match(/^(\s*)\$\$(\s*)$/))) {
+          if (this.isBlock('math')) {
+            this.setBlock(key).endBlock();
+          } else {
+            this.startBlock('math', key);
           }
+          continue;
+        } else if (this.isBlock('math')) {
+          this.setBlock(key);
+          continue;
+        }
+        if (!!(line.match(/^ {4}/))) {
+          emptyCount = 0;
+          if ((this.isBlock('pre')) || this.isBlock('list')) {
+            this.setBlock(key);
+          } else {
+            this.startBlock('pre', key);
+          }
+          continue;
+        } else if (this.isBlock('pre')) {
+          if (line.match(/^\s*$/)) {
+            if (emptyCount > 0) {
+              this.startBlock('normal', key);
+            } else {
+              this.setBlock(key);
+            }
+            emptyCount += 1;
+          } else {
+            this.startBlock('normal', key);
+          }
+          continue;
         }
         if (!!(matches = line.match(new RegExp("^\\s*<(" + special + ")(\\s+[^>]*)?>", 'i')))) {
           tag = matches[1].toLowerCase();
@@ -474,14 +493,6 @@
           continue;
         }
         switch (true) {
-          case !!(line.match(/^ {4}/)):
-            emptyCount = 0;
-            if ((this.isBlock('pre')) || this.isBlock('list')) {
-              this.setBlock(key);
-            } else {
-              this.startBlock('pre', key);
-            }
-            break;
           case !!(matches = line.match(/^(\s*)((?:[0-9a-z]+\.)|\-|\+|\*)\s+/)):
             space = matches[1].length;
             emptyCount = 0;
@@ -506,7 +517,7 @@
               this.startBlock('quote', key);
             }
             break;
-          case !!(matches = line.match(/^((?:(?:(?:[ :]*\-[ :]*)+(?:\||\+))|(?:(?:\||\+)(?:[ :]*\-[ :]*)+)|(?:(?:[ :]*\-[ :]*)+(?:\||\+)(?:[ :]*\-[ :]*)+))+)$/)):
+          case !!(matches = line.match(/^((?:(?:(?:[ :]*\-[ :]*)+(?:\||\+))|(?:(?:\||\+)(?:[ :]*\-[ :]*)+(?:\||\+))|(?:(?:\||\+)(?:[ :]*\-[ :]*)+))+)$/)):
             if (this.isBlock('table')) {
               block[3][0].push(block[3][2]);
               block[3][2] += 1;
@@ -583,17 +594,6 @@
               if (0 <= line.indexOf('|')) {
                 block[3][2] += 1;
                 this.setBlock(key, block[3]);
-              } else {
-                this.startBlock('normal', key);
-              }
-            } else if (this.isBlock('pre')) {
-              if (line.match(/^\s*$/)) {
-                if (emptyCount > 0) {
-                  this.startBlock('normal', key);
-                } else {
-                  this.setBlock(key);
-                }
-                emptyCount += 1;
               } else {
                 this.startBlock('normal', key);
               }
