@@ -1086,8 +1086,7 @@ Typecho_Date::setTimezoneOffset($options->timezone);
      */
     public function v0_9r13_12_6($db, $options)
     {
-        $frontArchive = $db->fetchRow($db->select()->from('table.options')->where('name = ?', 'frontArchive'));
-        if (empty($frontArchive)) {
+        if (!isset($options->frontArchive)) {
             $db->query($db->insert('table.options')
                 ->rows(array('name' => 'frontArchive', 'user' => 0, 'value' => 0)));
         }
@@ -1103,8 +1102,7 @@ Typecho_Date::setTimezoneOffset($options->timezone);
      */
     public function v0_9r13_12_20($db, $options)
     {
-        $commentsWhitelist = $db->fetchRow($db->select()->from('table.options')->where('name = ?', 'commentsWhitelist'));
-        if (empty($commentsWhitelist)) {
+        if (!isset($options->commentsWhitelist)) {
             $db->query($db->insert('table.options')
                 ->rows(array('name' => 'commentsWhitelist', 'user' => 0, 'value' => 0)));
         }
@@ -1175,8 +1173,10 @@ Typecho_Date::setTimezoneOffset($options->timezone);
      */
     public function v0_9r14_3_14($db, $options)
     {
-        $db->query($db->insert('table.options')
-            ->rows(array('name' => 'secret', 'user' => 0, 'value' => Typecho_Common::randString(32, true))));
+        if (!isset($options->secret)) {
+            $db->query($db->insert('table.options')
+                ->rows(array('name' => 'secret', 'user' => 0, 'value' => Typecho_Common::randString(32, true))));
+        }
     }
 
     /**
@@ -1189,8 +1189,10 @@ Typecho_Date::setTimezoneOffset($options->timezone);
      */
     public function v1_0r14_9_2($db, $options)
     {
-        $db->query($db->insert('table.options')
-            ->rows(array('name' => 'lang', 'user' => 0, 'value' => 'zh_CN')));
+        if (!isset($options->lang)) {
+            $db->query($db->insert('table.options')
+                ->rows(array('name' => 'lang', 'user' => 0, 'value' => 'zh_CN')));
+        }
     }
 
     /**
@@ -1203,8 +1205,10 @@ Typecho_Date::setTimezoneOffset($options->timezone);
      */
     public function v1_0r14_10_10($db, $options)
     {
-        $db->query($db->insert('table.options')
-            ->rows(array('name' => 'commentsAntiSpam', 'user' => 0, 'value' => 1)));
+        if (!isset($options->commentsAntiSpam)) {
+            $db->query($db->insert('table.options')
+                ->rows(array('name' => 'commentsAntiSpam', 'user' => 0, 'value' => 1)));
+        }
     }
 
     /**
@@ -1219,8 +1223,10 @@ Typecho_Date::setTimezoneOffset($options->timezone);
     public static function v1_1r17_4_24($db, $options)
     {
         // 增加markdown
-        $db->query($db->insert('table.options')
-            ->rows(array('name' => 'xmlrpcMarkdown', 'user' => 0, 'value' => 0)));
+        if (!isset($options->xmlrpcMarkdown)) {
+            $db->query($db->insert('table.options')
+                ->rows(array('name' => 'xmlrpcMarkdown', 'user' => 0, 'value' => 0)));
+        }
     }
 
     /**
@@ -1235,8 +1241,10 @@ Typecho_Date::setTimezoneOffset($options->timezone);
     public static function v1_1r17_10_24($db, $options)
     {
         // 增加installed
-        $db->query($db->insert('table.options')
-            ->rows(array('name' => 'installed', 'user' => 0, 'value' => 1)));
+        if (!isset($options->installed)) {
+            $db->query($db->insert('table.options')
+                ->rows(array('name' => 'installed', 'user' => 0, 'value' => 1)));
+        }
     }
 
     /**
@@ -1250,9 +1258,11 @@ Typecho_Date::setTimezoneOffset($options->timezone);
      */
     public static function v1_1r17_10_27($db, $options)
     {
-        // 增加installed
-        $db->query($db->insert('table.options')
-            ->rows(array('name' => 'allowXmlRpc', 'user' => 0, 'value' => 2)));
+        // 增加xmlRpc开关
+        if (!isset($options->allowXmlRpc)) {
+            $db->query($db->insert('table.options')
+                ->rows(array('name' => 'allowXmlRpc', 'user' => 0, 'value' => 2)));
+        }
     }
 }
 
