@@ -543,6 +543,12 @@ EOF;
                 if ($attrLength > 0 && "/" == trim($startTags[2][$key][$attrLength - 1])) {
                     continue;
                 }
+
+                // 白名单
+                if (preg_match("/^(area|base|br|col|embed|hr|img|input|keygen|link|meta|param|source|track|wbr)$/i", $tag)) {
+                    continue;
+                }
+
                 if (!empty($closeTags[1]) && $closeTagsIsArray) {
                     if (false !== ($index = array_search($tag, $closeTags[1]))) {
                         unset($closeTags[1][$index]);
