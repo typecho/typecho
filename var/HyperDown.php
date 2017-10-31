@@ -601,7 +601,7 @@ class HyperDown
 
                 if ($this->isBlock('pre') || $this->isBlock('list')) {
                     $this->setBlock($key);
-                } else if ($this->isBlock('normal')) {
+                } else {
                     $this->startBlock('pre', $key);
                 }
 
@@ -674,8 +674,10 @@ class HyperDown
                     break;
 
                 // block quote
-                case preg_match("/^\s*>/", $line):
-                    if ($this->isBlock('quote')) {
+                case preg_match("/^(\s*)>/", $line, $matches):
+                    if ($this->isBlock('list') && strlen($matches[1]) > 0) {
+                        $this->setBlock($key);
+                    } else if ($this->isBlock('quote')) {
                         $this->setBlock($key);
                     } else {
                         $this->startBlock('quote', $key);
@@ -758,14 +760,20 @@ class HyperDown
                 // normal
                 default:
                     if ($this->isBlock('list')) {
-                        if (preg_match("/^(\s*)/", $line)) { // empty line
-                            if ($emptyCount > 0) {
+                        if (preg_match("/^(\s*)/", $line, $matches)) { // empty line
+                            $indent = strlen($matches[1]) > 0;
+
+                            if ($emptyCount > 0 && !$indent) {
                                 $this->startBlock('normal', $key);
                             } else {
                                 $this->setBlock($key);
                             }
 
-                            $emptyCount ++;
+                            if ($indent) {
+                                $emptyCount = 0;
+                            } else {
+                                $emptyCount ++;
+                            }
                         } else if ($emptyCount == 0) {
                             $this->setBlock($key);
                         } else {
@@ -786,15 +794,7 @@ class HyperDown
                             $this->startBlock('normal', $key);
                         }
                     } else if ($this->isBlock('quote')) {
-                        if (preg_match("/^(\s*)/", $line)) { // empty line
-                            if ($emptyCount > 0) {
-                                $this->startBlock('normal', $key);
-                            } else {
-                                $this->setBlock($key);
-                            }
-
-                            $emptyCount ++;
-                        } else if ($emptyCount == 0) {
+                        if (!preg_match("/^(\s*)$/", $line)) { // empty line
                             $this->setBlock($key);
                         } else {
                             $this->startBlock('normal', $key);
@@ -993,6 +993,8 @@ class HyperDown
     {
         $html = '';
         $minSpace = 99999;
+        $secondMinSpace = 99999;
+        $found = false;
         $rows = array();
 
         // count levels
@@ -1005,17 +1007,18 @@ class HyperDown
                 $rows[] = array($space, $type, $line, $matches[4]);
             } else {
                 $rows[] = $line;
+
+                if (preg_match("/^(\s*)/", $line, $matches)) {
+                    $space = strlen($matches[1]);
+                    
+                    if ($space > 0) {
+                        $secondMinSpace = min($space, $secondMinSpace);
+                        $found = true;
+                    }
+                }
             }
         }
 
-        $found = false;
-        $secondMinSpace = 99999;
-        foreach ($rows as $row) {
-            if (is_array($row) && $row[0] != $minSpace) {
-                $secondMinSpace = min($secondMinSpace, $row[0]);
-                $found = true;
-            }
-        }
         $secondMinSpace = $found ? $secondMinSpace : $minSpace;
 
         $lastType = '';

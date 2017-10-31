@@ -393,7 +393,7 @@
     };
 
     Parser.prototype.parseBlock = function(text, lines) {
-      var align, aligns, block, emptyCount, head, isAfterList, j, key, l, len, len1, len2, line, m, matches, num, ref, row, rows, space, special, tag;
+      var align, aligns, block, emptyCount, head, indent, isAfterList, j, key, l, len, len1, len2, line, m, matches, num, ref, row, rows, space, special, tag;
       ref = text.split("\n");
       for (j = 0, len = ref.length; j < len; j++) {
         line = ref[j];
@@ -510,8 +510,10 @@
             this.definitions[matches[1]] = this.cleanUrl(matches[2]);
             this.startBlock('definition', key).endBlock();
             break;
-          case !!(line.match(/^\s*>/)):
-            if (this.isBlock('quote')) {
+          case !!(matches = line.match(/^(\s*)>/)):
+            if ((this.isBlock('list')) && matches[1].length > 0) {
+              this.setBlock(key);
+            } else if (this.isBlock('quote')) {
               this.setBlock(key);
             } else {
               this.startBlock('quote', key);
@@ -571,13 +573,18 @@
             break;
           default:
             if (this.isBlock('list')) {
-              if (line.match(/^(\s*)/)) {
-                if (emptyCount > 0) {
+              if (!!(matches = line.match(/^(\s*)/))) {
+                indent = matches[1].length > 0;
+                if (emptyCount > 0 && !indent) {
                   this.startBlock('normal', key);
                 } else {
                   this.setBlock(key);
                 }
-                emptyCount += 1;
+                if (indent) {
+                  emptyCount = 0;
+                } else {
+                  emptyCount += 1;
+                }
               } else if (emptyCount === 0) {
                 this.setBlock(key);
               } else {
@@ -598,14 +605,7 @@
                 this.startBlock('normal', key);
               }
             } else if (this.isBlock('quote')) {
-              if (line.match(/^(\s*)/)) {
-                if (emptyCount > 0) {
-                  this.startBlock('normal', key);
-                } else {
-                  this.setBlock(key);
-                }
-                emptyCount += 1;
-              } else if (emptyCount === 0) {
+              if (!line.match(/^(\s*)$/)) {
                 this.setBlock(key);
               } else {
                 this.startBlock('normal', key);
@@ -734,9 +734,11 @@
     };
 
     Parser.prototype.parseList = function(lines) {
-      var found, html, j, key, l, lastType, leftLines, len, len1, len2, line, m, matches, minSpace, row, rows, secondMinSpace, space, text, type;
+      var found, html, j, key, l, lastType, leftLines, len, len1, line, matches, minSpace, row, rows, secondMinSpace, space, text, type;
       html = '';
       minSpace = 99999;
+      secondMinSpace = 99999;
+      found = false;
       rows = [];
       for (key = j = 0, len = lines.length; j < len; key = ++j) {
         line = lines[key];
@@ -747,22 +749,20 @@
           rows.push([space, type, line, matches[4]]);
         } else {
           rows.push(line);
-        }
-      }
-      found = false;
-      secondMinSpace = 99999;
-      for (l = 0, len1 = rows.length; l < len1; l++) {
-        row = rows[l];
-        if (row instanceof Array && row[0] !== minSpace) {
-          secondMinSpace = Math.min(secondMinSpace, row[0]);
-          found = true;
+          if (!!(matches = line.match(/^(\s*)/))) {
+            space = matches[1].length;
+            if (space > 0) {
+              secondMinSpace = Math.min(space, secondMinSpace);
+              found = true;
+            }
+          }
         }
       }
       secondMinSpace = found ? secondMinSpace : minSpace;
       lastType = '';
       leftLines = [];
-      for (m = 0, len2 = rows.length; m < len2; m++) {
-        row = rows[m];
+      for (l = 0, len1 = rows.length; l < len1; l++) {
+        row = rows[l];
         if (row instanceof Array) {
           space = row[0], type = row[1], line = row[2], text = row[3];
           if (space !== minSpace) {
