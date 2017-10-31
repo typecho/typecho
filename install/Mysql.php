@@ -7,8 +7,6 @@ if (defined('SAE_MYSQL_DB') && SAE_MYSQL_DB != "app_") {
     $engine = 'SAE';
 } else if (!!getenv('HTTP_BAE_ENV_ADDR_SQL_IP')) {
     $engine = 'BAE';
-} else if (ini_get('acl.app_id') && class_exists('Alibaba')) {
-    $engine = 'ACE';
 } else if (isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false) {
     $engine = 'GAE';
 }
@@ -71,30 +69,6 @@ $baeDbPassword = "getenv('HTTP_BAE_ENV_SK')";
 )" />
     <input type="hidden" name="dbHost" value="<?php echo getenv('HTTP_BAE_ENV_ADDR_SQL_IP'); ?>" />
     <input type="hidden" name="dbPort" value="<?php echo getenv('HTTP_BAE_ENV_ADDR_SQL_PORT'); ?>" />
-<?php elseif ('ACE' == $engine): ?>
-<!-- ACE -->
-
-    <li>
-        <label class="typecho-label" for="dbHost"><?php _e('数据库地址'); ?></label>
-        <input type="text" class="text" name="dbHost" id="dbHost" value="<?php _v('dbHost', 'localhost'); ?>"/>
-        <p class="description"><?php _e('您可以访问 RDS 控制台获取详细信息'); ?></p>
-    </li>
-    <li>
-        <label class="typecho-label" for="dbPort"><?php _e('数据库端口'); ?></label>
-        <input type="text" class="text" name="dbPort" id="dbPort" value="<?php _v('dbPort', 3306); ?>"/>
-    </li>
-    <li>
-        <label class="typecho-label" for="dbUser"><?php _e('数据库用户名'); ?></label>
-        <input type="text" class="text" name="dbUser" id="dbUser" value="<?php _v('dbUser'); ?>" />
-    </li>
-    <li>
-        <label class="typecho-label" for="dbPassword"><?php _e('数据库密码'); ?></label>
-        <input type="password" class="text" name="dbPassword" id="dbPassword" value="<?php _v('dbPassword'); ?>" />
-    </li>
-    <li>
-        <label class="typecho-label" for="dbDatabase"><?php _e('数据库名'); ?></label>
-        <input type="text" class="text" name="dbDatabase" id="dbDatabase" value="<?php _v('dbDatabase', 'typecho'); ?>" />
-    </li>
 
 <?php elseif ('GAE' == $engine): ?>
 <!-- GAE -->
