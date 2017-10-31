@@ -410,7 +410,6 @@ EOF;
         return !empty($_SERVER['HTTP_APPNAME'])                     // SAE
             || !!getenv('HTTP_BAE_ENV_APPID')                       // BAE
             || !!getenv('HTTP_BAE_LOGID')                           // BAE 3.0
-            || (ini_get('acl.app_id') && class_exists('Alibaba'))   // ACE
             || (isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false) // GAE
             ;
     }
