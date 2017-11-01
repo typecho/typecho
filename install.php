@@ -198,7 +198,7 @@ if ('zh_CN' != $lang) {
 }
 
 Typecho_Cookie::set('__typecho_lang', $lang);
-
+ob_start();
 ?><!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head lang="zh-CN">
@@ -681,4 +681,5 @@ Typecho_Db::set(\$db);
 <?php
 include 'admin/copyright.php';
 include 'admin/footer.php';
+ob_end_flush();
 ?>
