@@ -1753,7 +1753,7 @@ a.operate-reply {
     display: block;
     margin: 2em 0;
     background: #FFF9E8;
-    color: #cf9900;
+    color: #ce9900;
     font-size: .85714em;
     text-align: center;
     content: "- more -"; }
@@ -1767,7 +1767,6 @@ a.operate-reply {
     word-break: break-all; }
   /* line 160, ../scss/components/_editor.scss */
   #wmd-preview table th {
-    text-align: left;
     background: #EEE; }
 
 /* 上传面板动画效果 */
@@ -1792,7 +1791,7 @@ a.operate-reply {
   100% {
     right: -1px; } }
 /* 编辑器全屏 */
-/* line 189, ../scss/components/_editor.scss */
+/* line 188, ../scss/components/_editor.scss */
 .fullscreen #wmd-button-bar, .fullscreen #text, .fullscreen #wmd-preview, .fullscreen .submit {
   position: absolute;
   top: 0;
@@ -1805,20 +1804,20 @@ a.operate-reply {
   -moz-border-radius: 0;
   -webkit-border-radius: 0;
   border-radius: 0; }
-/* line 199, ../scss/components/_editor.scss */
+/* line 198, ../scss/components/_editor.scss */
 .fullscreen #wmd-button-bar {
   left: 0;
   padding: 13px 20px;
   border-bottom: 1px solid #F3F3F0;
   z-index: 1000; }
-/* line 205, ../scss/components/_editor.scss */
+/* line 204, ../scss/components/_editor.scss */
 .fullscreen #text {
   top: 53px;
   left: 0;
   padding: 20px;
   border: none;
   outline: none; }
-/* line 212, ../scss/components/_editor.scss */
+/* line 211, ../scss/components/_editor.scss */
 .fullscreen #wmd-preview {
   top: 53px;
   right: 0;
@@ -1828,21 +1827,21 @@ a.operate-reply {
   border-left: 1px solid #F3F3F0;
   background: #F6F6F3;
   overflow: auto; }
-  /* line 221, ../scss/components/_editor.scss */
+  /* line 220, ../scss/components/_editor.scss */
   .fullscreen #wmd-preview code, .fullscreen #wmd-preview pre {
     background: #F0F0EC; }
-/* line 225, ../scss/components/_editor.scss */
+/* line 224, ../scss/components/_editor.scss */
 .fullscreen .submit {
   right: 0;
   margin: 0;
   padding: 10px 20px;
   border-bottom: 1px solid #F3F3F0; }
-/* line 231, ../scss/components/_editor.scss */
+/* line 230, ../scss/components/_editor.scss */
 .fullscreen #upload-panel {
   -webkit-box-shadow: 0 4px 16px rgba(0, 0, 0, 0.225);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.225);
   border-style: solid; }
-/* line 238, ../scss/components/_editor.scss */
+/* line 237, ../scss/components/_editor.scss */
 .fullscreen #tab-files {
   position: absolute;
   top: 52px;
@@ -1853,7 +1852,7 @@ a.operate-reply {
   -moz-animation: fullscreen-upload 0.5s;
   -webkit-animation: fullscreen-upload 0.5s;
   -o-animation: fullscreen-upload 0.5s; }
-/* line 251, ../scss/components/_editor.scss */
+/* line 250, ../scss/components/_editor.scss */
 .fullscreen .wmd-edittab,
 .fullscreen .typecho-post-option,
 .fullscreen .title,
@@ -1862,10 +1861,10 @@ a.operate-reply {
 .fullscreen .typecho-head-nav,
 .fullscreen .message {
   display: none; }
-/* line 258, ../scss/components/_editor.scss */
+/* line 257, ../scss/components/_editor.scss */
 .fullscreen .wmd-hidetab {
   display: block; }
-/* line 259, ../scss/components/_editor.scss */
+/* line 258, ../scss/components/_editor.scss */
 .fullscreen .wmd-visualhide,
 .fullscreen #btn-fullscreen-upload {
   visibility: visible; }
