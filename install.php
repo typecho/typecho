@@ -52,6 +52,8 @@ require_once 'Typecho/Router.php';
 /** 程序初始化 */
 Typecho_Common::init();
 
+ob_start();
+
 else:
 
     require_once dirname(__FILE__) . '/config.inc.php';
@@ -198,7 +200,6 @@ if ('zh_CN' != $lang) {
 }
 
 Typecho_Cookie::set('__typecho_lang', $lang);
-ob_start();
 ?><!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head lang="zh-CN">
@@ -681,5 +682,4 @@ Typecho_Db::set(\$db);
 <?php
 include 'admin/copyright.php';
 include 'admin/footer.php';
-ob_end_flush();
 ?>

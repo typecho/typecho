@@ -6,7 +6,7 @@ php:
   - 5.4
   - 7.0
   - 7.1
-  - nightly
+  - 7.2
 
 script: cd ./tools/ && set -e && make test
 
