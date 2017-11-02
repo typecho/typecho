@@ -1008,10 +1008,14 @@ a.operate-reply {
 .comment-edit label {
   display: block; }
 
+/* line 563, ../scss/style.scss */
+.comment-content img {
+  max-width: 100%; }
+
 /**
 * 评论回复
 */
-/* line 567, ../scss/style.scss */
+/* line 571, ../scss/style.scss */
 #typecho-respond {
   padding: 10px;
   display: none; }
@@ -1019,55 +1023,55 @@ a.operate-reply {
 /**
 * 模板列表
 */
-/* line 585, ../scss/style.scss */
+/* line 589, ../scss/style.scss */
 .typecho-theme-list img {
   margin: 1em 0;
   max-width: 100%;
   max-height: 240px; }
 
-/* line 591, ../scss/style.scss */
+/* line 595, ../scss/style.scss */
 .typecho-theme-list cite {
   font-style: normal;
   color: #999; }
 
-/* line 596, ../scss/style.scss */
+/* line 600, ../scss/style.scss */
 .typecho-theme-list tbody tr.current td {
   background-color: #FFF9E8; }
 
 /**
 * 后台配置项
 */
-/* line 605, ../scss/style.scss */
+/* line 609, ../scss/style.scss */
 .typecho-page-main .typecho-option input.text {
   width: 100%; }
 
-/* line 609, ../scss/style.scss */
+/* line 613, ../scss/style.scss */
 .typecho-page-main .typecho-option input.num {
   width: 40px; }
 
-/* line 613, ../scss/style.scss */
+/* line 617, ../scss/style.scss */
 .typecho-page-main .typecho-option textarea {
   width: 100%;
   height: 100px; }
 
-/* line 618, ../scss/style.scss */
+/* line 622, ../scss/style.scss */
 .typecho-page-main .typecho-option .multiline {
   display: block;
   margin: .3em 0; }
-  /* line 621, ../scss/style.scss */
+  /* line 625, ../scss/style.scss */
   .typecho-page-main .typecho-option .multiline.hidden {
     display: none; }
 
 /**
 * 编辑模板
 */
-/* line 630, ../scss/style.scss */
+/* line 634, ../scss/style.scss */
 .typecho-select-theme {
   height: 25px;
   line-height: 25px;
   margin: 15px 0px; }
 
-/* line 636, ../scss/style.scss */
+/* line 640, ../scss/style.scss */
 .typecho-select-theme h5 {
   color: #E47E00;
   font-weight: bold;
@@ -1076,32 +1080,32 @@ a.operate-reply {
   width: 120px;
   margin-right: 10px; }
 
-/* line 645, ../scss/style.scss */
+/* line 649, ../scss/style.scss */
 .typecho-select-theme select {
   width: 150px; }
 
 /**
 * 编辑模板（编辑详情）
 */
-/* line 653, ../scss/style.scss */
+/* line 657, ../scss/style.scss */
 .typecho-edit-theme ul {
   list-style: none;
   margin: 0;
   padding: 0; }
 
-/* line 659, ../scss/style.scss */
+/* line 663, ../scss/style.scss */
 .typecho-edit-theme li {
   padding: 3px 10px; }
 
-/* line 663, ../scss/style.scss */
+/* line 667, ../scss/style.scss */
 .typecho-edit-theme .current {
   background-color: #E6E6E3; }
 
-/* line 666, ../scss/style.scss */
+/* line 670, ../scss/style.scss */
 .typecho-edit-theme .current a {
   color: #444; }
 
-/* line 670, ../scss/style.scss */
+/* line 674, ../scss/style.scss */
 .typecho-edit-theme textarea {
   font-size: .92857em;
   line-height: 1.2;
@@ -1110,131 +1114,131 @@ a.operate-reply {
 /**
 * 编写页面
 */
-/* line 680, ../scss/style.scss */
+/* line 684, ../scss/style.scss */
 .typecho-post-area .edit-draft-notice {
   color: #999;
   font-size: .92857em; }
 
-/* line 684, ../scss/style.scss */
+/* line 688, ../scss/style.scss */
 .typecho-post-area .edit-draft-notice a {
   color: #B94A48; }
 
-/* line 686, ../scss/style.scss */
+/* line 690, ../scss/style.scss */
 .typecho-post-area .typecho-label {
   display: block;
   margin: 1em 0 -0.5em;
   font-weight: bold; }
 
-/* line 692, ../scss/style.scss */
+/* line 696, ../scss/style.scss */
 .typecho-post-area #auto-save-message {
   display: block;
   margin-top: 0.5em;
   color: #999;
   font-size: .92857em; }
 
-/* line 699, ../scss/style.scss */
+/* line 703, ../scss/style.scss */
 .typecho-post-area .submit .right button {
   margin-left: 5px; }
 
-/* line 703, ../scss/style.scss */
+/* line 707, ../scss/style.scss */
 .typecho-post-area .right {
   float: right;
   padding-left: 24px; }
 
-/* line 708, ../scss/style.scss */
+/* line 712, ../scss/style.scss */
 .typecho-post-area .left {
   float: left; }
 
-/* line 715, ../scss/style.scss */
+/* line 719, ../scss/style.scss */
 .typecho-post-area .out-date {
   border: 1px solid #D3DBB3;
   padding: 3px;
   background: #fff; }
 
-/* line 721, ../scss/style.scss */
+/* line 725, ../scss/style.scss */
 .typecho-post-area input.title {
   font-size: 1.17em;
   font-weight: bold; }
 
-/* line 725, ../scss/style.scss */
+/* line 729, ../scss/style.scss */
 .typecho-post-area .url-slug {
   margin-top: -0.5em;
   color: #AAA;
   font-size: .92857em;
   word-break: break-word; }
 
-/* line 731, ../scss/style.scss */
+/* line 735, ../scss/style.scss */
 .typecho-post-area #slug {
   padding: 2px;
   border: none;
   background: #FFFBCC;
   color: #666; }
 
-/* line 738, ../scss/style.scss */
+/* line 742, ../scss/style.scss */
 .typecho-post-area #text {
   resize: none; }
 
-/* line 742, ../scss/style.scss */
+/* line 746, ../scss/style.scss */
 #advance-panel {
   display: none; }
 
-/* line 746, ../scss/style.scss */
+/* line 750, ../scss/style.scss */
 #custom-field {
   margin: 1em 0;
   padding: 10px 15px;
   background: #FFF; }
-  /* line 751, ../scss/style.scss */
+  /* line 755, ../scss/style.scss */
   #custom-field.fold table, #custom-field.fold .description {
     display: none; }
-  /* line 754, ../scss/style.scss */
+  /* line 758, ../scss/style.scss */
   #custom-field .description {
     margin-top: 10px;
     text-align: right; }
-    /* line 757, ../scss/style.scss */
+    /* line 761, ../scss/style.scss */
     #custom-field .description button {
       float: left; }
-  /* line 762, ../scss/style.scss */
+  /* line 766, ../scss/style.scss */
   #custom-field p.description {
     text-align: left; }
-  /* line 766, ../scss/style.scss */
+  /* line 770, ../scss/style.scss */
   #custom-field .typecho-label {
     margin: 0; }
-    /* line 768, ../scss/style.scss */
+    /* line 772, ../scss/style.scss */
     #custom-field .typecho-label a {
       display: block;
       color: #444; }
-      /* line 771, ../scss/style.scss */
+      /* line 775, ../scss/style.scss */
       #custom-field .typecho-label a:hover {
         color: #467B96;
         text-decoration: none; }
-  /* line 777, ../scss/style.scss */
+  /* line 781, ../scss/style.scss */
   #custom-field table {
     margin-top: 10px; }
-  /* line 780, ../scss/style.scss */
+  /* line 784, ../scss/style.scss */
   #custom-field td {
     padding: 10px 5px;
     font-size: .92857em;
     border-bottom: 1px solid #F0F0EC;
     vertical-align: top; }
-    /* line 785, ../scss/style.scss */
+    /* line 789, ../scss/style.scss */
     #custom-field td label {
       font-size: 1em;
       font-weight: normal; }
-  /* line 790, ../scss/style.scss */
+  /* line 794, ../scss/style.scss */
   #custom-field select {
     height: 27px; }
 
-/* line 793, ../scss/style.scss */
+/* line 797, ../scss/style.scss */
 .typecho-post-area .is-draft {
   background: #FFF1A8; }
 
-/* line 797, ../scss/style.scss */
+/* line 801, ../scss/style.scss */
 .typecho-post-option .description {
   margin-top: -0.5em;
   color: #999;
   font-size: .92857em; }
 
-/* line 803, ../scss/style.scss */
+/* line 807, ../scss/style.scss */
 .category-option ul {
   list-style: none;
   border: 1px solid #D9D9D6;
@@ -1244,11 +1248,11 @@ a.operate-reply {
   background-color: #FFF;
   border-radius: 2px; }
 
-/* line 812, ../scss/style.scss */
+/* line 816, ../scss/style.scss */
 .category-option li {
   margin: 3px 0; }
 
-/* line 816, ../scss/style.scss */
+/* line 820, ../scss/style.scss */
 .visibility-option ul,
 .allow-option ul {
   list-style: none;
@@ -1257,61 +1261,61 @@ a.operate-reply {
 /**
 * 标签列表
 */
-/* line 827, ../scss/style.scss */
+/* line 831, ../scss/style.scss */
 .typecho-page-main ul.tag-list {
   list-style: none;
   margin: 0;
   padding: 20px;
   background-color: #FFF; }
 
-/* line 834, ../scss/style.scss */
+/* line 838, ../scss/style.scss */
 .typecho-page-main ul.tag-list li {
   display: inline-block;
   margin: 0 0 5px 0;
   padding: 5px 5px 5px 10px;
   cursor: pointer; }
 
-/* line 840, ../scss/style.scss */
+/* line 844, ../scss/style.scss */
 .typecho-page-main ul.tag-list li:hover {
   background-color: #E9E9E6; }
 
-/* line 844, ../scss/style.scss */
+/* line 848, ../scss/style.scss */
 .typecho-page-main ul.tag-list li input {
   display: none; }
 
-/* line 849, ../scss/style.scss */
+/* line 853, ../scss/style.scss */
 .typecho-page-main ul.tag-list li.checked {
   background-color: #FFFBCC; }
 
-/* line 853, ../scss/style.scss */
+/* line 857, ../scss/style.scss */
 .typecho-page-main ul.tag-list li.size-5 {
   font-size: 1em; }
 
-/* line 854, ../scss/style.scss */
+/* line 858, ../scss/style.scss */
 .typecho-page-main ul.tag-list li.size-10 {
   font-size: 1.2em; }
 
-/* line 855, ../scss/style.scss */
+/* line 859, ../scss/style.scss */
 .typecho-page-main ul.tag-list li.size-20 {
   font-size: 1.4em; }
 
-/* line 856, ../scss/style.scss */
+/* line 860, ../scss/style.scss */
 .typecho-page-main ul.tag-list li.size-30 {
   font-size: 1.6em; }
 
-/* line 857, ../scss/style.scss */
+/* line 861, ../scss/style.scss */
 .typecho-page-main ul.tag-list li.size-0 {
   font-size: 1.8em; }
 
-/* line 859, ../scss/style.scss */
+/* line 863, ../scss/style.scss */
 .typecho-page-main .tag-edit-link {
   visibility: hidden; }
 
-/* line 860, ../scss/style.scss */
+/* line 864, ../scss/style.scss */
 .typecho-page-main li:hover .tag-edit-link {
   visibility: visible; }
 
-/* line 862, ../scss/style.scss */
+/* line 866, ../scss/style.scss */
 .typecho-attachment-photo {
   border: 1px solid #E6E6E3;
   max-width: 100%; }
@@ -1319,22 +1323,22 @@ a.operate-reply {
 /*
 * Upload
 */
-/* line 871, ../scss/style.scss */
+/* line 875, ../scss/style.scss */
 #upload-panel {
   border: 1px dashed #D9D9D6;
   background-color: #FFF;
   color: #999;
   font-size: .92857em; }
-  /* line 876, ../scss/style.scss */
+  /* line 880, ../scss/style.scss */
   #upload-panel.drag {
     background-color: #FFFBCC; }
 
-/* line 881, ../scss/style.scss */
+/* line 885, ../scss/style.scss */
 .upload-area {
   padding: 15px;
   text-align: center; }
 
-/* line 886, ../scss/style.scss */
+/* line 890, ../scss/style.scss */
 #file-list {
   list-style: none;
   margin: 0 10px;
@@ -1342,40 +1346,40 @@ a.operate-reply {
   max-height: 450px;
   overflow: auto;
   word-break: break-all; }
-  /* line 893, ../scss/style.scss */
+  /* line 897, ../scss/style.scss */
   #file-list li,
   #file-list .insert {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis; }
-  /* line 899, ../scss/style.scss */
+  /* line 903, ../scss/style.scss */
   #file-list li {
     padding: 8px 0;
     border-top: 1px dashed #D9D9D6; }
-  /* line 903, ../scss/style.scss */
+  /* line 907, ../scss/style.scss */
   #file-list .insert {
     display: block;
     max-width: 100%; }
-  /* line 907, ../scss/style.scss */
+  /* line 911, ../scss/style.scss */
   #file-list .file {
     margin-left: 5px; }
-  /* line 910, ../scss/style.scss */
+  /* line 914, ../scss/style.scss */
   #file-list .info {
     text-transform: uppercase; }
 
-/* line 915, ../scss/style.scss */
+/* line 919, ../scss/style.scss */
 #btn-fullscreen-upload {
   visibility: hidden; }
 
 /**
 * 附件管理
 */
-/* line 923, ../scss/style.scss */
+/* line 927, ../scss/style.scss */
 .edit-media button {
   margin-right: 6px; }
 
 /* 拖动调整 textarea 大小 */
-/* line 926, ../scss/style.scss */
+/* line 930, ../scss/style.scss */
 .resize {
   display: block;
   margin: 2px auto 0;
@@ -1384,14 +1388,14 @@ a.operate-reply {
   border-width: 1px 0;
   width: 60px;
   cursor: row-resize; }
-  /* line 934, ../scss/style.scss */
+  /* line 938, ../scss/style.scss */
   .resize i {
     display: block;
     height: 1px;
     background-color: #D9D9D6; }
 
 /* 拖动排序 */
-/* line 942, ../scss/style.scss */
+/* line 946, ../scss/style.scss */
 .tDnD_whileDrag {
   background-color: #FFFBCC; }
 
