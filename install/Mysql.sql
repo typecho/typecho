@@ -35,7 +35,7 @@ CREATE TABLE `typecho_comments` (
   PRIMARY KEY  (`coid`),
   KEY `cid` (`cid`),
   KEY `created` (`created`)
-) ENGINE=MyISAM  DEFAULT CHARSET=%charset%;
+) ENGINE=%engine%  DEFAULT CHARSET=%charset%;
 
 -- --------------------------------------------------------
 
@@ -64,7 +64,7 @@ CREATE TABLE `typecho_contents` (
   PRIMARY KEY  (`cid`),
   UNIQUE KEY `slug` (`slug`),
   KEY `created` (`created`)
-) ENGINE=MyISAM  DEFAULT CHARSET=%charset%;
+) ENGINE=%engine%  DEFAULT CHARSET=%charset%;
 
 -- --------------------------------------------------------
 
@@ -82,7 +82,7 @@ CREATE TABLE `typecho_fields` (
   PRIMARY KEY  (`cid`,`name`),
   KEY `int_value` (`int_value`),
   KEY `float_value` (`float_value`)
-) ENGINE=MyISAM  DEFAULT CHARSET=%charset%;
+) ENGINE=%engine%  DEFAULT CHARSET=%charset%;
 
 -- --------------------------------------------------------
 
@@ -101,7 +101,7 @@ CREATE TABLE `typecho_metas` (
   `parent` int(10) unsigned default '0',
   PRIMARY KEY  (`mid`),
   KEY `slug` (`slug`)
-) ENGINE=MyISAM  DEFAULT CHARSET=%charset%;
+) ENGINE=%engine%  DEFAULT CHARSET=%charset%;
 
 -- --------------------------------------------------------
 
@@ -114,7 +114,7 @@ CREATE TABLE `typecho_options` (
   `user` int(10) unsigned NOT NULL default '0',
   `value` text,
   PRIMARY KEY  (`name`,`user`)
-) ENGINE=MyISAM DEFAULT CHARSET=%charset%;
+) ENGINE=%engine% DEFAULT CHARSET=%charset%;
 
 -- --------------------------------------------------------
 
@@ -126,7 +126,7 @@ CREATE TABLE `typecho_relationships` (
   `cid` int(10) unsigned NOT NULL,
   `mid` int(10) unsigned NOT NULL,
   PRIMARY KEY  (`cid`,`mid`)
-) ENGINE=MyISAM DEFAULT CHARSET=%charset%;
+) ENGINE=%engine% DEFAULT CHARSET=%charset%;
 
 -- --------------------------------------------------------
 
@@ -149,4 +149,4 @@ CREATE TABLE `typecho_users` (
   PRIMARY KEY  (`uid`),
   UNIQUE KEY `name` (`name`),
   UNIQUE KEY `mail` (`mail`)
-) ENGINE=MyISAM  DEFAULT CHARSET=%charset%;
+) ENGINE=%engine%  DEFAULT CHARSET=%charset%;
