@@ -304,6 +304,10 @@ Typecho_Cookie::set('__typecho_lang', $lang);
                                             $scripts = str_replace('%charset%', $config['charset'], $scripts);
                                         }
 
+                                        if (isset($config['engine'])) {
+                                            $scripts = str_replace('%engine%', $config['engine'], $scripts);
+                                        }
+
                                         $scripts = explode(';', $scripts);
                                         foreach ($scripts as $script) {
                                             $script = trim($script);
@@ -496,12 +500,12 @@ Typecho_Cookie::set('__typecho_lang', $lang);
                                     }
                                 }
 
-                                $_dbConfig = _rFrom('dbHost', 'dbUser', 'dbPassword', 'dbCharset', 'dbPort', 'dbDatabase', 'dbFile', 'dbDsn');
+                                $_dbConfig = _rFrom('dbHost', 'dbUser', 'dbPassword', 'dbCharset', 'dbPort', 'dbDatabase', 'dbFile', 'dbDsn', 'dbEngine');
 
                                 $_dbConfig = array_filter($_dbConfig);
                                 $dbConfig = array();
                                 foreach ($_dbConfig as $key => $val) {
-                                    $dbConfig[strtolower (substr($key, 2))] = $val;
+                                    $dbConfig[strtolower(substr($key, 2))] = $val;
                                 }
 
                                 // 在特殊服务器上的特殊安装过程处理
@@ -588,7 +592,7 @@ Typecho_Db::set(\$db);
                                 }
 
                                 // 安装不成功删除配置文件
-                                if($success != true && file_exists(__TYPECHO_ROOT_DIR__ . '/config.inc.php')) {
+                                if(!$success && file_exists(__TYPECHO_ROOT_DIR__ . '/config.inc.php')) {
                                     @unlink(__TYPECHO_ROOT_DIR__ . '/config.inc.php');
                                 }
                             }
