@@ -2147,7 +2147,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                         'created'   =>  $this->options->time,
                         'agent'     =>  $this->request->getAgent(),
                         'ip'        =>  $this->request->getIp(),
-                        'author'    =>  $finalTitle,
+                        'author'    =>  Typecho_Common::subStr($finalTitle, 0, 150, '...'),
                         'url'       =>  Typecho_Common::safeUrl($source),
                         'text'      =>  $finalText,
                         'ownerId'   =>  $post->author->uid,
