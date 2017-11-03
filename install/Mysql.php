@@ -153,7 +153,7 @@ $baeDbPassword = "getenv('HTTP_BAE_ENV_SK')";
             <option value="utf8"<?php if (_r('dbCharset') == 'utf8'): ?> selected<?php endif; ?>>utf8</option>
             <option value="utf8mb4"<?php if (_r('dbCharset') == 'utf8mb4'): ?> selected<?php endif; ?>>utf8mb4</option>
         </select>
-        <p class="description"><?php _e('请选择一个数据库编码, utf8mb4 编码至少需要 MySQL 5.5.3 版本'); ?></p>
+        <p class="description"><?php _e('选择 utf8mb4 编码至少需要 MySQL 5.5.3 版本'); ?></p>
     </li>
 
     <li>
@@ -162,5 +162,4 @@ $baeDbPassword = "getenv('HTTP_BAE_ENV_SK')";
             <option value="MyISAM"<?php if (_r('dbEngine') == 'MyISAM'): ?> selected<?php endif; ?>>MyISAM</option>
             <option value="InnoDB"<?php if (_r('dbEngine') == 'InnoDB'): ?> selected<?php endif; ?>>InnoDB</option>
         </select>
-        <p class="description"><?php _e('请根据需要选择一种数据库引擎'); ?></p>
     </li>

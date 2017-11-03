@@ -36,7 +36,7 @@ class Widget_Register extends Widget_Abstract_Users implements Widget_Interface_
         $validator->addRule('mail', 'required', _t('必须填写电子邮箱'));
         $validator->addRule('mail', array($this, 'mailExists'), _t('电子邮箱地址已经存在'));
         $validator->addRule('mail', 'email', _t('电子邮箱格式错误'));
-        $validator->addRule('mail', 'maxLength', _t('电子邮箱最多包含200个字符'), 200);
+        $validator->addRule('mail', 'maxLength', _t('电子邮箱最多包含64个字符'), 64);
 
         /** 如果请求中有password */
         if (array_key_exists('password', $_REQUEST)) {

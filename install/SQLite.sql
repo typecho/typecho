@@ -1,13 +1,13 @@
 CREATE TABLE typecho_comments ( "coid" INTEGER NOT NULL PRIMARY KEY,
 "cid" int(10) default '0' ,
 "created" int(10) default '0' ,
-"author" varchar(200) default NULL ,
+"author" varchar(150) default NULL ,
 "authorId" int(10) default '0' ,
 "ownerId" int(10) default '0' ,
-"mail" varchar(200) default NULL , 
-"url" varchar(200) default NULL , 
+"mail" varchar(150) default NULL ,
+"url" varchar(150) default NULL ,
 "ip" varchar(64) default NULL , 
-"agent" varchar(200) default NULL , 
+"agent" varchar(150) default NULL ,
 "text" text , 
 "type" varchar(16) default 'comment' , 
 "status" varchar(16) default 'approved' , 
@@ -17,8 +17,8 @@ CREATE INDEX typecho_comments_cid ON typecho_comments ("cid");
 CREATE INDEX typecho_comments_created ON typecho_comments ("created");
 
 CREATE TABLE typecho_contents ( "cid" INTEGER NOT NULL PRIMARY KEY, 
-"title" varchar(200) default NULL , 
-"slug" varchar(200) default NULL , 
+"title" varchar(150) default NULL ,
+"slug" varchar(150) default NULL ,
 "created" int(10) default '0' , 
 "modified" int(10) default '0' , 
 "text" text , 
@@ -38,7 +38,7 @@ CREATE UNIQUE INDEX typecho_contents_slug ON typecho_contents ("slug");
 CREATE INDEX typecho_contents_created ON typecho_contents ("created");
 
 CREATE TABLE "typecho_fields" ("cid" INTEGER NOT NULL,
-  "name" varchar(200) NOT NULL,
+  "name" varchar(150) NOT NULL,
   "type" varchar(8) default 'str',
   "str_value" text,
   "int_value" int(10) default '0',
@@ -50,10 +50,10 @@ CREATE INDEX typecho_fields_int_value ON typecho_fields ("int_value");
 CREATE INDEX typecho_fields_float_value ON typecho_fields ("float_value");
 
 CREATE TABLE typecho_metas ( "mid" INTEGER NOT NULL PRIMARY KEY, 
-"name" varchar(200) default NULL , 
-"slug" varchar(200) default NULL , 
+"name" varchar(150) default NULL ,
+"slug" varchar(150) default NULL ,
 "type" varchar(32) NOT NULL , 
-"description" varchar(200) default NULL , 
+"description" varchar(150) default NULL ,
 "count" int(10) default '0' , 
 "order" int(10) default '0' ,
 "parent" int(10) default '0');
@@ -72,10 +72,10 @@ CREATE TABLE typecho_relationships ( "cid" int(10) NOT NULL ,
 CREATE UNIQUE INDEX typecho_relationships_cid_mid ON typecho_relationships ("cid", "mid");
 
 CREATE TABLE typecho_users ( "uid" INTEGER NOT NULL PRIMARY KEY, 
-"name" varchar(32) default NULL , 
+"name" varchar(32) default NULL ,
 "password" varchar(64) default NULL , 
-"mail" varchar(200) default NULL , 
-"url" varchar(200) default NULL , 
+"mail" varchar(150) default NULL ,
+"url" varchar(150) default NULL ,
 "screenName" varchar(32) default NULL , 
 "created" int(10) default '0' , 
 "activated" int(10) default '0' , 
