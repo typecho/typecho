@@ -527,6 +527,7 @@ class HyperDown
         $this->_pos = -1;
         $special = implode("|", array_keys($this->_specialWhiteList));
         $emptyCount = 0;
+        $autoHtml = false;
 
         // analyze by line
         foreach ($lines as $key => $line) {
@@ -567,7 +568,7 @@ class HyperDown
 
             // super html mode
             if ($this->_html) {
-                if (preg_match("/^(\s*)!!!(\s*)$/", $line, $matches)) {
+                if (!$autoHtml && preg_match("/^(\s*)!!!(\s*)$/", $line, $matches)) {
                     if ($this->isBlock('shtml')) {
                         $this->setBlock($key)->endBlock();
                     } else {
@@ -576,6 +577,30 @@ class HyperDown
 
                     continue;
                 } else if ($this->isBlock('shtml')) {
+                    $this->setBlock($key);
+                    continue;
+                }
+
+                // auto html
+                if (preg_match("/^\s*<([a-z0-9-]+)(\s+[^>]*)?>/i", $line, $matches)) {
+                    if ($this->isBlock('ahtml')) {
+                        $this->setBlock($key);
+                        continue;
+                    } else if ((empty($matches[2]) || $matches[2] != '/') && !preg_match("/^(area|base|br|col|embed|hr|img|input|keygen|link|meta|param|source|track|wbr)$/i", $matches[1])) {
+                        $this->startBlock('ahtml', $key);
+
+                        if (strpos($line, "</{$matches[1]}>") !== false) {
+                            $this->endBlock();
+                        } else {
+                            $autoHtml = $matches[1];
+                        }
+                        continue;
+                    } 
+                } else if (!!$autoHtml && strpos($line, "</{$autoHtml}>") !== false) {
+                    $this->setBlock($key)->endBlock();
+                    $autoHtml = false;
+                    continue;
+                } else if ($this->isBlock('ahtml')) {
                     $this->setBlock($key);
                     continue;
                 }
@@ -918,6 +943,17 @@ class HyperDown
         $str = implode("\n", $lines);
 
         return preg_match("/^\s*$/", $str) ? '' : '<pre><code>' . $str . '</code></pre>';
+    }
+
+    /**
+     * parseAhtml
+     *
+     * @param array $lines
+     * @return string
+     */
+    private function parseAhtml(array $lines)
+    {
+        return trim(implode("\n", $lines));
     }
 
     /**

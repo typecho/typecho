@@ -393,7 +393,7 @@
     };
 
     Parser.prototype.parseBlock = function(text, lines) {
-      var align, aligns, block, emptyCount, head, indent, isAfterList, j, key, l, len, len1, len2, line, m, matches, num, ref, row, rows, space, special, tag;
+      var align, aligns, autoHtml, block, emptyCount, head, indent, isAfterList, j, key, l, len, len1, len2, line, m, matches, num, ref, row, rows, space, special, tag;
       ref = text.split("\n");
       for (j = 0, len = ref.length; j < len; j++) {
         line = ref[j];
@@ -404,6 +404,7 @@
       this.pos = -1;
       special = (array_keys(this.specialWhiteList)).join('|');
       emptyCount = 0;
+      autoHtml = false;
       for (key = l = 0, len1 = lines.length; l < len1; key = ++l) {
         line = lines[key];
         block = this.getBlock();
@@ -432,7 +433,7 @@
           continue;
         }
         if (this.html) {
-          if (!!(matches = line.match(/^(\s*)!!!(\s*)$/))) {
+          if (!autoHtml && !!(matches = line.match(/^(\s*)!!!(\s*)$/))) {
             if (this.isBlock('shtml')) {
               this.setBlock(key).endBlock();
             } else {
@@ -440,6 +441,27 @@
             }
             continue;
           } else if (this.isBlock('shtml')) {
+            this.setBlock(key);
+            continue;
+          }
+          if (matches = line.match(/^\s*<([a-z0-9-]+)(\s+[^>]*)?>/i)) {
+            if (this.isBlock('ahtml')) {
+              this.setBlock(key);
+              continue;
+            } else if ((matches[2] === void 0 || matches[2] !== '/') && !matches[1].match(/^(area|base|br|col|embed|hr|img|input|keygen|link|meta|param|source|track|wbr)$/i)) {
+              this.startBlock('ahtml', key);
+              if (0 <= line.indexOf("</" + matches[1] + ">")) {
+                this.endBlock();
+              } else {
+                autoHtml = matches[1];
+              }
+              continue;
+            }
+          } else if (!!autoHtml && 0 <= line.indexOf("</" + autoHtml + ">")) {
+            this.setBlock(key).endBlock();
+            autoHtml = false;
+            continue;
+          } else if (this.isBlock('ahtml')) {
             this.setBlock(key);
             continue;
           }
@@ -696,6 +718,10 @@
       } else {
         return '<pre><code>' + str + '</code></pre>';
       }
+    };
+
+    Parser.prototype.parseAhtml = function(lines) {
+      return trim(lines.join("\n"));
     };
 
     Parser.prototype.parseShtml = function(lines) {
