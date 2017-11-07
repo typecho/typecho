@@ -67,27 +67,6 @@ $(document).ready(function () {
 
     // 修正白名单
     converter.enableHtml(true);
-    converter.commonWhiteList += '|img|cite|embed|iframe';
-    converter.specialWhiteList = $.extend(converter.specialWhiteList, {
-        'ol'            :  'ol|li',
-        'ul'            :  'ul|li',
-        'blockquote'    :  'blockquote',
-        'div'           :  'div',
-        'p'             :  'p',
-        'h1'            :  'h1',
-        'h2'            :  'h2',
-        'h3'            :  'h3',
-        'h4'            :  'h4',
-        'h5'            :  'h5',
-        'h6'            :  'h6',
-        'pre'           :  'pre|code'
-    });
-
-    converter.hook('beforeParseInline', function (html) {
-        return html.replace(/^\s*<!\-\-\s*more\s*\-\->\s*$/, function () {
-            return converter.makeHolder('<!--more-->');
-        });
-    });
 
     // 自动跟随
     converter.hook('makeHtml', function (html) {
