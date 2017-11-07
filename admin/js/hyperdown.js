@@ -95,6 +95,7 @@
 
     function Parser() {
       this.commonWhiteList = 'kbd|b|i|strong|em|sup|sub|br|code|del|a|hr|small';
+      this.blockHtmlTags = 'p|div|h[1-6]|blockquote|pre|table|dl|ol|ul|address|form|fieldset|iframe|hr|legend|article|section|nav|aside|hgroup|header|footer|figcaption|svg|script|noscript';
       this.specialWhiteList = {
         table: 'table|tbody|thead|tfoot|tr|td|th'
       };
@@ -269,6 +270,15 @@
           }
         };
       })(this));
+      if (this.html) {
+        text = text.replace(/<!\-\-(.*?)\-\->/g, (function(_this) {
+          return function() {
+            var matches;
+            matches = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+            return _this.makeHolder(matches[0]);
+          };
+        })(this));
+      }
       text = str_replace(['<', '>'], ['&lt;', '&gt;'], text);
       text = text.replace(/\[\^((?:[^\]]|\\\]|\\\[)+?)\]/g, (function(_this) {
         return function() {
@@ -393,7 +403,7 @@
     };
 
     Parser.prototype.parseBlock = function(text, lines) {
-      var align, aligns, autoHtml, block, emptyCount, head, indent, isAfterList, j, key, l, len, len1, len2, line, m, matches, num, ref, row, rows, space, special, tag;
+      var align, aligns, autoHtml, block, emptyCount, head, htmlTagAllRegExp, htmlTagRegExp, indent, isAfterList, j, key, l, lastMatch, len, len1, len2, line, m, matches, n, num, ref, row, rows, space, special, tag;
       ref = text.split("\n");
       for (j = 0, len = ref.length; j < len; j++) {
         line = ref[j];
@@ -410,6 +420,21 @@
         block = this.getBlock();
         if (block != null) {
           block = block.slice(0);
+        }
+        if (!!(matches = line.match(/^(\s*)((?:[0-9]+\.)|(?:[a-z]\.?)|\-|\+|\*)\s+/i))) {
+          space = matches[1].length;
+          emptyCount = 0;
+          if (this.isBlock('list')) {
+            this.setBlock(key, space);
+          } else {
+            this.startBlock('list', key, space);
+          }
+          continue;
+        } else if (this.isBlock('list')) {
+          if ((emptyCount === 0) && !!(matches = line.match(/^(\s+)/)) && matches[1].length > block[3]) {
+            this.setBlock(key);
+            continue;
+          }
         }
         if (!!(matches = line.match(/^(\s*)(~{3,}|`{3,})([^`~]*)$/i))) {
           if (this.isBlock('code')) {
@@ -444,16 +469,25 @@
             this.setBlock(key);
             continue;
           }
-          if (matches = line.match(/^\s*<([a-z0-9-]+)(\s+[^>]*)?>/i)) {
+          htmlTagRegExp = new RegExp("^\\s*<(" + this.blockHtmlTags + ")(\\s+[^>]*)?>", 'i');
+          if (matches = line.match(htmlTagRegExp)) {
             if (this.isBlock('ahtml')) {
               this.setBlock(key);
               continue;
-            } else if ((matches[2] === void 0 || matches[2] !== '/') && !matches[1].match(/^(area|base|br|col|embed|hr|img|input|keygen|link|meta|param|source|track|wbr)$/i)) {
+            } else if (matches[2] === void 0 || matches[2] !== '/') {
               this.startBlock('ahtml', key);
-              if (0 <= line.indexOf("</" + matches[1] + ">")) {
+              htmlTagAllRegExp = new RegExp("\\s*<(" + this.blockHtmlTags + ")(\\s+[^>]*)?>", 'ig');
+              while (true) {
+                m = htmlTagAllRegExp.exec(line);
+                if (!m) {
+                  break;
+                }
+                lastMatch = m[1];
+              }
+              if (0 <= line.indexOf("</" + lastMatch + ">")) {
                 this.endBlock();
               } else {
-                autoHtml = matches[1];
+                autoHtml = lastMatch;
               }
               continue;
             }
@@ -463,6 +497,9 @@
             continue;
           } else if (this.isBlock('ahtml')) {
             this.setBlock(key);
+            continue;
+          } else if (!!(matches = line.match(/^\s*<!\-\-(.*?)\-\->\s*$/))) {
+            this.startBlock('ahtml', key).endBlock();
             continue;
           }
         }
@@ -515,15 +552,6 @@
           continue;
         }
         switch (true) {
-          case !!(matches = line.match(/^(\s*)((?:[0-9a-z]+\.)|\-|\+|\*)\s+/)):
-            space = matches[1].length;
-            emptyCount = 0;
-            if (this.isBlock('list')) {
-              this.setBlock(key, space);
-            } else {
-              this.startBlock('list', key, space);
-            }
-            break;
           case !!(matches = line.match(/^\[\^((?:[^\]]|\\\]|\\\[)+?)\]:/)):
             space = matches[0].length - 1;
             this.startBlock('footnote', key, [space, matches[1]]);
@@ -541,7 +569,7 @@
               this.startBlock('quote', key);
             }
             break;
-          case !!(matches = line.match(/^((?:(?:(?:[ :]*\-[ :]*)+(?:\||\+))|(?:(?:\||\+)(?:[ :]*\-[ :]*)+(?:\||\+))|(?:(?:\||\+)(?:[ :]*\-[ :]*)+))+)$/)):
+          case !!(matches = line.match(/^((?:(?:(?:\||\+)(?:[ :]*\-+[ :]*)(?:\||\+))|(?:(?:[ :]*\-+[ :]*)(?:\||\+)(?:[ :]*\-+[ :]*))|(?:(?:[ :]*\-+[ :]*)(?:\||\+))|(?:(?:\||\+)(?:[ :]*\-+[ :]*)))+)$/)):
             if (this.isBlock('table')) {
               block[3][0].push(block[3][2]);
               block[3][2] += 1;
@@ -562,8 +590,8 @@
               }
               rows = matches[1].split(/\+|\|/);
               aligns = [];
-              for (m = 0, len2 = rows.length; m < len2; m++) {
-                row = rows[m];
+              for (n = 0, len2 = rows.length; n < len2; n++) {
+                row = rows[n];
                 align = 'none';
                 if (!!(matches = row.match(/^\s*(:?)\-+(:?)\s*$/))) {
                   if (!!matches[1] && !!matches[2]) {
@@ -760,18 +788,24 @@
     };
 
     Parser.prototype.parseList = function(lines) {
-      var found, html, j, key, l, lastType, leftLines, len, len1, line, matches, minSpace, row, rows, secondMinSpace, space, text, type;
+      var found, html, j, key, l, lastType, leftLines, len, len1, line, matches, minSpace, row, rows, secondFound, secondMinSpace, space, text, type;
       html = '';
       minSpace = 99999;
       secondMinSpace = 99999;
       found = false;
+      secondFound = false;
       rows = [];
       for (key = j = 0, len = lines.length; j < len; key = ++j) {
         line = lines[key];
-        if (matches = line.match(/^(\s*)((?:[0-9a-z]+\.?)|\-|\+|\*)(\s+)(.*)$/)) {
+        if (matches = line.match(/^(\s*)((?:[0-9]+\.?)|(?:[a-z]\.?)|\-|\+|\*)(\s+)(.*)$/i)) {
           space = matches[1].length;
           type = 0 <= '+-*'.indexOf(matches[2]) ? 'ul' : 'ol';
           minSpace = Math.min(space, minSpace);
+          found = true;
+          if (space > 0) {
+            secondMinSpace = Math.min(space, secondMinSpace);
+            secondFound = true;
+          }
           rows.push([space, type, line, matches[4]]);
         } else {
           rows.push(line);
@@ -779,12 +813,13 @@
             space = matches[1].length;
             if (space > 0) {
               secondMinSpace = Math.min(space, secondMinSpace);
-              found = true;
+              secondFound = true;
             }
           }
         }
       }
-      secondMinSpace = found ? secondMinSpace : minSpace;
+      minSpace = found ? minSpace : 0;
+      secondMinSpace = secondFound ? secondMinSpace : minSpace;
       lastType = '';
       leftLines = [];
       for (l = 0, len1 = rows.length; l < len1; l++) {

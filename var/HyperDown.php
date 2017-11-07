@@ -17,6 +17,13 @@ class HyperDown
     public $_commonWhiteList = 'kbd|b|i|strong|em|sup|sub|br|code|del|a|hr|small';
 
     /**
+     * html tags
+     *
+     * @var string
+     */
+    public $_blockHtmlTags = 'p|div|h[1-6]|blockquote|pre|table|dl|ol|ul|address|form|fieldset|iframe|hr|legend|article|section|nav|aside|hgroup|header|footer|figcaption|svg|script|noscript';
+
+    /**
      * _specialWhiteList
      *
      * @var mixed
@@ -326,6 +333,12 @@ class HyperDown
             $text
         );
 
+        if ($this->_html) {
+            $text = preg_replace_callback("/<!\-\-(.*?)\-\->/", function ($matches) use ($self) {
+                return $self->makeHolder($matches[0]);
+            }, $text);
+        }
+
         $text = str_replace(array('<', '>'),  array('&lt;', '&gt;'),  $text);
 
         // footnote
@@ -533,7 +546,29 @@ class HyperDown
         foreach ($lines as $key => $line) {
             $block = $this->getBlock();
 
-            // code block is special
+            // list block
+            if (preg_match("/^(\s*)((?:[0-9]+\.)|(?:[a-z]\.?)|\-|\+|\*)\s+/i", $line, $matches)) {
+                $space = strlen($matches[1]);
+                $emptyCount = 0;
+
+                // opened
+                if ($this->isBlock('list')) {
+                    $this->setBlock($key, $space);
+                } else {
+                    $this->startBlock('list', $key, $space);
+                }
+
+                continue;
+            } else if ($this->isBlock('list')) {
+                if ($emptyCount == 0
+                    && preg_match("/^(\s+)/", $line, $matches)
+                    && strlen($matches[1]) > $block[3]) {
+                    $this->setBlock($key);
+                    continue;
+                }
+            }
+
+            // code block
             if (preg_match("/^(\s*)(~{3,}|`{3,})([^`~]*)$/i", $line, $matches)) {
                 if ($this->isBlock('code')) {
                     $isAfterList = $block[3][2];
@@ -582,17 +617,19 @@ class HyperDown
                 }
 
                 // auto html
-                if (preg_match("/^\s*<([a-z0-9-]+)(\s+[^>]*)?>/i", $line, $matches)) {
+                if (preg_match("/^\s*<({$this->_blockHtmlTags})(\s+[^>]*)?>/i", $line, $matches)) {
                     if ($this->isBlock('ahtml')) {
                         $this->setBlock($key);
                         continue;
-                    } else if ((empty($matches[2]) || $matches[2] != '/') && !preg_match("/^(area|base|br|col|embed|hr|img|input|keygen|link|meta|param|source|track|wbr)$/i", $matches[1])) {
+                    } else if (empty($matches[2]) || $matches[2] != '/') {
                         $this->startBlock('ahtml', $key);
+                        preg_match_all("/<({$this->_blockHtmlTags})(\s+[^>]*)?>/i", $line, $allMatches);
+                        $lastMatch = $allMatches[1][count($allMatches[0]) - 1];
 
-                        if (strpos($line, "</{$matches[1]}>") !== false) {
+                        if (strpos($line, "</{$lastMatch}>") !== false) {
                             $this->endBlock();
                         } else {
-                            $autoHtml = $matches[1];
+                            $autoHtml = $lastMatch;
                         }
                         continue;
                     } 
@@ -602,6 +639,9 @@ class HyperDown
                     continue;
                 } else if ($this->isBlock('ahtml')) {
                     $this->setBlock($key);
+                    continue;
+                } else if (preg_match("/^\s*<!\-\-(.*?)\-\->\s*$/", $line, $matches)) {
+                    $this->startBlock('ahtml', $key)->endBlock();
                     continue;
                 }
             }
@@ -670,19 +710,6 @@ class HyperDown
             }
 
             switch (true) {
-                // list
-                case preg_match("/^(\s*)((?:[0-9a-z]+\.)|\-|\+|\*)\s+/", $line, $matches):
-                    $space = strlen($matches[1]);
-                    $emptyCount = 0;
-
-                    // opened
-                    if ($this->isBlock('list')) {
-                        $this->setBlock($key, $space);
-                    } else {
-                        $this->startBlock('list', $key, $space);
-                    }
-                    break; 
-
                 // footnote
                 case preg_match("/^\[\^((?:[^\]]|\\]|\\[)+?)\]:/", $line, $matches):
                     $space = strlen($matches[0]) - 1;
@@ -710,7 +737,7 @@ class HyperDown
                     break;
 
                 // table
-                case preg_match("/^((?:(?:(?:[ :]*\-[ :]*)+(?:\||\+))|(?:(?:\||\+)(?:[ :]*\-[ :]*)+(?:\||\+))|(?:(?:\||\+)(?:[ :]*\-[ :]*)+))+)$/", $line, $matches):
+                case preg_match("/^((?:(?:(?:\||\+)(?:[ :]*\-+[ :]*)(?:\||\+))|(?:(?:[ :]*\-+[ :]*)(?:\||\+)(?:[ :]*\-+[ :]*))|(?:(?:[ :]*\-+[ :]*)(?:\||\+))|(?:(?:\||\+)(?:[ :]*\-+[ :]*)))+)$/", $line, $matches):
                     if ($this->isBlock('table')) {
                         $block[3][0][] = $block[3][2];
                         $block[3][2] ++;
@@ -1031,14 +1058,21 @@ class HyperDown
         $minSpace = 99999;
         $secondMinSpace = 99999;
         $found = false;
+        $secondFound = false;
         $rows = array();
 
         // count levels
         foreach ($lines as $key => $line) {
-            if (preg_match("/^(\s*)((?:[0-9a-z]+\.?)|\-|\+|\*)(\s+)(.*)$/", $line, $matches)) {
+            if (preg_match("/^(\s*)((?:[0-9]+\.?)|(?:[a-z]\.?)|\-|\+|\*)(\s+)(.*)$/i", $line, $matches)) {
                 $space = strlen($matches[1]);
                 $type = false !== strpos('+-*', $matches[2]) ? 'ul' : 'ol';
                 $minSpace = min($space, $minSpace);
+                $found = true;
+
+                if ($space > 0) {
+                    $secondMinSpace = min($space, $secondMinSpace);
+                    $secondFound = true;
+                }
 
                 $rows[] = array($space, $type, $line, $matches[4]);
             } else {
@@ -1049,13 +1083,14 @@ class HyperDown
                     
                     if ($space > 0) {
                         $secondMinSpace = min($space, $secondMinSpace);
-                        $found = true;
+                        $secondFound = true;
                     }
                 }
             }
         }
 
-        $secondMinSpace = $found ? $secondMinSpace : $minSpace;
+        $minSpace = $found ? $minSpace : 0;
+        $secondMinSpace = $secondFound ? $secondMinSpace : $minSpace;
 
         $lastType = '';
         $leftLines = array();
