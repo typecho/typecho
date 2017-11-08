@@ -46,6 +46,27 @@ class HyperDown
     public $_html = false;
 
     /**
+     * @var array
+     */
+    public $blockParsers = array(
+        array('code', 10),
+        array('shtml', 20),
+        array('ahtml', 30),
+        array('list', 40),
+        array('math', 50),
+        array('pre', 60),
+        array('html', 70),
+        array('footnote', 80),
+        array('definition', 90),
+        array('quote', 100),
+        array('table', 110),
+        array('sh', 120),
+        array('mh', 130),
+        array('hr', 140),
+        array('default', 9999)
+    );
+
+    /**
      * _blocks
      *
      * @var array
@@ -94,6 +115,11 @@ class HyperDown
     private $_id;
 
     /**
+     * @var array
+     */
+    private $_parsers = array();
+
+    /**
      * makeHtml
      *
      * @param mixed $text
@@ -106,6 +132,20 @@ class HyperDown
         $this->_holders = array();
         $this->_uniqid = md5(uniqid());
         $this->_id = 0;
+
+        usort($this->blockParsers, function ($a, $b) {
+            return $a[1] < $b[1] ? -1 : 1;
+        });
+
+        foreach ($this->blockParsers as $parser) {
+            list ($name) = $parser;
+
+            if (isset($parser[2])) {
+                $this->_parsers[$name] = $parser[2];
+            } else {
+                $this->_parsers[$name] = array($this, 'parseBlock' . ucfirst($name));
+            }
+        }
 
         $text = $this->initText($text);
         $html = $this->parse($text);
@@ -538,331 +578,525 @@ class HyperDown
         $this->_blocks = array();
         $this->_current = 'normal';
         $this->_pos = -1;
-        $special = implode("|", array_keys($this->_specialWhiteList));
-        $emptyCount = 0;
-        $autoHtml = false;
+
+        $state = array(
+            'special'   =>  implode("|", array_keys($this->_specialWhiteList)),
+            'empty'     =>  0,
+            'html'      =>  false
+        );
 
         // analyze by line
         foreach ($lines as $key => $line) {
             $block = $this->getBlock();
+            $args = array($block, $key, $line, &$state, $lines);
 
-            // list block
-            if (preg_match("/^(\s*)((?:[0-9]+\.)|(?:[a-z]\.?)|\-|\+|\*)\s+/i", $line, $matches)) {
-                $space = strlen($matches[1]);
-                $emptyCount = 0;
+            if ($this->_current != 'normal') {
+                $pass = call_user_func_array($this->_parsers[$this->_current], $args);
 
-                // opened
-                if ($this->isBlock('list')) {
-                    $this->setBlock($key, $space);
-                } else {
-                    $this->startBlock('list', $key, $space);
-                }
-
-                continue;
-            } else if ($this->isBlock('list')) {
-                if ($emptyCount == 0
-                    && preg_match("/^(\s+)/", $line, $matches)
-                    && strlen($matches[1]) > $block[3]) {
-                    $this->setBlock($key);
+                if (!$pass) {
                     continue;
                 }
             }
 
-            // code block
-            if (preg_match("/^(\s*)(~{3,}|`{3,})([^`~]*)$/i", $line, $matches)) {
-                if ($this->isBlock('code')) {
-                    $isAfterList = $block[3][2];
+            foreach ($this->_parsers as $name => $parser) {
+                if ($name != $this->_current) {
+                    $pass = call_user_func_array($parser, $args);
 
-                    if ($isAfterList) {
-                        $this->combineBlock()
-                            ->setBlock($key);
-                    } else {
-                        $this->setBlock($key)
-                            ->endBlock();
+                    if (!$pass) {
+                        break;
                     }
-                } else {
-                    $isAfterList = false;
-
-                    if ($this->isBlock('list')) {
-                        $space = $block[3];
-
-                        $isAfterList = ($space > 0 && strlen($matches[1]) >= $space)
-                            || strlen($matches[1]) > $space;
-                    }
-
-                    $this->startBlock('code', $key, array(
-                        $matches[1],  $matches[3],  $isAfterList
-                    ));
                 }
-
-                continue;
-            } else if ($this->isBlock('code')) {
-                $this->setBlock($key);
-                continue;
-            }
-
-            // super html mode
-            if ($this->_html) {
-                if (!$autoHtml && preg_match("/^(\s*)!!!(\s*)$/", $line, $matches)) {
-                    if ($this->isBlock('shtml')) {
-                        $this->setBlock($key)->endBlock();
-                    } else {
-                        $this->startBlock('shtml', $key);
-                    }
-
-                    continue;
-                } else if ($this->isBlock('shtml')) {
-                    $this->setBlock($key);
-                    continue;
-                }
-
-                // auto html
-                if (preg_match("/^\s*<({$this->_blockHtmlTags})(\s+[^>]*)?>/i", $line, $matches)) {
-                    if ($this->isBlock('ahtml')) {
-                        $this->setBlock($key);
-                        continue;
-                    } else if (empty($matches[2]) || $matches[2] != '/') {
-                        $this->startBlock('ahtml', $key);
-                        preg_match_all("/<({$this->_blockHtmlTags})(\s+[^>]*)?>/i", $line, $allMatches);
-                        $lastMatch = $allMatches[1][count($allMatches[0]) - 1];
-
-                        if (strpos($line, "</{$lastMatch}>") !== false) {
-                            $this->endBlock();
-                        } else {
-                            $autoHtml = $lastMatch;
-                        }
-                        continue;
-                    } 
-                } else if (!!$autoHtml && strpos($line, "</{$autoHtml}>") !== false) {
-                    $this->setBlock($key)->endBlock();
-                    $autoHtml = false;
-                    continue;
-                } else if ($this->isBlock('ahtml')) {
-                    $this->setBlock($key);
-                    continue;
-                } else if (preg_match("/^\s*<!\-\-(.*?)\-\->\s*$/", $line, $matches)) {
-                    $this->startBlock('ahtml', $key)->endBlock();
-                    continue;
-                }
-            }
-
-            // mathjax mode
-            if (preg_match("/^(\s*)\\$\\$(\s*)$/", $line, $matches)) {
-                if ($this->isBlock('math')) {
-                    $this->setBlock($key)->endBlock();
-                } else {
-                    $this->startBlock('math', $key);
-                }
-
-                continue;
-            } else if ($this->isBlock('math')) {
-                $this->setBlock($key);
-                continue;
-            }
-
-            // pre block
-            if (preg_match("/^ {4}/", $line)) {
-                $emptyCount = 0;
-
-                if ($this->isBlock('pre') || $this->isBlock('list')) {
-                    $this->setBlock($key);
-                } else {
-                    $this->startBlock('pre', $key);
-                }
-
-                continue;
-            } else if ($this->isBlock('pre')) {
-                if (preg_match("/^\s*$/", $line)) {
-                    if ($emptyCount > 0) {
-                        $this->startBlock('normal', $key);
-                    } else {
-                        $this->setBlock($key);
-                    }
-
-                    $emptyCount ++;
-                } else {
-                    $this->startBlock('normal', $key);
-                }
-                
-                continue;
-            }
-
-            // html block is special too
-            if (preg_match("/^\s*<({$special})(\s+[^>]*)?>/i", $line, $matches)) {
-                $tag = strtolower($matches[1]);
-                if (!$this->isBlock('html', $tag) && !$this->isBlock('pre')) {
-                    $this->startBlock('html', $key, $tag);
-                }
-
-                continue;
-            } else if (preg_match("/<\/({$special})>\s*$/i", $line, $matches)) {
-                $tag = strtolower($matches[1]);
-
-                if ($this->isBlock('html', $tag)) {
-                    $this->setBlock($key)
-                        ->endBlock();
-                }
-
-                continue;
-            } else if ($this->isBlock('html')) {
-                $this->setBlock($key);
-                continue;
-            }
-
-            switch (true) {
-                // footnote
-                case preg_match("/^\[\^((?:[^\]]|\\]|\\[)+?)\]:/", $line, $matches):
-                    $space = strlen($matches[0]) - 1;
-                    $this->startBlock('footnote', $key, array(
-                        $space,  $matches[1]
-                    ));
-                    break;
-
-                // definition
-                case preg_match("/^\s*\[((?:[^\]]|\\]|\\[)+?)\]:\s*(.+)$/", $line, $matches):
-                    $this->_definitions[$matches[1]] = $this->cleanUrl($matches[2]);
-                    $this->startBlock('definition', $key)
-                        ->endBlock();
-                    break;
-
-                // block quote
-                case preg_match("/^(\s*)>/", $line, $matches):
-                    if ($this->isBlock('list') && strlen($matches[1]) > 0) {
-                        $this->setBlock($key);
-                    } else if ($this->isBlock('quote')) {
-                        $this->setBlock($key);
-                    } else {
-                        $this->startBlock('quote', $key);
-                    }
-                    break;
-
-                // table
-                case preg_match("/^((?:(?:(?:\||\+)(?:[ :]*\-+[ :]*)(?:\||\+))|(?:(?:[ :]*\-+[ :]*)(?:\||\+)(?:[ :]*\-+[ :]*))|(?:(?:[ :]*\-+[ :]*)(?:\||\+))|(?:(?:\||\+)(?:[ :]*\-+[ :]*)))+)$/", $line, $matches):
-                    if ($this->isBlock('table')) {
-                        $block[3][0][] = $block[3][2];
-                        $block[3][2] ++;
-                        $this->setBlock($key, $block[3]);
-                    } else { 
-                        $head = 0;
-
-                        if (empty($block) ||
-                            $block[0] != 'normal' ||
-                            preg_match("/^\s*$/", $lines[$block[2]])) {
-                            $this->startBlock('table', $key);
-                        } else {
-                            $head = 1;
-                            $this->backBlock(1, 'table');
-                        }
-
-                        if ($matches[1][0] == '|') {
-                            $matches[1] = substr($matches[1], 1);
-
-                            if ($matches[1][strlen($matches[1]) - 1] == '|') {
-                                $matches[1] = substr($matches[1], 0, -1);
-                            }
-                        }
-
-                        $rows = preg_split("/(\+|\|)/", $matches[1]);
-                        $aligns = array();
-                        foreach ($rows as $row) {
-                            $align = 'none';
-
-                            if (preg_match("/^\s*(:?)\-+(:?)\s*$/", $row, $matches)) {
-                                if (!empty($matches[1]) && !empty($matches[2])) {
-                                    $align = 'center';
-                                } else if (!empty($matches[1])) {
-                                    $align = 'left';
-                                } else if (!empty($matches[2])) {
-                                    $align = 'right';
-                                }
-                            }
-
-                            $aligns[] = $align;
-                        }
-
-                        $this->setBlock($key, array(array($head), $aligns, $head + 1));
-                    }
-                    break;
-
-                // single heading
-                case preg_match("/^(#+)(.*)$/", $line, $matches):
-                    $num = min(strlen($matches[1]), 6);
-                    $this->startBlock('sh', $key, $num)
-                        ->endBlock();
-                    break;
-
-                // multi heading
-                case preg_match("/^\s*((=|-){2,})\s*$/", $line, $matches)
-                    && ($block && $block[0] == "normal" && !preg_match("/^\s*$/", $lines[$block[2]])):    // check if last line isn't empty
-                    if ($this->isBlock('normal')) {
-                        $this->backBlock(1, 'mh', $matches[1][0] == '=' ? 1 : 2)
-                            ->setBlock($key)
-                            ->endBlock();
-                    } else {
-                        $this->startBlock('normal', $key);
-                    }
-                    break;
-
-                // hr
-                case preg_match("/^[-\*]{3,}\s*$/", $line):
-                    $this->startBlock('hr', $key)
-                        ->endBlock();
-                    break;
-
-                // normal
-                default:
-                    if ($this->isBlock('list')) {
-                        if (preg_match("/^(\s*)/", $line, $matches)) { // empty line
-                            $indent = strlen($matches[1]) > 0;
-
-                            if ($emptyCount > 0 && !$indent) {
-                                $this->startBlock('normal', $key);
-                            } else {
-                                $this->setBlock($key);
-                            }
-
-                            if ($indent) {
-                                $emptyCount = 0;
-                            } else {
-                                $emptyCount ++;
-                            }
-                        } else if ($emptyCount == 0) {
-                            $this->setBlock($key);
-                        } else {
-                            $this->startBlock('normal', $key);
-                        }
-                    } else if ($this->isBlock('footnote')) {
-                        preg_match("/^(\s*)/", $line, $matches);
-                        if (strlen($matches[1]) >= $block[3][0]) {
-                            $this->setBlock($key);
-                        } else {
-                            $this->startBlock('normal', $key);
-                        }
-                    } else if ($this->isBlock('table')) {
-                        if (false !== strpos($line, '|')) {
-                            $block[3][2] ++;
-                            $this->setBlock($key, $block[3]);
-                        } else {
-                            $this->startBlock('normal', $key);
-                        }
-                    } else if ($this->isBlock('quote')) {
-                        if (!preg_match("/^(\s*)$/", $line)) { // empty line
-                            $this->setBlock($key);
-                        } else {
-                            $this->startBlock('normal', $key);
-                        }
-                    } else {
-                        if (empty($block) || $block[0] != 'normal') {
-                            $this->startBlock('normal', $key);
-                        } else {
-                            $this->setBlock($key);
-                        }
-                    }
-                    break;
             }
         }
 
         return $this->optimizeBlocks($this->_blocks, $lines);
+    }
+
+    /**
+     * @param $block
+     * @param $key
+     * @param $line
+     * @param $state
+     * @return bool
+     */
+    private function parseBlockList($block, $key, $line, &$state)
+    {
+        if (preg_match("/^(\s*)((?:[0-9]+\.)|(?:[a-z]\.?)|\-|\+|\*)\s+/i", $line, $matches)) {
+            $space = strlen($matches[1]);
+            $state['empty'] = 0;
+
+            // opened
+            if ($this->isBlock('list')) {
+                $this->setBlock($key, $space);
+            } else {
+                $this->startBlock('list', $key, $space);
+            }
+
+            return false;
+        } else if ($this->isBlock('list')) {
+            if ($state['empty'] == 0
+                && preg_match("/^(\s+)/", $line, $matches)
+                && strlen($matches[1]) > $block[3]) {
+                $this->setBlock($key);
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $block
+     * @param $key
+     * @param $line
+     * @return bool
+     */
+    private function parseBlockCode($block, $key, $line)
+    {
+        if (preg_match("/^(\s*)(~{3,}|`{3,})([^`~]*)$/i", $line, $matches)) {
+            if ($this->isBlock('code')) {
+                $isAfterList = $block[3][2];
+
+                if ($isAfterList) {
+                    $this->combineBlock()
+                        ->setBlock($key);
+                } else {
+                    $this->setBlock($key)
+                        ->endBlock();
+                }
+            } else {
+                $isAfterList = false;
+
+                if ($this->isBlock('list')) {
+                    $space = $block[3];
+
+                    $isAfterList = ($space > 0 && strlen($matches[1]) >= $space)
+                        || strlen($matches[1]) > $space;
+                }
+
+                $this->startBlock('code', $key, array(
+                    $matches[1],  $matches[3],  $isAfterList
+                ));
+            }
+
+            return false;
+        } else if ($this->isBlock('code')) {
+            $this->setBlock($key);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $block
+     * @param $key
+     * @param $line
+     * @param $state
+     * @return bool
+     */
+    private function parseBlockShtml($block, $key, $line, &$state)
+    {
+        if ($this->_html) {
+            if (preg_match("/^(\s*)!!!(\s*)$/", $line, $matches)) {
+                if ($this->isBlock('shtml')) {
+                    $this->setBlock($key)->endBlock();
+                } else {
+                    $this->startBlock('shtml', $key);
+                }
+
+                return false;
+            } else if ($this->isBlock('shtml')) {
+                $this->setBlock($key);
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $block
+     * @param $key
+     * @param $line
+     * @param $state
+     * @return bool
+     */
+    private function parseBlockAhtml($block, $key, $line, &$state)
+    {
+        if ($this->_html) {
+            if (preg_match("/^\s*<({$this->_blockHtmlTags})(\s+[^>]*)?>/i", $line, $matches)) {
+                if ($this->isBlock('ahtml')) {
+                    $this->setBlock($key);
+                    return false;
+                } else if (empty($matches[2]) || $matches[2] != '/') {
+                    $this->startBlock('ahtml', $key);
+                    preg_match_all("/<({$this->_blockHtmlTags})(\s+[^>]*)?>/i", $line, $allMatches);
+                    $lastMatch = $allMatches[1][count($allMatches[0]) - 1];
+
+                    if (strpos($line, "</{$lastMatch}>") !== false) {
+                        $this->endBlock();
+                    } else {
+                        $state['html'] = $lastMatch;
+                    }
+                    return false;
+                }
+            } else if (!!$state['html'] && strpos($line, "</{$state['html']}>") !== false) {
+                $this->setBlock($key)->endBlock();
+                $state['html'] = false;
+                return false;
+            } else if ($this->isBlock('ahtml')) {
+                $this->setBlock($key);
+                return false;
+            } else if (preg_match("/^\s*<!\-\-(.*?)\-\->\s*$/", $line, $matches)) {
+                $this->startBlock('ahtml', $key)->endBlock();
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $block
+     * @param $key
+     * @param $line
+     * @return bool
+     */
+    private function parseBlockMath($block, $key, $line)
+    {
+        if (preg_match("/^(\s*)\\$\\$(\s*)$/", $line, $matches)) {
+            if ($this->isBlock('math')) {
+                $this->setBlock($key)->endBlock();
+            } else {
+                $this->startBlock('math', $key);
+            }
+
+            return false;
+        } else if ($this->isBlock('math')) {
+            $this->setBlock($key);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $block
+     * @param $key
+     * @param $line
+     * @param $state
+     * @return bool
+     */
+    private function parseBlockPre($block, $key, $line, &$state)
+    {
+        if (preg_match("/^ {4}/", $line)) {
+            $state['empty'] = 0;
+
+            if ($this->isBlock('pre')) {
+                $this->setBlock($key);
+            } else {
+                $this->startBlock('pre', $key);
+            }
+
+            return false;
+        } else if ($this->isBlock('pre')) {
+            if (preg_match("/^\s*$/", $line)) {
+                if ($state['empty'] > 0) {
+                    $this->startBlock('normal', $key);
+                } else {
+                    $this->setBlock($key);
+                }
+
+                $state['empty'] ++;
+            } else {
+                $this->startBlock('normal', $key);
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $block
+     * @param $key
+     * @param $line
+     * @param $state
+     * @return bool
+     */
+    private function parseBlockHtml($block, $key, $line, &$state)
+    {
+        if (preg_match("/^\s*<({$state['special']})(\s+[^>]*)?>/i", $line, $matches)) {
+            $tag = strtolower($matches[1]);
+            if (!$this->isBlock('html', $tag) && !$this->isBlock('pre')) {
+                $this->startBlock('html', $key, $tag);
+            }
+
+            return false;
+        } else if (preg_match("/<\/({$state['special']})>\s*$/i", $line, $matches)) {
+            $tag = strtolower($matches[1]);
+
+            if ($this->isBlock('html', $tag)) {
+                $this->setBlock($key)
+                    ->endBlock();
+            }
+
+            return false;
+        } else if ($this->isBlock('html')) {
+            $this->setBlock($key);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $block
+     * @param $key
+     * @param $line
+     * @return bool
+     */
+    private function parseBlockFootnote($block, $key, $line)
+    {
+        if (preg_match("/^\[\^((?:[^\]]|\\]|\\[)+?)\]:/", $line, $matches)) {
+            $space = strlen($matches[0]) - 1;
+            $this->startBlock('footnote', $key, array(
+                $space, $matches[1]
+            ));
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $block
+     * @param $key
+     * @param $line
+     * @return bool
+     */
+    private function parseBlockDefinition($block, $key, $line)
+    {
+        if (preg_match("/^\s*\[((?:[^\]]|\\]|\\[)+?)\]:\s*(.+)$/", $line, $matches)) {
+            $this->_definitions[$matches[1]] = $this->cleanUrl($matches[2]);
+            $this->startBlock('definition', $key)
+                ->endBlock();
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $block
+     * @param $key
+     * @param $line
+     * @return bool
+     */
+    private function parseBlockQuote($block, $key, $line)
+    {
+        if (preg_match("/^(\s*)>/", $line, $matches)) {
+            if ($this->isBlock('list') && strlen($matches[1]) > 0) {
+                $this->setBlock($key);
+            } else if ($this->isBlock('quote')) {
+                $this->setBlock($key);
+            } else {
+                $this->startBlock('quote', $key);
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $block
+     * @param $key
+     * @param $line
+     * @param $state
+     * @param $lines
+     * @return bool
+     */
+    private function parseBlockTable($block, $key, $line, &$state, $lines)
+    {
+        if (preg_match("/^((?:(?:(?:\||\+)(?:[ :]*\-+[ :]*)(?:\||\+))|(?:(?:[ :]*\-+[ :]*)(?:\||\+)(?:[ :]*\-+[ :]*))|(?:(?:[ :]*\-+[ :]*)(?:\||\+))|(?:(?:\||\+)(?:[ :]*\-+[ :]*)))+)$/", $line, $matches)) {
+            if ($this->isBlock('table')) {
+                $block[3][0][] = $block[3][2];
+                $block[3][2]++;
+                $this->setBlock($key, $block[3]);
+            } else {
+                $head = 0;
+
+                if (empty($block) ||
+                    $block[0] != 'normal' ||
+                    preg_match("/^\s*$/", $lines[$block[2]])) {
+                    $this->startBlock('table', $key);
+                } else {
+                    $head = 1;
+                    $this->backBlock(1, 'table');
+                }
+
+                if ($matches[1][0] == '|') {
+                    $matches[1] = substr($matches[1], 1);
+
+                    if ($matches[1][strlen($matches[1]) - 1] == '|') {
+                        $matches[1] = substr($matches[1], 0, -1);
+                    }
+                }
+
+                $rows = preg_split("/(\+|\|)/", $matches[1]);
+                $aligns = array();
+                foreach ($rows as $row) {
+                    $align = 'none';
+
+                    if (preg_match("/^\s*(:?)\-+(:?)\s*$/", $row, $matches)) {
+                        if (!empty($matches[1]) && !empty($matches[2])) {
+                            $align = 'center';
+                        } else if (!empty($matches[1])) {
+                            $align = 'left';
+                        } else if (!empty($matches[2])) {
+                            $align = 'right';
+                        }
+                    }
+
+                    $aligns[] = $align;
+                }
+
+                $this->setBlock($key, array(array($head), $aligns, $head + 1));
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $block
+     * @param $key
+     * @param $line
+     * @return bool
+     */
+    private function parseBlockSh($block, $key, $line)
+    {
+        if (preg_match("/^(#+)(.*)$/", $line, $matches)) {
+            $num = min(strlen($matches[1]), 6);
+            $this->startBlock('sh', $key, $num)
+                ->endBlock();
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $block
+     * @param $key
+     * @param $line
+     * @param $state
+     * @param $lines
+     * @return bool
+     */
+    private function parseBlockMh($block, $key, $line, &$state, $lines)
+    {
+        if (preg_match("/^\s*((=|-){2,})\s*$/", $line, $matches)
+                    && ($block && $block[0] == "normal" && !preg_match("/^\s*$/", $lines[$block[2]]))) {    // check if last line isn't empty
+            if ($this->isBlock('normal')) {
+                $this->backBlock(1, 'mh', $matches[1][0] == '=' ? 1 : 2)
+                    ->setBlock($key)
+                    ->endBlock();
+            } else {
+                $this->startBlock('normal', $key);
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $block
+     * @param $key
+     * @param $line
+     * @return bool
+     */
+    private function parseBlockHr($block, $key, $line)
+    {
+        if (preg_match("/^[-\*]{3,}\s*$/", $line)) {
+            $this->startBlock('hr', $key)
+                ->endBlock();
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $block
+     * @param $key
+     * @param $line
+     * @param $state
+     * @return bool
+     */
+    private function parseBlockDefault($block, $key, $line, &$state)
+    {
+        if ($this->isBlock('list')) {
+            if (preg_match("/^(\s*)/", $line, $matches)) { // empty line
+                $indent = strlen($matches[1]) > 0;
+
+                if ($state['empty'] > 0 && !$indent) {
+                    $this->startBlock('normal', $key);
+                } else {
+                    $this->setBlock($key);
+                }
+
+                if ($indent) {
+                    $state['empty'] = 0;
+                } else {
+                    $state['empty'] ++;
+                }
+            } else if ($state['empty'] == 0) {
+                $this->setBlock($key);
+            } else {
+                $this->startBlock('normal', $key);
+            }
+        } else if ($this->isBlock('footnote')) {
+            preg_match("/^(\s*)/", $line, $matches);
+            if (strlen($matches[1]) >= $block[3][0]) {
+                $this->setBlock($key);
+            } else {
+                $this->startBlock('normal', $key);
+            }
+        } else if ($this->isBlock('table')) {
+            if (false !== strpos($line, '|')) {
+                $block[3][2] ++;
+                $this->setBlock($key, $block[3]);
+            } else {
+                $this->startBlock('normal', $key);
+            }
+        } else if ($this->isBlock('quote')) {
+            if (!preg_match("/^(\s*)$/", $line)) { // empty line
+                $this->setBlock($key);
+            } else {
+                $this->startBlock('normal', $key);
+            }
+        } else {
+            if (empty($block) || $block[0] != 'normal') {
+                $this->startBlock('normal', $key);
+            } else {
+                $this->setBlock($key);
+            }
+        }
+
+        return true;
     }
 
     /**

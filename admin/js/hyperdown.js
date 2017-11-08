@@ -101,15 +101,34 @@
       };
       this.hooks = {};
       this.html = false;
+      this.blockParsers = [['code', 10], ['shtml', 20], ['ahtml', 30], ['list', 40], ['math', 50], ['pre', 60], ['html', 70], ['footnote', 80], ['definition', 90], ['quote', 100], ['table', 110], ['sh', 120], ['mh', 130], ['hr', 140], ['default', 9999]];
+      this.parsers = {};
     }
 
     Parser.prototype.makeHtml = function(text) {
-      var html;
+      var html, j, len, name, parser, ref;
       this.footnotes = [];
       this.definitions = {};
       this.holders = {};
       this.uniqid = (Math.ceil(Math.random() * 10000000)) + (Math.ceil(Math.random() * 10000000));
       this.id = 0;
+      this.blockParsers.sort(function(a, b) {
+        if (a[1] < b[1]) {
+          return -1;
+        } else {
+          return 1;
+        }
+      });
+      ref = this.blockParsers;
+      for (j = 0, len = ref.length; j < len; j++) {
+        parser = ref[j];
+        name = parser[0];
+        if (parser[2] !== void 0) {
+          this.parsers[name] = parser[2];
+        } else {
+          this.parsers[name] = this['parseBlock' + (ucfirst(name))].bind(this);
+        }
+      }
       text = this.initText(text);
       html = this.parse(text);
       html = this.makeFootnotes(html);
@@ -403,7 +422,7 @@
     };
 
     Parser.prototype.parseBlock = function(text, lines) {
-      var align, aligns, autoHtml, block, emptyCount, head, htmlTagAllRegExp, htmlTagRegExp, indent, isAfterList, j, key, l, lastMatch, len, len1, len2, line, m, matches, n, num, ref, row, rows, space, special, tag;
+      var block, j, key, l, len, len1, line, name, parser, pass, ref, ref1, state;
       ref = text.split("\n");
       for (j = 0, len = ref.length; j < len; j++) {
         line = ref[j];
@@ -412,264 +431,361 @@
       this.blocks = [];
       this.current = 'normal';
       this.pos = -1;
-      special = (array_keys(this.specialWhiteList)).join('|');
-      emptyCount = 0;
-      autoHtml = false;
+      state = {
+        special: (array_keys(this.specialWhiteList)).join('|'),
+        empty: 0,
+        html: false
+      };
       for (key = l = 0, len1 = lines.length; l < len1; key = ++l) {
         line = lines[key];
         block = this.getBlock();
         if (block != null) {
           block = block.slice(0);
         }
-        if (!!(matches = line.match(/^(\s*)((?:[0-9]+\.)|(?:[a-z]\.?)|\-|\+|\*)\s+/i))) {
-          space = matches[1].length;
-          emptyCount = 0;
-          if (this.isBlock('list')) {
-            this.setBlock(key, space);
-          } else {
-            this.startBlock('list', key, space);
-          }
-          continue;
-        } else if (this.isBlock('list')) {
-          if ((emptyCount === 0) && !!(matches = line.match(/^(\s+)/)) && matches[1].length > block[3]) {
-            this.setBlock(key);
+        if (this.current !== 'normal') {
+          pass = this.parsers[this.current](block, key, line, state, lines);
+          if (!pass) {
             continue;
           }
         }
-        if (!!(matches = line.match(/^(\s*)(~{3,}|`{3,})([^`~]*)$/i))) {
-          if (this.isBlock('code')) {
-            isAfterList = block[3][2];
-            if (isAfterList) {
-              this.combineBlock().setBlock(key);
-            } else {
-              (this.setBlock(key)).endBlock();
+        ref1 = this.parsers;
+        for (name in ref1) {
+          parser = ref1[name];
+          if (name !== this.current) {
+            pass = parser(block, key, line, state, lines);
+            if (!pass) {
+              break;
             }
-          } else {
-            isAfterList = false;
-            if (this.isBlock('list')) {
-              space = block[3];
-              isAfterList = (space > 0 && matches[1].length >= space) || matches[1].length > space;
-            }
-            this.startBlock('code', key, [matches[1], matches[3], isAfterList]);
           }
-          continue;
-        } else if (this.isBlock('code')) {
-          this.setBlock(key);
-          continue;
-        }
-        if (this.html) {
-          if (!autoHtml && !!(matches = line.match(/^(\s*)!!!(\s*)$/))) {
-            if (this.isBlock('shtml')) {
-              this.setBlock(key).endBlock();
-            } else {
-              this.startBlock('shtml', key);
-            }
-            continue;
-          } else if (this.isBlock('shtml')) {
-            this.setBlock(key);
-            continue;
-          }
-          htmlTagRegExp = new RegExp("^\\s*<(" + this.blockHtmlTags + ")(\\s+[^>]*)?>", 'i');
-          if (matches = line.match(htmlTagRegExp)) {
-            if (this.isBlock('ahtml')) {
-              this.setBlock(key);
-              continue;
-            } else if (matches[2] === void 0 || matches[2] !== '/') {
-              this.startBlock('ahtml', key);
-              htmlTagAllRegExp = new RegExp("\\s*<(" + this.blockHtmlTags + ")(\\s+[^>]*)?>", 'ig');
-              while (true) {
-                m = htmlTagAllRegExp.exec(line);
-                if (!m) {
-                  break;
-                }
-                lastMatch = m[1];
-              }
-              if (0 <= line.indexOf("</" + lastMatch + ">")) {
-                this.endBlock();
-              } else {
-                autoHtml = lastMatch;
-              }
-              continue;
-            }
-          } else if (!!autoHtml && 0 <= line.indexOf("</" + autoHtml + ">")) {
-            this.setBlock(key).endBlock();
-            autoHtml = false;
-            continue;
-          } else if (this.isBlock('ahtml')) {
-            this.setBlock(key);
-            continue;
-          } else if (!!(matches = line.match(/^\s*<!\-\-(.*?)\-\->\s*$/))) {
-            this.startBlock('ahtml', key).endBlock();
-            continue;
-          }
-        }
-        if (!!(matches = line.match(/^(\s*)\$\$(\s*)$/))) {
-          if (this.isBlock('math')) {
-            this.setBlock(key).endBlock();
-          } else {
-            this.startBlock('math', key);
-          }
-          continue;
-        } else if (this.isBlock('math')) {
-          this.setBlock(key);
-          continue;
-        }
-        if (!!(line.match(/^ {4}/))) {
-          emptyCount = 0;
-          if ((this.isBlock('pre')) || this.isBlock('list')) {
-            this.setBlock(key);
-          } else {
-            this.startBlock('pre', key);
-          }
-          continue;
-        } else if (this.isBlock('pre')) {
-          if (line.match(/^\s*$/)) {
-            if (emptyCount > 0) {
-              this.startBlock('normal', key);
-            } else {
-              this.setBlock(key);
-            }
-            emptyCount += 1;
-          } else {
-            this.startBlock('normal', key);
-          }
-          continue;
-        }
-        if (!!(matches = line.match(new RegExp("^\\s*<(" + special + ")(\\s+[^>]*)?>", 'i')))) {
-          tag = matches[1].toLowerCase();
-          if (!(this.isBlock('html', tag)) && !(this.isBlock('pre'))) {
-            this.startBlock('html', key, tag);
-          }
-          continue;
-        } else if (!!(matches = line.match(new RegExp("</(" + special + ")>\\s*$", 'i')))) {
-          tag = matches[1].toLowerCase();
-          if (this.isBlock('html', tag)) {
-            this.setBlock(key).endBlock();
-          }
-          continue;
-        } else if (this.isBlock('html')) {
-          this.setBlock(key);
-          continue;
-        }
-        switch (true) {
-          case !!(matches = line.match(/^\[\^((?:[^\]]|\\\]|\\\[)+?)\]:/)):
-            space = matches[0].length - 1;
-            this.startBlock('footnote', key, [space, matches[1]]);
-            break;
-          case !!(matches = line.match(/^\s*\[((?:[^\]]|\\\]|\\\[)+?)\]:\s*(.+)$/)):
-            this.definitions[matches[1]] = this.cleanUrl(matches[2]);
-            this.startBlock('definition', key).endBlock();
-            break;
-          case !!(matches = line.match(/^(\s*)>/)):
-            if ((this.isBlock('list')) && matches[1].length > 0) {
-              this.setBlock(key);
-            } else if (this.isBlock('quote')) {
-              this.setBlock(key);
-            } else {
-              this.startBlock('quote', key);
-            }
-            break;
-          case !!(matches = line.match(/^((?:(?:(?:\||\+)(?:[ :]*\-+[ :]*)(?:\||\+))|(?:(?:[ :]*\-+[ :]*)(?:\||\+)(?:[ :]*\-+[ :]*))|(?:(?:[ :]*\-+[ :]*)(?:\||\+))|(?:(?:\||\+)(?:[ :]*\-+[ :]*)))+)$/)):
-            if (this.isBlock('table')) {
-              block[3][0].push(block[3][2]);
-              block[3][2] += 1;
-              this.setBlock(key, block[3]);
-            } else {
-              head = 0;
-              if ((block == null) || block[0] !== 'normal' || lines[block[2]].match(/^\s*$/)) {
-                this.startBlock('table', key);
-              } else {
-                head = 1;
-                this.backBlock(1, 'table');
-              }
-              if (matches[1][0] === '|') {
-                matches[1] = matches[1].substring(1);
-                if (matches[1][matches[1].length - 1] === '|') {
-                  matches[1] = matches[1].substring(0, matches[1].length - 1);
-                }
-              }
-              rows = matches[1].split(/\+|\|/);
-              aligns = [];
-              for (n = 0, len2 = rows.length; n < len2; n++) {
-                row = rows[n];
-                align = 'none';
-                if (!!(matches = row.match(/^\s*(:?)\-+(:?)\s*$/))) {
-                  if (!!matches[1] && !!matches[2]) {
-                    align = 'center';
-                  } else if (!!matches[1]) {
-                    align = 'left';
-                  } else if (!!matches[2]) {
-                    align = 'right';
-                  }
-                }
-                aligns.push(align);
-              }
-              this.setBlock(key, [[head], aligns, head + 1]);
-            }
-            break;
-          case !!(matches = line.match(/^(#+)(.*)$/)):
-            num = Math.min(matches[1].length, 6);
-            this.startBlock('sh', key, num).endBlock();
-            break;
-          case !!(matches = line.match(/^\s*((=|-){2,})\s*$/)) && ((block != null) && block[0] === 'normal' && !lines[block[2]].match(/^\s*$/)):
-            if (this.isBlock('normal')) {
-              this.backBlock(1, 'mh', matches[1][0] === '=' ? 1 : 2).setBlock(key).endBlock();
-            } else {
-              this.startBlock('normal', key);
-            }
-            break;
-          case !!(line.match(/^[-\*]{3,}\s*$/)):
-            this.startBlock('hr', key).endBlock();
-            break;
-          default:
-            if (this.isBlock('list')) {
-              if (!!(matches = line.match(/^(\s*)/))) {
-                indent = matches[1].length > 0;
-                if (emptyCount > 0 && !indent) {
-                  this.startBlock('normal', key);
-                } else {
-                  this.setBlock(key);
-                }
-                if (indent) {
-                  emptyCount = 0;
-                } else {
-                  emptyCount += 1;
-                }
-              } else if (emptyCount === 0) {
-                this.setBlock(key);
-              } else {
-                this.startBlock('normal', key);
-              }
-            } else if (this.isBlock('footnote')) {
-              matches = line.match(/^(\s*)/);
-              if (matches[1].length >= block[3][0]) {
-                this.setBlock(key);
-              } else {
-                this.startBlock('normal', key);
-              }
-            } else if (this.isBlock('table')) {
-              if (0 <= line.indexOf('|')) {
-                block[3][2] += 1;
-                this.setBlock(key, block[3]);
-              } else {
-                this.startBlock('normal', key);
-              }
-            } else if (this.isBlock('quote')) {
-              if (!line.match(/^(\s*)$/)) {
-                this.setBlock(key);
-              } else {
-                this.startBlock('normal', key);
-              }
-            } else {
-              if ((block == null) || block[0] !== 'normal') {
-                this.startBlock('normal', key);
-              } else {
-                this.setBlock(key);
-              }
-            }
         }
       }
       return this.optimizeBlocks(this.blocks, lines);
+    };
+
+    Parser.prototype.parseBlockList = function(block, key, line, state) {
+      var matches, space;
+      if (!!(matches = line.match(/^(\s*)((?:[0-9]+\.)|(?:[a-z]\.?)|\-|\+|\*)\s+/i))) {
+        space = matches[1].length;
+        state.empty = 0;
+        if (this.isBlock('list')) {
+          this.setBlock(key, space);
+        } else {
+          this.startBlock('list', key, space);
+        }
+        return false;
+      } else if (this.isBlock('list')) {
+        if ((state.empty === 0) && !!(matches = line.match(/^(\s+)/)) && matches[1].length > block[3]) {
+          this.setBlock(key);
+          return false;
+        }
+      }
+      return true;
+    };
+
+    Parser.prototype.parseBlockCode = function(block, key, line) {
+      var isAfterList, matches, space;
+      if (!!(matches = line.match(/^(\s*)(~{3,}|`{3,})([^`~]*)$/i))) {
+        if (this.isBlock('code')) {
+          isAfterList = block[3][2];
+          if (isAfterList) {
+            this.combineBlock().setBlock(key);
+          } else {
+            (this.setBlock(key)).endBlock();
+          }
+        } else {
+          isAfterList = false;
+          if (this.isBlock('list')) {
+            space = block[3];
+            isAfterList = (space > 0 && matches[1].length >= space) || matches[1].length > space;
+          }
+          this.startBlock('code', key, [matches[1], matches[3], isAfterList]);
+        }
+        return false;
+      } else if (this.isBlock('code')) {
+        this.setBlock(key);
+        return false;
+      }
+      return true;
+    };
+
+    Parser.prototype.parseBlockShtml = function(block, key, line, state) {
+      var matches;
+      if (this.html) {
+        if (!!(matches = line.match(/^(\s*)!!!(\s*)$/))) {
+          if (this.isBlock('shtml')) {
+            this.setBlock(key).endBlock();
+          } else {
+            this.startBlock('shtml', key);
+          }
+          return false;
+        } else if (this.isBlock('shtml')) {
+          this.setBlock(key);
+          return false;
+        }
+      }
+      return true;
+    };
+
+    Parser.prototype.parseBlockAhtml = function(block, key, line, state) {
+      var htmlTagAllRegExp, htmlTagRegExp, lastMatch, m, matches;
+      if (this.html) {
+        htmlTagRegExp = new RegExp("^\\s*<(" + this.blockHtmlTags + ")(\\s+[^>]*)?>", 'i');
+        if (matches = line.match(htmlTagRegExp)) {
+          if (this.isBlock('ahtml')) {
+            this.setBlock(key);
+            return false;
+          } else if (matches[2] === void 0 || matches[2] !== '/') {
+            this.startBlock('ahtml', key);
+            htmlTagAllRegExp = new RegExp("\\s*<(" + this.blockHtmlTags + ")(\\s+[^>]*)?>", 'ig');
+            while (true) {
+              m = htmlTagAllRegExp.exec(line);
+              if (!m) {
+                break;
+              }
+              lastMatch = m[1];
+            }
+            if (0 <= line.indexOf("</" + lastMatch + ">")) {
+              this.endBlock();
+            } else {
+              state.html = lastMatch;
+            }
+            return false;
+          }
+        } else if (!!state.html && 0 <= line.indexOf("</" + state.html + ">")) {
+          this.setBlock(key).endBlock();
+          state.html = false;
+          return false;
+        } else if (this.isBlock('ahtml')) {
+          this.setBlock(key);
+          return false;
+        } else if (!!(matches = line.match(/^\s*<!\-\-(.*?)\-\->\s*$/))) {
+          this.startBlock('ahtml', key).endBlock();
+          return false;
+        }
+      }
+      return true;
+    };
+
+    Parser.prototype.parseBlockMath = function(block, key, line) {
+      var matches;
+      if (!!(matches = line.match(/^(\s*)\$\$(\s*)$/))) {
+        if (this.isBlock('math')) {
+          this.setBlock(key).endBlock();
+        } else {
+          this.startBlock('math', key);
+        }
+        return false;
+      } else if (this.isBlock('math')) {
+        this.setBlock(key);
+        return false;
+      }
+      return true;
+    };
+
+    Parser.prototype.parseBlockPre = function(block, key, line, state) {
+      if (!!(line.match(/^ {4}/))) {
+        state.empty = 0;
+        if (this.isBlock('pre')) {
+          this.setBlock(key);
+        } else {
+          this.startBlock('pre', key);
+        }
+        return false;
+      } else if (this.isBlock('pre')) {
+        if (line.match(/^\s*$/)) {
+          if (state.empty > 0) {
+            this.startBlock('normal', key);
+          } else {
+            this.setBlock(key);
+          }
+          state.empty += 1;
+        } else {
+          this.startBlock('normal', key);
+        }
+        return false;
+      }
+      return true;
+    };
+
+    Parser.prototype.parseBlockHtml = function(block, key, line, state) {
+      var matches, tag;
+      if (!!(matches = line.match(new RegExp("^\\s*<(" + state.special + ")(\\s+[^>]*)?>", 'i')))) {
+        tag = matches[1].toLowerCase();
+        if (!(this.isBlock('html', tag)) && !(this.isBlock('pre'))) {
+          this.startBlock('html', key, tag);
+        }
+        return false;
+      } else if (!!(matches = line.match(new RegExp("</(" + state.special + ")>\\s*$", 'i')))) {
+        tag = matches[1].toLowerCase();
+        if (this.isBlock('html', tag)) {
+          this.setBlock(key).endBlock();
+        }
+        return false;
+      } else if (this.isBlock('html')) {
+        this.setBlock(key);
+        return false;
+      }
+      return true;
+    };
+
+    Parser.prototype.parseBlockFootnote = function(block, key, line) {
+      var matches, space;
+      if (!!(matches = line.match(/^\[\^((?:[^\]]|\\\]|\\\[)+?)\]:/))) {
+        space = matches[0].length - 1;
+        this.startBlock('footnote', key, [space, matches[1]]);
+        return false;
+      }
+      return true;
+    };
+
+    Parser.prototype.parseBlockDefinition = function(block, key, line) {
+      var matches;
+      if (!!(matches = line.match(/^\s*\[((?:[^\]]|\\\]|\\\[)+?)\]:\s*(.+)$/))) {
+        this.definitions[matches[1]] = this.cleanUrl(matches[2]);
+        this.startBlock('definition', key).endBlock();
+        return false;
+      }
+      return true;
+    };
+
+    Parser.prototype.parseBlockQuote = function(block, key, line) {
+      var matches;
+      if (!!(matches = line.match(/^(\s*)>/))) {
+        if ((this.isBlock('list')) && matches[1].length > 0) {
+          this.setBlock(key);
+        } else if (this.isBlock('quote')) {
+          this.setBlock(key);
+        } else {
+          this.startBlock('quote', key);
+        }
+        return false;
+      }
+      return true;
+    };
+
+    Parser.prototype.parseBlockTable = function(block, key, line, state, lines) {
+      var align, aligns, head, j, len, matches, row, rows;
+      if (!!(matches = line.match(/^((?:(?:(?:\||\+)(?:[ :]*\-+[ :]*)(?:\||\+))|(?:(?:[ :]*\-+[ :]*)(?:\||\+)(?:[ :]*\-+[ :]*))|(?:(?:[ :]*\-+[ :]*)(?:\||\+))|(?:(?:\||\+)(?:[ :]*\-+[ :]*)))+)$/))) {
+        if (this.isBlock('table')) {
+          block[3][0].push(block[3][2]);
+          block[3][2] += 1;
+          this.setBlock(key, block[3]);
+        } else {
+          head = 0;
+          if ((block == null) || block[0] !== 'normal' || lines[block[2]].match(/^\s*$/)) {
+            this.startBlock('table', key);
+          } else {
+            head = 1;
+            this.backBlock(1, 'table');
+          }
+          if (matches[1][0] === '|') {
+            matches[1] = matches[1].substring(1);
+            if (matches[1][matches[1].length - 1] === '|') {
+              matches[1] = matches[1].substring(0, matches[1].length - 1);
+            }
+          }
+          rows = matches[1].split(/\+|\|/);
+          aligns = [];
+          for (j = 0, len = rows.length; j < len; j++) {
+            row = rows[j];
+            align = 'none';
+            if (!!(matches = row.match(/^\s*(:?)\-+(:?)\s*$/))) {
+              if (!!matches[1] && !!matches[2]) {
+                align = 'center';
+              } else if (!!matches[1]) {
+                align = 'left';
+              } else if (!!matches[2]) {
+                align = 'right';
+              }
+            }
+            aligns.push(align);
+          }
+          this.setBlock(key, [[head], aligns, head + 1]);
+        }
+        return false;
+      }
+      return true;
+    };
+
+    Parser.prototype.parseBlockSh = function(block, key, line) {
+      var matches, num;
+      if (!!(matches = line.match(/^(#+)(.*)$/))) {
+        num = Math.min(matches[1].length, 6);
+        this.startBlock('sh', key, num).endBlock();
+        return false;
+      }
+      return true;
+    };
+
+    Parser.prototype.parseBlockMh = function(block, key, line, state, lines) {
+      var matches;
+      if (!!(matches = line.match(/^\s*((=|-){2,})\s*$/)) && ((block != null) && block[0] === 'normal' && !lines[block[2]].match(/^\s*$/))) {
+        if (this.isBlock('normal')) {
+          this.backBlock(1, 'mh', matches[1][0] === '=' ? 1 : 2).setBlock(key).endBlock();
+        } else {
+          this.startBlock('normal', key);
+        }
+        return false;
+      }
+      return true;
+    };
+
+    Parser.prototype.parseBlockHr = function(block, key, line) {
+      if (!!(line.match(/^[-\*]{3,}\s*$/))) {
+        this.startBlock('hr', key).endBlock();
+        return false;
+      }
+      return true;
+    };
+
+    Parser.prototype.parseBlockDefault = function(block, key, line, state) {
+      var indent, matches;
+      if (this.isBlock('list')) {
+        if (!!(matches = line.match(/^(\s*)/))) {
+          indent = matches[1].length > 0;
+          if (state.empty > 0 && !indent) {
+            this.startBlock('normal', key);
+          } else {
+            this.setBlock(key);
+          }
+          if (indent) {
+            state.empty = 0;
+          } else {
+            state.empty += 1;
+          }
+        } else if (state.empty === 0) {
+          this.setBlock(key);
+        } else {
+          this.startBlock('normal', key);
+        }
+      } else if (this.isBlock('footnote')) {
+        matches = line.match(/^(\s*)/);
+        if (matches[1].length >= block[3][0]) {
+          this.setBlock(key);
+        } else {
+          this.startBlock('normal', key);
+        }
+      } else if (this.isBlock('table')) {
+        if (0 <= line.indexOf('|')) {
+          block[3][2] += 1;
+          this.setBlock(key, block[3]);
+        } else {
+          this.startBlock('normal', key);
+        }
+      } else if (this.isBlock('quote')) {
+        if (!line.match(/^(\s*)$/)) {
+          this.setBlock(key);
+        } else {
+          this.startBlock('normal', key);
+        }
+      } else {
+        if ((block == null) || block[0] !== 'normal') {
+          this.startBlock('normal', key);
+        } else {
+          this.setBlock(key);
+        }
+      }
+      return true;
     };
 
     Parser.prototype.optimizeBlocks = function(_blocks, _lines) {
@@ -879,7 +995,7 @@
         }
         rows = line.split('|').map(function(row) {
           if (row.match(/^\s+$/)) {
-            return '';
+            return ' ';
           } else {
             return trim(row);
           }
