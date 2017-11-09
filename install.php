@@ -182,15 +182,7 @@ list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
 $lang = _r('lang', Typecho_Cookie::get('__typecho_lang'));
 $langs = Widget_Options_General::getLangs();
 
-if (empty($lang) && count($langs) > 1) {
-    foreach ($langs as $lang) {
-        if ('zh_CN' != $lang) {
-            break;
-        }
-    }
-}
-
-if (empty($lang)) {
+if (empty($lang) || (!empty($langs) && !isset($langs[$lang]))) {
     $lang = 'zh_CN';
 }
 

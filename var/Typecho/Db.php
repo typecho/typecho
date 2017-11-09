@@ -336,9 +336,12 @@ class Typecho_Db
      */
     public function query($query, $op = self::READ, $action = self::SELECT)
     {
+        $table = NULL;
+
         /** 在适配器中执行查询 */
         if ($query instanceof Typecho_Db_Query) {
             $action = $query->getAttribute('action');
+            $table = $query->getAttribute('table');
             $op = (self::UPDATE == $action || self::DELETE == $action
             || self::INSERT == $action) ? self::WRITE : self::READ;
         } else if (!is_string($query)) {
@@ -351,7 +354,7 @@ class Typecho_Db
 
         /** 提交查询 */
         $resource = $this->_adapter->query($query instanceof Typecho_Db_Query ?
-            $query->prepare($query) : $query, $handle, $op, $action);
+            $query->prepare($query) : $query, $handle, $op, $action, $table);
 
         if ($action) {
             //根据查询动作返回相应资源
