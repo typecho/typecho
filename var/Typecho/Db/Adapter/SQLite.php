@@ -69,12 +69,13 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
      * @param mixed $handle
      * @param int $op
      * @param null $action
+     * @param string $table 数据表
      * @return resource|SQLiteResult
      * @throws Typecho_Db_Query_Exception
      */
-    public function query($query, $handle, $op = Typecho_Db::READ, $action = NULL)
+    public function query($query, $handle, $op = Typecho_Db::READ, $action = NULL, $table = NULL)
     {
-        if ($resource = @sqlite_query($query instanceof Typecho_Db_Query ? $query->__toString() : $query, $handle)) {
+        if ($resource = @sqlite_query($query, $handle)) {
             return $resource;
         }
 

@@ -81,14 +81,14 @@ class Typecho_Db_Adapter_Pgsql implements Typecho_Db_Adapter
      * @param mixed $handle 连接对象
      * @param integer $op 数据库读写状态
      * @param string $action 数据库动作
+     * @param string $table 数据表
      * @throws Typecho_Db_Exception
      * @return resource
      */
-    public function query($query, $handle, $op = Typecho_Db::READ, $action = NULL)
+    public function query($query, $handle, $op = Typecho_Db::READ, $action = NULL, $table = NULL)
     {
-        $isQueryObject = $query instanceof Typecho_Db_Query;
-        $this->_lastTable = $isQueryObject ? $query->getAttribute('table') : NULL;
-        if ($resource = @pg_query($handle, $isQueryObject ? $query->__toString() : $query)) {
+        $this->_lastTable = $table;
+        if ($resource = @pg_query($handle, $query)) {
             return $resource;
         }
 
