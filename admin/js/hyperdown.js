@@ -196,9 +196,6 @@
         result = this.call('after' + ucfirst(method), result, value);
         html += result;
       }
-      if (inline && blocks.length === 1 && blocks[0][0] === 'normal') {
-        html = html.replace(/^\s*<p>(.*)<\/p>\s*$/m, '$1');
-      }
       return html;
     };
 
@@ -473,8 +470,13 @@
           this.startBlock('list', key, space);
         }
         return false;
-      } else if (this.isBlock('list')) {
-        if ((state.empty === 0) && !!(matches = line.match(/^(\s+)/)) && matches[1].length > block[3]) {
+      } else if ((this.isBlock('list')) && !line.match(/^\s*\[((?:[^\]]|\\\]|\\\[)+?)\]:\s*(.+)$/)) {
+        if ((state.empty <= 1) && !!(matches = line.match(/^(\s+)/)) && matches[1].length > block[3]) {
+          state.empty = 0;
+          this.setBlock(key);
+          return false;
+        } else if ((line.match(/^\s*$/)) && state.empty === 0) {
+          state.empty += 1;
           this.setBlock(key);
           return false;
         }
@@ -584,24 +586,14 @@
 
     Parser.prototype.parseBlockPre = function(block, key, line, state) {
       if (!!(line.match(/^ {4}/))) {
-        state.empty = 0;
         if (this.isBlock('pre')) {
           this.setBlock(key);
         } else {
           this.startBlock('pre', key);
         }
         return false;
-      } else if (this.isBlock('pre')) {
-        if (line.match(/^\s*$/)) {
-          if (state.empty > 0) {
-            this.startBlock('normal', key);
-          } else {
-            this.setBlock(key);
-          }
-          state.empty += 1;
-        } else {
-          this.startBlock('normal', key);
-        }
+      } else if ((this.isBlock('pre')) && line.match(/^\s*$/)) {
+        this.setBlock(key);
         return false;
       }
       return true;
@@ -739,26 +731,8 @@
     };
 
     Parser.prototype.parseBlockDefault = function(block, key, line, state) {
-      var indent, matches;
-      if (this.isBlock('list')) {
-        if (!!(matches = line.match(/^(\s*)/))) {
-          indent = matches[1].length > 0;
-          if (state.empty > 0 && !indent) {
-            this.startBlock('normal', key);
-          } else {
-            this.setBlock(key);
-          }
-          if (indent) {
-            state.empty = 0;
-          } else {
-            state.empty += 1;
-          }
-        } else if (state.empty === 0) {
-          this.setBlock(key);
-        } else {
-          this.startBlock('normal', key);
-        }
-      } else if (this.isBlock('footnote')) {
+      var matches;
+      if (this.isBlock('footnote')) {
         matches = line.match(/^(\s*)/);
         if (matches[1].length >= block[3][0]) {
           this.setBlock(key);
