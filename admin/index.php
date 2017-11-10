@@ -135,7 +135,7 @@ $(document).ready(function () {
     }
 
     function applyUpdate(update) {
-        if (update.available) {
+        if (update && update.available) {
             $('<div class="update-check message error"><p>'
                 + '<?php _e('您当前使用的版本是 %s'); ?>'.replace('%s', update.current) + '<br />'
                 + '<strong><a href="' + update.link + '" target="_blank">'
