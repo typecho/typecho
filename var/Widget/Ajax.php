@@ -43,29 +43,35 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
         $client = Typecho_Http_Client::get();
         if ($client) {
             $client->setHeader('User-Agent', $this->options->generator)
-                ->setTimeout(10)
-                ->send('http://typecho.org/version.json');
+                ->setTimeout(10);
+            $result = array('available' => 0);
 
-            /** 匹配内容体 */
-            $response = $client->getResponseBody();
-            $json = json_decode($response, true);
+            try {
+                $client->send('http://typecho.org/version.json');
 
-            if (!empty($json)) {
-                list($soft, $version) = explode(' ', $this->options->generator);
-                $current = explode('/', $version);
+                /** 匹配内容体 */
+                $response = $client->getResponseBody();
+                $json = json_decode($response, true);
 
-                if (isset($json['release']) && isset($json['version'])
-                    && preg_match("/^[0-9\.]+$/", $json['release'])
-                    && preg_match("/^[0-9\.]+$/", $json['version'])
-                    && version_compare($json['release'], $current[0], '>=')
-                    && version_compare($json['version'], $current[1], '>')) {
-                    $result = array(
-                        'available' => 1,
-                        'latest'    => $json['release'] . '-' . $json['version'],
-                        'current'   => $current[0] . '-' . $current[1],
-                        'link'      => 'http://typecho.org/download'
-                    );
+                if (!empty($json)) {
+                    list($soft, $version) = explode(' ', $this->options->generator);
+                    $current = explode('/', $version);
+
+                    if (isset($json['release']) && isset($json['version'])
+                        && preg_match("/^[0-9\.]+$/", $json['release'])
+                        && preg_match("/^[0-9\.]+$/", $json['version'])
+                        && version_compare($json['release'], $current[0], '>=')
+                        && version_compare($json['version'], $current[1], '>')) {
+                        $result = array(
+                            'available' => 1,
+                            'latest' => $json['release'] . '-' . $json['version'],
+                            'current' => $current[0] . '-' . $current[1],
+                            'link' => 'http://typecho.org/download'
+                        );
+                    }
                 }
+            } catch (Exception $e) {
+                // do nothing
             }
 
             $this->response->throwJson($result);
