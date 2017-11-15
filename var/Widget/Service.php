@@ -153,7 +153,8 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
                 ->setHeader('User-Agent', $this->options->generator)
                 ->setTimeout(2)
                 ->setData($input)
-                ->send(Typecho_Common::url('/action/service', $this->options->index));
+                ->send(Typecho_Common::url('/action/service',
+                    defined('__TYPECHO_SERVICE_INDEX__') ? __TYPECHO_SERVICE_INDEX__ : $this->options->index));
 
             } catch (Typecho_Http_Client_Exception $e) {
                 return;
@@ -185,7 +186,8 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
                                 'token'     =>  Typecho_Common::timeToken($this->options->secret)
                             ))
                             ->setMethod(Typecho_Http_Client::METHOD_POST)
-                            ->send(Typecho_Common::url('/action/service', $this->options->index));
+                            ->send(Typecho_Common::url('/action/service',
+                                defined('__TYPECHO_SERVICE_INDEX__') ? __TYPECHO_SERVICE_INDEX__ : $this->options->index));
 
                     } catch (Typecho_Http_Client_Exception $e) {
                         return;
