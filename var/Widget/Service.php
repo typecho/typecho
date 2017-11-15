@@ -27,15 +27,47 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
     public $asyncRequests = array();
 
     /**
+     * 获取真实的 URL
+     *
+     * @return string
+     */
+    private function getServiceUrl()
+    {
+        $url = Typecho_Common::url('/action/service', $this->options->index);
+
+        if (defined('__TYPECHO_SERVICE_URL__')) {
+            $rootPath = rtrim(parse_url($this->options->rootUrl, PHP_URL_PATH), '/');
+            $path = parse_url($url, PHP_URL_PATH);
+            $parts = parse_url(__TYPECHO_SERVICE_URL__);
+
+            if (!empty($parts['path'])
+                && $parts['path'] != '/'
+                && rtrim($parts['path'], '/') != $rootPath) {
+                $path = Typecho_Common::url($path, $parts['path']);
+            }
+
+            $parts['path'] = $path;
+            $url = Typecho_Common::buildUrl($parts);
+        }
+
+        return $url;
+    }
+
+    /**
      * 发送pingback实现
      *
      * @access public
      * @return void
+     * @throws Typecho_Widget_Exception
      */
     public function sendPingHandle()
     {
         /** 验证权限 */
-        $this->user->pass('contributor');
+        $token = $this->request->token;
+
+        if (!Typecho_Common::timeTokenValidate($token, $this->options->secret, 3)) {
+            throw new Typecho_Widget_Exception(_t('禁止访问'), 403);
+        }
 
         /** 忽略超时 */
         if (function_exists('ignore_user_abort')) {
@@ -143,18 +175,21 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
         if ($client = Typecho_Http_Client::get()) {
             try {
 
-                $input = array('do' => 'ping', 'cid' => $cid);
+                $input = array(
+                    'do' => 'ping',
+                    'cid' => $cid,
+                    'token' => Typecho_Common::timeToken($this->options->secret)
+                );
+
                 if (!empty($trackback)) {
                     $input['trackback'] = $trackback;
                 }
 
-                $client->setCookie('__typecho_uid', Typecho_Cookie::get('__typecho_uid'))
-                ->setCookie('__typecho_authCode', Typecho_Cookie::get('__typecho_authCode'))
-                ->setHeader('User-Agent', $this->options->generator)
-                ->setTimeout(2)
-                ->setData($input)
-                ->send(Typecho_Common::url('/action/service',
-                    defined('__TYPECHO_SERVICE_INDEX__') ? __TYPECHO_SERVICE_INDEX__ : $this->options->index));
+                $client->setHeader('User-Agent', $this->options->generator)
+                    ->setTimeout(2)
+                    ->setData($input)
+                    ->setMethod(Typecho_Http_Client::METHOD_POST)
+                    ->send($this->getServiceUrl());
 
             } catch (Typecho_Http_Client_Exception $e) {
                 return;
@@ -186,8 +221,7 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
                                 'token'     =>  Typecho_Common::timeToken($this->options->secret)
                             ))
                             ->setMethod(Typecho_Http_Client::METHOD_POST)
-                            ->send(Typecho_Common::url('/action/service',
-                                defined('__TYPECHO_SERVICE_INDEX__') ? __TYPECHO_SERVICE_INDEX__ : $this->options->index));
+                            ->send($this->getServiceUrl());
 
                     } catch (Typecho_Http_Client_Exception $e) {
                         return;
@@ -243,7 +277,7 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
      */
     public function action()
     {
-        $this->on($this->request->is('do=ping'))->sendPingHandle();
-        $this->on($this->request->is('do=async'))->asyncHandle();
+        $this->on($this->request->isPost() && $this->request->is('do=ping'))->sendPingHandle();
+        $this->on($this->request->isPost() && $this->request->is('do=async'))->asyncHandle();
     }
 }
