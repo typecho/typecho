@@ -51,7 +51,7 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
 
                 /** 匹配内容体 */
                 $response = $client->getResponseBody();
-                $json = json_decode($response, true);
+                $json = Json::decode($response, true);
 
                 if (!empty($json)) {
                     list($soft, $version) = explode(' ', $this->options->generator);
