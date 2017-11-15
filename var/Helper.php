@@ -64,6 +64,17 @@ class Helper
     }
 
     /**
+     * 请求异步服务
+     *
+     * @param $method
+     * @param $params
+     */
+    public static function requestService($method, $params)
+    {
+        Typecho_Widget::widget('Widget_Service')->requestService($method, $params);
+    }
+
+    /**
      * 强行删除某个插件
      *
      * @access public

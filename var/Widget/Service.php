@@ -20,6 +20,13 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 class Widget_Service extends Widget_Abstract_Options implements Widget_Interface_Do
 {
     /**
+     * 异步请求
+     *
+     * @var array
+     */
+    public $asyncRequests = array();
+
+    /**
      * 发送pingback实现
      *
      * @access public
@@ -31,7 +38,13 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
         $this->user->pass('contributor');
 
         /** 忽略超时 */
-        ignore_user_abort(true);
+        if (function_exists('ignore_user_abort')) {
+            ignore_user_abort(true);
+        }
+
+        if (function_exists('set_time_limit')) {
+            set_time_limit(30);
+        }
 
         /** 获取post */
         $post = $this->widget('Widget_Archive', "type=post", "cid={$this->request->cid}");
@@ -138,12 +151,84 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
                 $client->setCookie('__typecho_uid', Typecho_Cookie::get('__typecho_uid'))
                 ->setCookie('__typecho_authCode', Typecho_Cookie::get('__typecho_authCode'))
                 ->setHeader('User-Agent', $this->options->generator)
-                ->setTimeout(3)
+                ->setTimeout(2)
                 ->setData($input)
                 ->send(Typecho_Common::url('/action/service', $this->options->index));
 
             } catch (Typecho_Http_Client_Exception $e) {
                 return;
+            }
+        }
+    }
+
+    /**
+     * 请求异步服务
+     *
+     * @param $method
+     * @param mixed $params
+     */
+    public function requestService($method, $params = NULL)
+    {
+        static $called;
+
+        if (!$called) {
+            $self = $this;
+
+            Typecho_Response::addCallback(function () use ($self) {
+                if (!empty($self->asyncRequests) && $client = Typecho_Http_Client::get()) {
+                    try {
+                        $client->setHeader('User-Agent', $this->options->generator)
+                            ->setTimeout(2)
+                            ->setData(array(
+                                'do'        =>  'async',
+                                'requests'  =>  Json::encode($self->asyncRequests),
+                                'token'     =>  Typecho_Common::timeToken($this->options->secret)
+                            ))
+                            ->setMethod(Typecho_Http_Client::METHOD_POST)
+                            ->send(Typecho_Common::url('/action/service', $this->options->index));
+
+                    } catch (Typecho_Http_Client_Exception $e) {
+                        return;
+                    }
+                }
+            });
+
+            $called = true;
+        }
+
+        $this->asyncRequests[] = array($method, $params);
+    }
+
+    /**
+     * 执行回调
+     *
+     * @throws Typecho_Widget_Exception
+     */
+    public function asyncHandle()
+    {
+        /** 验证权限 */
+        $token = $this->request->token;
+
+        if (!Typecho_Common::timeTokenValidate($token, $this->options->secret, 3)) {
+            throw new Typecho_Widget_Exception(_t('禁止访问'), 403);
+        }
+
+        /** 忽略超时 */
+        if (function_exists('ignore_user_abort')) {
+            ignore_user_abort(true);
+        }
+
+        if (function_exists('set_time_limit')) {
+            set_time_limit(30);
+        }
+
+        $requests = Json::decode($this->request->requests, true);
+        $plugin = Typecho_Plugin::factory(__CLASS__);
+
+        if (!empty($requests)) {
+            foreach ($requests as $request) {
+                list ($method, $params) = $request;
+                $plugin->{$method}($params);
             }
         }
     }
@@ -157,5 +242,6 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
     public function action()
     {
         $this->on($this->request->is('do=ping'))->sendPingHandle();
+        $this->on($this->request->is('do=async'))->asyncHandle();
     }
 }

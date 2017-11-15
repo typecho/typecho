@@ -22,7 +22,7 @@ define('__TYPECHO_MB_SUPPORTED__', function_exists('mb_get_info') && function_ex
 class Typecho_Common
 {
     /** 程序版本 */
-    const VERSION = '1.1/17.10.30';
+    const VERSION = '1.1/17.11.15';
 
     /**
      * 允许的属性
@@ -908,6 +908,39 @@ EOF;
         } else {
             return md5($from) === $to;
         }
+    }
+
+    /**
+     * 创建一个会过期的Token
+     *
+     * @param $secret
+     * @return string
+     */
+    public static function timeToken($secret)
+    {
+        return sha1($secret . '&' . time());
+    }
+
+    /**
+     * 在时间范围内验证token
+     *
+     * @param $token
+     * @param $secret
+     * @param int $timeout
+     * @return bool
+     */
+    public static function timeTokenValidate($token, $secret, $timeout = 5)
+    {
+        $now = time();
+        $from = $now - $timeout;
+
+        for ($i = $now; $i >= $from; $i --) {
+            if (sha1($secret . '&' . $i) == $token) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
