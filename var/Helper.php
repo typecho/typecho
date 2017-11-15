@@ -54,7 +54,7 @@ class Helper
         $className = "Widget_Abstract_{$table}";
         $key = $keys[$table];
         $db = Typecho_Db::get();
-        $widget = new $className;
+        $widget = new $className(Typecho_Request::getInstance(), Typecho_Widget_Helper_Empty::getInstance());
         
         $db->fetchRow(
             $widget->select()->where("{$key} = ?", $pkId)->limit(1),
