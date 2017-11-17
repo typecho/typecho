@@ -101,7 +101,7 @@
       };
       this.hooks = {};
       this.html = false;
-      this.blockParsers = [['code', 10], ['shtml', 20], ['ahtml', 30], ['list', 40], ['math', 50], ['pre', 60], ['html', 70], ['footnote', 80], ['definition', 90], ['quote', 100], ['table', 110], ['sh', 120], ['mh', 130], ['hr', 140], ['default', 9999]];
+      this.blockParsers = [['code', 10], ['shtml', 20], ['pre', 30], ['ahtml', 40], ['list', 50], ['math', 60], ['html', 70], ['footnote', 80], ['definition', 90], ['quote', 100], ['table', 110], ['sh', 120], ['mh', 130], ['hr', 140], ['default', 9999]];
       this.parsers = {};
     }
 
