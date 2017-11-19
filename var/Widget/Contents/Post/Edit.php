@@ -99,7 +99,9 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                 'fieldValues'   =>  $this->request->getArray('fieldValues')
             );
             foreach ($data['fieldNames'] as $key => $val) {
-                if (empty($val)) {
+                $val = trim($val);
+
+                if (0 == strlen($val)) {
                     continue;
                 }
 
