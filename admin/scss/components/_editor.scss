@@ -40,6 +40,8 @@
   background: transparent url(../img/editor.png) no-repeat;
 }
 
+#btn-cancel-preview { display: none }
+
 @media 
 (-webkit-min-device-pixel-ratio: 2), 
 (min-resolution: 192dpi) {
@@ -259,4 +261,14 @@
   #btn-fullscreen-upload {
     visibility: visible;
   }
+}
+
+.preview {
+  .submit { width: 100%; background: #FFFFDD }
+  #wmd-button-bar, #wmd-preview, #text, #upload-panel, #tab-files, #btn-preview, #btn-fullscreen-upload, #auto-save-message { display: none }
+  .preview-frame { width: 100%; border: 0; padding: 0; margin: 0;
+    background: #fff; z-index: 999; position: absolute; top: 53px; left: 0 }
+
+  .preview-loading { background-image: url(../img/ajax-loader.gif); background-position: center; background-repeat: no-repeat }
+  #btn-cancel-preview { display: inline-block }
 }

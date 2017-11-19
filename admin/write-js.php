@@ -156,7 +156,9 @@ $(document).ready(function() {
         cid = idInput.val(),
         draft = $('input[name=draft]'),
         draftId = draft.length > 0 ? draft.val() : 0,
-        btnSave = $('#btn-save');
+        btnSave = $('#btn-save'),
+        btnPreview = $('#btn-preview'),
+        locked = false;
 
     // 计算夏令时偏移
     var dstOffset = (function () {
@@ -177,8 +179,7 @@ $(document).ready(function() {
 
     // 自动保存
 <?php if ($options->autoSave): ?>
-    var locked = false,
-        autoSave = $('<span id="auto-save-message" class="left"></span>').prependTo('.submit'),
+    var autoSave = $('<span id="auto-save-message" class="left"></span>').prependTo('.submit'),
         autoSaveOnce = !!cid,
         lastSaveTime = null;
 
@@ -189,16 +190,20 @@ $(document).ready(function() {
             if (savedData != data && !locked) {
                 locked = true;
                 btnSave.attr('disabled', 'disabled');
+                btnPreview.attr('disabled', 'disabled');
 
                 autoSave.text('<?php _e('正在保存'); ?>');
                 $.post(formAction, data + '&do=save', function (o) {
                     savedData = data;
                     lastSaveTime = o.time;
                     cid = o.cid;
+                    draftId = o.draftId;
                     idInput.val(cid);
                     autoSave.text('<?php _e('已保存'); ?>' + ' (' + o.time + ')').effect('highlight', 1000);
                     locked = false;
+
                     btnSave.removeAttr('disabled');
+                    btnPreview.removeAttr('disabled');
                 }, 'json');
             }
         }, 10000);
@@ -235,13 +240,75 @@ $(document).ready(function() {
     });
 
     // 预览功能
-    $('#btn-preview').click(function () {
+    var isFullScreen = false;
+
+    function previewData(cid) {
+        isFullScreen = $(document.body).hasClass('fullscreen');
+        $(document.body).addClass('fullscreen preview');
+
+        var frame = $('<iframe frameborder="0" class="preview-frame preview-loading"></iframe>')
+            .attr('src', './preview.php?cid=' + cid)
+            .appendTo(document.body);
+
+        frame.load(function () {
+            frame.removeClass('preview-loading');
+        });
+
+        frame.height($(window).height() - 53);
+    }
+
+    window.cancelPreview = function() {
+        if (submitted) {
+            return;
+        }
+
+        if (!isFullScreen) {
+            $(document.body).removeClass('fullscreen');
+        }
+
+        $(document.body).removeClass('preview');
+        $('.preview-frame').remove();
+    };
+
+    $('#btn-cancel-preview').click(cancelPreview);
+
+    btnPreview.click(function () {
         var data = form.serialize();
 
+        if (!!savedData) {
+            lastData = savedData;
+        }
+
         if (lastData != data) {
+            locked = true;
+
             if (confirm('<?php _e('内容已经改变尚未保存, 需要保存后才能预览, 是否保存?'); ?>')) {
-                
+                btnSave.attr('disabled', 'disabled');
+                btnPreview.attr('disabled', 'disabled');
+
+                if (!!autoSave) {
+                    autoSave.html('');
+                }
+
+                $.post(formAction, data + '&do=save', function (o) {
+                    savedData = data;
+                    cid = o.cid;
+                    draftId = o.draftId;
+                    idInput.val(cid);
+                    locked = false;
+
+                    btnSave.removeAttr('disabled');
+                    btnPreview.removeAttr('disabled');
+
+                    previewData(draftId);
+                });
+            } else {
+                locked = false;
             }
+        } else if (!!draftId) {
+            previewData(draftId);
+        } else if (!!cid) {
+            previewData(cid);
         }
     });
 
