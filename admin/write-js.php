@@ -307,7 +307,7 @@ $(document).ready(function() {
         if (changed) {
             locked = true;
 
-            if (confirm('<?php _e('内容已经改变尚未保存, 需要保存后才能预览, 是否保存?'); ?>')) {
+            if (confirm('<?php _e('修改后的内容需要保存后才能预览, 是否保存?'); ?>')) {
                 saveData(function (o) {
                     previewData(o.draftId);
                 });
