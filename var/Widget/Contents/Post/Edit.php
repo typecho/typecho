@@ -766,7 +766,8 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                 $this->response->throwJson(array(
                     'success'   =>  1,
                     'time'      =>  $created->format('H:i:s A'),
-                    'cid'       =>  $this->cid
+                    'cid'       =>  $this->cid,
+                    'draftId'   =>  $this->draft['cid']
                 ));
             } else {
                 /** 设置提示信息 */
@@ -888,17 +889,6 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     }
 
     /**
-     * 输出Markdown预览 
-     * 
-     * @access public
-     * @return void
-     */
-    public function preview()
-    {
-        $this->response->throwJson($this->markdown($this->request->text));
-    }
-
-    /**
      * 绑定动作
      *
      * @access public
@@ -910,7 +900,6 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         $this->on($this->request->is('do=publish') || $this->request->is('do=save'))->writePost();
         $this->on($this->request->is('do=delete'))->deletePost();
         $this->on($this->request->is('do=deleteDraft'))->deletePostDraft();
-        $this->on($this->request->is('do=preview'))->preview();
 
         $this->response->redirect($this->options->adminUrl);
     }

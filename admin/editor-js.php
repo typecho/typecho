@@ -60,7 +60,7 @@ $(document).ready(function () {
 
     var converter = new HyperDown(),
         editor = new Markdown.Editor(converter, '', options),
-        diffMatch = new diff_match_patch(), last = '', preview = $('#wmd-preview'),
+        diffMatch = new diff_match_patch(), last = '',
         mark = '@mark' + Math.ceil(Math.random() * 100000000) + '@',
         span = '<span class="diff" />',
         cache = {};

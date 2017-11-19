@@ -50,8 +50,12 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                     <?php include 'custom-fields.php'; ?>
 
                     <p class="submit clearfix">
+                        <span class="left">
+                            <button type="button" id="btn-cancel-preview" class="btn"><i class="i-caret-left"></i> <?php _e('取消预览'); ?></button>
+                        </span>
                         <span class="right">
                             <input type="hidden" name="cid" value="<?php $post->cid(); ?>" />
+                            <button type="button" id="btn-preview" class="btn"><i class="i-exlink"></i> <?php _e('预览文章'); ?></button>
                             <button type="submit" name="do" value="save" id="btn-save" class="btn"><?php _e('保存草稿'); ?></button>
                             <button type="submit" name="do" value="publish" class="btn primary" id="btn-submit"><?php _e('发布文章'); ?></button>
                             <?php if ($options->markdown && (!$post->have() || $post->isMarkdown)): ?>

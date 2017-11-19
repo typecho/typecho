@@ -17,3 +17,11 @@ if (!$user->pass('editor', true) && $content->authorId != $user->uid) {
 
 /** 输出内容 */
 $content->render();
+?>
+<script>
+    window.onbeforeunload = function () {
+        if (!!parent) {
+            parent.cancelPreview();
+        }
+    }
+</script>

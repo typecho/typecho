@@ -1645,48 +1645,52 @@ a.operate-reply {
   height: 20px;
   background: transparent url(../img/editor.png) no-repeat; }
 
+/* line 43, ../scss/components/_editor.scss */
+#btn-cancel-preview {
+  display: none; }
+
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  /* line 46, ../scss/components/_editor.scss */
+  /* line 48, ../scss/components/_editor.scss */
   #wmd-button-row span {
     background-image: url(../img/editor@2x.png);
     -moz-background-size: 320px auto;
     -o-background-size: 320px auto;
     -webkit-background-size: 320px auto;
     background-size: 320px auto; } }
-/* line 53, ../scss/components/_editor.scss */
+/* line 55, ../scss/components/_editor.scss */
 .wmd-edittab {
   float: right;
   margin-top: 3px;
   font-size: .92857em; }
-  /* line 57, ../scss/components/_editor.scss */
+  /* line 59, ../scss/components/_editor.scss */
   .wmd-edittab a {
     display: inline-block;
     padding: 0 8px;
     margin-left: 5px;
     height: 20px;
     line-height: 20px; }
-    /* line 63, ../scss/components/_editor.scss */
+    /* line 65, ../scss/components/_editor.scss */
     .wmd-edittab a:hover {
       text-decoration: none; }
-    /* line 66, ../scss/components/_editor.scss */
+    /* line 68, ../scss/components/_editor.scss */
     .wmd-edittab a.active {
       background: #E9E9E6;
       color: #999; }
 
-/* line 74, ../scss/components/_editor.scss */
+/* line 76, ../scss/components/_editor.scss */
 .wmd-hidetab {
   display: none; }
 
-/* line 78, ../scss/components/_editor.scss */
+/* line 80, ../scss/components/_editor.scss */
 .wmd-visualhide {
   visibility: hidden; }
 
 /* 对话框 */
-/* line 83, ../scss/components/_editor.scss */
+/* line 85, ../scss/components/_editor.scss */
 .wmd-prompt-background {
   background-color: #000; }
 
-/* line 86, ../scss/components/_editor.scss */
+/* line 88, ../scss/components/_editor.scss */
 .wmd-prompt-dialog {
   position: fixed;
   z-index: 1001;
@@ -1697,22 +1701,22 @@ a.operate-reply {
   padding: 20px;
   width: 360px;
   background: #F6F6F3; }
-  /* line 97, ../scss/components/_editor.scss */
+  /* line 99, ../scss/components/_editor.scss */
   .wmd-prompt-dialog p {
     margin: 0 0 5px; }
-  /* line 98, ../scss/components/_editor.scss */
+  /* line 100, ../scss/components/_editor.scss */
   .wmd-prompt-dialog form {
     margin-top: 10px; }
-  /* line 99, ../scss/components/_editor.scss */
+  /* line 101, ../scss/components/_editor.scss */
   .wmd-prompt-dialog input[type="text"] {
     margin-bottom: 10px;
     width: 100%; }
-  /* line 103, ../scss/components/_editor.scss */
+  /* line 105, ../scss/components/_editor.scss */
   .wmd-prompt-dialog button {
     margin-right: 10px; }
 
 /* 预览 */
-/* line 107, ../scss/components/_editor.scss */
+/* line 109, ../scss/components/_editor.scss */
 #wmd-preview {
   background: #FFF;
   margin: 1em 0;
@@ -1722,37 +1726,37 @@ a.operate-reply {
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
   border-radius: 2px; }
-  /* line 114, ../scss/components/_editor.scss */
+  /* line 116, ../scss/components/_editor.scss */
   #wmd-preview img {
     max-width: 100%; }
-  /* line 115, ../scss/components/_editor.scss */
+  /* line 117, ../scss/components/_editor.scss */
   #wmd-preview code, #wmd-preview pre {
     padding: 2px 4px;
     background: #F3F3F0;
     font-size: .92857em; }
-  /* line 120, ../scss/components/_editor.scss */
+  /* line 122, ../scss/components/_editor.scss */
   #wmd-preview code {
     color: #C13; }
-  /* line 121, ../scss/components/_editor.scss */
+  /* line 123, ../scss/components/_editor.scss */
   #wmd-preview pre {
     padding: 1em; }
-    /* line 123, ../scss/components/_editor.scss */
+    /* line 125, ../scss/components/_editor.scss */
     #wmd-preview pre code {
       padding: 0;
       color: #444; }
-  /* line 128, ../scss/components/_editor.scss */
+  /* line 130, ../scss/components/_editor.scss */
   #wmd-preview blockquote {
     margin: 1em 1.5em;
     padding-left: 1.5em;
     border-left: 4px solid #E9E9E6;
     color: #777; }
-  /* line 134, ../scss/components/_editor.scss */
+  /* line 136, ../scss/components/_editor.scss */
   #wmd-preview hr {
     margin: 2em auto;
     width: 100px;
     border: 1px solid #E9E9E6;
     border-width: 2px 0 0 0; }
-  /* line 140, ../scss/components/_editor.scss */
+  /* line 142, ../scss/components/_editor.scss */
   #wmd-preview .summary:after {
     display: block;
     margin: 2em 0;
@@ -1761,15 +1765,15 @@ a.operate-reply {
     font-size: .85714em;
     text-align: center;
     content: "- more -"; }
-  /* line 150, ../scss/components/_editor.scss */
+  /* line 152, ../scss/components/_editor.scss */
   #wmd-preview table {
     width: 100%; }
-  /* line 154, ../scss/components/_editor.scss */
+  /* line 156, ../scss/components/_editor.scss */
   #wmd-preview table th, #wmd-preview table td {
     border: 1px solid #DDD;
     padding: 5px 8px;
     word-break: break-all; }
-  /* line 160, ../scss/components/_editor.scss */
+  /* line 162, ../scss/components/_editor.scss */
   #wmd-preview table th {
     background: #EEE; }
 
@@ -1795,7 +1799,7 @@ a.operate-reply {
   100% {
     right: -1px; } }
 /* 编辑器全屏 */
-/* line 188, ../scss/components/_editor.scss */
+/* line 190, ../scss/components/_editor.scss */
 .fullscreen #wmd-button-bar, .fullscreen #text, .fullscreen #wmd-preview, .fullscreen .submit {
   position: absolute;
   top: 0;
@@ -1808,20 +1812,20 @@ a.operate-reply {
   -moz-border-radius: 0;
   -webkit-border-radius: 0;
   border-radius: 0; }
-/* line 198, ../scss/components/_editor.scss */
+/* line 200, ../scss/components/_editor.scss */
 .fullscreen #wmd-button-bar {
   left: 0;
   padding: 13px 20px;
   border-bottom: 1px solid #F3F3F0;
   z-index: 1000; }
-/* line 204, ../scss/components/_editor.scss */
+/* line 206, ../scss/components/_editor.scss */
 .fullscreen #text {
   top: 53px;
   left: 0;
   padding: 20px;
   border: none;
   outline: none; }
-/* line 211, ../scss/components/_editor.scss */
+/* line 213, ../scss/components/_editor.scss */
 .fullscreen #wmd-preview {
   top: 53px;
   right: 0;
@@ -1831,21 +1835,21 @@ a.operate-reply {
   border-left: 1px solid #F3F3F0;
   background: #F6F6F3;
   overflow: auto; }
-  /* line 220, ../scss/components/_editor.scss */
+  /* line 222, ../scss/components/_editor.scss */
   .fullscreen #wmd-preview code, .fullscreen #wmd-preview pre {
     background: #F0F0EC; }
-/* line 224, ../scss/components/_editor.scss */
+/* line 226, ../scss/components/_editor.scss */
 .fullscreen .submit {
   right: 0;
   margin: 0;
   padding: 10px 20px;
   border-bottom: 1px solid #F3F3F0; }
-/* line 230, ../scss/components/_editor.scss */
+/* line 232, ../scss/components/_editor.scss */
 .fullscreen #upload-panel {
   -webkit-box-shadow: 0 4px 16px rgba(0, 0, 0, 0.225);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.225);
   border-style: solid; }
-/* line 237, ../scss/components/_editor.scss */
+/* line 239, ../scss/components/_editor.scss */
 .fullscreen #tab-files {
   position: absolute;
   top: 52px;
@@ -1856,7 +1860,7 @@ a.operate-reply {
   -moz-animation: fullscreen-upload 0.5s;
   -webkit-animation: fullscreen-upload 0.5s;
   -o-animation: fullscreen-upload 0.5s; }
-/* line 250, ../scss/components/_editor.scss */
+/* line 252, ../scss/components/_editor.scss */
 .fullscreen .wmd-edittab,
 .fullscreen .typecho-post-option,
 .fullscreen .title,
@@ -1865,13 +1869,40 @@ a.operate-reply {
 .fullscreen .typecho-head-nav,
 .fullscreen .message {
   display: none; }
-/* line 257, ../scss/components/_editor.scss */
+/* line 259, ../scss/components/_editor.scss */
 .fullscreen .wmd-hidetab {
   display: block; }
-/* line 258, ../scss/components/_editor.scss */
+/* line 260, ../scss/components/_editor.scss */
 .fullscreen .wmd-visualhide,
 .fullscreen #btn-fullscreen-upload {
   visibility: visible; }
+
+/* line 267, ../scss/components/_editor.scss */
+.preview .submit {
+  width: 100%;
+  background: #FFFFDD; }
+/* line 268, ../scss/components/_editor.scss */
+.preview #wmd-button-bar, .preview #wmd-preview, .preview #text, .preview #upload-panel, .preview #tab-files, .preview #btn-preview, .preview #btn-fullscreen-upload, .preview #auto-save-message {
+  display: none; }
+/* line 269, ../scss/components/_editor.scss */
+.preview .preview-frame {
+  width: 100%;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: #fff;
+  z-index: 999;
+  position: absolute;
+  top: 53px;
+  left: 0; }
+/* line 272, ../scss/components/_editor.scss */
+.preview .preview-loading {
+  background-image: url(../img/ajax-loader.gif);
+  background-position: center;
+  background-repeat: no-repeat; }
+/* line 273, ../scss/components/_editor.scss */
+.preview #btn-cancel-preview {
+  display: inline-block; }
 
 /**
 * Jquery Timepicker
