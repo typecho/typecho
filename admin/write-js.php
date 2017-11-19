@@ -150,15 +150,72 @@ $(document).ready(function() {
 
     var submitted = false, form = $('form[name=write_post],form[name=write_page]').submit(function () {
         submitted = true;
-    }), savedData = null,
-        formAction = form.attr('action'),
+    }), formAction = form.attr('action'),
         idInput = $('input[name=cid]'),
         cid = idInput.val(),
         draft = $('input[name=draft]'),
         draftId = draft.length > 0 ? draft.val() : 0,
         btnSave = $('#btn-save'),
         btnPreview = $('#btn-preview'),
-        locked = false;
+        locked = false,
+        changed = false,
+        autoSave = $('<span id="auto-save-message" class="left"></span>').prependTo('.submit'),
+        lastSaveTime = null;
+
+    $(':input', form).bind('input change', function (e) {
+        var tagName = $(this).prop('tagName');
+
+        if (tagName.match(/(input|textarea)/i) && e.type == 'change') {
+            return;
+        }
+
+        changed = true;
+    });
+
+    form.bind('field', function () {
+        changed = true;
+    });
+
+    // 发送保存请求
+    function saveData(cb) {
+        function callback(o) {
+            lastSaveTime = o.time;
+            cid = o.cid;
+            draftId = o.draftId;
+            idInput.val(cid);
+            autoSave.text('<?php _e('已保存'); ?>' + ' (' + o.time + ')').effect('highlight', 1000);
+            locked = false;
+
+            btnSave.removeAttr('disabled');
+            btnPreview.removeAttr('disabled');
+
+            if (!!cb) {
+                cb(o)
+            }
+        }
+
+        changed = false;
+        btnSave.attr('disabled', 'disabled');
+        btnPreview.attr('disabled', 'disabled');
+        autoSave.text('<?php _e('正在保存'); ?>');
+
+        if (FormData !== undefined) {
+            var data = new FormData(form.get(0));
+            data.append('do', 'save');
+
+            $.ajax({
+                url: formAction,
+                processData: false,
+                contentType: false,
+                type: 'POST',
+                data: data,
+                success: callback
+            });
+        } else {
+            var data = form.serialize() + '&do=save';
+            $.post(formAction, data, callback, 'json');
+        }
+    }
 
     // 计算夏令时偏移
     var dstOffset = (function () {
@@ -179,38 +236,18 @@ $(document).ready(function() {
 
     // 自动保存
 <?php if ($options->autoSave): ?>
-    var autoSave = $('<span id="auto-save-message" class="left"></span>').prependTo('.submit'),
-        autoSaveOnce = !!cid,
-        lastSaveTime = null;
+    var autoSaveOnce = !!cid;
 
     function autoSaveListener () {
         setInterval(function () {
-            var data = form.serialize();
-                
-            if (savedData != data && !locked) {
+            if (changed && !locked) {
                 locked = true;
-                btnSave.attr('disabled', 'disabled');
-                btnPreview.attr('disabled', 'disabled');
-
-                autoSave.text('<?php _e('正在保存'); ?>');
-                $.post(formAction, data + '&do=save', function (o) {
-                    savedData = data;
-                    lastSaveTime = o.time;
-                    cid = o.cid;
-                    draftId = o.draftId;
-                    idInput.val(cid);
-                    autoSave.text('<?php _e('已保存'); ?>' + ' (' + o.time + ')').effect('highlight', 1000);
-                    locked = false;
-
-                    btnSave.removeAttr('disabled');
-                    btnPreview.removeAttr('disabled');
-                }, 'json');
+                saveData();
             }
         }, 10000);
     }
 
     if (autoSaveOnce) {
-        savedData = form.serialize();
         autoSaveListener();
     }
 
@@ -227,14 +264,8 @@ $(document).ready(function() {
 <?php endif; ?>
 
     // 自动检测离开页
-    var lastData = form.serialize();
-
     $(window).bind('beforeunload', function () {
-        if (!!savedData) {
-            lastData = savedData;
-        }
-
-        if (form.serialize() != lastData && !submitted) {
+        if (changed && !submitted) {
             return '<?php _e('内容已经改变尚未保存, 您确认要离开此页面吗?'); ?>';
         }
     });
@@ -273,34 +304,12 @@ $(document).ready(function() {
     $('#btn-cancel-preview').click(cancelPreview);
 
     btnPreview.click(function () {
-        var data = form.serialize();
-
-        if (!!savedData) {
-            lastData = savedData;
-        }
-
-        if (lastData != data) {
+        if (changed) {
             locked = true;
 
             if (confirm('<?php _e('内容已经改变尚未保存, 需要保存后才能预览, 是否保存?'); ?>')) {
-                btnSave.attr('disabled', 'disabled');
-                btnPreview.attr('disabled', 'disabled');
-
-                if (!!autoSave) {
-                    autoSave.html('');
-                }
-
-                $.post(formAction, data + '&do=save', function (o) {
-                    savedData = data;
-                    cid = o.cid;
-                    draftId = o.draftId;
-                    idInput.val(cid);
-                    locked = false;
-
-                    btnSave.removeAttr('disabled');
-                    btnPreview.removeAttr('disabled');
-
-                    previewData(draftId);
+                saveData(function (o) {
+                    previewData(o.draftId);
                 });
             } else {
                 locked = false;
@@ -339,7 +348,6 @@ $(document).ready(function() {
     // 自动隐藏密码框
     $('#visibility').change(function () {
         var val = $(this).val(), password = $('#post-password');
-        console.log(val);
 
         if ('password' == val) {
             password.removeClass('hidden');
