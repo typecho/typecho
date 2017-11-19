@@ -150,7 +150,13 @@ $(document).ready(function() {
 
     var submitted = false, form = $('form[name=write_post],form[name=write_page]').submit(function () {
         submitted = true;
-    }), savedData = null;
+    }), savedData = null,
+        formAction = form.attr('action'),
+        idInput = $('input[name=cid]'),
+        cid = idInput.val(),
+        draft = $('input[name=draft]'),
+        draftId = draft.length > 0 ? draft.val() : 0,
+        btnSave = $('#btn-save');
 
     // 计算夏令时偏移
     var dstOffset = (function () {
@@ -172,28 +178,27 @@ $(document).ready(function() {
     // 自动保存
 <?php if ($options->autoSave): ?>
     var locked = false,
-        formAction = form.attr('action'),
-        idInput = $('input[name=cid]'),
-        cid = idInput.val(),
         autoSave = $('<span id="auto-save-message" class="left"></span>').prependTo('.submit'),
         autoSaveOnce = !!cid,
         lastSaveTime = null;
 
     function autoSaveListener () {
         setInterval(function () {
-            idInput.val(cid);
             var data = form.serialize();
                 
             if (savedData != data && !locked) {
                 locked = true;
+                btnSave.attr('disabled', 'disabled');
 
                 autoSave.text('<?php _e('正在保存'); ?>');
                 $.post(formAction, data + '&do=save', function (o) {
                     savedData = data;
                     lastSaveTime = o.time;
                     cid = o.cid;
+                    idInput.val(cid);
                     autoSave.text('<?php _e('已保存'); ?>' + ' (' + o.time + ')').effect('highlight', 1000);
                     locked = false;
+                    btnSave.removeAttr('disabled');
                 }, 'json');
             }
         }, 10000);
@@ -226,6 +231,17 @@ $(document).ready(function() {
 
         if (form.serialize() != lastData && !submitted) {
             return '<?php _e('内容已经改变尚未保存, 您确认要离开此页面吗?'); ?>';
+        }
+    });
+
+    // 预览功能
+    $('#btn-preview').click(function () {
+        var data = form.serialize();
+
+        if (lastData != data) {
+            if (confirm('<?php _e('内容已经改变尚未保存, 需要保存后才能预览, 是否保存?'); ?>')) {
+                
+            }
         }
     });
 
