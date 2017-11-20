@@ -1761,6 +1761,7 @@ else
                                                   */
 
         hooks.addNoop("makeButton");
+        hooks.addNoop("commandExecuted");
 
         hooks.addNoop("enterFullScreen");
         hooks.addNoop("enterFakeFullScreen");
@@ -3238,9 +3239,20 @@ else
         }
 
         function bindCommand(method) {
-            if (typeof method === "string")
+            var methodName;
+
+            if (typeof method === "string") {
+                methodName = method;
                 method = commandManager[method];
-            return function () { method.apply(commandManager, arguments); }
+            }
+
+            return function () {
+                method.apply(commandManager, arguments);
+
+                if (methodName) {
+                    hooks.commandExecuted(methodName);
+                }
+            }
         }
 
         function makeSpritedButtonRow() {
@@ -3630,6 +3642,8 @@ else
                     }
                 }
                 postProcessing();
+
+                that.hooks.commandExecuted(isImage ? 'doImage' : 'doLink');
             };
 
             background = ui.createBackground();
@@ -4001,6 +4015,7 @@ else
         this.wrap(chunk, SETTINGS.lineLength - spaces.length);
         chunk.selection = chunk.selection.replace(/\n/g, "\n" + spaces);
 
+        this.hooks.commandExecuted('doList');
     };
 
     commandProto.doHeading = function (chunk, postProcessing) {

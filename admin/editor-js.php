@@ -2,7 +2,6 @@
 <?php $content = !empty($post) ? $post : $page; if ($options->markdown): ?>
 <script src="<?php $options->adminStaticUrl('js', 'hyperdown.js?v=' . $suffixVersion); ?>"></script>
 <script src="<?php $options->adminStaticUrl('js', 'pagedown.js?v=' . $suffixVersion); ?>"></script>
-<script src="<?php $options->adminStaticUrl('js', 'pagedown-extra.js?v=' . $suffixVersion); ?>"></script>
 <script src="<?php $options->adminStaticUrl('js', 'diff.js?v=' . $suffixVersion); ?>"></script>
 <script>
 $(document).ready(function () {
@@ -210,7 +209,7 @@ $(document).ready(function () {
 
     <?php Typecho_Plugin::factory('admin/editor-js.php')->markdownEditor($content); ?>
 
-    var input = $('#text'), th = textarea.height(), ph = preview.height(),
+    var th = textarea.height(), ph = preview.height(),
         uploadBtn = $('<button type="button" id="btn-fullscreen-upload" class="btn btn-link">'
             + '<i class="i-upload"><?php _e('附件'); ?></i></button>')
             .prependTo('.submit .right')
@@ -246,6 +245,10 @@ $(document).ready(function () {
         $(document.body).removeClass('fullscreen');
         textarea.height(th);
         preview.height(ph);
+    });
+
+    editor.hooks.chain('commandExecuted', function () {
+        textarea.trigger('input');
     });
 
     function initMarkdown() {
