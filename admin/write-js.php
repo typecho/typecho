@@ -279,6 +279,7 @@ $(document).ready(function() {
 
         var frame = $('<iframe frameborder="0" class="preview-frame preview-loading"></iframe>')
             .attr('src', './preview.php?cid=' + cid)
+            .attr('sandbox', 'allow-scripts')
             .appendTo(document.body);
 
         frame.load(function () {
@@ -288,7 +289,7 @@ $(document).ready(function() {
         frame.height($(window).height() - 53);
     }
 
-    window.cancelPreview = function() {
+    function cancelPreview() {
         if (submitted) {
             return;
         }
@@ -302,6 +303,12 @@ $(document).ready(function() {
     };
 
     $('#btn-cancel-preview').click(cancelPreview);
+
+    $(window).bind('message', function (e) {
+        if (e.originalEvent.data == 'cancelPreview') {
+            cancelPreview();
+        }
+    });
 
     btnPreview.click(function () {
         if (changed) {
