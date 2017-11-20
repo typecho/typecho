@@ -20,8 +20,8 @@ $content->render();
 ?>
 <script>
     window.onbeforeunload = function () {
-        if (!!parent) {
-            parent.cancelPreview();
+        if (!!window.parent) {
+            window.parent.postMessage('cancelPreview', '<?php $options->rootUrl(); ?>');
         }
     }
 </script>
