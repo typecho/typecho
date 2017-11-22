@@ -46,8 +46,7 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
     /**
      * 获取当前内容结构
      *
-     * @access protected
-     * @return array
+     * @return stdClass
      */
     protected function ___parentContent()
     {
@@ -60,8 +59,8 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
     /**
      * 获取菜单标题
      *
-     * @access public
      * @return string
+     * @throws Typecho_Widget_Exception
      */
     public function getMenuTitle()
     {

@@ -69,11 +69,15 @@ class Typecho_Db_Query
     private $_prefix;
 
     /**
+     * @var array
+     */
+    private $_params = array();
+
+    /**
      * 构造函数,引用数据库适配器作为内部数据
      *
      * @param Typecho_Db_Adapter $adapter 数据库适配器
      * @param string $prefix 前缀
-     * @return void
      */
     public function __construct(Typecho_Db_Adapter $adapter, $prefix)
     {
@@ -190,13 +194,35 @@ class Typecho_Db_Query
     {
         foreach ($values as &$value) {
             if (is_array($value)) {
-                $value = '(' . implode(',', array_map(array($this->_adapter, 'quoteValue'), $value)) . ')';
+                $value = '(' . implode(',', array_map(array($this, 'quoteValue'), $value)) . ')';
             } else {
-                $value = $this->_adapter->quoteValue($value);
+                $value = $this->quoteValue($value);
             }
         }
 
         return $values;
+    }
+
+    /**
+     * 延迟转义
+     *
+     * @param $value
+     * @return string
+     */
+    public function quoteValue($value)
+    {
+        $this->_params[] = $value;
+        return '#param:' . (count($this->_params) - 1) . '#';
+    }
+
+    /**
+     * 获取参数
+     *
+     * @return array
+     */
+    public function getParams()
+    {
+        return $this->_params;
     }
 
     /**
@@ -478,6 +504,24 @@ class Typecho_Db_Query
         $this->_sqlPreBuild['action'] = Typecho_Db::INSERT;
         $this->_sqlPreBuild['table'] = $this->filterPrefix($table);
         return $this;
+    }
+
+    /**
+     * @param $query
+     * @return string
+     */
+    public function prepare($query)
+    {
+        $params = $this->_params;
+        $adapter = $this->_adapter;
+
+        return preg_replace_callback("/#param:([0-9]+)#/", function ($matches) use ($params, $adapter) {
+            if (array_key_exists($matches[1], $params)) {
+                return $adapter->quoteValue($params[$matches[1]]);
+            } else {
+                return $matches[0];
+            }
+        }, $query);
     }
 
     /**

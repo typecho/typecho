@@ -22,7 +22,7 @@ define('__TYPECHO_MB_SUPPORTED__', function_exists('mb_get_info') && function_ex
 class Typecho_Common
 {
     /** 程序版本 */
-    const VERSION = '1.0/14.10.10';
+    const VERSION = '1.1/17.11.15';
 
     /**
      * 允许的属性
@@ -202,13 +202,7 @@ class Typecho_Common
     public static function init()
     {
         /** 设置自动载入函数 */
-        if (function_exists('spl_autoload_register')) {
-            spl_autoload_register(array('Typecho_Common', '__autoLoad'));
-        } else {
-            function __autoLoad($className) {
-                Typecho_Common::__autoLoad($className);
-            }
-        }
+        spl_autoload_register(array('Typecho_Common', '__autoLoad'));
 
         /** 兼容php6 */
         if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc()) {
@@ -234,12 +228,13 @@ class Typecho_Common
      */
     public static function exceptionHandle($exception)
     {
-        @ob_end_clean();
-
         if (defined('__TYPECHO_DEBUG__')) {
-            echo '<h1>' . $exception->getMessage() . '</h1>';
-            echo nl2br($exception->__toString());
+            echo '<pre><code>';
+            echo '<h1>' . htmlspecialchars($exception->getMessage()) . '</h1>';
+            echo htmlspecialchars($exception->__toString());
+            echo '</code></pre>';
         } else {
+            @ob_end_clean();
             if (404 == $exception->getCode() && !empty(self::$exceptionHandle)) {
                 $handleClass = self::$exceptionHandle;
                 new $handleClass($exception);
@@ -415,7 +410,6 @@ EOF;
         return !empty($_SERVER['HTTP_APPNAME'])                     // SAE
             || !!getenv('HTTP_BAE_ENV_APPID')                       // BAE
             || !!getenv('HTTP_BAE_LOGID')                           // BAE 3.0
-            || (ini_get('acl.app_id') && class_exists('Alibaba'))   // ACE
             || (isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false) // GAE
             ;
     }
@@ -548,6 +542,12 @@ EOF;
                 if ($attrLength > 0 && "/" == trim($startTags[2][$key][$attrLength - 1])) {
                     continue;
                 }
+
+                // 白名单
+                if (preg_match("/^(area|base|br|col|embed|hr|img|input|keygen|link|meta|param|source|track|wbr)$/i", $tag)) {
+                    continue;
+                }
+
                 if (!empty($closeTags[1]) && $closeTagsIsArray) {
                     if (false !== ($index = array_search($tag, $closeTags[1]))) {
                         unset($closeTags[1][$index]);
@@ -911,6 +911,39 @@ EOF;
     }
 
     /**
+     * 创建一个会过期的Token
+     *
+     * @param $secret
+     * @return string
+     */
+    public static function timeToken($secret)
+    {
+        return sha1($secret . '&' . time());
+    }
+
+    /**
+     * 在时间范围内验证token
+     *
+     * @param $token
+     * @param $secret
+     * @param int $timeout
+     * @return bool
+     */
+    public static function timeTokenValidate($token, $secret, $timeout = 5)
+    {
+        $now = time();
+        $from = $now - $timeout;
+
+        for ($i = $now; $i >= $from; $i --) {
+            if (sha1($secret . '&' . $i) == $token) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * 将路径转化为链接
      *
      * @access public
@@ -1046,6 +1079,129 @@ EOF;
         }
 
         return $sql;
+    }
+
+    /**
+     * 创建备份文件缓冲
+     *
+     * @param $type
+     * @param $header
+     * @param $body
+     * @return string
+     */
+    public static function buildBackupBuffer($type, $header, $body)
+    {
+        $buffer = '';
+
+        $buffer .= pack('vvv', $type, strlen($header), strlen($body));
+        $buffer .= $header . $body;
+        $buffer .= md5($buffer);
+
+        return $buffer;
+    }
+
+    /**
+     * 从备份文件中解压
+     *
+     * @param $fp
+     * @param bool $offset
+     * @return array|bool
+     */
+    public static function extractBackupBuffer($fp, &$offset)
+    {
+        $meta = fread($fp, 6);
+        $offset += 6;
+        $metaLen = strlen($meta);
+
+        if (false === $meta || $metaLen != 6) {
+            return false;
+        }
+
+        list ($type, $headerLen, $bodyLen) = array_values(unpack('v3', $meta));
+
+        $header = @fread($fp, $headerLen);
+        $offset += $headerLen;
+
+        if (false === $header || strlen($header) != $headerLen) {
+            return false;
+        }
+
+        $body = @fread($fp, $bodyLen);
+        $offset += $bodyLen;
+
+        if (false === $body || strlen($body) != $bodyLen) {
+            return false;
+        }
+
+        $md5 = @fread($fp, 32);
+        $offset += 32;
+
+        if (false === $md5 || $md5 != md5($meta . $header . $body)) {
+            return false;
+        }
+
+        return array($type, $header, $body);
+    }
+
+    /**
+     * 检查是否是一个安全的主机名
+     *
+     * @param $host
+     * @return bool
+     */
+    public static function checkSafeHost($host)
+    {
+        if ('localhost' == $host) {
+            return false;
+        }
+
+        $address = gethostbyname($host);
+        $inet = inet_pton($address);
+
+        if (false === $inet) {
+            // 有可能是ipv6的地址
+            $records = dns_get_record($host, DNS_AAAA);
+
+            if (empty($records)) {
+                return false;
+            }
+
+            $address = $records[0]['ipv6'];
+            $inet = inet_pton($address);
+        }
+
+        if (strpos($address, '.')) {
+            // ipv4
+            // 非公网地址
+            $privateNetworks = array(
+                '10.0.0.0|10.255.255.255',
+                '172.16.0.0|172.31.255.255',
+                '192.168.0.0|192.168.255.255',
+                '169.254.0.0|169.254.255.255',
+                '127.0.0.0|127.255.255.255'
+            );
+
+            $long = ip2long($address);
+
+            foreach ($privateNetworks as $network) {
+                list ($from, $to) = explode('|', $network);
+
+                if ($long >= ip2long($from) && $long <= ip2long($to)) {
+                    return false;
+                }
+            }
+        } else {
+            // ipv6
+            // https://en.wikipedia.org/wiki/Private_network
+            $from = inet_pton('fd00::');
+            $to = inet_pton('fdff:ffff:ffff:ffff:ffff:ffff:ffff:ffff');
+
+            if ($inet >= $from && $inet <= $to) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

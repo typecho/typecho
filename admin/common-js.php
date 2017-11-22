@@ -58,7 +58,7 @@
                         }
 
                         t.effect('highlight', {color : color})
-                            .delay(5000).slideUp(function () {
+                            .delay(5000).fadeOut(function () {
                             $(this).remove();
                         });
                     });

@@ -7,8 +7,6 @@ if (defined('SAE_MYSQL_DB') && SAE_MYSQL_DB != "app_") {
     $engine = 'SAE';
 } else if (!!getenv('HTTP_BAE_ENV_ADDR_SQL_IP')) {
     $engine = 'BAE';
-} else if (ini_get('acl.app_id') && class_exists('Alibaba')) {
-    $engine = 'ACE';
 } else if (isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false) {
     $engine = 'GAE';
 }
@@ -24,7 +22,7 @@ if (defined('SAE_MYSQL_DB') && SAE_MYSQL_DB != "app_") {
     'host'      =>  SAE_MYSQL_HOST_M,
     'user'      =>  SAE_MYSQL_USER,
     'password'  =>  SAE_MYSQL_PASS,
-    'charset'   =>  '<?php _e('utf8'); ?>',
+    'charset'   =>  '{charset}',
     'port'      =>  SAE_MYSQL_PORT,
     'database'  =>  SAE_MYSQL_DB
 )" />
@@ -65,36 +63,12 @@ $baeDbPassword = "getenv('HTTP_BAE_ENV_SK')";
     'host'      =>  getenv('HTTP_BAE_ENV_ADDR_SQL_IP'),
     'user'      =>  <?php echo $baeDbUser; ?>,
     'password'  =>  <?php echo $baeDbPassword; ?>,
-    'charset'   =>  '<?php _e('utf8'); ?>',
+    'charset'   =>  '{charset}',
     'port'      =>  getenv('HTTP_BAE_ENV_ADDR_SQL_PORT'),
     'database'  =>  '{database}'
 )" />
     <input type="hidden" name="dbHost" value="<?php echo getenv('HTTP_BAE_ENV_ADDR_SQL_IP'); ?>" />
     <input type="hidden" name="dbPort" value="<?php echo getenv('HTTP_BAE_ENV_ADDR_SQL_PORT'); ?>" />
-<?php elseif ('ACE' == $engine): ?>
-<!-- ACE -->
-
-    <li>
-        <label class="typecho-label" for="dbHost"><?php _e('数据库地址'); ?></label>
-        <input type="text" class="text" name="dbHost" id="dbHost" value="<?php _v('dbHost', 'localhost'); ?>"/>
-        <p class="description"><?php _e('您可以访问 RDS 控制台获取详细信息'); ?></p>
-    </li>
-    <li>
-        <label class="typecho-label" for="dbPort"><?php _e('数据库端口'); ?></label>
-        <input type="text" class="text" name="dbPort" id="dbPort" value="<?php _v('dbPort', 3306); ?>"/>
-    </li>
-    <li>
-        <label class="typecho-label" for="dbUser"><?php _e('数据库用户名'); ?></label>
-        <input type="text" class="text" name="dbUser" id="dbUser" value="<?php _v('dbUser'); ?>" />
-    </li>
-    <li>
-        <label class="typecho-label" for="dbPassword"><?php _e('数据库密码'); ?></label>
-        <input type="password" class="text" name="dbPassword" id="dbPassword" value="<?php _v('dbPassword'); ?>" />
-    </li>
-    <li>
-        <label class="typecho-label" for="dbDatabase"><?php _e('数据库名'); ?></label>
-        <input type="text" class="text" name="dbDatabase" id="dbDatabase" value="<?php _v('dbDatabase', 'typecho'); ?>" />
-    </li>
 
 <?php elseif ('GAE' == $engine): ?>
 <!-- GAE -->
@@ -128,7 +102,7 @@ $baeDbPassword = "getenv('HTTP_BAE_ENV_SK')";
     </li>
 
 <?php if (0 === strpos($adapter, 'Pdo_')): ?>
-    <input type="hidden" name="dbDsn" value="mysql:dbname={database};unix_socket={host};charset=<?php _e('utf8'); ?>" />
+    <input type="hidden" name="dbDsn" value="mysql:dbname={database};unix_socket={host};charset={charset}" />
     <input type="hidden" name="config" value="array (
     'dsn'       =>  '{dsn}',
     'user'      =>  '{user}',
@@ -173,3 +147,19 @@ $baeDbPassword = "getenv('HTTP_BAE_ENV_SK')";
 <?php  endif; ?>
 <input type="hidden" name="dbCharset" value="<?php _e('utf8'); ?>" />
 
+    <li>
+        <label class="typecho-label" for="dbCharset"><?php _e('数据库编码'); ?></label>
+        <select name="dbCharset" id="dbCharset">
+            <option value="utf8"<?php if (_r('dbCharset') == 'utf8'): ?> selected<?php endif; ?>>utf8</option>
+            <option value="utf8mb4"<?php if (_r('dbCharset') == 'utf8mb4'): ?> selected<?php endif; ?>>utf8mb4</option>
+        </select>
+        <p class="description"><?php _e('选择 utf8mb4 编码至少需要 MySQL 5.5.3 版本'); ?></p>
+    </li>
+
+    <li>
+        <label class="typecho-label" for="dbEngine"><?php _e('数据库引擎'); ?></label>
+        <select name="dbEngine" id="dbEngine">
+            <option value="MyISAM"<?php if (_r('dbEngine') == 'MyISAM'): ?> selected<?php endif; ?>>MyISAM</option>
+            <option value="InnoDB"<?php if (_r('dbEngine') == 'InnoDB'): ?> selected<?php endif; ?>>InnoDB</option>
+        </select>
+    </li>

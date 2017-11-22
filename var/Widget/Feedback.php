@@ -38,11 +38,12 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
     private function comment()
     {
         // 使用安全模块保护
+        $this->security->enable($this->options->commentsAntiSpam);
         $this->security->protect();
 
         $comment = array(
             'cid'       =>  $this->_content->cid,
-            'created'   =>  $this->options->gmtTime,
+            'created'   =>  $this->options->time,
             'agent'     =>  $this->request->getAgent(),
             'ip'        =>  $this->request->getIp(),
             'ownerId'   =>  $this->_content->author->uid,
@@ -65,20 +66,20 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         $validator->addRule('author', 'required', _t('必须填写用户名'));
         $validator->addRule('author', 'xssCheck', _t('请不要在用户名中使用特殊字符'));
         $validator->addRule('author', array($this, 'requireUserLogin'), _t('您所使用的用户名已经被注册,请登录后再次提交'));
-        $validator->addRule('author', 'maxLength', _t('用户名最多包含200个字符'), 200);
+        $validator->addRule('author', 'maxLength', _t('用户名最多包含150个字符'), 150);
 
         if ($this->options->commentsRequireMail && !$this->user->hasLogin()) {
             $validator->addRule('mail', 'required', _t('必须填写电子邮箱地址'));
         }
 
         $validator->addRule('mail', 'email', _t('邮箱地址不合法'));
-        $validator->addRule('mail', 'maxLength', _t('电子邮箱最多包含200个字符'), 200);
+        $validator->addRule('mail', 'maxLength', _t('电子邮箱最多包含150个字符'), 150);
 
         if ($this->options->commentsRequireUrl && !$this->user->hasLogin()) {
             $validator->addRule('url', 'required', _t('必须填写个人主页'));
         }
         $validator->addRule('url', 'url', _t('个人主页地址格式错误'));
-        $validator->addRule('url', 'maxLength', _t('个人主页地址最多包含200个字符'), 200);
+        $validator->addRule('url', 'maxLength', _t('个人主页地址最多包含150个字符'), 150);
 
         $validator->addRule('text', 'required', _t('必须填写评论内容'));
 
@@ -99,7 +100,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
                 }
             }
 
-            $expire = $this->options->gmtTime + $this->options->timezone + 30*24*3600;
+            $expire = $this->options->time + $this->options->timezone + 30*24*3600;
             Typecho_Cookie::set('__typecho_remember_author', $comment['author'], $expire);
             Typecho_Cookie::set('__typecho_remember_mail', $comment['mail'], $expire);
             Typecho_Cookie::set('__typecho_remember_url', $comment['url'], $expire);
@@ -169,7 +170,7 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
 
         $trackback = array(
             'cid'       =>  $this->_content->cid,
-            'created'   =>  $this->options->gmtTime,
+            'created'   =>  $this->options->time,
             'agent'     =>  $this->request->getAgent(),
             'ip'        =>  $this->request->getIp(),
             'ownerId'   =>  $this->_content->author->uid,
@@ -185,11 +186,11 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
         $validator = new Typecho_Validate();
         $validator->addRule('url', 'required', 'We require all Trackbacks to provide an url.')
         ->addRule('url', 'url', 'Your url is not valid.')
-        ->addRule('url', 'maxLength', 'Your url is not valid.', 200)
+        ->addRule('url', 'maxLength', 'Your url is not valid.', 150)
         ->addRule('text', 'required', 'We require all Trackbacks to provide an excerption.')
         ->addRule('author', 'required', 'We require all Trackbacks to provide an blog name.')
         ->addRule('author', 'xssCheck', 'Your blog name is not valid.')
-        ->addRule('author', 'maxLength', 'Your blog name is not valid.', 200);
+        ->addRule('author', 'maxLength', 'Your blog name is not valid.', 150);
 
         $validator->setBreak();
         if ($error = $validator->run($trackback)) {
@@ -312,14 +313,15 @@ class Widget_Feedback extends Widget_Abstract_Comments implements Widget_Interfa
 
                 /** 检查ip评论间隔 */
                 if (!$this->user->pass('editor', true) && $this->_content->authorId != $this->user->uid &&
-                $this->options->commentsPostIntervalEnable) {
+                    $this->options->commentsPostIntervalEnable) {
+
                     $latestComment = $this->db->fetchRow($this->db->select('created')->from('table.comments')
-                    ->where('cid = ?', $this->_content->cid)
+                    ->where('cid = ? AND ip = ?', $this->_content->cid, $this->request->getIp())
                     ->order('created', Typecho_Db::SORT_DESC)
                     ->limit(1));
 
-                    if ($latestComment && ($this->options->gmtTime - $latestComment['created'] > 0 &&
-                    $this->options->gmtTime - $latestComment['created'] < $this->options->commentsPostInterval)) {
+                    if ($latestComment && ($this->options->time - $latestComment['created'] > 0 &&
+                    $this->options->time - $latestComment['created'] < $this->options->commentsPostInterval)) {
                         throw new Typecho_Widget_Exception(_t('对不起, 您的发言过于频繁, 请稍侯再次发布.'), 403);
                     }
                 }

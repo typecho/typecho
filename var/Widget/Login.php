@@ -53,7 +53,7 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Do
 
         /** 开始验证用户 **/
         $valid = $this->user->login($this->request->name, $this->request->password,
-        false, 1 == $this->request->remember ? $this->options->gmtTime + $this->options->timezone + 30*24*3600 : 0);
+        false, 1 == $this->request->remember ? $this->options->time + $this->options->timezone + 30*24*3600 : 0);
 
         /** 比对密码 */
         if (!$valid) {

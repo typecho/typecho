@@ -43,7 +43,8 @@ class Widget_Do extends Typecho_Widget
         'plugins-edit'              =>  'Widget_Plugins_Edit',
         'themes-edit'               =>  'Widget_Themes_Edit',
         'users-edit'                =>  'Widget_Users_Edit',
-        'users-profile'             =>  'Widget_Users_Profile'
+        'users-profile'             =>  'Widget_Users_Profile',
+        'backup'                    =>  'Widget_Backup'
     );
 
     /**
@@ -63,7 +64,7 @@ class Widget_Do extends Typecho_Widget
             $widget = trim($this->request->widget, '/');
             $objectName = 'Widget_' . str_replace('/', '_', $widget);
 
-            if (Typecho_Common::isAvailableClass($objectName)) {
+            if (preg_match("/^[_a-z0-9]$/i", $objectName) && Typecho_Common::isAvailableClass($objectName)) {
                 $widgetName = $objectName;
             }
         } else {

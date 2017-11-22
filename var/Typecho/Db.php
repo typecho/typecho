@@ -160,7 +160,7 @@ class Typecho_Db
      * getConfig  
      * 
      * @access public
-     * @return void
+     * @return array
      */
     public function getConfig()
     {
@@ -182,6 +182,7 @@ class Typecho_Db
      * 
      * @param int $op 
      * @return Typecho_Db_Adapter
+     * @throws Typecho_Db_Exception
      */
     public function selectDb($op)
     {
@@ -335,9 +336,12 @@ class Typecho_Db
      */
     public function query($query, $op = self::READ, $action = self::SELECT)
     {
+        $table = NULL;
+
         /** 在适配器中执行查询 */
         if ($query instanceof Typecho_Db_Query) {
             $action = $query->getAttribute('action');
+            $table = $query->getAttribute('table');
             $op = (self::UPDATE == $action || self::DELETE == $action
             || self::INSERT == $action) ? self::WRITE : self::READ;
         } else if (!is_string($query)) {
@@ -349,7 +353,8 @@ class Typecho_Db
         $handle = $this->selectDb($op);
 
         /** 提交查询 */
-        $resource = $this->_adapter->query($query, $handle, $op, $action);
+        $resource = $this->_adapter->query($query instanceof Typecho_Db_Query ?
+            $query->prepare($query) : $query, $handle, $op, $action, $table);
 
         if ($action) {
             //根据查询动作返回相应资源
@@ -401,7 +406,7 @@ class Typecho_Db
      *
      * @param mixed $query 查询对象
      * @param array $filter 行过滤器函数,将查询的每一行作为第一个参数传入指定的过滤器中
-     * @return stdClass
+     * @return mixed
      */
     public function fetchRow($query, array $filter = NULL)
     {
@@ -422,7 +427,7 @@ class Typecho_Db
      *
      * @param mixed $query 查询对象
      * @param array $filter 行过滤器函数,将查询的每一行作为第一个参数传入指定的过滤器中
-     * @return array
+     * @return mixed
      */
     public function fetchObject($query, array $filter = NULL)
     {

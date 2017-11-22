@@ -218,7 +218,8 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->parameter->setDefault(array(
             'pageSize'          =>  $this->options->pageSize,
             'type'              =>  NULL,
-            'checkPermalink'    =>  true
+            'checkPermalink'    =>  true,
+            'preview'           =>  false
         ));
 
         /** 用于判断是路由调用还是外部调用 */
@@ -306,7 +307,7 @@ class Widget_Archive extends Widget_Abstract_Contents
             $commentUrl .= '?parent=' . $reply;
         }
         
-        return $this->options->commentsAntiSpam ? $commentUrl : $this->security->getTokenUrl($commentUrl);
+        return $commentUrl;
     }
 
     /**
@@ -775,12 +776,12 @@ class Widget_Archive extends Widget_Abstract_Contents
         }
 
         /** 匹配缩略名 */
-        if (isset($this->request->slug)) {
+        if (isset($this->request->slug) && !$this->parameter->preview) {
             $select->where('table.contents.slug = ?', $this->request->slug);
         }
 
         /** 匹配时间 */
-        if (isset($this->request->year)) {
+        if (isset($this->request->year) && !$this->parameter->preview) {
             $year = $this->request->filter('int')->year;
 
             $fromMonth = 1;
@@ -809,7 +810,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         }
 
         /** 保存密码至cookie */
-        if ($this->request->isPost() && isset($this->request->protectPassword)) {
+        if ($this->request->isPost() && isset($this->request->protectPassword) && !$this->parameter->preview) {
             $this->security->protect();
             Typecho_Cookie::set('protectPassword', $this->request->protectPassword, 0);
         }
@@ -819,8 +820,8 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->query($select);
 
         if (!$this->have() 
-            || (isset($this->request->category) && $this->category != $this->request->category)
-            || (isset($this->request->directory) && $this->request->directory != implode('/', $this->directory))) {
+            || (isset($this->request->category) && $this->category != $this->request->category && !$this->parameter->preview)
+            || (isset($this->request->directory) && $this->request->directory != implode('/', $this->directory) && !$this->parameter->preview)) {
             if (!$this->_invokeFromOutside) {
                 /** 对没有索引情况下的判断 */
                 throw new Typecho_Widget_Exception(_t('请求的地址不存在'), 404);
@@ -860,7 +861,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         }
 
         /** 设置归档类型 */
-        $this->_archiveType = $this->type;
+        list($this->_archiveType) = explode('_', $this->type);
 
         /** 设置归档缩略名 */
         $this->_archiveSlug = ('post' == $this->type || 'attachment' == $this->type) ? $this->cid : $this->slug;
@@ -1223,7 +1224,7 @@ class Widget_Archive extends Widget_Abstract_Contents
      * 重载select
      *
      * @access public
-     * @return void
+     * @return Typecho_Db_Query
      */
     public function select()
     {
@@ -1333,24 +1334,28 @@ class Widget_Archive extends Widget_Abstract_Contents
 
         /** 定时发布功能 */
         if (!$selectPlugged) {
-            if ('post' == $this->parameter->type || 'page' == $this->parameter->type) {
-                if ($this->user->hasLogin()) {
-                    $select = $this->select()->where('table.contents.status = ? OR table.contents.status = ? OR
+            if ($this->parameter->preview) {
+                $select = $this->select();
+            } else {
+                if ('post' == $this->parameter->type || 'page' == $this->parameter->type) {
+                    if ($this->user->hasLogin()) {
+                        $select = $this->select()->where('table.contents.status = ? OR table.contents.status = ? OR
                             (table.contents.status = ? AND table.contents.authorId = ?)',
                             'publish', 'hidden', 'private', $this->user->uid);
-                } else {
-                    $select = $this->select()->where('table.contents.status = ? OR table.contents.status = ?',
+                    } else {
+                        $select = $this->select()->where('table.contents.status = ? OR table.contents.status = ?',
                             'publish', 'hidden');
-                }
-            } else {
-                if ($this->user->hasLogin()) {
-                    $select = $this->select()->where('table.contents.status = ? OR
-                            (table.contents.status = ? AND table.contents.authorId = ?)', 'publish', 'private', $this->user->uid);
+                    }
                 } else {
-                    $select = $this->select()->where('table.contents.status = ?', 'publish');
+                    if ($this->user->hasLogin()) {
+                        $select = $this->select()->where('table.contents.status = ? OR
+                            (table.contents.status = ? AND table.contents.authorId = ?)', 'publish', 'private', $this->user->uid);
+                    } else {
+                        $select = $this->select()->where('table.contents.status = ?', 'publish');
+                    }
                 }
+                $select->where('table.contents.created < ?', $this->options->time);
             }
-            $select->where('table.contents.created < ?', $this->options->gmtTime);
         }
 
         /** handle初始化 */
@@ -1361,7 +1366,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->_feedRssUrl = $this->options->feedRssUrl;
         $this->_feedAtomUrl = $this->options->feedAtomUrl;
         $this->_keywords = $this->options->keywords;
-        $this->_description = $this->options->description; 
+        $this->_description = $this->options->description;
 
         if (isset($handles[$this->parameter->type])) {
             $handle = $handles[$this->parameter->type];
@@ -1369,10 +1374,11 @@ class Widget_Archive extends Widget_Abstract_Contents
         } else {
             $hasPushed = $this->pluginHandle()->handle($this->parameter->type, $this, $select);
         }
-        
+
         /** 初始化皮肤函数 */
         $functionsFile = $this->_themeDir . 'functions.php';
-        if ((!$this->_invokeFromOutside || $this->parameter->type == 404) && file_exists($functionsFile)) {
+        if ((!$this->_invokeFromOutside || $this->parameter->type == 404 || $this->parameter->preview)
+            && file_exists($functionsFile)) {
             require_once $functionsFile;
             if (function_exists('themeInit')) {
                 themeInit($this);
@@ -1541,7 +1547,7 @@ class Widget_Archive extends Widget_Abstract_Contents
     public function theNext($format = '%s', $default = NULL, $custom = array())
     {
         $content = $this->db->fetchRow($this->select()->where('table.contents.created > ? AND table.contents.created < ?',
-            $this->created, $this->options->gmtTime)
+            $this->created, $this->options->time)
             ->where('table.contents.status = ?', 'publish')
             ->where('table.contents.type = ?', $this->type)
             ->where('table.contents.password IS NULL')
@@ -1662,6 +1668,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         }
 
         $allows = $this->pluginHandle()->headerOptions($allows, $this);
+        $title = (empty($this->_archiveTitle) ? '' : $this->_archiveTitle . ' &raquo; ') . $this->options->title;
 
         $header = '';
         if (!empty($allows['description'])) {
@@ -1680,28 +1687,28 @@ class Widget_Archive extends Widget_Abstract_Contents
             $header .= '<meta name="template" content="' . $allows['template'] . '" />' . "\n";
         }
 
-        if (!empty($allows['pingback'])) {
+        if (!empty($allows['pingback']) && 2 == $this->options->allowXmlRpc) {
             $header .= '<link rel="pingback" href="' . $allows['pingback'] . '" />' . "\n";
         }
 
-        if (!empty($allows['xmlrpc'])) {
+        if (!empty($allows['xmlrpc']) && 0 < $this->options->allowXmlRpc) {
             $header .= '<link rel="EditURI" type="application/rsd+xml" title="RSD" href="' . $allows['xmlrpc'] . '" />' . "\n";
         }
 
-        if (!empty($allows['wlw'])) {
+        if (!empty($allows['wlw']) && 0 < $this->options->allowXmlRpc) {
             $header .= '<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="' . $allows['wlw'] . '" />' . "\n";
         }
 
         if (!empty($allows['rss2']) && $allowFeed) {
-            $header .= '<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="' . $allows['rss2'] . '" />' . "\n";
+            $header .= '<link rel="alternate" type="application/rss+xml" title="' . $title . ' &raquo; RSS 2.0" href="' . $allows['rss2'] . '" />' . "\n";
         }
 
         if (!empty($allows['rss1']) && $allowFeed) {
-            $header .= '<link rel="alternate" type="application/rdf+xml" title="RSS 1.0" href="' . $allows['rss1'] . '" />' . "\n";
+            $header .= '<link rel="alternate" type="application/rdf+xml" title="' . $title . ' &raquo; RSS 1.0" href="' . $allows['rss1'] . '" />' . "\n";
         }
 
         if (!empty($allows['atom']) && $allowFeed) {
-            $header .= '<link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="' . $allows['atom'] . '" />' . "\n";
+            $header .= '<link rel="alternate" type="application/atom+xml" title="' . $title . ' &raquo; ATOM 1.0" href="' . $allows['atom'] . '" />' . "\n";
         }
         
         if ($this->options->commentsThreaded && $this->is('single')) {
@@ -1794,35 +1801,36 @@ class Widget_Archive extends Widget_Abstract_Contents
 (function () {
     var event = document.addEventListener ? {
         add: 'addEventListener',
-        focus: 'focus',
+        triggers: ['scroll', 'mousemove', 'keyup', 'touchstart'],
         load: 'DOMContentLoaded'
     } : {
         add: 'attachEvent',
-        focus: 'onfocus',
+        triggers: ['onfocus', 'onmousemove', 'onkeyup', 'ontouchstart'],
         load: 'onload'
-    };
+    }, added = false;
 
     document[event.add](event.load, function () {
-        var r = document.getElementById('{$this->respondId}');
+        var r = document.getElementById('{$this->respondId}'),
+            input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = '_';
+        input.value = " . Typecho_Common::shuffleScriptVar(
+            $this->security->getToken($this->request->getRequestUrl())) . "
 
         if (null != r) {
             var forms = r.getElementsByTagName('form');
             if (forms.length > 0) {
-                var f = forms[0], textarea = f.getElementsByTagName('textarea')[0], added = false;
-
-                if (null != textarea && 'text' == textarea.name) {
-                    textarea[event.add](event.focus, function () {
-                        if (!added) {
-                            var input = document.createElement('input');
-                            input.type = 'hidden';
-                            input.name = '_';
-                            input.value = " . Typecho_Common::shuffleScriptVar(
-                                $this->security->getToken($this->request->getRequestUrl())) . "
-
-                            f.appendChild(input);
-                            added = true;
-                        }
-                    });
+                function append() {
+                    if (!added) {
+                        forms[0].appendChild(input);
+                        added = true;
+                    }
+                }
+            
+                for (var i = 0; i < event.triggers.length; i ++) {
+                    var trigger = event.triggers[i];
+                    document[event.add](trigger, append);
+                    window[event.add](trigger, append);
                 }
             }
         }
@@ -1947,7 +1955,9 @@ class Widget_Archive extends Widget_Abstract_Contents
         $this->checkPermalink();
         
         /** 添加Pingback */
-        $this->response->setHeader('X-Pingback', $this->options->xmlRpcUrl);
+        if (2 == $this->options->allowXmlRpc) {
+            $this->response->setHeader('X-Pingback', $this->options->xmlRpcUrl);
+        }
         $validated = false;
 
         //~ 自定义模板

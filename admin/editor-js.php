@@ -2,7 +2,6 @@
 <?php $content = !empty($post) ? $post : $page; if ($options->markdown): ?>
 <script src="<?php $options->adminStaticUrl('js', 'hyperdown.js?v=' . $suffixVersion); ?>"></script>
 <script src="<?php $options->adminStaticUrl('js', 'pagedown.js?v=' . $suffixVersion); ?>"></script>
-<script src="<?php $options->adminStaticUrl('js', 'pagedown-extra.js?v=' . $suffixVersion); ?>"></script>
 <script src="<?php $options->adminStaticUrl('js', 'diff.js?v=' . $suffixVersion); ?>"></script>
 <script>
 $(document).ready(function () {
@@ -60,25 +59,17 @@ $(document).ready(function () {
 
     var converter = new HyperDown(),
         editor = new Markdown.Editor(converter, '', options),
-        diffMatch = new diff_match_patch(), last = '', preview = $('#wmd-preview'),
+        diffMatch = new diff_match_patch(), last = '',
         mark = '@mark' + Math.ceil(Math.random() * 100000000) + '@',
         span = '<span class="diff" />',
         cache = {};
 
     // 修正白名单
     converter.enableHtml(true);
-    converter.commonWhiteList += '|img|cite|embed|iframe';
-    converter.specialWhiteList = $.extend(converter.specialWhiteList, {
-        'ol'            :  'ol|li',
-        'ul'            :  'ul|li',
-        'blockquote'    :  'blockquote',
-        'pre'           :  'pre|code'
-    });
 
     // 自动跟随
     converter.hook('makeHtml', function (html) {
-        // convert all comment
-        html = html.replace(/&lt;!--(.+?)--&gt;/g, '<!--$1-->');
+        html = html.replace('<p><!--more--></p>', '<!--more-->');
         
         if (html.indexOf('<!--more-->') > 0) {
             var parts = html.split(/\s*<\!\-\-more\-\->\s*/),
@@ -218,7 +209,7 @@ $(document).ready(function () {
 
     <?php Typecho_Plugin::factory('admin/editor-js.php')->markdownEditor($content); ?>
 
-    var input = $('#text'), th = textarea.height(), ph = preview.height(),
+    var th = textarea.height(), ph = preview.height(),
         uploadBtn = $('<button type="button" id="btn-fullscreen-upload" class="btn btn-link">'
             + '<i class="i-upload"><?php _e('附件'); ?></i></button>')
             .prependTo('.submit .right')
@@ -254,6 +245,10 @@ $(document).ready(function () {
         $(document.body).removeClass('fullscreen');
         textarea.height(th);
         preview.height(ph);
+    });
+
+    editor.hooks.chain('commandExecuted', function () {
+        textarea.trigger('input');
     });
 
     function initMarkdown() {

@@ -212,8 +212,8 @@ Typecho_Date::setTimezoneOffset($options->timezone);
                     $db->query('CREATE TABLE ' . $prefix . 'users_' . $uuid . ' ( "uid" INTEGER NOT NULL PRIMARY KEY,
             "name" varchar(32) default NULL ,
             "password" varchar(64) default NULL ,
-            "mail" varchar(200) default NULL ,
-            "url" varchar(200) default NULL ,
+            "mail" varchar(150) default NULL ,
+            "url" varchar(150) default NULL ,
             "screenName" varchar(32) default NULL ,
             "created" int(10) default \'0\' ,
             "activated" int(10) default \'0\' ,
@@ -227,8 +227,8 @@ Typecho_Date::setTimezoneOffset($options->timezone);
                     $db->query('CREATE TABLE ' . $prefix . 'users ( "uid" INTEGER NOT NULL PRIMARY KEY,
             "name" varchar(32) default NULL ,
             "password" varchar(64) default NULL ,
-            "mail" varchar(200) default NULL ,
-            "url" varchar(200) default NULL ,
+            "mail" varchar(150) default NULL ,
+            "url" varchar(150) default NULL ,
             "screenName" varchar(32) default NULL ,
             "created" int(10) default \'0\' ,
             "activated" int(10) default \'0\' ,
@@ -250,24 +250,24 @@ Typecho_Date::setTimezoneOffset($options->timezone);
             //do nothing
         }
 
-        //将slug字段长度增加到200
+        //将slug字段长度增加到150
         try {
             switch (true) {
                 case false !== strpos($adapterName, 'Mysql'):
-                    $db->query("ALTER TABLE  `" . $prefix . "contents` MODIFY COLUMN `slug` varchar(200)", Typecho_Db::WRITE);
-                    $db->query("ALTER TABLE  `" . $prefix . "metas` MODIFY COLUMN `slug` varchar(200)", Typecho_Db::WRITE);
+                    $db->query("ALTER TABLE  `" . $prefix . "contents` MODIFY COLUMN `slug` varchar(150)", Typecho_Db::WRITE);
+                    $db->query("ALTER TABLE  `" . $prefix . "metas` MODIFY COLUMN `slug` varchar(150)", Typecho_Db::WRITE);
                     break;
 
                 case false !== strpos($adapterName, 'Pgsql'):
-                    $db->query('ALTER TABLE  "' . $prefix . 'contents" ALTER COLUMN  "slug" TYPE varchar(200)', Typecho_Db::WRITE);
-                    $db->query('ALTER TABLE  "' . $prefix . 'metas" ALTER COLUMN  "slug" TYPE varchar(200)', Typecho_Db::WRITE);
+                    $db->query('ALTER TABLE  "' . $prefix . 'contents" ALTER COLUMN  "slug" TYPE varchar(150)', Typecho_Db::WRITE);
+                    $db->query('ALTER TABLE  "' . $prefix . 'metas" ALTER COLUMN  "slug" TYPE varchar(150)', Typecho_Db::WRITE);
                     break;
 
                 case false !== strpos($adapterName, 'SQLite'):
                     $uuid = uniqid();
                     $db->query('CREATE TABLE ' . $prefix . 'contents' . $uuid . ' ( "cid" INTEGER NOT NULL PRIMARY KEY,
-        "title" varchar(200) default NULL ,
-        "slug" varchar(200) default NULL ,
+        "title" varchar(150) default NULL ,
+        "slug" varchar(150) default NULL ,
         "created" int(10) default \'0\' ,
         "modified" int(10) default \'0\' ,
         "text" text ,
@@ -284,8 +284,8 @@ Typecho_Date::setTimezoneOffset($options->timezone);
                     $db->query('INSERT INTO ' . $prefix . 'contents' . $uuid . ' SELECT * FROM ' . $prefix . 'contents', Typecho_Db::WRITE);
                     $db->query('DROP TABLE  ' . $prefix . 'contents', Typecho_Db::WRITE);
                     $db->query('CREATE TABLE ' . $prefix . 'contents ( "cid" INTEGER NOT NULL PRIMARY KEY,
-        "title" varchar(200) default NULL ,
-        "slug" varchar(200) default NULL ,
+        "title" varchar(150) default NULL ,
+        "slug" varchar(150) default NULL ,
         "created" int(10) default \'0\' ,
         "modified" int(10) default \'0\' ,
         "text" text ,
@@ -305,19 +305,19 @@ Typecho_Date::setTimezoneOffset($options->timezone);
                     $db->query('CREATE INDEX ' . $prefix . 'contents_created ON ' . $prefix . 'contents ("created")', Typecho_Db::WRITE);
 
                     $db->query('CREATE TABLE ' . $prefix . 'metas' . $uuid . ' ( "mid" INTEGER NOT NULL PRIMARY KEY,
-        "name" varchar(200) default NULL ,
-        "slug" varchar(200) default NULL ,
+        "name" varchar(150) default NULL ,
+        "slug" varchar(150) default NULL ,
         "type" varchar(32) NOT NULL ,
-        "description" varchar(200) default NULL ,
+        "description" varchar(150) default NULL ,
         "count" int(10) default \'0\' ,
         "order" int(10) default \'0\' )', Typecho_Db::WRITE);
                     $db->query('INSERT INTO ' . $prefix . 'metas' . $uuid . ' SELECT * FROM ' . $prefix . 'metas', Typecho_Db::WRITE);
                     $db->query('DROP TABLE  ' . $prefix . 'metas', Typecho_Db::WRITE);
                     $db->query('CREATE TABLE ' . $prefix . 'metas ( "mid" INTEGER NOT NULL PRIMARY KEY,
-        "name" varchar(200) default NULL ,
-        "slug" varchar(200) default NULL ,
+        "name" varchar(150) default NULL ,
+        "slug" varchar(150) default NULL ,
         "type" varchar(32) NOT NULL ,
-        "description" varchar(200) default NULL ,
+        "description" varchar(150) default NULL ,
         "count" int(10) default \'0\' ,
         "order" int(10) default \'0\' )', Typecho_Db::WRITE);
                     $db->query('INSERT INTO ' . $prefix . 'metas SELECT * FROM ' . $prefix . 'metas' . $uuid, Typecho_Db::WRITE);
@@ -732,8 +732,8 @@ Typecho_Date::setTimezoneOffset($options->timezone);
             case false !== strpos($adapterName, 'SQLite'):
                 $uuid = uniqid();
                 $db->query('CREATE TABLE ' . $prefix . 'contents_tmp ( "cid" INTEGER NOT NULL PRIMARY KEY,
-"title" varchar(200) default NULL ,
-"slug" varchar(200) default NULL ,
+"title" varchar(150) default NULL ,
+"slug" varchar(150) default NULL ,
 "created" int(10) default \'0\' ,
 "modified" int(10) default \'0\' ,
 "text" text ,
@@ -755,8 +755,8 @@ Typecho_Date::setTimezoneOffset($options->timezone);
                 "allowPing", "allowFeed", "parent" FROM ' . $prefix . 'contents', Typecho_Db::WRITE);
                 $db->query('DROP TABLE  ' . $prefix . 'contents', Typecho_Db::WRITE);
                 $db->query('CREATE TABLE ' . $prefix . 'contents ( "cid" INTEGER NOT NULL PRIMARY KEY,
-"title" varchar(200) default NULL ,
-"slug" varchar(200) default NULL ,
+"title" varchar(150) default NULL ,
+"slug" varchar(150) default NULL ,
 "created" int(10) default \'0\' ,
 "modified" int(10) default \'0\' ,
 "text" text ,
@@ -1030,7 +1030,7 @@ Typecho_Date::setTimezoneOffset($options->timezone);
                 $config = $db->getConfig();
                 $db->query("CREATE TABLE `{$prefix}fields` (
   `cid` int(10) unsigned NOT NULL,
-  `name` varchar(200) NOT NULL,
+  `name` varchar(150) NOT NULL,
   `type` varchar(8) default 'str',
   `str_value` text,
   `int_value` int(10) default '0',
@@ -1043,7 +1043,7 @@ Typecho_Date::setTimezoneOffset($options->timezone);
 
             case false !== strpos($adapterName, 'Pgsql'):
                 $db->query('CREATE TABLE "' . $prefix . 'fields" ("cid" INT NOT NULL,
-  "name" VARCHAR(200) NOT NULL,
+  "name" VARCHAR(150) NOT NULL,
   "type" VARCHAR(8) NULL DEFAULT \'str\',
   "str_value" TEXT NULL DEFAULT NULL,
   "int_value" INT NULL DEFAULT \'0\',
@@ -1056,7 +1056,7 @@ Typecho_Date::setTimezoneOffset($options->timezone);
 
             case false !== strpos($adapterName, 'SQLite'):
                 $db->query('CREATE TABLE "' . $prefix . 'fields" ("cid" INTEGER NOT NULL,
-  "name" varchar(200) NOT NULL,
+  "name" varchar(150) NOT NULL,
   "type" varchar(8) default \'str\',
   "str_value" text,
   "int_value" int(10) default \'0\',
@@ -1086,8 +1086,7 @@ Typecho_Date::setTimezoneOffset($options->timezone);
      */
     public function v0_9r13_12_6($db, $options)
     {
-        $frontArchive = $db->fetchRow($db->select()->from('table.options')->where('name = ?', 'frontArchive'));
-        if (empty($frontArchive)) {
+        if (!isset($options->frontArchive)) {
             $db->query($db->insert('table.options')
                 ->rows(array('name' => 'frontArchive', 'user' => 0, 'value' => 0)));
         }
@@ -1103,8 +1102,7 @@ Typecho_Date::setTimezoneOffset($options->timezone);
      */
     public function v0_9r13_12_20($db, $options)
     {
-        $commentsWhitelist = $db->fetchRow($db->select()->from('table.options')->where('name = ?', 'commentsWhitelist'));
-        if (empty($commentsWhitelist)) {
+        if (!isset($options->commentsWhitelist)) {
             $db->query($db->insert('table.options')
                 ->rows(array('name' => 'commentsWhitelist', 'user' => 0, 'value' => 0)));
         }
@@ -1136,10 +1134,10 @@ Typecho_Date::setTimezoneOffset($options->timezone);
             case false !== strpos($adapterName, 'SQLite'):
                 $uuid = uniqid();
                 $db->query('CREATE TABLE ' . $prefix . 'metas' . $uuid . ' ( "mid" INTEGER NOT NULL PRIMARY KEY,
-        "name" varchar(200) default NULL ,
-        "slug" varchar(200) default NULL ,
+        "name" varchar(150) default NULL ,
+        "slug" varchar(150) default NULL ,
         "type" varchar(32) NOT NULL ,
-        "description" varchar(200) default NULL ,
+        "description" varchar(150) default NULL ,
         "count" int(10) default \'0\' ,
         "order" int(10) default \'0\' ,
         "parent" int(10) default \'0\')', Typecho_Db::WRITE);
@@ -1147,10 +1145,10 @@ Typecho_Date::setTimezoneOffset($options->timezone);
                     SELECT "mid", "name", "slug", "type", "description", "count", "order" FROM ' . $prefix . 'metas', Typecho_Db::WRITE);
                 $db->query('DROP TABLE  ' . $prefix . 'metas', Typecho_Db::WRITE);
                 $db->query('CREATE TABLE ' . $prefix . 'metas ( "mid" INTEGER NOT NULL PRIMARY KEY,
-        "name" varchar(200) default NULL ,
-        "slug" varchar(200) default NULL ,
+        "name" varchar(150) default NULL ,
+        "slug" varchar(150) default NULL ,
         "type" varchar(32) NOT NULL ,
-        "description" varchar(200) default NULL ,
+        "description" varchar(150) default NULL ,
         "count" int(10) default \'0\' ,
         "order" int(10) default \'0\' ,
         "parent" int(10) default \'0\')', Typecho_Db::WRITE);
@@ -1175,8 +1173,10 @@ Typecho_Date::setTimezoneOffset($options->timezone);
      */
     public function v0_9r14_3_14($db, $options)
     {
-        $db->query($db->insert('table.options')
-            ->rows(array('name' => 'secret', 'user' => 0, 'value' => Typecho_Common::randString(32, true))));
+        if (!isset($options->secret)) {
+            $db->query($db->insert('table.options')
+                ->rows(array('name' => 'secret', 'user' => 0, 'value' => Typecho_Common::randString(32, true))));
+        }
     }
 
     /**
@@ -1189,8 +1189,10 @@ Typecho_Date::setTimezoneOffset($options->timezone);
      */
     public function v1_0r14_9_2($db, $options)
     {
-        $db->query($db->insert('table.options')
-            ->rows(array('name' => 'lang', 'user' => 0, 'value' => 'zh_CN')));
+        if (!isset($options->lang)) {
+            $db->query($db->insert('table.options')
+                ->rows(array('name' => 'lang', 'user' => 0, 'value' => 'zh_CN')));
+        }
     }
 
     /**
@@ -1203,8 +1205,64 @@ Typecho_Date::setTimezoneOffset($options->timezone);
      */
     public function v1_0r14_10_10($db, $options)
     {
-        $db->query($db->insert('table.options')
-            ->rows(array('name' => 'commentsAntiSpam', 'user' => 0, 'value' => 1)));
+        if (!isset($options->commentsAntiSpam)) {
+            $db->query($db->insert('table.options')
+                ->rows(array('name' => 'commentsAntiSpam', 'user' => 0, 'value' => 1)));
+        }
+    }
+
+    /**
+     * 升级至17.4.24 
+     * 
+     * @param mixed $db 
+     * @param mixed $options 
+     * @static
+     * @access public
+     * @return void
+     */
+    public static function v1_1r17_4_24($db, $options)
+    {
+        // 增加markdown
+        if (!isset($options->xmlrpcMarkdown)) {
+            $db->query($db->insert('table.options')
+                ->rows(array('name' => 'xmlrpcMarkdown', 'user' => 0, 'value' => 0)));
+        }
+    }
+
+    /**
+     * 升级至17.10.24
+     *
+     * @param mixed $db
+     * @param mixed $options
+     * @static
+     * @access public
+     * @return void
+     */
+    public static function v1_1r17_10_24($db, $options)
+    {
+        // 增加installed
+        if (!isset($options->installed)) {
+            $db->query($db->insert('table.options')
+                ->rows(array('name' => 'installed', 'user' => 0, 'value' => 1)));
+        }
+    }
+
+    /**
+     * 升级至17.10.27
+     *
+     * @param mixed $db
+     * @param mixed $options
+     * @static
+     * @access public
+     * @return void
+     */
+    public static function v1_1r17_10_27($db, $options)
+    {
+        // 增加xmlRpc开关
+        if (!isset($options->allowXmlRpc)) {
+            $db->query($db->insert('table.options')
+                ->rows(array('name' => 'allowXmlRpc', 'user' => 0, 'value' => 2)));
+        }
     }
 }
 

@@ -61,7 +61,7 @@ class Widget_Options_Reading extends Widget_Options_Permalink
         // 页面列表
         $pages = $this->db->fetchAll($this->db->select('cid', 'title')
         ->from('table.contents')->where('type = ?', 'page')
-        ->where('status = ?', 'publish')->where('created < ?', $this->options->gmtTime));
+        ->where('status = ?', 'publish')->where('created < ?', $this->options->time));
         
         if (!empty($pages)) {
             $pagesSelect = '<select name="frontPagePage" id="frontPage-frontPagePage">';
@@ -163,7 +163,7 @@ class Widget_Options_Reading extends Widget_Options_Permalink
         if ('page' == $settings['frontPage'] && isset($this->request->frontPagePage) &&
         $this->db->fetchRow($this->db->select('cid')
         ->from('table.contents')->where('type = ?', 'page')
-        ->where('status = ?', 'publish')->where('created < ?', $this->options->gmtTime)
+        ->where('status = ?', 'publish')->where('created < ?', $this->options->time)
         ->where('cid = ?', $pageId = intval($this->request->frontPagePage)))) {
 
             $settings['frontPage'] = 'page:' . $pageId;
