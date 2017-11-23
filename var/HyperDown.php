@@ -234,6 +234,11 @@ class HyperDown
         $blocks = $this->parseBlock($text, $lines);
         $html = '';
 
+        // inline mode for single normal block
+        if ($inline && count($blocks) == 1 && $blocks[0][0] == 'normal') {
+            $blocks[0][3] = true;
+        }
+
         foreach ($blocks as $block) {
             list ($type, $start, $end, $value) = $block;
             $extract = array_slice($lines, $start, $end - $start + 1);
@@ -244,7 +249,7 @@ class HyperDown
             $result = $this->call('after' . ucfirst($method), $result, $value);
 
             $html .= $result;
-        }
+        } 
 
         return $html;
     }
@@ -1443,9 +1448,10 @@ class HyperDown
      * parseNormal
      *
      * @param array $lines
+     * @param bool $inline
      * @return string
      */
-    private function parseNormal(array $lines)
+    private function parseNormal(array $lines, $inline = false)
     {
         foreach ($lines as &$line) {
             $line = $this->parseInline($line);
@@ -1455,7 +1461,7 @@ class HyperDown
         $str = preg_replace("/(\n\s*){2,}/", "</p><p>", $str);
         $str = preg_replace("/\n/", "<br>", $str);
 
-        return preg_match("/^\s*$/", $str) ? '' : "<p>{$str}</p>";
+        return preg_match("/^\s*$/", $str) ? '' : ($inline ? $str : "<p>{$str}</p>");
     }
 
     /**

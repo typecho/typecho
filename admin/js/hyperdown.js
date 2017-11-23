@@ -186,6 +186,9 @@
       lines = [];
       blocks = this.parseBlock(text, lines);
       html = '';
+      if (inline && blocks.length === 1 && blocks[0][0] === 'normal') {
+        blocks[0][3] = true;
+      }
       for (j = 0, len = blocks.length; j < len; j++) {
         block = blocks[j];
         type = block[0], start = block[1], end = block[2], value = block[3];
@@ -1023,8 +1026,11 @@
       return '<hr>';
     };
 
-    Parser.prototype.parseNormal = function(lines) {
+    Parser.prototype.parseNormal = function(lines, inline) {
       var str;
+      if (inline == null) {
+        inline = false;
+      }
       lines = lines.map((function(_this) {
         return function(line) {
           return _this.parseInline(line);
@@ -1036,7 +1042,11 @@
       if (str.match(/^\s*$/)) {
         return '';
       } else {
-        return "<p>" + str + "</p>";
+        if (inline) {
+          return str;
+        } else {
+          return "<p>" + str + "</p>";
+        }
       }
     };
 
