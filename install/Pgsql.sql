@@ -12,7 +12,7 @@ CREATE TABLE "typecho_comments" (  "coid" INT NOT NULL DEFAULT nextval('typecho_
   "mail" VARCHAR(150) NULL DEFAULT NULL,
   "url" VARCHAR(150) NULL DEFAULT NULL,
   "ip" VARCHAR(64) NULL DEFAULT NULL,
-  "agent" VARCHAR(150) NULL DEFAULT NULL,
+  "agent" VARCHAR(511) NULL DEFAULT NULL,
   "text" TEXT NULL DEFAULT NULL,
   "type" VARCHAR(16) NULL DEFAULT 'comment',
   "status" VARCHAR(16) NULL DEFAULT 'approved',
