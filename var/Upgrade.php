@@ -1264,5 +1264,69 @@ Typecho_Date::setTimezoneOffset($options->timezone);
                 ->rows(array('name' => 'allowXmlRpc', 'user' => 0, 'value' => 2)));
         }
     }
+
+    /**
+     * 升级至17.12.8
+     *
+     * @param $db
+     */
+    public static function v1_1r17_12_8($db)
+    {
+        /** 修改数据库字段 */
+        $adapterName = $db->getAdapterName();
+        $prefix  = $db->getPrefix();
+
+        switch (true) {
+            case false !== strpos($adapterName, 'Mysql'):
+                $db->query("ALTER TABLE  `" . $prefix . "comments` MODIFY COLUMN `agent` varchar(511)", Typecho_Db::WRITE);
+                break;
+
+            case false !== strpos($adapterName, 'Pgsql'):
+                $db->query('ALTER TABLE  "' . $prefix . 'comments" ALTER COLUMN  "agent" TYPE varchar(511)', Typecho_Db::WRITE);
+                break;
+
+            case false !== strpos($adapterName, 'SQLite'):
+                $uuid = uniqid();
+                $db->query('CREATE TABLE ' . $prefix . 'comments' . $uuid . ' ( "coid" INTEGER NOT NULL PRIMARY KEY,
+"cid" int(10) default \'0\' ,
+"created" int(10) default \'0\' ,
+"author" varchar(150) default NULL ,
+"authorId" int(10) default \'0\' ,
+"ownerId" int(10) default \'0\' ,
+"mail" varchar(150) default NULL ,
+"url" varchar(150) default NULL ,
+"ip" varchar(64) default NULL ,
+"agent" varchar(511) default NULL ,
+"text" text ,
+"type" varchar(16) default \'comment\' ,
+"status" varchar(16) default \'approved\' ,
+"parent" int(10) default \'0\')', Typecho_Db::WRITE);
+                $db->query('INSERT INTO ' . $prefix . 'comments' . $uuid . ' SELECT * FROM ' . $prefix . 'comments', Typecho_Db::WRITE);
+                $db->query('DROP TABLE  ' . $prefix . 'metas', Typecho_Db::WRITE);
+                $db->query('CREATE TABLE ' . $prefix . 'comments ( "coid" INTEGER NOT NULL PRIMARY KEY,
+"cid" int(10) default \'0\' ,
+"created" int(10) default \'0\' ,
+"author" varchar(150) default NULL ,
+"authorId" int(10) default \'0\' ,
+"ownerId" int(10) default \'0\' ,
+"mail" varchar(150) default NULL ,
+"url" varchar(150) default NULL ,
+"ip" varchar(64) default NULL ,
+"agent" varchar(511) default NULL ,
+"text" text ,
+"type" varchar(16) default \'comment\' ,
+"status" varchar(16) default \'approved\' ,
+"parent" int(10) default \'0\')', Typecho_Db::WRITE);
+                $db->query('INSERT INTO ' . $prefix . 'comments SELECT * FROM ' . $prefix . 'comments' . $uuid, Typecho_Db::WRITE);
+                $db->query('DROP TABLE  ' . $prefix . 'comments' . $uuid, Typecho_Db::WRITE);
+                $db->query('CREATE INDEX ' . $prefix . 'comments_cid ON ' . $prefix . 'comments ("cid")', Typecho_Db::WRITE);
+                $db->query('CREATE INDEX ' . $prefix . 'comments_created ON ' . $prefix . 'comments ("created")', Typecho_Db::WRITE);
+                $db->flushPool();
+                break;
+
+            default:
+                break;
+        }
+    }
 }
 

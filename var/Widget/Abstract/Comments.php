@@ -185,6 +185,11 @@ class Widget_Abstract_Comments extends Widget_Abstract
             $insertStruct['coid'] = $comment['coid'];
         }
 
+        /** 过长的客户端字符串要截断 */
+        if (Typecho_Common::strLen($insertStruct['agent']) > 511) {
+            $insertStruct['agent'] = Typecho_Common::subStr($insertStruct['agent'], 0, 511, '');
+        }
+
         /** 首先插入部分数据 */
         $insertId = $this->db->query($this->db->insert('table.comments')->rows($insertStruct));
 

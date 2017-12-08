@@ -27,7 +27,7 @@ CREATE TABLE `typecho_comments` (
   `mail` varchar(150) default NULL,
   `url` varchar(150) default NULL,
   `ip` varchar(64) default NULL,
-  `agent` varchar(150) default NULL,
+  `agent` varchar(511) default NULL,
   `text` text,
   `type` varchar(16) default 'comment',
   `status` varchar(16) default 'approved',
