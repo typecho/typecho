@@ -464,7 +464,7 @@
 
     Parser.prototype.parseBlockList = function(block, key, line, state) {
       var matches, space;
-      if (!!(matches = line.match(/^(\s*)((?:[0-9]+\.)|(?:[a-z]\.?)|\-|\+|\*)\s+/i))) {
+      if (!!(matches = line.match(/^(\s*)((?:[0-9]+\.)|\-|\+|\*)\s+/i))) {
         space = matches[1].length;
         state.empty = 0;
         if (this.isBlock('list')) {
@@ -890,7 +890,7 @@
       rows = [];
       for (key = j = 0, len = lines.length; j < len; key = ++j) {
         line = lines[key];
-        if (matches = line.match(/^(\s*)((?:[0-9]+\.?)|(?:[a-z]\.?)|\-|\+|\*)(\s+)(.*)$/i)) {
+        if (matches = line.match(/^(\s*)((?:[0-9]+\.?)|\-|\+|\*)(\s+)(.*)$/i)) {
           space = matches[1].length;
           type = 0 <= '+-*'.indexOf(matches[2]) ? 'ul' : 'ol';
           minSpace = Math.min(space, minSpace);

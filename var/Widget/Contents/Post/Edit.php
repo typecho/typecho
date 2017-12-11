@@ -130,8 +130,11 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             $created = $this->request->created;
         } else if (!empty($this->request->date)) {
             $dstOffset = !empty($this->request->dst) ? $this->request->dst : 0;
-            $timezoneOffset = isset($this->request->timezone) ? intval($this->request->timezone) : $this->options->timezone;
-            $created = strtotime($this->request->date) - $timezoneOffset + $this->options->serverTimezone - $dstOffset;
+            $timezoneOffset = $this->options->timezone;
+            $timezone = ($timezoneOffset >= 0 ? '+' : '-') . str_pad($timezoneOffset / 3600, 2, '0', STR_PAD_LEFT) . ':00';
+            list ($date, $time) = explode(' ', $this->request->date);
+
+            $created = strtotime("{$date}T{$time}{$timezone}") - $dstOffset;
         } else if (!empty($this->request->year) && !empty($this->request->month) && !empty($this->request->day)) {
             $second = intval($this->request->get('sec', date('s')));
             $min = intval($this->request->get('min', date('i')));

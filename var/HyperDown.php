@@ -620,7 +620,7 @@ class HyperDown
      */
     private function parseBlockList($block, $key, $line, &$state)
     {
-        if (preg_match("/^(\s*)((?:[0-9]+\.)|(?:[a-z]\.?)|\-|\+|\*)\s+/i", $line, $matches)) {
+        if (preg_match("/^(\s*)((?:[0-9]+\.)|\-|\+|\*)\s+/i", $line, $matches)) {
             $space = strlen($matches[1]);
             $state['empty'] = 0;
 
@@ -1269,7 +1269,7 @@ class HyperDown
 
         // count levels
         foreach ($lines as $key => $line) {
-            if (preg_match("/^(\s*)((?:[0-9]+\.?)|(?:[a-z]\.?)|\-|\+|\*)(\s+)(.*)$/i", $line, $matches)) {
+            if (preg_match("/^(\s*)((?:[0-9]+\.?)|\-|\+|\*)(\s+)(.*)$/i", $line, $matches)) {
                 $space = strlen($matches[1]);
                 $type = false !== strpos('+-*', $matches[2]) ? 'ul' : 'ol';
                 $minSpace = min($space, $minSpace);
