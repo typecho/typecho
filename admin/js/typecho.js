@@ -13,6 +13,61 @@
     };
 })(window);
 
+// 虚拟编辑器
+function scrollableEditor(el) {
+    var styles =  el.css(),
+        rows = [],
+        css = {display: 'block'}, test = $('<div></div>').appendTo(document.body);
+
+    for (k in styles) {
+        if (k.match(/^(direction|font-family|font-size|font-style|font-weight|letter-spacing|line-height|text-align|vertical-align|white-space|word-wrap|word-break|word-spacing)$/i)) {
+            css[k] = styles[k];
+        }
+    }
+
+    test.css(css);
+    test.css('min-height', css['line-height']);
+
+    function reload() {
+        var text = el.text(),
+            lines = text.split("\n"),
+            h = 0;
+
+        test.width(el.width());
+        rows = [];
+
+        for (var i = 0; i < lines.length; i ++) {
+            test.text(lines[i]);
+            h += test.height();
+
+            rows.push(h);
+        }
+
+        test.html('');
+        scroll()
+    }
+
+    function scroll() {
+        var height = el.height(),
+            offset = (el.innerHeight() - height) / 2,
+            scrollTop = el.scrollTop();
+
+        for (var i = 0; i < rows.length; i ++) {
+            var h = rows[i];
+
+            if (scrollTop <= h) {
+                break;
+            }
+        }
+
+        el.data('scrollLine', i);
+    }
+
+    reload();
+    el.on('input resize', reload);
+    el.on('scroll', scroll);
+}
+
 (function ($) {
     // 下拉菜单插件
     $.fn.dropdownMenu = function (options) {
@@ -1221,7 +1276,7 @@ jQuery.fn.css = function() {
         'border-right-style','border-bottom-style','border-left-style','position',
         'display','visibility','z-index','overflow-x','overflow-y','white-space',
         'clip','float','clear','cursor','list-style-image','list-style-position',
-        'list-style-type','marker-offset'];
+        'list-style-type','marker-offset', 'word-wrap', 'word-break', 'word-spacing'];
     var len = attr.length, obj = {};
     for (var i = 0; i < len; i++) 
         obj[attr[i]] = jQuery.fn.css2.call(this, attr[i]);
