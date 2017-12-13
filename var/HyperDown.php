@@ -46,6 +46,11 @@ class HyperDown
     public $_html = false;
 
     /**
+     * @var bool
+     */
+    public $_line = false;
+
+    /**
      * @var array
      */
     public $blockParsers = array(
@@ -150,6 +155,7 @@ class HyperDown
         $text = $this->initText($text);
         $html = $this->parse($text);
         $html = $this->makeFootnotes($html);
+        $html = $this->optimizeLines($html);
 
         return $this->call('makeHtml', $html);
     }
@@ -160,6 +166,14 @@ class HyperDown
     public function enableHtml($html = true)
     {
         $this->_html = $html;
+    }
+
+    /**
+     * @param bool $line
+     */
+    public function enableLine($line = true)
+    {
+        $this->_line = $line;
     }
 
     /**
@@ -227,9 +241,10 @@ class HyperDown
      *
      * @param string $text
      * @param bool $inline
+     * @param int $offset
      * @return string
      */
-    private function parse($text, $inline = false)
+    private function parse($text, $inline = false, $offset = 0)
     {
         $blocks = $this->parseBlock($text, $lines);
         $html = '';
@@ -245,7 +260,7 @@ class HyperDown
             $method = 'parse' . ucfirst($type);
 
             $extract = $this->call('before' . ucfirst($method), $extract, $value);
-            $result = $this->{$method}($extract, $value);
+            $result = $this->{$method}($extract, $value, $start + $offset, $end + $offset);
             $result = $this->call('after' . ucfirst($method), $result, $value);
 
             $html .= $result;
@@ -272,6 +287,60 @@ class HyperDown
         }
 
         return $text;
+    }
+
+    /**
+     * @param $start
+     * @param int $end
+     * @return string
+     */
+    public function markLine($start, $end = -1)
+    {
+        if ($this->_line) {
+            $end = $end < 0 ? $start : $end;
+            return '<span class="line" data-start="' . $start
+                . '" data-end="' . $end . '" data-id="' . $this->_uniqid . '"></span>';
+        }
+
+        return '';
+    }
+
+    /**
+     * @param array $lines
+     * @param $start
+     * @return string
+     */
+    public function markLines(array $lines, $start)
+    {
+        $i = -1;
+        $self = $this;
+
+        return $this->_line ? array_map(function ($line) use ($self, $start, &$i) {
+            $i ++;
+            return $self->markLine($start + $i) . $line;
+        }, $lines) : $lines;
+    }
+
+    /**
+     * @param $html
+     * @return string
+     */
+    public function optimizeLines($html)
+    {
+        $last = 0;
+
+        return $this->_line ?
+            preg_replace_callback("/class=\"line\" data\-start=\"([0-9]+)\" data\-end=\"([0-9]+)\" (data\-id=\"{$this->_uniqid}\")/",
+                function ($matches) use (&$last) {
+                    if ($matches[1] != $last) {
+                        $replace = 'class="line" data-start="' . $last . '" data-start-original="' . $matches[1] . '" data-end="' . $matches[2] . '" ' . $matches[3];
+                    } else {
+                        $replace = $matches[0];
+                    }
+
+                    $last = $matches[2] + 1;
+                    return $replace;
+                }, $html) : $html;
     }
 
     /**
@@ -1132,9 +1201,10 @@ class HyperDown
      *
      * @param array $lines
      * @param array $parts
+     * @param int $start
      * @return string
      */
-    private function parseCode(array $lines, array $parts)
+    private function parseCode(array $lines, array $parts, $start)
     {
         list ($blank, $lang) = $parts;
         $lang = trim($lang);
@@ -1151,30 +1221,39 @@ class HyperDown
             }
         }
 
-        $lines = array_map(function ($line) use ($count) {
-            return preg_replace("/^[ ]{{$count}}/", '', $line);
-        }, array_slice($lines, 1, -1));
-        $str = implode("\n", $lines);
+        $isEmpty = true;
 
-        return preg_match("/^\s*$/", $str) ? '' :
+        $lines = array_map(function ($line) use ($count, &$isEmpty) {
+            $line = preg_replace("/^[ ]{{$count}}/", '', $line);
+            if ($isEmpty && !preg_match("/^\s*$/", $line)) {
+                $isEmpty = false;
+            }
+
+            return htmlspecialchars($line);
+        }, array_slice($lines, 1, -1));
+        $str = implode("\n", $this->markLines($lines, $start + 1));
+
+        return $isEmpty ? '' :
             '<pre><code' . (!empty($lang) ? " class=\"{$lang}\"" : '')
             . (!empty($rel) ? " rel=\"{$rel}\"" : '') . '>'
-            . htmlspecialchars($str) . '</code></pre>';
+            . $str . '</code></pre>';
     }
 
     /**
      * parsePre
      *
      * @param array $lines
+     * @param mixed $value
+     * @param int $start
      * @return string
      */
-    private function parsePre(array $lines)
+    private function parsePre(array $lines, $value, $start)
     {
         foreach ($lines as &$line) {
             $line = htmlspecialchars(substr($line, 4));
         }
-        $str = implode("\n", $lines);
 
+        $str = implode("\n", $this->markLines($lines, $start));
         return preg_match("/^\s*$/", $str) ? '' : '<pre><code>' . $str . '</code></pre>';
     }
 
@@ -1182,33 +1261,40 @@ class HyperDown
      * parseAhtml
      *
      * @param array $lines
+     * @param mixed $value
+     * @param int $start
      * @return string
      */
-    private function parseAhtml(array $lines)
+    private function parseAhtml(array $lines, $value, $start)
     {
-        return trim(implode("\n", $lines));
+        return trim(implode("\n", $this->markLines($lines, $start)));
     }
 
     /**
      * parseShtml
      *
      * @param array $lines
+     * @param mixed $value
+     * @param int $start
      * @return string
      */
-    private function parseShtml(array $lines)
+    private function parseShtml(array $lines, $value, $start)
     {
-        return trim(implode("\n", array_slice($lines, 1, -1)));
+        return trim(implode("\n", $this->markLines(array_slice($lines, 1, -1), $start + 1)));
     }
 
     /**
      * parseMath
      *
      * @param array $lines
+     * @param mixed $value
+     * @param int $start
+     * @param int $end
      * @return string
      */
-    private function parseMath(array $lines)
+    private function parseMath(array $lines, $value, $start, $end)
     {
-        return '<p>' . htmlspecialchars(implode("\n", $lines)) . '</p>';
+        return '<p>' . $this->markLine($start, $end) . htmlspecialchars(implode("\n", $lines)) . '</p>';
     }
 
     /**
@@ -1216,11 +1302,13 @@ class HyperDown
      *
      * @param array $lines
      * @param int $num
+     * @param int $start
+     * @param int $end
      * @return string
      */
-    private function parseSh(array $lines, $num)
+    private function parseSh(array $lines, $num, $start, $end)
     {
-        $line = $this->parseInline(trim($lines[0], '# '));
+        $line = $this->markLine($start, $end) . $this->parseInline(trim($lines[0], '# '));
         return preg_match("/^\s*$/", $line) ? '' : "<h{$num}>{$line}</h{$num}>";
     }
 
@@ -1229,36 +1317,42 @@ class HyperDown
      *
      * @param array $lines
      * @param int $num
+     * @param int $start
+     * @param int $end
      * @return string
      */
-    private function parseMh(array $lines, $num)
+    private function parseMh(array $lines, $num, $start, $end)
     {
-        return $this->parseSh($lines, $num);
+        return $this->parseSh($lines, $num, $start, $end);
     }
 
     /**
      * parseQuote
      *
      * @param array $lines
+     * @param mixed $value
+     * @param int $start
      * @return string
      */
-    private function parseQuote(array $lines)
+    private function parseQuote(array $lines, $value, $start)
     {
         foreach ($lines as &$line) {
             $line = preg_replace("/^\s*> ?/", '', $line);
         }
         $str = implode("\n", $lines);
 
-        return preg_match("/^\s*$/", $str) ? '' : '<blockquote>' . $this->parse($str) . '</blockquote>';
+        return preg_match("/^\s*$/", $str) ? '' : '<blockquote>' . $this->parse($str, true, $start) . '</blockquote>';
     }
 
     /**
      * parseList
      *
      * @param array $lines
+     * @param mixed $value
+     * @param int $start
      * @return string
      */
-    private function parseList(array $lines)
+    private function parseList(array $lines, $value, $start)
     {
         $html = '';
         $minSpace = 99999;
@@ -1300,8 +1394,9 @@ class HyperDown
 
         $lastType = '';
         $leftLines = array();
+        $leftStart = 0;
 
-        foreach ($rows as $row) {
+        foreach ($rows as $key => $row) {
             if (is_array($row)) {
                 list ($space, $type, $line, $text) = $row;
 
@@ -1309,7 +1404,7 @@ class HyperDown
                     $leftLines[] = preg_replace("/^\s{" . $secondMinSpace . "}/", '', $line);
                 } else {
                     if (!empty($leftLines)) {
-                        $html .= "<li>" . $this->parse(implode("\n", $leftLines), true) . "</li>";
+                        $html .= "<li>" . $this->parse(implode("\n", $leftLines), true, $start + $leftStart) . "</li>";
                     }
 
                     if ($lastType != $type) {
@@ -1320,6 +1415,7 @@ class HyperDown
                         $html .= "<{$type}>";
                     }
 
+                    $leftStart = $key;
                     $leftLines = array($text);
                     $lastType = $type;
                 }
@@ -1329,7 +1425,7 @@ class HyperDown
         }
 
         if (!empty($leftLines)) {
-            $html .= "<li>" . $this->parse(implode("\n", $leftLines), true) . "</li></{$lastType}>";
+            $html .= "<li>" . $this->parse(implode("\n", $leftLines), true, $start + $leftStart) . "</li></{$lastType}>";
         }
 
         return $html;
@@ -1338,9 +1434,10 @@ class HyperDown
     /**
      * @param array $lines
      * @param array $value
+     * @param int $start
      * @return string
      */
-    private function parseTable(array $lines, array $value)
+    private function parseTable(array $lines, array $value, $start)
     {
         list ($ignores, $aligns) = $value;
         $head = count($ignores) > 0 && array_sum($ignores) > 0;
@@ -1355,6 +1452,7 @@ class HyperDown
                     $head = false;
                     $body = true;
                 }
+
                 continue;
             }
 
@@ -1399,7 +1497,9 @@ class HyperDown
                 $html .= '<tbody>';
             }
 
-            $html .= '<tr>';
+            $html .= '<tr' . ($this->_line ? ' class="line" data-start="'
+                    . ($start + $key) . '" data-end="' . ($start + $key)
+                    . '" data-id="' . $this->_uniqid . '"' : '') . '>';
 
             foreach ($columns as $key => $column) {
                 list ($num, $text) = $column;
@@ -1437,11 +1537,14 @@ class HyperDown
     /**
      * parseHr
      *
+     * @param array $lines
+     * @param array $value
+     * @param int $start
      * @return string
      */
-    private function parseHr()
+    private function parseHr($lines, $value, $start)
     {
-        return '<hr>';
+        return $this->_line ? '<hr class="line" data-start="' . $start . '" data-end="' . $start . '">' : '<hr>';
     }
 
     /**
@@ -1449,12 +1552,22 @@ class HyperDown
      *
      * @param array $lines
      * @param bool $inline
+     * @param int $start
      * @return string
      */
-    private function parseNormal(array $lines, $inline = false)
+    private function parseNormal(array $lines, $inline = false, $start)
     {
-        foreach ($lines as &$line) {
+        $from = $start;
+
+        foreach ($lines as $key => &$line) {
             $line = $this->parseInline($line);
+
+            if (!preg_match("/^\s*$/", $line)) {
+                $end = $start + $key;
+                $line = $this->markLine($from, $end) . $line;
+
+                $from = $end + 1;
+            }
         }
 
         $str = trim(implode("\n", $lines));
@@ -1499,16 +1612,17 @@ class HyperDown
      *
      * @param array $lines
      * @param string $type
+     * @param int $start
      * @return string
      */
-    private function parseHtml(array $lines, $type)
+    private function parseHtml(array $lines, $type, $start)
     {
         foreach ($lines as &$line) {
             $line = $this->parseInline($line,
                 isset($this->_specialWhiteList[$type]) ? $this->_specialWhiteList[$type] : '');
         }
 
-        return implode("\n", $lines);
+        return implode("\n", $this->markLines($lines, $start));
     }
 
     /**

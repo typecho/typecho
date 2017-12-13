@@ -116,8 +116,8 @@
   img { max-width: 100%; }
   code, pre {
     padding: 2px 4px;
-    background: #F3F3F0;
-    font-size: .92857em;
+    background: #DDD;
+    font-size: 14px;
   }
   code { color: #C13; }
   pre {
@@ -161,6 +161,11 @@
 
   table th {
     background: #EEE;
+  }
+  span.line {
+    display: inline;
+    height: 1px;
+    line-height: 1px;
   }
 }
 
@@ -219,9 +224,6 @@
     border-left: 1px solid #F3F3F0;
     background: #F6F6F3;
     overflow: auto;
-    code, pre {
-      background: #F0F0EC;
-    }
   }
   .submit {
     right: 0;

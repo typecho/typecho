@@ -14,10 +14,14 @@
 })(window);
 
 // 虚拟编辑器
-function scrollableEditor(el) {
+function scrollableEditor(el, preview) {
     var styles =  el.css(),
+        lastWidth = el.width(),
+        lastFocus = null,
+        merge = [],
         rows = [],
-        css = {display: 'block'}, test = $('<div></div>').appendTo(document.body);
+        previewRows = [],
+        css = {display: 'block', 'position': 'absolute', 'left': '-99999px', 'top': '-99999px'}, test = $('<div></div>').appendTo(document.body);
 
     for (k in styles) {
         if (k.match(/^(direction|font-family|font-size|font-style|font-weight|letter-spacing|line-height|text-align|vertical-align|white-space|word-wrap|word-break|word-spacing)$/i)) {
@@ -29,7 +33,7 @@ function scrollableEditor(el) {
     test.css('min-height', css['line-height']);
 
     function reload() {
-        var text = el.text(),
+        var text = el.val(),
             lines = text.split("\n"),
             h = 0;
 
@@ -44,28 +48,126 @@ function scrollableEditor(el) {
         }
 
         test.html('');
-        scroll()
+        reloadPreview();
     }
 
     function scroll() {
         var height = el.height(),
             offset = (el.innerHeight() - height) / 2,
-            scrollTop = el.scrollTop();
+            scrollTop = el.scrollTop() - offset,
+            previewScrollTop = preview.scrollTop(),
+            percent = 0,
+            scrollPos = 0,
+            current = null;
 
-        for (var i = 0; i < rows.length; i ++) {
-            var h = rows[i];
+        for (var i = 0; i < merge.length; i ++) {
+            current = merge[i];
 
-            if (scrollTop <= h) {
+            if (scrollTop <= current[2]) {
+                percent = (scrollTop - current[3]) * current[4] / (current[2] - current[3])
+                break;
+            }
+        }
+        
+        if (!current) {
+            return;
+        }
+
+        for (var j = 0; j < previewRows.length; j ++) {
+            var item = previewRows[j];
+
+            if (current[0] >= item[0] && current[1] <= item[1]) {
+                var nextPos = previewRows[j + 1] ? previewRows[j + 1][2] : preview.get(0).scrollHeight;
+                scrollPos = (i == 0 ? 0 : item[2]) + (nextPos - item[2]) * percent;
+
+                preview.scrollTop(scrollPos);
+                break;
+            }
+        }
+    }
+
+    function reloadPreview() {
+        var last = 0;
+        previewRows = [];
+        merge = [];
+
+        $('.line', preview).each(function () {
+            var t = $(this), start = t.data('start'), end = t.data('end'), startOriginal = t.data('start-original'),
+                pos = t.position().top + preview.scrollTop();
+
+            previewRows.push([start, end, pos, this]);
+
+            if (typeof startOriginal != 'undefined') {
+                merge.push([start, startOriginal - 1, rows[startOriginal - 1], last, 0]);
+                merge.push([startOriginal, end, rows[end], rows[startOriginal - 1], 1]);
+            } else {
+                merge.push([start, end, rows[end], last, 1]);
+            }
+            
+            last = rows[end];
+        });
+
+        scroll();
+        reloadInput();
+    }
+
+    function getFoucsElement(focus) {
+        var e = $(focus), p = e.parent();
+
+        if (e.length > 0 && e.prop('tagName').match(/^(hr)$/i)) {
+            return e;
+        } else if (p.length > 0 && p.prop('tagName').toLowerCase() == 'div') {
+            return e.next();
+        }
+
+        return p;
+    }
+
+    function reloadInput() {
+        var text = el.val(), end = el.getSelection().start, pos = 0, line = 0;
+
+        // 使用高效算法检测当前行号
+        while (true) {
+            pos = text.indexOf("\n", pos);
+
+            if (pos >= 0 && pos < end) {
+                line ++;
+                pos += 1;
+            } else {
                 break;
             }
         }
 
-        el.data('scrollLine', i);
+        for (var i = 0; i < previewRows.length; i ++) {
+            var item = previewRows[i];
+
+            if (line >= item[0] && line <= item[1]) {
+                getFoucsElement(lastFocus).css('background', 'transparent');
+                getFoucsElement(item[3]).css('background-color', 'rgba(255,230,0,0.5)');
+                lastFocus = item[3];
+                break;
+            }
+        }
     }
 
-    reload();
-    el.on('input resize', reload);
+    // 检测宽度
+    setInterval(function () {
+        if (el.width() != lastWidth) {
+            lastWidth = el.width();
+            el.trigger('resize');
+        }
+    }, 150);
+
+    // 检测输入
+    el.on('touch keypress click', reloadInput);
+    el.on('blur', function () {
+        $(lastFocus).parent().css('background', 'transparent');
+    });
+
+    el.on('resize', reload);
     el.on('scroll', scroll);
+
+    return reload;
 }
 
 (function ($) {
