@@ -166,6 +166,11 @@
     display: inline;
     height: 1px;
     line-height: 1px;
+    position: absolute;
+  }
+
+  .focus, .focus * {
+    background-color: rgba(255,230,0,0.5) !important;
   }
 }
 
