@@ -18,10 +18,13 @@ function scrollableEditor(el, preview) {
     var styles =  el.css(),
         lastWidth = el.width(),
         lastFocus = null,
+        lastColor = null,
         merge = [],
         rows = [],
         previewRows = [],
-        css = {display: 'block', 'position': 'absolute', 'left': '-99999px', 'top': '-99999px'}, test = $('<div></div>').appendTo(document.body);
+        css = {display: 'block', 'position': 'absolute', 'left': '-99999px', 'top': '-99999px'},
+        test = $('<div></div>').appendTo(document.body),
+        lock = 0;
 
     for (k in styles) {
         if (k.match(/^(direction|font-family|font-size|font-style|font-weight|letter-spacing|line-height|text-align|vertical-align|white-space|word-wrap|word-break|word-spacing)$/i)) {
@@ -86,6 +89,36 @@ function scrollableEditor(el, preview) {
         }
     }
 
+    function scrollPreview() {
+        var height = el.height(),
+            offset = (el.innerHeight() - height) / 2,
+            previewScrollTop = preview.scrollTop(),
+            found = false,
+            current;
+
+        if (previewRows.length <= 0) {
+            return;
+        }
+
+        for (var i = 0; i < previewRows.length; i ++) {
+            var item = previewRows[i];
+
+            if (previewScrollTop < item[2]) {
+                found = true;
+                break;
+            }
+        }
+
+        current = found ? previewRows[i > 0 ? i - 1 : 0] : previewRows[previewRows.length - 1];
+
+        var start = current[0] > 0 ? rows[current[0] - 1] : 0,
+            end = rows[current[1]],
+            nextPos = found ? previewRows[i > 0 ? i : 1][2] : preview.get(0).scrollHeight,
+            percent = (previewScrollTop - current[2]) / (nextPos - current[2]);
+
+        el.scrollTop(start + (end - start) * percent + offset);
+    }
+
     function reloadPreview() {
         var last = 0;
         previewRows = [];
@@ -114,7 +147,7 @@ function scrollableEditor(el, preview) {
     function getFoucsElement(focus) {
         var e = $(focus), p = e.parent();
 
-        if (e.length > 0 && e.prop('tagName').match(/^(hr)$/i)) {
+        if (e.length > 0 && e.prop('tagName').match(/^(hr|tr)$/i)) {
             return e;
         } else if (p.length > 0 && p.prop('tagName').toLowerCase() == 'div') {
             return e.next();
@@ -142,8 +175,8 @@ function scrollableEditor(el, preview) {
             var item = previewRows[i];
 
             if (line >= item[0] && line <= item[1]) {
-                getFoucsElement(lastFocus).css('background', 'transparent');
-                getFoucsElement(item[3]).css('background-color', 'rgba(255,230,0,0.5)');
+                getFoucsElement(lastFocus).removeClass('focus');
+                getFoucsElement(item[3]).addClass('focus');
                 lastFocus = item[3];
                 break;
             }
@@ -161,11 +194,28 @@ function scrollableEditor(el, preview) {
     // 检测输入
     el.on('touch keypress click', reloadInput);
     el.on('blur', function () {
-        $(lastFocus).parent().css('background', 'transparent');
+        getFoucsElement(lastFocus).removeClass('focus');
     });
 
     el.on('resize', reload);
-    el.on('scroll', scroll);
+
+    el.on('scroll', function () {
+        if (lock != 1) {
+            lock = 2;
+            scroll();
+        } else {
+            lock = 0;
+        }
+    });
+
+    preview.on('scroll', function () {
+        if (lock != 2) {
+            lock = 1;
+            scrollPreview();
+        } else {
+            lock = 0;
+        }
+    });
 
     return reload;
 }

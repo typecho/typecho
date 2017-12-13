@@ -1761,7 +1761,7 @@ a.operate-reply {
     display: block;
     margin: 2em 0;
     background: #FFF9E8;
-    color: #cf9900;
+    color: #ce9900;
     font-size: .85714em;
     text-align: center;
     content: "- more -"; }
@@ -1780,7 +1780,11 @@ a.operate-reply {
   #wmd-preview span.line {
     display: inline;
     height: 1px;
-    line-height: 1px; }
+    line-height: 1px;
+    position: absolute; }
+  /* line 172, ../scss/components/_editor.scss */
+  #wmd-preview .focus, #wmd-preview .focus * {
+    background-color: rgba(255, 230, 0, 0.5) !important; }
 
 /* 上传面板动画效果 */
 @keyframes fullscreen-upload {
@@ -1804,7 +1808,7 @@ a.operate-reply {
   100% {
     right: -1px; } }
 /* 编辑器全屏 */
-/* line 195, ../scss/components/_editor.scss */
+/* line 200, ../scss/components/_editor.scss */
 .fullscreen #wmd-button-bar, .fullscreen #text, .fullscreen #wmd-preview, .fullscreen .submit {
   position: absolute;
   top: 0;
@@ -1817,20 +1821,20 @@ a.operate-reply {
   -moz-border-radius: 0;
   -webkit-border-radius: 0;
   border-radius: 0; }
-/* line 205, ../scss/components/_editor.scss */
+/* line 210, ../scss/components/_editor.scss */
 .fullscreen #wmd-button-bar {
   left: 0;
   padding: 13px 20px;
   border-bottom: 1px solid #F3F3F0;
   z-index: 1000; }
-/* line 211, ../scss/components/_editor.scss */
+/* line 216, ../scss/components/_editor.scss */
 .fullscreen #text {
   top: 53px;
   left: 0;
   padding: 20px;
   border: none;
   outline: none; }
-/* line 218, ../scss/components/_editor.scss */
+/* line 223, ../scss/components/_editor.scss */
 .fullscreen #wmd-preview {
   top: 53px;
   right: 0;
@@ -1840,18 +1844,18 @@ a.operate-reply {
   border-left: 1px solid #F3F3F0;
   background: #F6F6F3;
   overflow: auto; }
-/* line 228, ../scss/components/_editor.scss */
+/* line 233, ../scss/components/_editor.scss */
 .fullscreen .submit {
   right: 0;
   margin: 0;
   padding: 10px 20px;
   border-bottom: 1px solid #F3F3F0; }
-/* line 234, ../scss/components/_editor.scss */
+/* line 239, ../scss/components/_editor.scss */
 .fullscreen #upload-panel {
   -webkit-box-shadow: 0 4px 16px rgba(0, 0, 0, 0.225);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.225);
   border-style: solid; }
-/* line 241, ../scss/components/_editor.scss */
+/* line 246, ../scss/components/_editor.scss */
 .fullscreen #tab-files {
   position: absolute;
   top: 52px;
@@ -1862,7 +1866,7 @@ a.operate-reply {
   -moz-animation: fullscreen-upload 0.5s;
   -webkit-animation: fullscreen-upload 0.5s;
   -o-animation: fullscreen-upload 0.5s; }
-/* line 254, ../scss/components/_editor.scss */
+/* line 259, ../scss/components/_editor.scss */
 .fullscreen .wmd-edittab,
 .fullscreen .typecho-post-option,
 .fullscreen .title,
@@ -1871,22 +1875,22 @@ a.operate-reply {
 .fullscreen .typecho-head-nav,
 .fullscreen .message {
   display: none; }
-/* line 261, ../scss/components/_editor.scss */
+/* line 266, ../scss/components/_editor.scss */
 .fullscreen .wmd-hidetab {
   display: block; }
-/* line 262, ../scss/components/_editor.scss */
+/* line 267, ../scss/components/_editor.scss */
 .fullscreen .wmd-visualhide,
 .fullscreen #btn-fullscreen-upload {
   visibility: visible; }
 
-/* line 269, ../scss/components/_editor.scss */
+/* line 274, ../scss/components/_editor.scss */
 .preview .submit {
   width: 100%;
   background: #FFFFDD; }
-/* line 270, ../scss/components/_editor.scss */
+/* line 275, ../scss/components/_editor.scss */
 .preview #wmd-button-bar, .preview #wmd-preview, .preview #text, .preview #upload-panel, .preview #tab-files, .preview #btn-preview, .preview #btn-fullscreen-upload, .preview #auto-save-message {
   display: none; }
-/* line 271, ../scss/components/_editor.scss */
+/* line 276, ../scss/components/_editor.scss */
 .preview .preview-frame {
   width: 100%;
   border: 0;
@@ -1897,12 +1901,12 @@ a.operate-reply {
   position: absolute;
   top: 53px;
   left: 0; }
-/* line 274, ../scss/components/_editor.scss */
+/* line 279, ../scss/components/_editor.scss */
 .preview .preview-loading {
   background-image: url(../img/ajax-loader.gif);
   background-position: center;
   background-repeat: no-repeat; }
-/* line 275, ../scss/components/_editor.scss */
+/* line 280, ../scss/components/_editor.scss */
 .preview #btn-cancel-preview {
   display: inline-block; }
 

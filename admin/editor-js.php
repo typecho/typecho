@@ -92,7 +92,19 @@ $(document).ready(function () {
     });
 
     editor.hooks.chain('onPreviewRefresh', function () {
-        reloadScroll();
+        var images = $('img', preview), count = images.length;
+
+        if (count == 0) {
+            reloadScroll();
+        } else {
+            images.load(function () {
+                count --;
+
+                if (count == 0) {
+                    reloadScroll();
+                }
+            });
+        }
     });
 
     <?php Typecho_Plugin::factory('admin/editor-js.php')->markdownEditor($content); ?>
