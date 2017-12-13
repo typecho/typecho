@@ -32,7 +32,7 @@
         }
       } else {
         search = preg_quote(search);
-        str = str.replace(new RegExp(search, 'g'), replace);
+        str = str.replace(new RegExp(search, 'g'), replace.replace(/\$/g, '$$$$'));
       }
       return str;
     };
@@ -101,6 +101,7 @@
       };
       this.hooks = {};
       this.html = false;
+      this.line = false;
       this.blockParsers = [['code', 10], ['shtml', 20], ['pre', 30], ['ahtml', 40], ['list', 50], ['math', 60], ['html', 70], ['footnote', 80], ['definition', 90], ['quote', 100], ['table', 110], ['sh', 120], ['mh', 130], ['hr', 140], ['default', 9999]];
       this.parsers = {};
     }
@@ -132,11 +133,16 @@
       text = this.initText(text);
       html = this.parse(text);
       html = this.makeFootnotes(html);
+      html = this.optimizeLines(html);
       return this.call('makeHtml', html);
     };
 
     Parser.prototype.enableHtml = function(html1) {
       this.html = html1 != null ? html1 : true;
+    };
+
+    Parser.prototype.enableLine = function(line1) {
+      this.line = line1 != null ? line1 : true;
     };
 
     Parser.prototype.hook = function(type, cb) {
@@ -178,10 +184,13 @@
       return html;
     };
 
-    Parser.prototype.parse = function(text, inline) {
+    Parser.prototype.parse = function(text, inline, offset) {
       var block, blocks, end, extract, html, j, len, lines, method, result, start, type, value;
       if (inline == null) {
         inline = false;
+      }
+      if (offset == null) {
+        offset = 0;
       }
       lines = [];
       blocks = this.parseBlock(text, lines);
@@ -195,7 +204,7 @@
         extract = lines.slice(start, end + 1);
         method = 'parse' + ucfirst(type);
         extract = this.call('before' + ucfirst(method), extract, value);
-        result = this[method](extract, value);
+        result = this[method](extract, value, start + offset, end + offset);
         result = this.call('after' + ucfirst(method), result, value);
         html += result;
       }
@@ -232,6 +241,53 @@
         this.holders = {};
       }
       return text;
+    };
+
+    Parser.prototype.markLine = function(start, end) {
+      if (end == null) {
+        end = -1;
+      }
+      if (this.line) {
+        end = end < 0 ? start : end;
+        return '<span class="line" data-start="' + start + '" data-end="' + end + '" data-id="' + this.uniqid + '"></span>';
+      }
+      return '';
+    };
+
+    Parser.prototype.markLines = function(lines, start) {
+      var i;
+      i = -1;
+      if (this.line) {
+        return lines.map((function(_this) {
+          return function(line) {
+            i += 1;
+            return (_this.markLine(start + i)) + line;
+          };
+        })(this));
+      } else {
+        return lines;
+      }
+    };
+
+    Parser.prototype.optimizeLines = function(html) {
+      var last, regex;
+      last = 0;
+      regex = new RegExp("class=\"line\" data\\-start=\"([0-9]+)\" data\\-end=\"([0-9]+)\" (data\\-id=\"" + this.uniqid + "\")", 'g');
+      if (this.line) {
+        return html.replace(regex, function() {
+          var matches, replace;
+          matches = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+          if (last !== parseInt(matches[1])) {
+            replace = 'class="line" data-start="' + last + '" data-start-original="' + matches[1] + '" data-end="' + matches[2] + '" ' + matches[3];
+          } else {
+            replace = matches[0];
+          }
+          last = 1 + parseInt(matches[2]);
+          return replace;
+        });
+      } else {
+        return html;
+      }
     };
 
     Parser.prototype.parseInline = function(text, whiteList, clearHolders, enableAutoLink) {
@@ -802,8 +858,8 @@
       return this.call('afterOptimizeBlocks', blocks, lines);
     };
 
-    Parser.prototype.parseCode = function(lines, parts) {
-      var blank, count, lang, rel, str;
+    Parser.prototype.parseCode = function(lines, parts, start) {
+      var blank, count, isEmpty, lang, rel, str;
       blank = parts[0], lang = parts[1];
       lang = trim(lang);
       count = blank.length;
@@ -817,23 +873,28 @@
           rel = trim(rel);
         }
       }
+      isEmpty = true;
       lines = lines.slice(1, -1).map(function(line) {
-        return line.replace(new RegExp("/^[ ]{" + count + "}/"), '');
+        line = line.replace(new RegExp("/^[ ]{" + count + "}/"), '');
+        if (isEmpty && !line.match(/^\s*$/)) {
+          isEmpty = false;
+        }
+        return htmlspecialchars(line);
       });
-      str = lines.join("\n");
-      if (str.match(/^\s*$/)) {
+      str = (this.markLines(lines, start + 1)).join("\n");
+      if (isEmpty) {
         return '';
       } else {
-        return '<pre><code' + (!!lang ? " class=\"" + lang + "\"" : '') + (!!rel ? " rel=\"" + rel + "\"" : '') + '>' + (htmlspecialchars(str)) + '</code></pre>';
+        return '<pre><code' + (!!lang ? " class=\"" + lang + "\"" : '') + (!!rel ? " rel=\"" + rel + "\"" : '') + '>' + str + '</code></pre>';
       }
     };
 
-    Parser.prototype.parsePre = function(lines) {
+    Parser.prototype.parsePre = function(lines, value, start) {
       var str;
       lines = lines.map(function(line) {
         return htmlspecialchars(line.substring(4));
       });
-      str = lines.join("\n");
+      str = (this.markLines(lines, start)).join("\n");
       if (str.match(/^\s*$/)) {
         return '';
       } else {
@@ -841,21 +902,21 @@
       }
     };
 
-    Parser.prototype.parseAhtml = function(lines) {
-      return trim(lines.join("\n"));
+    Parser.prototype.parseAhtml = function(lines, value, start) {
+      return trim((this.markLines(lines, start)).join("\n"));
     };
 
-    Parser.prototype.parseShtml = function(lines) {
-      return trim((lines.slice(1, -1)).join("\n"));
+    Parser.prototype.parseShtml = function(lines, value, start) {
+      return trim((this.markLines(lines.slice(1, -1), start + 1)).join("\n"));
     };
 
-    Parser.prototype.parseMath = function(lines) {
-      return '<p>' + (htmlspecialchars(lines.join("\n"))) + '</p>';
+    Parser.prototype.parseMath = function(lines, value, start, end) {
+      return '<p>' + (this.markLine(start, end)) + (htmlspecialchars(lines.join("\n"))) + '</p>';
     };
 
-    Parser.prototype.parseSh = function(lines, num) {
+    Parser.prototype.parseSh = function(lines, num, start, end) {
       var line;
-      line = this.parseInline(trim(lines[0], '# '));
+      line = (this.markLine(start, end)) + this.parseInline(trim(lines[0], '# '));
       if (line.match(/^\s*$/)) {
         return '';
       } else {
@@ -863,11 +924,11 @@
       }
     };
 
-    Parser.prototype.parseMh = function(lines, num) {
-      return this.parseSh(lines, num);
+    Parser.prototype.parseMh = function(lines, num, start, end) {
+      return this.parseSh(lines, num, start, end);
     };
 
-    Parser.prototype.parseQuote = function(lines) {
+    Parser.prototype.parseQuote = function(lines, value, start) {
       var str;
       lines = lines.map(function(line) {
         return line.replace(/^\s*> ?/, '');
@@ -876,12 +937,12 @@
       if (str.match(/^\s*$/)) {
         return '';
       } else {
-        return '<blockquote>' + (this.parse(str)) + '</blockquote>';
+        return '<blockquote>' + (this.parse(str, true, start)) + '</blockquote>';
       }
     };
 
-    Parser.prototype.parseList = function(lines) {
-      var found, html, j, key, l, lastType, leftLines, len, len1, line, matches, minSpace, row, rows, secondFound, secondMinSpace, space, text, type;
+    Parser.prototype.parseList = function(lines, value, start) {
+      var found, html, j, key, l, lastType, leftLines, leftStart, len, len1, line, matches, minSpace, row, rows, secondFound, secondMinSpace, space, text, type;
       html = '';
       minSpace = 99999;
       secondMinSpace = 99999;
@@ -915,15 +976,16 @@
       secondMinSpace = secondFound ? secondMinSpace : minSpace;
       lastType = '';
       leftLines = [];
-      for (l = 0, len1 = rows.length; l < len1; l++) {
-        row = rows[l];
+      leftStart = 0;
+      for (key = l = 0, len1 = rows.length; l < len1; key = ++l) {
+        row = rows[key];
         if (row instanceof Array) {
           space = row[0], type = row[1], line = row[2], text = row[3];
           if (space !== minSpace) {
             leftLines.push(line.replace(new RegExp("^\\s{" + secondMinSpace + "}"), ''));
           } else {
             if (leftLines.length > 0) {
-              html += '<li>' + (this.parse(leftLines.join("\n"), true)) + '</li>';
+              html += '<li>' + (this.parse(leftLines.join("\n"), true, start + leftStart)) + '</li>';
             }
             if (lastType !== type) {
               if (!!lastType) {
@@ -931,6 +993,7 @@
               }
               html += "<" + type + ">";
             }
+            leftStart = key;
             leftLines = [text];
             lastType = type;
           }
@@ -939,12 +1002,12 @@
         }
       }
       if (leftLines.length > 0) {
-        html += '<li>' + (this.parse(leftLines.join("\n"), true)) + ("</li></" + lastType + ">");
+        html += '<li>' + (this.parse(leftLines.join("\n"), true, start + leftStart)) + ("</li></" + lastType + ">");
       }
       return html;
     };
 
-    Parser.prototype.parseTable = function(lines, value) {
+    Parser.prototype.parseTable = function(lines, value, start) {
       var aligns, body, column, columns, head, html, ignores, j, key, l, last, len, len1, line, num, output, row, rows, tag, text;
       ignores = value[0], aligns = value[1];
       head = ignores.length > 0 && (ignores.reduce(function(prev, curr) {
@@ -995,7 +1058,11 @@
         } else if (body) {
           html += '<tbody>';
         }
-        html += '<tr>';
+        html += '<tr';
+        if (this.line) {
+          html += ' class="line" data-start="' + (start + key) + '" data-end="' + (start + key) + '" data-id="' + this.uniqid + '"';
+        }
+        html += '>';
         for (key in columns) {
           column = columns[key];
           num = column[0], text = column[1];
@@ -1022,18 +1089,32 @@
       return html += '</table>';
     };
 
-    Parser.prototype.parseHr = function() {
-      return '<hr>';
+    Parser.prototype.parseHr = function(lines, value, start) {
+      if (this.line) {
+        return '<hr class="line" data-start="' + start + '" data-end="' + start + '">';
+      } else {
+        return '<hr>';
+      }
     };
 
-    Parser.prototype.parseNormal = function(lines, inline) {
-      var str;
+    Parser.prototype.parseNormal = function(lines, inline, start) {
+      var from, key, str;
       if (inline == null) {
         inline = false;
       }
+      from = start;
+      key = 0;
       lines = lines.map((function(_this) {
         return function(line) {
-          return _this.parseInline(line);
+          var end;
+          line = _this.parseInline(line);
+          if (!line.match(/^\s*$/)) {
+            end = start + key;
+            line = (_this.markLine(from, end)) + line;
+            from = end + 1;
+          }
+          key += 1;
+          return line;
         };
       })(this));
       str = trim(lines.join("\n"));
@@ -1066,13 +1147,13 @@
       return '';
     };
 
-    Parser.prototype.parseHtml = function(lines, type) {
+    Parser.prototype.parseHtml = function(lines, type, start) {
       lines = lines.map((function(_this) {
         return function(line) {
           return _this.parseInline(line, _this.specialWhiteList[type] != null ? _this.specialWhiteList[type] : '');
         };
       })(this));
-      return lines.join("\n");
+      return (this.markLines(lines, start)).join("\n");
     };
 
     Parser.prototype.cleanUrl = function(url) {
