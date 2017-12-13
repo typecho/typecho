@@ -1098,20 +1098,16 @@
     };
 
     Parser.prototype.parseNormal = function(lines, inline, start) {
-      var from, key, str;
+      var key, str;
       if (inline == null) {
         inline = false;
       }
-      from = start;
       key = 0;
       lines = lines.map((function(_this) {
         return function(line) {
-          var end;
           line = _this.parseInline(line);
           if (!line.match(/^\s*$/)) {
-            end = start + key;
-            line = (_this.markLine(from, end)) + line;
-            from = end + 1;
+            line = (_this.markLine(start + key)) + line;
           }
           key += 1;
           return line;
