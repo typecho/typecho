@@ -18,7 +18,6 @@ function scrollableEditor(el, preview) {
     var styles =  el.css(),
         lastWidth = el.width(),
         lastFocus = null,
-        lastColor = null,
         merge = [],
         rows = [],
         previewRows = [],
