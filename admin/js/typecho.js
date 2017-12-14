@@ -23,7 +23,7 @@ function scrollableEditor(el, preview) {
         previewRows = [],
         css = {display: 'block', 'position': 'absolute', 'left': '-99999px', 'top': '-99999px'},
         test = $('<div></div>').appendTo(document.body),
-        lock = 0;
+        focused = false;
 
     for (k in styles) {
         if (k.match(/^(direction|font-family|font-size|font-style|font-weight|letter-spacing|line-height|text-align|vertical-align|white-space|word-wrap|word-break|word-spacing)$/i)) {
@@ -34,7 +34,7 @@ function scrollableEditor(el, preview) {
     test.css(css);
     test.css('min-height', css['line-height']);
 
-    function reload() {
+    function reload(input) {
         var text = el.val(),
             lines = text.split("\n"),
             h = 0;
@@ -50,10 +50,10 @@ function scrollableEditor(el, preview) {
         }
 
         test.html('');
-        reloadPreview();
+        reloadPreview(input);
     }
 
-    function scroll() {
+    function scroll(inputLine) {
         var height = el.height(),
             offset = (el.innerHeight() - height) / 2,
             scrollTop = el.scrollTop() - offset,
@@ -62,8 +62,25 @@ function scrollableEditor(el, preview) {
             scrollPos = 0,
             current = null;
 
+        // 自动滚动到当前行
+        if (typeof inputLine != 'undefined') {
+            for (var a = 0; a < previewRows.length; a ++) {
+                var item = previewRows[a];
+                
+                if (inputLine >= item[0] && inputLine <= item[1]) {
+                    if (a == previewRows.length - 1 || item[2] < previewScrollTop 
+                        || previewRows[a + 1][2] > previewScrollTop + preview.height()) {
+                        preview.scrollTop(item[2]);
+                    }
+                    break;
+                }
+            }
+            
+            return;
+        }
+
         for (var i = 0; i < merge.length; i ++) {
-            current = merge[i];
+            current = merge[i]; 
 
             if (scrollTop <= current[2]) {
                 percent = (scrollTop - current[3]) * current[4] / (current[2] - current[3])
@@ -76,7 +93,7 @@ function scrollableEditor(el, preview) {
         }
 
         for (var j = 0; j < previewRows.length; j ++) {
-            var item = previewRows[j];
+            var item = previewRows[j];  
 
             if (current[0] >= item[0] && current[1] <= item[1]) {
                 var nextPos = previewRows[j + 1] ? previewRows[j + 1][2] : preview.get(0).scrollHeight;
@@ -118,7 +135,7 @@ function scrollableEditor(el, preview) {
         el.scrollTop(start + (end - start) * percent + offset);
     }
 
-    function reloadPreview() {
+    function reloadPreview(input) {
         var last = 0;
         previewRows = [];
         merge = [];
@@ -139,8 +156,15 @@ function scrollableEditor(el, preview) {
             last = rows[end];
         });
 
-        scroll();
-        reloadInput();
+        var inputLine = reloadInput();
+
+        if (input) {
+            if (inputLine !== null) {
+                scroll(inputLine);
+            }
+        } else {
+            scroll();
+        }
     }
 
     function getFoucsElement(focus) {
@@ -156,7 +180,11 @@ function scrollableEditor(el, preview) {
     }
 
     function reloadInput() {
-        var text = el.val(), end = el.getSelection().start, pos = 0, line = 0;
+        var text = el.val(), end = el.getSelection().start, pos = 0, line = 0, current = null;
+
+        if (!focused) {
+            return current;
+        }
 
         // 使用高效算法检测当前行号
         while (true) {
@@ -177,9 +205,12 @@ function scrollableEditor(el, preview) {
                 getFoucsElement(lastFocus).removeClass('focus');
                 getFoucsElement(item[3]).addClass('focus');
                 lastFocus = item[3];
+                current = line;
                 break;
             }
         }
+
+        return current;
     }
 
     // 检测宽度
@@ -192,28 +223,21 @@ function scrollableEditor(el, preview) {
 
     // 检测输入
     el.on('touch keypress click', reloadInput);
-    el.on('blur', function () {
+    el.on('focus', function () {
+        focused = true;
+    }).on('blur', function () {
+        focused = false;
         getFoucsElement(lastFocus).removeClass('focus');
     });
 
     el.on('resize', reload);
 
-    el.on('scroll', function () {
-        if (lock != 1) {
-            lock = 2;
-            scroll();
-        } else {
-            lock = 0;
-        }
+    el.on('DOMMouseScroll mousewheel touchmove', function () {
+        scroll();
     });
 
-    preview.on('scroll', function () {
-        if (lock != 2) {
-            lock = 1;
-            scrollPreview();
-        } else {
-            lock = 0;
-        }
+    preview.on('DOMMouseScroll mousewheel touchmove', function () {
+        scrollPreview();
     });
 
     return reload;
