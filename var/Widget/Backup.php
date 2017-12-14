@@ -28,6 +28,27 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
         'fields'            =>  6
     );
 
+    private $_fields = array(
+        'contents'  =>  array(
+            'cid', 'title', 'slug', 'created', 'modified', 'text', 'order', 'authorId',
+            'template', 'type', 'status', 'password', 'commentsNum', 'allowComment', 'allowPing', 'allowFeed', 'parent'
+        ),
+        'comments'  =>  array(
+            'coid', 'cid', 'created', 'author', 'authorId', 'ownerId',
+            'mail', 'url', 'ip', 'agent', 'text', 'type', 'status', 'parent'
+        ),
+        'metas'     =>  array(
+            'mid', 'name', 'slug', 'type', 'description', 'count', 'order', 'parent'
+        ),
+        'relationships' =>  array('cid', 'mid'),
+        'users'     =>  array(
+            'uid', 'name', 'password', 'mail', 'url', 'screenName', 'created', 'activated', 'logged', 'group', 'authCode'
+        ),
+        'fields'    =>  array(
+            'cid', 'name', 'type', 'str_value', 'int_value', 'float_value'
+        )
+    );
+
     /**
      * @var array
      */
@@ -37,6 +58,26 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
      * @var bool
      */
     private $_login = false;
+
+    /**
+     * 过滤字段
+     *
+     * @param $table
+     * @param $data
+     * @return array
+     */
+    private function applyFields($table, $data)
+    {
+        $result = array();
+
+        foreach ($data as $key => $val) {
+            if (in_array($key, $this->_fields[$table])) {
+                $result[$key] = $val;
+            }
+        }
+
+        return $result;
+    }
 
     /**
      * @param $type
@@ -165,7 +206,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
                 $this->reLogin($data);
             }
 
-            $db->query($db->insert('table.' . $table)->rows($data));
+            $db->query($db->insert('table.' . $table)->rows($this->applyFields($table, $data)));
         } catch (Exception $e) {
             $this->widget('Widget_Notice')->set(_t('恢复过程中遇到如下错误: %s', $e->getMessage()), 'error');
             $this->response->goBack();
@@ -213,7 +254,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
                 $page ++;
 
                 foreach ($rows as $row) {
-                    $buffer .= $this->buildBuffer($val, $row);
+                    $buffer .= $this->buildBuffer($val, $this->applyFields($type, $row));
 
                     if (sizeof($buffer) >= 1024 * 1024) {
                         echo $buffer;
