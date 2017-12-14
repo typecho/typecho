@@ -370,7 +370,7 @@ class Typecho_Plugin
 
         $items = array_map('trim', explode('-', $versionRange));
         if (count($items) < 2) {
-            $items[1] = $items[0];
+            $items[1] = '9999.9999.9999';
         }
 
         list ($minVersion, $maxVersion) = $items;
