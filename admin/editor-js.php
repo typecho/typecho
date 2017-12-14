@@ -95,13 +95,13 @@ $(document).ready(function () {
         var images = $('img', preview), count = images.length;
 
         if (count == 0) {
-            reloadScroll();
+            reloadScroll(true);
         } else {
             images.load(function () {
                 count --;
 
                 if (count == 0) {
-                    reloadScroll();
+                    reloadScroll(true);
                 }
             });
         }
