@@ -497,7 +497,7 @@ class Widget_Options extends Typecho_Widget
      * @param $plugin
      * @return string
      */
-    public function pluginDir($plugin)
+    public function pluginDir($plugin = NULL)
     {
         return __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__;
     }
