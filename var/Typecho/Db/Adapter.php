@@ -40,6 +40,15 @@ interface Typecho_Db_Adapter
     public function getVersion($handle);
 
     /**
+     * 清空数据表
+     *
+     * @param string $table 数据表名
+     * @param mixed $handle 连接对象
+     * @return mixed
+     */
+    public function truncate($table, $handle);
+
+    /**
      * 执行数据库查询
      *
      * @param string $query 数据库查询SQL字符串

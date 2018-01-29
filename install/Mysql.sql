@@ -25,7 +25,7 @@ CREATE TABLE `typecho_comments` (
   `authorId` int(10) unsigned default '0',
   `ownerId` int(10) unsigned default '0',
   `mail` varchar(150) default NULL,
-  `url` varchar(150) default NULL,
+  `url` varchar(255) default NULL,
   `ip` varchar(64) default NULL,
   `agent` varchar(511) default NULL,
   `text` text,

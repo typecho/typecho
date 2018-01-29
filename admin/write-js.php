@@ -155,8 +155,10 @@ $(document).ready(function() {
         cid = idInput.val(),
         draft = $('input[name=draft]'),
         draftId = draft.length > 0 ? draft.val() : 0,
-        btnSave = $('#btn-save'),
+        btnSave = $('#btn-save').removeAttr('name').removeAttr('value'),
+        btnSubmit = $('#btn-submit').removeAttr('name').removeAttr('value'),
         btnPreview = $('#btn-preview'),
+        doAction = $('<input type="hidden" name="do" value="publish" />').appendTo(form),
         locked = false,
         changed = false,
         autoSave = $('<span id="auto-save-message" class="left"></span>').prependTo('.submit'),
@@ -199,7 +201,7 @@ $(document).ready(function() {
         btnPreview.attr('disabled', 'disabled');
         autoSave.text('<?php _e('正在保存'); ?>');
 
-        if (FormData !== undefined) {
+        if (typeof FormData !== 'undefined') {
             var data = new FormData(form.get(0));
             data.append('do', 'save');
 
@@ -326,6 +328,14 @@ $(document).ready(function() {
         } else if (!!cid) {
             previewData(cid);
         }
+    });
+
+    btnSave.click(function () {
+        doAction.attr('value', 'save');
+    });
+
+    btnSubmit.click(function () {
+        doAction.attr('value', 'publish');
     });
 
     // 控制选项和附件的切换

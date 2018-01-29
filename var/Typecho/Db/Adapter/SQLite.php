@@ -59,7 +59,20 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
      */
     public function getVersion($handle)
     {
-        return 'ext:sqlite ' . sqlite_libversion();
+        return 'sqlite:sqlite ' . sqlite_libversion();
+    }
+
+    /**
+     * 清空数据表
+     *
+     * @param string $table
+     * @param mixed $handle 连接对象
+     * @return mixed|void
+     * @throws Typecho_Db_Exception
+     */
+    public function truncate($table, $handle)
+    {
+        $this->query('DELETE FROM ' . $this->quoteColumn($table), $handle);
     }
 
     /**
