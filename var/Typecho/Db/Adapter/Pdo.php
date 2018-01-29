@@ -47,7 +47,7 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
      *
      * @param Typecho_Config $config 数据库配置
      * @throws Typecho_Db_Exception
-     * @return resource
+     * @return PDO
      */
     public function connect(Typecho_Config $config)
     {
