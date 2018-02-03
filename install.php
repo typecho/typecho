@@ -220,14 +220,14 @@ Typecho_Cookie::set('__typecho_lang', $lang);
                 <h1 class="typecho-install-title"><?php _e('安装失败!'); ?></h1>
                 <div class="typecho-install-body">
                     <form method="post" action="?config" name="config">
-                    <p class="message error"><?php _e('您没有上传 config.inc.php 文件，请您重新安装！'); ?> <button class="btn primary" type="submit"><?php _e('重新安装 &raquo;'); ?></button></p>
+                    <p class="message error"><?php _e('您没有上传 config.inc.php 文件, 请您重新安装!'); ?> <button class="btn primary" type="submit"><?php _e('重新安装 &raquo;'); ?></button></p>
                     </form>
                 </div>
                 <?php elseif (!Typecho_Cookie::get('__typecho_config')): ?>
                     <h1 class="typecho-install-title"><?php _e('没有安装!'); ?></h1>
                     <div class="typecho-install-body">
                         <form method="post" action="?config" name="config">
-                            <p class="message error"><?php _e('您没有执行安装步骤，请您重新安装！'); ?> <button class="btn primary" type="submit"><?php _e('重新安装 &raquo;'); ?></button></p>
+                            <p class="message error"><?php _e('您没有执行安装步骤, 请您重新安装!'); ?> <button class="btn primary" type="submit"><?php _e('重新安装 &raquo;'); ?></button></p>
                         </form>
                     </div>
                 <?php else : ?>
@@ -276,7 +276,7 @@ Typecho_Cookie::set('__typecho_lang', $lang);
                 <h1 class="typecho-install-title"><?php _e('安装失败!'); ?></h1>
                 <div class="typecho-install-body">
                     <form method="post" action="?config" name="config">
-                    <p class="message error"><?php _e('您没有上传 config.inc.php 文件，请您重新安装！'); ?> <button class="btn primary" type="submit"><?php _e('重新安装 &raquo;'); ?></button></p>
+                    <p class="message error"><?php _e('您没有上传 config.inc.php 文件, 请您重新安装!'); ?> <button class="btn primary" type="submit"><?php _e('重新安装 &raquo;'); ?></button></p>
                     </form>
                 </div>
                 <?php else : ?>
@@ -524,7 +524,7 @@ Typecho_Cookie::set('__typecho_lang', $lang);
                                     } catch (Typecho_Db_Adapter_Exception $e) {
                                         $success = false;
                                         echo '<p class="message error">'
-                                        . _t('对不起，无法连接数据库，请先检查数据库配置再继续进行安装') . '</p>';
+                                        . _t('对不起, 无法连接数据库, 请先检查数据库配置再继续进行安装') . '</p>';
                                     } catch (Typecho_Db_Exception $e) {
                                         $success = false;
                                         echo '<p class="message error">'
@@ -652,7 +652,7 @@ Typecho_Db::set(\$db);
                 <p><strong><?php _e('本安装程序将自动检测服务器环境是否符合最低配置需求. 如果不符合, 将在上方出现提示信息, 请按照提示信息检查您的主机配置. 如果服务器环境符合要求, 将在下方出现 "开始下一步" 的按钮, 点击此按钮即可一步完成安装.'); ?></strong></p>
                 <h2><?php _e('许可及协议'); ?></h2>
                 <p><?php _e('Typecho 基于 <a href="http://www.gnu.org/copyleft/gpl.html">GPL</a> 协议发布, 我们允许用户在 GPL 协议许可的范围内使用, 拷贝, 修改和分发此程序.'); ?>
-                <?php _e('在GPL许可的范围内，您可以自由地将其用于商业以及非商业用途.'); ?></p>
+                <?php _e('在GPL许可的范围内, 您可以自由地将其用于商业以及非商业用途.'); ?></p>
                 <p><?php _e('Typecho 软件由其社区提供支持, 核心开发团队负责维护程序日常开发工作以及新特性的制定.'); ?>
                 <?php _e('如果您遇到使用上的问题, 程序中的 BUG, 以及期许的新功能, 欢迎您在社区中交流或者直接向我们贡献代码.'); ?>
                 <?php _e('对于贡献突出者, 他的名字将出现在贡献者名单中.'); ?></p>
