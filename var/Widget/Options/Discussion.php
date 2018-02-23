@@ -53,10 +53,10 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
             'commentsUrlNofollow'   =>  _t('对评论者个人主页链接使用 <a href="http://en.wikipedia.org/wiki/Nofollow">nofollow 属性</a>'),
             'commentsAvatar'        =>  _t('启用 <a href="http://gravatar.com">Gravatar</a> 头像服务, 最高显示评级为 %s 的头像',
             '</label><select id="commentsShow-commentsAvatarRating" name="commentsAvatarRating">
-            <option value="G"' . ('G' == $this->options->commentsAvatarRating ? ' selected="true"' : '') . '>G - 普通</option>
-            <option value="PG"' . ('PG' == $this->options->commentsAvatarRating ? ' selected="true"' : '') . '>PG - 13岁以上</option>
-            <option value="R"' . ('R' == $this->options->commentsAvatarRating ? ' selected="true"' : '') . '>R - 17岁以上成人</option>
-            <option value="X"' . ('X' == $this->options->commentsAvatarRating ? ' selected="true"' : '') . '>X - 限制级</option></select>
+            <option value="G"' . ('G' == $this->options->commentsAvatarRating ? ' selected="true"' : '') . '>' . _t('G - 普通') .'</option>
+            <option value="PG"' . ('PG' == $this->options->commentsAvatarRating ? ' selected="true"' : '') . '>' . _t('PG - 13岁以上') .'</option>
+            <option value="R"' . ('R' == $this->options->commentsAvatarRating ? ' selected="true"' : '') . '>' . _t('R - 17岁以上成人') .'</option>
+            <option value="X"' . ('X' == $this->options->commentsAvatarRating ? ' selected="true"' : '') . '>' . _t('X - 限制级') .'</option></select>
             <label for="commentsShow-commentsAvatarRating">'),
             'commentsPageBreak'     =>  _t('启用分页, 并且每页显示 %s 篇评论, 在列出时将 %s 作为默认显示',
             '</label><input type="text" value="' . $this->options->commentsPageSize
