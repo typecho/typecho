@@ -57,7 +57,15 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
             <option value="PG"' . ('PG' == $this->options->commentsAvatarRating ? ' selected="true"' : '') . '>PG - 13岁以上</option>
             <option value="R"' . ('R' == $this->options->commentsAvatarRating ? ' selected="true"' : '') . '>R - 17岁以上成人</option>
             <option value="X"' . ('X' == $this->options->commentsAvatarRating ? ' selected="true"' : '') . '>X - 限制级</option></select>
-            <label for="commentsShow-commentsAvatarRating">'),
+            <label for="commentsShow-commentsAvatarRating">') . '</label></span><span class="multiline">'
+            . _t('设置默认头像为 %s ', '<select id="commentsShow-commentsGravatarDefault" name="commentsGravatarDefault">
+            <option value="mm"' . ('mm' == $this->options->commentsGravatarDefault ? ' selected="true"' : '') . '>神秘人士</option>
+            <option value="blank"' . ('blank' == $this->options->commentsGravatarDefault ? ' selected="true"' : '') . '>空白</option>
+            <option value=""' . ('' == $this->options->commentsGravatarDefault ? ' selected="true"' : '') . '>Gravatar 标志</option>
+            <option value="identicon"' . ('identicon' == $this->options->commentsGravatarDefault ? ' selected="true"' : '') . '>抽象图形（自动生成）</option>
+            <option value="wavatar"' . ('wavatar' == $this->options->commentsGravatarDefault ? ' selected="true"' : '') . '>Wavatar（自动生成）</option>
+            <option value="monsterid"' . ('monsterid' == $this->options->commentsGravatarDefault ? ' selected="true"' : '') . '>小怪物（自动生成）</option></select>
+            <label for="commentsShow-commentsGravatarDefault">'),
             'commentsPageBreak'     =>  _t('启用分页, 并且每页显示 %s 篇评论, 在列出时将 %s 作为默认显示',
             '</label><input type="text" value="' . $this->options->commentsPageSize
             . '" class="text num text-s" id="commentsShow-commentsPageSize" name="commentsPageSize" /><label for="commentsShow-commentsPageSize">',
@@ -190,7 +198,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
 
         $settings = $this->request->from('commentDateFormat', 'commentsListSize', 'commentsPageSize', 'commentsPageDisplay', 'commentsAvatar',
                 'commentsOrder', 'commentsMaxNestingLevels', 'commentsUrlNofollow', 'commentsPostTimeout', 'commentsUniqueIpInterval', 'commentsWhitelist', 'commentsRequireMail', 'commentsAvatarRating',
-                'commentsPostTimeout', 'commentsPostInterval', 'commentsRequireModeration', 'commentsRequireURL', 'commentsHTMLTagAllowed', 'commentsStopWords', 'commentsIpBlackList');
+                'commentsGravatarDefault', 'commentsPostTimeout', 'commentsPostInterval', 'commentsRequireModeration', 'commentsRequireURL', 'commentsHTMLTagAllowed', 'commentsStopWords', 'commentsIpBlackList');
         $settings['commentsShow'] = $this->request->getArray('commentsShow');
         $settings['commentsPost'] = $this->request->getArray('commentsPost');
 
@@ -208,6 +216,8 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         $settings['commentsOrder'] = ('DESC' == $settings['commentsOrder']) ? 'DESC' : 'ASC';
         $settings['commentsAvatarRating'] = in_array($settings['commentsAvatarRating'], array('G', 'PG', 'R', 'X'))
             ? $settings['commentsAvatarRating'] : 'G';
+        $settings['commentsGravatarDefault'] = in_array($settings['commentsGravatarDefault'], array('mm', 'blank', '', 'identicon', 'wavatar', 'monsterid'))
+            ? $settings['commentsGravatarDefault'] : '';
 
         $settings['commentsRequireModeration'] = $this->isEnableByCheckbox($settings['commentsPost'], 'commentsRequireModeration');
         $settings['commentsWhitelist'] = $this->isEnableByCheckbox($settings['commentsPost'], 'commentsWhitelist');
