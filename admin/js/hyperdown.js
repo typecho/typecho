@@ -1034,7 +1034,7 @@
           }
         }
         rows = line.split('|').map(function(row) {
-          if (row.match(/^\s+$/)) {
+          if (row.match(/^\s*$/)) {
             return ' ';
           } else {
             return trim(row);

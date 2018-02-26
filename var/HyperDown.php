@@ -1469,7 +1469,7 @@ class HyperDown
 
 
             $rows = array_map(function ($row) {
-                if (preg_match("/^\s+$/", $row)) {
+                if (preg_match("/^\s*$/", $row)) {
                     return ' ';
                 } else {
                     return trim($row);
