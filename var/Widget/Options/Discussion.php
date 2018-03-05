@@ -163,7 +163,7 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         $commentsHTMLTagAllowed = new Typecho_Widget_Helper_Form_Element_Textarea('commentsHTMLTagAllowed', NULL,
         $this->options->commentsHTMLTagAllowed,
         _t('允许使用的HTML标签和属性'), _t('默认的用户评论不允许填写任何的HTML标签, 你可以在这里填写允许使用的HTML标签.') . '<br />'
-            . _t('比如: %s', ': <code>&lt;a href=&quot;&quot;&gt; &lt;img src=&quot;&quot;&gt; &lt;blockquote&gt;</code>'));
+            . _t('比如: %s', '<code>&lt;a href=&quot;&quot;&gt; &lt;img src=&quot;&quot;&gt; &lt;blockquote&gt;</code>'));
         $commentsHTMLTagAllowed->input->setAttribute('class', 'mono');
         $form->addInput($commentsHTMLTagAllowed);
 
