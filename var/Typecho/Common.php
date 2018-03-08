@@ -12,6 +12,45 @@
 define('__TYPECHO_MB_SUPPORTED__', function_exists('mb_get_info') && function_exists('mb_regex_encoding'));
 
 /**
+ * I18n function
+ *
+ * @param string $string 需要翻译的文字
+ * @return string
+ */
+function _t($string) {
+    if (func_num_args() <= 1) {
+        return Typecho_I18n::translate($string);
+    } else {
+        $args = func_get_args();
+        array_shift($args);
+        return vsprintf(Typecho_I18n::translate($string), $args);
+    }
+}
+
+/**
+ * I18n function, translate and echo
+ *
+ * @param string $string 需要翻译并输出的文字
+ * @return void
+ */
+function _e() {
+    $args = func_get_args();
+    echo call_user_func_array('_t', $args);
+}
+
+/**
+ * 针对复数形式的翻译函数
+ *
+ * @param string $single 单数形式的翻译
+ * @param string $plural 复数形式的翻译
+ * @param integer $number 数字
+ * @return string
+ */
+function _n($single, $plural, $number) {
+    return str_replace('%d', $number, Typecho_I18n::ngettext($single, $plural, $number));
+}
+
+/**
  * Typecho公用方法
  *
  * @category typecho
@@ -217,9 +256,6 @@ class Typecho_Common
 
         /** 设置异常截获函数 */
         set_exception_handler(array('Typecho_Common', 'exceptionHandle'));
-        
-        /** 载入国际化支持 */
-        require_once 'Typecho/I18n.php';
     }
 
     /**
