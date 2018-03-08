@@ -217,6 +217,9 @@ class Typecho_Common
 
         /** 设置异常截获函数 */
         set_exception_handler(array('Typecho_Common', 'exceptionHandle'));
+        
+        /** 载入国际化支持 */
+        require_once 'Typecho/I18n.php';
     }
 
     /**
