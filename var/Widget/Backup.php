@@ -280,7 +280,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
                 foreach ($rows as $row) {
                     $buffer .= $this->buildBuffer($val, $this->applyFields($type, $row));
 
-                    if (sizeof($buffer) >= 1024 * 1024) {
+                    if (strlen($buffer) >= 1024 * 1024) {
                         echo $buffer;
                         ob_flush();
                         $buffer = '';
