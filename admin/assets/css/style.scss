@@ -1,0 +1,99 @@
+
+
+//----------------------------------------------------/
+// The block number above each block
+//----------------------------------------------------/
+.block-number {
+  $color: #191919;
+
+  text-align: center;
+  font-weight: bold;
+  font-size: 0.8125em;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: $color;
+  //opacity: 0.8;
+  transition: 0.3s ease-out;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &::after {
+    content: '';
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 6px;
+    margin-bottom: 2px;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    border-top: 3px solid $color;
+  }
+
+  a:hover,
+  a:focus {
+    color: $color;
+  }
+}
+
+
+//----------------------------------------------------/
+// Make some change to components in demo
+//----------------------------------------------------/
+.demo-section .main-content .section,
+.demo-topbar .main-content .topbar,
+.demo-navbar .main-content .navbar,
+.demo-header .main-content .header,
+.demo-footer .main-content .footer {
+  margin: 30px 20px 100px;
+  border: 1px solid #f5f6f7;
+  box-shadow: 0 0 15px rgba(0,0,0,0.05);
+}
+
+.demo-topbar .main-content .topbar,
+.demo-navbar .main-content .navbar {
+  position: static;
+  margin: 0;
+}
+
+
+//----------------------------------------------------/
+// Index cover
+//----------------------------------------------------/
+.sample-blocks {
+
+  img {
+    border-radius: 0.25rem;
+
+    &.aos-animate {
+      opacity: 0.5 !important;
+    }
+
+    &:hover {
+      opacity: 1 !important;
+      transition: 0.7s !important;
+    }
+  }
+
+  a {
+    position: absolute;
+  }
+
+  a:nth-child(1) { animation: wobble 4s infinite; right: 15px; bottom: -20px; }
+  a:nth-child(2) { animation: wobble 8s infinite; right: 320px; bottom: 30px; }
+  a:nth-child(3) { animation: wobble 5s infinite; right: 0px; bottom: 190px; }
+  a:nth-child(4) { animation: wobble 6s infinite; right: 280px; bottom: 180px; }
+  a:nth-child(5) { animation: wobble 9s infinite; right: 270px; bottom: 320px; }
+  a:nth-child(6) { animation: wobble 7s infinite; right: 20px; bottom: 370px; }
+  a:nth-child(7) { animation: wobble 5s infinite; right: 200px; bottom: 470px; }
+  a:nth-child(8) { animation: wobble 8s infinite; right: 10px; bottom: 470px; }
+  a:nth-child(9) { animation: wobble 9s infinite; right: 0px; bottom: 570px; }
+
+}
+
+@keyframes wobble {
+  0%   { transform: rotate(-1deg) translate(-5px, -5px); }
+  50%  { transform: rotate(1deg) translate(5px, 5px); }
+  100% { transform: rotate(-1deg) translate(-5px, -5px); }
+}
