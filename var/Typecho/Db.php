@@ -327,12 +327,23 @@ class Typecho_Db
     }
 
     /**
+     * @param $table
+     * @throws Typecho_Db_Exception
+     */
+    public function truncate($table)
+    {
+        $table = preg_replace("/^table\./", $this->_prefix, $table);
+        $this->_adapter->truncate($table, $this->selectDb(self::WRITE));
+    }
+
+    /**
      * 执行查询语句
      *
      * @param mixed $query 查询语句或者查询对象
-     * @param boolean $op 数据库读写状态
+     * @param int $op 数据库读写状态
      * @param string $action 操作动作
      * @return mixed
+     * @throws Typecho_Db_Exception
      */
     public function query($query, $op = self::READ, $action = self::SELECT)
     {

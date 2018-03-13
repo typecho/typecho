@@ -71,7 +71,20 @@ class Typecho_Db_Adapter_Pgsql implements Typecho_Db_Adapter
     public function getVersion($handle)
     {
         $version = pg_version($handle);
-        return 'ext:pgsql ' . $version['server'];
+        return 'pgsql:pgsql ' . $version['server'];
+    }
+
+    /**
+     * 清空数据表
+     *
+     * @param string $table
+     * @param mixed $handle 连接对象
+     * @return mixed|void
+     * @throws Typecho_Db_Exception
+     */
+    public function truncate($table, $handle)
+    {
+        $this->query('TRUNCATE TABLE ' . $this->quoteColumn($table) . ' RESTART IDENTITY', $handle);
     }
 
     /**

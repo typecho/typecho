@@ -28,6 +28,9 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
         'fields'            =>  6
     );
 
+    /**
+     * @var array
+     */
     private $_fields = array(
         'contents'  =>  array(
             'cid', 'title', 'slug', 'created', 'modified', 'text', 'order', 'authorId',
@@ -52,6 +55,11 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
     /**
      * @var array
      */
+    private $_lastIds = array();
+
+    /**
+     * @var array
+     */
     private $_cleared = array();
 
     /**
@@ -71,8 +79,15 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
         $result = array();
 
         foreach ($data as $key => $val) {
-            if (in_array($key, $this->_fields[$table])) {
+            $index = array_search($key, $this->_fields[$table]);
+
+            if ($index !== false) {
                 $result[$key] = $val;
+
+                if ($index === 0 && !in_array($table, array('relationships', 'fields'))) {
+                    $this->_lastIds[$table] = isset($this->_lastIds[$table])
+                        ? max($this->_lastIds[$table], $val) : $val;
+                }
             }
         }
 
@@ -154,6 +169,14 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
             $this->processData($type, $header, $body);
         }
 
+        // 针对PGSQL重置计数
+        if (false !== strpos($this->db->getVersion(), 'pgsql')) {
+            foreach ($this->_lastIds as $table => $id) {
+                $seq = $this->db->getPrefix() . $table . '_seq';
+                $this->db->query('ALTER SEQUENCE ' . $seq . ' RESTART WITH ' . ($id + 1));
+            }
+        }
+
         @fclose($fp);
         $this->widget('Widget_Notice')->set(_t('数据恢复完成'), 'success');
         $this->response->goBack();
@@ -189,6 +212,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
      *
      * @param $table
      * @param $data
+     * @throws Typecho_Exception
      */
     private function importData($table, $data)
     {
@@ -197,7 +221,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
         try {
             if (empty($this->_cleared[$table])) {
                 // 清除数据
-                $db->query($db->delete('table.' . $table));
+                $db->truncate('table.' . $table);
                 $this->_cleared[$table] = true;
             }
 

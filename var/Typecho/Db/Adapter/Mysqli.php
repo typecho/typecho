@@ -63,7 +63,20 @@ class Typecho_Db_Adapter_Mysqli implements Typecho_Db_Adapter
      */
     public function getVersion($handle)
     {
-        return 'ext:mysqli ' . $this->_dbLink->server_version;
+        return 'mysqli:mysql ' . $this->_dbLink->server_version;
+    }
+
+    /**
+     * 清空数据表
+     *
+     * @param string $table
+     * @param mixed $handle 连接对象
+     * @return mixed|void
+     * @throws Typecho_Db_Exception
+     */
+    public function truncate($table, $handle)
+    {
+        $this->query('TRUNCATE TABLE ' . $this->quoteColumn($table), $handle);
     }
 
     /**
