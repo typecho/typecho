@@ -120,6 +120,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
      */
     private function extractData($file)
     {
+        $isFix = $this->request->is('fix=1');
         $fp = @fopen($file, 'rb');
 
         if (!$fp) {
@@ -157,7 +158,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
         $offset = $headerSize;
 
         while (!feof($fp) && $offset + $headerSize < $fileSize) {
-            $data = Typecho_Common::extractBackupBuffer($fp, $offset);
+            $data = Typecho_Common::extractBackupBuffer($fp, $offset, $isFix);
 
             if (!$data) {
                 @fclose($fp);

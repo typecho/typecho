@@ -1146,7 +1146,7 @@ EOF;
      * @param bool $offset
      * @return array|bool
      */
-    public static function extractBackupBuffer($fp, &$offset)
+    public static function extractBackupBuffer($fp, &$offset, $isFix = false)
     {
         $meta = fread($fp, 6);
         $offset += 6;
@@ -1163,6 +1163,12 @@ EOF;
 
         if (false === $header || strlen($header) != $headerLen) {
             return false;
+        }
+
+        if ($isFix) {
+            $bodyLen = array_reduce(json_decode($header, true), function ($carry, $len) {
+                return NULL === $len ? $carry : $carry + $len;
+            }, 0);
         }
 
         $body = @fread($fp, $bodyLen);

@@ -42,32 +42,50 @@ $backupFiles = Typecho_Widget::widget('Widget_Backup')->listFiles();
                             <input tabindex="2" id="backup-upload-file" name="file" type="file" class="file">
                         </li>
                     </ul>
+                    <ul class="typecho-option">
+                        <li>
+                            <input tabindex="3" name="fix" value="1" type="checkbox" id="backup-fix">
+                            <label for="backup-fix"><?php _e('纠错模式'); ?></label>
+                            <p class="description"><?php _e('当你在恢复备份的时候出现错误, 请尝试使用此模式'); ?></p>
+                        </li>
+                    </ul>
                     <ul class="typecho-option typecho-option-submit">
                         <li>
-                            <button tabindex="3" type="submit" class="btn primary"><?php _e('上传并恢复 &raquo;'); ?></button>
+                            <button tabindex="4" type="submit" class="btn primary"><?php _e('上传并恢复 &raquo;'); ?></button>
                             <input type="hidden" name="do" value="import">
                         </li>
                     </ul>
                 </form>
 
                 <form action="<?php echo $actionUrl; ?>" id="from-server" class="tab-content hidden" method="post">
+                    <?php if (empty($backupFiles)): ?>
                     <ul class="typecho-option">
                         <li>
-                            <?php if (empty($backupFiles)): ?>
-                                <p class="description"><?php _e('将备份文件手动上传至服务器的 %s 目录下后, 这里会出现文件选项', __TYPECHO_BACKUP_DIR__); ?></p>
-                            <?php else: ?>
-                                <label class="typecho-label" for="backup-select-file"><?php _e('选择一个备份文件恢复数据'); ?></label>
-                                <select name="file" id="backup-select-file">
-                                    <?php foreach ($backupFiles as $file): ?>
-                                        <option value="<?php echo $file; ?>"><?php echo $file; ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            <?php endif; ?>
+                            <p class="description"><?php _e('将备份文件手动上传至服务器的 %s 目录下后, 这里会出现文件选项', __TYPECHO_BACKUP_DIR__); ?></p>
                         </li>
                     </ul>
+                    <?php else: ?>
+                    <ul class="typecho-option">
+                        <li>
+                            <label class="typecho-label" for="backup-select-file"><?php _e('选择一个备份文件恢复数据'); ?></label>
+                            <select tabindex="5" name="file" id="backup-select-file">
+                                <?php foreach ($backupFiles as $file): ?>
+                                    <option value="<?php echo $file; ?>"><?php echo $file; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </li>
+                    </ul>
+                    <ul class="typecho-option">
+                        <li>
+                            <input tabindex="6" name="fix" value="1" type="checkbox" id="backup-fix">
+                            <label for="backup-fix"><?php _e('纠错模式'); ?></label>
+                            <p class="description"><?php _e('当你在恢复备份的时候出现错误, 请尝试使用此模式'); ?></p>
+                        </li>
+                    </ul>
+                    <?php endif; ?>
                     <ul class="typecho-option typecho-option-submit">
                         <li>
-                            <button tabindex="5" type="submit" class="btn primary"><?php _e('选择并恢复 &raquo;'); ?></button>
+                            <button tabindex="7" type="submit" class="btn primary"><?php _e('选择并恢复 &raquo;'); ?></button>
                             <input type="hidden" name="do" value="import">
                         </li>
                     </ul>
