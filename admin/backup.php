@@ -42,13 +42,6 @@ $backupFiles = Typecho_Widget::widget('Widget_Backup')->listFiles();
                             <input tabindex="2" id="backup-upload-file" name="file" type="file" class="file">
                         </li>
                     </ul>
-                    <ul class="typecho-option">
-                        <li>
-                            <input tabindex="3" name="fix" value="1" type="checkbox" id="backup-fix">
-                            <label for="backup-fix"><?php _e('纠错模式'); ?></label>
-                            <p class="description"><?php _e('当你在恢复备份的时候出现错误, 请尝试使用此模式'); ?></p>
-                        </li>
-                    </ul>
                     <ul class="typecho-option typecho-option-submit">
                         <li>
                             <button tabindex="4" type="submit" class="btn primary"><?php _e('上传并恢复 &raquo;'); ?></button>
@@ -73,13 +66,6 @@ $backupFiles = Typecho_Widget::widget('Widget_Backup')->listFiles();
                                     <option value="<?php echo $file; ?>"><?php echo $file; ?></option>
                                 <?php endforeach; ?>
                             </select>
-                        </li>
-                    </ul>
-                    <ul class="typecho-option">
-                        <li>
-                            <input tabindex="6" name="fix" value="1" type="checkbox" id="backup-fix">
-                            <label for="backup-fix"><?php _e('纠错模式'); ?></label>
-                            <p class="description"><?php _e('当你在恢复备份的时候出现错误, 请尝试使用此模式'); ?></p>
                         </li>
                     </ul>
                     <?php endif; ?>

@@ -1132,7 +1132,7 @@ EOF;
     {
         $buffer = '';
 
-        $buffer .= pack('vvv', $type, strlen($header), strlen($body));
+        $buffer .= pack('vvV', $type, strlen($header), strlen($body));
         $buffer .= $header . $body;
         $buffer .= md5($buffer);
 
@@ -1144,19 +1144,22 @@ EOF;
      *
      * @param $fp
      * @param bool $offset
+     * @param string $version
      * @return array|bool
      */
-    public static function extractBackupBuffer($fp, &$offset, $isFix = false)
+    public static function extractBackupBuffer($fp, &$offset, $version)
     {
-        $meta = fread($fp, 6);
-        $offset += 6;
+        $realMetaLen = $version == 'FILE' ? 6 : 8;
+
+        $meta = fread($fp, $realMetaLen);
+        $offset += $realMetaLen;
         $metaLen = strlen($meta);
 
-        if (false === $meta || $metaLen != 6) {
+        if (false === $meta || $metaLen != $realMetaLen) {
             return false;
         }
 
-        list ($type, $headerLen, $bodyLen) = array_values(unpack('v3', $meta));
+        list ($type, $headerLen, $bodyLen) = array_values(unpack($version == 'FILE' ? 'v3' : 'v1type/v1headerLen/V1bodyLen', $meta));
 
         $header = @fread($fp, $headerLen);
         $offset += $headerLen;
@@ -1165,7 +1168,7 @@ EOF;
             return false;
         }
 
-        if ($isFix) {
+        if ('FILE' == $version) {
             $bodyLen = array_reduce(json_decode($header, true), function ($carry, $len) {
                 return NULL === $len ? $carry : $carry + $len;
             }, 0);
