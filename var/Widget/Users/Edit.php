@@ -276,7 +276,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         $deleteCount = 0;
 
         foreach ($users as $user) {
-            if ($masterUserId == $user || $user == $this->user->id) {
+            if ($masterUserId == $user || $user == $this->user->uid) {
                 continue;
             }
 
