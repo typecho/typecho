@@ -90,9 +90,6 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
         $this->parameter->setDefault('ignore=0&current=');
 
         $select = $this->select()->where('type = ?', 'category');
-        if ($this->parameter->ignore) {
-            $select->where('mid <> ?', $this->parameter->ignore);
-        }
 
         $categories = $this->db->fetchAll($select->order('table.metas.order', Typecho_Db::SORT_ASC));
         foreach ($categories as $category) {
@@ -368,6 +365,27 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
     }
 
     /**
+     * 是否拥有某个父级分类
+     *
+     * @param mixed $mid 
+     * @param mixed $parentId
+     * @access public
+     * @return bool
+     */
+    public function hasParent($mid, $parentId)
+    {
+        if (isset($this->_parents[$mid])) {
+            foreach ($this->_parents[$mid] as $parent) {
+                if ($parent == $parentId) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * 获取某个分类所有父级节点缩略名
      * 
      * @param mixed $mid 
@@ -412,7 +430,11 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
 
         if (!empty($mids)) {
             foreach ($mids as $mid) {
-                $result[] = $this->_map[$mid];
+                if (!$this->parameter->ignore
+                    || ($this->parameter->ignore != $mid
+                    && !$this->hasParent($mid, $this->parameter->ignore))) {
+                    $result[] = $this->_map[$mid];
+                }
             }
         }
 
