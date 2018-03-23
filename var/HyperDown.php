@@ -1160,9 +1160,13 @@ class HyperDown
             list ($type, $from, $to) = $block;
 
             if ('pre' == $type) {
-                $isEmpty = array_reduce($lines, function ($result, $line) {
-                    return preg_match("/^\s*$/", $line) && $result;
-                }, true);
+                $isEmpty = array_reduce(
+                    array_slice($lines, $block[1], $block[2] - $block[1] + 1),
+                    function ($result, $line) {
+                        return preg_match("/^\s*$/", $line) && $result;
+                    },
+                    true
+                );
 
                 if ($isEmpty) {
                     $block[0] = $type = 'normal';
