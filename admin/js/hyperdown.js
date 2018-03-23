@@ -834,7 +834,7 @@
         nextBlock = blocks[key + 1] != null ? blocks[key + 1] : null;
         type = block[0], from = block[1], to = block[2];
         if ('pre' === type) {
-          isEmpty = lines.reduce(function(result, line) {
+          isEmpty = (lines.slice(block[1], block[2] + 1)).reduce(function(result, line) {
             return (line.match(/^\s*$/)) && result;
           }, true);
           if (isEmpty) {
