@@ -132,9 +132,10 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
                     Typecho_Cookie::set('__typecho_all_posts', 'off');
                 }
 
-                if ('on' != Typecho_Cookie::get('__typecho_all_posts')) {
-                    $select->where('table.contents.authorId = ?', isset($this->request->uid) ?
-                        $this->request->filter('int')->uid : $this->user->uid);
+                if (isset($this->request->uid)) {
+                    $select->where('table.contents.authorId = ?', $this->request->filter('int')->uid);
+                } else if('off' == $this->request->__typecho_all_posts || 'off' == Typecho_Cookie::get('__typecho_all_posts')) {
+                    $select->where('table.contents.authorId = ?', $this->user->uid);
                 }
             }
         }
