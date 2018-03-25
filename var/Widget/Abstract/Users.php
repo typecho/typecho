@@ -117,7 +117,7 @@ class Widget_Abstract_Users extends Widget_Abstract
     protected function getPageOffset($column, $offset, $group = NULL, $pageSize = 20)
     {
         $select = $this->db->select(array('COUNT(uid)' => 'num'))->from('table.users')
-        ->where("table.users.{$column} > {$offset}");
+        ->where("table.users.{$column} < {$offset}");
 
         if (!empty($group)) {
             $select->where('table.users.group = ?', $group);
