@@ -1,0 +1,126 @@
+
+.fab {
+  position: relative;
+  display: inline-block;
+  z-index: $zindex-fab;
+
+  > .btn {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+
+.fab-fixed {
+  position: fixed;
+  right: 40px;
+  bottom: 40px;
+}
+
+
+.fab-buttons {
+  position: absolute;
+  bottom: 64px;
+  right: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  flex-direction: column-reverse;
+
+  li {
+    padding: 4px 0;
+    text-align: right;
+    opacity: 0;
+    transition: .4s;
+
+    @for $i from 1 through 9 {
+      &:nth-child(#{$i}) { transform: translateY(103% * $i); }
+    }
+  }
+}
+
+
+.fab-icon-default,
+.fab-icon-active {
+  display: inline-block;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  transition: .5s;
+}
+
+.fab-icon-active {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0);
+}
+
+
+.fab > .btn.active {
+
+  .fab-icon-default {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+  }
+
+  .fab-icon-active {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  + .fab-buttons li {
+    opacity: 1;
+    transform: translate(0);
+  }
+
+}
+
+
+
+// Directions
+//
+.fab-dir-bottom .fab-buttons {
+  top: 64px;
+  flex-direction: column;
+
+  li {
+
+    @for $i from 1 through 9 {
+      &:nth-child(#{$i}) { transform: translateY(-103% * $i); }
+    }
+  }
+}
+
+
+.fab-dir-left .fab-buttons {
+  top: 0;
+  right: 64px;
+  flex-direction: row-reverse;
+
+  li {
+    padding: 8px 4px;
+
+    @for $i from 1 through 9 {
+      &:nth-child(#{$i}) { transform: translateX(103% * $i); }
+    }
+  }
+}
+
+
+
+.fab-dir-right .fab-buttons {
+  top: 0;
+  left: 64px;
+  flex-direction: row;
+
+  li {
+    padding: 8px 4px;
+
+    @for $i from 1 through 9 {
+      &:nth-child(#{$i}) { transform: translateX(-103% * $i); }
+    }
+  }
+}

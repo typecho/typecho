@@ -1,0 +1,26 @@
+
+.swal2-modal {
+
+  .swal2-title {
+    font-family: $font-body;
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: .5px;
+    color: $color-title;
+  }
+
+  .swal2-content {
+    color: $color-text;
+    font-size: 1rem;
+  }
+
+  .swal2-confirm,
+  .swal2-cancel {
+    min-width: 80px;
+  }
+
+  button + button {
+    margin-left: 12px;
+  }
+
+}

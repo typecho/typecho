@@ -1,0 +1,12 @@
+@mixin card-colors($color) {
+  background-color: $color;
+
+  &.card-bordered {
+    border-color: $color;
+  }
+}
+
+@mixin card-outline($color) {
+  background-color: #fff;
+  border: 1px solid $color;
+}

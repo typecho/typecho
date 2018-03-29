@@ -1,0 +1,61 @@
+
+.shepherd-element.shepherd-theme-arrows-plain-buttons {
+
+  &.shepherd-has-title .shepherd-content header {
+    background-color: $color-bg-light;
+
+    h3 {
+      font-size: 16px;
+    }
+  }
+
+  &.shepherd-element-attached-top.shepherd-element-attached-center.shepherd-has-title .shepherd-content:before,
+  &.shepherd-element-attached-top.shepherd-element-attached-left.shepherd-target-attached-bottom.shepherd-has-title .shepherd-content:before,
+  &.shepherd-element-attached-top.shepherd-element-attached-right.shepherd-target-attached-bottom.shepherd-has-title .shepherd-content:before {
+    border-bottom-color: $color-bg-light;
+  }
+
+  .shepherd-content {
+    font-size: 14px;
+    line-height: $line-height-md;
+    width: 400px;
+    max-width: calc(100% - 32px);
+    filter: none;
+    border: 1px solid $color-divider-light;
+    border-radius: 3px;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.06);
+
+    &::before {
+      border-width: 12px;
+    }
+
+    footer .shepherd-buttons li .shepherd-button {
+      color: #fff;
+    }
+
+    .shepherd-text p {
+      line-height: inherit;
+    }
+  }
+
+}
+
+// Backdrop
+//
+.backdrop-tour {
+  background-color: rgba(0,0,0,0.3) !important;
+  z-index: $zindex-backdrop-tour;
+}
+
+.shepherd-active {
+
+  .shepherd-step,
+  .shepherd-target.shepherd-enabled {
+    z-index: $zindex-backdrop-tour + 1;
+  }
+
+  .shepherd-target .shepherd-target {
+    z-index: $zindex-backdrop-tour + 2;
+  }
+
+}

@@ -1,0 +1,102 @@
+
+
+//-----------------------------------------------------------------
+// Coloring
+//
+
+// Background colors
+//
+@each $name, $color in $colors {
+  .bg-#{$name} {
+    background-color: $color !important;
+    color: #fff;
+  }
+}
+
+.bg-white         { background-color: #fff !important; }
+.bg-inverse       { background-color: $color-dark !important; color: #fff; }
+.bg-transparent   { background-color: transparent !important; }
+.bg-secondary     { color: $color-text; }
+.bg-lightest      { background-color: $color-bg-lightest !important; }
+.bg-lighter       { background-color: $color-bg-lighter !important; }
+.bg-light         { background-color: $color-bg-light !important; }
+
+
+// Pale background colors
+//
+@each $name, $color in $colors-pale {
+  .bg-pale-#{$name} {
+    background-color: $color !important;
+  }
+}
+
+
+
+
+// Text colors
+//
+@each $name, $color in $colors {
+  .text-#{$name} {
+    color: $color !important;
+  }
+}
+
+@each $name, $color in $social-colors {
+  .text-#{$name} {
+    color: $color !important;
+  }
+}
+
+.text-default     {color: $color-text !important;}
+.text-muted       {color: $color-gray !important;}
+.text-light       {color: $color-text-light !important;}
+.text-lighter     {color: $color-text-disable !important;}
+.text-fade        {color: rgba($color-text, .7) !important;}
+.text-fader       {color: rgba($color-text, .5) !important;}
+.text-fadest      {color: rgba($color-text, .4) !important;}
+.text-transparent {color: transparent !important;}
+
+// Link hover colors
+a.text-primary    { @include link-colors-important($color-primary); }
+a.text-secondary  { @include link-colors-important($color-secondary); }
+a.text-info       { @include link-colors-important($color-info); }
+a.text-success    { @include link-colors-important($color-success); }
+a.text-warning    { @include link-colors-important($color-warning); }
+a.text-danger     { @include link-colors-important($color-danger); }
+
+
+// Hover color on hover
+//
+@each $name, $color in $colors {
+  .hover-#{$name} {
+    @include link-colors-important($color);
+  }
+}
+
+@each $name, $color in $social-colors {
+  .hover-#{$name} {
+    @include link-colors-important($color);
+  }
+}
+
+.hover-white       { @include link-colors-important(#fff); }
+.hover-muted       { @include link-colors-important($color-gray); }
+.hover-light       { @include link-colors-important($color-text-light); }
+.hover-lighter     { @include link-colors-important($color-text-disable); }
+.hover-fade        { @include link-colors-important($color-alpha-dark-text-light); }
+.hover-transparent { @include link-colors-important(transparent); }
+
+
+
+
+
+// Active colors. This colors applies to background-color if the element has .active class
+//
+@each $name, $color in $colors-pale {
+  .active.active-#{$name} {
+    background-color: $color !important;
+  }
+}
+
+.active.active-white       { background-color: #fff !important; }
+.active.active-transparent { background-color: transparent !important; }

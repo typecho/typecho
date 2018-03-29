@@ -1,0 +1,33 @@
+
+.breadcrumb {
+  background-color: transparent;
+  padding: 0;
+
+  a {
+    color: $color-text-secondary;
+  }
+
+  a:hover {
+    color: $color-primary;
+    text-decoration: none;
+  }
+
+  .breadcrumb-item i {
+    opacity: .9;
+    margin-right: 2px;
+  }
+}
+
+.breadcrumb-item+.breadcrumb-item::before {
+  color: $color-text-secondary;
+}
+
+
+// Arrow
+//
+.breadcrumb-arrow .breadcrumb-item+.breadcrumb-item::before {
+  content: "\e649";
+  font-family: $font-icon-themify;
+  font-size: 0.5rem;
+  vertical-align: middle;
+}

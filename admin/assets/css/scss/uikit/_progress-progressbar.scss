@@ -1,0 +1,55 @@
+
+.progress {
+  height: auto;
+  border-radius: 2px;
+  margin-bottom: 8px;
+  background-color: $color-bg-light;
+}
+
+.progress-bar {
+  height: 5px;
+  background-color: $color-primary;
+}
+
+
+
+
+// The rest should delete
+//
+progress {
+  width: 100%
+}
+
+.progress-xs { height: 3px; }
+.progress-sm { height: 4px; }
+.progress-lg { height: 6px; }
+.progress-xl { height: 7px; }
+
+.progress[value] {
+  color: $color-bg-lighter;
+}
+
+.progress[value]::-webkit-progress-bar {
+  background-color: $color-bg-lighter;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.progress[value]::-webkit-progress-value {
+  background-color: $color-primary;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.progress[value="100"]::-webkit-progress-value {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+// Colors
+//
+@each $name, $color in $colors {
+  .progress-#{$name} {
+    @include progressbar-colors($color);
+  }
+}

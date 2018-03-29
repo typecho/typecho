@@ -1,0 +1,204 @@
+
+//-----------------------------------------------------------
+// Sidebar menu
+//
+.sidebar {
+
+  .menu-item {
+
+    &.open .menu-submenu {
+      display: block;
+    }
+
+  }
+
+  .menu-link {
+    position: relative;
+
+    .title small {
+      transition: .2s linear;
+    }
+  }
+
+  .open .arrow::before {
+    transform: rotate(90deg);
+  }
+
+}
+
+
+//-----------------------------------------------------------------
+// Boxed icons
+//
+.sidebar-icons-boxed {
+
+  // Sidebar header
+  .sidebar-header .logo-icon {
+    flex-basis: $sidebar-icon-size-lg;
+  }
+
+  // Sidebar navigation
+  .menu-link .icon {
+    font-size: 16px;
+    background-color: rgba(0,0,0,0.07);
+    flex-basis: $sidebar-icon-size-lg;
+    line-height: $sidebar-icon-size-lg;
+    border-radius: 2px;
+  }
+
+  .menu-submenu .menu-link .icon {
+    font-size: 13px;
+    flex-basis: $sidebar-icon-size;
+    line-height: $sidebar-icon-size;
+  }
+
+  .menu .active > .menu-link .icon {
+    background-color: rgba(255,255,255,0.15);
+  }
+
+  .menu-sub-submenu {
+    padding-left: $sidebar-icon-size-lg + 10px;
+  }
+
+  .menu-submenu .icon,
+  .menu-submenu .dot {
+    margin-left: $sidebar-items-margin-x + 5px;
+    margin-right: $sidebar-items-margin-x + 5px;
+  }
+
+}
+
+//-----------------------------------------------------------------
+// Right handed icons
+//
+.sidebar-icons-right {
+
+  .sidebar-header .logo-icon,
+  .sidebar-navigation .menu-link .icon,
+  .sidebar-navigation .menu-link .dot {
+    order: 1;
+  }
+
+  .sidebar-navigation .menu-sub-submenu {
+    padding-left: 0;
+  }
+
+}
+
+
+//-----------------------------------------------------------------
+// Folded state
+//
+.sidebar-folded .sidebar {
+
+  .title,
+  .logo {
+    transition: .4s;
+  }
+
+  // Left icons and even boxed
+  &:not(.sidebar-icons-right) {
+
+    .title,
+    .logo {
+      margin-left: 20px;
+    }
+
+  }
+
+  // Left sided icons
+  &:not(.sidebar-icons-boxed):not(.sidebar-icons-right) {
+    .sidebar-header,
+    .menu-link {
+      padding-left: 17px; // 12+5+8 = 25
+    }
+  }
+
+  // Right sided and not boxed
+  &.sidebar-icons-right:not(.sidebar-icons-boxed) {
+
+    .logo-icon,
+    .icon,
+    .dot {
+      margin-left: 20px;
+      flex-basis: $sidebar-icon-size-lg;
+    }
+
+  }
+
+  // Right sided and boxed
+  &.sidebar-icons-right.sidebar-icons-boxed {
+
+    .logo-icon,
+    .icon,
+    .dot {
+      margin-left: 25px;
+    }
+
+  }
+
+}
+
+.sidebar-folded .sidebar:hover {
+  @include sidebar-folded-open();
+}
+
+
+
+
+//-----------------------------------------------------------------
+// Toggleable size
+//
+
+.sidebar-collapse {
+  @include sidebar-expand-media-down();
+}
+
+.sidebar-expand {
+  @include sidebar-expand-media-up();
+}
+
+
+.sidebar-expand-sm {
+  @include media-down(xs) {
+    @include sidebar-expand-media-down();
+  }
+
+  @include media-up(sm) {
+    @include sidebar-expand-media-up();
+  }
+}
+
+
+.sidebar-expand-md {
+  @include media-down(sm) {
+    @include sidebar-expand-media-down();
+  }
+
+  @include media-up(md) {
+    @include sidebar-expand-media-up();
+  }
+}
+
+
+.sidebar-expand-lg {
+  @include media-down(md) {
+    @include sidebar-expand-media-down();
+  }
+
+  @include media-up(lg) {
+    @include sidebar-expand-media-up();
+  }
+}
+
+
+.sidebar-expand-xl {
+  @include media-down(lg) {
+    @include sidebar-expand-media-down();
+  }
+
+  @include media-up(xl) {
+    @include sidebar-expand-media-up();
+  }
+}
+

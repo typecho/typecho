@@ -1,0 +1,59 @@
+
+.accordion {
+
+  .card {
+    background-color: #fff;
+    border: 1px solid $color-divider-light;
+    margin-bottom: 16px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .card-title {
+    background-color: $color-bg-lightest;
+  }
+
+  .card-title a {
+    display: block;
+    letter-spacing: 1px;
+    padding-left: 33px;
+
+
+    &::before {
+      content: "\e648";
+      display: inline-block;
+      font-family: $font-icon-themify;
+      font-size: 12px;
+      margin-right: 20px;
+      margin-left: -33px;
+      transition: .2s linear;
+    }
+
+    &.collapsed::before {
+      transform: rotate(180deg);
+    }
+  }
+
+}
+
+
+.accordion-connected {
+
+  .card {
+    margin-bottom: 0;
+    border: none;
+    border-bottom: 1px solid $color-divider-light;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+
+
+  .card-title {
+    border-bottom: 0;
+    background-color: #fff;
+  }
+}

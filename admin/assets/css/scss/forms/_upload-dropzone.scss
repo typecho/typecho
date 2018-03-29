@@ -1,0 +1,36 @@
+
+//-----------------------------------------------------------------
+// Dropzone
+//
+.dropzone {
+  padding: 10px;
+  border: 2px dashed $color-divider;
+  background-color: $color-bg-lightest;
+  transition: .5s;
+
+  &.dz-drag-hover {
+    border: 2px dashed $color-info;
+  }
+
+  .dz-preview {
+    margin: 10px;
+  }
+
+  .dz-preview .dz-image {
+    border-radius: 4px !important;
+  }
+}
+
+.dz-message {
+  color: $color-text-disable;
+  font-size: 1rem;
+
+  span::before {
+    font-family: $font-icon-fontawesome;
+    content: "\f0ee";
+    font-size: 2rem;
+    display: block;
+    padding-bottom: 16px;
+    opacity: .5;
+  }
+}

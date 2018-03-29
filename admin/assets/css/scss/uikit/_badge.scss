@@ -1,0 +1,184 @@
+
+.badge {
+  border-radius: 3px;
+  font-weight: 400;
+  line-height: 1.3;
+  font-size: 85%;
+
+  &:empty {
+    display: inline-block;
+    vertical-align: inherit;
+  }
+}
+
+.badge-pill {
+  border-radius: 10rem;
+}
+
+// Colors
+//
+@each $name, $color in $colors {
+  .badge-#{$name} {
+    background-color: $color;
+
+    &[href]:focus,
+    &[href]:hover {
+      background-color: darken($color, 5%);
+    }
+  }
+}
+
+.badge-warning {
+  color: #fff;
+}
+
+.badge-default   {
+  color: $color-text-light;
+  background-color: $color-bg-light;
+
+  &[href]:focus,
+  &[href]:hover {
+    color: $color-text-light;
+    background-color: darken($color-bg-light, 3%);
+  }
+}
+
+.badge-secondary {
+  color: $color-text-light;
+  background-color: $color-secondary;
+
+  &[href]:focus,
+  &[href]:hover {
+    color: $color-text-light;
+    background-color: darken($color-secondary, 3%);
+  }
+}
+
+
+
+
+
+// Sizes
+//
+.badge-sm {
+  line-height: 1.2;
+  padding-top: 1px;
+  padding-bottom: 2px;
+  font-size: 75%;
+}
+
+.badge-lg {
+  line-height: 1.5;
+  padding: 5px 7px;
+  font-size: 95%;
+}
+
+.badge-xl {
+  line-height: 1.7;
+  padding: 7px 9px;
+  font-size: 100%;
+}
+
+
+
+
+
+// Dotted badge
+//
+.badge-dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border-radius: 100%;
+  vertical-align: middle;
+
+  &.badge-sm {
+    width: 6px;
+    height: 6px;
+  }
+
+  &.badge-lg {
+    width: 10px;
+    height: 10px;
+  }
+
+  &.badge-xl {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+
+
+
+
+// Ring badge
+//
+.badge-ring {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  border-radius: 100%;
+  vertical-align: middle;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #fff;
+    transform: scale(1);
+    transition: .3s;
+  }
+
+  &.badge-sm {
+    width: 8px;
+    height: 8px;
+
+    &::after {
+      width: 4px;
+      height: 4px;
+    }
+  }
+
+  &.badge-lg {
+    width: 12px;
+    height: 12px;
+
+    &::after {
+      width: 8px;
+      height: 8px;
+    }
+  }
+
+  &.badge-xl {
+    width: 14px;
+    height: 14px;
+
+    &::after {
+      width: 10px;
+      height: 10px;
+    }
+  }
+
+  &.fill::after {
+    transform: scale(0);
+  }
+}
+
+
+
+
+
+// Bold badge
+//
+.badge-bold {
+  font-family: $font-title;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 1px;
+}

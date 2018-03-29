@@ -1,0 +1,178 @@
+
+//-----------------------------------------------------------
+// Topbar menu
+//
+.topbar {
+
+  .menu {
+    margin-left: $topbar-gap;
+    margin-bottom: 0;
+    white-space: nowrap;
+  }
+
+  .menu-item {
+    position: relative;
+    display: inline-block;
+
+    &:hover > .menu-link,
+    &.active > .menu-link {
+      color: $color-alpha-dark-text-active;
+      border-top-color: $color-primary;
+    }
+  }
+
+  .menu-link {
+    height: $height-topbar;
+    color: $color-alpha-dark-text;
+    border-top: 2px solid transparent;
+
+    .icon,
+    .dot {
+      flex-basis: $topbar-icon-size;
+    }
+
+    .title small {
+      opacity: 1;
+    }
+
+    .arrow::before {
+      content: "\e64b";
+    }
+  }
+
+  .menu-submenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    padding: 0;
+    min-width: $topbar-menu-dropdown-size;
+    background-color: #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+
+    .menu-item {
+      display: block;
+
+      &:hover {
+        .menu-sub-submenu {
+          display: block;
+        }
+      }
+
+      &:hover > .menu-link {
+        color: $color-text;
+        background-color: $color-bg-lighter;
+      }
+
+      &.active > .menu-link {
+        color: $color-text;
+        background-color: $color-bg-lighter;
+      }
+
+      .icon,
+      .dot {
+        margin-left: 6px;
+      }
+    }
+
+    .menu-link {
+      height: $menu-submenu-height;
+      border-top: none;
+      opacity: 1;
+
+      .arrow::before {
+        content: "\e649";
+      }
+    }
+
+    .dot::after {
+      border-color: $color-text;
+    }
+  }
+
+  .menu-sub-submenu {
+    position: absolute;
+    top: -4px;
+    left: 100%;
+    display: none;
+    background-color: #fff;
+    min-width: $topbar-menu-dropdown-size;
+    padding-left: 0;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.06);
+
+    .menu-item {
+      padding-left: 0;
+      opacity: 1;
+    }
+
+  }
+
+
+  .menu-category,
+  .menu-divider {
+    display: none;
+  }
+
+}
+
+
+//-----------------------------------------------------------------
+// Toggleable sizes
+//
+
+.topbar-expand {
+  @include topbar-expand-media-up();
+}
+
+
+.topbar-expand-sm {
+  @include media-down(xs) {
+    @include topbar-expand-media-down();
+  }
+
+  @include media-up(sm) {
+    @include topbar-expand-media-up();
+  }
+}
+
+
+.topbar-expand-md {
+  @include media-down(sm) {
+    @include topbar-expand-media-down();
+  }
+
+  @include media-up(md) {
+    @include topbar-expand-media-up();
+  }
+}
+
+
+.topbar-expand-lg {
+  @include media-down(md) {
+    @include topbar-expand-media-down();
+  }
+
+  @include media-up(lg) {
+    @include topbar-expand-media-up();
+  }
+}
+
+
+.topbar-expand-xl {
+  @include media-down(lg) {
+    @include topbar-expand-media-down();
+  }
+
+  @include media-up(xl) {
+    @include topbar-expand-media-up();
+  }
+}
+
+
+// body class
+.topbar-menu-open {
+  overflow: hidden;
+  .topbar-navigation {
+    left: 0;
+    box-shadow: $offcanvas-left-shadow;
+  }
+}

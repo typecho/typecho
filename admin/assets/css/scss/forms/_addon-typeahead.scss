@@ -1,0 +1,33 @@
+
+.twitter-typeahead {
+  display: block !important;
+}
+
+.tt-menu {
+  background-color: #fff;
+  right: 0;
+  margin-top: 2px;
+  border-radius: 2px;
+  border: 1px solid $color-divider-light;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.tt-suggestion {
+  display: block;
+  margin: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: 0.15s linear;
+
+  &.tt-cursor,
+  &:hover,
+  &:focus {
+    background-color: $color-bg-lighter;
+  }
+}
+
+
+.typeahead-scrollable .tt-menu {
+  max-height: 220px;
+  overflow-y: auto;
+}

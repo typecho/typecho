@@ -1,0 +1,23 @@
+
+
+// Fix for fancy dropdown
+.clockpicker.dropdown-menu {
+  transform: scale(1,1);
+  padding: 6px;
+  transition: initial;
+}
+
+.clockpicker-button {
+  color: $color-text;
+  padding: 3px;
+  height: auto;
+  font-size: .875rem;
+}
+
+.clockpicker-popover .popover-content {
+  background-color: $color-bg-lighter;
+}
+
+.clockpicker-plate {
+  border-color: $color-divider;
+}

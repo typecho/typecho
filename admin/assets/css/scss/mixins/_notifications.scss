@@ -1,0 +1,23 @@
+@mixin callout-variation($color) {
+  border-left-color: $color;
+  background-color: $color-bg-lightest;
+
+  h3,
+  h4,
+  h5,
+  h6,
+  a {
+    color: $color;
+  }
+
+  h3,
+  h4,
+  h5,
+  h6 {
+    text-transform: uppercase;
+  }
+
+  > *:last-child {
+    margin-bottom: 0;
+  }
+}

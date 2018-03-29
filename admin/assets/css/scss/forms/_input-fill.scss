@@ -1,0 +1,63 @@
+
+//-----------------------------------------------------------------
+// Fill elements
+//
+
+.form-type-fill {
+
+  // Inputs
+  //
+  &.form-control,
+  .form-control {
+    background-color: darken($color-bg-lighter, 0.5%);
+    border-color: $color-divider-light;
+
+    &:focus {
+      background-color: darken($color-bg-lighter, 2%);
+      box-shadow: 0 0 20px rgba(0,0,0,0.04);
+      border-color: $color-divider-light;
+    }
+  }
+
+
+  .input-group-text {
+    border-color: $color-divider-light;
+    background-color: darken($color-bg-lighter, 0.5%);
+    border-right: 1px solid $color-divider-light;
+  }
+
+  .input-group .form-control + .input-group-text {
+    border-left: 1px solid $color-divider-light;
+    border-right: 0;
+  }
+
+  .input-group-btn:not(:first-child) > .btn,
+  .input-group-btn:not(:first-child) > .btn-group {
+    z-index: initial;
+  }
+
+
+  // File browser
+  //
+  .custom-file-control {
+
+  }
+
+
+  // Select picker
+  //
+  .bootstrap-select.btn-group  {
+
+    .dropdown-toggle {
+      background-color: darken($color-bg-lighter, 0.5%);
+      border-color: $color-divider-light;
+    }
+
+    &.show .dropdown-toggle {
+      background-color: darken($color-bg-lighter, 2%);
+      box-shadow: 0 0 20px rgba(0,0,0,0.04);
+      border-color: $color-divider-light;
+    }
+  }
+
+}

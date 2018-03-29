@@ -1,0 +1,59 @@
+
+@mixin media-up($point) {
+
+  $bp-xs: "(min-width: 0)";      // Extra small devices (portrait phones, less than 576px)
+  $bp-sm: "(min-width: 576px)";  // Small devices (landscape phones, 576px and up)
+  $bp-md: "(min-width: 768px)";  // Medium devices (tablets, 768px and up)
+  $bp-lg: "(min-width: 992px)";  // Large devices (desktops, 992px and up)
+  $bp-xl: "(min-width: 1200px)"; // Large desktops
+
+
+  @if $point == xs {
+    @media #{$bp-xs} { @content; }
+  }
+  @else if $point == sm {
+    @media #{$bp-sm} { @content; }
+  }
+  @else if $point == md {
+    @media #{$bp-md} { @content; }
+  }
+  @else if $point == lg {
+    @media #{$bp-lg}  { @content; }
+  }
+  @else if $point == xl {
+    @media #{$bp-xl}  { @content; }
+  }
+  @else {
+    @media (min-width: #{$point}px) { @content; }
+  }
+
+}
+
+@mixin media-down($point) {
+
+  $bp-xs: "(max-width: 575px)";  // Extra small devices (portrait phones, less than 576px)
+  $bp-sm: "(max-width: 767px)";  // Small devices (landscape phones, less than 768px)
+  $bp-md: "(max-width: 991px)";  // Medium devices (tablets, less than 992px)
+  $bp-lg: "(max-width: 1199px)"; // Large devices (desktops, less than 1200px)
+  $bp-xl: "(max-width: 5000px)"; // Large desktops
+
+  @if $point == xs {
+    @media #{$bp-xs} { @content; }
+  }
+  @else if $point == sm {
+    @media #{$bp-sm} { @content; }
+  }
+  @else if $point == md {
+    @media #{$bp-md} { @content; }
+  }
+  @else if $point == lg {
+    @media #{$bp-lg}  { @content; }
+  }
+  @else if $point == xl {
+    @media #{$bp-xl}  { @content; }
+  }
+  @else {
+    @media (max-width: #{$point}px) { @content; }
+  }
+
+}

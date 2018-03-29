@@ -1,0 +1,14 @@
+@mixin dropdown-toggle($btn, $color, $percentage) {
+  .open > .btn-#{$btn}.dropdown-toggle {
+    background-color: $color;
+    border-color: $color;
+
+    &.focus,
+    &:focus,
+    &:hover {
+      background-color: darken($color, $percentage);
+      border-color: darken($color, $percentage);
+    }
+  }
+
+}

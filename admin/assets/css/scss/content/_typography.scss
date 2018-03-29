@@ -1,0 +1,276 @@
+
+body {
+  font-family: $font-body;
+  color: $color-text;
+  font-weight: 300;
+  font-size: 13px;
+  line-height: $line-height-md;
+}
+
+// TODO: will fix in Beta release
+button, input, optgroup, select, textarea {
+  font-family: $font-body;
+  font-weight: 300;
+}
+
+
+canvas:focus {
+  outline: none;
+}
+
+::selection {
+  background: lighten($color-primary, 7%);
+  color: #fff;
+}
+::-moz-selection {
+  background: lighten($color-primary, 7%);
+  color: #fff;
+}
+
+
+a {
+  color: $color-primary;
+  transition: .2s linear;
+
+  &:hover,
+  &:focus {
+    color: $color-text;
+    text-decoration: none;
+    outline: none;
+  }
+
+  &.media {
+    color: $color-text;
+  }
+
+  &[class*="text-"] {
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
+  }
+
+  &[class*="hover-"] {
+    color: $color-text;
+  }
+}
+
+
+b,
+strong {
+  font-weight: 500;
+}
+
+small,
+time,
+.small {
+  font-family: $font-body;
+  font-weight: 400;
+  font-size: 11px;
+  color: $color-text-secondary;
+
+  a {
+    color: $color-text-secondary;
+    border-bottom: 1px dotted $color-text-secondary;
+
+    &:hover {
+      color: $color-primary;
+      border-bottom-color: transparent;
+    }
+  }
+}
+
+.lead {
+  font-size: 16px;
+  line-height: $line-height-lg;
+}
+
+.semibold {
+  font-weight: 400;
+}
+
+.dropcap:first-child:first-letter {
+  float: left;
+  color: #903;
+  font-size: 75px;
+  line-height: 60px;
+  padding-top: 4px;
+  padding-right: 8px;
+  padding-left: 3px;
+}
+
+//-----------------------------------------------------------------
+// Heading
+//
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: $font-title;
+  font-weight: 300;
+  color: $color-title;
+  line-height: 1.5;
+  letter-spacing: .5px;
+
+  b,
+  strong {
+    font-weight: 400;
+  }
+
+  small {
+    font-size: 65%;
+  }
+
+  a,
+  a[class*="hover-"] {
+    color: $color-title;
+  }
+
+}
+
+h1, .h1 { font-size: 33px; }
+h2, .h2 { font-size: 28px; }
+h3, .h3 { font-size: 23px; }
+h4, .h4 { font-size: 19px; }
+h5, .h5 { font-size: 16px; font-weight: 400; }
+h6, .h6 { font-size: 14px; font-weight: 400; }
+
+.font-alt {
+  font-family: $font-body;
+}
+
+.sidetitle {
+  font-style: italic;
+  margin-left: 0.5rem;
+
+  &::before {
+    content: '\2014 \00A0';
+  }
+}
+
+.subtitle {
+  display: block;
+  margin-top: 8px;
+}
+
+
+
+//-----------------------------------------------------------------
+// UL & OL lists
+//
+.list-iconic {
+  list-style: none;
+  padding-left: 1.5rem;
+
+  .icon {
+    padding-right: 0.5rem;
+    font-size: 0.75em;
+  }
+}
+
+
+.blockquote {
+  font-style: italic;
+  margin-left: 2rem;
+  margin-right: 2rem;
+  margin-top: 1rem;
+  color: $color-text;
+
+  p {
+    font-size: 1.125rem;
+    line-height: 1.875rem;
+  }
+
+  a {
+    color: $color-text;
+  }
+
+  footer {
+    color: $color-text-secondary;
+    font-size: 0.875rem;
+
+    &::before {
+      content: '\2014 \00A0';
+    }
+  }
+}
+
+.blockquote-inverse {
+  &,
+  footer {
+    color: #fff;
+  }
+}
+
+
+
+dt {
+  font-weight: 400;
+}
+
+
+time {
+  font-size: 12px;
+  color: $color-text-secondary;
+}
+
+
+.dl-inline {
+  dt,
+  dd {
+    display: inline-block;
+  }
+
+  dd {
+    margin-bottom: 0;
+  }
+}
+
+
+
+
+
+//-----------------------------------------------------------------
+// Media queries
+//
+@include media-down(md) {
+
+  html {
+    font-size: 16px;
+  }
+
+
+  h1, .h1 { font-size: 31px; }
+  h2, .h2 { font-size: 26px; }
+  h3, .h3 { font-size: 22px; }
+  h4, .h4 { font-size: 18px; }
+  h5, .h5 { font-size: 15px; }
+  h6, .h6 { font-size: 13px; }
+
+  .blockquote {
+    margin-left: 2rem;
+    margin-right: 2rem;
+  }
+
+}
+
+
+@include media-down(sm) {
+
+  html {
+    font-size: 15px;
+  }
+
+  h1, .h1 { font-size: 24px; }
+  h2, .h2 { font-size: 22px; }
+  h3, .h3 { font-size: 20px; }
+  h4, .h4 { font-size: 16px; }
+
+  .lead {
+    font-size: 15px;
+  }
+
+  .blockquote {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+}

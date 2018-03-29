@@ -1,0 +1,138 @@
+
+// Clearfix
+//
+@mixin clearfix() {
+  &::after {
+    display: block;
+    content: "";
+    clear: both;
+  }
+}
+
+
+// Add placeholder color for inputs
+//
+@mixin placeholder-color($color) {
+  &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: $color;
+  }
+  &::-moz-placeholder { /* Firefox 19+ */
+    color: $color;
+  }
+  &:-ms-input-placeholder { /* IE 10+ */
+    color: $color;
+  }
+  &:-moz-placeholder { /* Firefox 18- */
+    color: $color;
+  }
+}
+
+
+// Children gap
+//
+@mixin gap-items($size: 8px) {
+  margin: -$size;
+  > * {
+    margin: $size;
+  }
+
+  @include media-down(sm) {
+    $size: $size/2;
+    margin: -$size;
+    > * {
+      margin: $size;
+    }
+  }
+}
+
+@mixin gap-items-x($size: 8px) {
+  > * {
+    margin-left:  $size;
+    margin-right: $size;
+
+    &:first-child { margin-left: 0; }
+    &:last-child  { margin-right: 0; }
+  }
+
+  @include media-down(sm) {
+    $size: $size/2;
+    > * {
+      margin-left:  $size;
+      margin-right: $size;
+
+      &:first-child { margin-left: 0; }
+      &:last-child  { margin-right: 0; }
+    }
+  }
+
+}
+
+
+@mixin row-x-gap($size) {
+  $size: $size/2;
+  margin-left: -$size;
+  margin-right: -$size;
+
+  > .col,
+  > [class*="col-"] {
+    padding-left: $size;
+    padding-right: $size;
+  }
+
+  @include media-down(sm) {
+    $size: $size/4;
+    margin-left: -$size;
+    margin-right: -$size;
+
+    > .col,
+    > [class*="col-"] {
+      padding-left: $size;
+      padding-right: $size;
+    }
+  }
+}
+
+
+
+@mixin row-y-gap($size) {
+  $size: $size/2;
+  margin-top: -$size;
+  margin-bottom: -$size;
+
+  > .col,
+  > [class*="col-"] {
+    padding-top: $size;
+    padding-bottom: $size;
+  }
+
+  @include media-down(sm) {
+    $size: $size/4;
+    margin-top: -$size;
+    margin-bottom: -$size;
+
+    > .col,
+    > [class*="col-"] {
+      padding-top: $size;
+      padding-bottom: $size;
+    }
+  }
+}
+
+
+
+@mixin masonry-gap($size) {
+  column-gap: $size;
+
+  .masonry-item {
+    padding-bottom: $size;
+  }
+
+  @include media-down(sm) {
+    $size: $size/2;
+    column-gap: $size;
+
+    .masonry-item {
+      padding-bottom: $size;
+    }
+  }
+}

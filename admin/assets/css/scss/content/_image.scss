@@ -1,0 +1,23 @@
+
+img {
+  max-width: 100%;
+}
+
+.img-thumbnail {
+  padding: 0.25rem;
+  border-color: lighten($color-divider, 3%);
+  border-radius: 3px;
+}
+
+.img-shadow {
+  box-shadow: 0 0 25px 5px rgba(0,0,0,0.2);
+}
+
+.img-outside-right {
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    transform: translateX(15%);
+  }
+}

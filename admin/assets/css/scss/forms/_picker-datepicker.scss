@@ -1,0 +1,167 @@
+
+// Fix for fancy dropdown
+.datepicker.dropdown-menu {
+  transform: scale(1,1);
+  transition: 0s;
+  padding: 6px;
+}
+
+.datepicker-dropdown:before {
+  border-bottom-color: $color-divider;
+}
+
+.datepicker-dropdown.datepicker-orient-top:before {
+  border-top-color: $color-divider;
+}
+
+.datepicker > div.datepicker-days {
+  display: block;
+}
+
+.datepicker table tr {
+
+  td,
+  th,
+  td span {
+    border-radius: 0;
+    font-size: 12px;
+    color: $color-text;
+  }
+
+  th {
+    font-weight: 500;
+  }
+
+  td {
+
+    &.old,
+    &.new {
+      color: lighten($color-text, 43%);
+    }
+
+    &.range {
+      background-color: $color-bg-light;
+      border-color: $color-bg-light;
+
+    }
+
+    &.range-start,
+    &.range-end {
+      background-color: $color-primary !important;
+      border-color: $color-primary !important;
+      text-shadow: none;
+      border-radius: 100%;
+    }
+
+    &.range-start {
+      border-top-right-radius: 0 !important;
+      border-bottom-right-radius: 0 !important;
+    }
+
+    &.range-end {
+      border-top-left-radius: 0 !important;
+      border-bottom-left-radius: 0 !important;
+    }
+
+    &.range-start.range-end {
+      border-radius: 100% !important;
+    }
+
+  }
+
+  .dow {
+    padding-top: 0.5rem;
+    padding-bottom: 1rem;
+    font-size: 11px;
+  }
+}
+
+.datepicker {
+
+  .datepicker-switch {
+    font-weight: 300;
+    font-size: 13px;
+  }
+
+  .datepicker-switch,
+  .prev,
+  .next {
+    line-height: $height-md;
+  }
+
+  .prev,
+  .next {
+    font-size: 0;
+
+    &::before {
+      font-family: $font-icon-themify;
+      color: $color-text-secondary;
+      font-size: 12px;
+      vertical-align: top;
+    }
+  }
+
+  .prev::before {
+    content: "\e629";
+  }
+
+  .next::before {
+    content: "\e628";
+  }
+
+}
+
+
+.datepicker table tr td.day:hover,
+.datepicker table tr td.focused,
+.datepicker tfoot tr th:hover,
+.datepicker .datepicker-switch:hover,
+.datepicker .next:hover,
+.datepicker .prev:hover {
+  background-color: $color-bg-lighter;
+}
+
+.datepicker table tr td.active.active,
+.datepicker table tr td.active.highlighted.active,
+.datepicker table tr td.active.highlighted:active,
+.datepicker table tr td.active:active {
+  background-color: $color-primary;
+  border-color: $color-primary;
+  text-shadow: none;
+  border-radius: 100%;
+}
+
+.datepicker table tr td span.active.active,
+.datepicker table tr td span.active.disabled.active,
+.datepicker table tr td span.active.disabled:active,
+.datepicker table tr td span.active.disabled:hover.active,
+.datepicker table tr td span.active.disabled:hover:active,
+.datepicker table tr td span.active:active,
+.datepicker table tr td span.active:hover.active,
+.datepicker table tr td span.active:hover:active {
+  background-color: $color-primary;
+  border-color: $color-primary;
+}
+
+.datepicker table tr td.active.active.focus,
+.datepicker table tr td.active.active:focus,
+.datepicker table tr td.active.active:hover,
+.datepicker table tr td.active.highlighted.active.focus,
+.datepicker table tr td.active.highlighted.active:focus,
+.datepicker table tr td.active.highlighted.active:hover,
+.datepicker table tr td.active.highlighted:active.focus,
+.datepicker table tr td.active.highlighted:active:focus,
+.datepicker table tr td.active.highlighted:active:hover,
+.datepicker table tr td.active:active.focus,
+.datepicker table tr td.active:active:focus,
+.datepicker table tr td.active:active:hover {
+  background-color: darken($color-primary, 2%);
+  border-color: darken($color-primary, 2%);
+}
+
+
+.datepicker table tr td.today {
+  color: $color-text;
+  background-color: $color-bg-light;
+  border-color: $color-bg-light;
+}

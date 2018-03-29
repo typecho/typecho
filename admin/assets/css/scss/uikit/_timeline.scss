@@ -1,0 +1,265 @@
+
+.timeline {
+  position: relative;
+  list-style: none;
+  margin: 0 auto 30px;
+  padding-left: 0;
+  width: 90%;
+  z-index: 1;
+}
+
+
+
+
+// Block
+//
+.timeline-block {
+  display: flex;
+}
+
+
+
+
+
+// Details
+//
+.timeline-detail {
+  flex: 1;
+  padding-bottom: 30px;
+}
+
+
+@include media-down(sm) {
+  .timeline-detail {
+    display: none;
+  }
+}
+
+
+
+
+// Point
+//
+.timeline-point {
+  position: relative;
+  flex-shrink: 0;
+  flex-grow: 0;
+  order: 2;
+  width: 96px;
+  padding-bottom: 30px;
+  text-align: center;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 9px;
+    left: 50%;
+    bottom: -9px;
+    width: 1px;
+    margin-left: -1px;
+    z-index: -1;
+    background-color: $color-divider;
+  }
+
+  .timeline .timeline-block:first-child &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    margin-left: -2px;
+    border-radius: 50%;
+  }
+
+  .timeline .timeline-block:last-child &::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin-left: -3px;
+    border-radius: 50%;
+  }
+}
+
+@each $name, $color in $colors {
+  .timeline-point-#{$name}::before {
+    background-color: $color;
+  }
+}
+
+
+
+
+// Content
+//
+.timeline-content {
+  flex: 1;
+  margin-bottom: 60px;
+
+  .card {
+    margin-bottom: 0;
+  }
+}
+
+
+
+
+
+// Period
+//
+.timeline-period {
+  position: relative;
+  padding: 30px 0;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 300;
+  color: $color-text-secondary;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin-left: -3px;
+    background-color: $color-divider;
+    border-radius: 50%;
+  }
+
+  time {
+    font-size: inherit;
+    font-weight: inherit;
+  }
+
+  .timeline &:first-child::after {
+    display: none;
+  }
+
+}
+
+
+
+
+
+
+// ------------------------------------------------------------------
+// Variations
+//
+
+// Zig-zag
+//
+.timeline {
+
+  // Deafult is right sided content
+  @include media-down(md) {
+    .timeline-block {
+
+      .timeline-detail {
+        order: 1;
+        text-align: right;
+      }
+
+      .timeline-content {
+        order: 3;
+      }
+
+    }
+  }
+
+  // Make it zig-zag in large screens
+  @include media-up(lg) {
+    .timeline-block:nth-child(even) {
+      .timeline-detail {
+        order: 1;
+        text-align: right;
+      }
+
+      .timeline-content {
+        order: 3;
+      }
+    }
+
+
+    .timeline-block:nth-child(odd) {
+      .timeline-detail {
+        order: 3;
+        text-align: left;
+      }
+
+      .timeline-content {
+        order: 1;
+      }
+    }
+  }
+
+}
+
+
+
+// Left aligned content
+//
+.timeline.timeline-content-left .timeline-block {
+
+  .timeline-detail {
+    order: 3;
+    text-align: left;
+  }
+
+  .timeline-content {
+    order: 1;
+  }
+
+}
+
+
+// Right aligned content
+//
+.timeline.timeline-content-right .timeline-block {
+
+  .timeline-detail {
+    order: 1;
+    text-align: right;
+  }
+
+  .timeline-content {
+    order: 3;
+  }
+
+}
+
+
+
+
+
+
+
+// ------------------------------------------------------------------
+// Timeline activity
+//
+.timeline-activity {
+
+  .timeline-content {
+    margin-bottom: 10px;
+  }
+
+}
+
+
+
+
+
+
+// ------------------------------------------------------------------
+// Sizes
+//
+.timeline-point-xs .timeline-point { width: 32px; }
+.timeline-point-sm .timeline-point { width: 64px; }
+.timeline-point-lg .timeline-point { width: 128px; }
+.timeline-point-xl .timeline-point { width: 256px; }

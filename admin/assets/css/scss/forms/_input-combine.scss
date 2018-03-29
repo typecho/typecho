@@ -1,0 +1,337 @@
+
+//-----------------------------------------------------------------
+// Combined elements
+//
+.form-type-combine .form-group,
+.form-type-combine.form-group,
+.form-type-combine .input-group,
+.form-type-combine.input-group {
+  position: relative;
+  background-color: #fff;
+  position: relative;
+  border: 1px solid $color-divider;
+  border-radius: 2px;
+  padding: 4px 12px 8px;
+  cursor: text;
+  outline: none !important;
+  transition: .5s;
+
+  &:focus,
+  &.focused {
+    background-color: $color-bg-lightest;
+
+    label,
+    small,
+    .form-text {
+      opacity: .4;
+    }
+
+  }
+
+  &.disabled {
+    background-color: $color-bg-lighter;
+    opacity: .5;
+    cursor: not-allowed;
+  }
+
+  label,
+  small,
+  .form-text {
+    transition: .5s;
+  }
+
+  .form-control,
+  .form-control-plaintext {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    width: 100%;
+    height: 25px;
+    line-height: 25px;
+    min-height: auto;
+  }
+
+  .form-control:focus,
+  .form-control.focused {
+    box-shadow: none;
+  }
+
+  textarea,
+  select[multiple] {
+    height: auto !important;
+  }
+
+  label {
+    font-family: $font-title;
+    font-weight: 500;
+    font-size: 10px;
+    line-height: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0;
+    cursor: inherit;
+  }
+
+  &.require::after {
+    content: '*';
+    color: $color-danger;
+    font-size: 0.875rem;
+    font-weight: 500;
+    position: absolute;
+    top: 0;
+    right: 6px;
+  }
+
+
+  // Sizes
+  //
+  &.form-group-sm {
+    .form-control,
+    .form-control-plaintext {
+      height: 20px;
+      line-height: 20px;
+      font-size: 13px;
+    }
+
+    label {
+      font-size: 10px;
+    }
+
+    .input-group-text {
+      line-height: 58px;
+      font-size: 13px;
+    }
+  }
+
+
+  &.form-group-lg {
+    .form-control,
+    .form-control-plaintext {
+      height: 32px;
+      line-height: 32px;
+      font-size: 15px;
+    }
+
+    label {
+      font-size: 12px;
+    }
+
+    .input-group-text {
+      line-height: 70px;
+      font-size: 15px;
+    }
+  }
+
+
+
+
+  // Select picker
+  //
+  .bootstrap-select.btn-group  {
+
+    .dropdown-toggle {
+      background-color: transparent;
+      border: none;
+      padding: 0 18px 0 0;
+      height: 25px;
+      line-height: 25px;
+      min-height: auto;
+    }
+
+    &.show .dropdown-toggle {
+      background-size: 100% 2px, 100% 1px;
+      border-color: transparent;
+    }
+
+  }
+
+
+
+
+
+}
+
+
+
+
+
+.form-type-combine .input-group,
+.form-type-combine.input-group {
+
+  padding: 0;
+  display: flex;
+  overflow: visible;
+  margin-bottom: 1rem;
+
+  .input-group-text {
+    flex-shrink: 0;
+    justify-content: center;
+    border: none;
+    min-width: 63px;
+    line-height: 63px;
+    padding-top: 0;
+    padding-bottom: 0;
+    cursor: default;
+
+    .custom-control {
+      display: inline-flex;
+    }
+  }
+
+  .input-group-prepend .btn,
+  .input-group-append .btn {
+    height: 100%;
+    border: 0;
+    margin: 0;
+  }
+
+  .input-group-input {
+    padding: 4px 12px 8px;
+    flex-grow: 1;
+    transition: .5s;
+
+    &:focus,
+    &.focused {
+      background-color: $color-bg-lightest;
+
+      label,
+      small,
+      .form-text {
+        opacity: .4;
+      }
+    }
+
+    .form-control:focus {
+      background-color: transparent;
+    }
+
+
+  }
+
+  // Border
+  .input-group-text + .input-group-input,
+  .input-group-btn + .input-group-input,
+  .input-group-input + .input-group-text,
+  .input-group-input + .input-group-btn .btn,
+  .input-group-btn .btn + .btn {
+    border-left: 1px solid $color-divider;
+  }
+
+  .input-group-append {
+    border-left: 1px solid $color-divider;
+  }
+  .input-group-prepend {
+    border-right: 1px solid $color-divider;
+  }
+
+
+  .form-control:focus {
+    border-color: $color-divider;
+    background-color: $color-bg-lightest;
+    transition: .5s;
+  }
+
+}
+
+
+
+
+
+//-----------------------------------------------------------------
+// Validation
+//
+
+// Depricated - Alpha 6
+//
+.form-type-combine {
+
+  &.has-success,
+  .has-success {
+    border-color: $color-success;
+
+    + .form-control-feedback {
+      color: $color-success;
+    }
+  }
+
+  &.has-warning,
+  .has-warning {
+    border-color: $color-warning;
+
+    + .form-control-feedback {
+      color: $color-warning;
+    }
+  }
+
+  &.has-danger,
+  .has-danger {
+    border-color: $color-danger;
+
+    + .form-control-feedback {
+      color: $color-danger;
+    }
+  }
+
+  .form-group + .form-control-feedback {
+    margin-top: -.5rem;
+    line-height: 20px;
+  }
+}
+
+
+// Beta 1
+//
+.form-type-combine {
+
+  .custom-select.is-invalid,
+  .form-control.is-invalid,
+  .was-validated .custom-select:invalid,
+  .was-validated .form-control:invalid {
+    border-color: $color-danger !important;
+
+    &:focus {
+      box-shadow: none !important;
+    }
+  }
+
+  .custom-select.is-valid,
+  .form-control.is-valid,
+  .was-validated .custom-select:valid,
+  .was-validated .form-control:valid {
+    border-color: $color-success !important;
+
+    &:focus {
+      box-shadow: none !important;
+    }
+  }
+
+}
+
+// Layout
+//
+.form-groups-attached {
+  margin-bottom: 1rem;
+
+  .form-group {
+    margin-bottom: 0;
+    border-radius: 0;
+  }
+
+
+  > div:not(:last-child),
+  > div:not(:last-child) .form-group {
+    border-bottom-color: transparent;
+  }
+
+
+  .row {
+    margin-left: 0;
+    margin-right: 0;
+
+    > .form-group:not(:last-child) {
+      border-right-color: transparent;
+    }
+  }
+
+
+}

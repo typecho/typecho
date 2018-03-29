@@ -1,0 +1,19 @@
+
+[data-provide="easypie"] {
+  display: inline-flex;
+  text-align: center;
+  position: relative;
+}
+
+.easypie-data {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 10px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}

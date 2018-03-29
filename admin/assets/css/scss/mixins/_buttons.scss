@@ -1,0 +1,82 @@
+
+// General button colors
+@mixin btn-colors($color, $percentage) {
+
+  background-color: $color;
+  border-color: $color;
+  color: #fff;
+
+  &:hover {
+    background-color: lighten($color, $percentage);
+    border-color: lighten($color, $percentage);
+    color: #fff;
+  }
+
+
+  &:focus,
+  &.focus {
+    color: #fff;
+  }
+
+  &.disabled,
+  &:disabled {
+    background-color: $color;
+    border-color: $color;
+    opacity: 0.5;
+  }
+
+
+  &:not([disabled]):not(.disabled).active,
+  &:not([disabled]):not(.disabled):active,
+  .show > &.dropdown-toggle {
+    background-color: darken($color, $percentage);
+    border-color: darken($color, $percentage);
+    color: #fff;
+    box-shadow: none;
+  }
+
+}
+
+
+
+
+
+// Outline buttons
+@mixin btn-outline($color, $percentage) {
+  color: $color;
+  background-color: transparent;
+  border-color: $color;
+
+  &:hover  {
+    color: #fff;
+    background-color: $color;
+    border-color: $color;
+  }
+
+  &:not([disabled]):not(.disabled).active,
+  &:not([disabled]):not(.disabled):active,
+  .show > &.dropdown-toggle {
+    background-color: darken($color, $percentage);
+    border-color: darken($color, $percentage);
+    box-shadow: none;
+  }
+
+}
+
+
+
+
+
+// Pure buttons
+@mixin btn-pure($color) {
+  color: $color;
+
+  &:hover,
+  &:not([disabled]):not(.disabled).active,
+  &:not([disabled]):not(.disabled):active,
+  .show > &.dropdown-toggle {
+    color: darken($color, 10%);
+    box-shadow: none;
+  }
+
+}

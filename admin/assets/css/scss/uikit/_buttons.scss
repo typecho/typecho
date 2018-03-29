@@ -1,0 +1,475 @@
+
+.btn {
+  font-size: 14px;
+  padding: 5px 16px;
+  line-height: inherit;
+  color: $color-text-secondary;
+  letter-spacing: 1px;
+  border-radius: 2px;
+  background-color: #fff;
+  border-color: $color-divider;
+  outline: none !important;
+  transition: 0.15s linear;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:focus,
+  &.focus,
+  &:active,
+  &.active {
+    box-shadow: none;
+  }
+
+}
+
+.btn-bold {
+  font-family: $font-title;
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 12px;
+}
+
+
+
+
+
+
+//-----------------------------------------------------------------
+// Button sizes
+//
+.btn-group-xs > .btn,
+.btn-xs {
+  font-size: 11px;
+  padding: 2px 8px;
+  line-height: $line-height-xs;
+
+  &.btn-bold {
+    font-size: 9px;
+  }
+}
+
+.btn-group-sm > .btn,
+.btn-sm {
+  font-size: 12px;
+  padding: 4px 12px;
+  line-height: $line-height-sm;
+  &.btn-bold {
+    font-size: 11px;
+  }
+}
+
+.btn-group-lg > .btn,
+.btn-lg {
+  font-size: 15px;
+  padding: 7px 20px;
+  line-height: $line-height-lg;
+  &.btn-bold {
+    font-size: 14px;
+  }
+}
+
+// Consistent width
+.btn-w-xs { width: $width-cons-xs; }
+.btn-w-sm { width: $width-cons-sm; }
+.btn-w-md { width: $width-cons-md; }
+.btn-w-lg { width: $width-cons-lg; }
+.btn-w-xl { width: $width-cons-xl; }
+
+
+
+
+
+//-----------------------------------------------------------------
+// Border modifiers
+//
+.btn-round {
+  border-radius: 10rem;
+}
+
+
+
+
+
+//-----------------------------------------------------------------
+// Button variations
+//
+.btn-primary   { @include btn-colors($color-primary, 8%); }
+.btn-success   { @include btn-colors($color-success, 3%); }
+.btn-info      { @include btn-colors($color-info, 6%); }
+.btn-warning   { @include btn-colors($color-warning, 5%); }
+.btn-danger    { @include btn-colors($color-danger, 5%); }
+
+
+.btn-secondary {
+  color: $color-text !important;
+  @include btn-colors($color-secondary, 3%);
+}
+
+.btn-link {
+  color: $color-info;
+  font-weight: 500;
+
+  &:hover,
+  &:focus {
+    text-decoration: none;
+    color: $color-secondary;
+  }
+}
+
+.btn-light {
+  background-color: $color-bg-lightest;
+  border-color: $color-divider;
+  color: $color-text-secondary;
+
+  &:hover,
+  &:focus {
+    background-color: $color-bg-lighter;
+    color: $color-text;
+  }
+
+
+  &:active,
+  &.active,
+  .show > &.dropdown-toggle {
+    background-color: $color-bg-lighter;
+    color: $color-text;
+  }
+
+}
+
+
+
+// Extended colors
+.btn-purple     { @include btn-colors($color-purple, 5%); }
+.btn-pink       { @include btn-colors($color-pink, 4%); }
+.btn-cyan       { @include btn-colors($color-cyan, 8%); }
+.btn-yellow     { @include btn-colors($color-yellow, 8%); }
+.btn-brown      { @include btn-colors($color-brown, 5%); }
+.btn-dark       { @include btn-colors($color-dark, 5%); }
+
+
+// Social media colors
+@each $name, $color in $social-colors {
+  .btn-#{$name} {
+    @include btn-colors($color, 8%);
+  }
+}
+
+
+
+
+
+//-----------------------------------------------------------------
+// Outline buttons
+//
+.btn-primary-outline   { @include btn-outline($color-primary, 8%); }
+.btn-success-outline   { @include btn-outline($color-success, 6%); }
+.btn-info-outline      { @include btn-outline($color-info, 6%); }
+.btn-warning-outline   { @include btn-outline($color-warning, 5%); }
+.btn-danger-outline    { @include btn-outline($color-danger, 5%); }
+.btn-secondary-outline {
+  @include btn-outline($color-secondary, 3%);
+}
+
+// Separated class
+.btn-outline.btn-primary   { @include btn-outline($color-primary, 8%); }
+.btn-outline.btn-success   { @include btn-outline($color-success, 6%); }
+.btn-outline.btn-info      { @include btn-outline($color-info, 6%); }
+.btn-outline.btn-warning   { @include btn-outline($color-warning, 5%); }
+.btn-outline.btn-danger    { @include btn-outline($color-danger, 5%); }
+.btn-outline.btn-secondary {
+  @include btn-outline($color-secondary, 3%);
+}
+
+.btn-outline.btn-light      { @include btn-outline(#fff, 5%); }
+.btn-outline.btn-purple     { @include btn-outline($color-purple, 5%); }
+.btn-outline.btn-pink       { @include btn-outline($color-pink, 4%); }
+.btn-outline.btn-cyan       { @include btn-outline($color-cyan, 8%); }
+.btn-outline.btn-yellow     { @include btn-outline($color-yellow, 8%); }
+.btn-outline.btn-brown      { @include btn-outline($color-brown, 5%); }
+.btn-outline.btn-dark       { @include btn-outline($color-dark, 5%); }
+
+
+.btn-outline.btn-light:hover {
+  color: $color-text;
+}
+
+
+// Social media colors
+@each $name, $color in $social-colors {
+  .btn-outline.btn-#{$name} {
+    @include btn-outline($color, 8%);
+  }
+}
+
+
+//-----------------------------------------------------------------
+// Labled buttons
+//
+.btn-label {
+  position: relative;
+  padding-left: $height-md + 16px;
+  overflow: hidden;
+
+  label {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: $height-md;
+    line-height: inherit;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: rgba(0,0,0,0.1);
+    cursor: pointer;
+    margin-bottom: 0;
+  }
+
+  &.btn-label-right {
+
+  }
+
+  // Sizes
+  &.btn-xs {
+    padding-left: $height-xs + 8px;
+
+    label {
+      width: $height-xs;
+    }
+  }
+
+  &.btn-sm {
+    padding-left: $height-sm + 12px;
+
+    label {
+      width: $height-sm;
+    }
+  }
+
+  &.btn-lg {
+    padding-left: $height-lg + 16px;
+
+    label {
+      width: $height-lg;
+    }
+  }
+}
+
+
+
+
+
+//-----------------------------------------------------------------
+// Floating buttons
+//
+.btn-float {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  margin: 0;
+  font-size: 24px;
+  border-radius: 100%;
+  box-shadow: 0 6px 10px rgba(0,0,0,.15);
+
+  &.btn-sm {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+
+  &:active {
+    box-shadow: none;
+  }
+}
+
+
+
+
+
+//-----------------------------------------------------------------
+// Button icon
+//
+.btn-sq,
+.btn-square {
+  padding: 5px;
+  width: $height-md;
+  height: $height-md;
+
+  &.btn-lg {
+    width: $height-lg;
+    height: $height-lg;
+  }
+
+  &.btn-sm {
+    width: $height-sm;
+    height: $height-sm;
+  }
+
+  &.btn-xs {
+    width: $height-xs;
+    height: $height-xs;
+  }
+}
+
+
+
+
+
+//-----------------------------------------------------------------
+// Button pure
+//
+.btn-pure {
+  background-color: transparent !important;
+  border-color: transparent !important;
+
+  @each $name, $color in $colors {
+    &.btn-#{$name} {
+      @include btn-pure($color);
+    }
+  }
+
+  // Social media colors
+  @each $name, $color in $social-colors {
+    &.btn-#{$name} {
+      @include btn-pure($color);
+    }
+  }
+
+}
+
+
+
+
+
+//-----------------------------------------------------------------
+// Button flat
+//
+.btn-flat {
+  position: relative;
+  font-size: 13px;
+  font-family: $font-title;
+  text-transform: uppercase;
+  background-color: $color-bg-lightest;
+  border: none;
+  letter-spacing: 1px;
+  border-radius: 0;
+
+  &:hover {
+    background-color: $color-bg-lighter;
+  }
+
+  svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  circle {
+    fill: rgba(255,255,255,0.3);
+  }
+
+  @each $name, $color in $colors {
+    &.btn-#{$name} {
+      color: $color;
+
+      circle {
+        fill: rgba($color,0.1);
+      }
+    }
+  }
+  &.btn-secondary {
+    color: $color-text-light;
+  }
+
+  // Social media colors
+  @each $name, $color in $social-colors {
+    &.btn-#{$name} {
+      color: $color;
+
+      circle {
+        fill: rgba($color,0.1);
+      }
+    }
+  }
+
+}
+
+
+
+
+
+//-----------------------------------------------------------------
+// Multiline
+//
+.btn-multiline {
+  padding-top: 15px;
+  padding-bottom: 5px;
+}
+
+
+
+//-----------------------------------------------------------------
+// Button group
+//
+.btn-group,
+.btn-group-vertical {
+  vertical-align: initial;
+}
+
+
+.btn-group {
+  .btn i {
+    vertical-align: middle;
+  }
+}
+
+
+.btn-group-vertical>.btn:first-child:not(:last-child) {
+  border-top-right-radius: 2px;
+}
+
+.btn-group-vertical>.btn:last-child:not(:first-child) {
+  border-bottom-left-radius: 2px;
+}
+
+.btn-spacer .btn+.btn {
+  margin-left: 8px;
+}
+
+
+
+// Justified
+//
+.btn-group-justified {
+  display: flex;
+  justify-content: space-between;
+
+  .btn {
+    width: 100%;
+  }
+}
+
+
+
+// Round
+//
+.btn-group-round {
+
+  .btn:first-child {
+    border-top-left-radius: 10rem;
+    border-bottom-left-radius: 10rem;
+  }
+
+  .btn:last-child {
+    border-top-right-radius: 10rem;
+    border-bottom-right-radius: 10rem;
+  }
+}

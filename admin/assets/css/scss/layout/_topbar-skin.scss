@@ -1,0 +1,129 @@
+
+.topbar-inverse {
+
+  background-color: $sidebar-dark-bg;
+
+  .topbar-title,
+  .sidebar-toggler,
+  .topbar-menu-toggler {
+    color: $color-alpha-light-text-active;
+  }
+
+  .topbar-btn {
+    color: $color-alpha-light-text;
+  }
+
+  .topbar-btn:hover,
+  .dropdown.show .topbar-btn {
+    color: $color-alpha-light-text-active;
+    border-top-color: $color-alpha-light-text;
+  }
+
+  .topbar-divider {
+    border-left-color: $color-alpha-light-divider-light;
+  }
+
+  .topbar-btns .topbar-btn.has-new {
+    color: $color-alpha-light-text-active;
+
+    i::after {
+      border: none;
+      top: -2px;
+      right: -2px;
+      width: 8px;
+      height: 8px;
+    }
+  }
+
+  //--------------------------
+  // Search input
+  //
+  .lookup-circle {
+
+    &::before {
+      color: $color-alpha-light-text;
+    }
+
+    input {
+      background-color: $color-alpha-light-bg;
+      color: $color-alpha-light-text-active;
+
+      &:focus {
+        background-color: $color-alpha-light-bg-hover;
+      }
+
+      @include placeholder-color($color-alpha-light-text);
+    }
+  }
+
+  //--------------------------
+  // Navigation
+  //
+  .menu > .menu-item {
+
+    > .menu-link {
+      color: $color-alpha-light-text;
+    }
+
+    &:hover > .menu-link,
+    &.active > .menu-link {
+      color: $color-alpha-light-text-active;
+      border-top-color: $color-alpha-light-text;
+    }
+
+  }
+
+  //--------------------------
+  // Secondary Navigation
+  //
+  &.topbar-secondary {
+
+    border-bottom-color: rgba(255,255,255,0.05);
+
+    .dropdown-menu,
+    .menu > .menu-item:hover,
+    .menu > .menu-item.active,
+    .menu-submenu,
+    .menu-sub-submenu,
+    .dropdown.show .topbar-btn,
+    .dropdown:hover .topbar-btn,
+    .topbar-btn:hover {
+      background-color: darken($sidebar-dark-bg, 2%);
+    }
+
+    .dropdown-item {
+      color: $color-alpha-light-text;
+
+      &:hover,
+      &:focus {
+        color: $color-alpha-light-text-active;
+        background-color: darken($sidebar-dark-bg, 3%);
+      }
+    }
+
+    .dropdown-divider {
+      border-top-color: rgba(255,255,255,0.07);
+    }
+
+    .menu-item:hover > .menu-link,
+    .menu-item.active > .menu-link {
+      color: $color-alpha-light-text-active;
+      border-top-color: $color-alpha-light-text;
+    }
+
+    .menu-link {
+      color: $color-alpha-light-text;
+    }
+
+    // Colors
+    //
+    @each $name, $color in $colors {
+      &.bg-#{$name} {
+        @include topbar-secondary-bg-variation($color);
+      }
+    }
+
+  }
+
+
+}

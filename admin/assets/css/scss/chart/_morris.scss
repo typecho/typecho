@@ -1,0 +1,19 @@
+
+
+.morris-hover {
+  z-index: $zindex-morris;
+}
+
+.morris-hover.morris-default-style {
+  border-radius: 2px;
+  padding: 8px 12px;
+  background: rgba(255,255,255,0.95);
+  font-family: inherit;
+  font-weight: 400;
+  border: 1px solid $color-divider-light;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+
+  .morris-hover-point {
+    text-align: left;
+  }
+}

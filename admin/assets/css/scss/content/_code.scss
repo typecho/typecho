@@ -1,0 +1,179 @@
+
+pre {
+  background-color: $color-bg-lighter;
+  border-left: 5px solid $color-divider;
+  padding: 12px;
+  border-radius: 3px;
+  color: $color-text-light;
+}
+
+code {
+  white-space: nowrap;
+  color: #ba5e63;
+}
+
+.code-bold {
+  color: #bd4147;
+  font-weight: 600;
+  letter-spacing: .5px;
+}
+
+kbd {
+  background-color: $color-dark;
+}
+
+.pre-scrollable {
+  max-height: 360px;
+}
+
+
+// Copy to clipboard button
+//
+.clipboard-copy {
+  position: absolute;
+  top: 6px;
+  right: 13px;
+  line-height: 20px;
+  opacity: 0;
+  z-index: 9;
+  transition: opacity .5s;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+pre:hover .clipboard-copy {
+  opacity: 1;
+  transition: transform 0s, opacity .5s;
+}
+
+
+
+// Prism
+//
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+  position: relative;
+  background-color: $color-bg-lighter;
+  padding-bottom: 12px;
+  margin-top: 0;
+  margin-bottom: 25px;
+  word-wrap: normal;
+  border: 1px solid $color-divider;
+}
+
+.line-numbers .line-numbers-rows {
+  border-right-color: $color-divider;
+}
+
+div.prism-show-language > div.prism-show-language-label {
+  border-radius: 0;
+  background-color: transparent;
+  color: $color-text-secondary;
+  font-family: $font-title;
+  font-size: 11px;
+  opacity: 0.5;
+  letter-spacing: 1px;
+  right: 8px;
+  top: 4px;
+}
+
+.prism-show-language {
+  display: none;
+}
+
+.line-highlight {
+  background: rgba(255,255,0,.1);
+}
+
+.token.badge {
+  font-size: 100%;
+  padding: 0;
+}
+
+
+
+
+// Code preview
+//
+.code-preview {
+  border: 1px solid $color-divider;
+  border-bottom: none;
+  padding: 20px;
+  background-color: #fff;
+
+  > *:last-child {
+    margin-bottom: 0;
+  }
+}
+
+
+
+
+// Code title
+//
+.code-title {
+  background-color: $color-bg-lighter;
+  border: 1px solid $color-divider;
+  border-bottom: none;
+  padding: 15px 20px;
+  margin-bottom: 0;
+
+  > *:last-child {
+    margin-bottom: 0;
+  }
+}
+
+
+
+
+// Code wrapper
+//
+.code {
+
+  margin-bottom: 30px;
+
+  &.code-fold pre {
+    display: none;
+  }
+
+  pre {
+    margin-bottom: 0;
+    //display: none;
+  }
+
+  &.show-language .prism-show-language {
+    display: block;
+  }
+}
+
+.code-card {
+  .code-title {
+    font-family: $font-body;
+  }
+
+  .code-preview {
+    padding: 0;
+  }
+}
+
+
+// Pre toggler
+//
+.code-toggler {
+  border-top: 1px solid $color-divider;
+  margin-top: -1px;
+  text-align: right;
+
+  .btn {
+    border-radius: 0;
+    background-color: $color-bg-lighter;
+    border-top: none;
+    color: $color-text-secondary;
+
+    i {
+      vertical-align: middle;
+    }
+  }
+}

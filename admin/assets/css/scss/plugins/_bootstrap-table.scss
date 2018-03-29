@@ -1,0 +1,122 @@
+
+//-----------------------------------------------------------------
+// Bootstrap tables
+//
+.bootstrap-table {
+  margin-bottom: 1rem;
+
+  .table {
+    padding: 0 !important;
+    border-bottom: 0;
+
+    td,
+    th {
+      padding: .75rem !important;
+    }
+
+    > thead > tr > th {
+      border-bottom-color: $color-divider;
+    }
+  }
+
+  // Separated
+  //
+  .table-separated {
+    border-collapse: separate !important;
+
+    > thead > tr > th {
+      border-bottom: 0;
+    }
+  }
+
+
+  // Sizes
+  //
+  .table-sm {
+    th,
+    td {
+      padding: .5rem !important;
+    }
+  }
+
+  .table-lg {
+    th,
+    td {
+      padding: 1rem !important;
+    }
+  }
+
+}
+
+.fixed-table-container {
+  border: none;
+  border-radius: 0;
+
+  thead th,
+  tbody td {
+    border-left: none;
+  }
+
+  thead th {
+    position: relative;
+
+    .th-inner {
+      background-image: none !important;
+      padding: 0;
+
+      &::before,
+      &::after {
+        content: '';
+        position: absolute;
+        right: 12px;
+        border-left: 4px solid transparent;
+        border-right: 4px solid transparent;
+      }
+    }
+
+    .both::before {
+      border-bottom: 8px solid $color-divider;
+      bottom: 55%;
+    }
+    .both::after {
+      border-top: 8px solid $color-divider;
+      top: 55%;
+    }
+
+    .desc::before {
+      display: none
+    }
+    .desc::after {
+      border-top-color: $color-text-secondary;
+    }
+
+    .asc::before {
+      border-bottom-color: $color-text-secondary;
+    }
+    .asc::after {
+      display: none;
+    }
+
+  }
+}
+
+.fixed-table-body {
+
+  .table > thead > tr > th {
+    border-bottom: none;
+  }
+
+  .card-view .title {
+    font-weight: 500;
+  }
+}
+
+.fixed-table-header .table {
+  th {
+    padding: 0 !important;
+  }
+
+  .th-inner {
+    padding: .75rem;
+  }
+}

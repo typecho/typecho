@@ -1,0 +1,361 @@
+
+.avatar {
+  $size: $height-md;
+  position: relative;
+  display: inline-block;
+  width: $size;
+  height: $size;
+  line-height: $size;
+  text-align: center;
+  border-radius: 100%;
+  background-color: $color-bg-light;
+  color: $color-text-secondary;
+  text-transform: uppercase;
+
+  img {
+    width: 100%;
+    height: 100%;
+    border-radius: 100%;
+    vertical-align: top;
+  }
+}
+
+.avatar-bordered {
+  border: 4px solid rgba(255, 255, 255, .25);
+  -webkit-background-clip: padding-box; /* for Safari */
+          background-clip: padding-box; /* for IE9+, Firefox 4+, Opera, Chrome */
+}
+
+.avatar-square {
+  border-radius: 0;
+}
+
+
+
+
+
+//-----------------------------------------------------------------
+// Sizes
+//
+.avatar-sm {
+  $size: $height-sm;
+  width: $size;
+  height: $size;
+  line-height: $size;
+  font-size: 0.75rem;
+}
+
+.avatar-lg {
+  $size: $height-lg;
+  width: $size;
+  height: $size;
+  line-height: $size;
+  font-size: 1.125rem;
+}
+
+.avatar-xl {
+  $size: $height-xl;
+  width: $size;
+  height: $size;
+  line-height: $size;
+  font-size: 1.25rem;
+}
+
+.avatar-xxl {
+  $size: $height-xxl;
+  width: $size;
+  height: $size;
+  line-height: $size;
+  font-size: 1.375rem;
+}
+
+.avatar-xxxl {
+  $size: $height-xxxl;
+  width: $size;
+  height: $size;
+  line-height: $size;
+  font-size: 1.5rem;
+}
+
+
+
+
+
+//-----------------------------------------------------------------
+// Pills
+//
+.avatar-pill {
+  width: auto;
+  border-radius: $height-md/2;
+  color: $color-text-light;
+  text-transform: none;
+  letter-spacing: 0;
+  background-color: $color-bg-lighter;
+  font-size: 0.875rem;
+
+  display: inline-flex;
+  align-items: center;
+
+  &:hover,
+  &:focus {
+    color: $color-text-light;
+    background-color: $color-bg-light;
+  }
+
+  img {
+    width: $height-md;
+  }
+
+  span {
+    padding-right: $height-md/2;
+    padding-left: 8px;
+  }
+
+  .close {
+    padding-left: 0;
+    padding-right: 8px;
+    font-size: 19px;
+    line-height: inherit;
+  }
+
+
+
+  // Sizes
+  //
+  &.avatar-sm {
+    $size: $height-sm;
+    border-radius: $size/2;
+    font-size: 0.8125rem;
+
+    img {
+      width: $size;
+    }
+
+    span {
+      padding-right: $size/2;
+    }
+
+    .close {
+      padding-right: 6px;
+      font-size: 18px;
+    }
+  }
+
+  &.avatar-lg {
+    $size: $height-lg;
+    border-radius: $size/2;
+    font-size: 0.9375rem;
+
+    img {
+      width: $size;
+    }
+
+    span {
+      padding-right: $size/2;
+    }
+
+    .close {
+      padding-right: 10px;
+      font-size: 20px;
+    }
+  }
+
+  &.avatar-xl {
+    $size: $height-xl;
+    border-radius: $size/2;
+    font-size: 1rem;
+
+    img {
+      width: $size;
+    }
+
+    span {
+      padding-right: $size/2;
+      padding-left: 12px;
+    }
+
+    .close {
+      padding-right: 12px;
+      font-size: 22px;
+    }
+  }
+
+  &.avatar-xxl {
+    $size: $height-xxl;
+    border-radius: $size/2;
+    font-size: 1.125rem;
+
+    img {
+      width: $size;
+    }
+
+    span {
+      padding-right: $size/2;
+      padding-left: 12px;
+    }
+
+    .close {
+      padding-right: 16px;
+      font-size: 24px;
+    }
+  }
+
+  &.avatar-xxxl {
+    $size: $height-xxxl;
+    border-radius: $size/2;
+    font-size: 1.25rem;
+
+    img {
+      width: $size;
+    }
+
+    span {
+      padding-right: $size/2;
+      padding-left: 12px;
+    }
+
+    .close {
+      padding-right: 20px;
+      font-size: 24px;
+    }
+  }
+
+
+}
+
+
+
+
+
+//-----------------------------------------------------------------
+// Status
+//
+.avatar[class*='status-'] {
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: 0px;
+    bottom: 0;
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    border: 2px solid #fff;
+    background-color: $color-primary;
+  }
+
+  &.avatar-sm::after          { right: -2px; width: 9px; height: 9px; }
+  &.avatar-lg::after          { right: 4px; }
+  &.avatar-xl::after          { right: 5px; width: 11px; height: 11px; }
+  &.avatar-xxl::after         { right: 15px; width: 12px; height: 12px; }
+  &.avatar-xxxl::after        { right: 25px; width: 16px; height: 16px; }
+}
+
+
+// Status colors
+.avatar.status-success::after { background-color: $color-success; }
+.avatar.status-info::after    { background-color: $color-info; }
+.avatar.status-warning::after { background-color: $color-warning; }
+.avatar.status-danger::after  { background-color: $color-danger; }
+.avatar.status-dark::after    { background-color: $color-dark; }
+
+
+
+
+
+
+//-----------------------------------------------------------------
+// Avatar list
+//
+.avatar-list {
+  display: inline-flex;
+
+  &:not(.avatar-list-overlap) {
+    @include gap-items(2px);
+  }
+}
+
+
+.avatar-list-overlap {
+
+  .avatar {
+    border: 2px solid #fff;
+    box-shadow: 0 0 25px rgba(0,0,0,0.2);
+    transition: .15s linear;
+  }
+
+  .avatar + .avatar {
+    margin-left: -16px;
+  }
+
+  .avatar + .avatar-sm   { margin-left: -12px; }
+  .avatar + .avatar-lg   { margin-left: -20px; }
+  .avatar + .avatar-xl   { margin-left: -26px; }
+  .avatar + .avatar-xxl  { margin-left: -36px; }
+  .avatar + .avatar-xxxl { margin-left: -48px; }
+
+  .overlap-exclude,
+  .avatar:hover + .avatar {
+    margin-left: 0;
+  }
+}
+
+
+
+
+
+
+
+//-----------------------------------------------------------------
+// Add avatar
+//
+.avatar-add {
+  font-family: $font-icon-themify;
+  background-color: transparent;
+  border: 1px dashed lighten($color-text-secondary, 10%);
+  color: $color-text-secondary;
+  font-size: 0.875rem;
+
+  &::before {
+    content: "\e61a";
+  }
+
+  &:hover {
+    background-color: $color-primary;
+    border-color: $color-primary;
+    color: #fff;
+  }
+}
+
+
+
+
+
+//-----------------------------------------------------------------
+// Avatar more
+//
+.avatar-more {
+
+  span {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    color: rgba(255,255,255,.8);
+    border-radius: 100%;
+    background-color: rgba(0,0,0,0.5);
+    transition: 0.3s ease;
+  }
+
+  &:hover span {
+    color: #fff;
+    background-color: rgba(0,0,0,0.65);
+  }
+
+}
+
+[data-provide~="more-avatar"] ~ .avatar {
+  display: none;
+}

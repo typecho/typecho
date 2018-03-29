@@ -1,0 +1,105 @@
+
+
+//-----------------------------------------------------------------
+// Image hover effects
+//
+[class*="img-hov-"] {
+  overflow: hidden;
+
+  img {
+    transition: .45s;
+    -webkit-backface-visibility: hidden;
+  }
+}
+
+.img-hov-fadein {
+  transition: .45s;
+  &:hover {
+    opacity: .7;
+  }
+}
+
+.img-hov-fadeout {
+  opacity: .7;
+  transition: .45s;
+  &:hover {
+    opacity: 1;
+  }
+}
+
+
+.img-hov-zoomin img {
+  &:hover {
+    transform: scale(1.045);
+  }
+}
+
+.img-hov-zoomout img {
+  transform: scale(1.045);
+  &:hover {
+    transform: scale(1);
+  }
+}
+
+.img-hov-stretchin img {
+  transform-origin: left top 0;
+  &:hover {
+    transform: scale(1.045);
+  }
+}
+
+.img-hov-stretchout img {
+  transform-origin: left top 0;
+  transform: scale(1.045);
+  &:hover {
+    transform: scale(1);
+  }
+}
+
+
+.img-hov-slideleft img {
+  transform-origin: left center 0;
+  transform: scale(1.045) translateX(0);
+  &:hover {
+    transform: scale(1.045) translateX(-4.5%);
+  }
+}
+
+.img-hov-slideright img {
+  transform-origin: right center 0;
+  transform: scale(1.045) translateX(0);
+  &:hover {
+    transform: scale(1.045) translateX(4.5%);
+  }
+}
+
+.img-hov-slideup img {
+  transform-origin: center top 0;
+  transform: scale(1.045) translateY(0);
+  &:hover {
+    transform: scale(1.045) translateY(-4.5%);
+  }
+}
+
+.img-hov-slidedown img {
+  transform-origin: center bottom 0;
+  transform: scale(1.045) translateY(0);
+  &:hover {
+    transform: scale(1.045) translateY(4.5%);
+  }
+}
+
+
+.img-hov-rotateleft img {
+  transform: rotateZ(0) scale(1);
+  &:hover {
+    transform: rotateZ(-5deg) scale(1.1);
+  }
+}
+
+.img-hov-rotateright img {
+  transform: rotateZ(0) scale(1);
+  &:hover {
+    transform: rotateZ(5deg) scale(1.1);
+  }
+}

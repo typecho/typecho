@@ -1,0 +1,155 @@
+
+.switch {
+  font-weight: 300;
+  letter-spacing: 0;
+  margin-bottom: 0;
+  line-height: $height-sm;
+  cursor: pointer;
+  white-space: nowrap;
+
+  input {
+    display: none;
+
+    &:checked ~ .switch-indicator {
+      background: $color-pale-primary;
+
+      &::after {
+        background: $color-primary;
+        left: calc(100% - 20px);
+        box-shadow: 0px 0px 3px $color-bg-lightest;
+      }
+    }
+
+    &:disabled ~ span {
+      cursor: not-allowed;
+      opacity: .5;
+    }
+  }
+
+  &.disabled {
+    opacity: .5;
+    cursor: not-allowed;
+  }
+
+}
+
+.switch-indicator {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 10px;
+  background: $color-bg-dark;
+  border-radius: 20px;
+  vertical-align: middle;
+  transition: 0.3s;
+
+  &::after {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 20px;
+    height: 20px;
+    transition: 0.3s;
+    cursor: inherit;
+    background: #fff;
+    border-radius: 50%;
+    top: -5px;
+    box-shadow: 0px 0px 3px #bbb;
+  }
+}
+
+.switch-description {
+  padding-left: 6px;
+}
+
+//-----------------------------------------------------------------
+// Varieties
+//
+.switch-border {
+
+  input:checked + .switch-indicator {
+    border-color: $color-pale-primary;
+
+    &::after {
+      left: calc(100% - 14px);
+    }
+  }
+
+  .switch-indicator {
+    border: 2px solid $color-bg-dark;
+    background: transparent !important;
+    height: 20px;
+
+    &::after {
+      background: darken($color-bg-dark, 5%);
+      border-radius: 50%;
+      width: 12px;
+      height: 12px;
+      top: 2px;
+      left: 2px;
+      box-shadow: none;
+    }
+  }
+}
+
+
+.switch-sm .switch-indicator {
+  height: 4px;
+  border-radius: 0;
+
+  &::after {
+    top: -8px;
+  }
+}
+
+
+.switch-lg {
+
+  input:checked + .switch-indicator::after {
+    left: calc(100% - 18px);
+  }
+
+  .switch-indicator {
+    height: 20px;
+
+    &::after {
+      background: #fff;
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      top: 2px;
+      left: 2px;
+    }
+  }
+}
+
+//
+// Stacked
+//
+.switch-stacked .switch {
+  display: inline;
+
+  &::after {
+    display: block;
+    margin-bottom: .25rem;
+    content: "";
+  }
+
+}
+
+//
+// Colors
+//
+.switch-secondary { @include switch-colors($color-secondary, $color-pale-secondary); }
+.switch-success   { @include switch-colors($color-success, $color-pale-success); }
+.switch-info      { @include switch-colors($color-info, $color-pale-info); }
+.switch-warning   { @include switch-colors($color-warning, $color-pale-warning); }
+.switch-danger    { @include switch-colors($color-danger, $color-pale-danger); }
+.switch-gray      { @include switch-colors($color-gray, $color-pale-gray); }
+.switch-dark      { @include switch-colors($color-dark, $color-pale-dark); }
+.switch-pink      { @include switch-colors($color-pink, $color-pale-pink); }
+.switch-purple    { @include switch-colors($color-purple, $color-pale-purple); }
+.switch-brown    { @include switch-colors($color-brown, $color-pale-brown); }
+.switch-cyan      { @include switch-colors($color-cyan, $color-pale-cyan); }

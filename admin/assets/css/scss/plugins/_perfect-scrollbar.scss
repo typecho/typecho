@@ -1,0 +1,89 @@
+
+.scrollable {
+  //position: relative;
+}
+
+
+.ps-container {
+  position: relative;
+}
+
+
+.ps-container > {
+
+  .ps-scrollbar-x-rail {
+    height: 3px;
+
+    > .ps-scrollbar-x {
+      background-color: rgba(0,0,0,.25);
+      border-radius: 0;
+      height: 3px;
+      bottom: 0;
+    }
+
+    &:hover,
+    &:active {
+      &,
+      > .ps-scrollbar-x {
+        height: 7px;
+      }
+    }
+  }
+
+  .ps-scrollbar-y-rail {
+    width: 3px;
+    right: 2px !important;
+
+    > .ps-scrollbar-y {
+      background-color: rgba(0,0,0,.25);
+      border-radius: 0;
+      width: 3px;
+      right: 0;
+    }
+
+    &:hover,
+    &:active {
+      &,
+      > .ps-scrollbar-y {
+        width: 7px;
+      }
+    }
+  }
+}
+
+
+.ps-container.ps-in-scrolling.ps-x > .ps-scrollbar-x-rail,
+.ps-container.ps-in-scrolling.ps-y > .ps-scrollbar-y-rail {
+  background-color: rgba(0,0,0,.1);
+}
+
+.ps-container:hover.ps-in-scrolling.ps-x > .ps-scrollbar-x-rail > .ps-scrollbar-x,
+.ps-container.ps-in-scrolling.ps-x > .ps-scrollbar-x-rail > .ps-scrollbar-x {
+  background-color: rgba(0,0,0,.4);
+  height: 7px;
+}
+
+.ps-container:hover.ps-in-scrolling.ps-y > .ps-scrollbar-y-rail > .ps-scrollbar-y,
+.ps-container.ps-in-scrolling.ps-y > .ps-scrollbar-y-rail > .ps-scrollbar-y {
+  background-color: rgba(0,0,0,.4);
+  width: 7px;
+}
+
+
+.ps-container:hover > .ps-scrollbar-x-rail:hover,
+.ps-container:hover > .ps-scrollbar-y-rail:hover,
+.ps-container.ps-in-scrolling.ps-x > .ps-scrollbar-x-rail,
+.ps-container.ps-in-scrolling.ps-y > .ps-scrollbar-y-rail,
+.ps-container:hover.ps-in-scrolling.ps-x > .ps-scrollbar-x-rail,
+.ps-container:hover.ps-in-scrolling.ps-y > .ps-scrollbar-y-rail {
+  background-color: rgba(0,0,0,.1);
+}
+
+.ps-container:hover > .ps-scrollbar-x-rail:hover > .ps-scrollbar-x,
+.ps-container:hover > .ps-scrollbar-y-rail:hover > .ps-scrollbar-y,
+.ps-container.ps-in-scrolling.ps-x > .ps-scrollbar-x-rail > .ps-scrollbar-x,
+.ps-container.ps-in-scrolling.ps-y > .ps-scrollbar-y-rail > .ps-scrollbar-y,
+.ps-container:hover.ps-in-scrolling.ps-x > .ps-scrollbar-x-rail > .ps-scrollbar-x,
+.ps-container:hover.ps-in-scrolling.ps-y > .ps-scrollbar-y-rail > .ps-scrollbar-y {
+  background-color: rgba(0,0,0,.3);
+}

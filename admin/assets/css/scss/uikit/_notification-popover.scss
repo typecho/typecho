@@ -1,0 +1,43 @@
+
+.popover {
+  font-family: $font-body;
+  border-color: $color-divider;
+  border-radius: 2px;
+
+  &.bs-popover-bottom .arrow::before {
+    border-bottom-color: $color-divider;
+  }
+
+  &.bs-popover-bottom .arrow::after {
+    border-bottom-color: $color-bg-lightest;
+  }
+
+  &.bs-popover-top .arrow::before {
+    border-top-color: $color-divider;
+  }
+
+  &.bs-popover-left .arrow::before {
+    border-left-color: $color-divider;
+  }
+
+  &.bs-popover-right .arrow::before {
+    border-right-color: $color-divider;
+  }
+
+}
+
+
+.popover-header {
+  background-color: $color-bg-lightest;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  font-family: $font-body;
+  font-size: 14px;
+  font-weight: 400;
+  color: $color-text-light;
+  border-bottom-color: $color-divider-light;
+}
+
+.popover-body {
+  font-weight: 300;
+}

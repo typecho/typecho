@@ -1,0 +1,650 @@
+[
+{
+  "title": "Accordions",
+  "url": "uikit/panel-accordion.html",
+  "description": "uikit/panel-accordion.html",
+  "tokens": "panel accordion collapse"
+},
+{
+  "title": "Tabs",
+  "url": "uikit/panel-tab.html",
+  "description": "uikit/panel-tab.html",
+  "tokens": "panel tab"
+},
+{
+  "title": "Process Navigation",
+  "url": "uikit/progress-process.html",
+  "description": "uikit/progress-process.html",
+  "tokens": "progress process step"
+},
+{
+  "title": "Progressbar",
+  "url": "uikit/progress-progressbar.html",
+  "description": "uikit/progress-progressbar.html",
+  "tokens": "progress progressbar"
+},
+{
+  "title": "Spinners",
+  "url": "uikit/progress-spinner.html",
+  "description": "uikit/progress-spinner.html",
+  "tokens": "progress spinner loader material indicator"
+},
+{
+  "title": "Activity Timeline",
+  "url": "uikit/timeline-activity.html",
+  "description": "uikit/timeline-activity.html",
+  "tokens": "timeline activity"
+},
+{
+  "title": "Timeline",
+  "url": "uikit/timeline.html",
+  "description": "uikit/timeline.html",
+  "tokens": "timeline activity"
+},
+{
+  "title": "Knob",
+  "url": "form/addon-knob.html",
+  "description": "form/addon-knob.html",
+  "tokens": "knob"
+},
+{
+  "title": "Misc Addons",
+  "url": "form/addon-misc.html",
+  "description": "form/addon-misc.html",
+  "tokens": "maxlength password strength"
+},
+{
+  "title": "Sliders",
+  "url": "form/addon-slider.html",
+  "description": "form/addon-slider.html",
+  "tokens": "slider noUiSlider range"
+},
+{
+  "title": "Tagsinput",
+  "url": "form/addon-tagsinput.html",
+  "description": "form/addon-tagsinput.html",
+  "tokens": "tagsinput"
+},
+{
+  "title": "Typeahead",
+  "url": "form/addon-typeahead.html",
+  "description": "form/addon-typeahead.html",
+  "tokens": "typeaheads twitter auto complete"
+},
+{
+  "title": "Checkbox",
+  "url": "form/control-checkbox.html",
+  "description": "form/control-checkbox.html",
+  "tokens": "checkbox"
+},
+{
+  "title": "Radio",
+  "url": "form/control-radio.html",
+  "description": "form/control-radio.html",
+  "tokens": "radio"
+},
+{
+  "title": "Switch Control",
+  "url": "form/control-switch.html",
+  "description": "form/control-switch.html",
+  "tokens": "switch"
+},
+{
+  "title": "Quill Editor",
+  "url": "form/editor-quill.html",
+  "description": "form/editor-quill.html",
+  "tokens": "editor wysiwyg quill"
+},
+{
+  "title": "Summernote Editor",
+  "url": "form/editor-summernote.html",
+  "description": "form/editor-summernote.html",
+  "tokens": "editor wysiwyg summernote"
+},
+{
+  "title": "Combined Inputs",
+  "url": "form/input-combine.html",
+  "description": "form/input-combine.html",
+  "tokens": "input form control combine select textarea"
+},
+{
+  "title": "Default Inputs",
+  "url": "form/input-default.html",
+  "description": "form/input-default.html",
+  "tokens": "input form control select textarea"
+},
+{
+  "title": "Filled Inputs",
+  "url": "form/input-fill.html",
+  "description": "form/input-fill.html",
+  "tokens": "input form control fill select textarea"
+},
+{
+  "title": "Line Inputs",
+  "url": "form/input-line.html",
+  "description": "form/input-line.html",
+  "tokens": "input form control line select textarea"
+},
+{
+  "title": "Material Inputs",
+  "url": "form/input-material.html",
+  "description": "form/input-material.html",
+  "tokens": "input form control material select textarea"
+},
+{
+  "title": "Rounded Inputs",
+  "url": "form/input-round.html",
+  "description": "form/input-round.html",
+  "tokens": "input form control round select textarea"
+},
+{
+  "title": "Form Layouts",
+  "url": "form/layout.html",
+  "description": "form/layout.html",
+  "tokens": "form layout"
+},
+{
+  "title": "Lookup",
+  "url": "form/lookup.html",
+  "description": "form/lookup.html",
+  "tokens": "form lookup search"
+},
+{
+  "title": "Mask",
+  "url": "form/mask.html",
+  "description": "form/mask.html",
+  "tokens": "mask formatter"
+},
+{
+  "title": "Color Pickers",
+  "url": "form/picker-color.html",
+  "description": "form/picker-color.html",
+  "tokens": "color picker selector minicolors"
+},
+{
+  "title": "Date and Time Pickers",
+  "url": "form/picker-datetime.html",
+  "description": "form/picker-datetime.html",
+  "tokens": "date time datetime datepicker timepicker clockpicker"
+},
+{
+  "title": "Rating and Toggler",
+  "url": "form/picker-rating.html",
+  "description": "form/picker-rating.html",
+  "tokens": "star rating toggler like"
+},
+{
+  "title": "Bootstrap select",
+  "url": "form/picker-select.html",
+  "description": "form/picker-select.html",
+  "tokens": "bootstrap select picker"
+},
+{
+  "title": "Multiline Publisher",
+  "url": "form/publisher-multi.html",
+  "description": "form/publisher-multi.html",
+  "tokens": "publisher multiline"
+},
+{
+  "title": "Single Line Publisher",
+  "url": "form/publisher-single.html",
+  "description": "form/publisher-single.html",
+  "tokens": "publisher single"
+},
+{
+  "title": "Dropify Uploader",
+  "url": "form/upload-dropify.html",
+  "description": "form/upload-dropify.html",
+  "tokens": "upload dropify"
+},
+{
+  "title": "Dropzone",
+  "url": "form/upload-dropzone.html",
+  "description": "form/upload-dropzone.html",
+  "tokens": "upload dropzone"
+},
+{
+  "title": "Uploaders",
+  "url": "form/upload.html",
+  "description": "form/upload.html",
+  "tokens": "upload"
+},
+{
+  "title": "Form Validation",
+  "url": "form/validation.html",
+  "description": "form/validation.html",
+  "tokens": "validation validator"
+},
+{
+  "title": "Form Wizard",
+  "url": "form/wizard.html",
+  "description": "form/wizard.html",
+  "tokens": "wizard"
+},
+{
+  "title": "Chartjs",
+  "url": "chart/chartjs.html",
+  "description": "chart/chartjs.html",
+  "tokens": "chartjs line bar bubble pie radar polar"
+},
+{
+  "title": "EasyPieChart",
+  "url": "chart/easypiechart.html",
+  "description": "chart/easypiechart.html",
+  "tokens": "chart easypiechart pie scale"
+},
+{
+  "title": "Morris Chart",
+  "url": "chart/morris.html",
+  "description": "chart/morris.html",
+  "tokens": "morris chart line area bar pie"
+},
+{
+  "title": "Peity",
+  "url": "chart/peity.html",
+  "description": "chart/peity.html",
+  "tokens": "peity chart line bar pie"
+},
+{
+  "title": "Sparkline",
+  "url": "chart/sparkline.html",
+  "description": "chart/sparkline.html",
+  "tokens": "chart sparkline"
+},
+{
+  "title": "App Widgets",
+  "url": "widget/app.html",
+  "description": "widget/app.html",
+  "tokens": "widget app chat todo"
+},
+{
+  "title": "Blog Widgets",
+  "url": "widget/blog.html",
+  "description": "widget/blog.html",
+  "tokens": "widget blog post"
+},
+{
+  "title": "Chart Widgets",
+  "url": "widget/chart.html",
+  "description": "widget/chart.html",
+  "tokens": "widget chart"
+},
+{
+  "title": "Form Widgets",
+  "url": "widget/form.html",
+  "description": "widget/form.html",
+  "tokens": "widget form payment"
+},
+{
+  "title": "List Widgets",
+  "url": "widget/list.html",
+  "description": "widget/list.html",
+  "tokens": "widget list table comments popular recent"
+},
+{
+  "title": "Social Widgets",
+  "url": "widget/social.html",
+  "description": "widget/social.html",
+  "tokens": "widget social facebook twitter user profile"
+},
+{
+  "title": "Statistic Widgets",
+  "url": "widget/statistic.html",
+  "description": "widget/statistic.html",
+  "tokens": "widget statistic"
+},
+{
+  "title": "Calendar",
+  "url": "page-app/calendar.html",
+  "description": "page-app/calendar.html",
+  "tokens": "app calendar scheduler"
+},
+{
+  "title": "Chat",
+  "url": "page-app/chat.html",
+  "description": "page-app/chat.html",
+  "tokens": "app chat message messenger"
+},
+{
+  "title": "Mailbox Single",
+  "url": "page-app/mailbox-single.html",
+  "description": "page-app/mailbox-single.html",
+  "tokens": "mail email conversation mailbox"
+},
+{
+  "title": "Mailbox",
+  "url": "page-app/mailbox.html",
+  "description": "page-app/mailbox.html",
+  "tokens": "mail email conversation mailbox"
+},
+{
+  "title": "Users",
+  "url": "page-app/users.html",
+  "description": "page-app/users.html",
+  "tokens": "users contacts customers clients"
+},
+{
+  "title": "Frequently asked questions",
+  "url": "page/faq-1.html",
+  "description": "page/faq-1.html",
+  "tokens": "faq"
+},
+{
+  "title": "Frequently asked questions",
+  "url": "page/faq-2.html",
+  "description": "page/faq-2.html",
+  "tokens": "faq"
+},
+{
+  "title": "Frequently asked questions",
+  "url": "page/faq-3.html",
+  "description": "page/faq-3.html",
+  "tokens": "faq"
+},
+{
+  "title": "Basic Gallery",
+  "url": "page/gallery-basic.html",
+  "description": "page/gallery-basic.html",
+  "tokens": "gallery"
+},
+{
+  "title": "Justified Gallery",
+  "url": "page/gallery-justified.html",
+  "description": "page/gallery-justified.html",
+  "tokens": "gallery justified"
+},
+{
+  "title": "Masonry Gallery",
+  "url": "page/gallery-masonry.html",
+  "description": "page/gallery-masonry.html",
+  "tokens": "gallery masonry"
+},
+{
+  "title": "Shuffle Gallery",
+  "url": "page/gallery-shuffle.html",
+  "description": "page/gallery-shuffle.html",
+  "tokens": "gallery shuffle"
+},
+{
+  "title": "Galleries",
+  "url": "page/gallery.html",
+  "description": "page/gallery.html",
+  "tokens": "gallery"
+},
+{
+  "title": "Invoice 1",
+  "url": "page/invoice-1.html",
+  "description": "page/invoice-1.html",
+  "tokens": "invoice receipt"
+},
+{
+  "title": "Invoice 2",
+  "url": "page/invoice-2.html",
+  "description": "page/invoice-2.html",
+  "tokens": "invoice receipt"
+},
+{
+  "title": "Google map",
+  "url": "page/map-google.html",
+  "description": "page/map-google.html",
+  "tokens": "map google"
+},
+{
+  "title": "Mapael map",
+  "url": "page/map-mapael.html",
+  "description": "page/map-mapael.html",
+  "tokens": "map vector mapael"
+},
+{
+  "title": "Pricing tables",
+  "url": "page/pricing.html",
+  "description": "page/pricing.html",
+  "tokens": "pricing"
+},
+{
+  "title": "Profile",
+  "url": "page/profile.html",
+  "description": "page/profile.html",
+  "tokens": "profile user timeline"
+},
+{
+  "title": "Categorized Search Result",
+  "url": "page/search-categorized.html",
+  "description": "page/search-categorized.html",
+  "tokens": "search result"
+},
+{
+  "title": "Classic Search Results",
+  "url": "page/search.html",
+  "description": "page/search.html",
+  "tokens": "search result"
+},
+{
+  "title": "User list",
+  "url": "page/userlist-grid.html",
+  "description": "page/userlist-grid.html",
+  "tokens": "users userlist usergrid contacts customers clients"
+},
+{
+  "title": "User list",
+  "url": "page/userlist.html",
+  "description": "page/userlist.html",
+  "tokens": "users userlist contacts clients customers"
+},
+{
+  "title": "Blank page",
+  "url": "page-extra/blank.html",
+  "description": "page-extra/blank.html",
+  "tokens": "blank starter"
+},
+{
+  "title": "Coming soon 1",
+  "url": "page-extra/coming-soon-1.html",
+  "description": "page-extra/coming-soon-1.html",
+  "tokens": "coming soon landing"
+},
+{
+  "title": "Coming soon 2",
+  "url": "page-extra/coming-soon-2.html",
+  "description": "page-extra/coming-soon-2.html",
+  "tokens": "coming soon landing"
+},
+{
+  "title": "Coming soon 3",
+  "url": "page-extra/coming-soon-3.html",
+  "description": "page-extra/coming-soon-3.html",
+  "tokens": "coming soon landing"
+},
+{
+  "title": "Coming soon",
+  "url": "page-extra/coming-soon.html",
+  "description": "page-extra/coming-soon.html",
+  "tokens": "coming soon landing"
+},
+{
+  "title": "Page not found",
+  "url": "page-extra/error-404.html",
+  "description": "page-extra/error-404.html",
+  "tokens": "not found 404 error"
+},
+{
+  "title": "Internal server error",
+  "url": "page-extra/error-500.html",
+  "description": "page-extra/error-500.html",
+  "tokens": "error 500"
+},
+{
+  "title": "Error Pages",
+  "url": "page-extra/error.html",
+  "description": "page-extra/error.html",
+  "tokens": "error 404 500"
+},
+{
+  "title": "Under maintenance",
+  "url": "page-extra/maintenance.html",
+  "description": "page-extra/maintenance.html",
+  "tokens": "maintenance"
+},
+{
+  "title": "Lockscreen Page 1",
+  "url": "page-extra/user-lock-1.html",
+  "description": "page-extra/user-lock-1.html",
+  "tokens": "lock lockscreen"
+},
+{
+  "title": "Lockscreen Page 2",
+  "url": "page-extra/user-lock-2.html",
+  "description": "page-extra/user-lock-2.html",
+  "tokens": "lock lockscreen"
+},
+{
+  "title": "Lockscreen Page 3",
+  "url": "page-extra/user-lock-3.html",
+  "description": "page-extra/user-lock-3.html",
+  "tokens": "lock lockscreen"
+},
+{
+  "title": "Lockscreen Pages",
+  "url": "page-extra/user-lock.html",
+  "description": "page-extra/user-lock.html",
+  "tokens": "lock lockscreen"
+},
+{
+  "title": "Login Page 1",
+  "url": "page-extra/user-login-1.html",
+  "description": "page-extra/user-login-1.html",
+  "tokens": "login signin"
+},
+{
+  "title": "Login Page 2",
+  "url": "page-extra/user-login-2.html",
+  "description": "page-extra/user-login-2.html",
+  "tokens": "login signin"
+},
+{
+  "title": "Login Page 3",
+  "url": "page-extra/user-login-3.html",
+  "description": "page-extra/user-login-3.html",
+  "tokens": "login signin"
+},
+{
+  "title": "Login Pages",
+  "url": "page-extra/user-login.html",
+  "description": "page-extra/user-login.html",
+  "tokens": "login signin"
+},
+{
+  "title": "Recover Password 1",
+  "url": "page-extra/user-pass-1.html",
+  "description": "page-extra/user-pass-1.html",
+  "tokens": "forget password"
+},
+{
+  "title": "Recover Password 2",
+  "url": "page-extra/user-pass-2.html",
+  "description": "page-extra/user-pass-2.html",
+  "tokens": "forget password"
+},
+{
+  "title": "Recover Password 3",
+  "url": "page-extra/user-pass-3.html",
+  "description": "page-extra/user-pass-3.html",
+  "tokens": "forget password"
+},
+{
+  "title": "Forget Password Pages",
+  "url": "page-extra/user-pass.html",
+  "description": "page-extra/user-pass.html",
+  "tokens": "forget password"
+},
+{
+  "title": "User Registration 1",
+  "url": "page-extra/user-register-1.html",
+  "description": "page-extra/user-register-1.html",
+  "tokens": "register signup"
+},
+{
+  "title": "User Registration 2",
+  "url": "page-extra/user-register-2.html",
+  "description": "page-extra/user-register-2.html",
+  "tokens": "register signup"
+},
+{
+  "title": "User Registration 3",
+  "url": "page-extra/user-register-3.html",
+  "description": "page-extra/user-register-3.html",
+  "tokens": "register signup"
+},
+{
+  "title": "User Registration Pages",
+  "url": "page-extra/user-register.html",
+  "description": "page-extra/user-register.html",
+  "tokens": "register signup"
+},
+{
+  "title": "Emails",
+  "url": "email/index.html",
+  "description": "email/index.html",
+  "tokens": "email marketing mail"
+},
+{
+  "title": "Build tools",
+  "url": "help/article-build-tools.html",
+  "description": "help/article-build-tools.html",
+  "tokens": "build tools grunt"
+},
+{
+  "title": "Dependency injection",
+  "url": "help/article-dependency-injection.html",
+  "description": "help/article-dependency-injection.html",
+  "tokens": "depencency injection provide"
+},
+{
+  "title": "Directory structure",
+  "url": "help/article-directory-structure.html",
+  "description": "help/article-directory-structure.html",
+  "tokens": "contents directory structure"
+},
+{
+  "title": "Html structure",
+  "url": "help/article-html-structure.html",
+  "description": "help/article-html-structure.html",
+  "tokens": "html structure"
+},
+{
+  "title": "Introduction",
+  "url": "help/article-introduction.html",
+  "description": "help/article-introduction.html",
+  "tokens": "introduction"
+},
+{
+  "title": "Quick start",
+  "url": "help/article-quick-start.html",
+  "description": "help/article-quick-start.html",
+  "tokens": "quick start"
+},
+{
+  "title": "List of Articles",
+  "url": "help/articles.html",
+  "description": "help/articles.html",
+  "tokens": "articles"
+},
+{
+  "title": "Changelog",
+  "url": "help/changelog.html",
+  "description": "help/changelog.html",
+  "tokens": "changelog"
+},
+{
+  "title": "License FAQs",
+  "url": "help/faq-license.html",
+  "description": "help/faq-license.html",
+  "tokens": "faq license"
+},
+{
+  "title": "Technical FAQs",
+  "url": "help/faq-technical.html",
+  "description": "help/faq-technical.html",
+  "tokens": "faq"
+}
+]

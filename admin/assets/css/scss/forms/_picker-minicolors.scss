@@ -1,0 +1,50 @@
+
+.minicolors-panel {
+  border-color: $color-divider;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.09);
+}
+
+.minicolors-theme-bootstrap .minicolors-input-swatch {
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  border: none;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+}
+
+.minicolors-theme-bootstrap .minicolors-swatches .minicolors-swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border-color: $color-divider;
+}
+
+.minicolors-swatches .minicolors-swatch {
+  margin-right: 6px;
+}
+
+.minicolors input[type=hidden] + .minicolors-swatch {
+  width: 20px;
+  transform: translateY(0);
+}
+
+.minicolors-theme-bootstrap .minicolors-input {
+  padding-left: 40px !important;
+}
+
+
+// Material forms
+//
+.form-type-line,
+.form-type-material {
+
+  .minicolors-theme-bootstrap .minicolors-input-swatch {
+    left: 0;
+  }
+
+  .minicolors-theme-bootstrap .minicolors-input {
+    padding-left: 28px !important;
+  }
+}

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bubble Theme - Quill</title>
+  <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="language" content="english">
+<meta name="viewport" content="width=device-width">
+
+<meta name="description" content="Quill is a free, open source WYSIWYG editor built for the modern web. With its modular architecture and expressive API, it is completely customizable to fit any need.">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@quilljs">
+
+<meta name="twitter:title" content="Bubble Theme - Quill">
+
+<meta name="twitter:description" content="Quill is a free, open source WYSIWYG editor built for the modern web.">
+<meta name="twitter:image" content="http://quilljs.com/assets/images/brand-asset.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="http://quilljs.com/standalone/bubble/">
+<meta property="og:image" content="http://quilljs.com/assets/images/brand-asset.png">
+<meta property="og:title" content="Bubble Theme - Quill">
+<meta property="og:site_name" content="Quill">
+ 
+<link type="application/atom+xml" rel="alternate" href="https://quilljs.com/feed.xml" title="Quill - Your powerful, rich text editor" />
+  
+  
+<link rel="stylesheet" href="../quill.bubble.css" />
+
+<style>
+  .standalone-container {
+    margin: 50px auto;
+    max-width: 720px;
+  }
+  #bubble-container {
+    height: 350px;
+  }
+</style>
+
+
+</head>
+<body>
+  
+<div class="standalone-container">
+  <div id="bubble-container"></div>
+</div>
+
+  
+  
+<script type="text/javascript" src="../quill.min.js"></script>
+
+<script type="text/javascript">
+  var quill = new Quill('#bubble-container', {
+    placeholder: 'Compose an epic...',
+    theme: 'bubble'
+  });
+</script>
+
+
+</body>
+</html>

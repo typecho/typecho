@@ -1,0 +1,990 @@
+//-----------------------------------------------------------------
+// Common style
+//
+.teaser {
+  background: $color-dark;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  cursor: pointer;
+
+  img {
+    position: relative;
+    display: block;
+    min-height: 100%;
+    max-width: 100%;
+    width: 100%;
+    opacity: 0.7;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  figcaption {
+    padding: 2em;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 1.25em;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+
+    &::before,
+    &::after {
+      pointer-events: none;
+    }
+
+    &,
+    > a:not(.btn) {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    > a {
+      text-indent: 200%;
+      white-space: nowrap;
+      font-size: 0;
+      opacity: 0;
+    }
+  }
+
+  h2,
+  h3,
+  h4 {
+    color: #fff;
+    font-family: $font-body;
+    font-weight: 300;
+    margin: 0;
+
+    span {
+      font-weight: 500;
+    }
+  }
+
+  p {
+    letter-spacing: 1px;
+    font-size: 68.5%;
+    margin: 0;
+  }
+
+}
+
+
+
+
+
+
+//-----------------------------------------------------------------
+// Individual effects
+//
+
+// Honey
+//
+.teaser-honey {
+
+  img {
+    opacity: 0.9;
+    transition: opacity 0.35s;
+  }
+
+  figcaption::before {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background: $color-primary;
+    content: '';
+    transform: translate3d(0,10px,0);
+  }
+
+  h3 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 1em 1.5em;
+    width: 100%;
+    text-align: left;
+    transform: translate3d(0,-30px,0);
+  }
+
+  h3 i {
+    font-style: normal;
+    opacity: 0;
+    transition: opacity 0.35s, transform 0.35s;
+    transform: translate3d(0,-30px,0);
+  }
+
+  figcaption::before,
+  h3 {
+    transition: transform 0.35s;
+  }
+
+  &:hover img {
+    opacity: 0.5;
+  }
+
+  &:hover figcaption::before,
+  &:hover h3,
+  &:hover h3 i {
+    opacity: 1;
+    transform: translate3d(0,0,0);
+  }
+}
+
+
+
+
+
+// Zoe
+//
+.teaser-zoe {
+
+  figcaption {
+    top: auto;
+    bottom: 0;
+    padding: 1em;
+    height: 3.75em;
+    background: #fff;
+    color: #3c4a50;
+    transition: transform 0.35s;
+    transform: translate3d(0,100%,0);
+  }
+
+  h3 {
+    color: $color-title;
+    float: left;
+  }
+
+  .icon-links a {
+    float: right;
+    color: $color-text;
+    font-size: 1.4em;
+  }
+
+  &:hover .icon-links a:hover,
+  &:hover .icon-links a:focus {
+    color: $color-title;
+  }
+
+  p.description {
+    position: absolute;
+    bottom: 8em;
+    padding: 2em;
+    color: #fff;
+    text-transform: none;
+    font-size: 90%;
+    opacity: 0;
+    transition: opacity 0.35s;
+    -webkit-backface-visibility: hidden;
+  }
+
+  h3,
+  .icon-links a {
+    transition: transform 0.35s;
+    transform: translate3d(0,200%,0);
+  }
+
+  .icon-links a span::before {
+    padding: 8px 10px;
+  }
+
+  h3 {
+    display: inline-block;
+  }
+
+  &:hover p.description {
+    opacity: 1;
+  }
+
+  &:hover figcaption,
+  &:hover h3,
+  &:hover .icon-links a {
+    transform: translate3d(0,0,0);
+  }
+
+  &:hover h3 {
+    transition-delay: 0.05s;
+  }
+
+  &:hover .icon-links a:nth-child(3) {
+    transition-delay: 0.1s;
+  }
+
+  &:hover .icon-links a:nth-child(2) {
+    transition-delay: 0.15s;
+  }
+
+  &:hover .icon-links a:first-child {
+    transition-delay: 0.2s;
+  }
+
+}
+
+
+
+
+
+// Marley
+//
+.teaser-marley {
+
+  figcaption {
+    text-align: right;
+  }
+
+  h3,
+  p {
+    position: absolute;
+    right: 30px;
+    left: 30px;
+    padding: 10px 0;
+  }
+
+  p {
+    bottom: 30px;
+    line-height: 1.5;
+    transform: translate3d(0,100%,0);
+  }
+
+  h3 {
+    top: 30px;
+    transition: transform 0.35s;
+    transform: translate3d(0,20px,0);
+  }
+
+  &:hover h3 {
+    transform: translate3d(0,0,0);
+  }
+
+  h3::after {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: #fff;
+    content: '';
+    transform: translate3d(0,40px,0);
+  }
+
+  h3::after,
+  p {
+    opacity: 0;
+    transition: opacity 0.35s, transform 0.35s;
+  }
+
+  &:hover h3::after,
+  &:hover p {
+    opacity: 1;
+    transform: translate3d(0,0,0);
+  }
+
+}
+
+
+
+
+
+// Bubba
+//
+.teaser-bubba {
+
+  img {
+    opacity: 0.7;
+    transition: opacity 0.35s;
+  }
+
+  &:hover img {
+    opacity: 0.4;
+  }
+
+  figcaption::before,
+  figcaption::after {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    bottom: 30px;
+    left: 30px;
+    content: '';
+    opacity: 0;
+    transition: opacity 0.35s, transform 0.35s;
+  }
+
+  figcaption::before {
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #fff;
+    transform: scale(0,1);
+  }
+
+  figcaption::after {
+    border-right: 1px solid #fff;
+    border-left: 1px solid #fff;
+    transform: scale(1,0);
+  }
+
+  h3 {
+    padding-top: 27%;
+    transition: transform 0.35s;
+    transform: translate3d(0,-20px,0);
+  }
+
+  p {
+    padding: 20px 2.5em;
+    opacity: 0;
+    transition: opacity 0.35s, transform 0.35s;
+    transform: translate3d(0,20px,0);
+  }
+
+  &:hover figcaption::before,
+  &:hover figcaption::after {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  &:hover h3,
+  &:hover p {
+    opacity: 1;
+    transform: translate3d(0,0,0);
+  }
+
+}
+
+
+
+
+
+// Milo
+//
+.teaser-milo {
+
+  img {
+    max-width: none;
+    width: 100%;
+    opacity: 1;
+    transition: opacity 0.35s, transform 0.35s;
+    transform: translate3d(-20px,0,0) scale(1.12);
+    backface-visibility: hidden;
+  }
+
+  h3 {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    padding: 1em 1.2em;
+  }
+
+  p {
+    padding: 0 10px 0 0;
+    width: 50%;
+    border-right: 1px solid #fff;
+    text-align: right;
+    opacity: 0;
+    transition: opacity 0.35s, transform 0.35s;
+    transform: translate3d(-40px,0,0);
+  }
+
+
+  &:hover {
+    img {
+      opacity: 0.5;
+      transform: translate3d(0,0,0) scale(1);
+    }
+
+    p {
+      opacity: 1;
+      transform: translate3d(0,0,0);
+    }
+  }
+
+}
+
+
+
+
+
+// Hera
+//
+.teaser-hera {
+
+  h3 {
+    font-size: 158.75%;
+  }
+
+  h3,
+  p {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transition: opacity 0.35s, transform 0.35s;
+    transform: translate3d(-50%,-50%,0);
+    transform-origin: 50%;
+  }
+
+  figcaption::before {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200px;
+    height: 200px;
+    border: 2px solid #fff;
+    content: '';
+    opacity: 0;
+    transition: opacity 0.35s, transform 0.35s;
+    transform: translate3d(-50%,-50%,0) rotate3d(0,0,1,-45deg) scale3d(0,0,1);
+    transform-origin: 50%;
+  }
+
+  p {
+    width: 60px;
+    text-transform: none;
+    font-size: 121%;
+    line-height: 2;
+  }
+
+  p a {
+    color: #fff;
+  }
+
+  p a:hover,
+  p a:focus {
+    opacity: 0.6;
+  }
+
+  p a i {
+    opacity: 0;
+    transition: opacity 0.35s, transform 0.35s;
+  }
+
+  p a:first-child i {
+    transform: translate3d(-60px,-60px,0);
+  }
+
+  p a:nth-child(2) i {
+    transform: translate3d(60px,-60px,0);
+  }
+
+  p a:nth-child(3) i {
+    transform: translate3d(-60px,60px,0);
+  }
+
+  p a:nth-child(4) i {
+    transform: translate3d(60px,60px,0);
+  }
+
+  &:hover figcaption::before {
+    opacity: 1;
+    transform: translate3d(-50%,-50%,0) rotate3d(0,0,1,-45deg) scale3d(1,1,1);
+  }
+
+  &:hover h3 {
+    opacity: 0;
+    transform: translate3d(-50%,-50%,0) scale3d(0.8,0.8,1);
+  }
+
+  &:hover p i:empty {
+    transform: translate3d(0,0,0);
+    opacity: 1;
+  }
+
+}
+
+
+
+
+
+
+// Winston
+//
+.teaser-winston {
+  text-align: left;
+
+  img {
+    transition: opacity 0.45s;
+    backface-visibility: hidden;
+  }
+
+  figcaption::before {
+    position: absolute;
+    bottom: -100%;
+    left: 0;
+    width: 200%;
+    height: 100%;
+    background-color: #fff;
+    content: '';
+    transition: opacity 0.45s, transform 0.45s;
+    transform-origin: 0 100%;
+  }
+
+  h3 {
+    transition: transform 0.35s;
+    transform: translate3d(0,20px,0);
+  }
+
+  p {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    padding: 0 1.5em 7% 0;
+  }
+
+  a {
+    margin: 0 10px;
+    color: $color-title;
+    font-size: 170%;
+  }
+
+  a:hover,
+  a:focus {
+    color: $color-primary;
+  }
+
+  p a i {
+    opacity: 0;
+    transition: opacity 0.35s, transform 0.35s;
+    transform: translate3d(0,50px,0);
+  }
+
+  &:hover img {
+    opacity: 0.6;
+  }
+
+  &:hover h3 {
+    transform: translate3d(0,0,0);
+  }
+
+  &:hover figcaption::before {
+    opacity: 0.7;
+    transform: rotate3d(0,0,1,-15deg);
+  }
+
+  &:hover p i {
+    opacity: 1;
+    transform: translate3d(0,0,0);
+  }
+
+  &:hover p a:nth-child(3) i {
+    transition-delay: 0.05s;
+  }
+
+  &:hover p a:nth-child(2) i {
+    transition-delay: 0.1s;
+  }
+
+  &:hover p a:first-child i {
+    transition-delay: 0.15s;
+  }
+
+}
+
+
+
+
+
+// Terry
+//
+.teaser-terry {
+
+
+  figcaption {
+    padding: 1em;
+  }
+
+  figcaption::before,
+  figcaption::after {
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    border-style: solid;
+    border-color: #101010;
+    content: '';
+    transition: transform 0.35s;
+  }
+
+  figcaption::before {
+    right: 0;
+    bottom: 0;
+    border-width: 0 70px 60px 0;
+    transform: translate3d(70px,60px,0);
+  }
+
+  figcaption::after {
+    top: 0;
+    left: 0;
+    border-width: 15px 0 0 15px;
+    transform: translate3d(-15px,-15px,0);
+  }
+
+  img,
+  p a {
+    transition: opacity 0.35s, transform 0.35s;
+  }
+
+  img {
+    opacity: 0.85;
+  }
+
+  h3 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 0.4em 10px;
+    width: 50%;
+    transition: transform 0.35s;
+    transform: translate3d(100%,0,0);
+  }
+
+  @media screen and (max-width: 920px) {
+    h3 {
+      padding: 0.75em 10px;
+      font-size: 120%;
+    }
+  }
+
+  p {
+    float: right;
+    clear: both;
+    text-align: left;
+    text-transform: none;
+    font-size: 111%;
+  }
+
+  p a {
+    display: block;
+    margin-bottom: 1em;
+    color: #fff;
+    opacity: 0;
+    transform: translate3d(90px,0,0);
+  }
+
+  p a:hover,
+  p a:focus {
+    color: #f3cf3f;
+  }
+
+  &:hover figcaption::before,
+  &:hover figcaption::after {
+    transform: translate3d(0,0,0);
+  }
+
+  &:hover img {
+    opacity: 0.6;
+  }
+
+  &:hover h3,
+  &:hover p a {
+    transform: translate3d(0,0,0);
+  }
+
+  &:hover p a {
+    opacity: 1;
+  }
+
+  &:hover p a:first-child {
+    transition-delay: 0.025s;
+  }
+
+  &:hover p a:nth-child(2) {
+    transition-delay: 0.05s;
+  }
+
+  &:hover p a:nth-child(3) {
+    transition-delay: 0.075s;
+  }
+
+  &:hover p a:nth-child(4) {
+    transition-delay: 0.1s;
+  }
+}
+
+
+
+
+
+// Steve
+//
+.teaser-steve {
+  z-index: auto;
+  overflow: visible;
+
+  &:before,
+  h2:before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    content: '';
+    transition: opacity 0.35s;
+  }
+
+  &:before {
+    box-shadow: 0 3px 30px rgba(0,0,0,0.8);
+    opacity: 0;
+  }
+
+
+  figcaption {
+    z-index: 1;
+  }
+
+  img {
+    opacity: 1;
+    transition: transform 0.35s;
+    transform: perspective(1000px) translate3d(0,0,0);
+  }
+
+  h2,
+  p {
+    background: #fff;
+    color: #2d434e;
+  }
+
+  h2 {
+    position: relative;
+    margin-top: 2em;
+    padding: 0.25em;
+  }
+
+  h2:before {
+    box-shadow: 0 1px 10px rgba(0,0,0,0.5);
+  }
+
+  p {
+    margin-top: 1em;
+    padding: 0.5em;
+    font-weight: 800;
+    opacity: 0;
+    transition: opacity 0.35s, transform 0.35s;
+    transform: scale3d(0.9,0.9,1);
+  }
+
+
+  &:hover {
+    &:before {
+      opacity: 1;
+    }
+
+    img {
+      transform: perspective(1000px) translate3d(0,0,21px);
+    }
+
+    h2:before {
+      opacity: 0;
+    }
+
+    p {
+      opacity: 1;
+      transform: scale3d(1,1,1);
+    }
+  }
+
+}
+
+
+
+
+// Kira
+//
+.teaser-kira {
+  text-align: left;
+
+
+  img {
+    transition: opacity 0.35s;
+  }
+
+  figcaption {
+    z-index: 1;
+  }
+
+  h2 {
+    color: #fff;
+  }
+
+  p {
+    padding: 28px 10px;
+    font-weight: 500;
+    font-size: 100%;
+    opacity: 0;
+    transition: opacity 0.35s, transform 0.35s;
+    transform: translate3d(0,-10px,0);
+  }
+
+  p a {
+    margin: 0 0.5em;
+    color: $color-title;
+    vertical-align: middle;
+
+    &:hover,
+    &:focus {
+      opacity: 0.6;
+    }
+  }
+
+  figcaption::before {
+    position: absolute;
+    top: 8px;
+    right: 2em;
+    left: 2em;
+    z-index: -1;
+    height: 3.1em;
+    background: #fff;
+    content: '';
+    transition: opacity 0.35s, transform 0.35s;
+    transform: translate3d(0,4em,0) scale3d(1,0.023,1);
+    transform-origin: 50% 0;
+  }
+
+
+  &:hover {
+    img {
+      opacity: 0.5;
+    }
+
+    p {
+      opacity: 1;
+      transform: translate3d(0,0,0);
+    }
+
+    figcaption::before {
+      opacity: 0.7;
+      transform: translate3d(0,5em,0) scale3d(1,1,1);
+    }
+  }
+
+}
+
+
+
+
+// Julia
+//
+
+.teaser-julia {
+
+  img {
+    max-width: none;
+    transition: opacity 1s, transform 1s;
+    backface-visibility: hidden;
+  }
+
+  figcaption {
+    text-align: left;
+  }
+
+  h2 {
+    position: relative;
+    padding: 0.5em 0;
+  }
+
+  p {
+    display: table;
+    margin: 0 0 0.25em;
+    padding: 0.4em 1em;
+    background: rgba(255,255,255,0.9);
+    color: $color-text;
+    text-transform: none;
+    font-weight: 500;
+    font-size: 75%;
+    transition: opacity 0.35s, transform 0.35s;
+    transform: translate3d(-360px,0,0);
+  }
+
+  p:first-child {
+    transition-delay: 0.15s;
+  }
+
+  p:nth-of-type(2) {
+    transition-delay: 0.1s;
+  }
+
+  p:nth-of-type(3) {
+    transition-delay: 0.05s;
+  }
+
+
+  &:hover {
+    p:first-child {
+      transition-delay: 0s;
+    }
+
+    p:nth-of-type(2) {
+      transition-delay: 0.05s;
+    }
+
+    p:nth-of-type(3) {
+      transition-delay: 0.1s;
+    }
+
+    img {
+      opacity: 0.4;
+      transform: scale3d(1.1,1.1,1);
+    }
+
+    p {
+      opacity: 1;
+      transform: translate3d(0,0,0);
+    }
+  }
+
+}
+
+
+
+
+
+// Simple
+//
+.teaser-simple {
+  cursor: default;
+
+  img {
+    opacity: 1;
+
+    transition: opacity 0.5s;
+  }
+
+
+  figcaption {
+    //z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: none;
+    transform: scale(0);
+    transition: .35s;
+
+    @include gap-items-x(4px);
+
+    a {
+      position: static;
+      z-index: auto;
+      text-indent: 0;
+      white-space: nowrap;
+      font-size: inherit;
+      opacity: 1;
+    }
+
+    a:not(.btn) {
+      width: auto;
+      height: auto;
+      font-size: 13px;
+    }
+  }
+
+  &:hover {
+    img {
+      opacity: 0.5;
+    }
+
+    figcaption {
+      transform: scale(1);
+    }
+
+  }
+
+}

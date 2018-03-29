@@ -1,0 +1,23 @@
+
+[data-provide~="sparkline"] {
+
+}
+
+
+.jqstooltip {
+ background-color: $tooltip-bg !important;
+ font-size: 13px !important;
+ padding: 4px 6px!important;
+ color: #fff !important;
+ overflow: hidden !important;
+ text-align: center !important;
+ border: none !important;
+ max-width: 400px !important;
+ max-height: 400px !important;
+ box-sizing: content-box;
+}
+
+.jqsfield {
+ font-size: 13px !important;
+ color: #fff !important; /*set the text color here */
+}

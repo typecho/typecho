@@ -1,0 +1,286 @@
+
+
+.swiper-container {
+  width: 100%;
+  height: 100%;
+
+  .container,
+  [class^="col-"] {
+    box-sizing: border-box;
+  }
+}
+
+.swiper-slide {
+
+  .card-shadowed {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+}
+
+
+
+//----------------------------------------------------/
+// Buttons
+//----------------------------------------------------/
+.swiper-button-next,
+.swiper-button-prev {
+  background-image: none;
+  color: $color-text-secondary;
+  transition: .4s;
+
+  &::before {
+    font-family: $font-icon-themify;
+    font-size: 1.75rem;
+    opacity: .7;
+    transition: .4s;
+  }
+
+  &:hover::before {
+    opacity: 1;
+  }
+}
+
+.swiper-button-next::before { content: "\e649"; }
+.swiper-button-prev::before { content: "\e64a"; }
+
+.swiper-button-next {
+  right: 0;
+}
+
+.swiper-button-prev {
+  left: 0;
+}
+
+
+
+
+// Hidden state - Move in from sides
+//
+.swiper-button-hidden {
+
+  .swiper-button-next {
+    right: -44px;
+  }
+
+  .swiper-button-prev {
+    left: -44px;
+  }
+
+  &:hover {
+    .swiper-button-next {
+      right: 24px;
+    }
+
+    .swiper-button-prev {
+      left: 24px;
+    }
+  }
+
+}
+
+
+
+// Boxed
+//
+.swiper-button-box {
+
+  .swiper-button-next,
+  .swiper-button-prev {
+    width: 44px;
+    height: 64px;
+    margin-top: -32px;
+    line-height: 64px;
+    text-align: center;
+    color: #fff;
+    background-color: rgba(0,0,0,0.2);
+    opacity: .6;
+    transition: .4s;
+
+    &::before {
+      font-family: $font-icon-themify;
+      font-size: 1.75rem;
+      opacity: 1;
+    }
+
+    &:hover {
+      opacity: 1;
+    }
+
+    @include media-down(md) {
+      width: 24px;
+      height: 30px;
+      margin-top: -15px;
+      line-height: 30px;
+
+      &::before {
+        font-size: 1rem;
+      }
+    }
+
+  }
+
+
+  .swiper-button-next {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+
+  .swiper-button-prev {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+
+  &.swiper-button-hidden:hover {
+    .swiper-button-next {
+      right: 0;
+    }
+
+    .swiper-button-prev {
+      left: 0;
+    }
+  }
+
+}
+
+
+
+
+
+// Circular
+//
+.swiper-button-circular {
+
+  .swiper-button-next,
+  .swiper-button-prev {
+
+    width: 40px;
+    height: 40px;
+    line-height: 38px;
+    text-align: center;
+    border: 1px solid #fff;
+    border-radius: 50%;
+    background-color: #fff;
+    color: $color-text-light;
+    box-shadow: 0 0 10px rgba(0,0,0,.1);
+
+    &:hover {
+      color: $color-text;
+      box-shadow: 0 0 25px rgba(0,0,0,.06);
+    }
+
+    &::before {
+      font-size: 14px;
+    }
+  }
+
+  .swiper-button-prev { left:  5%; }
+  .swiper-button-next { right: 5%; }
+
+  .swiper-button-next::before { content: "\e649" }
+  .swiper-button-prev::before { content: "\e64a" }
+
+}
+
+
+
+
+
+
+
+//----------------------------------------------------/
+// Pagination
+//----------------------------------------------------/
+.swiper-pagination-outline {
+
+  .swiper-pagination-bullet:not(.swiper-pagination-bullet-active) {
+    border: 1px solid rgba(0,0,0,0.5);
+    background: transparent;
+  }
+
+}
+
+.swiper-pagination-bullet {
+  position: relative;
+  background: #ccc;
+  opacity: 1;
+  width: 6px;
+  height: 6px;
+  transition: .3s;
+
+  &:hover {
+    background: #aaa;
+  }
+
+  &::before,
+  &::after {
+    position: absolute;
+    left: -7px;
+    display: inline-block;
+    width: 20px;
+    height: 13px;
+    content: "";
+    cursor: pointer;
+  }
+
+  &::before {
+    top: -10px;
+  }
+
+  &::after {
+    bottom: -10px;
+  }
+}
+
+.swiper-pagination-bullet-active {
+  background: #777;
+}
+
+
+.swiper-container-horizontal>.swiper-pagination-bullets .swiper-pagination-bullet {
+  margin: 0 7px;
+}
+
+
+.swiper-pagination-outside {
+
+  .swiper-wrapper {
+    padding-bottom: 30px;
+  }
+
+  &.swiper-container-horizontal > .swiper-pagination-bullets {
+    bottom: 0;
+  }
+}
+
+
+
+
+//----------------------------------------------------/
+// Centered slide
+//----------------------------------------------------/
+.swiper-container[data-centered-slides="true"] {
+
+  .swiper-slide {
+    opacity: .1;
+    transition: opacity 1s;
+  }
+
+  .swiper-slide-active,
+  .swiper-slide-duplicate-active {
+    opacity: 1;
+  }
+
+}
+
+
+
+
+@include media-down(sm) {
+
+  .swiper-button-next,
+  .swiper-button-prev {
+    display: none;
+  }
+
+}

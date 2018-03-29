@@ -1,0 +1,17 @@
+@mixin spinner-colors($color) {
+  &.spinner-linear .line,
+  &.spinner-dots span,
+  &.spinner-ball {
+    background-color: $color;
+  }
+
+  &.spinner-circle {
+    border-color: $color;
+    border-top-color: transparent;
+  }
+
+  &.spinner-circle-shadow {
+    border-color: rgba($color, .3);
+    border-left-color: $color;
+  }
+}

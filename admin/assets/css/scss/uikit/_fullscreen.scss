@@ -1,0 +1,20 @@
+
+[data-provide~="fullscreen"] {
+
+  .fullscreen-active {
+    display: none;
+  }
+
+  &.is-fullscreen {
+
+    .fullscreen-default {
+      display: none;
+    }
+
+    .fullscreen-active {
+      display: inline-block;
+    }
+
+  }
+}
+

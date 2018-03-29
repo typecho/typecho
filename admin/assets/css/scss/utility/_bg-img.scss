@@ -1,0 +1,160 @@
+
+//-----------------------------------------------------------------
+// Background image
+//
+.bg-img {
+  position: relative;
+  border-bottom: none;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  z-index: 0;
+}
+
+.overlay {
+  position: relative;
+}
+
+.overlay::before {
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  background-color: rgba(0,0,0,.1);
+}
+
+.overlay-dark::before     { background-color: rgba(0,0,0,.35); }
+.overlay-darker::before   { background-color: rgba(0,0,0,.50); }
+.overlay-darkest::before  { background-color: rgba(0,0,0,.70); }
+
+.overlay-light::before    { background-color: rgba(255,255,255,.55); }
+.overlay-lighter::before  { background-color: rgba(255,255,255,.70); }
+.overlay-lightest::before { background-color: rgba(255,255,255,.90); }
+
+.bg-fixed {
+  background-attachment: fixed;
+}
+
+.bg-repeat {
+  background-repeat: repeat;
+  background-size: auto;
+}
+
+.bg-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: -100;
+  transform: translate(-50% -50%);
+  overflow: hidden;
+}
+
+.bg-img-left {
+  background-position: left center;
+}
+
+.bg-img-right {
+  background-position: right center;
+}
+
+
+
+
+
+
+
+//----------------------------------------------------/
+// Overlay
+//----------------------------------------------------/
+
+[data-overlay],
+[data-overlay-light] {
+  position: relative;
+}
+[data-overlay]::before,
+[data-overlay-light]::before {
+  position: absolute;
+  content: '';
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #191919;
+  z-index: -1;
+  border-radius: inherit;
+}
+
+[data-overlay-light]::before {
+  background: #fff;
+}
+
+
+[data-overlay-primary]::before {
+  background: $color-primary;
+}
+
+
+// Default overlay
+//
+@for $i from 1 through 9 {
+  [data-overlay="#{$i}"]::before {
+    opacity: $i / 10;
+  }
+}
+
+
+// Light overlay
+//
+@for $i from 1 through 9 {
+  [data-overlay-light="#{$i}"]::before {
+    opacity: $i / 10;
+  }
+}
+
+
+
+
+//----------------------------------------------------/
+// Scrim
+//----------------------------------------------------/
+
+[data-scrim-top],
+[data-scrim-bottom] {
+  position: relative;
+}
+[data-scrim-top]::before,
+[data-scrim-bottom]::before {
+  position: absolute;
+  content: '';
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 20%;
+  background: linear-gradient(to bottom, #191919 0%, rgba(0, 0, 0, 0) 100%);
+  z-index: -1;
+  border-radius: inherit;
+}
+
+[data-scrim-bottom]::before {
+  top: 20%;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #191919 100%)
+}
+
+
+// Default scrim
+//
+@for $i from 1 through 9 {
+  [data-scrim-top="#{$i}"]::before,
+  [data-scrim-bottom="#{$i}"]::before {
+    opacity: $i / 10;
+  }
+}
+

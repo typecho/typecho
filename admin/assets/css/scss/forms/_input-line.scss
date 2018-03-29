@@ -1,0 +1,165 @@
+
+//-----------------------------------------------------------------
+// Line elements
+//
+
+.form-type-line {
+
+  // Inputs
+  //
+  &.form-control,
+  .form-control {
+    border-color: transparent;
+    padding-left: 0;
+    padding-right: 0;
+    background-size: 0 1px, 100% 1px;
+    background-repeat: no-repeat;
+    background-position: center bottom, center calc(100%);
+    background-image: linear-gradient($color-primary, $color-primary), linear-gradient($color-divider, $color-divider);
+    transition: background 0.3s;
+
+    &:focus,
+    &.focus {
+      background-size: 100% 1px, 100% 1px;
+      border-color: transparent;
+      box-shadow: none;
+    }
+
+    &:disabled,
+    &[readonly] {
+      background-color: #fff;
+      opacity: 0.7;
+    }
+  }
+
+
+  // Form groups
+  //
+  &.form-group,
+  .form-group {
+
+    label {
+      margin-bottom: 0;
+    }
+  }
+
+
+  // Input groups
+  //
+  &.input-group,
+  .input-group {
+
+    .btn {
+      border-radius: 0;
+    }
+
+    .input-group-text {
+      background-color: #fff;
+      border: none;
+      color: $color-text-secondary;
+    }
+
+
+    .input-group-prepend ~ .form-control,
+    .form-control ~ .input-group-append {
+      margin-left: 1rem;
+    }
+
+  }
+
+
+  // File browser
+  //
+  .custom-file-control {
+    border: 0;
+    border-radius: 0;
+    border-bottom: 1px solid $color-divider;
+    padding-left: 0;
+    padding-right: 0;
+
+    &::before {
+      border-radius: 0;
+    }
+  }
+
+
+  // Select picker
+  //
+  .bootstrap-select.btn-group  {
+
+    .dropdown-toggle {
+      border: none;
+      background-color: transparent;
+      padding-left: 0;
+      background-size: 0 1px, 100% 1px;
+      background-repeat: no-repeat;
+      background-position: center bottom, center calc(100%);
+      background-image: linear-gradient($color-primary,$color-primary), linear-gradient($color-divider,$color-divider);
+      transition: background 0.3s;
+
+      &:focus {
+        background-color: #fff;
+      }
+    }
+
+    &.show .dropdown-toggle {
+      background-size: 100% 1px, 100% 1px;
+      border-color: transparent;
+    }
+  }
+
+
+}
+
+
+//-----------------------------------------------------------------
+// Validation
+//
+
+// Depricated
+//
+.form-type-line .has-success .form-control,
+.form-type-line.has-success .form-control {
+  background-image: linear-gradient($color-success,$color-success), linear-gradient($color-success,$color-success);
+}
+
+.form-type-line .has-warning .form-control,
+.form-type-line.has-warning .form-control {
+  background-image: linear-gradient($color-warning,$color-warning), linear-gradient($color-warning,$color-warning);
+}
+
+.form-type-line .has-danger .form-control,
+.form-type-line.has-danger .form-control {
+  background-image: linear-gradient($color-danger,$color-danger), linear-gradient($color-danger,$color-danger);
+}
+
+
+// Beta-1
+//
+.form-type-line {
+
+  .custom-select.is-invalid,
+  .form-control.is-invalid,
+  .was-validated .custom-select:invalid,
+  .was-validated .form-control:invalid {
+    background-image: linear-gradient($color-danger, $color-danger), linear-gradient($color-danger, $color-danger);
+    border: none;
+
+    &:focus {
+      box-shadow: none !important;
+    }
+  }
+
+  .custom-select.is-valid,
+  .form-control.is-valid,
+  .was-validated .custom-select:valid,
+  .was-validated .form-control:valid {
+    background-image: linear-gradient($color-success, $color-success), linear-gradient($color-success, $color-success);
+    border: none;
+
+    &:focus {
+      box-shadow: none !important;
+    }
+  }
+
+}

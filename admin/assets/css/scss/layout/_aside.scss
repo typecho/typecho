@@ -1,0 +1,191 @@
+
+.aside {
+  background-color: #fff;
+  box-shadow: 1px 1px 5px rgba(0,0,0,0.04);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: $width-aside-md;
+  padding-top: $height-topbar;
+  z-index: $zindex-aside;
+  transform: translateZ(0);
+  transition: .3s ease;
+  backface-visibility: hidden;
+  perspective: 1000;
+  will-change: transform;
+
+  ~ .header,
+  ~ .main-content,
+  ~ .site-footer {
+    margin-left: $width-aside-md;
+  }
+
+  > .nav-tabs {
+    margin-bottom: 0;
+  }
+
+  .aside-open & {
+    box-shadow: 1px 1px 15px rgba(0,0,0,0.07) !important;
+  }
+
+}
+
+
+
+// Small
+.aside-sm {
+  width: $width-aside-sm;
+
+  ~ .header,
+  ~ .main-content,
+  ~ .site-footer {
+    margin-left: $width-aside-sm;
+  }
+}
+
+// Large
+.aside-lg {
+  width: $width-aside-lg;
+
+  ~ .header,
+  ~ .main-content,
+  ~ .site-footer {
+    margin-left: $width-aside-lg;
+  }
+}
+
+.aside-open .aside {
+  left: 0 !important;
+}
+
+.aside-body {
+  padding: 20px 0;
+  height: 100%;
+}
+
+.aside-block {
+  padding: 0 20px;
+}
+
+
+// Title
+//
+.aside-title {
+  color: $color-text-secondary;
+  font-size: 13px;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  opacity: .65;
+}
+
+
+// Toggler button
+//
+.aside-toggler {
+  display: none;
+  background-color: #fff;
+  height: $height-lg;
+  width: $height-lg/2;
+  border-top-right-radius: $height-lg;
+  border-bottom-right-radius: $height-lg;
+  border: 1px solid $color-divider;
+  border-left: none;
+  position: absolute;
+  top: 50%;
+  right: -$height-lg/2;
+  margin-top: -$height-lg/2;
+  font-family: $font-icon-themify;
+  padding-left: 2px;
+  color: $color-text-light;
+  cursor: pointer;
+  box-shadow: 4px 1px 9px rgba(0,0,0,0.07);
+
+  &:focus {
+    outline: none;
+  }
+
+  &::before {
+    content: "\e649";
+    transition: .3s linear;
+  }
+}
+
+.aside-open .aside-toggler::before {
+  display: inline-block;
+  transform: rotate(180deg);
+}
+
+
+@include media-down(sm) {
+
+  .aside-toggler {
+    $height: $height-md + 4px;
+    $width: $height-md - 6px;
+    height: $height;
+    width: $width;
+    border-top-right-radius: $height;
+    border-bottom-right-radius: $height;
+    right: -$width;
+    margin-top: -$height/2;
+    font-size: 0.875rem;
+  }
+
+}
+
+
+
+//-----------------------------------------------------------------
+// Expand
+//
+
+.aside-collapse {
+  @include page-aside-expand-media-down();
+}
+
+.aside-expand {
+  @include page-aside-expand-media-up();
+}
+
+
+.aside-expand-sm {
+  @include media-down(xs) {
+    @include page-aside-expand-media-down();
+  }
+
+  @include media-up(sm) {
+    @include page-aside-expand-media-up();
+  }
+}
+
+
+.aside-expand-md {
+  @include media-down(sm) {
+    @include page-aside-expand-media-down();
+  }
+
+  @include media-up(md) {
+    @include page-aside-expand-media-up();
+  }
+}
+
+.aside-expand-lg {
+  @include media-down(md) {
+    @include page-aside-expand-media-down();
+  }
+
+  @include media-up(lg) {
+    @include page-aside-expand-media-up();
+  }
+}
+
+.aside-expand-xl {
+  @include media-down(lg) {
+    @include page-aside-expand-media-down();
+  }
+
+  @include media-up(xl) {
+    @include page-aside-expand-media-up();
+  }
+}
+

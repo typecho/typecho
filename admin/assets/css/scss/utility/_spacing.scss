@@ -1,0 +1,55 @@
+
+//-----------------------------------------------------------------
+// Spacing
+//
+$spacing-sizes-list: 10 12 15 16 20 24 25 30 35 40 45 50 60 70 80 90 100 120 140 150 160 180 200 250 300 400 500;
+@each $prop, $abbrev in (margin: m, padding: p) {
+  @each $size in $spacing-sizes-list {
+    .#{$abbrev}-#{$size}  { #{$prop}:        #{$size}px !important; }
+    .#{$abbrev}t-#{$size} { #{$prop}-top:    #{$size}px !important; }
+    .#{$abbrev}r-#{$size} { #{$prop}-right:  #{$size}px !important; }
+    .#{$abbrev}b-#{$size} { #{$prop}-bottom: #{$size}px !important; }
+    .#{$abbrev}l-#{$size} { #{$prop}-left:   #{$size}px !important; }
+
+    // Axes
+    .#{$abbrev}x-#{$size} {
+      #{$prop}-right:  #{$size}px !important;
+      #{$prop}-left:   #{$size}px !important;
+    }
+    .#{$abbrev}y-#{$size} {
+      #{$prop}-top:    #{$size}px !important;
+      #{$prop}-bottom: #{$size}px !important;
+    }
+  }
+}
+
+
+
+
+
+
+//-----------------------------------------------------------------
+// Gap items
+//
+.gap-items,
+.gap-items-3 { @include gap-items-x(); }
+.gap-items-1 { @include gap-items-x(2px); }
+.gap-items-2 { @include gap-items-x(4px); }
+.gap-items-4 { @include gap-items-x(12px); }
+.gap-items-5 { @include gap-items-x(16px); }
+
+
+.gap-multiline-items,
+.gap-multiline-items-3 { @include gap-items(); }
+.gap-multiline-items-1 { @include gap-items(2px); }
+.gap-multiline-items-2 { @include gap-items(4px); }
+.gap-multiline-items-4 { @include gap-items(12px); }
+.gap-multiline-items-5 { @include gap-items(16px); }
+
+
+.gap-y.gap-items,
+.gap-y.gap-items-3 { @include gap-items(); }
+.gap-y.gap-items-1 { @include gap-items(2px); }
+.gap-y.gap-items-2 { @include gap-items(4px); }
+.gap-y.gap-items-4 { @include gap-items(12px); }
+.gap-y.gap-items-5 { @include gap-items(16px); }

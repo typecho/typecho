@@ -1,0 +1,12 @@
+@mixin pagination-colors($color) {
+
+  .page-item.active .page-link {
+    &,
+    &:focus,
+    &:hover {
+      background-color: $color;
+      border-color: $color;
+    }
+  }
+
+}

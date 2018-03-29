@@ -1,0 +1,353 @@
+//-----------------------------------------------------------------
+//
+//
+
+
+// Table of Contents
+//
+// Colors
+// Options
+// Components
+
+//-----------------------------------------------------------------
+// General
+//
+
+$line-height-xs:      18px;
+$line-height-sm:      20px;
+$line-height-md:      24px;
+$line-height-lg:      32px;
+$line-height-xl:      54px;
+
+
+//-----------------------------------------------------------------
+// Sizes
+//
+
+// Elements height
+$height-xs:            24px;
+$height-sm:            29px;
+$height-md:            36px;
+$height-lg:            48px;
+$height-xl:            64px;
+$height-xxl:           96px;
+$height-xxxl:          128px;
+
+// Elements consistent width
+$width-cons-xs:        85px;
+$width-cons-sm:        100px;
+$width-cons-md:        120px;
+$width-cons-lg:        145px;
+$width-cons-xl:        180px;
+
+// Layout sizes
+$width-sidebar-normal:    260px;
+$width-sidebar-sm:        220px;
+$width-sidebar-lg:        300px;
+$width-sidebar-iconic:    100px;
+$width-sidebar-folded:    80px;
+$width-sidebar-icon-only: 70px;
+
+$width-aside-sm:       200px;
+$width-aside-md:       250px;
+$width-aside-lg:       300px;
+
+$width-quickview-sm:   220px;
+$width-quickview-md:   300px;
+$width-quickview-lg:   420px;
+$width-quickview-xl:   640px;
+$width-quickview-xxl:  860px;
+
+$width-aside:          300px;
+
+$height-topbar:        64px;
+$height-topbar-sec:    80px;
+
+
+//-----------------------------------------------------------------
+// Spacing
+//
+
+
+
+//-----------------------------------------------------------------
+// Fonts
+//
+$font-bootstrap:        -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+$font-body:             Roboto, sans-serif;
+$font-title:            Roboto, sans-serif;
+$font-article:          Roboto, sans-serif;
+$font-quote:            Georgia, Verdana, Serif;
+$font-icon-fontawesome: FontAwesome;
+$font-icon-themify:     themify;
+
+
+//-----------------------------------------------------------------
+// Colors
+//
+
+$white:                  #fff !default;
+$gray-100:               #f8f9fa !default;
+$gray-200:               #e9ecef !default;
+$gray-300:               #dee2e6 !default;
+$gray-400:               #ced4da !default;
+$gray-500:               #adb5bd !default;
+$gray-600:               #868e96 !default;
+$gray-700:               #495057 !default;
+$gray-800:               #343a40 !default;
+$gray-900:               #212529 !default;
+$black:                  #000 !default;
+
+// Base colors
+$color-blue:             #48b0f7 !default;
+$color-indigo:           #6610f2 !default;
+$color-purple:           #926dde !default; // 926dde
+$color-pink:             #f96197 !default; // ff708e
+$color-red:              #f96868 !default;
+$color-orange:           #faa64b !default;
+$color-yellow:           #fcc525 !default;
+$color-green:            #15c377 !default; // 46be8a
+$color-teal:             #33cabb !default;
+$color-cyan:             #57c7d4 !default;
+$color-brown:            #8d6658 !default;
+$color-dark:             #465161 !default;
+
+$color-gray:             $gray-600 !default;
+$color-light:            $gray-100 !default;
+
+// Context colors
+$color-primary:          #33cabb !default;
+$color-secondary:        #e4e7ea !default;
+$color-success:          $color-green !default; // 46be8a
+$color-info:             $color-blue !default;
+$color-warning:          $color-orange !default;
+$color-danger:           $color-red !default;
+
+
+
+// Pale context colors
+$color-pale-primary:     #dcfcfa !default;
+$color-pale-secondary:   #f7fafc !default;
+$color-pale-success:     #e3fcf2 !default;
+$color-pale-info:        #e3f3fc !default;
+$color-pale-warning:     #fcf0e3 !default;
+$color-pale-danger:      #fce3e3 !default;
+$color-pale-purple:      #ece3fc !default;
+$color-pale-pink:        #fce3ec !default;
+$color-pale-cyan:        #e3fafc !default;
+$color-pale-yellow:      #fcf8e3 !default;
+$color-pale-brown:       #eddcd5 !default;
+$color-pale-dark:        #c8c8c8 !default;
+$color-pale-gray:        #f2f2f2 !default;
+
+
+// Background colors
+$color-bg-light:         #f5f6f7 !default;
+$color-bg-lighter:       #f9fafb !default;
+$color-bg-lightest:      #fcfdfe !default;
+$color-bg-body:          #f5f6fa !default;
+$color-bg-new:           #f3f9ff !default;
+$color-bg-new-hover:     #ecf5fe !default;
+$color-bg-dark:          #e3e4e5 !default;
+$color-bg-darker:        #dcddde !default;
+
+// Text colors
+$color-title:            #313944 !default; //37404d
+$color-subtitle:         #999999 !default;
+$color-text:             #4d5259 !default; //616a78
+$color-text-light:       #616a78 !default;
+$color-text-secondary:   #8b95a5 !default;
+$color-text-placeholder: #c9ccce !default;
+$color-text-disable:     #a5b3c7 !default;
+
+// Divider color
+$color-divider:          #ebebeb !default;
+$color-divider-light:    #f1f2f3 !default;
+
+// Social media
+$color-facebook:         #3b5998 !default;
+$color-google-plus:      #dd4b39 !default;
+$color-twitter:          #00aced !default;
+$color-linkedin:         #007bb6 !default;
+$color-pinterest:        #cb2027 !default;
+$color-git:              #666666 !default;
+$color-tumblr:           #32506d !default;
+$color-vimeo:            #aad450 !default;
+$color-youtube:          #bb0000 !default;
+$color-flickr:           #ff0084 !default;
+$color-reddit:           #ff4500 !default;
+$color-dribbble:         #ea4c89 !default;
+$color-skype:            #00aff0 !default;
+$color-instagram:        #517fa4 !default;
+$color-lastfm:           #c3000d !default;
+$color-behance:          #1769ff !default;
+$color-rss:              #f26522 !default;
+
+// Alpha channel colors
+$color-alpha-dark-text:           rgba($color-text, .7)  !default;
+$color-alpha-dark-text-light:     rgba($color-text, .4)  !default;
+$color-alpha-dark-text-active:    rgba($color-text, 1)   !default;
+$color-alpha-dark-bg:             rgba($color-text, .04) !default;
+$color-alpha-dark-bg-hover:       rgba($color-text, .05) !default;
+$color-alpha-dark-divider:        rgba($color-text, .07) !default;
+
+$color-alpha-light-text:          rgba(#fff, .7)  !default;
+$color-alpha-light-text-light:    rgba(#fff, .4)  !default;
+$color-alpha-light-text-active:   rgba(#fff, 1)   !default;
+$color-alpha-light-bg:            rgba(#fff, .1)  !default;
+$color-alpha-light-bg-hover:      rgba(#fff, .15) !default;
+$color-alpha-light-divider:       rgba(#fff, .15) !default;
+$color-alpha-light-divider-light: rgba(#fff, .08) !default;
+
+
+$zindex-fab:                9 !default;
+
+$zindex-morris:             900 !default;
+$zindex-topbar:             995 !default;
+$zindex-topbar-navigation:  999 !default;
+$zindex-sidebar:            997 !default;
+$zindex-sidebar-open:       997 !default;
+$zindex-dock:               994 !default;
+$zindex-dock-maximize:      999 !default;
+$zindex-dock-open-modal:    1050 !default;
+$zindex-quickview:          999 !default;
+$zindex-aside:              991 !default;
+$zindex-backdrop-topbar:    992 !default;
+$zindex-backdrop-sidebar:   996 !default;
+$zindex-backdrop-quickview: 998 !default;
+$zindex-dropdown-toggle:    991 !default;
+$zindex-backdrop-tour:      999 !default;
+$zindex-card-maximize:      900 !default;
+$zindex-card-fullscreen:    998 !default;
+$zindex-lookup-fullscreen:  1050 !default;
+$zindex-toast:              1051 !default;
+$zindex-dropdown:           992 !default;
+$zindex-preloader:          2000 !default;
+
+$zindex-pace:               2001 !default;
+
+
+
+//-----------------------------------------------------------------
+// Components
+//
+
+// Offcanvas
+$offcanvas-right-shadow: 5px 0px 13px 3px rgba(0, 0, 0, 0.1) !default;
+$offcanvas-left-shadow:  0px 0px 25px rgba(0, 0, 0, 0.1) !default;
+
+// Menu
+$menu-height-xs:              42px;
+$menu-height-sm:              48px;
+$menu-height:                 56px;
+$menu-height-lg:              64px;
+$menu-height-xl:              72px;
+$menu-submenu-height:         32px;
+$menu-link-items-margin-x:    8px  !default;
+$menu-light-submenu-bg:       #f7f9fa !default;
+
+// Sidebar
+$sidebar-header-bg:           $color-purple !default;
+$sidebar-dark-bg:             #3f4a59 !default;
+$sidebar-dark-submenu-bg:     #455160 !default;
+$sidebar-darker-bg:           #242a33 !default;//21252d
+$sidebar-darker-submenu-bg:   #2b323b !default;//2b303b
+$sidebar-light-submenu-bg:    #f7f9fa !default;
+$sidebar-padding-x:           12px !default;
+$sidebar-items-margin-x:      8px  !default;
+$sidebar-icon-size:           30px !default;
+$sidebar-icon-size-lg:        40px !default;
+$sidebar-submenu-item-height: 34px !default;
+
+// Topbar
+$topbar-gap:                  12px !default;
+
+$topbar-padding-x:            20px !default;
+$topbar-items-margin-x:       8px  !default;
+$topbar-submenu-item-height:  38px !default;
+$topbar-icon-size:            16px !default;
+$topbar-menu-dropdown-size:   200px !default;
+
+// Notification
+$tooltip-bg:                  #323232 !default;
+$toaster-bg:                  #323232 !default;
+
+// Card
+$card-internal-border:        1px solid $color-alpha-dark-divider;
+
+// Backdrop
+$backdrop-bg-light:           rgba(255,255,255,0.8);
+$backdrop-bg-dark:            rgba(0,0,0,0.5);
+
+// Dock
+$dock-header-height:          44px !default;
+
+
+
+
+
+
+
+
+//
+// Lists
+//
+$sides: left right top bottom;
+
+
+
+//
+// Maps
+//
+$colors: (
+  'primary':   $color-primary,
+  'secondary': $color-secondary,
+  'success':   $color-success,
+  'info':      $color-info,
+  'warning':   $color-warning,
+  'danger':    $color-danger,
+  'pink':      $color-pink,
+  'purple':    $color-purple,
+  'brown':     $color-brown,
+  'cyan':      $color-cyan,
+  'yellow':    $color-yellow,
+  'gray':      $color-gray,
+  'dark':      $color-dark,
+);
+
+$colors-pale: (
+  'primary':   $color-pale-primary,
+  'secondary': $color-pale-secondary,
+  'success':   $color-pale-success,
+  'info':      $color-pale-info,
+  'warning':   $color-pale-warning,
+  'danger':    $color-pale-danger,
+  'pink':      $color-pale-pink,
+  'purple':    $color-pale-purple,
+  'brown':     $color-pale-brown,
+  'cyan':      $color-pale-cyan,
+  'yellow':    $color-pale-yellow,
+  'gray':      $color-pale-gray,
+  'dark':      $color-pale-dark,
+);
+
+
+$social-colors: (
+  'facebook':    $color-facebook,
+  'google':      $color-google-plus,
+  'twitter':     $color-twitter,
+  'linkedin':    $color-linkedin,
+  'pinterest':   $color-pinterest,
+  'git':         $color-git,
+  'tumblr':      $color-tumblr,
+  'vimeo':       $color-vimeo,
+  'youtube':     $color-youtube,
+  'flickr':      $color-flickr,
+  'reddit':      $color-reddit,
+  'dribbble':    $color-dribbble,
+  'skype':       $color-skype,
+  'instagram':   $color-instagram,
+  'lastfm':      $color-lastfm,
+  'behance':     $color-behance,
+  'rss':         $color-rss,
+);

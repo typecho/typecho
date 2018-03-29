@@ -1,0 +1,90 @@
+.tooltip {
+
+}
+
+.tooltip-inner {
+  background-color: $tooltip-bg;
+  border-radius: 2px;
+  font-size: 12px;
+}
+
+.tooltip {
+  &.bs-tooltip-bottom .arrow::before {
+    border-bottom-color: $tooltip-bg;
+  }
+
+  &.bs-tooltip-top .arrow::before {
+    border-top-color: $tooltip-bg;
+  }
+
+  &.bs-tooltip-right .arrow::before {
+    border-right-color: $tooltip-bg
+  }
+
+  &.bs-tooltip-left .arrow::before {
+    border-left-color: $tooltip-bg;
+  }
+}
+
+
+// Colors
+//
+@each $name, $color in $colors {
+  .tooltip-#{$name} {
+
+    &.bs-tooltip-bottom .arrow::before {
+      border-bottom-color: $color;
+    }
+
+    &.bs-tooltip-top .arrow::before {
+      border-top-color: $color;
+    }
+
+    &.bs-tooltip-right .arrow::before {
+      border-right-color: $color;
+    }
+
+    &.bs-tooltip-left .arrow::before {
+      border-left-color: $color;
+    }
+
+    .tooltip-inner {
+      color: #fff;
+      background-color: $color;
+    }
+
+  }
+}
+
+
+.tooltip-secondary .tooltip-inner {
+  color: $color-text;
+}
+
+
+.tooltip-light,
+.tooltip-white {
+  $color: #fff;
+
+  &.bs-tooltip-bottom .arrow::before {
+    border-bottom-color: $color;
+  }
+
+  &.bs-tooltip-top .arrow::before {
+    border-top-color: $color;
+  }
+
+  &.bs-tooltip-right .arrow::before {
+    border-right-color: $color;
+  }
+
+  &.bs-tooltip-left .arrow::before {
+    border-left-color: $color;
+  }
+
+  .tooltip-inner {
+    color: $color-text;
+    background-color: $color;
+  }
+
+}
