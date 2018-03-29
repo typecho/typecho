@@ -1,0 +1,114 @@
+
+//-----------------------------------------------------------------
+// Media variations
+//
+
+// Media single
+//
+.media-single,
+.media-center-v {
+  align-items: center;
+}
+
+.media-vertical {
+  flex-direction: column;
+}
+
+// Media chat
+//
+.media-chat {
+  padding-right: 64px;
+  margin-bottom: 0;
+
+  &.media-chat-reverse {
+    padding-right: 12px;
+    padding-left: 64px;
+    flex-direction: row-reverse;
+  }
+
+  .media-body {
+    flex: initial;
+    display: table;
+
+    p {
+      position: relative;
+      padding: 6px 8px;
+      margin: 4px 0;
+      background-color: $color-bg-light;
+      border-radius: 3px;
+      //display: inherit; // If set, cause .row images doesn't work properly in firefox
+
+      &.inverse {
+        color: #fff;
+      }
+
+      &.meta {
+        background-color: transparent !important;
+        padding: 0;
+        opacity: .8;
+
+        time {
+          font-weight: 300;
+        }
+      }
+    }
+  }
+
+
+  // Right aligned chats
+  &.media-chat-reverse .media-body {
+
+    p {
+      float: right;
+      clear: right;
+      background-color: $color-info;
+      color: #fff;
+    }
+
+  }
+
+}
+
+// Date
+.media-meta-day {
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0;
+  color: $color-text-secondary;
+  opacity: .8;
+  font-weight: 400;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    border-top: 1px solid $color-divider;
+  }
+
+  &::before {
+    margin-right: 16px;
+  }
+
+  &::after {
+    margin-left: 16px;
+  }
+}
+
+
+// Doc
+@include media-down(sm) {
+
+  .media-doc {
+    flex-direction: column;
+
+    > * {
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    .media-body {
+      margin: 30px 0;
+    }
+  }
+
+}

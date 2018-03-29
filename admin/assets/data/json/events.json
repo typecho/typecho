@@ -1,0 +1,63 @@
+[
+  {
+    "title": "All Day Event",
+    "start": "2017-12-01",
+	  "className": "badge badge-warning"
+  },
+  {
+    "title": "Long Event",
+    "start": "2017-12-07",
+    "end": "2017-12-10"
+  },
+  {
+    "id": "999",
+    "title": "Repeating Event",
+    "start": "2017-12-09T16:00:00-05:00",
+    "className": "badge badge-cyan"
+  },
+  {
+    "id": "999",
+    "title": "Repeating Event",
+    "start": "2017-12-16T16:00:00-05:00",
+    "className": "badge badge-cyan"
+  },
+  {
+    "title": "Conference",
+    "start": "2017-12-11",
+    "end": "2017-12-13",
+    "className": "badge badge-purple"
+  },
+  {
+    "title": "Meeting",
+    "start": "2017-12-12T10:30:00-05:00",
+    "end": "2017-12-12T12:30:00-05:00",
+    "className": "badge badge-yellow"
+  },
+  {
+    "title": "Lunch",
+    "start": "2017-12-12T12:00:00-05:00"
+  },
+  {
+    "title": "Meeting",
+    "start": "2017-12-12T14:30:00-05:00"
+  },
+  {
+    "title": "Happy Hour",
+    "start": "2017-12-12T17:30:00-05:00"
+  },
+  {
+    "title": "Dinner",
+    "start": "2017-12-12T20:00:00"
+  },
+  {
+    "title": "Birthday Party",
+    "start": "2017-12-13T07:00:00-05:00",
+    "className": "badge badge-pink"
+  },
+  {
+    "title": "Click for Google",
+    "url": "http://google.com/",
+    "start": "2017-12-28",
+    "className": "badge badge-info"
+  }
+]

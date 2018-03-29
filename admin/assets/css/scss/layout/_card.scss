@@ -1,0 +1,415 @@
+
+
+.card {
+  border: 0;
+  border-radius: 0px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 3px rgba(0,0,0,0.03);
+  transition: .5s;
+
+  > .table-responsive .table,
+  > .table {
+    margin-bottom: 0;
+
+    tr td:first-child,
+    tr th:first-child {
+      padding-left: 20px;
+    }
+
+    tr td:last-child,
+    tr th:last-child {
+      padding-right: 20px;
+    }
+  }
+
+
+  .card-hover-show {
+    opacity: 0;
+    transition: .3s linear;
+  }
+
+  &:hover {
+    .card-hover-show {
+      opacity: 1;
+    }
+  }
+
+
+}
+
+
+.card,
+.card-content {
+
+  // Alert
+  > .alert {
+    border-radius: 0;
+    margin-bottom: 0;
+  }
+
+  // Callout
+  > .callout {
+    margin-bottom: 0;
+  }
+
+  // Tabs
+  > .nav-tabs {
+    margin-bottom: 0;
+  }
+
+}
+
+//-----------------------------------------------------------------
+// Card body
+//
+.card-body {
+
+
+}
+
+
+//-----------------------------------------------------------------
+// Header
+//
+
+// Card title
+.card-title {
+  font-family: $font-body;
+  font-weight: 300;
+  line-height: 1.5;
+  margin-bottom: 0;
+  padding: 15px 20px;
+  border-bottom: $card-internal-border;
+
+  a {
+    color: $color-title;
+  }
+
+  strong,
+  b {
+    font-weight: 400;
+  }
+
+}
+
+
+.h6.card-title, h6.card-title { font-size: 13.5px; }
+.h5.card-title, h5.card-title { font-size: 15px; }
+.h4.card-title, h4.card-title { font-size: 17px; }
+.h3.card-title, h3.card-title { font-size: 19px; }
+.h2.card-title, h2.card-title { font-size: 22px; }
+.h1.card-title, h1.card-title { font-size: 26px; }
+
+
+
+.card-title-bold {
+  font-family: $font-title;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 500;
+}
+
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: transparent;
+  border-bottom: $card-internal-border;
+
+  &::after {
+    display: none;
+  }
+
+  @include gap-items-x(8px);
+
+  &.card-header-sm {
+    padding-top: 8px;
+    padding-bottom: 4px;
+
+    .card-title {
+      font-size: 0.9375rem;
+    }
+  }
+
+  .card-title {
+    padding: 0;
+    border: none;
+  }
+
+  progress,
+  input {
+    margin-bottom: 0;
+  }
+
+  .pagination {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+
+.card-header-actions {
+  display: flex;
+  align-items: center;
+
+  @include gap-items(4px);
+}
+
+
+
+
+
+
+//-----------------------------------------------------------------
+// Footer
+//
+.card-footer {
+  background-color: $color-bg-lightest;
+  border-top: $card-internal-border;
+  color: $color-text-secondary;
+  padding: 10px 20px;
+
+  > *:last-child {
+    margin-bottom: 0;
+  }
+}
+
+//-----------------------------------------------------------------
+// Card controls
+//
+.card-controls {
+  list-style-type: none;
+  padding-left: 0;
+  margin-bottom: 0;
+  display: flex;
+  flex-direction: row-reverse;
+
+
+  li > a {
+    font-family: $font-icon-themify;
+    font-size: 12px;
+    display: inline-block;
+    padding: 0 4px;
+    margin: 0 4px;
+    color: $color-text-secondary;
+    opacity: .8;
+    transition: 0.3s linear;
+
+    &:hover {
+      color: $color-primary;
+    }
+  }
+
+  li:first-child > a {
+    margin-right: 0;
+  }
+
+  .dropdown.show > a {
+    color: $color-primary;
+  }
+
+  [data-toggle="dropdown"],
+  .card-btn-reload {
+    font-size: 14px;
+  }
+
+
+}
+
+
+// Controls icon
+.card-btn-close::before      { content: "\e646"; }
+.card-btn-slide::before      { content: "\e648"; }
+.card-btn-maximize::before   { content: "\e6e8"; }
+.card-btn-fullscreen::before { content: "\e659"; }
+.card-btn-prev::before       { content: "\e64a"; }
+.card-btn-next::before       { content: "\e649"; }
+
+.card-carousel .card-footer .carousel-indicators-outside {
+  padding: 6px 0;
+}
+
+
+
+//-----------------------------------------------------------------
+// Card block
+//
+.card-body > *:last-child {
+  margin-bottom: 0;
+}
+
+
+
+//-----------------------------------------------------------------
+// Card image
+//
+.card-img,
+.card-img-top,
+.card-img-bottom {
+  border-radius: 0;
+}
+
+
+
+//-----------------------------------------------------------------
+// Card loading
+//
+.card-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255,255,255,0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  z-index: -1;
+  transition: .5s;
+
+  &.reveal {
+    opacity: 1;
+    z-index: auto;
+  }
+
+}
+
+
+
+//-----------------------------------------------------------------
+// Card coloring
+//
+.card-inverse {
+
+  color: #fff!important;
+  background-color: $color-dark;
+
+  h1,h2,h3,h4,h5,h6,
+  .card-title,
+  small,
+  .card-controls li > a {
+    color: #fff !important;
+  }
+
+  .card-title small {
+    opacity: 0.8;
+  }
+
+  .card-btn-more::before,
+  .card-btn-more::after {
+    border-color: #fff;
+  }
+
+  .card-header,
+  .card-footer,
+  .card-action {
+    border-color: $color-alpha-light-divider;
+  }
+}
+
+// Background color
+//
+@each $name, $color in $colors {
+  .card-#{$name} {
+    @include card-colors($color);
+  }
+}
+
+
+// Border color
+//
+@each $name, $color in $colors {
+  .card-outline-#{$name} {
+    @include card-outline($color);
+  }
+}
+
+
+//-----------------------------------------------------------------
+// Card modifiers
+//
+.card-bordered {
+  border: 1px solid $color-divider;
+}
+
+.card-shadowed {
+  box-shadow: 0 0 25px rgba(0,0,0,0.07);
+}
+
+.card-hover-shadow:hover {
+  box-shadow: 0 0 35px rgba(0,0,0,0.07);
+}
+
+.card-transparent {
+  box-shadow: none;
+  background-color: transparent;
+}
+
+.card-round {
+  border-radius: 4px;
+}
+
+.card-maximize {
+  position: fixed;
+  top: $height-topbar;
+  right: 0;
+  bottom: 0;
+  margin-bottom: 0;
+  z-index: $zindex-card-maximize;
+  transition: left 0.3s ease;
+
+  .card-btn-maximize {
+    color: $color-primary;
+  }
+}
+
+.card-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin-bottom: 0;
+  z-index: $zindex-card-fullscreen;
+
+  .card-btn-fullscreen {
+    color: $color-primary;
+  }
+}
+
+.card-slided-up {
+
+  .card-content {
+    display: none;
+  }
+
+  .card-btn-slide::before {
+    content: "\e64b";
+  }
+}
+
+
+
+
+//-----------------------------------------------------------------
+// Groups
+//
+.card-columns {
+  margin-bottom: 30px;
+}
+
+
+
+//-----------------------------------------------------------------
+// Media queries
+//
+
+@include media-up(xs) {
+
+  .card-group .card + .card {
+    border-left: $card-internal-border;
+  }
+
+}

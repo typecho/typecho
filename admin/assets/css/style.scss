@@ -1,0 +1,406 @@
+@import "scss/variables";
+
+
+
+
+//---------------------------------------------------------------------------
+// General
+//
+.font-dosis {
+  font-family: Dosis, Roboto, sans-serif;
+}
+
+
+
+
+//---------------------------------------------------------------------------
+// Header images
+//
+.bg-ui-general {
+  background-image: url(../img/header/general.png);
+}
+
+
+//---------------------------------------------------------------------------
+// Buttons
+//
+.doc-btn-spacing {
+  .btn {
+    margin-bottom: 10px;
+    margin-right: 6px;
+  }
+
+  .btn-group {
+    margin-bottom: 10px;
+  }
+
+  .btn-group .btn,
+  .btn-group .btn-group,
+  .btn-group-vertical .btn {
+    margin-bottom: 0;
+    margin-right: 0;
+  }
+}
+
+
+
+
+
+//---------------------------------------------------------------------------
+// Dropdown
+//
+.doc-dropdown {
+  .dropdown,
+  .dropup {
+    display: inline-block;
+  }
+
+  .dropdown-menu,
+  .dropdown-grid {
+    transform: scale(1, 1);
+  }
+}
+
+
+
+
+
+//---------------------------------------------------------------------------
+// Colors
+//
+.doc-bg-colors-spacing > [class*="bg-"] {
+  padding: 8px;
+  margin-bottom: 8px;
+}
+
+
+.doc-link-colors-spacing > a[class] {
+  padding-right: 8px;
+}
+
+
+
+
+
+
+//---------------------------------------------------------------------------
+// Sample topbars demo
+//
+.doc-topbar-static .topbar {
+  position: static;
+  box-shadow: 0 0 5px rgba(0,0,0,0.08);
+
+  .sidebar-toggler,
+  .topbar-menu-toggler {
+    display: none;
+  }
+
+  .topbar-menu-open & .topbar-navigation {
+    display: none;
+  }
+}
+
+.doc-topbar-static .topbar.bg-transparent {
+  box-shadow: none;
+}
+
+
+
+
+
+//---------------------------------------------------------------------------
+// Animate on scroll
+//
+.doc-aos {
+
+  div {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 50px;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 15px rgba(0,0,0,0.07);
+  }
+
+}
+
+
+
+
+//---------------------------------------------------------------------------
+// Media
+//
+.demo-code-for-media {
+  .code-title {
+    background-color: #fff;
+  }
+
+  .code-preview {
+    padding: 0;
+  }
+
+  .code-toggler ~ pre {
+    display: none;
+  }
+}
+
+.doc-media-bg .media  {
+  background-color: #f9fafb;
+}
+
+
+
+//---------------------------------------------------------------------------
+// Icons
+//
+.demo-icons-list {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 32px;
+
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    width: 32px + 40px;
+    height: 32px + 40px;
+    text-align: center;
+    cursor: pointer;
+    transition: .1s;
+
+    .material-icons {
+      font-size: inherit;
+    }
+
+    [data-i8-icon] {
+      margin: 0 10px;
+    }
+
+    [data-provide~="emoji"] svg {
+      width: 32px;
+      height: 32px;
+    }
+
+    &:hover {
+      background-color: #f7fafc;
+    }
+  }
+
+  &.icons-size-16px {
+    font-size: 16px;
+
+    li {
+      width: 16px + 40px;
+      height: 16px + 40px;
+    }
+  }
+
+  &.icons-size-24px {
+    font-size: 24px;
+
+    li {
+      width: 24px + 40px;
+      height: 24px + 40px;
+    }
+  }
+
+  &.icons-size-32px {
+    font-size: 32px;
+
+    li {
+      width: 32px + 40px;
+      height: 32px + 40px;
+    }
+  }
+
+  &.icons-size-48px {
+    font-size: 48px;
+
+    li {
+      width: 48px + 40px;
+      height: 48px + 40px;
+    }
+  }
+
+  &.icons-size-64px {
+    font-size: 64px;
+
+    li {
+      width: 64px + 40px;
+      height: 64px + 40px;
+    }
+  }
+
+  &.icons-size-80px {
+    font-size: 80px;
+
+    li {
+      width: 80px + 40px;
+      height: 80px + 40px;
+    }
+  }
+
+  &.icons-size-96px {
+    font-size: 96px;
+
+    li {
+      width: 96px + 40px;
+      height: 96px + 40px;
+    }
+  }
+}
+
+
+
+
+
+//---------------------------------------------------------------------------
+// Emojione
+//
+.demo-emoji-list-container .demo-icons-list {
+
+  li {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 32px + 20px;
+    height: 32px + 20px;
+  }
+
+  &.icons-size-16px li {
+    width: 16px + 20px;
+    height: 16px + 20px;
+
+    [data-provide~="emoji"] svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  &.icons-size-24px li {
+    width: 24px + 20px;
+    height: 24px + 20px;
+
+    [data-provide~="emoji"] svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  &.icons-size-32px li {
+    width: 32px + 20px;
+    height: 32px + 20px;
+
+    [data-provide~="emoji"] svg {
+      width: 32px;
+      height: 32px;
+    }
+  }
+
+  &.icons-size-48px li {
+    width: 48px + 20px;
+    height: 48px + 20px;
+
+    [data-provide~="emoji"] svg {
+      width: 48px;
+      height: 48px;
+    }
+  }
+
+
+  &.icons-size-64px li {
+    width: 64px + 20px;
+    height: 64px + 20px;
+
+    [data-provide~="emoji"] svg {
+      width: 64px;
+      height: 64px;
+    }
+  }
+
+  &.icons-size-80px li {
+    width: 80px + 20px;
+    height: 80px + 20px;
+
+    [data-provide~="emoji"] svg {
+      width: 80px;
+      height: 80px;
+    }
+  }
+
+  &.icons-size-96px li {
+    width: 96px + 20px;
+    height: 96px + 20px;
+
+    [data-provide~="emoji"] svg {
+      width: 96px;
+      height: 96px;
+    }
+  }
+
+
+}
+
+
+
+
+
+//---------------------------------------------------------------------------
+// Color list
+//
+.demo-color-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  //display: flex;
+  //flex-wrap: wrap;
+  //justify-content: space-between;
+
+  li {
+    display: inline-flex;
+    flex-direction: column;
+    margin: 20px;
+    margin-right: 0;
+    border: 1px solid $color-divider-light;
+
+    > span {
+      display: flex;
+      flex-grow: 1;
+      flex-basis: 100px;
+      min-height: 80px;
+      min-width: 160px;
+    }
+  }
+
+  p {
+    font-size: 12px;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    background-color: $color-bg-lightest;
+    border-top: 1px solid $color-divider-light;
+  }
+}
+
+
+
+
+
+//---------------------------------------------------------------------------
+// Tooltip
+//
+.demo-tooltip-static .tooltip {
+  position: relative;
+  display: inline-block;
+  opacity: 1;
+  margin-bottom: 15px;
+}
+
+
+
+

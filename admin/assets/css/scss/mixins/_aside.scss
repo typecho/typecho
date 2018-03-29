@@ -1,0 +1,31 @@
+@mixin page-aside-expand-media-up() {
+
+}
+
+
+@mixin page-aside-expand-media-down() {
+
+  .aside-toggler {
+    display: inline-block;
+  }
+
+  &.aside {
+    left: -$width-aside-md;
+    box-shadow: none;
+
+    ~ .header,
+    ~ .main-content,
+    ~ .site-footer {
+      margin-left: 0;
+    }
+  }
+
+  &.aside-sm {
+    left: -$width-aside-sm;
+  }
+
+  &.aside-lg {
+    left: -$width-aside-lg;
+  }
+
+}

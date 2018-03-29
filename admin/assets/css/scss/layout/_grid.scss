@@ -1,0 +1,152 @@
+
+body {
+  background-color: $color-bg-body;
+}
+
+
+
+
+
+// Sticky block
+//
+.sticker-stick {
+  position: fixed;
+}
+
+
+
+//---------------------------------------------------------
+// Bootstrap grid
+//
+
+.row {
+
+
+  &.no-gap,
+  &.no-gutters {
+    margin-left: 0;
+    margin-right: 0;
+
+    > .col,
+    > [class*="col-"] {
+      padding-right: 0;
+      padding-left: 0;
+    }
+  }
+
+  // Gap sizes
+  //
+  &.gap-1 { @include row-x-gap(8px) }
+  &.gap-2 { @include row-x-gap(16px) }
+  &.gap-3 { @include row-x-gap(30px) }
+  &.gap-4 { @include row-x-gap(48px) }
+  &.gap-5 { @include row-x-gap(64px) }
+
+
+
+  &.gap-y {
+    @include row-y-gap(30px);
+
+    &.gap-1 { @include row-y-gap(8px) }
+    &.gap-2 { @include row-y-gap(16px) }
+    &.gap-3 { @include row-y-gap(30px) }
+    &.gap-4 { @include row-y-gap(48px) }
+    &.gap-5 { @include row-y-gap(64px) }
+  }
+
+}
+
+//---------------------------------------------------------
+// Flexbox
+//
+// We have to remove this section, since this is available in Alpha-6 as .d-flex
+
+
+.flexbox {
+  display: flex;
+  justify-content: space-between;
+  //align-items: center;  //If it becomes center, .divider-vertical won't work
+  //align-items: baseline; // This cause problems: see misc utilities, centering block section
+
+  @include gap-items-x(4px);
+
+  &.no-gap > *,
+  &.no-gutters > * {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+ul.flexbox {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 0;
+}
+
+// Flex row vertical
+//
+.flexbox-vertical {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  &.no-gap > *,
+  &.no-gutters > * {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+
+
+// Grow
+.flex-justified > *,
+.flex-grow-all > *,
+.flex-cols-wide > *,
+.flex-col-wide,
+.flex-grow {
+  flex: 1;
+}
+
+.flex-grow-1 { flex-grow: 1; }
+.flex-grow-2 { flex-grow: 2; }
+.flex-grow-3 { flex-grow: 3; }
+.flex-grow-4 { flex-grow: 4; }
+.flex-grow-5 { flex-grow: 5; }
+.flex-grow-6 { flex-grow: 6; }
+.flex-grow-7 { flex-grow: 7; }
+.flex-grow-8 { flex-grow: 8; }
+.flex-grow-9 { flex-grow: 9; }
+.flex-grow-0 { flex-grow: 0; }
+
+
+
+
+
+
+//---------------------------------------------------------
+// Masonry
+//
+.masonry-grid {
+  column-count: 3;
+  column-gap: 30px;
+
+  &.no-gap,
+  &.no-gutters { @include masonry-gap(0) }
+
+  &.gap-1 { @include masonry-gap(8px) }
+  &.gap-2 { @include masonry-gap(16px) }
+  &.gap-3 { @include masonry-gap(30px) }
+  &.gap-4 { @include masonry-gap(48px) }
+  &.gap-5 { @include masonry-gap(64px) }
+}
+
+.masonry-cols-2 { column-count: 2; }
+.masonry-cols-3 { column-count: 3; }
+.masonry-cols-4 { column-count: 4; }
+.masonry-cols-5 { column-count: 5; }
+
+.masonry-item {
+  display: block;
+  break-inside: avoid;
+  padding-bottom: 30px;
+}

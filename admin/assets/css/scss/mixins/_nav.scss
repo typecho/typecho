@@ -1,0 +1,73 @@
+@mixin nav-process-colors($color, $color-pale) {
+  &.nav-process-circle .nav-item {
+
+    &.complete .nav-link,
+    &.processing .nav-link {
+      &,
+      &::before {
+        background-color: $color-pale;
+      }
+
+      &::after {
+        background-color: $color;
+      }
+    }
+
+  }
+
+
+
+
+  &.nav-process-iconic .nav-item {
+
+    &.complete,
+    &.processing {
+
+      .nav-link::before {
+        background-color: $color;
+      }
+    }
+
+    &.complete .nav-link {
+      background-color: $color;
+    }
+
+
+    &.processing {
+      i {
+        color: $color;
+      }
+      .nav-link {
+        border-color: $color;
+      }
+    }
+
+  }
+
+
+
+  &.nav-process-box {
+
+    .nav-item.complete:not(.processing) .nav-link .nav-link-number {
+      background-color: $color;
+    }
+
+  }
+
+
+
+  &.nav-process-block .nav-item {
+
+    &.complete:not(.processing) .nav-link {
+      background-color: $color;
+      .nav-link-number {
+        color: $color;
+      }
+    }
+
+    &.processing .nav-link-number {
+      background-color: $color;
+    }
+
+  }
+}

@@ -1,0 +1,87 @@
+
+//-----------------------------------------------------------------
+// jsGrid
+//
+
+.jsgrid-cell {
+  padding: .625rem;
+}
+
+.jsgrid-header-cell {
+  font-weight: 400;
+  padding: .75rem;
+}
+
+.jsgrid-grid-header,
+.jsgrid-header-row > .jsgrid-header-cell {
+  background-color: $color-bg-lighter;
+}
+
+
+.jsgrid-edit-row > .jsgrid-cell,
+.jsgrid-filter-row > .jsgrid-cell,
+.jsgrid-grid-body,
+.jsgrid-grid-header,
+.jsgrid-header-row > .jsgrid-header-cell,
+.jsgrid-insert-row > .jsgrid-cell {
+  border-color: $color-divider-light;
+}
+
+.jsgrid-alt-row>.jsgrid-cell {
+  background: $color-bg-lightest;
+}
+
+.jsgrid-selected-row>.jsgrid-cell {
+  background: $color-bg-new;
+  border-color: $color-divider-light;
+}
+
+
+.jsgrid-grid-body tr:last-child .jsgrid-cell {
+  border-bottom: 0;
+}
+
+
+
+// Forms
+//
+.jsgrid input,
+.jsgrid select,
+.jsgrid textarea {
+  border: 1px solid $color-divider;
+  border-radius: 2px;
+  color: $color-text-secondary;
+  padding: 5px 8px;
+  font-size: 14px;
+  line-height: $line-height-sm;
+  transition: 0.2s linear;
+
+  &:focus {
+    border-color: lighten($color-primary, 20%);
+    color: $color-text;
+    outline: none;
+  }
+}
+
+.jsgrid select {
+  height: 32px;
+}
+
+
+// Pagination
+//
+.jsgrid-pager {
+  text-align: center;
+
+  a {
+    color: $color-info;
+  }
+}
+.jsgrid-pager-current-page {
+  font-weight: 500;
+}
+
+
+
+
+

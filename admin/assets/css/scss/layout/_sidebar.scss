@@ -1,0 +1,299 @@
+
+//-----------------------------------------------------------------
+// Sidebar
+//
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: $width-sidebar-normal;
+  background-color: $sidebar-dark-bg;
+  white-space: nowrap;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.08);
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  z-index: $zindex-sidebar;
+  transform: translateZ(0);
+  transition: .3s ease;
+  backface-visibility: hidden;
+  perspective: 1000;
+  will-change: transform;
+
+  ~ .topbar,
+  ~ main {
+    margin-left: $width-sidebar-normal;
+  }
+}
+
+.sidebar-sm {
+  width: $width-sidebar-sm;
+  ~ .topbar,
+  ~ main {
+    margin-left: $width-sidebar-sm;
+  }
+}
+
+.sidebar-lg {
+  width: $width-sidebar-lg;
+  ~ .topbar,
+  ~ main {
+    margin-left: $width-sidebar-lg;
+  }
+}
+
+
+.sidebar-header,
+.sidebar-footer {
+  height: $height-topbar;
+}
+
+.sidebar-navigation {
+  position: relative;
+  overflow: hidden;
+  flex: 1;
+}
+
+.sidebar-profile {
+  text-align: center;
+  padding: 40px 20px 30px;
+
+  .avatar {
+    width: 100px;
+    height: 100px;
+    transition: .5s;
+  }
+
+  .profile-info {
+    transform: scale(1);
+    margin-top: 1rem;
+    transition: .5s;
+  }
+}
+
+
+//-----------------------------------------------------------------
+// Sidebar header
+//
+.sidebar-header {
+  background-color: $sidebar-header-bg;
+  padding: 0 $sidebar-padding-x;
+  display: flex;
+  align-items: center;
+  color: #fff;
+
+  > * {
+    margin-left: $sidebar-items-margin-x;
+    margin-right: $sidebar-items-margin-x;
+  }
+
+  .logo-icon {
+    text-align: center;
+    flex-basis: $sidebar-icon-size;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+  }
+
+  .logo {
+    font-size: 1rem;
+    font-weight: 500;
+    flex-grow: 1;
+  }
+
+  a {
+    color: #fff;
+  }
+}
+
+.sidebar-toggle-fold {
+
+  margin: 0;
+  padding: 12px $sidebar-items-margin-x;
+  cursor: pointer;
+
+  &::before {
+    content: '';
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border: 2px solid #fff;
+    border-radius: 100%;
+    background-color: #fff;
+    transition: 0.2s linear;
+  }
+
+}
+.sidebar-folded .sidebar-toggle-fold::before {
+  background-color: transparent;
+}
+
+// Alternative color
+.sidebar-header-inverse {
+  color: $color-text;
+  background-color: #fff;
+
+  .sidebar-toggle-fold::before {
+    border-color: $color-text;
+  }
+
+  a {
+    color: $color-text;
+  }
+}
+.sidebar-folded .sidebar-header-inverse .sidebar-toggle-fold::before {
+  background-color: $color-text;
+}
+
+
+
+//-----------------------------------------------------------------
+// Sidebar footer
+//
+.sidebar-footer {
+  border-top: 1px solid $color-alpha-dark-divider;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  > * {
+    margin: 0 4px;
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+
+//-----------------------------------------------------------------
+// Sidebar utilities
+//
+
+// Spacer
+//
+.sidebar-spacer-sm {
+  height: $height-topbar/2;
+}
+
+.sidebar-spacer {
+  height: $height-topbar;
+}
+
+.sidebar-spacer-lg {
+  height: $height-topbar*3/2;
+}
+
+
+
+
+//-----------------------------------------------------------------
+// Body classes
+//
+.sidebar-open {
+  overflow: hidden;
+
+  .sidebar {
+    left: 0 !important;
+    box-shadow: $offcanvas-left-shadow !important;
+  }
+}
+
+.sidebar-folded {
+
+  .sidebar {
+    ~ .topbar,
+    ~ main {
+      margin-left: $width-sidebar-folded;
+    }
+
+
+    // Utility classes
+    .hide-on-fold {
+      display: none;
+    }
+
+    .fade-on-fold {
+      opacity: 0;
+      transition: .5s;
+    }
+
+  }
+
+  .sidebar:not(.sidebar-icons-right) {
+    width: $width-sidebar-folded;
+
+
+    .sidebar-profile {
+      .avatar {
+        width: $sidebar-icon-size-lg;
+        height: $sidebar-icon-size-lg;
+      }
+
+      .profile-info {
+        transform: scale(0.33);
+        margin-left: -100px;
+        margin-right: -100px;
+      }
+    }
+
+    &:hover {
+      width: $width-sidebar-normal;
+      box-shadow: $offcanvas-left-shadow;
+
+      .sidebar-profile {
+
+        .avatar {
+          width: 100px;
+          height: 100px;
+        }
+
+        .profile-info {
+          transform: scale(1);
+        }
+      }
+
+    }
+
+    &.sidebar-sm:hover {
+      width: $width-sidebar-sm;
+    }
+
+    &.sidebar-lg:hover {
+      width: $width-sidebar-lg;
+    }
+
+  }
+
+  .sidebar-icons-right {
+    left: -($width-sidebar-normal - $width-sidebar-folded);
+
+    &:hover {
+      left: 0;
+      box-shadow: $offcanvas-left-shadow;
+    }
+
+    &.sidebar-sm {
+      left: -($width-sidebar-sm - $width-sidebar-folded);
+    }
+
+    &.sidebar-lg {
+      left: -($width-sidebar-lg - $width-sidebar-folded);
+    }
+  }
+
+
+  .card-maximize {
+    left: $width-sidebar-folded;
+  }
+}
+
+.sidebar-folded .sidebar {
+  @include sidebar-folded-open();
+}
+

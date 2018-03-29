@@ -1,0 +1,32 @@
+{
+    "messages": [
+        {
+            "id": 652,
+            "session_id": 8965861649940144331,
+            "date": "2014-12-17T01:01:09Z",
+            "m_type": "Error",
+            "message": "could not find a matching MDF file for legacy SQL selection $SQL:\\(local)\\Adams",
+            "file_name": "$SQL:\\(local)\\Adams",
+            "msdn": 33
+        },
+        {
+            "id": 653,
+            "session_id": 8965861649940144331,
+            "date": "2014-12-17T01:01:10Z",
+            "m_type": "Error",
+            "message": "could not find a matching MDF file for legacy SQL selection $SQL:\\(local)\\TRAINING",
+            "file_name": "$SQL:\\(local)\\TRAINING",
+            "msdn": 33
+        }
+    ],
+    "session_id": 8965861649940144331,
+    "date": "2014-12-17T01:55:14Z",
+    "client_date": "2014-12-16T19:55:14Z",
+    "actual_cpu": "",
+    "licensed_cpu": "",
+    "license": 1,
+    "brand": 2,
+    "account": 215,
+    "computer": 289,
+    "regcode": "1:2:215:289"
+}

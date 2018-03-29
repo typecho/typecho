@@ -1,0 +1,125 @@
+
+//-----------------------------------------------------------------
+// Star rating
+//
+.rating {
+  display: inline-flex;
+  flex-direction: row-reverse;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  input {
+    display: none;
+  }
+
+  label {
+    color: $color-bg-dark;
+    cursor: pointer;
+
+    &::before {
+      margin-right: 5px;
+      font-size: 20px;
+      display: inline-block;
+    }
+  }
+
+  @include rating-colors($color-primary);
+}
+
+// Static
+//
+.rating-static {
+  flex-direction: row;
+
+  label {
+    cursor: default;
+  }
+
+  label:not(.active) {
+    color: $color-bg-dark !important;
+  }
+}
+
+
+// Sizes
+//
+.rating-xs label::before {
+  margin-right: 1px;
+  font-size: 13px;
+}
+
+.rating-sm label::before {
+  margin-right: 2px;
+  font-size: 16px;
+}
+
+.rating-lg label::before {
+  font-size: 24px;
+}
+
+
+
+// Remove
+//
+.rating-remove {
+  margin-left: 10px;
+  margin-right: 10px;
+  cursor: pointer;
+  line-height: 20px;
+  opacity: 0;
+  visibility: hidden; // To hide tooltip
+  transition: .2s linear;
+
+  [data-has-rate="true"]:hover & {
+    opacity: .6;
+    visibility: visible;
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+
+
+// Colors
+//
+@each $name, $color in $colors {
+  .rating-#{$name} {
+    @include rating-colors($color);
+  }
+}
+
+
+
+
+//-----------------------------------------------------------------
+// Toggler
+//
+.toggler {
+  color: $color-bg-dark;
+  cursor: pointer;
+  font-size: 20px;
+  margin-bottom: 0;
+  line-height: 1;
+
+  i {
+    transition: color .2s linear;
+  }
+
+  input {
+    display: none;
+
+    &:checked + i {
+      color: $color-yellow;
+    }
+  }
+}
+
+// Colors
+//
+@each $name, $color in $colors {
+  .toggler-#{$name} input:checked + i {
+    color: $color;
+  }
+}

@@ -1,0 +1,288 @@
+
+//-----------------------------------------------------------------
+// Nav general
+//
+.nav {
+
+}
+
+.nav-item {
+
+  i {
+    width: 1.28571429em;
+    text-align: center;
+  }
+}
+
+.nav-link {
+  font-weight: 400;
+  color: $color-text-secondary;
+  line-height: $height-sm + 4px;
+  padding: 0px 12px;
+  white-space: nowrap;
+
+  &:hover,
+  &:focus,
+  &.active {
+    color: $color-text;
+  }
+
+  &.disabled {
+    color: $color-text-secondary;
+    opacity: .7;
+  }
+
+}
+
+.nav-primary .nav-link:not(.disabled) {
+  &:hover,
+  &:focus {
+    color: $color-primary;
+  }
+}
+
+.nav:not(.nav-tabs) .nav-link {
+
+  > * {
+    margin: 0 4px;
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    &:not(.badge) {
+      flex-grow: 1;
+    }
+  }
+
+}
+
+
+
+// Actions
+//
+.nav-action {
+  color: $color-text-secondary;
+  font-size: 14px;
+  opacity: 0;
+  margin: 0 4px;
+
+  &:hover {
+    color: $color-text;
+  }
+}
+
+.nav-item:hover .nav-action {
+  opacity: 1;
+}
+
+.nav-actions-visible .nav-action {
+  opacity: 1;
+}
+
+
+//-----------------------------------------------------------------
+// Pills
+//
+.nav-pills {
+
+  &::after {
+    display: none;
+  }
+
+  .nav-link {
+    border-radius: 2px;
+  }
+
+  .nav-item.show .nav-link,
+  .nav-link.active {
+    color: $color-text;
+    background-color: $color-bg-lighter;
+  }
+
+}
+
+
+//-----------------------------------------------------------------
+// Stacked
+//
+
+.nav.flex-column {
+
+  .nav-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    height: $height-sm;
+    transition: .2s linear;
+
+    + .nav-item {
+      margin: 4px 0;
+    }
+
+    &:first-child {
+      margin-bottom: 4px;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    &.active .nav-link {
+      color: $color-text;
+    }
+
+    &.disabled {
+      background-color: transparent;
+      opacity: .7;
+      cursor: not-allowed;
+
+      .nav-link {
+        color: $color-text-secondary;
+      }
+
+      > * {
+        cursor: not-allowed;
+      }
+    }
+
+  }
+
+
+  .nav-link {
+    flex: 1;
+    padding: 0;
+  }
+
+}
+
+
+// Stacked pills
+//
+.nav.flex-column.nav-pills {
+
+  .nav-item {
+    padding: 0 12px;
+    height: $height-md;
+    border-radius: 2px;
+
+    &.active,
+    &:hover {
+      background-color: $color-bg-lighter;
+    }
+
+    > * {
+      margin: 0 6px;
+    }
+  }
+
+}
+
+
+
+
+// Dot separated
+//
+.nav-dot-separated .nav-item,
+.nav-dot-separated > .nav-link {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0 !important;
+
+  &::after {
+    content: '•';
+    vertical-align: middle;
+    color: $color-text-light;
+    opacity: 0.4;
+    cursor: default;
+  }
+
+  &:last-child::after {
+    display: none;
+  }
+
+  &:hover::after {
+    color: $color-text-light;
+  }
+}
+
+.nav-dot-separated > .nav-link {
+  padding-right: 0;
+
+  &::after {
+    padding-left: inherit;
+  }
+}
+
+
+
+
+// Dotted nav
+//
+.nav-dotted .nav-link {
+  line-height: normal;
+  padding: 0 4px;
+  margin-left: 8px;
+  margin-right: 8px;
+  border-bottom: 1px dotted lighten($color-text-light, 20%);
+}
+
+
+
+// Stacked
+.nav-sm {
+  .nav-item {
+    height: $height-sm !important;
+  }
+  .nav-link {
+    line-height: $height-sm;
+  }
+}
+
+.nav-lg {
+  .nav-item {
+    height: $height-lg !important;
+    font-size: 14px;
+  }
+  .nav-link {
+    line-height: $height-lg;
+    font-weight: 300;
+  }
+}
+
+
+
+
+
+
+// Gap
+//
+.nav.gap-0 .nav-link { padding: 0; }
+.nav.gap-1 .nav-link { padding: 0 4px; }
+.nav.gap-2 .nav-link { padding: 0 8px; }
+.nav.gap-3 .nav-link { padding: 0 12px; }
+.nav.gap-4 .nav-link { padding: 0 16px; }
+.nav.gap-5 .nav-link { padding: 0 20px; }
+
+
+
+
+
+// Remove space in sides of a nav
+//
+.nav.no-gutters {
+  > .nav-link:first-child,
+  .nav-item:first-child .nav-link {
+    padding-left: 0;
+  }
+
+  > .nav-link:last-child,
+  .nav-item:last-child .nav-link {
+    padding-right: 0;
+  }
+}

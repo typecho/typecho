@@ -1,0 +1,22 @@
+
+.site-footer {
+  background-color: #fff;
+  font-size: 12px;
+  color: $color-text-light;
+  border-top: 1px solid $color-divider-light;
+
+  p {
+    margin-bottom: 0;
+    font-weight: 400;
+  }
+
+  a {
+    color: $color-text-light;
+
+    &:hover {
+      color: $color-primary;
+    }
+  }
+
+
+}

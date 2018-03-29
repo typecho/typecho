@@ -1,0 +1,141 @@
+
+.quickview {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  width: $width-quickview-md;
+  max-width: calc( 100% - 50px);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: -$width-quickview-md;
+  z-index: $zindex-quickview;
+  transform: translateZ(0);
+  transition: .3s ease;
+  backface-visibility: hidden;
+  perspective: 1000;
+  will-change: transform;
+
+  &.quickview-sm {
+    width: $width-quickview-sm;
+    right: -$width-quickview-sm;
+  }
+
+  &.quickview-lg {
+    width: $width-quickview-lg;
+    right: -$width-quickview-lg;
+  }
+
+  &.quickview-xl {
+    width: $width-quickview-xl;
+    right: -$width-quickview-xl;
+  }
+
+  &.quickview-xxl {
+    width: $width-quickview-xxl;
+    right: -$width-quickview-xxl;
+  }
+
+  @include media-down(sm) {
+    &[data-fullscreen-on-mobile] {
+      max-width: 100%;
+      width: 100%;
+      right: -100%;
+    }
+  }
+
+  &.reveal {
+    right: 0;
+    box-shadow: $offcanvas-right-shadow;
+  }
+
+  &.backdrop-light + .backdrop-quickview {
+    background-color: $backdrop-bg-light;
+  }
+
+  &.backdrop-dark + .backdrop-quickview {
+    background-color: $backdrop-bg-dark;
+  }
+
+  > .nav-tabs {
+    margin-bottom: 0;
+    height: $height-topbar;
+  }
+
+}
+
+.quickview-body {
+  flex: 1;
+}
+
+.quickview-block {
+  padding: 20px;
+  width: 100%;
+}
+
+
+.quickview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  min-height: $height-topbar !important;
+  border-bottom: 1px solid $color-divider;
+
+  .close {
+    margin-left: 16px;
+    font-size: 16px;
+  }
+
+  &.nav-tabs {
+    padding: 0;
+  }
+
+  .nav-link {
+    height: $height-topbar;
+    line-height: $height-topbar - 6px;
+    padding-top: 6px;
+    padding-bottom: 0;
+  }
+}
+
+.quickview-header-lg {
+  height: $height-topbar-sec;
+
+  .nav-link {
+    height: $height-topbar;
+    line-height: $height-topbar-sec - 6px;
+  }
+}
+
+.quickview-title {
+  margin-bottom: 0;
+  letter-spacing: .5px;
+}
+
+.quickview-footer {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  min-height: $height-topbar;
+  background-color: $color-bg-lightest;
+  border-top: 1px solid $color-divider-light;
+
+  .row {
+    flex: 1;
+  }
+
+  > *:not(.row) {
+    margin: 0 4px;
+  }
+
+  a:not(.btn) {
+    display: inline-block;
+    padding: 0.75rem 0.5rem;
+    color: $color-text-secondary;
+
+    &:hover {
+      color: $color-title;
+    }
+  }
+}

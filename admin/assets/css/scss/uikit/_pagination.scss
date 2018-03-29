@@ -1,0 +1,110 @@
+
+//
+// Pagination
+//
+.page-link {
+  color: $color-text-secondary;
+  font-weight: 400;
+  border-color: $color-divider;
+  padding: 0 8px;
+  margin: 0 3px;
+  min-width: $height-sm + 2px;
+  line-height: $height-sm;
+  text-align: center;
+  border-radius: 2px !important;
+
+  &:hover,
+  &:focus {
+    background-color: $color-bg-lighter;
+    color: $color-text;
+  }
+
+  span {
+    font-size: 75%;
+  }
+}
+
+.page-item.disabled .page-link {
+  &,
+  &:focus,
+  &:hover {
+    opacity: 0.6;
+  }
+}
+
+.page-item.active .page-link {
+  &,
+  &:focus,
+  &:hover {
+    background-color: $color-primary;
+    border-color: $color-primary;
+    font-weight: 500;
+  }
+}
+
+// No border
+//
+.pagination.no-border .page-link {
+
+  border: none;
+
+  &:hover,
+  &:focus {
+    border-color: $color-bg-lighter;
+  }
+
+}
+
+// No gutters
+//
+.pagination.no-gutters {
+
+  margin-left: 1px;
+
+  .page-link {
+    margin: 0;
+    margin-left: -1px;
+    border-radius: 0 !important;
+  }
+}
+
+
+// Round
+//
+.pagination-circle .page-link {
+  border-radius: 50% !important;
+}
+
+
+// Size
+//
+.pagination-sm .page-link {
+  padding: 0;
+  min-width: $height-xs + 2px;
+  line-height: $height-xs;
+}
+
+.pagination-lg .page-link {
+  padding: 0;
+  min-width: $height-md + 2px;
+  line-height: $height-md;
+}
+
+
+// Colors
+//
+@each $name, $color in $colors {
+  .pagination-#{$name} {
+    @include pagination-colors($color);
+  }
+}
+
+.pagination-secondary .page-item.active .page-link {
+
+  &,
+  &:focus,
+  &:hover {
+    color: $color-text-secondary;
+  }
+
+}

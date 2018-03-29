@@ -1,0 +1,433 @@
+
+.dropdown,
+.dropup {
+
+  .flex-row {
+    align-items: center;
+  }
+}
+
+.dropdown-backdrop {
+  cursor: default;
+}
+
+
+
+
+
+//-----------------------------------------------------------------
+// Dropdown toggle
+//
+.dropdown-toggle {
+  cursor: pointer;
+  transition: .2s linear;
+
+  &::after {
+    margin-left: .5em;
+    vertical-align: .12em;
+  }
+
+  .dropup &::after {
+    vertical-align: .2em;
+  }
+
+  &.no-caret::after {
+    display: none;
+  }
+
+  .icon {
+    vertical-align: baseline;
+    margin-right: 6px;
+    font-size: 0.75rem;
+  }
+
+}
+
+@include dropdown-toggle(primary, $color-primary, 8%);
+@include dropdown-toggle(secondary, $color-secondary, 3%);
+@include dropdown-toggle(success, $color-success, 6%);
+@include dropdown-toggle(info, $color-info, 6%);
+@include dropdown-toggle(warning, $color-warning, 5%);
+@include dropdown-toggle(danger, $color-danger, 5%);
+
+
+//-----------------------------------------------------------------
+// Dropdown menu
+//
+.dropdown-grid {
+  position: absolute;
+  top: 100%;
+  float: left;
+  min-width: 300px;
+  margin: 2px 0 0;
+  text-align: left;
+  list-style: none;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0,0,0,.15);
+}
+
+.dropup {
+  .dropdown-menu,
+  .dropdown-grid {
+    //transform-origin: center bottom 0;
+  }
+}
+
+.dropdown-menu,
+.dropdown-grid {
+  color: $color-text;
+  border-radius: 2px;
+  font-size: 13px;
+  border-color: $color-divider-light;
+  padding: 0;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.06);
+  z-index: $zindex-dropdown;
+
+  // Unable to open dropdown with animation, due to Popper
+  //
+  //display: block;
+  //transform: scale(1,0);
+  //transform-origin: center top 0;
+  //transition: .3s;
+
+  a {
+    color: $color-text;
+  }
+
+  // Replacing Tether with Popper, has conflict with this idea
+  /*
+  &.open-top-right {
+    transform-origin: 97% top 0;
+    transform: scale(0,0);
+  }
+
+  &.open-top-left {
+    transform-origin: 3% top 0;
+    transform: scale(0,0);
+  }
+
+  &.open-top-center {
+    left: 50%;
+    transform: scale(0,0) translateX(-50%);
+  }
+
+
+  &.open-bottom-right {
+    transform-origin: 97% bottom 0;
+    transform: scale(0,0);
+  }
+
+  &.open-bottom-left {
+    transform-origin: 3% bottom 0;
+    transform: scale(0,0);
+  }
+
+  &.open-bottom-center {
+    left: 50%;
+    transform-origin: center bottom 0;
+    transform: scale(1,0) translateX(-50%);
+  }
+  */
+}
+
+
+.show > {
+
+  // Popper problem
+  /*
+  .dropdown-menu,
+  .dropdown-grid {
+    transform: scale(1,1) !important;
+  }
+
+  .open-top-center,
+  .open-bottom-center {
+    transform: scale(1,1) translateX(-50%) !important;
+  }
+  */
+
+  .dropdown-grid {
+    display: flex;
+  }
+
+}
+
+
+//-----------------------------------------------------------------
+// Dropdown item
+//
+.dropdown-item {
+  color: lighten($color-text, 8%);
+  font-weight: 300;
+  padding: 4px 12px;
+  width: auto;
+  margin: 4px;
+  transition: 0.15s linear;
+
+  &:hover,
+  &:focus {
+    background-color: $color-bg-lighter;
+  }
+
+  &.active,
+  &:active {
+    color: $color-text;
+    background-color: $color-bg-light;
+  }
+
+  &.show,
+  &.show:focus,
+  &.show:hover {
+    background-color: $color-bg-lighter;
+    color: $color-text;
+  }
+
+  &.disabled {
+    opacity: .5;
+    cursor: not-allowed;
+
+    &:hover {
+      background-color: transparent;
+    }
+  }
+
+  &.flexbox,
+  .flexbox {
+    align-items: baseline;
+  }
+
+  i {
+    margin-right: 0.5rem;
+  }
+
+  .icon {
+    vertical-align: baseline;
+    margin-right: 6px;
+    font-size: 0.875rem;
+  }
+}
+
+
+//-----------------------------------------------------------------
+// Dropdown grid
+//
+.dropdown-grid {
+  display: none; // Should become flex
+
+  flex-wrap: wrap;
+  padding: 8px;
+
+  .dropdown-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    flex-basis: 33.333333%;
+    overflow: hidden;
+
+    text-align: center;
+    padding: 12px;
+    margin: 0;
+    min-height: 90px;
+    border: 1px solid transparent;
+
+    &:hover {
+      border-color: $color-divider-light;
+    }
+
+  }
+
+  .icon {
+    font-size: 24px;
+  }
+
+  .title {
+    margin: 6px -12px 0;
+  }
+
+  .i8-icon {
+    margin: 0 12px -4px;
+
+    + .title {
+      margin-top: 0;
+    }
+  }
+
+
+  &.cols-2 {
+    min-width: 200px;
+
+    .dropdown-item {
+      flex-basis: 50%;
+    }
+  }
+
+  &.cols-4 {
+    min-width: 400px;
+
+    .dropdown-item {
+      flex-basis: 25%;
+    }
+  }
+}
+
+.dropdown-grid-right {
+  right: 0;
+  left: auto;
+}
+
+
+//-----------------------------------------------------------------
+// Dropdown header & footer
+//
+.dropdown-header {
+  text-transform: uppercase;
+  color: $color-text-secondary;
+  font-size: 12px;
+  margin-bottom: 0;
+  padding: 12px;
+  letter-spacing: .25px;
+  opacity: 0.8;
+}
+
+.dropdown-footer {
+  display: flex;
+  justify-content: space-between;
+  background-color: $color-bg-lighter;
+  border-top: 1px solid $color-divider;
+  padding: 0 0.75rem;
+
+  a {
+    display: inline-block;
+    padding: 10px 8px;
+    color: $color-text-secondary;
+
+    &:hover {
+      color: $color-text;
+    }
+  }
+
+}
+
+
+
+
+
+
+//-----------------------------------------------------------------
+// Detach dropdowns in .topbar
+//
+.topbar .dropdown-menu,
+.topbar .dropdown-grid {
+  margin-top: 7px !important;
+  overflow: visible !important;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: -11px;
+    left: 17px;
+    width: 0;
+    height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 9px solid rgba(0,0,0,.045);
+  }
+
+  &::after {
+    top: -9px;
+    border-bottom-color: #fdfeff;
+  }
+
+
+  &.dropdown-menu-right::before,
+  &.dropdown-menu-right::after {
+    left: auto;
+    right: 17px;
+  }
+}
+
+
+
+
+
+//-----------------------------------------------------------------
+// Utilities
+//
+
+.dropdown-divider {
+  background-color: $color-divider-light;
+  margin: 4px 0;
+}
+
+
+
+
+
+
+//-----------------------------------------------------------------
+// Sizes
+//
+.dropdown-sm {
+
+  .dropdown-item {
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
+
+  .dropdown-grid {
+
+    min-width: 270px;
+
+    .dropdown-item {
+      min-height: 80px;
+      font-size: .8125rem;
+    }
+
+    .icon {
+      font-size: 20px;
+    }
+
+    &.cols-2 {
+      min-width: 180px;
+    }
+
+    &.cols-4 {
+      min-width: 360px;
+    }
+  }
+
+}
+
+
+.dropdown-lg {
+
+  .dropdown-item {
+    padding-top: 7px;
+    padding-bottom: 7px;
+  }
+
+  .dropdown-grid {
+
+    min-width: 330px;
+
+    .dropdown-item {
+      min-height: 100px;
+    }
+
+    .icon {
+      font-size: 28px;
+    }
+
+    &.cols-2 {
+      min-width: 220px;
+    }
+
+    &.cols-4 {
+      min-width: 440px;
+    }
+  }
+
+}

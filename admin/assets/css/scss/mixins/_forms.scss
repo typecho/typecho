@@ -1,0 +1,35 @@
+@mixin form-validation-colors($color) {
+  .form-control {
+    border-color: $color;
+
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+  .checkbox,
+  .checkbox-inline,
+  .custom-control,
+  .form-control-feedback,
+  .form-control-label,
+  .radio,
+  .radio-inline,
+  &.checkbox label,
+  &.checkbox-inline label,
+  &.radio label,
+  &.radio-inline label {
+    color: $color;
+  }
+}
+
+
+
+@mixin custom-control-colors($color) {
+  &.custom-checkbox .custom-control-label::after {
+    color: $color;
+  }
+
+  &.custom-radio .custom-control-label::after {
+    background-color: $color;
+  }
+}

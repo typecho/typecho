@@ -1,0 +1,250 @@
+
+
+//-----------------------------------------------------------------
+// Linear spinner
+//
+.spinner-linear {
+  position: relative;
+  height: 2px;
+  display: block;
+  width: 100%;
+  background-color: $color-bg-light;
+  border-radius: 2px;
+  background-clip: padding-box;
+  overflow: hidden;
+
+  .line {
+    background-color: $color-primary;
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      background-color: inherit;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      will-change: left, right;
+    }
+
+    &::before {
+      animation: spinner-linear 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+    }
+
+    &::after {
+      animation: spinner-linear-short 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
+      animation-delay: 1.15s;
+    }
+
+  }
+}
+
+@keyframes spinner-linear {
+  0%   { left: -35%; right: 100%; }
+  60%  { left: 100%; right: -90%; }
+  100% { left: 100%; right: -90%; }
+}
+
+@keyframes spinner-linear-short {
+  0%   { left: -200%; right: 100%; }
+  60%  { left: 107%;  right: -8%; }
+  100% { left: 107%;  right: -8%; }
+}
+
+
+
+
+//-----------------------------------------------------------------
+// Spinner dots
+//
+.spinner-dots {
+  width: 70px;
+  text-align: center;
+
+  span {
+    width: 12px;
+    height: 12px;
+    background-color: $color-primary;
+    border-radius: 100%;
+    display: inline-block;
+    animation: spinner-dots 1.4s infinite ease-in-out both;
+  }
+
+  .dot1 {
+    animation-delay: -0.32s;
+  }
+
+  .dot2 {
+    animation-delay: -0.16s;
+  }
+
+}
+
+@keyframes spinner-dots {
+  0%, 80%, 100% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  }
+  40% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+}
+
+
+//-----------------------------------------------------------------
+// Spinner ball
+//
+.spinner-ball {
+  width: 50px;
+  height: 50px;
+  animation: spinner-ball infinite linear 1s;
+  border-radius: 100%;
+  background-color: $color-primary;
+}
+
+@keyframes spinner-ball {
+  0% {
+    transform: scale(.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+
+
+//-----------------------------------------------------------------
+// Circular spinner
+//
+.spinner-circle {
+  width: 25px;
+  height: 25px;
+  animation: spinner-circle infinite .75s linear;
+  border: 1px solid $color-primary;
+  border-top-color: transparent;
+  border-radius: 100%;
+}
+
+
+//-----------------------------------------------------------------
+// Circular spinner
+//
+.spinner-circle-shadow {
+  position: relative;
+  width: 25px;
+  height: 25px;
+  animation: spinner-circle infinite .75s linear;
+  border: 1px solid rgba($color-primary, .3);
+  border-left-color: $color-primary;
+  border-radius: 100%;
+}
+
+@keyframes spinner-circle {
+  0%   { transform: rotate(0); }
+  100% { transform: rotate(360deg); }
+}
+
+
+//-----------------------------------------------------------------
+// Circular material spinner - SVG
+//
+.spinner-circle-material-svg {
+  animation: spinner-svg-spinner 1.5s linear infinite;
+  height: 54px;
+  width: 54px;
+
+  .circle {
+    animation: spinner-svg-progress 1.5s cubic-bezier(0.4, 0.0, 0.2, 1) infinite,
+               spinner-svg-colors 6s cubic-bezier(0.4, 0.0, 0.2, 1) infinite;
+    fill: none;
+    stroke: #db3236;
+    stroke-linecap: round;
+    stroke-width: 2;
+  }
+}
+
+@keyframes spinner-svg-spinner {
+  0%   { transform: rotate(-110deg) }
+  20%  { transform: rotate(-70deg) }
+  60%  { transform: rotate(90deg) }
+  100% { transform: rotate(250deg); }
+}
+
+@keyframes spinner-svg-progress {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  20% {
+    stroke-dasharray: 1, 150;
+    stroke-dash-offset: 0;
+  }
+  60% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
+}
+
+@keyframes spinner-svg-colors {
+  0%  { stroke: #db3236; }
+  23% { stroke: #db3236; }
+  27% { stroke: #4885ed; }
+  48% { stroke: #4885ed; }
+  52% { stroke: #3cba54; }
+  73% { stroke: #3cba54; }
+  77% { stroke: #f4c20d; }
+  98% { stroke: #f4c20d; }
+}
+
+//-----------------------------------------------------------------
+// Circular material spinner
+//
+.spinner-circle-material {
+  height: 50px;
+  min-height: 50px;
+  width: 50px;
+  border-radius: 100px;
+  border: 2px transparent solid;
+  border-top: 2px #3F51B5 solid;
+  animation: spinner-material 4s infinite;
+}
+
+@keyframes spinner-material {
+  0% {
+    transform: rotate(0deg);
+    border-top-color: #3F51B5;
+  }
+  25% {
+    transform: rotate(360deg);
+    border-top-color: #F44336;
+  }
+  50% {
+    transform: rotate(720deg);
+    border-top-color: #FFC107;
+  }
+  75% {
+    transform: rotate(1080deg);
+    border-top-color: #4CAF50;
+  }
+  100% {
+    transform: rotate(1440deg);
+    border-top-color: #3F51B5;
+  }
+}
+
+
+//-----------------------------------------------------------------
+// Spinner colors
+//
+@each $name, $color in $colors {
+  .spinner-#{$name} {
+    @include spinner-colors($color);
+  }
+}

@@ -1,0 +1,41 @@
+
+.price {
+  font-family: $font-title;
+  font-weight: bold;
+  font-size: 75px;
+  line-height: 75px;
+  color: #000;
+  padding: 10px 0;
+
+  span {
+    display: block;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 25px;
+    color: $color-text-light;
+  }
+
+  sup {
+    font-size: 28px;
+    vertical-align: super;
+  }
+}
+
+
+
+.price-dollar {
+  display: inline-block;
+  font-size: 16px;
+  vertical-align: top;
+  margin-right: -10px;
+  margin-top: 14px;
+}
+
+.price-interval {
+  display: inline-block;
+  font-size: 12px;
+  vertical-align: text-bottom;
+  margin-left: -10px;
+  margin-bottom: 14px;
+  color: $color-text-secondary;
+}

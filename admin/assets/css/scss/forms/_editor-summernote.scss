@@ -1,0 +1,152 @@
+//
+// Summernote
+//
+.note-editor,
+.note-popover {
+
+  &.note-frame {
+    border-color: $color-divider-light;
+  }
+
+  .dropdown-menu {
+    white-space: nowrap;
+    width: auto;
+
+    li {
+
+      a {
+        display: block;
+        margin: 4px;
+        padding: 4px 12px;
+
+        &:hover {
+          background-color: $color-bg-lighter;
+        }
+
+        > * {
+          margin: 0;
+        }
+      }
+    }
+  }
+
+  .note-color {
+    .dropdown-menu {
+      padding: 5px 0;
+    }
+
+    .btn + .btn::after {
+      margin-left: 0;
+    }
+
+  }
+
+}
+
+.note-toolbar,
+.note-popover {
+  .btn {
+    background-color: darken($color-bg-light, 2%);
+    color: $color-text-secondary;
+    font-size: .8125rem;
+
+    &:hover,
+    &.active {
+      background-color: darken($color-bg-light, 4%);
+      color: $color-text;
+    }
+
+    &.dropdown-toggle {
+      z-index: initial;
+    }
+  }
+
+  .open .dropdown-toggle, // Before bootstrap 4
+  .show .dropdown-toggle {
+    background-color: darken($color-bg-light, 4%);
+  }
+}
+
+.panel-heading.note-toolbar,
+.note-editor.note-frame .note-statusbar {
+  background-color: $color-bg-lighter;
+  border-bottom: 1px solid lighten($color-divider-light, 1%);
+}
+
+.note-icon-caret,
+.note-popover.popover {
+  display: none;
+}
+
+.note-editor.note-frame .note-statusbar .note-resizebar .note-icon-bar {
+  border-top-color: $color-divider;
+}
+
+.note-popover .popover-content .note-para .dropdown-menu,
+.panel-heading.note-toolbar .note-para .dropdown-menu {
+  min-width: 204px;
+}
+
+.note-editor.note-frame .note-editing-area .note-codable {
+  background-color: $color-bg-lighter;
+  color: $color-text;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.note-popover .popover-content .note-color .dropdown-menu .btn-group .note-color-reset,
+.panel-heading.note-toolbar .note-color .dropdown-menu .btn-group .note-color-reset {
+  border-radius: 2px;
+  margin: 5px;
+  height: $height-sm;
+  line-height: $height-sm - 2px;
+  font-size: 0.75rem;
+
+  &:hover {
+    background-color: $color-bg-lighter;
+  }
+}
+
+.note-palette-title {
+  font-weight: 400;
+  line-height: $line-height-md;
+}
+
+
+
+// Font selector would be 29px instead of 31px if it's alone
+//
+.note-btn-group.note-fontname {
+  vertical-align: top;
+  .note-btn {
+    line-height: 22px;
+  }
+}
+
+.note-btn-group.note-fontsize {
+  vertical-align: top;
+}
+
+
+
+// Change which applies to the <textarea>
+//
+[data-provide~="summernote"].b-0 + .note-editor {
+  border: none;
+
+  .note-statusbar {
+    display: none;
+  }
+}
+
+
+
+/*
+ * Fix for Bootstrap Beta 1. Color picker doesn't open.
+ */
+.note-popover .popover-content .note-color .dropdown-menu .btn-group,
+.panel-heading.note-toolbar .note-color .dropdown-menu .btn-group {
+  flex-direction: column;
+}

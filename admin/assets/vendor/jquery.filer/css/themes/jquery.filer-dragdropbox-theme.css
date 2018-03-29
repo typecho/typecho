@@ -1,0 +1,191 @@
+/*!
+ * CSS jQuery.filer
+ * Theme: DragDropBox
+ * Copyright (c) 2016 CreativeDream
+ * Version: 1.3 (14-Sep-2016)
+*/
+
+/*-------------------------
+	Input
+-------------------------*/
+.jFiler-input-dragDrop {
+    display: block;
+    width: 343px;
+    margin: 0 auto 25px auto;
+    padding: 25px;
+    color: #97A1A8;
+    background: #F9FBFE;
+    border: 2px dashed #C8CBCE;
+    text-align: center;
+    -webkit-transition: box-shadow 0.3s,
+                        border-color 0.3s;
+    -moz-transition: box-shadow 0.3s,
+                        border-color 0.3s;
+    transition: box-shadow 0.3s,
+                        border-color 0.3s;
+}
+
+.jFiler .jFiler-input-dragDrop.dragged {
+    border-color: #aaa;
+    box-shadow: inset 0 0 20px rgba(0,0,0,.08);
+}
+
+.jFiler .jFiler-input-dragDrop.dragged * {
+    pointer-events: none;
+}
+
+.jFiler .jFiler-input-dragDrop.dragged .jFiler-input-icon {
+    -webkit-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+
+.jFiler .jFiler-input-dragDrop.dragged .jFiler-input-text,
+.jFiler .jFiler-input-dragDrop.dragged .jFiler-input-choose-btn {
+    filter: alpha(opacity=30);
+    opacity: 0.3;
+}
+
+.jFiler-input-dragDrop .jFiler-input-icon {
+    font-size: 48px;
+    margin-top: -10px;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+.jFiler-input-text h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.jFiler-input-text span {
+    font-size: 12px;
+}
+
+.jFiler-input-choose-btn {
+    display: inline-block;
+    padding: 8px 14px;
+    outline: none;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    white-space: nowrap;
+    font-size: 12px;
+    font-weight: bold;
+    color: #8d9496;
+    border-radius: 3px;
+    border: 1px solid #c6c6c6;
+    vertical-align: middle;
+    *background-color: #fff;
+    box-shadow: 0px 1px 5px rgba(0,0,0,0.05);
+    -webkit-transition: all 0.2s;
+    -moz-transition: all 0.2s;
+    transition: all 0.2s;
+}
+
+.jFiler-input-choose-btn:hover,
+.jFiler-input-choose-btn:active {
+    color: inherit;
+}
+
+.jFiler-input-choose-btn:active {
+    background-color: #f5f5f5;
+}
+
+/* gray */
+.jFiler-input-choose-btn.gray {
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#fcfcfc),to(#f5f5f5));
+    background-image: -webkit-linear-gradient(top,#fcfcfc,#f5f5f5);
+    background-image: -o-linear-gradient(top,#fcfcfc,#f5f5f5);
+    background-image: linear-gradient(to bottom,#fcfcfc,#f5f5f5);
+    background-image: -moz-linear-gradient(top,#fcfcfc,#f5f5f5);
+}
+
+.jFiler-input-choose-btn.gray:hover {
+    filter: alpha(opacity=87);
+    opacity: 0.87;
+}
+
+.jFiler-input-choose-btn.gray:active {
+    background-color: #f5f5f5;
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#f5f5f5),to(#fcfcfc));
+    background-image: -webkit-linear-gradient(top,#f5f5f5,#fcfcfc);
+    background-image: -o-linear-gradient(top,#f5f5f5,#fcfcfc);
+    background-image: linear-gradient(to bottom,#f5f5f5,#fcfcfc);
+    background-image: -moz-linear-gradient(top,#f5f5f5,#fcfcfc);
+}
+
+/* blue */
+.jFiler-input-choose-btn.blue {
+    color: #48A0DC;
+    border: 1px solid #48A0DC;
+}
+
+.jFiler-input-choose-btn.blue:hover {
+    background: #48A0DC;
+}
+
+.jFiler-input-choose-btn.blue:active {
+    background: #48A0DC;
+}
+
+/* green */
+.jFiler-input-choose-btn.green {
+    color: #27ae60;
+    border: 1px solid #27ae60;
+}
+
+.jFiler-input-choose-btn.green:hover {
+    background: #27ae60;
+}
+
+.jFiler-input-choose-btn.green:active {
+    background: #27ae60;
+}
+
+/* red */
+.jFiler-input-choose-btn.red {
+    color: #ed5a5a;
+    border: 1px solid #ed5a5a;
+}
+
+.jFiler-input-choose-btn.red:hover {
+    background: #ed5a5a;
+}
+
+.jFiler-input-choose-btn.red:active {
+    background: #E05252;
+}
+
+/* black */
+.jFiler-input-choose-btn.black {
+    color: #555;
+    border: 1px solid #555;
+}
+
+.jFiler-input-choose-btn.black:hover {
+    background: #555;
+}
+
+.jFiler-input-choose-btn.black:active {
+    background: #333;
+}
+
+.jFiler-input-choose-btn.blue:hover,
+.jFiler-input-choose-btn.green:hover,
+.jFiler-input-choose-btn.red:hover,
+.jFiler-input-choose-btn.black:hover {
+    border-color: transparent;
+    color: #fff;
+}
+
+.jFiler-input-choose-btn.blue:active,
+.jFiler-input-choose-btn.green:active,
+.jFiler-input-choose-btn.red:active,
+.jFiler-input-choose-btn.black:active {
+    border-color: transparent;
+    color: #fff;
+    filter: alpha(opacity=87);
+    opacity: 0.87;
+}

@@ -1,0 +1,14 @@
+
+
+// Fix for fancy dropdown
+.colorpicker.dropdown-menu {
+  transform: scale(1,1);
+  padding: 6px;
+  transition: initial;
+}
+
+
+.colorpicker-element .add-on i,
+.colorpicker-element .input-group-addon i {
+  vertical-align: middle;
+}

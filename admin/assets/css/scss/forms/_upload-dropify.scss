@@ -1,0 +1,50 @@
+
+//-----------------------------------------------------------------
+// Dropify
+//
+.dropify-wrapper {
+  border: 1px solid $color-divider;
+  padding: 12px;
+
+  .dropify-clear,
+  &.touch-fallback .dropify-clear {
+    bottom: 6px; // 18px when ".dropify-infos-message" displayed
+    border: none;
+    color: $color-danger;
+    font-weight: 400;
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 6px 12px;
+    cursor: pointer;
+
+     &:hover {
+
+      background-color: $color-bg-lighter;
+    }
+  }
+
+}
+
+.dropify-wrapper.touch-fallback .dropify-preview .dropify-infos .dropify-infos-inner {
+  padding-top: 10px;
+  padding-bottom: 0;
+}
+
+.dropify-wrapper .dropify-preview .dropify-infos .dropify-infos-inner p,
+.dropify-wrapper.touch-fallback .dropify-preview .dropify-infos .dropify-infos-inner p {
+  color: $color-text-secondary;
+  font-weight: 300;
+}
+
+.dropify-wrapper.touch-fallback .dropify-preview .dropify-infos .dropify-infos-inner p.dropify-infos-message {
+  font-size: 12px;
+  opacity: 0.6;
+
+  display: none; // Hide "drag and drop..." message
+}
+
+.dropify-wrapper.touch-fallback .dropify-preview .dropify-infos .dropify-infos-inner p.dropify-filename {
+  font-weight: 400;
+  font-size: 13px;
+  color: $color-text-light;
+}

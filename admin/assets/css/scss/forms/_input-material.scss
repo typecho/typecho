@@ -1,0 +1,280 @@
+
+
+//-----------------------------------------------------------------
+// Material elements
+//
+.form-type-material {
+
+  // Inputs
+  //
+  &.form-control,
+  .form-control {
+    border-color: transparent;
+    padding-left: 0;
+    padding-right: 0;
+    background-size: 0 2px, 100% 1px;
+    background-repeat: no-repeat;
+    background-position: center bottom, center calc(100% - 1px);
+    background-image: linear-gradient($color-primary,$color-primary), linear-gradient($color-divider,$color-divider);
+    transition: background 0.3s;
+
+    &:focus,
+    &.focus {
+      background-size: 100% 2px, 100% 1px;
+      border-color: transparent;
+      box-shadow: none;
+    }
+
+    &:disabled,
+    &[readonly] {
+      background-color: #fff;
+      opacity: 0.7;
+    }
+
+    &.form-control-sm ~ label {
+      font-size: 80%;
+    }
+
+    &.form-control-lg ~ label {
+      font-size: 120%;
+    }
+
+  }
+
+
+  // Form groups
+  //
+  &.form-group,
+  .form-group {
+    position: relative;
+    padding-top: 10px;
+    margin-bottom: 20px;
+
+    label:not(.custom-control-label):not(.switch) {
+      position: absolute;
+      left: 0;
+      top: 13px;
+      font-weight: 300;
+      padding: 0;
+      pointer-events: none;
+      white-space: nowrap;
+      transition: 0.3s;
+    }
+
+    .form-control-lg ~ label {
+      top: 20px;
+    }
+  }
+
+
+  // Input groups
+  //
+  &.input-group,
+  .input-group {
+    position: relative;
+    padding-top: 10px;
+
+    label:not(.custom-control-label) {
+      position: absolute;
+      left: 0;
+      top: 8px !important;
+      font-weight: 300;
+      padding: 0;
+      pointer-events: none;
+      transition: 0.3s;
+    }
+
+    .input-group-text {
+      background-color: #fff;
+      border: none;
+      color: $color-text-secondary;
+    }
+
+    .input-group-btn + .form-control,
+    .form-control + .input-group-btn,
+    .input-group-btn + .input-group-input,
+    .input-group-input + .input-group-btn {
+      //margin-left: 1rem;
+    }
+
+    .input-group-prepend .btn:last-of-type {
+      margin-right: 1rem;
+    }
+
+    .input-group-append .btn:first-of-type {
+      margin-left: 1rem;
+    }
+
+    &.input-group-lg label {
+      font-size: 120%;
+      top: 14px !important;
+    }
+
+    &.input-group-sm label {
+      font-size: 80%;
+      top: 3px !important;
+    }
+
+  }
+
+
+  // File browser
+  //
+  .custom-file-control {
+    border: 0;
+    border-radius: 0;
+    border-bottom: 1px solid $color-divider;
+    padding-left: 0;
+    padding-right: 0;
+
+    &::before {
+      border-radius: 0;
+    }
+  }
+
+
+  .input-group-input {
+    position: relative;
+    flex-grow: 1;
+
+    .form-control {
+      width: 100%;
+    }
+
+    label {
+      top: 6px !important;
+      z-index: 3;
+    }
+
+    &.do-float label,
+    .label-floated {
+      top: -13px !important;
+    }
+  }
+
+
+
+  // Select picker
+  //
+  .bootstrap-select.btn-group  {
+
+    .dropdown-toggle {
+      background-color: transparent;
+      border: none;
+      padding-left: 0;
+      background-size: 0 2px, 100% 1px;
+      background-repeat: no-repeat;
+      background-position: center bottom, center calc(100% - 1px);
+      background-image: linear-gradient($color-primary,$color-primary), linear-gradient($color-divider,$color-divider);
+      transition: background 0.3s;
+
+      &:focus {
+        background-color: #fff;
+      }
+    }
+
+    &.show .dropdown-toggle {
+      background-size: 100% 2px, 100% 1px;
+      border-color: transparent;
+    }
+
+    &.input-group-btn .dropdown-toggle {
+      margin-top: 0;
+    }
+
+    + label {
+      z-index: 3;
+    }
+  }
+
+
+}
+
+
+.do-float label,
+.label-floated {
+  top: -8px !important;
+  font-size: 10px !important;
+  font-weight: 400 !important;
+  opacity: .5;
+}
+
+
+//-----------------------------------------------------------------
+// Validation
+//
+
+// Depricated - Alpha-6
+//
+.form-type-material .has-success,
+.form-type-material.has-success {
+
+  .form-control {
+    background-image: linear-gradient($color-success,$color-success), linear-gradient($color-success,$color-success);
+  }
+
+  &.do-float label,
+  .do-float label {
+    color: $color-success;
+  }
+
+}
+
+.form-type-material .has-warning,
+.form-type-material.has-warning {
+
+  .form-control {
+    background-image: linear-gradient($color-warning,$color-warning), linear-gradient($color-warning,$color-warning);
+  }
+
+  &.do-float label,
+  .do-float label {
+    color: $color-warning;
+  }
+
+}
+
+.form-type-material .has-danger,
+.form-type-material.has-danger {
+
+  .form-control {
+    background-image: linear-gradient($color-danger,$color-danger), linear-gradient($color-danger,$color-danger);
+  }
+
+  &.do-float label,
+  .do-float label {
+    color: $color-danger;
+  }
+
+}
+
+
+// Beta-1
+//
+.form-type-material {
+
+  .custom-select.is-invalid,
+  .form-control.is-invalid,
+  .was-validated .custom-select:invalid,
+  .was-validated .form-control:invalid {
+    background-image: linear-gradient($color-danger, $color-danger), linear-gradient($color-danger, $color-danger);
+    border: none;
+
+    &:focus {
+      box-shadow: none !important;
+    }
+  }
+
+  .custom-select.is-valid,
+  .form-control.is-valid,
+  .was-validated .custom-select:valid,
+  .was-validated .form-control:valid {
+    background-image: linear-gradient($color-success, $color-success), linear-gradient($color-success, $color-success);
+    border: none;
+
+    &:focus {
+      box-shadow: none !important;
+    }
+  }
+
+}

@@ -1,0 +1,89 @@
+
+//-----------------------------------------------------------------
+// Line elements
+//
+
+.form-type-round {
+
+  // Inputs
+  //
+  &input.form-control,
+  input.form-control,
+  &select:not([multiple]).form-control,
+  select:not([multiple]).form-control {
+    border-radius: 10rem;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+
+  // Small
+  &input.form-control-sm,
+  &select:not([multiple]).form-control-sm,
+  &.input-group-sm input.form-control,
+  input.form-control-sm,
+  select:not([multiple]).form-control-sm,
+  .input-group-sm input.form-control {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  // Large
+  &input.form-control-lg,
+  &select:not([multiple]).form-control-lg,
+  &.input-group-lg input.form-control,
+  input.form-control-lg,
+  select:not([multiple]).form-control-lg,
+  .input-group-lg input.form-control {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+
+  // Input groups
+  //
+  &.input-group,
+  .input-group {
+    border-radius: 10rem;
+
+    .input-group-prepend > .input-group-text:first-child,
+    .input-group-prepend > .btn:first-child {
+      border-top-left-radius: 10rem;
+      border-bottom-left-radius: 10rem;
+    }
+
+    .input-group-append > .input-group-text:last-child,
+    .input-group-append > .btn:last-of-type {
+      border-top-right-radius: 10rem;
+      border-bottom-right-radius: 10rem;
+    }
+
+  }
+
+
+  // File browser
+  //
+  .custom-file-control {
+    border: 0;
+    border-radius: 0;
+    border-bottom: 1px solid $color-divider;
+    padding-left: 0;
+    padding-right: 0;
+
+    &::before {
+      border-radius: 0;
+    }
+  }
+
+
+
+  // Select picker
+  //
+  .bootstrap-select.btn-group  {
+
+    .dropdown-toggle {
+      border-radius: 10rem;
+    }
+  }
+
+}

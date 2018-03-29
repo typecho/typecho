@@ -1,0 +1,47 @@
+
+.ql-bubble .ql-out-bottom,
+.ql-bubble .ql-out-top {
+  visibility: visible;
+}
+
+.ql-toolbar.ql-snow {
+  font-family: $font-body;
+  border-color: $color-divider;
+  border-bottom-color: $color-divider-light;
+  background-color: $color-bg-lightest;
+}
+
+.ql-container.ql-snow {
+  border-color: $color-divider;
+}
+
+.ql-toolbar.ql-snow .ql-picker-label {
+  font-weight: 300;
+}
+
+.ql-editor.ql-blank::before {
+  color: $color-text-placeholder;
+  font-style: normal;
+}
+
+.ql-container {
+  font-family: $font-body;
+  height: auto;
+}
+
+.ql-editor {
+  line-height: $line-height-md;
+}
+
+
+.quill-no-border {
+
+  .ql-container.ql-snow {
+    border: none;
+  }
+
+  .ql-toolbar.ql-snow {
+    border: none;
+    border-bottom: 1px solid $color-divider-light;
+  }
+}

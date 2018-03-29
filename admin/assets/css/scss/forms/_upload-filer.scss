@@ -1,0 +1,151 @@
+
+.jFiler-theme-default {
+
+  .jFiler {
+    display: none;
+  }
+
+  .jFiler-input {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: $height-md;
+    background: #fff;
+    border-color: $color-divider;
+    font-size: 14px;
+    font-family: $font-body;
+    color: $color-text;
+    border-radius: 3px;
+    box-shadow: none;
+  }
+
+  .jFiler-input-caption {
+    flex-grow: 1;
+    float: none;
+    padding: 0 12px;
+    line-height: $height-md;
+    font-size: 12px;
+    color: $color-text-secondary;
+  }
+
+  .jFiler-input-button {
+    float: none;
+    font-size: 13px;
+    line-height: $height-md;
+    padding: 0 12px;
+    border-left-color: $color-divider;
+    color: $color-text;
+    background-color: $color-bg-lightest;
+    background-image: none;
+  }
+
+  .jFiler-input-button:hover {
+    box-shadow: none;
+    background-color: $color-bg-lighter;
+  }
+
+  .jFiler-input-button:active {
+    background-image: none;
+    background-color: $color-bg-lighter;
+  }
+
+
+  // Items
+  //
+  .jFiler-item {
+    background: $color-bg-lighter;
+    color: $color-text;
+
+    .jFiler-item-inner {
+      display: flex;
+      align-items: center;
+    }
+
+    .jFiler-item-title {
+      //font-weight: 600;
+    }
+
+    .jFiler-item-others {
+      font-size: 13px;
+    }
+
+    .jFiler-item-assets {
+      margin-top: -13px;
+    }
+
+    .jFiler-item-assets a {
+      border: none;
+      color: $color-text-secondary;
+      font-size: 16px;
+    }
+  }
+
+}
+
+
+// Grid items
+//
+.jFiler-items-grid .jFiler-item .jFiler-item-container {
+  border-color: $color-divider;
+  border-radius: 2px;
+
+  .jFiler-item-thumb {
+    border-color: $color-divider-light;
+  }
+
+  .jFiler-item-assets {
+    color: $color-text-secondary;
+  }
+}
+
+
+// Drag and drop area
+//
+.jFiler-input-dragDrop {
+  width: 100%;
+  margin: 0 0 25px;
+  padding: 40px 25px;
+  background-color: $color-bg-lightest;
+  color: $color-text;
+  border-color: $color-divider;
+
+  .jFiler-input-icon {
+    margin: 10px 0;
+    color: $color-text-secondary;
+  }
+
+  .jFiler-input-text {
+    color: $color-text-secondary;
+
+    h3 {
+      color: $color-text-secondary;
+      font-size: 16px;
+    }
+  }
+}
+
+.jFiler-input-choose-btn.blue {
+  background-color: $color-secondary;
+  height: $height-md;
+  line-height: $height-md + 1px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 2px;
+  color: $color-text;
+  box-shadow: none;
+  font-size: 0.875rem;
+  font-weight: 400;
+  letter-spacing: 1px;
+
+  &:hover,
+  &:active {
+    background-color: lighten($color-secondary, 3%);
+  }
+}
+
+// Progressbar
+//
+.jFiler-jProgressBar {
+  height: 5px;
+  background: $color-bg-lightest;
+}

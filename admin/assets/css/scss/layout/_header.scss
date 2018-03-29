@@ -1,0 +1,338 @@
+
+
+.header {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+  margin-bottom: 30px;
+  background-size: cover;
+  background-position: center center;
+  border-bottom: 1px solid $color-divider;
+
+  > .container {
+    margin-bottom: 0;
+    padding-left: 30px;
+    padding-right: 30px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    //width: 100%; // This may cause problem
+
+    .header-info,
+    .header-action,
+    .header-bar {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+
+  &,
+  &.bg-img {
+    z-index: 2;
+  }
+}
+
+
+
+//-----------------------------------------------------------------
+// Header bar
+//
+.header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 12px 30px;
+
+  background-color: #fff;
+  border-bottom: 1px solid $color-divider-light;
+
+  > * {
+    margin-bottom: 0;
+  }
+}
+
+
+
+//-----------------------------------------------------------------
+// Page info
+//
+
+.header-title {
+  font-weight: 100;
+  font-family: $font-body;
+  color: $color-alpha-dark-text-active;
+
+  strong {
+    font-weight: 300;
+  }
+
+  small {
+    display: block;
+    font-weight: 300;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: inherit;
+    opacity: 0.7;
+    padding-top: 16px;
+  }
+}
+
+
+.header-info {
+  margin: 50px 0;
+  padding: 0 30px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  //align-items: center;   //This property overwrites flex-items-xs-bottom
+  width: 100%;
+
+  @include media-down(sm) {
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+
+  .left {
+    flex: 1;
+  }
+
+  .breadcrumb-item {
+
+    &::before {
+      color: $color-alpha-dark-text;
+    }
+
+    &.active {
+      color: $color-alpha-dark-text-active;
+    }
+
+    a {
+      color: $color-alpha-dark-text;
+
+      &:hover {
+        color: $color-alpha-dark-text-active;
+      }
+    }
+  }
+
+}
+
+
+//-----------------------------------------------------------------
+// Page actions
+//
+.header-action {
+  position: relative;
+  padding: 0 30px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 100%;
+
+  .nav {
+    white-space: nowrap;
+    flex-wrap: nowrap;
+    margin-bottom: 0;
+    border-bottom: none;
+
+    // Enabling horizontal scrollbar will cause to hide dropdowns as well.
+    // overflow-y: scroll; doesn't work.
+    /*
+    @include media-down(sm) {
+      overflow-x: auto;
+    }
+    */
+  }
+
+  .nav-link {
+    display: inline-block;
+    font-family: $font-title;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 0.75rem 1rem 1rem;
+    border-bottom: 3px solid transparent;
+    color: $color-alpha-dark-text;
+    background-color: transparent !important;
+
+    &.active,
+    &:hover {
+      color: $color-alpha-dark-text-active;
+      border-bottom-color: $color-primary;
+    }
+
+    + .nav-link {
+      margin-left: 0;
+    }
+
+    i {
+      margin-right: 4px;
+    }
+
+    small {
+      color: inherit;
+      vertical-align: bottom;
+      opacity: 0.7;
+    }
+
+    @include media-down(sm) {
+      padding: 0.5rem 0.75rem 0.75rem;
+    }
+  }
+
+  .dropdown-menu {
+    margin-top: 0;
+  }
+
+  .dropdown.show .nav-link {
+    color: $color-alpha-dark-text-active;
+    border-bottom-color: $color-primary;
+  }
+
+  .nav-item {
+    margin-bottom: 0;
+  }
+
+  .nav-tabs .nav-link {
+    transition: .2s linear;
+  }
+
+  .buttons {
+    position: absolute;
+    right: 30px;
+    bottom: 0;
+    transform: translateY(50%);
+
+    .btn {
+      margin-left: 4px;
+    }
+  }
+
+}
+
+
+//-----------------------------------------------------------------
+// Page header skins
+//
+
+// Transparent
+.header-transparent {
+  background-color: transparent;
+  border-bottom: none;
+}
+
+// Inverse
+.header-inverse {
+
+  background-color: $sidebar-dark-bg;
+
+  .header-info {
+
+    .header-title {
+      color: $color-alpha-light-text-active;
+    }
+
+    .breadcrumb-item {
+
+      &::before {
+        color: $color-alpha-light-text;
+      }
+
+      &.active {
+        color: $color-alpha-light-text-active;
+      }
+
+      a {
+        color: $color-alpha-light-text;
+
+        &:hover {
+          color: $color-alpha-light-text-active;
+        }
+      }
+    }
+
+  }
+
+  .header-action {
+    .nav-link {
+      color: $color-alpha-light-text;
+
+      &.active,
+      &:hover {
+        color: $color-alpha-light-text-active;
+        border-bottom-color: $color-primary;
+      }
+    }
+
+    .dropdown.show .nav-link {
+      color: $color-alpha-light-text-active;
+    }
+  }
+
+  &[class*="bg-"] {
+    .header-action .nav-link {
+      &.active,
+      &:hover {
+        border-bottom-color: $color-alpha-light-text;
+      }
+    }
+
+    .header-action .dropdown.show .nav-link {
+      border-bottom-color: $color-alpha-light-text;
+    }
+  }
+
+
+  .lookup-circle {
+
+    &::before {
+      color: $color-alpha-light-text;
+    }
+
+    input {
+      background-color: $color-alpha-light-bg;
+      color: $color-alpha-light-text-active;
+
+      &:focus {
+        background-color: $color-alpha-light-bg-hover;
+      }
+
+      @include placeholder-color($color-alpha-light-text);
+    }
+  }
+
+}
+
+
+//-----------------------------------------------------------------
+// Media queries
+//
+@include media-down(md) {
+
+  .page-info {
+    flex-direction: column;
+    margin-top: 2rem;
+
+    > div {
+      width: 100%;
+      margin: 0.5rem 0;
+    }
+  }
+
+  .page-info .header-search::before {
+    right: 24px;
+  }
+
+  .page-action nav a {
+    padding-top: 0.5rem;
+    padding-bottom: 1.25rem;
+  }
+
+}

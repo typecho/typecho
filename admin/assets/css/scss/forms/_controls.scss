@@ -1,0 +1,294 @@
+
+
+.form-check-input {
+  outline: none !important;
+}
+
+//-----------------------------------------------------------------
+// Custom checkbox and radiobox
+//
+.custom-control {
+  min-width: 18px;
+}
+
+.custom-controls-stacked {
+  @include clearfix();
+
+  .custom-control {
+    display: block;
+    margin-bottom: 6px;
+  }
+}
+
+.custom-checkbox .custom-control-input,
+.custom-radio .custom-control-input {
+  &:checked ~ .custom-control-label::before,
+  &:active:not(:disabled) ~ .custom-control-label::before {
+    background-color: $color-bg-lightest;
+  }
+
+  &:focus ~ .custom-control-label::before {
+    box-shadow: none;
+  }
+
+  &:checked ~ .custom-control-label::after {
+    transform: scale(1);
+    background-image: none;
+  }
+
+  &:disabled ~ .custom-control-label {
+
+    &::before,
+    &::after {
+      opacity: .5;
+    }
+
+    &::before {
+      background-color: $color-bg-lightest !important;
+    }
+  }
+
+  &:checked ~ .custom-control-label.strike-on-check {
+    text-decoration: line-through;
+    opacity: .6;
+  }
+}
+
+.custom-control-label {
+  color: $color-text;
+  font-weight: 300;
+
+  &::before {
+    top: .125rem;
+    width: 18px;
+    height: 18px;
+    background-color: $color-bg-lightest;
+    border: 1px solid $color-divider;
+    pointer-events: initial;
+  }
+
+
+  &::after {
+    content: '';
+    display: inline-block;
+    transform: scale(0);
+    transition: transform .3s;
+  }
+
+}
+
+
+// Radio only
+//
+.custom-radio {
+  //cursor: pointer;
+
+  .custom-control-label::after {
+    border-radius: 50%;
+    vertical-align: top;
+    margin-top: 3px;
+    margin-left: 5px;
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background-color: $color-primary;
+  }
+
+}
+
+
+// Checkbox only
+//
+.custom-checkbox {
+  //cursor: pointer;
+
+  .custom-control-label {
+
+    &::before {
+      border-radius: 0;
+    }
+
+    &::after {
+      content: "\e64c";
+      top: 0;
+      left: 2px;
+      font-family: $font-icon-themify;
+      font-size: 11px;
+      font-weight: bold;
+      text-align: center;
+      color: $color-primary;
+    }
+
+    &:empty::after {
+      top: 4px;
+    }
+
+  }
+
+}
+
+
+
+// No border
+//
+.custom-control.no-border {
+
+  .custom-control-label::before {
+    border-color: transparent;
+    background-color: transparent !important;
+  }
+
+  &.custom-checkbox .custom-control-indicator {
+
+    &::after {
+      font-size: 14px;
+    }
+  }
+
+  &.custom-radio .custom-control-indicator {
+
+    &::after {
+      margin-top: 3px;
+      display: inline-block;
+      width: 9px;
+      height: 9px;
+    }
+  }
+
+}
+
+
+
+
+
+// Sizes
+//
+.custom-control-sm {
+  min-width: 14px;
+  padding-left: 1.25rem;
+
+  .custom-control-label::before {
+    top: 4px;
+    width: 14px;
+    height: 14px;
+    line-height: 12px;
+  }
+
+  &.custom-radio .custom-control-label::after {
+    margin-top: 5px;
+    margin-left: 4px;
+    width: 6px;
+    height: 6px;
+  }
+  &.custom-radio.no-border .custom-control-label::after {
+    margin-top: 5px;
+    margin-left: 4px;
+    width: 7px;
+    height: 7px;
+  }
+
+  &.custom-checkbox .custom-control-label::after {
+    font-size: 9px;
+    left: 0px;
+  }
+  &.custom-checkbox.no-border .custom-control-label::after {
+    font-size: 11px;
+  }
+}
+
+.custom-control-lg {
+  min-width: 22px;
+  padding-left: 2rem;
+
+  .custom-control-label::before {
+    width: 22px;
+    height: 22px;
+    line-height: 22px;
+  }
+
+  &.custom-radio .custom-control-label::after {
+    margin-top: 4px;
+    margin-left: 6px;
+    width: 10px;
+    height: 10px;
+  }
+  &.custom-radio.no-border .custom-control-label::after {
+    margin-top: 4px;
+    margin-left: 6px;
+    width: 10px;
+    height: 10px;
+  }
+
+  &.custom-checkbox .custom-control-label::after {
+    font-size: 14px;
+    left: 4px;
+  }
+  &.custom-checkbox.no-border .custom-control-label::after {
+    font-size: 16px;
+  }
+}
+
+
+
+//
+// Color variations
+//
+.custom-control-light .custom-control-label::before {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: transparent;
+}
+
+@each $name, $color in $colors {
+  .custom-control-#{$name} {
+    @include custom-control-colors($color);
+  }
+}
+.custom-control-light { @include custom-control-colors(#fff); }
+
+
+.custom-control-secondary .custom-control-label::after          { color: $color-text; }
+.custom-control-light .custom-control-label::after              { color: $color-primary; }
+.custom-control-light.custom-radio .custom-control-label::after { background-color: $color-primary; }
+
+
+
+//
+// Validation
+//
+.custom-control-input.is-invalid~.custom-control-indicator,
+.was-validated .custom-control-input:invalid~.custom-control-indicator,
+.custom-control-input.is-valid~.custom-control-indicator,
+.was-validated .custom-control-input:valid~.custom-control-indicator {
+  background-color: $color-bg-lightest;
+}
+
+
+.custom-control-input.is-invalid {
+
+  ~ .custom-control-description {
+    color: $color-danger;
+  }
+
+  ~ .invalid-feedback {
+    display: flex;
+    width: 100%;
+    padding-left: 1rem;
+    font-size: 12px;
+    margin-top: 0;
+    font-style: italic;
+
+    &::before {
+      content: '\2014 \00A0';
+    }
+  }
+}
+
+.custom-control-input.is-valid {
+
+  ~ .custom-control-description {
+    color: $color-success;
+  }
+}

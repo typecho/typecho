@@ -1,0 +1,56 @@
+
+// Fix for fancy dropdown
+.bootstrap-timepicker-widget.dropdown-menu {
+  transform: scale(1,1);
+  transition: 0s;
+  padding: 6px;
+}
+
+.bootstrap-timepicker-widget.dropdown-menu:before {
+  border-bottom-color: $color-divider;
+}
+
+.bootstrap-timepicker-widget.timepicker-orient-bottom:before {
+  border-top-color: $color-divider;
+}
+
+.bootstrap-timepicker-widget table td input {
+  border-radius: 2px;
+  border: 1px solid $color-divider;
+  font-size: 0.875rem;
+  height: $height-sm;
+  width: $height-sm;
+  line-height: $height-sm;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+// Buttons
+.bootstrap-timepicker-widget table td a {
+  color: $color-text-secondary;
+  height: $height-sm;
+  width: $height-sm;
+  line-height: $height-sm;
+  padding: 0;
+
+  &:hover {
+    background-color: $color-bg-lightest;
+    border-color: $color-divider;
+    border-radius: 2px;
+  }
+}
+
+// Icons
+.bootstrap-timepicker-widget .glyphicon {
+  font-family: $font-icon-themify;
+}
+
+.bootstrap-timepicker-widget .glyphicon-chevron-up::before {
+  content: "\e648";
+}
+
+.bootstrap-timepicker-widget .glyphicon-chevron-down::before {
+  content: "\e64b";
+}

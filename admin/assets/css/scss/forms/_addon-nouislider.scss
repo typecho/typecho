@@ -1,0 +1,117 @@
+
+//
+// NoUiSlider
+//
+
+.noUi-target {
+
+  margin: 1rem 0;
+
+  &.noUi-vertical {
+    display: inline-block;
+    margin: 0 1rem;
+  }
+
+  &.noUi-connect,
+  .noUi-connect {
+    background-color: $color-primary;
+    box-shadow: none;
+  }
+}
+
+.noUi-background {
+  background: $color-bg-light;
+}
+
+
+.noUi-handle {
+  background-color: #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  transform: scale(1);
+  box-shadow: none;
+  outline: none;
+  border: 1px solid $color-divider;
+  transition: 0.2s ease-in-out;
+
+  &::before,
+  &::after {
+    display: none;
+  }
+
+  &:hover {
+    transform: scale(1.1);
+
+    .noUi-tooltip {
+      display: block;
+    }
+  }
+
+  &:active {
+    transform: scale(1.3);
+  }
+}
+
+.noUi-horizontal {
+
+  height: 4px;
+  border-radius: 4px;
+  background: $color-bg-light;
+  border: none;
+  box-shadow: none;
+
+  .noUi-handle {
+    width: 20px;
+    height: 20px;
+    left: -10px;
+    top: -8px;
+  }
+}
+
+
+.noUi-vertical {
+  width: 4px;
+  height: 180px;
+  border-radius: 4px;
+  background: $color-bg-light;
+  border: none;
+  box-shadow: none;
+
+  .noUi-handle {
+    width: 20px;
+    height: 20px;
+    left: -8px;
+    top: -10px;
+  }
+}
+
+
+.noUi-tooltip {
+  background-color: $tooltip-bg;
+  font-size: 0.75rem;
+  border: none;
+  color: #fff;
+  padding: 0 6px;
+  height: 24px;
+  line-height: 25px;
+  display: none;
+}
+
+.noUi-horizontal .noUi-tooltip {
+  transform: translateX(-50%);
+}
+
+.noUi-horizontal .noUi-handle-upper .noUi-tooltip {
+  bottom: auto;
+  top: -32px;
+}
+
+
+
+// Colors
+//
+@each $name, $color in $colors {
+  .slider-#{$name} {
+    @include slider-colors($color);
+  }
+}

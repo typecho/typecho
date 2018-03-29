@@ -1,0 +1,17 @@
+
+.pwstrength {
+
+  position: relative;
+
+  .progress {
+    height: 3px;
+  }
+
+  [data-vertical] + .progress {
+    position: absolute;
+    height: 3px;
+    margin-bottom: 0;
+    transform: rotate(-90deg);
+  }
+
+}

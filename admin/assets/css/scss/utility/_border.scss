@@ -1,0 +1,39 @@
+
+//-----------------------------------------------------------------
+// Borders
+//
+$border-sizes-list: 0 1 2 3;
+@each $size in $border-sizes-list {
+  .b-#{$size}  { border:        #{$size}px solid $color-divider !important; } // All sides
+  .bt-#{$size} { border-top:    #{$size}px solid $color-divider !important; }
+  .br-#{$size} { border-right:  #{$size}px solid $color-divider !important; }
+  .bb-#{$size} { border-bottom: #{$size}px solid $color-divider !important; }
+  .bl-#{$size} { border-left:   #{$size}px solid $color-divider !important; }
+
+  // Axes
+  .bx-#{$size} {
+    border-right:  #{$size}px solid $color-divider !important;
+    border-left:   #{$size}px solid $color-divider !important;
+  }
+  .by-#{$size} {
+    border-top:    #{$size}px solid $color-divider !important;
+    border-bottom: #{$size}px solid $color-divider !important;
+  }
+}
+
+.border {
+  border: 1px solid $color-divider !important;
+}
+
+// Border colors
+//
+@each $name, $value in $colors {
+  .border-#{$name} {
+    border-color: $value !important;
+  }
+}
+.border-transparent {border-color: transparent !important; }
+.border-white       {border-color: #fff !important; }
+.border-light       {border-color: $color-divider-light !important; }
+.border-fade        {border-color: $color-alpha-dark-divider !important; }
+

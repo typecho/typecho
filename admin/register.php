@@ -9,34 +9,34 @@ $rememberMail = htmlspecialchars(Typecho_Cookie::get('__typecho_remember_mail'))
 Typecho_Cookie::delete('__typecho_remember_name');
 Typecho_Cookie::delete('__typecho_remember_mail');
 
-$bodyClass = 'body-100';
+$bodyClass = 'layout-centered bg-img';
+$bodyStyle = 'background-image: url(' . Typecho_Common::url('bg/4.jpg?v=' . $suffixVersion, $options->adminStaticUrl('assets/img')) . ');';
 
 include 'header.php';
 ?>
-<div class="typecho-login-wrap">
-    <div class="typecho-login">
-        <h1><a href="http://typecho.org" class="i-logo">Typecho</a></h1>
-        <form action="<?php $options->registerAction(); ?>" method="post" name="register" role="form">
-            <p>
-                <label for="name" class="sr-only"><?php _e('用户名'); ?></label>
-                <input type="text" id="name" name="name" placeholder="<?php _e('用户名'); ?>" value="<?php echo $rememberName; ?>" class="text-l w-100" autofocus />
-            </p>
-            <p>
-                <label for="mail" class="sr-only"><?php _e('Email'); ?></label>
-                <input type="email" id="mail" name="mail" placeholder="<?php _e('Email'); ?>" value="<?php echo $rememberMail; ?>" class="text-l w-100" />
-            </p>
-            <p class="submit">
-                <button type="submit" class="btn btn-l w-100 primary"><?php _e('注册'); ?></button>
-            </p>
-        </form>
-        
-        <p class="more-link">
-            <a href="<?php $options->siteUrl(); ?>"><?php _e('返回首页'); ?></a>
-            &bull;
-            <a href="<?php $options->adminUrl('login.php'); ?>"><?php _e('用户登录'); ?></a>
-        </p>
-    </div>
-</div>
+<main class="main-content">
+	<div class="bg-white rounded shadow-7 w-400 mw-100 p-6">
+		<h5 class="mb-7"><? _e('注册')?></h5>
+		<form action="<?php $options->registerAction(); ?>" method="post" name="login" role="form">
+			<div class="form-group">
+				<input type="text" class="form-control" name="name" value="<?php echo $rememberName; ?>" placeholder="<?php _e('用户名'); ?>" autofocus />
+			</div>
+
+			<div class="form-group">
+				<input type="text" class="form-control" name="mail" value="<?php echo $rememberMail; ?>" placeholder="<?php _e('Email'); ?>" autofocus />
+			</div>
+
+			<div class="form-group">
+				<button class="btn btn-block btn-primary" type="submit"><?php _e('注册'); ?></button>
+			</div>
+		</form>
+
+		<hr class="w-30">
+
+		<p class="text-center text-muted small-2">已有账号 ? <a href="<?php $options->loginUrl(); ?>"><?php _e('用户登录'); ?></a></p>
+	</div>
+
+</main>
 <?php 
 include 'common-js.php';
 ?>

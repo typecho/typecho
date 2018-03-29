@@ -1,0 +1,183 @@
+
+
+.table th {
+  border-top: 0;
+  font-weight: 400;
+}
+
+.table tbody th {
+  border-top: 1px solid #eceeef;
+}
+
+.table thead th {
+  border-bottom: 1px solid $color-divider;
+}
+
+.table tfoot th {
+  border-top: 1px solid $color-divider;
+  border-bottom: 0;
+}
+
+.thead-default th {
+  background-color: $color-bg-lightest;
+}
+
+.table-hover tbody tr {
+  transition: background-color 0.2s linear;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: $color-bg-lightest;
+}
+
+.table-hover tbody tr:hover {
+  background-color: $color-bg-lighter;
+}
+
+// Sizes
+//
+.table-sm {
+  th,
+  td {
+    padding: .5rem;
+  }
+}
+
+.table-lg {
+  th,
+  td {
+    padding: 1rem;
+  }
+}
+
+// Separate
+//
+.table-separated {
+
+  border-collapse: separate;
+  border-spacing: 0 8px;
+
+  &.table-striped tbody tr:nth-of-type(odd),
+  &.table-hover tbody tr:hover {
+    background-color: $color-bg-lighter;
+  }
+
+  tbody tr {
+    background-color: $color-bg-lightest;
+    transition: .5s;
+
+    > *:first-child {
+      border-top-left-radius: 3px;
+      border-bottom-left-radius: 3px;
+    }
+
+    > *:last-child {
+      border-top-right-radius: 3px;
+      border-bottom-right-radius: 3px;
+    }
+
+    th,
+    td {
+      border-top: none;
+    }
+  }
+
+  thead th {
+    border-bottom: none;
+  }
+}
+
+// Background colors
+//
+.table-active  { @include table-colors($color-bg-light); }
+
+
+// Bordery
+//
+.table tr {
+
+  &[class*="bl-"] > *:first-child {
+    border-left: inherit;
+  }
+
+  &[class*="br-"] > *:last-child {
+    border-right: inherit;
+  }
+
+  &[class*="bt-"] > * {
+    border-top: inherit;
+  }
+
+  &[class*="bb-"] > * {
+    border-bottom: inherit;
+  }
+
+  &[class*="bx-"] > {
+    *:first-child {
+      border-left: inherit;
+    }
+
+    *:last-child {
+      border-right: inherit;
+    }
+  }
+
+  &[class*="by-"] > * {
+    border-top: inherit;
+    border-bottom: inherit;
+  }
+
+  &[class*="b-"] > {
+    * {
+      border-top: inherit;
+      border-bottom: inherit;
+    }
+
+    *:first-child {
+      border-left: inherit;
+    }
+
+    *:last-child {
+      border-right: inherit;
+    }
+  }
+}
+
+// Media in table
+//
+.table .media {
+  padding: 0;
+}
+
+.table-actions {
+
+  .table-action {
+    padding: 0 4px;
+    font-size: 1rem;
+    color: $color-text-secondary;
+  }
+
+  .table-action:first-child {
+    padding-left: 0;
+  }
+
+  .table-action:last-child {
+    padding-rightt: 0;
+  }
+
+  .dropdown {
+    display: inline-block;
+  }
+
+}
+
+
+.table tr.active {
+  background-color: $color-bg-lighter;
+  transition: background-color .3s;
+}
+
+
+.table-bordered {
+  border: 1px solid $color-divider !important;
+}

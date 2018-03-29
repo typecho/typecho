@@ -1,0 +1,108 @@
+
+
+//-----------------------------------------------------------------
+// Font family
+//
+.font-body,
+.font-roboto { font-family: $font-body; }
+
+.font-title,
+.font-ubuntu { font-family: $font-title; }
+
+.font-article,
+.font-lora   { font-family: $font-article; }
+
+
+
+
+
+//-----------------------------------------------------------------
+// Font size
+//
+$font-size-list: 8 9 10 11 12 13 14 15 16 17 18 19 20 22 24 25 26 28 30 35 40 45 50 60 70 80 90;
+@each $value in $font-size-list {
+  .fs-#{$value} {
+    font-size: #{$value}px !important;
+
+    @if $value > 29 {
+      line-height:1.2;
+    }
+  }
+}
+
+
+
+
+//-----------------------------------------------------------------
+// Font weight
+//
+$font-weight-list: 100 200 300 400 500 600 700 800 900;
+@each $value in $font-weight-list {
+  .fw-#{$value} {
+    font-weight: #{$value} !important;
+  }
+}
+
+
+
+
+
+//-----------------------------------------------------------------
+// Line height
+//
+.lh-0  { line-height: 0   !important; }
+.lh-1  { line-height: 1   !important; }
+.lh-11 { line-height: 1.1 !important; }
+.lh-12 { line-height: 1.2 !important; }
+.lh-13 { line-height: 1.3 !important; }
+.lh-14 { line-height: 1.4 !important; }
+.lh-15 { line-height: 1.5 !important; }
+.lh-16 { line-height: 1.6 !important; }
+.lh-17 { line-height: 1.7 !important; }
+.lh-18 { line-height: 1.8 !important; }
+.lh-19 { line-height: 1.9 !important; }
+.lh-2  { line-height: 2   !important; }
+.lh-22 { line-height: 2.2 !important; }
+.lh-24 { line-height: 2.4 !important; }
+.lh-25 { line-height: 2.5 !important; }
+.lh-26 { line-height: 2.6 !important; }
+.lh-28 { line-height: 2.8 !important; }
+.lh-3  { line-height: 3   !important; }
+.lh-35 { line-height: 3.5 !important; }
+.lh-4  { line-height: 4   !important; }
+.lh-45 { line-height: 4.5 !important; }
+.lh-5  { line-height: 5   !important; }
+
+
+
+
+//-----------------------------------------------------------------
+// Letter spacing
+//
+$letter-spacing-list: 0 1 2 3 4 5;
+@each $value in $letter-spacing-list {
+  .letter-spacing-#{$value} {
+    letter-spacing: #{$value}px !important;
+  }
+
+  .ls-#{$value} {
+    letter-spacing: #{$value}px !important;
+  }
+}
+
+
+
+
+//-----------------------------------------------------------------
+// Misc
+//
+.text-truncate {
+  width: auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.align-sub {
+  vertical-align: sub;
+}

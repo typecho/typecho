@@ -1,0 +1,129 @@
+
+
+.fc button {
+  font-weight: 400;
+  height: $height-md;
+  line-height: $height-md;
+  padding: 0 12px;
+  text-transform: capitalize;
+}
+
+.fc-state-default {
+  border: 1px solid $color-divider;
+  background-color: $color-bg-lightest;
+  background-image: none;
+  color: $color-text;
+  text-shadow: none;
+  box-shadow: none;
+
+  &:hover {
+    background-color: $color-bg-light;
+  }
+
+  &.fc-corner-right {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+  }
+
+  &.fc-corner-left {
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+  }
+}
+
+.fc-state-active {
+  background-color: $color-bg-light;
+}
+
+.fc-state-disabled:hover {
+  background-color: $color-bg-lightest;
+}
+
+
+
+.fc-unthemed .fc-content,
+.fc-unthemed .fc-divider,
+.fc-unthemed .fc-list-heading td,
+.fc-unthemed .fc-list-view,
+.fc-unthemed .fc-popover,
+.fc-unthemed .fc-row,
+.fc-unthemed tbody,
+.fc-unthemed td,
+.fc-unthemed th,
+.fc-unthemed thead {
+  border-color: $color-divider;
+}
+
+
+.fc th {
+  font-weight: 400;
+  border: none;
+  padding: 12px 0;
+}
+
+
+.fc-event {
+  font-size: 12px;
+  border: none;
+  color: #fff;
+  border-radius: 2px;
+  padding: 2px 6px;
+  opacity: .9;
+  transition: none;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.fc-event:not(.badge),
+.fc-event-dot:not(.badge) {
+  background-color: $color-primary;
+}
+
+.fc-content {
+  color: #fff;
+}
+
+.fc-day-grid-event .fc-time {
+  font-weight: 500;
+  padding-right: 4px;
+}
+
+.fc-day-grid-event {
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.fc-unthemed .fc-divider,
+.fc-unthemed .fc-list-heading td,
+.fc-unthemed .fc-popover .fc-header {
+  background-color: $color-bg-light;
+}
+
+.fc-popover .fc-header {
+  padding: 4px 8px;
+}
+
+.fc-unthemed .fc-popover .fc-header .fc-close {
+  color: $color-text-secondary;
+  opacity: .7;
+  margin-top: 6px;
+  transition: .3s;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.fc-toolbar h2 {
+  font-family: $font-body;
+  font-size: 18px;
+  color: $color-text;
+  padding-top: 8px;
+}
+
+
+.fc-head-container {
+  border: none !important;
+}

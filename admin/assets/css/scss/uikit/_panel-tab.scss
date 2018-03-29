@@ -1,0 +1,173 @@
+
+.nav-tabs {
+  border-bottom-color: $color-divider;
+  margin-bottom: 1rem;
+
+  .nav-item {
+
+    &.show .nav-link,
+    &.show .nav-link:focus,
+    &.show .nav-link:hover {
+      color: $color-text;
+    }
+  }
+
+  .nav-link {
+    position: relative;
+    border: none;
+    font-size: 13px;
+    text-align: center;
+    color: $color-text-secondary;
+    border-bottom: 2px solid transparent;
+    padding: 10px 16px;
+    border-radius: 0;
+    transition: 0.5s;
+
+    @include media-down(sm) {
+      padding: 8px 12px;
+    }
+
+    &:hover,
+    &.active,
+    &.active:focus,
+    &.active:hover {
+      color: $color-text;
+      border-color: $color-primary;
+    }
+
+    .icon {
+      margin-right: 4px;
+    }
+
+    // Remove btn
+    .close {
+      width: 12px;
+      height: 12px;
+      margin-top: 6px;
+      font-size: 20px;
+      opacity: 0;
+      transform: translateX(10px);
+
+      span {
+        display: inline-block;
+        width: inherit;
+        height: inherit;
+      }
+    }
+
+    &:hover .close {
+      opacity: .25;
+    }
+
+  }
+
+  // Tab colors
+  //
+  @each $name, $color in $colors {
+    &.nav-tabs-#{$name} {
+      @include tab-variant($color);
+    }
+  }
+
+}
+
+
+//-----------------------------------------------------------------
+// Light mode
+//
+.nav-tabs-light-mode {
+  border-bottom: none;
+  background-color: $color-bg-lighter;
+
+  .nav-link {
+    border-bottom: none;
+  }
+}
+
+
+//-----------------------------------------------------------------
+// Inverse mode
+//
+.nav-tabs-inverse-mode {
+  border-bottom: none;
+  background-color: transparent;
+  margin-bottom: 0;
+
+  .nav-link {
+    border-bottom: none;
+
+    &.active,
+    &.active:focus,
+    &.active:hover {
+      background-color: $color-bg-lighter;
+    }
+  }
+
+  + .tab-content {
+    background-color: $color-bg-lighter;
+    padding: 20px 16px;
+  }
+}
+
+
+//-----------------------------------------------------------------
+// Left sided
+//
+.nav-tabs-left,
+.nav-tabs-right {
+  display: flex;
+
+  .nav-tabs {
+    flex-direction: column;
+    border-bottom: 0;
+
+    .nav-item + .nav-item {
+      margin-left: 0;
+    }
+
+    .nav-link {
+      border-bottom: none;
+      text-align: left;
+    }
+  }
+
+  .tab-content {
+    overflow: hidden;
+  }
+}
+
+
+.nav-tabs-left {
+  .nav-tabs {
+    border-right: 1px solid $color-divider;
+
+    .nav-link {
+      border-right: 2px solid transparent;
+    }
+  }
+
+  .tab-content {
+    padding-left: 20px;
+  }
+}
+
+
+
+//-----------------------------------------------------------------
+// Right sided
+//
+.nav-tabs-right {
+  .nav-tabs {
+    order: 2;
+    border-left: 1px solid $color-divider;
+
+    .nav-link {
+      border-left: 2px solid transparent;
+    }
+  }
+
+  .tab-content {
+    order: 1;
+    padding-right: 20px;
+  }
+}

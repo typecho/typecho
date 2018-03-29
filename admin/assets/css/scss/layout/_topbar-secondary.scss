@@ -1,0 +1,120 @@
+
+.topbar-secondary {
+
+  $local_dropdown-item-height: 38px;
+  $local_darker-background: $color-pale-secondary;
+
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  box-shadow: none;
+  height: $height-topbar-sec + 1px;
+
+  .topbar-btn {
+    line-height: $height-topbar-sec;
+    border-top: none;
+
+    &.has-new i::after {
+      top: -2px;
+      right: -2px;
+      width: 8px;
+      height: 8px;
+      border: none;
+    }
+
+    i {
+      font-size: 20px;
+    }
+
+  }
+
+  .dropdown.show .topbar-btn,
+  .topbar-btn:hover {
+    background-color: $local_darker-background;
+  }
+
+  .dropdown-menu {
+    border: none;
+    box-shadow: none;
+    transition: none;
+    margin-top: 0 !important;
+
+    &::before,
+    &::after {
+      display: none;
+    }
+  }
+
+  .dropdown:hover {
+
+    .topbar-btn {
+      background-color: $local_darker-background;
+    }
+  }
+
+  .dropdown-item {
+    font-family: $font-title;
+    font-size: 13px;
+    text-transform: uppercase;
+    height: $local_dropdown-item-height;
+    line-height: $local_dropdown-item-height;
+    padding-top: 0;
+    padding-bottom: 0;
+
+    &:hover,
+    &:focus {
+      background-color: transparent;
+    }
+  }
+
+  .dropdown-divider {
+    background-color: rgba(0,0,0,0.05);
+  }
+
+  //-----------------------------------------------------------------
+  // Navigation
+  //
+  .menu-link {
+    font-family: $font-title;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    height: $height-topbar-sec;
+    border-top: none;
+
+    .title {
+      font-weight: 500;
+      letter-spacing: 1.5px;
+    }
+  }
+
+  .menu-submenu .menu-link {
+    height: $local_dropdown-item-height;
+  }
+
+  .dropdown-menu,
+  .menu > .menu-item:hover,
+  .menu > .menu-item.active,
+  .menu-submenu,
+  .menu-sub-submenu {
+    background-color: $local_darker-background;
+  }
+
+  .menu-item.active > .menu-link,
+  .menu-item:hover > .menu-link {
+    color: $color-text;
+    background-color: transparent !important;
+  }
+
+  .menu-submenu,
+  .menu-sub-submenu {
+    box-shadow: none;
+
+    .title {
+      letter-spacing: 1px;
+    }
+  }
+
+  .menu-sub-submenu {
+    border-left: 1px solid rgba(0,0,0,0.03);
+  }
+
+}

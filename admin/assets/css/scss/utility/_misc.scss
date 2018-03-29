@@ -1,0 +1,144 @@
+
+
+//-----------------------------------------------------------------
+// General classes
+//
+
+.bring-front {
+  z-index: 1;
+}
+
+
+.transition-3s { transition: .3s; }
+.transition-5s { transition: .5s; }
+
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+
+//-----------------------------------------------------------------
+// Block centering
+//
+.center-v {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+.center-h {
+  display: flex;
+  justify-content: center;
+}
+
+.center-vh {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+
+
+
+
+//-----------------------------------------------------------------
+// Rotating
+//
+$rotate-list: 45 90 180;
+@each $value in $rotate-list {
+  .rotate-#{$value} {
+    display: inline-block;
+    transform: rotate(#{$value}deg);
+  }
+}
+
+
+
+
+
+//-----------------------------------------------------------------
+// Opacity
+//
+$opacity-list: 0 5 10 15 20 25 30 35 40 45 50 55 60 65 70 75 80 85 90 95 100;
+@each $value in $opacity-list {
+  .opacity-#{$value} {
+    opacity: $value / 100 !important;
+  }
+}
+
+
+
+//-----------------------------------------------------------------
+// Cursor
+//
+.cursor-default { cursor: default !important; }
+.cursor-pointer { cursor: pointer; }
+.cursor-text    { cursor: text; }
+
+
+
+
+//-----------------------------------------------------------------
+// Box shadow
+//
+
+.shadow-1 { box-shadow: 0 0 5px rgba(0,0,0,0.06); }
+.shadow-2 { box-shadow: 0 0 15px rgba(0,0,0,0.07); }
+.shadow-3 { box-shadow: 0 0 25px rgba(0,0,0,0.09); }
+.shadow-4 { box-shadow: 0 0 35px rgba(0,0,0,0.11); }
+.shadow-5 { box-shadow: 0 0 45px rgba(0,0,0,0.13); }
+
+.hover-shadow-1:hover { box-shadow: 0 0 5px rgba(0,0,0,0.06); }
+.hover-shadow-2:hover { box-shadow: 0 0 15px rgba(0,0,0,0.07); }
+.hover-shadow-3:hover { box-shadow: 0 0 25px rgba(0,0,0,0.09); }
+.hover-shadow-4:hover { box-shadow: 0 0 35px rgba(0,0,0,0.11); }
+.hover-shadow-5:hover { box-shadow: 0 0 45px rgba(0,0,0,0.13); }
+
+
+.shadow-material-1 { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
+.shadow-material-2 { box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23); }
+.shadow-material-3 { box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23); }
+.shadow-material-4 { box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22); }
+.shadow-material-5 { box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22); }
+
+.hover-shadow-material-1:hover { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
+.hover-shadow-material-2:hover { box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23); }
+.hover-shadow-material-3:hover { box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23); }
+.hover-shadow-material-4:hover { box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22); }
+.hover-shadow-material-5:hover { box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22); }
+
+
+.shadow-0,
+.hover-shadow-0,
+.shadow-material-0,
+.hover-shadow-material-0 { box-shadow: none; }
+
+
+//-----------------------------------------------------------------
+// Hue rotate
+//
+.text-hue-rotate {
+  color: #f35626;
+  background-image: -webkit-linear-gradient(92deg,#f35626,#feab3a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-animation: hue-rotate 60s infinite linear;
+}
+
+.bg-hue-rotate {
+  -webkit-animation: hue-rotate 30s linear infinite;
+}
+
+
+@-webkit-keyframes hue {
+  from {
+    -webkit-filter: hue-rotate(0deg);
+  }
+
+  to {
+    -webkit-filter: hue-rotate(-360deg);
+  }
+}

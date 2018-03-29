@@ -1,0 +1,59 @@
+
+.bootstrap-tagsinput {
+  display: block;
+  border: 1px solid $color-divider;
+  box-shadow: none;
+  padding: 12px 12px 0;
+  min-height: 52px;
+
+  input {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: $color-text;
+  }
+
+  .badge {
+    height: $height-xs;
+    line-height: $height-xs;
+    border-radius: $height-xs/2;
+    padding: 0 0.75rem;
+    font-size: 0.875rem;
+    margin-right: 0.75rem;
+    margin-bottom: 0.75rem;
+
+    &.badge-default,
+    &.badge-secondary {
+      color: $color-text-light;
+    }
+
+    [data-role=remove] {
+      font-weight: 300;
+      opacity: 0.7;
+      transition: 0.2s linear;
+
+      &:hover {
+        box-shadow: none;
+        opacity: 1;
+      }
+    }
+
+  }
+
+  .badge:not([class*="badge-"]) {
+    color: $color-text-light;
+    background-color: $color-bg-light;
+  }
+
+
+
+  // Typeahead
+  .twitter-typeahead {
+    display: inline-block !important;
+
+    .tt-menu {
+      margin-top: 20px;
+      min-width: 180px;
+    }
+  }
+
+}

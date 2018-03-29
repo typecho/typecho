@@ -1,0 +1,234 @@
+
+//-------------------------------
+// Menu - <ul>
+//
+.menu {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 30px;
+}
+
+//-------------------------------
+// Menu item - <li>
+//
+.menu-item {
+  vertical-align: top;
+  transition: opacity 0.2s linear;
+}
+
+
+//-------------------------------
+// Menu link - <a>
+//
+.menu-link {
+  height: $menu-height;
+  padding: 0 $sidebar-padding-x;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  transition: .2s linear;
+
+  > * {
+    margin-left: $menu-link-items-margin-x;
+    margin-right: $menu-link-items-margin-x;
+  }
+
+  // Icon
+  //
+  .icon {
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-align: center;
+    flex-basis: $sidebar-icon-size;
+    flex-shrink: 0;
+
+    &::before {
+      letter-spacing: 0;
+    }
+  }
+
+  // Dot
+  //
+  .dot {
+    position: relative;
+    flex-basis: $sidebar-icon-size;
+    flex-shrink: 0;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: -4px;
+      left: 50%;
+      margin-left: -4px;
+      width: 8px;
+      height: 8px;
+      border: 1px solid #fff;
+      border-radius: 100%;
+      transition: .2s linear;
+    }
+  }
+
+  // Menu text
+  //
+  .title {
+    flex-grow: 1;
+    display: flex;
+    flex-shrink: 0;
+    flex-direction: column;
+    line-height: 1;
+    font-size: 14px;
+
+    small {
+      color: inherit;
+      font-weight: 300;
+      font-size: 11px;
+      margin-top: .375rem;
+      opacity: 0.4;
+    }
+  }
+
+  // Caret
+  //
+  .arrow::before {
+    content: "\e649";
+    font-family: $font-icon-themify;
+    font-size: 8px;
+    cursor: pointer;
+    display: inline-block;
+    transition: transform 0.3s linear;
+  }
+
+  // Label
+  //
+  .badge {
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+
+}
+
+//-------------------------------
+// Submenu - <ul>
+//
+.menu-submenu {
+  background-color: $sidebar-dark-submenu-bg;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  padding-left: 0;
+  display: none;
+  list-style-type: none;
+  margin-bottom: 0;
+
+  .menu-link {
+    height: $menu-submenu-height;
+    font-size: .875rem;
+    font-weight: 300;
+    letter-spacing: 0;
+    color: #fff;
+    opacity: 0.8;
+    transition: 0.2s linear;
+
+    .icon {
+      font-size: 13px;
+      font-weight: 400;
+    }
+
+    .title {
+      font-size: 13px;
+    }
+
+    .arrow::before {
+      font-size: .5rem;
+    }
+  }
+
+  .menu-item {
+
+    &.active > .menu-link,
+    &:hover > .menu-link {
+      opacity: 1;
+      background-color: transparent;
+    }
+  }
+
+}
+
+
+//-------------------------------
+// Sub submenu - <ul>
+//
+.menu-sub-submenu {
+  list-style-type: none;
+  margin-bottom: 0;
+  padding-left: $sidebar-icon-size + 10px;
+
+  .menu-item {
+    padding-left: $sidebar-padding-x;
+    opacity: 0.7;
+    transition: 0.2s linear;
+
+    &:hover,
+    &.active {
+      opacity: 1;
+    }
+  }
+
+  .menu-link .dot {
+    flex-basis: 0;
+    &::after {
+      left: -12px;
+    }
+  }
+}
+
+
+//-------------------------------
+// Category and divider - <li>
+//
+.menu-category {
+  position: relative;
+  font-family: $font-title;
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  line-height: $menu-submenu-height;
+  padding: 1rem ($sidebar-padding-x + $menu-link-items-margin-x) 0.5rem;
+  color: #fff;
+  opacity: 0.7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &::after {
+    content: '';
+    width: 100%;
+    height: 0;
+    border-top: 1px dashed #fff;
+    vertical-align: middle;
+    margin-left: 1.5rem;
+    opacity: 0.3;
+
+    position: absolute;
+    top: 50%;
+    margin-top: 3px;
+  }
+}
+
+.menu-divider {
+  display: block;
+  height: 1px;
+  background-color: #fff;
+  opacity: 0.08;
+  margin: 1rem 0;
+}
+
+//-------------------------------
+// Menu size - <ul>
+//
+.menu-xs > .menu-item > .menu-link { height: $menu-height-xs; }
+.menu-sm > .menu-item > .menu-link { height: $menu-height-sm; }
+.menu-lg > .menu-item > .menu-link { height: $menu-height-lg; }
+.menu-xl > .menu-item > .menu-link { height: $menu-height-xl; }

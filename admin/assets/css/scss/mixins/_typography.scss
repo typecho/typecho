@@ -1,0 +1,13 @@
+@mixin link-colors($color) {
+  &:hover,
+  &:focus {
+    color: $color;
+  }
+}
+
+@mixin link-colors-important($color) {
+  &:hover,
+  &:focus {
+    color: $color !important;
+  }
+}

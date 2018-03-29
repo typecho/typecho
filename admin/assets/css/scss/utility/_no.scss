@@ -1,0 +1,27 @@
+
+
+
+//-----------------------------------------------------------------
+// No classes
+//
+.no-border         { border: none !important; }
+.no-padding        { padding: 0 !important; }
+.no-margin         { margin: 0 !important; }
+.no-shadow         { shadow: none; }
+.no-text-shadow    { text-shadow: none; }
+.no-scroll         { overflow: hidden; }
+.no-radius         { border-radius: 0 !important; }
+.no-shrink         { flex-shrink: 0; }
+.no-grow           { flex-grow: 0; }
+.no-letter-spacing { letter-spacing: 0; }
+.no-wrap           {
+  white-space: nowrap;
+  flex-wrap: nowrap;
+}
+
+.no-underline {
+  &:hover,
+  &:focus {
+    text-decoration: none;
+  }
+}

@@ -1,0 +1,32 @@
+[
+    {
+        "github": {
+            "name": "bootstrap-table",
+            "count": {
+                "stargazers": 768,
+                "forks": 183
+            },
+            "description": "An extended Bootstrap table with radio, checkbox, sort, pagination, and other added features. (supports twitter bootstrap v2 and v3)"
+        }
+    },
+    {
+        "github": {
+            "name": "multiple-select",
+            "count": {
+                "stargazers": 365,
+                "forks": 166
+            },
+            "description": "A jQuery plugin to select multiple elements with checkboxes :)"
+        }
+    },
+    {
+        "github": {
+            "name": "bootstrap-show-password",
+            "count": {
+                "stargazers": 37,
+                "forks": 13
+            },
+            "description": "Show/hide password plugin for twitter bootstrap."
+        }
+    }
+]

@@ -1,0 +1,10 @@
+@mixin tab-variant($color) {
+  .nav-link {
+    &:hover,
+    &.active,
+    &.active:focus,
+    &.active:hover {
+      border-color: $color;
+    }
+  }
+}

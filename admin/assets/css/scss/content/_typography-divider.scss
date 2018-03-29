@@ -1,0 +1,124 @@
+
+//-----------------------------------------------------------------
+// Dividers
+//
+
+hr {
+  border-top-color: $color-alpha-dark-divider;
+  margin: 2rem auto;
+}
+
+
+
+
+.divider-dash {
+  opacity: .7;
+  margin: 0 4px;
+  vertical-align: middle;
+  color: $color-text-secondary;
+
+  &::before {
+    content: '\2014 \00A0';
+  }
+}
+
+
+.divider-dot {
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  margin: 0 4px;
+  vertical-align: middle;
+  opacity: .5;
+  background-color: $color-text-secondary;
+}
+
+.divider-line {
+  display: inline-flex;
+  height: 20px;
+  width: 1px;
+  margin: 0 4px;
+  background-color: $color-alpha-dark-divider;
+}
+
+
+
+.divider {
+  display: flex;
+  align-items: center;
+  flex: 0;
+  color: $color-text-secondary;
+  font-size: 11px;
+  letter-spacing: .5px;
+  margin: 2rem auto;
+  width: 100%;
+
+  &::before,
+  &::after {
+    content: '';
+    flex-grow: 1;
+    border-top: 1px solid $color-divider;
+  }
+
+  &::before {
+    margin-right: 16px;
+  }
+
+  &::after {
+    margin-left: 16px;
+  }
+
+  a {
+    color: $color-text-secondary;
+  }
+}
+
+.divider-vertical {
+  display: inline-flex;
+  flex-direction: column;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 0 2rem;
+
+
+  &::before,
+  &::after {
+    border-top: none;
+    border-right: 1px solid $color-divider;
+    margin: 0;
+  }
+
+  &::before {
+    margin-bottom: 16px;
+  }
+
+  &::after {
+    margin-top: 16px;
+  }
+}
+
+
+
+// Sizing
+//
+.hr-sm,
+.divider-sm {
+  margin: 1rem auto;
+}
+
+.hr-lg,
+.divider-lg {
+  margin: 3rem auto;
+}
+
+.divider-vertical {
+  &.divider-sm {
+    padding: 0 1rem;
+  }
+
+  &.divider-lg {
+    padding: 0 3rem;
+  }
+}
+

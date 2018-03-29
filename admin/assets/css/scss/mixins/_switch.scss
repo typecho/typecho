@@ -1,0 +1,10 @@
+@mixin switch-colors($color, $color-bg-lightest) {
+  input:checked + .switch-indicator {
+    background: $color-bg-lightest;
+    border-color: $color-bg-lightest;
+
+    &::after {
+      background: $color;
+    }
+  }
+}

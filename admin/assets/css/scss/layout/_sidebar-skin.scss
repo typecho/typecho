@@ -1,0 +1,324 @@
+
+//-----------------------------------------------------------------
+// Default skin
+//
+.sidebar {
+
+  .menu-link {
+    color: #fff;
+  }
+
+  // Small title
+  .menu-item {
+    // Hover
+    &:hover > .menu-link {
+      color: #fff;
+
+      .title small {
+        opacity: 0.7;
+      }
+    }
+
+    // Active
+    &.active > .menu-link {
+      color: #fff;
+
+      .title small {
+        opacity: .8;
+      }
+    }
+  }
+
+
+  .menu > .menu-item:hover > .menu-link {
+    background-color: rgba(0,0,0,0.1);
+  }
+
+}
+
+.sidebar-profile {
+  color: #fff;
+
+  h3, h4, h5, h6 {
+    color: #fff;
+  }
+}
+
+.sidebar-footer {
+  border-top: 1px solid $color-alpha-light-divider-light;
+}
+
+.sidebar-iconic .menu-item + .menu-item {
+  border-top: 1px solid $color-alpha-light-divider-light;
+}
+
+.sidebar-icons-boxed {
+
+  .menu-submenu .active > .menu-link .icon {
+    background-color: $color-primary;
+  }
+}
+
+
+
+//-----------------------------------------------------------------
+// Sidebar dark skin
+//
+.sidebar.sidebar-dark {
+
+  background-color: $sidebar-darker-bg;
+
+  .menu-submenu {
+    background-color: $sidebar-darker-submenu-bg;
+  }
+
+}
+
+//-----------------------------------------------------------------
+// Sidebar light skin
+//
+.sidebar.sidebar-light {
+
+  background-color: #fff;
+
+  .sidebar-profile {
+    color: $color-text;
+    border-bottom-color: $color-alpha-dark-divider;
+
+    h3, h4, h5, h6 {
+      color: $color-title;
+    }
+  }
+
+  .sidebar-footer {
+    border-top-color: $color-alpha-dark-divider;
+  }
+
+  &.sidebar-icons-boxed {
+    .menu .menu-link .icon {
+      background-color: rgba(0,0,0,0.035);
+    }
+
+    .menu .active > .menu-link .icon {
+      background-color: rgba(255,255,255,0.15);
+    }
+
+    .menu-submenu .active > .menu-link .icon {
+      color: #fff;
+    }
+  }
+
+  &.sidebar-iconic .menu-item + .menu-item {
+    border-top-color: $color-alpha-dark-divider;
+  }
+
+  .menu {
+
+    .menu-link {
+      color: lighten($color-text, 20%);
+      opacity: 1
+    }
+
+    .dot::after {
+      border-color: lighten($color-text, 5%);
+    }
+
+    .menu-link .title small {
+      opacity: 0.7;
+      color: $color-text;
+    }
+
+    > .menu-item:hover > .menu-link {
+      color: $color-text;
+      background-color: $color-bg-lighter;
+
+      .title small {
+        opacity: 1;
+      }
+    }
+
+    &:not(.menu-bordery) > .menu-item.active,
+    &:not(.menu-bordery) > .menu-item.active:hover {
+
+      > .menu-link {
+        color: #fff;
+
+        .title small {
+          color: #fff;
+        }
+      }
+
+    }
+  }
+
+  .menu-submenu {
+    background-color: $sidebar-light-submenu-bg;
+
+    .menu-item:hover .menu-link,
+    .menu-item.active .menu-link {
+      color: $color-text;
+    }
+  }
+
+  .menu-category {
+    color: #000;
+    &::after {
+      border-top-color: $color-text;
+    }
+  }
+
+  .menu-divider {
+    background-color: #000;
+  }
+
+}
+
+
+//-----------------------------------------------------------------
+// Bordery style
+//
+.sidebar .menu.menu-bordery {
+  > .menu-item > .menu-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 4px;
+    transition: .5s;
+  }
+
+}
+
+.sidebar-icons-boxed .menu.menu-bordery .active>.menu-link .icon {
+  color: #fff;
+}
+
+.sidebar.sidebar-light .menu > .menu-item.active > .menu-link {
+  background-color: $color-bg-lighter;
+  color: $color-text;
+}
+
+
+
+
+
+//-----------------------------------------------------------------
+// Sidebar color
+//
+.sidebar {
+  .menu:not(.menu-bordery) > .menu-item.active > .menu-link {
+    background-color: $color-primary;
+  }
+
+  &.sidebar-dark {
+    .menu:not(.menu-bordery) > .menu-item.active > .menu-link {
+      background-color: rgba($color-primary, 0.95);
+    }
+
+    &.sidebar-icons-boxed .menu-submenu .active > .menu-link .icon {
+      background-color: rgba($color-primary, 0.85);
+    }
+  }
+
+  &.sidebar-light {
+    &.sidebar-icons-boxed {
+      .menu-submenu .active > .menu-link .icon {
+        background-color: $color-primary;
+      }
+    }
+
+    .menu {
+      &:not(.menu-bordery) > .menu-item.active,
+      &:not(.menu-bordery) > .menu-item.active:hover {
+        > .menu-link {
+          background-color: $color-primary;
+        }
+      }
+    }
+  }
+
+  .menu.menu-bordery {
+    > .menu-item.active > .menu-link::before,
+    > .menu-item:hover > .menu-link::before {
+      background-color: $color-primary;
+    }
+  }
+
+  &.sidebar-icons-boxed .menu.menu-bordery .active>.menu-link .icon {
+    background-color: $color-primary !important;
+  }
+
+  .menu-submenu .menu-item {
+    &.active > .menu-link,
+    &:hover > .menu-link {
+      .dot::after {
+        background-color: $color-primary;
+        border-color: $color-primary;
+      }
+    }
+  }
+}
+
+
+
+
+// Other colors
+//
+@each $name, $color in $colors {
+  .sidebar.sidebar-color-#{$name} {
+    .menu:not(.menu-bordery) > .menu-item.active > .menu-link {
+      background-color: $color;
+    }
+
+    &.sidebar-dark {
+      .menu:not(.menu-bordery) > .menu-item.active > .menu-link {
+        background-color: rgba($color, 0.95);
+      }
+
+      &.sidebar-icons-boxed .menu-submenu .active > .menu-link .icon {
+        background-color: rgba($color, 0.85);
+      }
+    }
+
+    &.sidebar-light {
+      &.sidebar-icons-boxed {
+        .menu-submenu .active > .menu-link .icon {
+          background-color: $color;
+        }
+      }
+
+      .menu {
+        &:not(.menu-bordery) > .menu-item.active,
+        &:not(.menu-bordery) > .menu-item.active:hover {
+          > .menu-link {
+            background-color: $color;
+          }
+        }
+      }
+    }
+
+    .menu.menu-bordery {
+      > .menu-item.active > .menu-link::before,
+      > .menu-item:hover > .menu-link::before {
+        background-color: $color;
+      }
+    }
+
+    &.sidebar-icons-boxed .menu.menu-bordery .active>.menu-link .icon {
+      background-color: $color !important;
+    }
+
+    .menu-submenu .menu-item {
+      &.active > .menu-link,
+      &:hover > .menu-link {
+        .dot::after {
+          background-color: $color;
+          border-color: $color;
+        }
+      }
+    }
+  }
+}
+
+

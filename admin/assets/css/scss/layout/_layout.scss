@@ -1,0 +1,11 @@
+
+.layout-chat {
+  height: 100vh;
+
+  .main-content {
+    display: flex;
+
+    height: 10%; // Don't know why, but it is required for footer to be visible.
+  }
+
+}

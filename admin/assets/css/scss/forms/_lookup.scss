@@ -1,0 +1,395 @@
+//-----------------------------------------------------------------
+// Lookup
+//
+.lookup {
+  $height: $height-md;
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+
+
+  &::before {
+    content: "\e610";
+    font-family: $font-icon-themify;
+    font-size: 16px;
+    position: absolute;
+    top: 52%;
+    left: 0;
+    transform: translateY(-50%);
+    color: $color-alpha-dark-text-light;
+    width: $height;
+    text-align: center;
+    cursor: text;
+  }
+
+  input {
+    color: $color-alpha-dark-text-active;
+    border: 1px solid $color-divider;
+    border-radius: $height/2;
+    height: $height;
+    width: 200px;
+    max-width: 100%;
+    padding-left: $height;
+    padding-right: $height/2;
+    font-family: $font-body;
+    font-size: 15px;
+    font-weight: 300;
+    letter-spacing: .5px;
+    outline: none!important;
+    transition: .5s;
+
+    @include placeholder-color($color-alpha-dark-text);
+
+    &:focus {
+      background-color: $color-alpha-dark-bg;
+    }
+
+
+    + input,
+    + .bootstrap-select .dropdown-toggle {
+      border-left: none;
+    }
+  }
+
+
+  .bootstrap-select + .bootstrap-select .dropdown-toggle {
+    border-left: none;
+  }
+
+
+  .btn {
+    height: $height;
+    line-height: $height;
+  }
+
+  &.no-icon {
+
+    &::before {
+      display: none;
+    }
+
+    input {
+      padding-left: $height/2;
+    }
+  }
+
+}
+
+// Small
+.lookup-sm {
+  $height: $height-sm;
+
+  &::before {
+    font-size: 14px;
+    width: $height;
+  }
+
+  input {
+    border-radius: $height/2;
+    height: $height;
+    width: $height;
+    padding-left: $height;
+    padding-right: $height/2;
+    font-size: 14px;
+    width: 160px;
+  }
+
+  .btn {
+    height: $height;
+    line-height: $height;
+  }
+
+}
+
+
+// Large
+.lookup-lg {
+  $height: $height-lg;
+
+  &::before {
+    font-size: 20px;
+    width: $height;
+  }
+
+  input {
+    border-radius: $height/2;
+    height: $height;
+    width: $height;
+    padding-left: $height;
+    padding-right: $height/2;
+    font-size: 16px;
+    width: 250px;
+  }
+
+  .btn {
+    height: $height;
+    line-height: $height;
+  }
+
+}
+
+// Right aligned
+.lookup-right {
+
+  &::before {
+    left: auto;
+    right: 0;
+  }
+
+  input {
+    padding-left: $height-md/2;
+    padding-right: $height-md;
+  }
+
+  &.lookup-sm input {
+    padding-left: $height-sm/2;
+    padding-right: $height-sm;
+  }
+
+  &.lookup-lg input {
+    padding-left: $height-lg/2;
+    padding-right: $height-lg;
+  }
+
+
+  &.no-icon input {
+    padding-right: $height-md/2;
+  }
+
+  &.no-icon.lookup-sm input {
+    padding-right: $height-sm/2;
+  }
+
+  &.no-icon.lookup-lg input {
+    padding-right: $height-lg/2;
+  }
+
+}
+
+
+
+
+
+//-----------------------------------------------------------------
+// Circle lookup
+//
+.lookup-circle {
+
+
+  z-index: 0;
+
+  &::before {
+    z-index: -1;
+  }
+
+  input {
+    background-color: $color-alpha-dark-bg;
+    border: none;
+    width: $height-md;
+    padding-right: 0;
+
+    &:focus {
+      background-color: $color-alpha-dark-bg-hover;
+      width: 170px;
+      padding-right: $height-md/2;
+    }
+  }
+
+  // Small
+  &.lookup-sm {
+    &::before {
+      font-size: 14px;
+      width: $height-sm;
+    }
+
+    input {
+      border-radius: $height-sm/2;
+      height: $height-sm;
+      width: $height-sm;
+      padding-left: $height-sm;
+
+      &:focus {
+        width: 150px;
+        padding-right: $height-sm/2;
+      }
+    }
+  }
+
+  // Large
+  &.lookup-lg {
+    &::before {
+      font-size: 16px;
+      width: $height-lg;
+    }
+
+    input {
+      border-radius: $height-lg/2;
+      height: $height-lg;
+      width: $height-lg;
+      padding-left: $height-lg;
+
+      &:focus {
+        width: 200px;
+        padding-right: $height-lg/2;
+      }
+    }
+  }
+
+  // Right aligned
+  &.lookup-right {
+
+    &::before {
+      left: auto;
+      right: 0;
+    }
+
+    input {
+      padding-left: 0;
+      padding-right: $height-md;
+
+      &:focus {
+        padding-left: $height-md/2;
+      }
+    }
+
+    &.lookup-sm input {
+      padding-left: 0;
+      padding-right: $height-sm;
+
+      &:focus {
+        padding-left: $height-sm/2;
+      }
+    }
+
+    &.lookup-lg input {
+      padding-left: 0;
+      padding-right: $height-lg;
+
+      &:focus {
+        padding-left: $height-lg/2;
+      }
+    }
+
+  }
+
+}
+
+
+
+
+
+
+//-----------------------------------------------------------------
+// Huge lookup
+//
+.lookup-huge {
+
+  display: flex;
+
+  $height: 64px;
+
+  &::before {
+    font-size: 24px;
+    width: $height;
+  }
+
+  input {
+    border-radius: $height/2;
+    height: $height;
+    width: $height;
+    padding-left: $height;
+    padding-right: $height/2;
+    font-size: 20px;
+    font-weight: 100;
+    width: 100%;
+
+    @include placeholder-color($color-text-placeholder);
+  }
+
+  .btn,
+  .bootstrap-select.btn-group > .dropdown-toggle {
+    height: $height;
+    line-height: 100%;
+  }
+
+  &.no-icon input {
+    padding-left: $height/2;
+  }
+}
+
+
+
+
+
+//-----------------------------------------------------------------
+// Fullscreen lookup
+//
+.lookup-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255,255,255,.985);
+  z-index: $zindex-lookup-fullscreen;
+  padding: 50px 5%;
+  display: none;
+  flex-direction: column;
+
+  &.reveal {
+    display: flex;
+  }
+
+  > .close {
+    position: absolute;
+    top: 32px;
+    right: 32px;
+  }
+
+  .lookup-form {
+
+    border-bottom: 1px solid $color-divider;
+    margin-bottom: 2rem;
+
+    input {
+      border: none;
+      font-size: 44px;
+      background-color: transparent;
+      outline: none !important;
+      padding: 25px 0;
+      color: $color-text;
+      width: 100%;
+
+      @include placeholder-color($color-text-placeholder);
+    }
+
+  }
+
+  .lookup-results {
+    height: 100%;
+
+    // It displays horizontal scrollbar, while we don't need it
+    // TODO: find a better way to fix this issue
+    .ps-scrollbar-x-rail {
+      display: none;
+    }
+  }
+
+
+}
+
+
+@include media-down(sm) {
+
+  .lookup-fullscreen .lookup-results.scrollable .row {
+    margin-left: 0;
+    margin-right: 0;
+
+    [class*="col-"] {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+
+}

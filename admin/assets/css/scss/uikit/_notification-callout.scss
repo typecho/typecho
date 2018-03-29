@@ -1,0 +1,33 @@
+
+// Callouts
+// -------------------------
+.callout {
+  padding: 15px 20px;
+  margin-bottom: 20px;
+  border-left: 3px solid transparent;
+}
+
+.callout-success {
+  @include callout-variation($color-success);
+}
+
+.callout-info {
+  @include callout-variation($color-info);
+}
+
+.callout-warning {
+  @include callout-variation($color-warning);
+}
+
+.callout-danger {
+  @include callout-variation($color-danger);
+}
+
+// Media queries
+@include media-down(sm) {
+
+  .callout {
+    padding: 10px;
+  }
+
+}

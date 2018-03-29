@@ -1,0 +1,25 @@
+
+[data-provide~="sortable"] {
+  [draggable="true"] {
+    cursor: move;
+  }
+}
+
+.sortable-placeholder {
+  background-color: $color-bg-lighter;
+  border: 2px dashed $color-divider;
+}
+
+.sortable-dragging {
+
+}
+
+.sortable-dot {
+  display: inline-block;
+  width: 5px;
+  min-height: 20px;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAG0lEQVQYV2NkYGD4z8DAwMgABXAGNgGwSgwVAFbmAgXQdISfAAAAAElFTkSuQmCC);
+  cursor: move;
+  cursor: -webkit-zoom-grabbing;
+  opacity: .6;
+}

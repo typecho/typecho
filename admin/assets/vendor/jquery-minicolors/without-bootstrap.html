@@ -1,0 +1,185 @@
+<!doctype html>
+<html>
+<head>
+  <title>jQuery MiniColors</title>
+  <meta charset="utf-8">
+
+  <!-- jQuery -->
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+  <!-- MiniColors -->
+  <script src="jquery.minicolors.js"></script>
+  <link rel="stylesheet" href="jquery.minicolors.css">
+
+  <style>
+    body {
+      font: 16px sans-serif;
+      line-height: 1.8;
+      padding: 0 40px;
+      margin-bottom: 200px;
+    }
+    a {
+      color: #08c;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .form-group {
+      margin: 20px 0;
+    }
+    label {
+      color: #888;
+    }
+  </style>
+
+  <script>
+    $(document).ready( function() {
+
+      $('.demo').each( function() {
+        //
+        // Dear reader, it's actually very easy to initialize MiniColors. For example:
+        //
+        //  $(selector).minicolors();
+        //
+        // The way I've done it below is just for the demo, so don't get confused
+        // by it. Also, data- attributes aren't supported at this time. Again,
+        // they're only used for the purposes of this demo.
+        //
+        $(this).minicolors({
+          control: $(this).attr('data-control') || 'hue',
+          defaultValue: $(this).attr('data-defaultValue') || '',
+          format: $(this).attr('data-format') || 'hex',
+          keywords: $(this).attr('data-keywords') || '',
+          inline: $(this).attr('data-inline') === 'true',
+          letterCase: $(this).attr('data-letterCase') || 'lowercase',
+          opacity: $(this).attr('data-opacity'),
+          position: $(this).attr('data-position') || 'bottom left',
+          swatches: $(this).attr('data-swatches') ? $(this).attr('data-swatches').split('|') : [],
+          change: function(hex, opacity) {
+            var log;
+            try {
+              log = hex ? hex : 'transparent';
+              if( opacity ) log += ', ' + opacity;
+              console.log(log);
+            } catch(e) {}
+          },
+          theme: 'default'
+        });
+
+      });
+
+    });
+  </script>
+</head>
+<body>
+
+  <h1>MiniColors Demo (without Bootstrap)</h1>
+  <p>
+    <a href="index.html">&laquo; Back to the Bootstrap demo</a>
+  </p>
+
+  <!-- Control Types -->
+  <h3>Control Types</h3>
+  <div class="form-group">
+    <label for="hue-demo">Hue (default)</label>
+    <input type="text" id="hue-demo" class="demo" data-control="hue" value="#ff6161">
+  </div>
+  <div class="form-group">
+    <label for="saturation-demo">Saturation</label>
+    <input type="text" id="saturation-demo" class="demo" data-control="saturation" value="#0088cc">
+  </div>
+  <div class="form-group">
+    <label for="brightness-demo">Brightness</label>
+    <input type="text" id="brightness-demo" class="demo" data-control="brightness" value="#00ffff">
+  </div>
+  <div class="form-group">
+    <label for="wheel-demo">Wheel</label>
+    <input type="text" id="wheel-demo" class="demo" data-control="wheel" value="#ff99ee">
+  </div>
+
+  <!-- Input modes -->
+  <h3>Input Modes</h3>
+  <div class="form-group">
+    <label for="text-field">Text field</label>
+    <br>
+    <input type="text" id="text-field" class="demo" value="#70c24a">
+  </div>
+  <div class="form-group">
+    <label for="hidden-input">Hidden Input</label>
+    <br>
+    <input type="hidden" id="hidden-input" class="demo" value="#db913d">
+  </div>
+  <div class="form-group">
+    <label for="inline">Inline</label>
+    <br>
+    <input type="text" id="inline" class="demo" data-inline="true" value="#4fc8db">
+  </div>
+
+  <!-- Positions -->
+  <h3>Positions</h3>
+  <div class="form-group">
+    <label for="position-bottom-left">bottom left (default)</label>
+    <input type="text" id="position-bottom-left" class="demo" data-position="bottom left" value="#0088cc">
+  </div>
+  <div class="form-group">
+    <label for="position-top-left">top left</label>
+    <input type="text" id="position-top-left" class="demo" data-position="top left" value="#0088cc">
+  </div>
+  <div class="form-group">
+    <label for="position-bottom-right">bottom right</label>
+    <input type="text" id="position-bottom-right" class="demo" data-position="bottom right" value="#0088cc">
+  </div>
+  <div class="form-group">
+    <label for="position-top-right">top right</label>
+    <input type="text" id="position-top-right" class="demo" data-position="top right" value="#0088cc">
+  </div>
+
+  <!-- RGB(A) -->
+  <h3>RGB(A)</h3>
+  <div class="form-group">
+    <label for="rgb">rgb</label>
+    <br>
+    <input type="text" id="rgb" class="demo" data-format="rgb" value="rgb(33, 147, 58)">
+  </div>
+  <div class="form-group">
+    <label for="rgba">rgb(a)</label>
+    <br>
+    <input type="text" id="rgba" class="demo" data-format="rgb" data-opacity=".5" value="rgba(52, 64, 158, 0.5)">
+  </div>
+
+  <!-- and more -->
+  <h3>&hellip;and more!</h3>
+  <div class="form-group">
+    <label for="opacity">Opacity</label>
+    <br>
+    <input type="text" id="opacity" class="demo" data-opacity=".5" value="#766fa8">
+  </div>
+  <div class="form-group">
+    <label for="keywords">Keywords</label>
+    <br>
+    <input type="text" id="keywords" class="demo" data-keywords="transparent, inherit, initial" value="transparent">
+  </div>
+  <div class="form-group">
+    <label for="default-value">Default Value</label>
+    <br>
+    <input type="text" id="default-value" class="demo" data-defaultValue="#ff6600">
+  </div>
+  <div class="form-group">
+    <label for="letter-case">Letter Case</label>
+    <br>
+    <input type="text" id="letter-case" class="demo" data-letterCase="uppercase">
+  </div>
+  <div class="form-group">
+    <label for="letter-case">Swatches</label>
+    <br>
+    <input type="text" id="swatches" class="demo" data-swatches="#ef9a9a|#90caf9|#a5d6a7|#fff59d|#ffcc80|#bcaaa4|#eeeeee|#f44336|#2196f3|#4caf50|#ffeb3b|#ff9800|#795548|#9e9e9e" value="#f00">
+  </div>
+  <div class="form-group">
+    <label for="letter-case">Swatches and opacity</label>
+    <br>
+    <input type="text" id="swatches-opacity" class="demo" data-format="rgb" data-opacity="1" data-swatches="#fff|#000|#f00|#0f0|#00f|#ff0|rgba(0,0,255,0.5)" value="#f00">
+  </div>
+
+</body>
+</html>

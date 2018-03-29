@@ -1,0 +1,253 @@
+@mixin sidebar-expand-media-up() {
+
+  .hidden-expand-up {
+    display: none;
+  }
+
+  ~ .topbar .sidebar-toggler {
+    display: none;
+  }
+
+
+  //-----------------------------------------------------------------
+  // Sidebar icon only
+  //
+  &.sidebar-icon-only {
+    width: $width-sidebar-icon-only;
+
+    ~ .topbar,
+    ~ main {
+      margin-left: $width-sidebar-icon-only;
+    }
+
+    .menu > .menu-item.active > .menu-link,
+    .menu > .menu-item:hover > .menu-link {
+      background-color: transparent !important;
+    }
+
+    .menu.menu-bordery>.menu-item>.menu-link::before {
+      width: 3px;
+    }
+
+  }
+
+
+  //-----------------------------------------------------------------
+  // Sidebar iconic
+  //
+  &.sidebar-iconic {
+    width: $width-sidebar-iconic;
+    overflow: visible;
+
+    ~ .topbar,
+    ~ main {
+      margin-left: $width-sidebar-iconic;
+    }
+
+    .menu-link {
+      flex-direction: column;
+      height: auto;
+      padding-top: 12px;
+      padding-bottom: 8px;
+
+      .title {
+        flex-grow: 0;
+        line-height: $height-md;
+        font-weight: 300;
+        letter-spacing: 0;
+      }
+
+      .icon {
+        font-size: 20px;
+        line-height: $height-md;
+      }
+
+      .badge {
+        position: absolute;
+        top: 8px;
+        right: 4px;
+      }
+    }
+
+    .sidebar-header {
+      justify-content: center;
+    }
+
+    .sidebar-profile {
+      padding: 20px;
+    }
+
+    .sidebar-profile .avatar {
+      width: 56px;
+      height: 56px;
+    }
+
+
+
+    // Sizes
+    &.sidebar-sm {
+      width: $width-sidebar-iconic - 20px;
+
+      ~ .topbar,
+      ~ main {
+        margin-left: $width-sidebar-iconic - 20px;
+      }
+
+      .menu-link {
+        padding-top: 8px;
+        padding-bottom: 4px;
+
+        .title {
+          line-height: $height-sm;
+          font-size: 12px;
+        }
+
+        .icon {
+          font-size: 16px;
+          line-height: $height-sm;
+        }
+
+        .badge {
+          top: 4px;
+          right: 2px;
+        }
+      }
+
+      .sidebar-profile .avatar {
+        width: 40px;
+        height: 40px;
+      }
+    }
+
+
+
+    &.sidebar-lg {
+      width: $width-sidebar-iconic + 20px;
+
+      ~ .topbar,
+      ~ main {
+        margin-left: $width-sidebar-iconic + 20px;
+      }
+
+      .menu-link {
+        padding-top: 16px;
+        padding-bottom: 12px;
+
+        .icon {
+          font-size: 24px;
+        }
+
+        .badge {
+          top: 12px;
+          right: 8px;
+        }
+      }
+
+      .sidebar-profile .avatar {
+        width: 76px;
+        height: 76px;
+      }
+    }
+
+  }
+
+
+}
+
+@mixin sidebar-expand-media-down() {
+
+  .hidden-expand-down {
+    display: none;
+  }
+
+  ~ .topbar .sidebar-toggler {
+    display: inline-block;
+  }
+
+  .sidebar-toggle-fold {
+    display: none;
+  }
+
+  &.sidebar {
+    box-shadow: none;
+    left: -$width-sidebar-normal;
+
+    ~ .topbar,
+    ~ main {
+      margin-left: 0;
+    }
+  }
+
+  &.sidebar-sm {
+    left: -$width-sidebar-sm;
+  }
+
+  &.sidebar-lg {
+    left: -$width-sidebar-lg;
+  }
+
+}
+
+
+@mixin sidebar-folded-open() {
+
+  // Utility classes
+  .hide-on-fold {
+    display: initial;
+  }
+
+  .fade-on-fold {
+    opacity: 1;
+  }
+
+  // Left sided icons, even boxed
+  .title,
+  .logo {
+    margin-left: $sidebar-items-margin-x;
+  }
+
+
+  &:not(.sidebar-icons-right) {
+
+    .sidebar-profile {
+
+      .avatar {
+        width: 100px;
+        height: 100px;
+      }
+
+      .profile-info {
+        transform: scale(1);
+      }
+    }
+
+  }
+
+  // Right sided icons but NOT boxed
+  &.sidebar-icons-right:not(.sidebar-icons-boxed) {
+
+    .logo-icon,
+    .icon,
+    .dot {
+      margin-left: $sidebar-items-margin-x;
+      flex-basis: $sidebar-icon-size;
+    }
+
+  }
+
+  // Right sided icons and boxed
+  &.sidebar-icons-right.sidebar-icons-boxed {
+
+    .logo-icon,
+    .icon {
+      margin-left: $sidebar-items-margin-x;
+    }
+
+    .menu-submenu .icon,
+    .menu-submenu .dot {
+      margin-left: $sidebar-items-margin-x + 5px;
+    }
+
+  }
+
+}

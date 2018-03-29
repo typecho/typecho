@@ -1,0 +1,415 @@
+/*!
+ * CSS jQuery.filer
+ * Copyright (c) 2016 CreativeDream
+ * Version: 1.3 (14-Sep-2016)
+*/
+@import url('../assets/fonts/jquery.filer-icons/jquery-filer.css');
+
+/*-------------------------
+	Basic configurations
+-------------------------*/
+.jFiler * {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.jFiler {
+    font-family: sans-serif;
+    font-size: 14px;
+    color: #494949;
+}
+
+/* Helpers */
+.jFiler ul.list-inline li {
+    display: inline-block;
+    padding-right: 5px;
+    padding-left: 5px;
+}
+
+.jFiler .pull-left {
+    float: left;
+}
+
+.jFiler .pull-right {
+    float: right;
+}
+
+/* File Icons */
+span.jFiler-icon-file {
+	position: relative;
+    display: block;
+    background: #e1e1e1 url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMQAAAEACAYAAADsqNl9AAAD5klEQVR42u3azUqUURjA8bHAEpIK+9hlRBGC0QfVustI+oAo2nQJgYGFFEUhJF1NUVAXEC6iSyhIDCoX5js9Z5xpXmxsRjOdmfP7wfPqwtWZ589xhqlUN2Y5Zi5mJmYi5lzMgZhdFbpavEb32sxsURSfq5mqrPPv52MexYxZrb4NIusoOgoiDudb/JiMGbZSWQSRbRSdBPEqZtQqZRdEllFU2rxPuB8zYI2yDSK7KNYKYinmlvURRG5RVNa4GW5aHUHkGEWrIKasjSByjWJ1EC+tjCByjqKy6qPVI1ZGEDlHUb4h7loXQeQeRSOILzF7rIsgco+iEcS0VRGEKFaCSB+znrQqghDFShDvrYkgRNEM4pk1EYQomkFctiaCEEUziDPWRBCiaAYxYk0EIYpmEIPWRBCiqAeBIEQhCEGIQhBsWxA9E4UNEYQoBCEIUQiC7giiq6OwIYIQhSAEIQpB0H1BdF0UNkQQohCEIEQhCLo7iFoUMZ8EgSC6JAobIghRCEIQohAEvRXEtkRhQwQhCkEIQhSCoHeD2LIobIggRCEIQYhCEPRHEP81ChsiCFEIQhCiEAT9F8SmR2FDBCEKQQhCFIKgv4PYlChsiCD6bZ7/SxQ2RBCiEIQgRCEI8gpiQ1HYEEGIQhCCEIUgyDeIjqOwIYIQhSAEIQpBsBLEKVGsHYUNcUuIQhCCMK2jsB2CEEUpCtshClOKwmYIwpSisBn5BjEqgj+jsBluCVMaWyEKIQiCUhCXhCAI3BKC4K9RXBeEIHBbCALvKwTBRuO4IQgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAyEi1Wh10ClBrYXd6jDgKqAVxMD3OOgqoBXE+PSYcBdSCuJIeM44CakHMpseco4BKpSiKDymI5Zgxx0Hmt8N4TDX9kjx0JGQexONyEPMxw46FTGPYF7NQDiKZdDRkGsSDRgTlIL7HHHU8ZBbD8ZjFVkEkr2MGHBOZxLAj5m05gNVBJNOOipzeSLcLIn0Me9tx0ecx3KnvetsgkiVR0Ocx/Gy1+GsF0bgppr2noI9C2BnzpNXN0EkQDW9ijjlOejyGEzHv2i17J0EkP2KmYvY6WnoshP31/3QWO1n0ToNoWKhfOeOOmi4P4XTM06Iovq5nwdcbxG/pm4Hp67IxV2MuxByKGfJSsMWLPxRzOOZizLWYF7GbHze6178AQI59RSRyAJkAAAAASUVORK5CYII=') no-repeat;
+    background-size: cover;
+    width: 57px;
+    height: 74px;
+    line-height: 90px;
+    text-align: center;
+    margin: 0 auto;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    overflow: hidden;
+}
+
+span.jFiler-icon-file i[class*="icon-jfi-"] {
+    font-size: 24px;
+}
+
+span.jFiler-icon-file.f-image {
+    background-color: #e15955;
+}
+
+span.jFiler-icon-file.f-video {
+    background-color: #4183d7;
+}
+
+span.jFiler-icon-file.f-audio {
+    background-color: #5bab6e;
+}
+
+/* Progress Bar */
+.jFiler-jProgressBar {
+    height: 8px;
+    background: #f1f1f1;
+    margin-top: 3px;
+    margin-bottom: 0;
+    overflow: hidden;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+.jFiler-jProgressBar .bar {
+    float: left;
+    width: 0;
+    height: 100%;
+    font-size: 12px;
+    color: #ffffff;
+    text-align: center;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    background-color: #50A1E9;
+    box-sizing: border-box;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    -webkit-transition: width 0.3s ease;
+    -moz-transition: width 0.3s ease;
+    -o-transition: width 0.3s ease;
+    transition: width 0.3s ease;
+}
+
+.jFiler-jProgressBar .bar.dark {
+    background-color: #555;
+}
+
+.jFiler-jProgressBar .bar.blue {
+    background-color: #428bca;
+}
+
+.jFiler-jProgressBar .bar.green {
+    background-color: #5cb85c;
+}
+
+.jFiler-jProgressBar .bar.orange {
+    background-color: #f7a923;
+}
+
+.jFiler-jProgressBar .bar.red {
+    background-color: #d9534f;
+}
+
+/* Thumbs */
+.jFiler-row:after,
+.jFiler-item:after {
+    display: table;
+    line-height: 0;
+    content: "";
+    clear: both;
+}
+
+.jFiler-items ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/*-------------------------
+	Default Theme
+-------------------------*/
+.jFiler-theme-default .jFiler-input {
+    position: relative;
+    display: block;
+    width: 400px;
+    height: 35px;
+    margin: 0 0 15px 0;
+    background: #fefefe;
+    border: 1px solid #cecece;
+    font-size: 12px;
+    font-family: sans-serif;
+    color: #888;
+    border-radius: 4px;
+    cursor: pointer;
+    overflow: hidden;
+    -webkit-box-shadow: rgba(0,0,0,.25) 0 4px 5px -5px inset;
+       -moz-box-shadow: rgba(0,0,0,.25) 0 4px 5px -5px inset;
+            box-shadow: rgba(0,0,0,.25) 0 4px 5px -5px inset;
+}
+
+.jFiler-theme-default .jFiler-input.focused {
+    outline: none;
+    -webkit-box-shadow: 0 0 7px rgba(0,0,0,0.1);
+    -moz-box-shadow: 0 0 7px rgba(0,0,0,0.1);
+    box-shadow: 0 0 7px rgba(0,0,0,0.1);
+}
+
+.jFiler-theme-default .jFiler-input.dragged {
+    border: 1px dashed #aaaaaa;
+    background: #f9f9f9;
+}
+
+.jFiler-theme-default .jFiler-inpu.draggedt:hover {
+    background: #FFF8D0;
+}
+
+.jFiler-theme-default .jFiler-input.dragged * {
+    pointer-events: none;
+}
+
+.jFiler-theme-default .jFiler-input.dragged .jFiler-input-caption {
+    width: 100%;
+    text-align: center;
+}
+
+.jFiler-theme-default .jFiler-input.dragged .jFiler-input-button {
+    display: none;
+}
+
+.jFiler-theme-default .jFiler-input-caption {
+    display: block;
+    float: left;
+    height: 100%;
+    padding-top: 8px;
+    padding-left: 10px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.jFiler-theme-default .jFiler-input-button {
+    display: block;
+    float: right;
+    height: 100%;
+    padding-top: 8px;
+    padding-left: 15px;
+    padding-right: 15px;
+    border-left: 1px solid #ccc;
+    color: #666666;
+    text-align: center;
+    background-color: #fefefe;
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#fefefe),to(#f1f1f1));
+    background-image: -webkit-linear-gradient(top,#fefefe,#f1f1f1);
+    background-image: -o-linear-gradient(top,#fefefe,#f1f1f1);
+    background-image: linear-gradient(to bottom,#fefefe,#f1f1f1);
+    background-image: -moz-linear-gradient(top,#fefefe,#f1f1f1);
+    -webkit-transition: all .1s ease-out;
+       -moz-transition: all .1s ease-out;
+         -o-transition: all .1s ease-out;
+            transition: all .1s ease-out;
+}
+
+.jFiler-theme-default .jFiler-input-button:hover {
+    -moz-box-shadow: inset 0 0 10px rgba(0,0,0,0.07);
+    -webkit-box-shadow: inset 0 0 10px rgba(0,0,0,0.07);
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.07);
+}
+
+.jFiler-theme-default .jFiler-input-button:active {
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#f1f1f1),to(#fefefe));
+    background-image: -webkit-linear-gradient(top,#f1f1f1,#fefefe);
+    background-image: -o-linear-gradient(top,#f1f1f1,#fefefe);
+    background-image: linear-gradient(to bottom,#f1f1f1,#fefefe);
+    background-image: -moz-linear-gradient(top,#f1f1f1,#fefefe);
+}
+
+/*-------------------------
+	Thumbnails
+-------------------------*/
+.jFiler-items-default .jFiler-items {
+
+}
+
+.jFiler-items-default .jFiler-item {
+    position: relative;
+    padding: 16px;
+    margin-bottom: 16px;
+    background: #f7f7f7;
+    color: #4d4d4c;
+}
+
+
+.jFiler-items-default .jFiler-item .jFiler-item-icon {
+    font-size: 32px;
+    color: #48A0DC;
+
+    margin-right: 15px;
+    margin-top: -3px;
+}
+
+.jFiler-items-default .jFiler-item .jFiler-item-title {
+    font-weight: bold;
+}
+
+.jFiler-items-default .jFiler-item .jFiler-item-others {
+    font-size: 12px;
+    color: #777;
+    margin-left: -5px;
+    margin-right: -5px;
+}
+
+.jFiler-items-default .jFiler-item .jFiler-item-others span {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.jFiler-items-default .jFiler-item-assets {
+    position: absolute;
+    display: block;
+    right: 16px;
+    top: 50%;
+    margin-top: -10px;
+}
+
+.jFiler-items-default .jFiler-item-assets a {
+    padding: 8px 9px 8px 12px;
+    cursor: pointer;
+    background: #fafafa;
+    color: #777;
+    border-radius: 4px;
+    border: 1px solid #e3e3e3
+}
+
+.jFiler-items-default .jFiler-item-assets .jFiler-item-trash-action:hover,
+.jFiler-items-default .jFiler-item-assets .jFiler-item-trash-action:active {
+    color: #d9534f;
+}
+
+.jFiler-items-default .jFiler-item-assets .jFiler-item-trash-action:active {
+    background: transparent;
+}
+
+/* Thumbnails: Grid */
+.jFiler-items-grid .jFiler-item {
+    float: left;
+}
+
+.jFiler-items-grid .jFiler-item .jFiler-item-container {
+    position: relative;
+    margin: 0 20px 30px 0;
+    padding: 10px;
+    border: 1px solid #e1e1e1;
+    border-radius: 3px;
+    background: #fff;
+    -webkit-box-shadow: 0px 0px 3px rgba(0,0,0,0.06);
+    -moz-box-shadow: 0px 0px 3px rgba(0,0,0,0.06);
+    box-shadow: 0px 0px 3px rgba(0,0,0,0.06);
+}
+
+.jFiler-items-grid .jFiler-item .jFiler-item-container .jFiler-item-thumb {
+    position: relative;
+    width: 190px;
+    height: 145px;
+    min-height: 115px;
+    border: 1px solid #e1e1e1;
+    overflow: hidden;
+}
+
+.jFiler-items-grid .jFiler-item .jFiler-item-container .jFiler-item-thumb .jFiler-item-thumb-image {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+
+.jFiler-item .jFiler-item-container .jFiler-item-thumb img {
+    max-width: none;
+    max-height: 100%;
+}
+
+.jFiler-items-grid .jFiler-item .jFiler-item-container .jFiler-item-thumb span.jFiler-icon-file {
+    margin-top: 32px;
+}
+
+.jFiler-items-grid .jFiler-item-thumb-image.fi-loading {
+    background: url('data:image/gif;base64,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') no-repeat center;
+    width: 100%;
+    height: 100%;
+}
+
+.jFiler-items-grid .jFiler-item .jFiler-item-container .jFiler-item-thumb-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: #fff;
+    background: rgba(76, 76, 77, 0.8);
+    opacity: 0;
+    filter: alpha(opacity=0);
+    z-index: 10;
+    overflow-y: auto;
+    -webkit-transition: all 0.12s;
+       -moz-transition: all 0.12s;
+            transition: all 0.12s;
+}
+
+.jFiler-items-grid .jFiler-item .jFiler-item-container .jFiler-item-thumb:hover .jFiler-item-thumb-overlay {
+    opacity: 1;
+    filter: aplpha(opacity(100));
+}
+
+.jFiler-items-grid .jFiler-item .jFiler-item-container .jFiler-item-info {
+    display: table;
+    padding: 0 10px;
+    overflow: auto;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+
+.jFiler-items-grid .jFiler-item .jFiler-item-container .jFiler-item-info .jFiler-item-title {
+    display: block;
+    font-weight: bold;
+    word-break: break-all;
+    line-height: 1;
+}
+
+.jFiler-items-grid .jFiler-item .jFiler-item-container .jFiler-item-info .jFiler-item-others {
+    display: inline-block;
+    font-size: 10px;
+}
+
+.jFiler-items-grid .jFiler-item .jFiler-item-container .jFiler-item-assets {
+    margin-top: 10px;
+    color: #999;
+}
+
+.jFiler-items-grid .jFiler-item .jFiler-item-container .jFiler-item-assets .text-success {
+    color: #3C763D
+}
+
+.jFiler-items-grid .jFiler-items-grid .jFiler-item .jFiler-item-container .jFiler-item-assets .text-error {
+    color: #A94442
+}
+
+.jFiler-items-grid .jFiler-item .jFiler-item-container .jFiler-item-assets .jFiler-jProgressBar {
+    width: 120px;
+    margin-left: -5px;
+}
+
+.jFiler-items-grid .jFiler-item .jFiler-item-container .jFiler-item-assets .jFiler-item-others {
+    font-size: 12px;
+}
+
+.jFiler-items-grid .jFiler-item-trash-action:hover {
+    cursor: pointer;
+    color: #d9534f;
+}

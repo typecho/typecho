@@ -1,0 +1,86 @@
+
+// TODO: Probably will fix in the Beta version
+// When display is flex, image keep stay at its complete height
+.carousel-item-next,
+.carousel-item-prev,
+.carousel-item.active {
+  display: block;
+}
+
+// Caption
+//
+.carousel-caption {
+  padding-bottom: 0;
+
+  h1, h2, h3, h4, h5, h6 {
+    color: #fff;
+  }
+}
+
+
+//
+// Controls
+//
+.carousel-control-next-icon,
+.carousel-control-prev-icon {
+  font-family: $font-icon-themify;
+  font-size: 28px;
+  background: none;
+}
+
+.carousel-control-next-icon::before {
+  content: "\e649";
+}
+
+.carousel-control-prev-icon::before {
+  content: "\e64a";
+}
+
+
+
+// Indicators
+//
+.carousel-indicators {
+  bottom: 16px;
+  margin-bottom: 0;
+
+  li {
+    border: none;
+    background-color: #fff;
+    opacity: .4;
+    margin-left: 2px;
+    margin-right: 2px;
+    transition: 0.2s linear;
+  }
+
+  .active {
+    opacity: .8;
+  }
+}
+
+
+// Place indicator outside of carousel
+//
+.carousel-indicators-outside {
+  position: static;
+  margin: 0 auto;
+  padding-top: 16px;
+
+  li {
+    background-color: $color-bg-darker;
+  }
+
+  .active {
+    background-color: darken($color-secondary, 12%);
+  }
+}
+
+
+
+// Active color
+//
+@each $name, $color in $colors {
+  .carousel-indicators-#{$name} .active {
+    background-color: $color;
+  }
+}

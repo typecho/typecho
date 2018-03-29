@@ -1,0 +1,21 @@
+#tooling{
+  float: right;
+}
+.clear{
+  display: block;
+  width: 13px;
+  height: 13px;
+  position: absolute;
+  opacity: 0.6;
+  z-index: 100;
+  top: 50%;
+  right: 26px;
+  margin-top: -10px;
+  cursor: pointer;
+}
+.clear > i{
+  font-size: 1.5em;
+}
+.clear > i:hover{
+  color: hsl(0, 0%, 75%);
+}

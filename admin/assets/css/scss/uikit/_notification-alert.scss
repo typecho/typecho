@@ -1,0 +1,33 @@
+
+.alert {
+  border: none;
+  border-radius: 3px;
+
+  hr {
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+}
+
+.alert-link {
+  font-weight: 400;
+}
+
+
+.alert-primary {
+  color: darken($color-primary, 22%);
+  background-color: #d5f5f3;
+}
+
+.alert-secondary {
+  background-color: $color-secondary;
+}
+
+.alert-info {
+  color: #004085;
+  background-color: #cce5ff;
+}
+
+.alert-light {
+  background-color: $color-pale-secondary;
+}
