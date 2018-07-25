@@ -97,7 +97,7 @@ $(document).ready(function () {
         if (count == 0) {
             reloadScroll(true);
         } else {
-            images.load(function () {
+            images.bind('load error', function () {
                 count --;
 
                 if (count == 0) {
