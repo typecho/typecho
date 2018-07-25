@@ -1743,8 +1743,9 @@ a.operate-reply {
     padding: 1em; }
     /* line 125, ../scss/components/_editor.scss */
     #wmd-preview pre code {
-      padding: 0;
-      color: #444; }
+    padding: 0;
+    color: #444;
+    white-space: pre-wrap;}
   /* line 130, ../scss/components/_editor.scss */
   #wmd-preview blockquote {
     margin: 1em 1.5em;

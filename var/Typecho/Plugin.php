@@ -407,8 +407,8 @@ class Typecho_Plugin
      * @param string $pluginName 插件名称
      * @return mixed
      */
-    public function exists($pluginName) {
-        return array_search($pluginName, self::$_plugins['activated']);
+    public static function exists($pluginName) {
+        return array_key_exists($pluginName, self::$_plugins['activated']);
     }
 
     /**
