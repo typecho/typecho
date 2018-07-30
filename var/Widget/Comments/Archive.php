@@ -283,9 +283,7 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
             
             /** 评论置位 */
             $this->length = count($this->stack);
-            if (0 !== $this->length) {
-                $this->row = current($this->stack);
-            }
+            $this->row = $this->length > 0 ? current($this->stack) : array();
         }
         
         reset($this->stack);
