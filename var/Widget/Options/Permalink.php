@@ -233,7 +233,7 @@ RewriteRule . {$basePath}index.php [L]
 
         $patterns = array('/archives/[cid:digital]/' => _t('默认风格') . ' <code>/archives/{cid}/</code>',
         '/archives/[slug].html' => _t('wordpress风格') . ' <code>/archives/{slug}.html</code>',
-        '/[year:digital:4]/[month:digital:2]/[day:digital:2]/[slug].html' => _t('按日期归档') . ' <code>/archives/{year}/{month}/{day}/{slug}.html</code>',
+        '/[year:digital:4]/[month:digital:2]/[day:digital:2]/[slug].html' => _t('按日期归档') . ' <code>/{year}/{month}/{day}/{slug}.html</code>',
         '/[category]/[slug].html' => _t('按分类归档') . ' <code>/{category}/{slug}.html</code>');
 
         /** 自定义文章路径 */
