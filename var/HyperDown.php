@@ -1630,9 +1630,9 @@ class HyperDown
      */
     public function cleanUrl($url)
     {
-        if (preg_match("/^\s*((http|https|ftp|mailto):[\p{L}_a-z0-9-\.\/%#!@\?\+=~\|\,&\(\)]+)/iu", $url, $matches)) {
+        if (preg_match("/^\s*((http|https|ftp|mailto):[\p{L}_a-z0-9-:\.\*\/%#!@\?\+=~\|\,&\(\)]+)/iu", $url, $matches)) {
             return $matches[1];
-        } else if (preg_match("/^\s*([\p{L}_a-z0-9-\.\/%#!@\?\+=~\|\,&]+)/iu", $url, $matches)) {
+        } else if (preg_match("/^\s*([\p{L}_a-z0-9-:\.\*\/%#!@\?\+=~\|\,&]+)/iu", $url, $matches)) {
             return $matches[1];
         } else {
             return '#';

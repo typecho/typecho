@@ -1154,8 +1154,8 @@
 
     Parser.prototype.cleanUrl = function(url) {
       var matches, regexUrl, regexWord;
-      regexUrl = new RegExp("^\\s*((http|https|ftp|mailto):[" + pL + "_a-z0-9-\\./%#!@\\?\\+=~\\|\\,&\\(\\)]+)", 'i');
-      regexWord = new RegExp("^\\s*([" + pL + "_a-z0-9-\\./%#!@\\?\\+=~\\|\\,&]+)", 'i');
+      regexUrl = new RegExp("^\\s*((http|https|ftp|mailto):[" + pL + "_a-z0-9-:\\.\\*/%#!@\\?\\+=~\\|\\,&\\(\\)]+)", 'i');
+      regexWord = new RegExp("^\\s*([" + pL + "_a-z0-9-:\\.\\*/%#!@\\?\\+=~\\|\\,&]+)", 'i');
       if (!!(matches = url.match(regexUrl))) {
         return matches[1];
       } else if (!!(matches = url.match(regexWord))) {
