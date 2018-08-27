@@ -809,12 +809,6 @@ class Widget_Archive extends Widget_Abstract_Contents
             $select->where('table.contents.created >= ? AND table.contents.created < ?', $from, $to);
         }
 
-        /** 保存密码至cookie */
-        if ($this->request->isPost() && isset($this->request->protectPassword) && !$this->parameter->preview) {
-            $this->security->protect();
-            Typecho_Cookie::set('protectPassword', $this->request->protectPassword, 0);
-        }
-
         /** 匹配类型 */
         $select->limit(1);
         $this->query($select);
@@ -829,6 +823,12 @@ class Widget_Archive extends Widget_Abstract_Contents
                 $hasPushed = true;
                 return;
             }
+        }
+
+        /** 保存密码至cookie */
+        if ($this->request->isPost() && isset($this->request->protectPassword) && !$this->parameter->preview) {
+            $this->security->protect();
+            Typecho_Cookie::set('protectPassword_' . $this->cid, $this->request->protectPassword, 0);
         }
 
         /** 设置模板 */
@@ -1186,7 +1186,7 @@ class Widget_Archive extends Widget_Abstract_Contents
             $searchQuery = '%' . str_replace(' ', '%', $keywords) . '%';
 
             /** 搜索无法进入隐私项保护归档 */
-            $select->where('table.contents.password IS NULL')
+            $select->where("table.contents.password IS NULL OR table.contents.password = ''")
             ->where('table.contents.title LIKE ? OR table.contents.text LIKE ?', $searchQuery, $searchQuery)
             ->where('table.contents.type = ?', 'post');
         }
@@ -1231,7 +1231,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         if ($this->_invokeByFeed) {
             // 对feed输出加入限制条件
             return parent::select()->where('table.contents.allowFeed = ?', 1)
-            ->where('table.contents.password IS NULL');
+            ->where("table.contents.password IS NULL OR table.contents.password = ''");
         } else {
             return parent::select();
         }
@@ -1550,7 +1550,7 @@ class Widget_Archive extends Widget_Abstract_Contents
             $this->created, $this->options->time)
             ->where('table.contents.status = ?', 'publish')
             ->where('table.contents.type = ?', $this->type)
-            ->where('table.contents.password IS NULL')
+            ->where("table.contents.password IS NULL OR table.contents.password = ''")
             ->order('table.contents.created', Typecho_Db::SORT_ASC)
             ->limit(1));
 
@@ -1587,7 +1587,7 @@ class Widget_Archive extends Widget_Abstract_Contents
         $content = $this->db->fetchRow($this->select()->where('table.contents.created < ?', $this->created)
             ->where('table.contents.status = ?', 'publish')
             ->where('table.contents.type = ?', $this->type)
-            ->where('table.contents.password IS NULL')
+            ->where("table.contents.password IS NULL OR table.contents.password = ''")
             ->order('table.contents.created', Typecho_Db::SORT_DESC)
             ->limit(1));
 

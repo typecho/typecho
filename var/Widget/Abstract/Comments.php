@@ -168,14 +168,14 @@ class Widget_Abstract_Comments extends Widget_Abstract
         $insertStruct = array(
             'cid'       =>  $comment['cid'],
             'created'   =>  empty($comment['created']) ? $this->options->time : $comment['created'],
-            'author'    =>  empty($comment['author']) ? NULL : $comment['author'],
+            'author'    =>  strlen($comment['author']) === 0 ? NULL : $comment['author'],
             'authorId'  =>  empty($comment['authorId']) ? 0 : $comment['authorId'],
             'ownerId'   =>  empty($comment['ownerId']) ? 0 : $comment['ownerId'],
-            'mail'      =>  empty($comment['mail']) ? NULL : $comment['mail'],
-            'url'       =>  empty($comment['url']) ? NULL : $comment['url'],
-            'ip'        =>  empty($comment['ip']) ? $this->request->getIp() : $comment['ip'],
-            'agent'     =>  empty($comment['agent']) ? $_SERVER["HTTP_USER_AGENT"] : $comment['agent'],
-            'text'      =>  empty($comment['text']) ? NULL : $comment['text'],
+            'mail'      =>  strlen($comment['mail']) === 0 ? NULL : $comment['mail'],
+            'url'       =>  strlen($comment['url']) === 0 ? NULL : $comment['url'],
+            'ip'        =>  strlen($comment['ip']) === 0 ? $this->request->getIp() : $comment['ip'],
+            'agent'     =>  strlen($comment['agent']) === 0 ? $_SERVER["HTTP_USER_AGENT"] : $comment['agent'],
+            'text'      =>  strlen($comment['text']) === 0 ? NULL : $comment['text'],
             'type'      =>  empty($comment['type']) ? 'comment' : $comment['type'],
             'status'    =>  empty($comment['status']) ? 'approved' : $comment['status'],
             'parent'    =>  empty($comment['parent']) ? 0 : $comment['parent'],
@@ -225,10 +225,10 @@ class Widget_Abstract_Comments extends Widget_Abstract
 
         /** 构建插入结构 */
         $preUpdateStruct = array(
-            'author'    =>  empty($comment['author']) ? NULL : $comment['author'],
-            'mail'      =>  empty($comment['mail']) ? NULL : $comment['mail'],
-            'url'       =>  empty($comment['url']) ? NULL : $comment['url'],
-            'text'      =>  empty($comment['text']) ? NULL : $comment['text'],
+            'author'    =>  strlen($comment['author']) === 0 ? NULL : $comment['author'],
+            'mail'      =>  strlen($comment['mail']) === 0 ? NULL : $comment['mail'],
+            'url'       =>  strlen($comment['url']) === 0 ? NULL : $comment['url'],
+            'text'      =>  strlen($comment['text']) === 0 ? NULL : $comment['text'],
             'status'    =>  empty($comment['status']) ? 'approved' : $comment['status'],
         );
 
