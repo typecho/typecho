@@ -738,6 +738,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
                 . '" method="post">' .
             '<p class="word">' . _t('请输入密码访问') . '</p>' .
             '<p><input type="password" class="text" name="protectPassword" />
+            <input type="hidden" name="protectCID" value="' . $value['cid'] . '" />
             <input type="submit" class="submit" value="' . _t('提交') . '" /></p>' .
             '</form>';
 

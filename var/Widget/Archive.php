@@ -809,6 +809,15 @@ class Widget_Archive extends Widget_Abstract_Contents
             $select->where('table.contents.created >= ? AND table.contents.created < ?', $from, $to);
         }
 
+        /** 保存密码至cookie */
+        if ($this->request->isPost()
+            && isset($this->request->protectPassword)
+            && isset($this->request->protectCID)
+            && !$this->parameter->preview) {
+            $this->security->protect();
+            Typecho_Cookie::set('protectPassword_' . $this->request->filter('int')->protectCID, $this->request->protectPassword, 0);
+        }
+
         /** 匹配类型 */
         $select->limit(1);
         $this->query($select);
@@ -823,12 +832,6 @@ class Widget_Archive extends Widget_Abstract_Contents
                 $hasPushed = true;
                 return;
             }
-        }
-
-        /** 保存密码至cookie */
-        if ($this->request->isPost() && isset($this->request->protectPassword) && !$this->parameter->preview) {
-            $this->security->protect();
-            Typecho_Cookie::set('protectPassword_' . $this->cid, $this->request->protectPassword, 0);
         }
 
         /** 设置模板 */
