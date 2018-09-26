@@ -77,7 +77,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                     <div id="tab-advance" class="tab-content">
                         <section class="typecho-post-option" role="application">
                             <label for="date" class="typecho-label"><?php _e('发布日期'); ?></label>
-                            <p><input class="typecho-date w-100" type="text" name="date" id="date" value="<?php $post->have() ? $post->date('Y-m-d H:i') : ''; ?>" /></p>
+                            <p><input class="typecho-date w-100" type="text" name="date" id="date" autocomplete="off" value="<?php $post->have() ? $post->date('Y-m-d H:i') : ''; ?>" /></p>
                         </section>
 
                         <section class="typecho-post-option category-option">
@@ -123,7 +123,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                                 </p>
                                 <p id="post-password"<?php if (strlen($post->password) == 0): ?> class="hidden"<?php endif; ?>>
                                     <label for="protect-pwd" class="sr-only">内容密码</label>
-                                    <input type="text" name="password" id="protect-pwd" class="text-s" value="<?php $post->password(); ?>" size="16" placeholder="<?php _e('内容密码'); ?>" />
+                                    <input type="text" name="password" id="protect-pwd" class="text-s" value="<?php $post->password(); ?>" size="16" placeholder="<?php _e('内容密码'); ?>" autocomplete="off" />
                                 </p>
                             </section>
                             <?php endif; ?>
