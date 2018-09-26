@@ -43,15 +43,6 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                     <?php endif; ?>
                     <!--<li><a href="<?php $options->adminUrl('profile.php'); ?>"><?php _e('更新我的资料'); ?></a></li>-->
                 </ul>
-                <?php $version = Typecho_Cookie::get('__typecho_check_version'); ?>
-                <?php if ($version && $version['available']): ?>
-                <div class="update-check">
-                    <p class="message notice">
-                        <?php _e('您当前使用的版本是'); ?> <?php echo $version['current']; ?> &rarr;
-                        <strong><a href="<?php echo $version['link']; ?>"><?php _e('官方最新版本是'); ?> <?php echo $version['latest']; ?></a></strong>
-                    </p>
-                </div>
-                <?php endif; ?>
             </div>
 
             <div class="col-mb-12 col-tb-4" role="complementary">
