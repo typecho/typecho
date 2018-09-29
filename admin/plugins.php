@@ -40,7 +40,7 @@ include 'menu.php';
                                 <td><?php $activatedPlugins->description(); ?></td>
                                 <td><?php $activatedPlugins->version(); ?></td>
                                 <td><?php echo empty($activatedPlugins->homepage) ? $activatedPlugins->author : '<a href="' . $activatedPlugins->homepage
-                                . '">' . $activatedPlugins->author . '</a>'; ?></td>
+                                . '" rel="noopener noreferrer">' . $activatedPlugins->author . '</a>'; ?></td>
                                 <td>
                                     <?php if ($activatedPlugins->activate || $activatedPlugins->deactivate || $activatedPlugins->config || $activatedPlugins->personalConfig): ?>
                                         <?php if ($activatedPlugins->config): ?>
@@ -99,7 +99,7 @@ include 'menu.php';
                                 <td><?php $deactivatedPlugins->description(); ?></td>
                                 <td><?php $deactivatedPlugins->version(); ?></td>
                                 <td><?php echo empty($deactivatedPlugins->homepage) ? $deactivatedPlugins->author : '<a href="' . $deactivatedPlugins->homepage
-                                . '">' . $deactivatedPlugins->author . '</a>'; ?></td>
+                                . '" rel="noopener noreferrer">' . $deactivatedPlugins->author . '</a>'; ?></td>
                                 <td>
                                     <a href="<?php $security->index('/action/plugins-edit?activate=' . $deactivatedPlugins->name); ?>"><?php _e('启用'); ?></a>
                                 </td>
