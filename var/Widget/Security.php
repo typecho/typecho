@@ -146,17 +146,6 @@ class Widget_Security extends Typecho_Widget
     }
 
     /**
-     * 获取绝对路由路径
-     *
-     * @param $path
-     * @return string
-     */
-    public function getRootUrl($path)
-    {
-        return Typecho_Common::url($this->getTokenUrl($path), $this->_options->rootUrl);
-    }
-
-    /**
      * 输出后台安全路径
      *
      * @param $path

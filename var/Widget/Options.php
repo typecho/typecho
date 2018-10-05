@@ -206,7 +206,7 @@ class Widget_Options extends Typecho_Widget
     {
         return $this->widget('Widget_Security')->getTokenUrl(
             Typecho_Router::url('do', array('action' => 'login', 'widget' => 'Login'),
-            Typecho_Common::url('index.php', $this->rootUrl)));
+            Typecho_Common::url('', $this->index)));
     }
 
     /**
