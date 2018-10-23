@@ -271,16 +271,16 @@ class Widget_Abstract_Contents extends Widget_Abstract
     {
         /** 构建插入结构 */
         $insertStruct = array(
-            'title'         =>  strlen($content['title']) === 0 ? NULL : htmlspecialchars($content['title']),
+            'title'         =>  !isset($content['title']) || strlen($content['title']) === 0 ? NULL : htmlspecialchars($content['title']),
             'created'       =>  empty($content['created']) ? $this->options->time : $content['created'],
             'modified'      =>  $this->options->time,
-            'text'          =>  strlen($content['text']) === 0 ? NULL : $content['text'],
+            'text'          =>  !isset($content['text']) || strlen($content['text']) === 0 ? NULL : $content['text'],
             'order'         =>  empty($content['order']) ? 0 : intval($content['order']),
             'authorId'      =>  isset($content['authorId']) ? $content['authorId'] : $this->user->uid,
             'template'      =>  empty($content['template']) ? NULL : $content['template'],
             'type'          =>  empty($content['type']) ? 'post' : $content['type'],
             'status'        =>  empty($content['status']) ? 'publish' : $content['status'],
-            'password'      =>  strlen($content['password']) === 0 ? NULL : $content['password'],
+            'password'      =>  !isset($content['password']) || strlen($content['password']) === 0 ? NULL : $content['password'],
             'commentsNum'   =>  empty($content['commentsNum']) ? 0 : $content['commentsNum'],
             'allowComment'  =>  !empty($content['allowComment']) && 1 == $content['allowComment'] ? 1 : 0,
             'allowPing'     =>  !empty($content['allowPing']) && 1 == $content['allowPing'] ? 1 : 0,
@@ -297,7 +297,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
 
         /** 更新缩略名 */
         if ($insertId > 0) {
-            $this->applySlug(strlen($content['slug']) === 0 ? NULL : $content['slug'], $insertId);
+            $this->applySlug(!isset($content['slug']) || strlen($content['slug']) === 0 ? NULL : $content['slug'], $insertId);
         }
 
         return $insertId;
@@ -320,9 +320,9 @@ class Widget_Abstract_Contents extends Widget_Abstract
 
         /** 构建更新结构 */
         $preUpdateStruct = array(
-            'title'         =>  strlen($content['title']) === 0 ? NULL : htmlspecialchars($content['title']),
+            'title'         =>  !isset($content['title']) || strlen($content['title']) === 0 ? NULL : htmlspecialchars($content['title']),
             'order'         =>  empty($content['order']) ? 0 : intval($content['order']),
-            'text'          =>  strlen($content['text']) === 0 ? NULL : $content['text'],
+            'text'          =>  !isset($content['text']) || strlen($content['text']) === 0 ? NULL : $content['text'],
             'template'      =>  empty($content['template']) ? NULL : $content['template'],
             'type'          =>  empty($content['type']) ? 'post' : $content['type'],
             'status'        =>  empty($content['status']) ? 'publish' : $content['status'],
@@ -353,7 +353,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
 
         /** 更新缩略名 */
         if ($updateRows > 0 && isset($content['slug'])) {
-            $this->applySlug(strlen($content['slug']) === 0 ? NULL : $content['slug'], $updateCondition);
+            $this->applySlug(!isset($content['slug']) || strlen($content['slug']) === 0 ? NULL : $content['slug'], $updateCondition);
         }
 
         return $updateRows;

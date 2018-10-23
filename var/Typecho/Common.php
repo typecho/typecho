@@ -61,7 +61,7 @@ function _n($single, $plural, $number) {
 class Typecho_Common
 {
     /** 程序版本 */
-    const VERSION = '1.2/18.1.29';
+    const VERSION = '1.2/18.10.23';
 
     /**
      * 允许的属性

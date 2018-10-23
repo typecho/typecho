@@ -120,8 +120,8 @@ $(document).ready(function() {
         }
     }
 
-    $('#tab-files').bind('init', function () {
-        var uploader = new plupload.Uploader({
+    var uploader = null, tabFilesEl = $('#tab-files').bind('init', function () {
+        uploader = new plupload.Uploader({
             browse_button   :   $('.upload-file').get(0),
             url             :   '<?php $security->index('/action/upload'
                 . (isset($fileParentContent) ? '?cid=' . $fileParentContent->cid : '')); ?>',
@@ -175,6 +175,23 @@ $(document).ready(function() {
 
         uploader.init();
     });
+
+    Typecho.uploadFile = function (file, name) {
+        if (!uploader) {
+            $('#tab-files-btn').parent().trigger('click');
+        }
+        
+        var timer = setInterval(function () {
+            if (!uploader) {
+                return;
+            }
+
+            clearInterval(timer);
+            timer = null;
+
+            uploader.addFile(file, name);
+        }, 50);
+    };
 
     function attachInsertEvent (el) {
         $('.insert', el).click(function () {

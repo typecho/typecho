@@ -168,14 +168,14 @@ class Widget_Abstract_Comments extends Widget_Abstract
         $insertStruct = array(
             'cid'       =>  $comment['cid'],
             'created'   =>  empty($comment['created']) ? $this->options->time : $comment['created'],
-            'author'    =>  strlen($comment['author']) === 0 ? NULL : $comment['author'],
+            'author'    =>  !isset($content['author']) || strlen($comment['author']) === 0 ? NULL : $comment['author'],
             'authorId'  =>  empty($comment['authorId']) ? 0 : $comment['authorId'],
             'ownerId'   =>  empty($comment['ownerId']) ? 0 : $comment['ownerId'],
-            'mail'      =>  strlen($comment['mail']) === 0 ? NULL : $comment['mail'],
-            'url'       =>  strlen($comment['url']) === 0 ? NULL : $comment['url'],
-            'ip'        =>  strlen($comment['ip']) === 0 ? $this->request->getIp() : $comment['ip'],
-            'agent'     =>  strlen($comment['agent']) === 0 ? $_SERVER["HTTP_USER_AGENT"] : $comment['agent'],
-            'text'      =>  strlen($comment['text']) === 0 ? NULL : $comment['text'],
+            'mail'      =>  !isset($content['mail']) || strlen($comment['mail']) === 0 ? NULL : $comment['mail'],
+            'url'       =>  !isset($content['url']) || strlen($comment['url']) === 0 ? NULL : $comment['url'],
+            'ip'        =>  !isset($content['ip']) || strlen($comment['ip']) === 0 ? $this->request->getIp() : $comment['ip'],
+            'agent'     =>  !isset($content['agent']) || strlen($comment['agent']) === 0 ? $_SERVER["HTTP_USER_AGENT"] : $comment['agent'],
+            'text'      =>  !isset($content['text']) || strlen($comment['text']) === 0 ? NULL : $comment['text'],
             'type'      =>  empty($comment['type']) ? 'comment' : $comment['type'],
             'status'    =>  empty($comment['status']) ? 'approved' : $comment['status'],
             'parent'    =>  empty($comment['parent']) ? 0 : $comment['parent'],
@@ -225,10 +225,10 @@ class Widget_Abstract_Comments extends Widget_Abstract
 
         /** 构建插入结构 */
         $preUpdateStruct = array(
-            'author'    =>  strlen($comment['author']) === 0 ? NULL : $comment['author'],
-            'mail'      =>  strlen($comment['mail']) === 0 ? NULL : $comment['mail'],
-            'url'       =>  strlen($comment['url']) === 0 ? NULL : $comment['url'],
-            'text'      =>  strlen($comment['text']) === 0 ? NULL : $comment['text'],
+            'author'    =>  !isset($content['author']) || strlen($comment['author']) === 0 ? NULL : $comment['author'],
+            'mail'      =>  !isset($content['mail']) || strlen($comment['mail']) === 0 ? NULL : $comment['mail'],
+            'url'       =>  !isset($content['url']) || strlen($comment['url']) === 0 ? NULL : $comment['url'],
+            'text'      =>  !isset($content['text']) || strlen($comment['text']) === 0 ? NULL : $comment['text'],
             'status'    =>  empty($comment['status']) ? 'approved' : $comment['status'],
         );
 

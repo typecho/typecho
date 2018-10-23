@@ -1,6 +1,7 @@
 (function (w) {
     w.Typecho = {
         insertFileToEditor  :   function (file, url, isImage) {},
+        uploadFile: function (file) {},
         editorResize        :   function (id, url) {
             $('#' + id).resizeable({
                 minHeight   :   100,
