@@ -149,11 +149,10 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
      * @param boolean $isInit 是否为初始化
      * @return boolean
      */
-    public function configHandle(array $settings, $isInit)
+    public function configHandle(array &$settings, $isInit)
     {
         if (function_exists('themeConfigHandle')) {
             themeConfigHandle($settings, $isInit);
-            return true;
         }
 
         return false;
