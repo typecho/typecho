@@ -360,4 +360,17 @@ class Widget_Stat extends Typecho_Widget
                     ->from('table.metas')
                     ->where('table.metas.type = ?', 'category'))->num;
     }
+    
+     /**
+     * 获取标签数目
+     *
+     * @access protected
+     * @return integer
+     */
+    protected function ___tagsNum()
+    {
+        return $this->db->fetchObject($this->db->select(array('COUNT(mid)' => 'num'))
+                    ->from('table.metas')
+                    ->where('table.metas.type = ?', 'tag'))->num;
+    }
 }
