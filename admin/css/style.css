@@ -927,6 +927,10 @@ a.operate-reply {
   width: 100%;
   border-collapse: collapse; }
 
+.typecho-list-table.mono textarea,.typecho-list-table.mono input{
+    width: 100%;
+}
+
 /* line 486, ../scss/style.scss */
 .typecho-list-table.deactivate {
   color: #999; }
