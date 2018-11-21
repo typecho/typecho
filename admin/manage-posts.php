@@ -5,7 +5,7 @@ include 'menu.php';
 
 $stat = Typecho_Widget::widget('Widget_Stat');
 $posts = Typecho_Widget::widget('Widget_Contents_Post_Admin');
-$isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == Typecho_Cookie::get('__typecho_all_posts'));
+$isAllPosts = ('on' == $request->get('__typecho_all_posts') || ('off' != Typecho_Cookie::get('__typecho_all_posts') && 'off' != $request->get('__typecho_all_posts')));
 ?>
 <div class="main">
     <div class="body container">
