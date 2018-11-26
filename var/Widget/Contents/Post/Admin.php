@@ -173,7 +173,7 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
         $this->_countSql = clone $select;
 
         /** 提交查询 */
-        $select->order('table.contents.created', Typecho_Db::SORT_DESC)
+        $select->order('table.contents.cid', Typecho_Db::SORT_DESC)
         ->page($this->_currentPage, $this->parameter->pageSize);
 
         $this->db->fetchAll($select, array($this, 'push'));

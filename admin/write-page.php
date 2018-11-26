@@ -70,7 +70,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                     <div id="tab-advance" class="tab-content">
                         <section  class="typecho-post-option" role="application">
                             <label for="date" class="typecho-label"><?php _e('发布日期'); ?></label>
-                            <p><input class="typecho-date w-100" type="text" name="date" id="date" autocomplete="off" value="<?php $page->have() ? $page->date('Y-m-d H:i') : ''; ?>" /></p>
+                            <p><input class="typecho-date w-100" type="text" name="date" id="date" autocomplete="off" value="<?php $page->have() && $page->created > 0 ? $page->date('Y-m-d H:i') : ''; ?>" /></p>
                         </section>
 
                         <section class="typecho-post-option">

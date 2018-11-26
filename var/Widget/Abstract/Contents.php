@@ -232,7 +232,8 @@ class Widget_Abstract_Contents extends Widget_Abstract
     {
         $select = $this->db->select(array('COUNT(table.contents.cid)' => 'num'))->from('table.contents')
         ->where("table.contents.{$column} > {$offset}")
-        ->where("table.contents.type = ?", $type);
+        ->where("table.contents.type = ? OR (table.contents.type = ? AND table.contents.parent = ?)",
+            $type, $type . '_draft', 0);
 
         if (!empty($status)) {
             $select->where("table.contents.status = ?", $status);
@@ -272,7 +273,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
         /** 构建插入结构 */
         $insertStruct = array(
             'title'         =>  !isset($content['title']) || strlen($content['title']) === 0 ? NULL : htmlspecialchars($content['title']),
-            'created'       =>  empty($content['created']) ? $this->options->time : $content['created'],
+            'created'       =>  !isset($content['created']) ? $this->options->time : $content['created'],
             'modified'      =>  $this->options->time,
             'text'          =>  !isset($content['text']) || strlen($content['text']) === 0 ? NULL : $content['text'],
             'order'         =>  empty($content['order']) ? 0 : intval($content['order']),
@@ -341,7 +342,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
         }
 
         /** 更新创建时间 */
-        if (!empty($content['created'])) {
+        if (isset($content['created'])) {
             $updateStruct['created'] = $content['created'];
         }
 

@@ -149,12 +149,12 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
 
         foreach ($pages as $page) {
             // 标记插件接口
-            $this->pluginHandle()->mark($page, $this);
+            $this->pluginHandle()->mark($status, $page, $this);
             $condition = $this->db->sql()->where('cid = ?', $page);
 
             if ($this->db->query($condition->update('table.contents')->rows(array('status' => $status)))) {
                 // 完成标记插件接口
-                $this->pluginHandle()->finishMark($page, $this);
+                $this->pluginHandle()->finishMark($status, $page, $this);
 
                 $markCount ++;
             }

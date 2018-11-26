@@ -77,7 +77,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                     <div id="tab-advance" class="tab-content">
                         <section class="typecho-post-option" role="application">
                             <label for="date" class="typecho-label"><?php _e('发布日期'); ?></label>
-                            <p><input class="typecho-date w-100" type="text" name="date" id="date" autocomplete="off" value="<?php $post->have() ? $post->date('Y-m-d H:i') : ''; ?>" /></p>
+                            <p><input class="typecho-date w-100" type="text" name="date" id="date" autocomplete="off" value="<?php $post->have() && $post->created > 0 ? $post->date('Y-m-d H:i') : ''; ?>" /></p>
                         </section>
 
                         <section class="typecho-post-option category-option">

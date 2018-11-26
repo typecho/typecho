@@ -145,9 +145,12 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             $day = intval($this->request->day);
 
             $created = mktime($hour, $min, $second, $month, $day, $year) - $this->options->timezone + $this->options->serverTimezone;
-        } else if ($this->request->is('cid')) {
+        } else if ($this->have() && $this->created > 0) {
             //如果是修改文章
             $created = $this->created;
+        } else if ($this->request->is('do=save')) {
+            // 如果是草稿而且没有任何输入则保持原状
+            $created = 0;
         }
 
         return $created;
@@ -188,13 +191,13 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      * 获取页面偏移的URL Query
      *
      * @access protected
-     * @param integer $created 创建时间
+     * @param integer $cid 文章id
      * @param string $status 状态
      * @return string
      */
-    protected function getPageOffsetQuery($created, $status = NULL)
+    protected function getPageOffsetQuery($cid, $status = NULL)
     {
-        return 'page=' . $this->getPageOffset('created', $created, 'post', $status,
+        return 'page=' . $this->getPageOffset('cid', $cid, 'post', $status,
         'on' == $this->request->__typecho_all_posts ? 0 : $this->user->uid);
     }
 
@@ -755,7 +758,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             $this->widget('Widget_Notice')->highlight($this->theId);
 
             /** 获取页面偏移 */
-            $pageQuery = $this->getPageOffsetQuery($this->created);
+            $pageQuery = $this->getPageOffsetQuery($this->cid);
 
             /** 页面跳转 */
             $this->response->redirect(Typecho_Common::url('manage-posts.php?' . $pageQuery, $this->options->adminUrl));
@@ -810,20 +813,40 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
 
         foreach ($posts as $post) {
             // 标记插件接口
-            $this->pluginHandle()->mark($post, $this);
+            $this->pluginHandle()->mark($status, $post, $this);
 
             $condition = $this->db->sql()->where('cid = ?', $post);
             $postObject = $this->db->fetchObject($this->db->select('status', 'type')
-                ->from('table.contents')->where('cid = ? AND type = ?', $post, 'post'));
+                ->from('table.contents')->where('cid = ? AND (type = ? OR type = ?)', $post, 'post', 'post_draft'));
 
             if ($this->isWriteable(clone $condition) &&
-                $postObject) {
+                count((array) $postObject)) {
 
                 /** 标记状态 */
                 $this->db->query($condition->update('table.contents')->rows(array('status' => $status)));
 
+                // 刷新Metas
+                if ($postObject->type == 'post') {
+                    $op = NULL;
+
+                    if ($status == 'publish' && $postObject->status != 'publish') {
+                        $op = '+';
+                    } else if ($status != 'publish' && $postObject->status == 'publish') {
+                        $op = '-';
+                    }
+
+                    if (!empty($op)) {
+                        $metas = $this->db->fetchAll($this->db->select()->from('table.relationships')->where('cid = ?', $post));
+                        foreach ($metas as $meta) {
+                            $this->db->query($this->db->update('table.metas')
+                                ->expression('count', 'count ' . $op . ' 1')
+                                ->where('mid = ? AND (type = ? OR type = ?)', $meta['mid'], 'category', 'tag'));
+                        }
+                    }
+                }
+
                 // 完成标记插件接口
-                $this->pluginHandle()->finishMark($post, $this);
+                $this->pluginHandle()->finishMark($status, $post, $this);
 
                 $markCount ++;
             }
@@ -856,10 +879,10 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
 
             $condition = $this->db->sql()->where('cid = ?', $post);
             $postObject = $this->db->fetchObject($this->db->select('status', 'type')
-                ->from('table.contents')->where('cid = ? AND type = ?', $post, 'post'));
+                ->from('table.contents')->where('cid = ? AND (type = ? OR type = ?)', $post, 'post', 'post_draft'));
 
             if ($this->isWriteable(clone $condition) &&
-                $postObject &&
+                count((array) $postObject) &&
                 $this->delete($condition)) {
 
                 /** 删除分类 */
