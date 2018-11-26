@@ -153,6 +153,18 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
             $condition = $this->db->sql()->where('cid = ?', $page);
 
             if ($this->db->query($condition->update('table.contents')->rows(array('status' => $status)))) {
+                // 处理草稿
+                $draft = $this->db->fetchRow($this->db->select('cid')
+                    ->from('table.contents')
+                    ->where('table.contents.parent = ? AND table.contents.type = ?',
+                        $page, 'page_draft')
+                ->limit(1));
+
+                if (!empty($draft)) {
+                    $this->db->query($this->db->update('table.contents')->rows(array('status' => $status))
+                        ->where('cid = ?', $draft['cid']));
+                }
+
                 // 完成标记插件接口
                 $this->pluginHandle()->finishMark($status, $page, $this);
 

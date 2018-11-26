@@ -845,6 +845,18 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                     }
                 }
 
+                // 处理草稿
+                $draft = $this->db->fetchRow($this->db->select('cid')
+                    ->from('table.contents')
+                    ->where('table.contents.parent = ? AND table.contents.type = ?',
+                        $post, 'post_draft')
+                ->limit(1));
+
+                if (!empty($draft)) {
+                    $this->db->query($this->db->update('table.contents')->rows(array('status' => $status))
+                        ->where('cid = ?', $draft['cid']));
+                }
+
                 // 完成标记插件接口
                 $this->pluginHandle()->finishMark($status, $post, $this);
 

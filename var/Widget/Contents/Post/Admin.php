@@ -56,7 +56,7 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
             return true;
         }
 
-        $savedPost = $this->db->fetchRow($this->db->select('cid', 'modified')
+        $savedPost = $this->db->fetchRow($this->db->select('cid', 'modified', 'status')
         ->from('table.contents')
         ->where('table.contents.parent = ? AND (table.contents.type = ? OR table.contents.type = ?)',
             $this->cid, 'post_draft', 'page_draft')
