@@ -786,6 +786,60 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     }
 
     /**
+     * 标记文章
+     *
+     * @access public
+     * @return void
+     */
+    public function markPost()
+    {
+        $status = $this->request->get('status');
+        $statusList = array(
+            'publish'   =>  _t('公开'),
+            'private'   =>  _t('私密'),
+            'hidden'    =>  _t('隐藏'),
+            'waiting'   =>  _t('待审核')
+        );
+
+        if (!isset($statusList[$status])) {
+            $this->response->goBack();
+        }
+
+        $posts = $this->request->filter('int')->getArray('cid');
+        $markCount = 0; 
+
+        foreach ($posts as $post) {
+            // 标记插件接口
+            $this->pluginHandle()->mark($post, $this);
+
+            $condition = $this->db->sql()->where('cid = ?', $post);
+            $postObject = $this->db->fetchObject($this->db->select('status', 'type')
+                ->from('table.contents')->where('cid = ? AND type = ?', $post, 'post'));
+
+            if ($this->isWriteable(clone $condition) &&
+                $postObject) {
+
+                /** 标记状态 */
+                $this->db->query($condition->update('table.contents')->rows(array('status' => $status)));
+
+                // 完成标记插件接口
+                $this->pluginHandle()->finishMark($post, $this);
+
+                $markCount ++;
+            }
+
+            unset($condition);
+        }
+
+        /** 设置提示信息 */
+        $this->widget('Widget_Notice')->set($markCount > 0 ? _t('文章已经被标记为<strong>%s</strong>', $statusList[$status]) : _t('没有文章被标记'),
+        $deleteCount > 0 ? 'success' : 'notice');
+
+        /** 返回原网页 */
+        $this->response->goBack();
+    }
+
+    /**
      * 删除文章
      *
      * @access public
@@ -804,7 +858,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             $postObject = $this->db->fetchObject($this->db->select('status', 'type')
                 ->from('table.contents')->where('cid = ? AND type = ?', $post, 'post'));
 
-            if ($this->isWriteable($condition) &&
+            if ($this->isWriteable(clone $condition) &&
                 $postObject &&
                 $this->delete($condition)) {
 
@@ -905,6 +959,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         $this->security->protect();
         $this->on($this->request->is('do=publish') || $this->request->is('do=save'))->writePost();
         $this->on($this->request->is('do=delete'))->deletePost();
+        $this->on($this->request->is('do=mark'))->markPost();
         $this->on($this->request->is('do=deleteDraft'))->deletePostDraft();
 
         $this->response->redirect($this->options->adminUrl);

@@ -127,6 +127,50 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
     }
 
     /**
+     * 标记页面
+     *
+     * @access public
+     * @return void
+     */
+    public function markPage()
+    {
+        $status = $this->request->get('status');
+        $statusList = array(
+            'publish'   =>  _t('公开'),
+            'hidden'    =>  _t('隐藏')
+        );
+
+        if (!isset($statusList[$status])) {
+            $this->response->goBack();
+        }
+
+        $pages = $this->request->filter('int')->getArray('cid');
+        $markCount = 0; 
+
+        foreach ($pages as $page) {
+            // 标记插件接口
+            $this->pluginHandle()->mark($page, $this);
+            $condition = $this->db->sql()->where('cid = ?', $page);
+
+            if ($this->db->query($condition->update('table.contents')->rows(array('status' => $status)))) {
+                // 完成标记插件接口
+                $this->pluginHandle()->finishMark($page, $this);
+
+                $markCount ++;
+            }
+
+            unset($condition);
+        }
+
+        /** 设置提示信息 */
+        $this->widget('Widget_Notice')->set($markCount > 0 ? _t('页面已经被标记为<strong>%s</strong>', $statusList[$status]) : _t('没有页面被标记'),
+        $deleteCount > 0 ? 'success' : 'notice');
+
+        /** 返回原网页 */
+        $this->response->goBack();
+    }
+
+    /**
      * 删除页面
      *
      * @access public
@@ -256,6 +300,7 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
         $this->security->protect();
         $this->on($this->request->is('do=publish') || $this->request->is('do=save'))->writePage();
         $this->on($this->request->is('do=delete'))->deletePage();
+        $this->on($this->request->is('do=mark'))->markPage();
         $this->on($this->request->is('do=deleteDraft'))->deletePageDraft();
         $this->on($this->request->is('do=sort'))->sortPage();
         $this->response->redirect($this->options->adminUrl);

@@ -227,7 +227,7 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
                 ->where('table.contents.cid = ?', $post)
                 ->limit(1), array($this, 'push'));
 
-            if ($this->isWriteable($condition) && $this->delete($condition)) {
+            if ($this->isWriteable(clone $condition) && $this->delete($condition)) {
                 /** 删除文件 */
                 Widget_Upload::deleteHandle($row);
 
@@ -285,7 +285,7 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
                 ->where('table.contents.cid = ?', $post)
                 ->limit(1), array($this, 'push'));
 
-                if ($this->isWriteable($condition) && $this->delete($condition)) {
+                if ($this->isWriteable(clone $condition) && $this->delete($condition)) {
                     /** 删除文件 */
                     Widget_Upload::deleteHandle($row);
 
