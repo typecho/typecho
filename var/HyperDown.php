@@ -488,7 +488,7 @@ class HyperDown
 
                 $result = isset( $self->_definitions[$matches[2]] ) ?
                     "<img src=\"{$self->_definitions[$matches[2]]}\" alt=\"{$escaped}\" title=\"{$escaped}\">"
-                    : $escaped;
+                    : $matches[0];
 
                 return $self->makeHolder($result);
             },
@@ -517,7 +517,7 @@ class HyperDown
                 );
                 $result = isset( $self->_definitions[$matches[2]] ) ?
                     "<a href=\"{$self->_definitions[$matches[2]]}\">{$escaped}</a>"
-                    : $escaped;
+                    : $matches[0];
 
                 return $self->makeHolder($result);
             },
