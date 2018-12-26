@@ -37,7 +37,7 @@ class Typecho_Widget_Helper_Form_Element_Fake extends Typecho_Widget_Helper_Form
         $this->init();
 
         /** 初始化表单项 */
-        $this->input = $this->input($name, $options);
+        $this->input = $this->input($name);
 
         /** 初始化表单值 */
         if (NULL !== $value) {
