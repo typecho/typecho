@@ -207,7 +207,7 @@ $(document).ready(function () {
 
         // 剪贴板复制图片
         textarea.pastableTextarea().on('pasteImage', function (e, data) {
-            name = data.name.replace(/[\(\)\[\]\*#!]/g, '');
+            var name = data.name ? data.name.replace(/[\(\)\[\]\*#!]/g, '') : (new Date()).toISOString().replace(/\..+$/, '');
             if (!name.match(/\.[a-z0-9]{2,}$/i)) {
                 var ext = data.blob.type.split('/').pop();
                 name += '.' + ext;
