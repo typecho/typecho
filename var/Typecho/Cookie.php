@@ -99,7 +99,7 @@ class Typecho_Cookie
     public static function set($key, $value, $expire = 0)
     {
         $key = self::$_prefix . $key;
-        setrawcookie($key, rawurlencode($value), $expire, self::$_path,$_SERVER['SERVER_NAME'],true.true);
+        setrawcookie($key, rawurlencode($value), $expire, self::$_path,$_SERVER['SERVER_NAME'],true,true);
         $_COOKIE[$key] = $value;
     }
 
@@ -117,7 +117,7 @@ class Typecho_Cookie
             return;
         }
 
-        setcookie($key, '', time() - 2592000, self::$_path,$_SERVER['SERVER_NAME'],true.true);
+        setcookie($key, '', time() - 2592000, self::$_path,$_SERVER['SERVER_NAME'],true,true);
         unset($_COOKIE[$key]);
     }
 }
