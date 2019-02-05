@@ -22,4 +22,4 @@ http://typecho.org/download
 This branch is only suitable for sites with TLS encryption
 
 #### Example site
-https://haimablog.ooo
+https://haimablog.ooo/
