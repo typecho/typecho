@@ -18,4 +18,5 @@ http://forum.typecho.org/
 #### Download
 http://typecho.org/download
 
-#### Tips:This branch is only suitable for sites with TLS encryption
+#### Tips
+This branch is only suitable for sites with TLS encryption
