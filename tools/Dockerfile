@@ -18,6 +18,7 @@ RUN sed -i 's/archive.ubuntu.com/'$ubuntu_mirror'/g' /etc/apt/sources.list && \
 
 # install mysql
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server && \
+mkdir -p /var/run/mysqld && chown mysql:mysql /var/run/mysqld && \ # 增加此行
 #    sed -i -e "s/^bind-address\s*=\s*127.0.0.1/bind-address = 0.0.0.0/" /etc/mysql/mysql.conf.d/mysqld.cnf && \
     sed -i 's/^\(log_error\s.*\)/# \1/' /etc/mysql/my.cnf && \
     echo "mysqld_safe &" > /tmp/mysql_config && \
