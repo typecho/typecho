@@ -251,7 +251,8 @@ class Widget_Options extends Typecho_Widget
      */
     protected function ___logoutUrl()
     {
-        return Typecho_Common::url('/action/logout', $this->index);
+        return $this->widget('Widget_Security')->getTokenUrl(
+            Typecho_Common::url('/action/logout', $this->index));
     }
 
     /**
