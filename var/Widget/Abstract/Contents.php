@@ -474,7 +474,13 @@ class Widget_Abstract_Contents extends Widget_Abstract
             if (isset($exists[$name])) {
                 unset($exists[$name]);
             }
- 
+
+            if(empty($value)){
+                $this->db->query($this->db->delete('table.fields')
+                    ->where('cid = ? AND name = ?', $cid, $name));
+                continue;
+            }
+
             $this->setField($name, $type, $value, $cid);
         }
 
