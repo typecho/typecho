@@ -1615,7 +1615,7 @@ a.operate-reply {
   list-style: none;
   margin: 0;
   padding: 0;
-  height: 26px;
+  height: auto;
   line-height: 1; }
   /* line 15, ../scss/components/_editor.scss */
   .wmd-button-row li {
