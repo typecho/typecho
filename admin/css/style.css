@@ -36,7 +36,9 @@ a {
 /* line 39, ../scss/style.scss */
 code, pre, .mono {
   font-family: Menlo, Monaco, Consolas, "Courier New", monospace; }
-
+code, pre{
+  white-space: pre-wrap;
+}
 /* line 43, ../scss/style.scss */
 .p {
   margin: 1em 0; }
