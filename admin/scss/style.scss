@@ -40,6 +40,10 @@ code, pre, .mono {
   font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
+code, pre{
+  white-space: pre-wrap;
+}
+
 .p { margin: 1em 0; }
 
 .body-100 {
