@@ -770,6 +770,9 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             // 完成保存插件接口
             $this->pluginHandle()->finishSave($contents, $this);
 
+            /** 设置高亮 */
+            $this->widget('Widget_Notice')->highlight($this->cid);
+
             if ($this->request->isAjax()) {
                 $created = new Typecho_Date();
                 $this->response->throwJson(array(
