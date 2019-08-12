@@ -1,5 +1,7 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 /**
  * 多行文字域帮手
  *
@@ -28,9 +30,12 @@ class Typecho_Widget_Helper_Form_Element_Textarea extends Typecho_Widget_Helper_
      * @param array $options 选择项
      * @return Typecho_Widget_Helper_Layout
      */
-    public function input($name = NULL, array $options = NULL)
+    public function input($name = null, array $options = null)
     {
-        $input = new Typecho_Widget_Helper_Layout('textarea', array('id' => $name . '-0-' . self::$uniqueId, 'name' => $name));
+        $orgClass = array('id' => $name . '-0-' . self::$uniqueId, 'name' => $name);
+        $class = empty($options) ? $orgClass : array_merge($orgClass, $options);
+
+        $input = new Typecho_Widget_Helper_Layout('textarea', $class);
         $this->label->setAttribute('for', $name . '-0-' . self::$uniqueId);
         $this->container($input->setClose(false));
         $this->inputs[] = $input;

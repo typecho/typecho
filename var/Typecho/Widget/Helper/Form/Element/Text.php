@@ -1,5 +1,7 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 /**
  * 文字输入表单项帮手
  *
@@ -28,10 +30,12 @@ class Typecho_Widget_Helper_Form_Element_Text extends Typecho_Widget_Helper_Form
      * @param array $options 选择项
      * @return Typecho_Widget_Helper_Layout
      */
-    public function input($name = NULL, array $options = NULL)
+    public function input($name = null, array $options = null)
     {
-        $input = new Typecho_Widget_Helper_Layout('input', array('id' => $name . '-0-' . self::$uniqueId,
-        'name' => $name, 'type' => 'text', 'class' => 'text'));
+        $orgClass = array('id' => $name . '-0-' . self::$uniqueId,
+        'name' => $name, 'type' => 'text', 'class' => 'text');
+        $class = empty($options) ? $orgClass : array_merge($orgClass, $options);
+        $input = new Typecho_Widget_Helper_Layout('input', $class);
         $this->container($input);
         $this->label->setAttribute('for', $name . '-0-' . self::$uniqueId);
         $this->inputs[] = $input;
