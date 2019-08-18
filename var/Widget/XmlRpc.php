@@ -1439,7 +1439,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         /** 调整状态 */
         if (isset($content["{$type}_status"])) {
             $status = $this->wordpressToTypechoStatus($content["{$type}_status"], $type);
-            
+            $input['visibility'] = isset($content["visibility"]) ? $content["visibility"] : $status;
             if ('publish' == $status || 'waiting' == $status || 'private' == $status) {
                 $input['do'] = 'publish';
                 
