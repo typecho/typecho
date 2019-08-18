@@ -1604,7 +1604,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                     'wp_author_id'           => $posts->authorId,
                     'wp_author_display_name' => $posts->author->screenName,
                     'date_created_gmt'       => new IXR_Date($posts->created),
-                    'post_status'            => $this->typechoToWordpressStatus($posts->status, 'post'),
+                    'post_status'            => $this->typechoToWordpressStatus(($posts->hasSaved || 'post_draft' == $posts->type) ? 'draft' : $posts->status, 'post'),
                     'custom_fields'          => array(),
                     'wp_post_format'         => 'standard',
                     'date_modified'          => new IXR_Date($this->options->timezone + $posts->modified),
