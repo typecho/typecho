@@ -1053,8 +1053,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         
         $input = array();
         if (!empty($struct['status'])) {
-            $input['status'] = 'hold' == $input['status'] ? $input['status'] : 
-                $this->wordpressToTypechoStatus($struct['status']);
+            $input['status'] = $this->wordpressToTypechoStatus($struct['status'], 'comment');
         } else {
             $input['__typecho_all_comments'] = 'on';
         }
