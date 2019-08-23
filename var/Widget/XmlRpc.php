@@ -485,8 +485,8 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function wpEditPage($blogId, $pageId, $userName, $password, $content, $publish)
     {
-        $content['type'] = 'page';
-        $this->mwEditPost($blogId, $pageId, $userName, $password, $content, $publish);
+        $content['post_type'] = 'page';
+        $this->mwEditPost($pageId, $userName, $password, $content, $publish);
     }
 
 
