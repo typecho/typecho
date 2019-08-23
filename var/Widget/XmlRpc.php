@@ -395,8 +395,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 'dateCreated'            => new IXR_Date($this->options->timezone + $pages->created),
                 'userid'                 => $pages->authorId,
                 'page_id'                => intval($pages->cid),
-                /** todo:此处有疑问 */
-                'page_status'            => $this->typechoToWordpressStatus($pages->status, 'page'),
+                'page_status'            => $this->typechoToWordpressStatus(($pages->hasSaved || 'page_draft' == $pages->type) ? 'draft' : $pages->status, 'page'),
                 'description'            => $excerpt,
                 'title'                  => $pages->title,
                 'link'                   => $pages->permalink,
