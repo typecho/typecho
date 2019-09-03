@@ -319,4 +319,17 @@ abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_
         $this->rules[] = func_get_args();
         return $this;
     }
+
+    /**
+     * 统一设置所有输入项的属性值
+     *
+     * @param $attributeName
+     * @param $attributeValue
+     */
+    public function setInputsAttribute($attributeName, $attributeValue)
+    {
+        foreach ($this->inputs as $input) {
+            $input->setAttribute($attributeName, $attributeValue);
+        }
+    }
 }
