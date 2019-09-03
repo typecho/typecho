@@ -395,8 +395,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 'dateCreated'            => new IXR_Date($this->options->timezone + $pages->created),
                 'userid'                 => $pages->authorId,
                 'page_id'                => intval($pages->cid),
-                /** todo:此处有疑问 */
-                'page_status'            => $this->typechoToWordpressStatus($pages->status, 'page'),
+                'page_status'            => $this->typechoToWordpressStatus(($pages->hasSaved || 'page_draft' == $pages->type) ? 'draft' : $pages->status, 'page'),
                 'description'            => $excerpt,
                 'title'                  => $pages->title,
                 'link'                   => $pages->permalink,
@@ -485,8 +484,8 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
      */
     public function wpEditPage($blogId, $pageId, $userName, $password, $content, $publish)
     {
-        $content['type'] = 'page';
-        $this->mwEditPost($blogId, $pageId, $userName, $password, $content, $publish);
+        $content['post_type'] = 'page';
+        $this->mwEditPost($pageId, $userName, $password, $content, $publish);
     }
 
 
@@ -1053,8 +1052,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         
         $input = array();
         if (!empty($struct['status'])) {
-            $input['status'] = 'hold' == $input['status'] ? $input['status'] : 
-                $this->wordpressToTypechoStatus($struct['status']);
+            $input['status'] = $this->wordpressToTypechoStatus($struct['status'], 'comment');
         } else {
             $input['__typecho_all_comments'] = 'on';
         }
@@ -1440,7 +1438,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         /** 调整状态 */
         if (isset($content["{$type}_status"])) {
             $status = $this->wordpressToTypechoStatus($content["{$type}_status"], $type);
-            
+            $input['visibility'] = isset($content["visibility"]) ? $content["visibility"] : $status;
             if ('publish' == $status || 'waiting' == $status || 'private' == $status) {
                 $input['do'] = 'publish';
                 
@@ -1605,7 +1603,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                     'wp_author_id'           => $posts->authorId,
                     'wp_author_display_name' => $posts->author->screenName,
                     'date_created_gmt'       => new IXR_Date($posts->created),
-                    'post_status'            => $this->typechoToWordpressStatus($posts->status, 'post'),
+                    'post_status'            => $this->typechoToWordpressStatus(($posts->hasSaved || 'post_draft' == $posts->type) ? 'draft' : $posts->status, 'post'),
                     'custom_fields'          => array(),
                     'wp_post_format'         => 'standard',
                     'date_modified'          => new IXR_Date($this->options->timezone + $posts->modified),
