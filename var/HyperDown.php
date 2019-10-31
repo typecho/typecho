@@ -58,16 +58,17 @@ class HyperDown
         array('shtml', 20),
         array('pre', 30),
         array('ahtml', 40),
-        array('list', 50),
-        array('math', 60),
-        array('html', 70),
-        array('footnote', 80),
-        array('definition', 90),
-        array('quote', 100),
-        array('table', 110),
-        array('sh', 120),
-        array('mh', 130),
-        array('hr', 140),
+        array('shr', 50),
+        array('list', 60),
+        array('math', 70),
+        array('html', 80),
+        array('footnote', 90),
+        array('definition', 100),
+        array('quote', 110),
+        array('table', 120),
+        array('sh', 130),
+        array('mh', 140),
+        array('dhr', 150),
         array('default', 9999)
     );
 
@@ -264,7 +265,7 @@ class HyperDown
             $result = $this->call('after' . ucfirst($method), $result, $value);
 
             $html .= $result;
-        } 
+        }
 
         return $html;
     }
@@ -377,15 +378,15 @@ class HyperDown
     public function parseInline($text, $whiteList = '', $clearHolders = true, $enableAutoLink = true)
     {
         $self = $this;
-        $text = $this->call('beforeParseInline', $text); 
+        $text = $this->call('beforeParseInline', $text);
 
         // code
         $text = preg_replace_callback(
             "/(^|[^\\\])(`+)(.+?)\\2/",
             function ($matches) use ($self) {
                 return  $matches[1] . $self->makeHolder(
-                    '<code>' . htmlspecialchars($matches[3]) . '</code>'
-                );
+                        '<code>' . htmlspecialchars($matches[3]) . '</code>'
+                    );
             },
             $text
         );
@@ -395,8 +396,8 @@ class HyperDown
             "/(^|[^\\\])(\\$+)(.+?)\\2/",
             function ($matches) use ($self) {
                 return  $matches[1] . $self->makeHolder(
-                    $matches[2] . htmlspecialchars($matches[3]) . $matches[2]
-                );
+                        $matches[2] . htmlspecialchars($matches[3]) . $matches[2]
+                    );
             },
             $text
         );
@@ -431,8 +432,8 @@ class HyperDown
             "/<(\/?)([a-z0-9-]+)(\s+[^>]*)?>/i",
             function ($matches) use ($self, $whiteList) {
                 if ($self->_html || false !== stripos(
-                    '|' . $self->_commonWhiteList . '|' . $whiteList . '|', '|' . $matches[2] . '|'
-                )) {
+                        '|' . $self->_commonWhiteList . '|' . $whiteList . '|', '|' . $matches[2] . '|'
+                    )) {
                     return $self->makeHolder($matches[0]);
                 } else {
                     return htmlspecialchars($matches[0]);
@@ -522,7 +523,7 @@ class HyperDown
                 return $self->makeHolder($result);
             },
             $text
-        ); 
+        );
 
         // strong and em and some fuck
         $text = $this->parseInlineCallback($text);
@@ -1067,7 +1068,7 @@ class HyperDown
     private function parseBlockMh($block, $key, $line, &$state, $lines)
     {
         if (preg_match("/^\s*((=|-){2,})\s*$/", $line, $matches)
-                    && ($block && $block[0] == "normal" && !preg_match("/^\s*$/", $lines[$block[2]]))) {    // check if last line isn't empty
+            && ($block && $block[0] == "normal" && !preg_match("/^\s*$/", $lines[$block[2]]))) {    // check if last line isn't empty
             if ($this->isBlock('normal')) {
                 $this->backBlock(1, 'mh', $matches[1][0] == '=' ? 1 : 2)
                     ->setBlock($key)
@@ -1088,9 +1089,27 @@ class HyperDown
      * @param $line
      * @return bool
      */
-    private function parseBlockHr($block, $key, $line)
+    private function parseBlockShr($block, $key, $line)
     {
-        if (preg_match("/^[-\*]{3,}\s*$/", $line)) {
+        if (preg_match("/^(\* *){3,}\s*$/", $line)) {
+            $this->startBlock('hr', $key)
+                ->endBlock();
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $block
+     * @param $key
+     * @param $line
+     * @return bool
+     */
+    private function parseBlockDhr($block, $key, $line)
+    {
+        if (preg_match("/^(- *){3,}\s*$/", $line)) {
             $this->startBlock('hr', $key)
                 ->endBlock();
 
@@ -1384,7 +1403,7 @@ class HyperDown
 
                 if (preg_match("/^(\s*)/", $line, $matches)) {
                     $space = strlen($matches[1]);
-                    
+
                     if ($space > 0) {
                         $secondMinSpace = min($space, $secondMinSpace);
                         $secondFound = true;

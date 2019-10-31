@@ -638,13 +638,23 @@ class Widget_Abstract_Contents extends Widget_Abstract
             ->select()->from('table.metas')
             ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
             ->where('table.relationships.cid = ?', $value['cid'])
-            ->where('table.metas.type = ?', 'category')
-            ->order('table.metas.order', Typecho_Db::SORT_ASC), array($this->widget('Widget_Metas_Category_List'), 'filter'));
+            ->where('table.metas.type = ?', 'category'), array($this->widget('Widget_Metas_Category_List'), 'filter'));
+
         $value['category'] = NULL;
         $value['directory'] = array();
 
         /** 取出第一个分类作为slug条件 */
         if (!empty($value['categories'])) {
+            /** 使用自定义排序 */
+            usort($value['categories'], function ($a, $b) {
+                $field = 'order';
+                if ($a['order'] == $b['order']) {
+                    $field = 'mid';
+                }
+
+                return $a[$field] < $b[$field] ? -1 : 1;
+            });
+
             $value['category'] = $value['categories'][0]['slug'];
 
             $value['directory'] = $this->widget('Widget_Metas_Category_List')->getAllParentsSlug($value['categories'][0]['mid']);
