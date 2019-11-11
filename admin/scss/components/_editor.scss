@@ -42,8 +42,8 @@
 
 #btn-cancel-preview { display: none }
 
-@media 
-(-webkit-min-device-pixel-ratio: 2), 
+@media
+(-webkit-min-device-pixel-ratio: 2),
 (min-resolution: 192dpi) {
   #wmd-button-row span {
     background-image: url(../img/editor@2x.png);
@@ -204,7 +204,6 @@
     width: 50%;
     background: #FFF;
     z-index: 999;
-    @include box-sizing(border-box);
     @include border-radius(0);
   }
   #wmd-button-bar {

@@ -1,0 +1,84 @@
+// box-shadow
+@mixin box-shadow($value){
+  -webkit-box-shadow:  $value;
+  -moz-box-shadow:  $value;
+  box-shadow:  $value;
+}
+
+// border-radius
+@mixin border-radius($corner: 5px){
+  -webkit-border-radius: $corner;
+  -moz-border-radius: $corner;
+  border-radius: $corner;
+}
+
+@mixin background-size($value){
+  -webkit-background-size: $value;
+  background-size: $value;
+}
+
+// unable to select
+@mixin unselectable(){
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+@mixin clearfix(){
+  &:after{
+    content: '';
+    display: block;
+    clear: both;
+    visibility: hidden;
+  }
+}
+
+
+// ANIMATION
+@mixin transform($value){
+  -webkit-transform: $value;
+  -moz-transform: $value;
+  -ms-transform: $value;
+  -o-transform: $value;
+  transform: $value;
+}
+
+
+@mixin transition($value){
+  -webkit-transition: $value;
+  -moz-transition: $value;
+  -ms-transition: $value;
+  -o-transition: $value;
+  transition: $value;
+}
+
+
+
+@mixin linear-gradient($direct, $colors){
+  background: linear-gradient($direct, $colors);
+  background: -webkit-linear-gradient($direct, $colors);
+  background: -moz-linear-gradient($direct, $colors);
+}
+
+@mixin backdrop-filter($value){
+  backdrop-filter: $value ;
+  -webkit-backdrop-filter: $value;
+}
+
+// PC 1px
+@mixin divider-1px(){
+  content:'';
+  height: 1px;
+  display: block;
+  width: 100%;
+  position: absolute;
+  background-color: $color-border;
+  @include transform(scaleY(.5))
+}
+
+
+@mixin opacity($value){
+  opacity: $value;
+}
+

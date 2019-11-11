@@ -1,4 +1,3 @@
-@import "compass/css3/background-size";
 
 @mixin image-2x($image, $width, $height) {
   @media (-webkit-min-device-pixel-ratio: 1.3),

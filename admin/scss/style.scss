@@ -9,77 +9,7 @@
 * @version 0.9
 */
 
-@import "compass";
-
-/**
-* Typecho 全局样式
-*/
-
-html {
-  height: 100%;
-}
-
-body {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  background: #F6F6F3;
-  color: #444;
-  font-size: 87.5%;
-  line-height: 1.5;
-}
-
-a {
-  color: #467B96;
-  text-decoration: none;
-  &:hover {
-    color: #499BC3;
-    text-decoration: underline;
-  }
-}
-
-code, pre, .mono { 
-  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
-}
-
-.p { margin: 1em 0; }
-
-.body-100 {
-  height: 100%;
-}
-
-a.balloon-button {
-  display: inline-block;
-  padding: 0 6px;
-  min-width: 12px;
-  height: 18px;
-  line-height: 18px;
-  background: #D8E7EE;
-  font-size: .85714em;
-  text-align: center;
-  text-decoration: none;
-  
-  /** 修正ie中文不对齐 */
-  zoom:1;
-  
-  -moz-border-radius: 30px;
-  -webkit-border-radius: 30px;
-  border-radius: 30px;
-  white-space: nowrap;
-}
-
-a.button:hover, a.balloon-button:hover {
-  background-color: #A5CADC;
-  color: #FFF;
-  text-decoration: none;
-}
-
-
-@import "forms";
-@import "buttons";
-@import "messages";
-@import "pagenavi";
-
-@import "header";
-@import "footer";
+@import "mixin";
 
 /* 低版本浏览器升级提示 */
 .browsehappy {
@@ -99,10 +29,7 @@ a.button:hover, a.balloon-button:hover {
   width: 100%;
   z-index: 10;
   text-align: center;
-
-  -moz-border-radius: 0;
-  -webkit-border-radius: 0;
-  border-radius: 0;
+  @include border-radius(0)
 }
 
 .popup ul {
@@ -119,9 +46,8 @@ a.button:hover, a.balloon-button:hover {
 
 /**
 * logo 的样式
-*/
-.logo {
-}
+
+.logo {}
 
 /**
 * 载入状态
@@ -183,68 +109,6 @@ a.button:hover, a.balloon-button:hover {
 /** 增加配置面板内部的错误样式 by 70 */
 
 
-/** 
-* 安装样式
-* 
-* @author mingcheng
-* @date   2008-09-06
-*/
-
-/**
-* 安装向导
-*/
-.typecho-install {
-  padding-bottom: 2em;
-}
-.typecho-install-patch {
-  margin-bottom: 2em;
-  padding: 2em 0;
-  background-color: #292D33;
-  color: #FFF;
-  text-align: center;
-}
-
-.typecho-install-patch ol {
-  list-style: none;
-  margin: 3em 0 1em;
-  padding: 0;
-  color: #999;
-}
-.typecho-install-patch li {
-  display: inline-block;
-  margin: 0 .8em;
-}
-.typecho-install-patch span {
-  display: inline-block;
-  margin-right: 5px;
-  width: 20px;
-  height: 20px;
-  line-height: 20px;
-  border: 2px solid #999;
-  text-align: center;
-  border-radius: 2em;
-}
-.typecho-install-patch li.current {
-  color: #FFF;
-  font-weight: bold;
-}
-.typecho-install-patch li.current span {
-  border-color: #FFF;
-}
-
-
-/**
-* 安装主体内容
-*/
-
-.typecho-install .typecho-install-body input {
-  width: 100%;
-}
-.typecho-install-body .typecho-option li {
-  margin: 1em 0;
-}
-
-
 /**
 * 欢迎界面
 */
@@ -282,7 +146,7 @@ a.button:hover, a.balloon-button:hover {
 .latest-link {
   li {
     white-space: nowrap;
-    overflow: hidden; 
+    overflow: hidden;
     text-overflow: ellipsis;
   }
   span {
@@ -315,7 +179,7 @@ a.button:hover, a.balloon-button:hover {
   text-align: center;
   vertical-align: middle;
   h1 {
-    margin: 0 0 1em; 
+    margin: 0 0 1em;
   }
 }
 
@@ -387,8 +251,7 @@ a.button:hover, a.balloon-button:hover {
   height: 26px;
   line-height: 26px;
   color: #666;
-  @include box-sizing(border-box);
-  
+
 }
 .typecho-option-tabs a:hover {
   background-color: #E9E9E6;
@@ -522,7 +385,7 @@ a.operate-reply {
 
 
 .typecho-list-table tr td .hidden-by-mouse {
-  @include opacity(0); 
+  @include opacity(0);
 }
 
 .typecho-list-table tr:hover td .hidden-by-mouse {
@@ -947,12 +810,3 @@ background: #FFF1A8;
 .tDnD_whileDrag {
   background-color: #FFFBCC;
 }
-
-
-/**
-* 导入扩展样式
-*/
-
-@import "icons";
-@import "components";
-@import "hidden";

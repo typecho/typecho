@@ -11,8 +11,8 @@ $sprites-retina: sprite-map("icons-2x/*.png");
   // display: block;
   // height: image-height(sprite-file($sprites, $name));
   // width: image-width(sprite-file($sprites, $name));
-  @media 
-  (-webkit-min-device-pixel-ratio: 2), 
+  @media
+  (-webkit-min-device-pixel-ratio: 2),
   (min-resolution: 192dpi) {
     // Workaround for https://gist.github.com/2140082
     @if (sprite-position($sprites, $name) != sprite-position($sprites-retina, $name)) {
@@ -36,7 +36,7 @@ $sprites-retina: sprite-map("icons-2x/*.png");
     @include opacity(0.75);
   }
   @media
-  (-webkit-min-device-pixel-ratio: 2), 
+  (-webkit-min-device-pixel-ratio: 2),
   (min-resolution: 192dpi) {
     // Hard coded width of the normal sprite image. There must be a smarter way to do this.
     @include background-size(auto 256px);

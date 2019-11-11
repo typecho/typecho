@@ -1,0 +1,56 @@
+
+/**
+* 安装样式
+* @author mingcheng
+* @date   2008-09-06
+*/
+
+/**
+* 安装向导
+*/
+.typecho-install {
+  padding-bottom: 2em;
+  .typecho-install-body {
+    input {
+      width: 100%;
+    }
+    .typecho-option li {
+      margin: 1em 0;
+    }
+  }
+}
+
+.typecho-install-patch {
+  margin-bottom: 2em;
+  padding: 2em 0;
+  background-color: #292D33;
+  color: #FFF;
+  text-align: center;
+  ol {
+    list-style: none;
+    margin: 3em 0 1em;
+    padding: 0;
+    color: #999;
+    li {
+      display: inline-block;
+      margin: 0 .8em .5em;
+      .current {
+        color: #FFF;
+        font-weight: bold;
+        span {
+          border-color: #FFF;
+        }
+      }
+      span {
+        display: inline-block;
+        margin-right: 5px;
+        width: 20px;
+        height: 20px;
+        line-height: 20px;
+        border: 2px solid #999;
+        text-align: center;
+        border-radius: 2em;
+      }
+    }
+  }
+}
