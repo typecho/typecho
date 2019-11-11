@@ -23,14 +23,14 @@
 .typecho-install-patch {
   margin-bottom: 2em;
   padding: 2em 0;
-  background-color: #292D33;
+  background-color: $bg-navbar;
   color: #FFF;
   text-align: center;
   ol {
     list-style: none;
     margin: 3em 0 1em;
     padding: 0;
-    color: #999;
+    color: $text-comment;
     li {
       display: inline-block;
       margin: 0 .8em .5em;
@@ -47,7 +47,7 @@
         width: 20px;
         height: 20px;
         line-height: 20px;
-        border: 2px solid #999;
+        border: 2px solid $text-comment;
         text-align: center;
         border-radius: 2em;
       }

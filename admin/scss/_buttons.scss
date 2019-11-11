@@ -35,7 +35,7 @@
   zoom: 1;
 
   &:disabled {
-    color: #999;
+    color: $text-comment;
   }
 }
 
@@ -52,7 +52,7 @@
 }
 
 .primary {
-  @include button(#467B96);
+  @include button($color-link);
   color: #FFF;
 }
 

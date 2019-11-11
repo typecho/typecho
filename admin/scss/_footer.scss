@@ -3,7 +3,7 @@
 */
 .typecho-foot {
   padding: 4em 0 3em;
-  color: #999;
+  color: $text-comment;
   line-height: 1.8;
   text-align: center;
 
@@ -15,6 +15,6 @@
   }
   .resource a {
     margin: 0 3px;
-    color: #999;
+    color: $text-comment;
   }
 }

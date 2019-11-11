@@ -3,7 +3,7 @@
 */
 .typecho-head-nav {
   padding: 0 10px;
-  background: #292D33;
+  background: $bg-navbar;
 }
 
 .typecho-head-nav a {
@@ -46,7 +46,7 @@
 #typecho-nav-list .parent a:hover,
 #typecho-nav-list .focus .parent a,
 #typecho-nav-list .root:hover .parent a {
-  background: #202328;
+  background: $bg-navbar-active;
   color: #FFF;
   text-decoration: none;
 }
@@ -60,9 +60,9 @@
   top: 36px;
   display: none;
   margin: 0;
-  min-width: 160px; 
+  min-width: 160px;
   max-width: 240px;
-  background: #202328;
+  background: $bg-navbar-active;
   z-index: 250;
 }
 
@@ -83,7 +83,7 @@
 
 #typecho-nav-list .child li a:hover,
 #typecho-nav-list .child li a:focus {
-  background: #292D33;
+  background: $bg-navbar;
   color: #FFF;
 }
 #typecho-nav-list .child li.focus a {
@@ -104,6 +104,6 @@
   color: #BBB;
 }
 .typecho-head-nav .operate a:hover {
-  background-color: #202328;
+  background-color: $bg-navbar-active;
   color: #FFF;
 }

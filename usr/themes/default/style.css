@@ -11,7 +11,7 @@
  * --------------- */
 body {
   background-color: #FFF;
-  color: #444;
+  color: $text-main;
   /*font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;*/
   font-family: "Droid Serif", Georgia, "Times New Roman", "PingFang SC", "Hiragino Sans GB", "Source Han Sans CN", "WenQuanYi Micro Hei","Microsoft Yahei", serif;
   font-size: 87.5%;
@@ -22,9 +22,9 @@ a {
   text-decoration: none;
 }
 a:hover, a:active {
-  color: #444;
+  color: $text-main;
 }
-pre, code { 
+pre, code {
   background: #F3F3F3;
   font-family: Menlo, Monaco, Consolas, "Lucida Console", "Courier New", monospace;
   font-size: .92857em;
@@ -37,7 +37,7 @@ pre {
 }
 pre code {
   padding: 3px;
-  color: #444;
+  color: $text-main;
 }
 
 blockquote {
@@ -146,7 +146,7 @@ textarea {
   border-bottom: none;
   height: 32px;
   line-height: 32px;
-  color: #444;
+  color: $text-main;
   float: left;
 }
 #nav-menu a:hover,
@@ -175,8 +175,8 @@ textarea {
   text-indent: -9999em;
 }
 
-@media 
-(-webkit-min-device-pixel-ratio: 2), 
+@media
+(-webkit-min-device-pixel-ratio: 2),
 (min-resolution: 192dpi) {
   #search button {
     background-image: url(img/icon-search@2x.png);
@@ -274,7 +274,7 @@ textarea {
 }
 
 .page-navigator .current a {
-  color: #444;
+  color: $text-main;
   background: #EEE;
 }
 
@@ -314,7 +314,7 @@ textarea {
 .comment-author {
   display: block;
   margin-bottom: 3px;
-  color: #444;
+  color: $text-main;
 }
 .comment-author .avatar {
   float: left;
@@ -370,7 +370,7 @@ textarea {
 
 
 /* ------------------
- * Footer 
+ * Footer
  * --------------- */
 #footer {
   padding: 3em 0;

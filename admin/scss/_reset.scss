@@ -10,16 +10,16 @@ html {
 body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   background: #F6F6F3;
-  color: #444;
+  color: $text-main;
   font-size: 87.5%;
   line-height: 1.5;
 }
 
 a {
-  color: #467B96;
+  color: $color-link;
   text-decoration: none;
   &:hover {
-    color: #499BC3;
+    color: $color-link-hover;
     text-decoration: underline;
   }
 }

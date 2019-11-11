@@ -67,7 +67,7 @@
     }
     &.active {
       background: #E9E9E6;
-      color: #999;
+      color: $text-comment;
     }
   }
 }
@@ -124,7 +124,7 @@
     padding: 1em;
     code {
       padding: 0;
-      color: #444;
+      color: $text-main;
     }
   }
   blockquote {

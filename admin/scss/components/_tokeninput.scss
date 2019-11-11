@@ -35,7 +35,7 @@ ul.token-input-list li input {
 li.token-input-token {
   padding: 0 6px;
   height: 27px;
-  line-height: 27px; 
+  line-height: 27px;
   background-color: #F3F3F0;
   cursor: default;
   font-size: .92857em;
@@ -101,6 +101,6 @@ div.token-input-dropdown ul li em {
 }
 
 div.token-input-dropdown ul li.token-input-selected-dropdown-item {
-  background-color: #467B96;
+  background-color: $color-link;
   color: #FFF;
 }
