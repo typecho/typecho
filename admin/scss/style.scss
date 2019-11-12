@@ -102,7 +102,7 @@
 }
 
 .profile-avatar {
-  border: 1px dashed $color-border-create;
+  border: 1px dashed $color-border-dark;
   max-width: 100%;
 }
 
@@ -241,43 +241,36 @@
   &.fix-tabs {
     margin-bottom: 1em;
   }
-}
-
-.typecho-option-tabs a {
-  display: block;
-  margin-right: -1px;
-  border: 1px solid $color-border-create;
-  padding: 0 15px;
-  height: 26px;
-  line-height: 26px;
-  color: #666;
-
-}
-.typecho-option-tabs a:hover {
-  background-color: #E9E9E6;
-  color: #666;
-  text-decoration: none;
-}
-
-.typecho-option-tabs li {
-  float: left;
-  &:first-child a {
-    @include border-radius(2px 0 0 2px);
+  &.right {
+    float: right;
   }
-  &:last-child a {
-    @include border-radius(0 2px 2px 0);
+  li {
+    border: 1px solid $color-border-dark;
+    float: left;
+    margin-left: -1px;
+    &:first-child{
+      border-left: 1px solid $color-border-dark;
+      @include border-radius(2px 0 0 2px);
+    }
+    &:last-child{
+      @include border-radius(0 2px 2px 0);
+    }
+    &.current a,&.active a {
+      background-color: $bg-tabs-active;
+    }
+    a {
+      display: block;
+      padding: ($tab-height - 14px)/2 15px;
+      line-height: 1;
+      color: #666;
+      &:hover {
+        background-color: $bg-tabs-active;
+        color: #666;
+        text-decoration: none;
+      }
+    }
   }
 }
-
-.typecho-option-tabs.right {
-  float: right;
-}
-
-.typecho-option-tabs li.current a,
-.typecho-option-tabs li.active a {
-  background-color: #E9E9E6;
-}
-
 
 /**
 * 表格列表页
@@ -670,7 +663,7 @@ background: #FFF1A8;
 
 .category-option ul {
   list-style: none;
-  border: 1px solid $color-border-create;
+  border: 1px solid $color-border-dark;
   padding: 6px 12px;
   max-height: 240px;
   overflow: auto;
@@ -737,7 +730,7 @@ background: #FFF1A8;
 * Upload
 */
 #upload-panel {
-  border: 1px dashed $color-border-create;
+  border: 1px dashed $color-border-dark;
   background-color: white;
   color: $text-comment;
   font-size: .92857em;
@@ -766,7 +759,7 @@ background: #FFF1A8;
   }
   li {
     padding: 8px 0;
-    border-top: 1px dashed $color-border-create;
+    border-top: 1px dashed $color-border-dark;
   }
   .insert {
     display: block;
@@ -795,14 +788,14 @@ background: #FFF1A8;
   display: block;
   margin: 2px auto 0;
   padding: 2px 0;
-  border: 1px solid $color-border-create;
+  border: 1px solid $color-border-dark;
   border-width: 1px 0;
   width: 60px;
   cursor: row-resize;
   i {
     display: block;
     height: 1px;
-    background-color: $color-border-create;
+    background-color: $color-border-dark;
   }
 }
 

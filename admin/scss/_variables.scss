@@ -15,12 +15,13 @@ $color-link-hover: #499BC3;
 
 // color border
 $color-border: #F0F0EC;
-$color-border-create: #D9D9D6;
+$color-border-dark: #D9D9D6;
 
 // background color
 $bg-main: #F6F6F3;
 $bg-navbar: #292D33;
 $bg-navbar-active: #202328;
+$bg-tabs-active:  #E9E9E6;
 
 $color-input-outline-focus: rgba(70, 117, 150, 0.54);
 
@@ -29,6 +30,7 @@ $text-main: #444;
 $text-comment: #999;
 $text-nav: #bbb;
 $text-footer: #AAA;
+
 
 $color-danger: $darkred;
 $color-success: $green;
@@ -39,9 +41,14 @@ $color-danger: $darkred;
 /*
 * SIZE
 */
+
+// navbar
 $nav-height: 36px;
 $nav-menu-width-min: 160px;
 $nav-menu-width-max: 240;
+
+// tabs
+$tab-height: 26px;
 
 
 /*

@@ -7,7 +7,7 @@ ul.token-input-list {
   margin: 0;
   padding: 0 4px;
   min-height: 32px;
-  border: 1px solid $color-border-create;
+  border: 1px solid $color-border-dark;
   cursor: text;
   z-index: 999;
   background-color: white;
@@ -67,7 +67,7 @@ div.token-input-dropdown {
   position: absolute;
   background-color: white;
   overflow: hidden;
-  border: 1px solid $color-border-create;
+  border: 1px solid $color-border-dark;
   border-top-width: 0;
   cursor: default;
   z-index: $z-base;

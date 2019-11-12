@@ -14,7 +14,7 @@ input, textarea, select, button{
 
 input[type=text], input[type=password], input[type=email], textarea {
   background: white;
-  border: 1px solid $color-border-create;
+  border: 1px solid $color-border-dark;
   padding: 7px;
   @include border-radius(2px);
 }

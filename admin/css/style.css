@@ -1943,44 +1943,38 @@ input.text-l, textarea.text-l {
 .typecho-option-tabs.fix-tabs {
   margin-bottom: 1em;
 }
-
-.typecho-option-tabs a {
-  display: block;
-  margin-right: -1px;
-  border: 1px solid #D9D9D6;
-  padding: 0 15px;
-  height: 26px;
-  line-height: 26px;
-  color: #666;
+.typecho-option-tabs.right {
+  float: right;
 }
-
-.typecho-option-tabs a:hover {
-  background-color: #E9E9E6;
-  color: #666;
-  text-decoration: none;
-}
-
 .typecho-option-tabs li {
+  border: 1px solid #D9D9D6;
   float: left;
+  margin-left: -1px;
 }
-.typecho-option-tabs li:first-child a {
+.typecho-option-tabs li:first-child {
+  border-left: 1px solid #D9D9D6;
   -webkit-border-radius: 2px 0 0 2px;
   -moz-border-radius: 2px 0 0 2px;
   border-radius: 2px 0 0 2px;
 }
-.typecho-option-tabs li:last-child a {
+.typecho-option-tabs li:last-child {
   -webkit-border-radius: 0 2px 2px 0;
   -moz-border-radius: 0 2px 2px 0;
   border-radius: 0 2px 2px 0;
 }
-
-.typecho-option-tabs.right {
-  float: right;
-}
-
-.typecho-option-tabs li.current a,
-.typecho-option-tabs li.active a {
+.typecho-option-tabs li.current a, .typecho-option-tabs li.active a {
   background-color: #E9E9E6;
+}
+.typecho-option-tabs li a {
+  display: block;
+  padding: 6px 15px;
+  line-height: 1;
+  color: #666;
+}
+.typecho-option-tabs li a:hover {
+  background-color: #E9E9E6;
+  color: #666;
+  text-decoration: none;
 }
 
 /**
