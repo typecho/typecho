@@ -22,6 +22,7 @@ $bg-main: #F6F6F3;
 $bg-navbar: #292D33;
 $bg-navbar-active: #202328;
 $bg-tabs-active:  #E9E9E6;
+$bg-tabs-hover:  lighten($bg-tabs-active, 3%);
 
 $color-input-outline-focus: rgba(70, 117, 150, 0.54);
 
