@@ -2,13 +2,19 @@
 * Forms
 */
 
-input[type=text], input[type=password], input[type=email],
-textarea {
+input[type=text], input[type=password], input[type=email], textarea {
   background: #FFF;
   border: 1px solid #D9D9D6;
   padding: 7px;
-
   border-radius: 2px;
+  @include transition(all .3s);
+
+  &:focus {
+    border-color: $color-input-outline-focus;
+    @include transition(all .3s);
+    @include box-shadow(0 0 0 2px $color-input-outline-focus);
+    outline: none;
+  }
 }
 
 textarea {
@@ -16,10 +22,15 @@ textarea {
   line-height: 1.5;
 }
 
-input[type="radio"], input[type="checkbox"] { margin-right: 3px; }
+input[type="radio"], input[type="checkbox"] {
+  margin-right: 3px;
+}
 
 input, textarea {
-  &.text-s { padding: 5px; }
+  &.text-s {
+    padding: 5px;
+  }
+
   &.text-l {
     padding: 10px;
     font-size: 1.14286em;

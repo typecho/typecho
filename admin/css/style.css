@@ -4,10 +4,11 @@
 * Typecho 后台样式
 *
 * @author  Typecho Team
+* @updater  KyleBing
 * @since   2008-09-26
-* @update  2013-11-02
+* @update  2019-11-11
 * @link    http://www.typecho.org/
-* @version 0.9
+* @version 1.0
 */
 /**
 * Typecho 全局样式
@@ -1193,12 +1194,28 @@ div.token-input-dropdown ul li.token-input-selected-dropdown-item {
 /**
 * Forms
 */
-input[type=text], input[type=password], input[type=email],
-textarea {
+input[type=text], input[type=password], input[type=email], textarea {
   background: #FFF;
   border: 1px solid #D9D9D6;
   padding: 7px;
   border-radius: 2px;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -ms-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
+}
+input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, textarea:focus {
+  border-color: rgba(70, 117, 150, 0.54);
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -ms-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
+  -webkit-box-shadow: 0 0 0 2px rgba(70, 117, 150, 0.54);
+  -moz-box-shadow: 0 0 0 2px rgba(70, 117, 150, 0.54);
+  box-shadow: 0 0 0 2px rgba(70, 117, 150, 0.54);
+  outline: none;
 }
 
 textarea {

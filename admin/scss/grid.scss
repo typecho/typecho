@@ -27,7 +27,6 @@ $screen-wide: 1200px;
   margin-right: auto;
   padding-left: $gutter-width / 2;
   padding-right: $gutter-width / 2;
-  @extend
 }
 
 // Column group
@@ -42,7 +41,6 @@ $screen-wide: 1200px;
   min-height: 1px;
   padding-right: $gutter-width / 2;
   padding-left: $gutter-width / 2;
-  @extend
 }
 
 .row [class*="-push-"],

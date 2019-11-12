@@ -11,8 +11,7 @@
  * --------------- */
 body {
   background-color: #FFF;
-  color: $text-main;
-  /*font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;*/
+  color: #444;
   font-family: "Droid Serif", Georgia, "Times New Roman", "PingFang SC", "Hiragino Sans GB", "Source Han Sans CN", "WenQuanYi Micro Hei","Microsoft Yahei", serif;
   font-size: 87.5%;
 }
@@ -22,7 +21,7 @@ a {
   text-decoration: none;
 }
 a:hover, a:active {
-  color: $text-main;
+  color: #444;
 }
 pre, code {
   background: #F3F3F3;
@@ -37,7 +36,7 @@ pre {
 }
 pre code {
   padding: 3px;
-  color: $text-main;
+  color: #444;
 }
 
 blockquote {
@@ -146,7 +145,7 @@ textarea {
   border-bottom: none;
   height: 32px;
   line-height: 32px;
-  color: $text-main;
+  color: #444;
   float: left;
 }
 #nav-menu a:hover,
@@ -274,7 +273,7 @@ textarea {
 }
 
 .page-navigator .current a {
-  color: $text-main;
+  color: #444;
   background: #EEE;
 }
 
@@ -314,7 +313,7 @@ textarea {
 .comment-author {
   display: block;
   margin-bottom: 3px;
-  color: $text-main;
+  color: #444;
 }
 .comment-author .avatar {
   float: left;
