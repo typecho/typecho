@@ -1,19 +1,30 @@
 /**
 * 后台头部导航
 */
+
+$navbar-height: 36px;
+
 .typecho-head-nav {
   padding: 0 10px;
   background: $bg-navbar;
+  .operate {
+    float: right;
+    a {
+      display: inline-block;
+      padding: 0 20px;
+      line-height: $navbar-height;
+      color: #BBB;
+      &:hover{
+        background-color: $bg-navbar-active;
+        color: #FFF;
+        text-decoration: none;
+      }
+    }
+  }
+
 }
 
-.typecho-head-nav a {
-  color: #BBB;
-}
-.typecho-head-nav a:hover,
-.typecho-head-nav a:focus {
-  color: #FFF;
-  text-decoration: none;
-}
+
 
 #typecho-nav-list {
   float: left;
@@ -22,88 +33,70 @@
     margin: 0;
     padding: 0;
   }
-}
+  .root {
+    position: relative;
+    float: left;
+    &:hover{
+      .child{
+        display: block;
+      }
+    }
+    .parent{
+      a{
+        display: block;
+        float: left;
+        padding: 0 20px;
+        height: $navbar-height;
+        line-height: $navbar-height;
+        color: #BBB;
+        &:hover{
+          background: $bg-navbar-active;
+          color: #FFF;
+          text-decoration: none;
+        }
+      }
+    }
+    .child{
+      position: absolute;
+      top: $navbar-height;
+      display: none;
+      margin: 0;
+      min-width: 160px;
+      max-width: 240px;
+      background: $bg-navbar-active;
+      z-index: 250;
+      li{
+        &.focus{
+          a{
+            color: $color-link-hover;
+            font-weight: bold;
+          }
+        }
+        a{
+          color: #BBB;
+          display: block;
+          padding: 0 20px;
+          overflow: hidden;
+          text-overflow : ellipsis;
+          white-space: nowrap;
+          height: $navbar-height;
+          line-height: $navbar-height;
+          &:hover, &focus{
+            background: $bg-navbar;
+            color: #FFF;
+            text-decoration: none;
+          }
+        }
+      }
 
-#typecho-nav-list ul:first-child {
-  border-left: 1px solid #383D45;
-}
-
-#typecho-nav-list .root {
-  position: relative;
-  float: left;
-}
-
-#typecho-nav-list .parent a {
-  display: block;
-  float: left;
-  padding: 0 20px;
-  border-right: 1px solid #383D45;
-  height: 36px;
-  line-height: 36px;
-  color: #BBB;
-}
-
-#typecho-nav-list .parent a:hover,
-#typecho-nav-list .focus .parent a,
-#typecho-nav-list .root:hover .parent a {
-  background: $bg-navbar-active;
-  color: #FFF;
-  text-decoration: none;
-}
-
-#typecho-nav-list .focus .parent a {
-  font-weight: bold;
-}
-
-#typecho-nav-list .child {
-  position: absolute;
-  top: 36px;
-  display: none;
-  margin: 0;
-  min-width: 160px;
-  max-width: 240px;
-  background: $bg-navbar-active;
-  z-index: 250;
-}
-
-#typecho-nav-list .root:hover .child {
-  display: block;
-}
-
-#typecho-nav-list .child li a {
-  color: #BBB;
-  display: block;
-  padding: 0 20px;
-  overflow: hidden;
-  text-overflow : ellipsis;
-  white-space: nowrap;
-  height: 36px;
-  line-height: 36px;
-}
-
-#typecho-nav-list .child li a:hover,
-#typecho-nav-list .child li a:focus {
-  background: $bg-navbar;
-  color: #FFF;
-}
-#typecho-nav-list .child li.focus a {
-  color: #6DA1BB;
-  font-weight: bold;
-}
-
-.typecho-head-nav .operate {
-  float: right;
-}
-.typecho-head-nav .operate a {
-  display: inline-block;
-  margin-left: -1px;
-  padding: 0 20px;
-  border: 1px solid #383D45;
-  border-width: 0 1px;
-  line-height: 36px;
-  color: #BBB;
-}
-.typecho-head-nav .operate a:hover {
-  background-color: $bg-navbar-active;
-  color: #FFF;
+    }
+    &.focus{
+      .parent a{
+        font-weight: bold;
+        background: $bg-navbar-active;
+        color: white;
+        text-decoration: none;
+      }
+    }
+  }
 }
