@@ -102,7 +102,7 @@
 }
 
 .profile-avatar {
-  border: 1px dashed #D9D9D6;
+  border: 1px dashed $color-border-create;
   max-width: 100%;
 }
 
@@ -246,7 +246,7 @@
 .typecho-option-tabs a {
   display: block;
   margin-right: -1px;
-  border: 1px solid #D9D9D6;
+  border: 1px solid $color-border-create;
   padding: 0 15px;
   height: 26px;
   line-height: 26px;
@@ -670,7 +670,7 @@ background: #FFF1A8;
 
 .category-option ul {
   list-style: none;
-  border: 1px solid #D9D9D6;
+  border: 1px solid $color-border-create;
   padding: 6px 12px;
   max-height: 240px;
   overflow: auto;
@@ -737,7 +737,7 @@ background: #FFF1A8;
 * Upload
 */
 #upload-panel {
-  border: 1px dashed #D9D9D6;
+  border: 1px dashed $color-border-create;
   background-color: #FFF;
   color: $text-comment;
   font-size: .92857em;
@@ -766,7 +766,7 @@ background: #FFF1A8;
   }
   li {
     padding: 8px 0;
-    border-top: 1px dashed #D9D9D6;
+    border-top: 1px dashed $color-border-create;
   }
   .insert {
     display: block;
@@ -795,14 +795,14 @@ background: #FFF1A8;
   display: block;
   margin: 2px auto 0;
   padding: 2px 0;
-  border: 1px solid #D9D9D6;
+  border: 1px solid $color-border-create;
   border-width: 1px 0;
   width: 60px;
   cursor: row-resize;
   i {
     display: block;
     height: 1px;
-    background-color: #D9D9D6;
+    background-color: $color-border-create;
   }
 }
 

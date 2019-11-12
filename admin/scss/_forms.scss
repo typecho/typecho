@@ -4,9 +4,9 @@
 
 input[type=text], input[type=password], input[type=email], textarea {
   background: #FFF;
-  border: 1px solid #D9D9D6;
+  border: 1px solid $color-border-create;
   padding: 7px;
-  border-radius: 2px;
+  @include border-radius(2px);
   @include transition(all .3s);
 
   &:focus {
@@ -37,16 +37,16 @@ input, textarea {
   }
 }
 
-.w-10 { width: 10%; }
-.w-20 { width: 20%; }
-.w-30 { width: 30%; }
-.w-40 { width: 40%;}
-.w-50 { width: 50%;}
-.w-60 { width: 60%;}
-.w-70 { width: 70%;}
-.w-80 { width: 80%;}
-.w-90 { width: 90%;}
-.w-100 { width: 100%;}
+.w-10  { width: 10%;  }
+.w-20  { width: 20%;  }
+.w-30  { width: 30%;  }
+.w-40  { width: 40%;  }
+.w-50  { width: 50%;  }
+.w-60  { width: 60%;  }
+.w-70  { width: 70%;  }
+.w-80  { width: 80%;  }
+.w-90  { width: 90%;  }
+.w-100 { width: 100%; }
 
 select {
   border: 1px solid #CCC;
