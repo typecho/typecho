@@ -1222,7 +1222,7 @@ input, textarea, select, button {
   transition: all 0.3s;
 }
 input:focus, textarea:focus, select:focus, button:focus {
-  border-color: rgba(70, 117, 150, 0.54);
+  border-color: rgba(70, 117, 150, 0.54) !important;
   -webkit-transition: all 0.3s;
   -moz-transition: all 0.3s;
   -ms-transition: all 0.3s;

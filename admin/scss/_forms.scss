@@ -5,7 +5,7 @@
 input, textarea, select, button{
   @include transition(all .3s);
   &:focus {
-    border-color: $color-input-outline-focus;
+    border-color: $color-input-outline-focus !important;
     @include transition(all .3s);
     @include box-shadow(0 0 0 2px $color-input-outline-focus);
     outline: none;
