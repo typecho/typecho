@@ -53,7 +53,7 @@
 
 .primary {
   @include button($color-link);
-  color: #FFF;
+  color: white;
 }
 
 .btn-group {
@@ -62,7 +62,7 @@
 
 .btn-warn {
   @include button(#B94A48);
-  color: #FFF;
+  color: white;
 }
 
 .btn-link,
@@ -83,12 +83,12 @@
 .dropdown-menu {
   list-style: none;
   position: absolute;
-  z-index: 2;
+  z-index: $z-dropdown;
   left: 0;
   margin: 0;
   padding: 0;
   border: 1px solid $color-border-create;
-  background: #FFF;
+  background: white;
   text-align: left;
   min-width: 108px;
   display: none;

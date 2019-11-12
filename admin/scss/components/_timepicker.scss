@@ -7,7 +7,7 @@
   margin-top: -1px;
   padding: 10px;
   border: 1px solid $color-border-create;
-  background: #FFF;
+  background: white;
 }
 .ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
 .ui-timepicker-div dl { text-align: left; }
@@ -44,7 +44,7 @@
 }
 #ui-datepicker-div .ui-datepicker-current-day a {
   background-color: $color-link !important;
-  color: #FFF;
+  color: white;
 }
 #ui-datepicker-div .ui-timepicker-div {
   margin-top: 20px;
@@ -61,7 +61,7 @@
   position: absolute;
   top: -7px;
   margin-left: -5px;
-  z-index: 2;
+  z-index: $z-dropdown;
   width: 10px;
   height: 16px;
   background-color: $color-link;

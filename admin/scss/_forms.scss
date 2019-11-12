@@ -2,19 +2,26 @@
 * Forms
 */
 
-input[type=text], input[type=password], input[type=email], textarea {
-  background: #FFF;
-  border: 1px solid $color-border-create;
-  padding: 7px;
-  @include border-radius(2px);
+input, textarea, select, button{
   @include transition(all .3s);
-
   &:focus {
     border-color: $color-input-outline-focus;
     @include transition(all .3s);
     @include box-shadow(0 0 0 2px $color-input-outline-focus);
     outline: none;
   }
+}
+
+input[type=text], input[type=password], input[type=email], textarea {
+  background: white;
+  border: 1px solid $color-border-create;
+  padding: 7px;
+  @include border-radius(2px);
+}
+
+select {
+  border: 1px solid $color-border;
+  height: 28px;
 }
 
 textarea {
@@ -47,8 +54,3 @@ input, textarea {
 .w-80  { width: 80%;  }
 .w-90  { width: 90%;  }
 .w-100 { width: 100%; }
-
-select {
-  border: 1px solid #CCC;
-  height: 28px;
-}

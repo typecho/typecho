@@ -24,7 +24,7 @@
   margin-bottom: 2em;
   padding: 2em 0;
   background-color: $bg-navbar;
-  color: #FFF;
+  color: white;
   text-align: center;
   ol {
     list-style: none;
@@ -35,10 +35,10 @@
       display: inline-block;
       margin: 0 .8em .5em;
       .current {
-        color: #FFF;
+        color: white;
         font-weight: bold;
         span {
-          border-color: #FFF;
+          border-color: white;
         }
       }
       span {

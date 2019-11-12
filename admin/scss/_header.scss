@@ -14,7 +14,7 @@
       color: $text-nav;
       &:hover{
         background-color: $bg-navbar-active;
-        color: #FFF;
+        color: white;
         text-decoration: none;
       }
     }
@@ -47,7 +47,7 @@
         color: $text-nav;
         &:hover{
           background: $bg-navbar-active;
-          color: #FFF;
+          color: white;
           text-decoration: none;
         }
       }
@@ -60,7 +60,7 @@
       min-width: $nav-menu-width-min;
       max-width: $nav-menu-width-max;
       background: $bg-navbar-active;
-      z-index: 250;
+      z-index: $z-navbar;
       li{
         &.focus{
           a{
@@ -79,7 +79,7 @@
           line-height: $nav-height;
           &:hover, &focus{
             background: $bg-navbar;
-            color: #FFF;
+            color: white;
             text-decoration: none;
           }
         }

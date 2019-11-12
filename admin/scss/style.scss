@@ -339,7 +339,7 @@ a.operate-reply {
 }
 .typecho-table-wrap {
   padding: 30px;
-  background: #FFF;
+  background: white;
 }
 .typecho-list-table {
   width: 100%;
@@ -583,7 +583,7 @@ a.operate-reply {
 .typecho-post-area .out-date {
   border: 1px solid #D3DBB3;
   padding: 3px;
-  background: #fff;
+  background: white;
 }
 
 .typecho-post-area input.title {
@@ -614,7 +614,7 @@ a.operate-reply {
 #custom-field {
   margin: 1em 0;
   padding: 10px 15px;
-  background: #FFF;
+  background: white;
   &.fold {
     table, .description { display: none; }
   }
@@ -674,7 +674,7 @@ background: #FFF1A8;
   padding: 6px 12px;
   max-height: 240px;
   overflow: auto;
-  background-color: #FFF;
+  background-color: white;
   border-radius: 2px;
 }
 .category-option li {
@@ -696,7 +696,7 @@ background: #FFF1A8;
   list-style: none;
   margin: 0;
   padding: 20px;
-  background-color: #FFF;
+  background-color: white;
 }
 
 .typecho-page-main ul.tag-list li {
@@ -738,7 +738,7 @@ background: #FFF1A8;
 */
 #upload-panel {
   border: 1px dashed $color-border-create;
-  background-color: #FFF;
+  background-color: white;
   color: $text-comment;
   font-size: .92857em;
   &.drag {

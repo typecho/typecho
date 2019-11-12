@@ -10,7 +10,12 @@
 * @link    http://www.typecho.org/
 * @version 1.0
 */
-/* SIZE */
+/*
+* SIZE
+*/
+/*
+* Z-INDEX
+*/
 /**
 * Typecho 全局样式
 */
@@ -73,7 +78,7 @@ a.balloon-button {
 
 a.button:hover, a.balloon-button:hover {
   background-color: #A5CADC;
-  color: #FFF;
+  color: white;
   text-decoration: none;
 }
 
@@ -191,7 +196,7 @@ a.button:hover, a.balloon-button:hover {
 
 /* 预览 */
 #wmd-preview {
-  background: #FFF;
+  background: white;
   margin: 1em 0;
   padding: 0 15px;
   word-wrap: break-word;
@@ -298,7 +303,7 @@ a.button:hover, a.balloon-button:hover {
   position: absolute;
   top: 0;
   width: 50%;
-  background: #FFF;
+  background: white;
   z-index: 999;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
@@ -378,7 +383,7 @@ a.button:hover, a.balloon-button:hover {
   border: 0;
   padding: 0;
   margin: 0;
-  background: #fff;
+  background: white;
   z-index: 999;
   position: absolute;
   top: 53px;
@@ -401,7 +406,7 @@ a.button:hover, a.balloon-button:hover {
   margin-top: -1px;
   padding: 10px;
   border: 1px solid #D9D9D6;
-  background: #FFF;
+  background: white;
 }
 
 .ui-timepicker-div .ui-widget-header {
@@ -473,7 +478,7 @@ a.button:hover, a.balloon-button:hover {
 
 #ui-datepicker-div .ui-datepicker-current-day a {
   background-color: #467B96 !important;
-  color: #FFF;
+  color: white;
 }
 
 #ui-datepicker-div .ui-timepicker-div {
@@ -493,7 +498,7 @@ a.button:hover, a.balloon-button:hover {
   position: absolute;
   top: -7px;
   margin-left: -5px;
-  z-index: 2;
+  z-index: 10;
   width: 10px;
   height: 16px;
   background-color: #467B96;
@@ -528,8 +533,10 @@ ul.token-input-list {
   border: 1px solid #D9D9D6;
   cursor: text;
   z-index: 999;
-  background-color: #FFF;
+  background-color: white;
   clear: left;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
   border-radius: 2px;
 }
 ul.token-input-list li {
@@ -571,10 +578,15 @@ li.token-input-selected-token {
 li.token-input-input-token {
   padding: 0 4px;
 }
+li.token-input-input-token input:focus {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
 
 div.token-input-dropdown {
   position: absolute;
-  background-color: #FFF;
+  background-color: white;
   overflow: hidden;
   border: 1px solid #D9D9D6;
   border-top-width: 0;
@@ -598,11 +610,11 @@ div.token-input-dropdown ul {
 
 div.token-input-dropdown ul li {
   padding: 4px 10px;
-  background-color: #FFF;
+  background-color: white;
 }
 
 div.token-input-dropdown ul li.token-input-dropdown-item {
-  background-color: #FFF;
+  background-color: white;
 }
 
 div.token-input-dropdown ul li em {
@@ -611,7 +623,7 @@ div.token-input-dropdown ul li em {
 
 div.token-input-dropdown ul li.token-input-selected-dropdown-item {
   background-color: #467B96;
-  color: #FFF;
+  color: white;
 }
 
 /*
@@ -769,7 +781,7 @@ div.token-input-dropdown ul li.token-input-selected-dropdown-item {
 
 /* 预览 */
 #wmd-preview {
-  background: #FFF;
+  background: white;
   margin: 1em 0;
   padding: 0 15px;
   word-wrap: break-word;
@@ -876,7 +888,7 @@ div.token-input-dropdown ul li.token-input-selected-dropdown-item {
   position: absolute;
   top: 0;
   width: 50%;
-  background: #FFF;
+  background: white;
   z-index: 999;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
@@ -956,7 +968,7 @@ div.token-input-dropdown ul li.token-input-selected-dropdown-item {
   border: 0;
   padding: 0;
   margin: 0;
-  background: #fff;
+  background: white;
   z-index: 999;
   position: absolute;
   top: 53px;
@@ -979,7 +991,7 @@ div.token-input-dropdown ul li.token-input-selected-dropdown-item {
   margin-top: -1px;
   padding: 10px;
   border: 1px solid #D9D9D6;
-  background: #FFF;
+  background: white;
 }
 
 .ui-timepicker-div .ui-widget-header {
@@ -1051,7 +1063,7 @@ div.token-input-dropdown ul li.token-input-selected-dropdown-item {
 
 #ui-datepicker-div .ui-datepicker-current-day a {
   background-color: #467B96 !important;
-  color: #FFF;
+  color: white;
 }
 
 #ui-datepicker-div .ui-timepicker-div {
@@ -1071,7 +1083,7 @@ div.token-input-dropdown ul li.token-input-selected-dropdown-item {
   position: absolute;
   top: -7px;
   margin-left: -5px;
-  z-index: 2;
+  z-index: 10;
   width: 10px;
   height: 16px;
   background-color: #467B96;
@@ -1106,8 +1118,10 @@ ul.token-input-list {
   border: 1px solid #D9D9D6;
   cursor: text;
   z-index: 999;
-  background-color: #FFF;
+  background-color: white;
   clear: left;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
   border-radius: 2px;
 }
 ul.token-input-list li {
@@ -1149,10 +1163,15 @@ li.token-input-selected-token {
 li.token-input-input-token {
   padding: 0 4px;
 }
+li.token-input-input-token input:focus {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
 
 div.token-input-dropdown {
   position: absolute;
-  background-color: #FFF;
+  background-color: white;
   overflow: hidden;
   border: 1px solid #D9D9D6;
   border-top-width: 0;
@@ -1176,11 +1195,11 @@ div.token-input-dropdown ul {
 
 div.token-input-dropdown ul li {
   padding: 4px 10px;
-  background-color: #FFF;
+  background-color: white;
 }
 
 div.token-input-dropdown ul li.token-input-dropdown-item {
-  background-color: #FFF;
+  background-color: white;
 }
 
 div.token-input-dropdown ul li em {
@@ -1189,24 +1208,20 @@ div.token-input-dropdown ul li em {
 
 div.token-input-dropdown ul li.token-input-selected-dropdown-item {
   background-color: #467B96;
-  color: #FFF;
+  color: white;
 }
 
 /**
 * Forms
 */
-input[type=text], input[type=password], input[type=email], textarea {
-  background: #FFF;
-  border: 1px solid #D9D9D6;
-  padding: 7px;
-  border-radius: 2px;
+input, textarea, select, button {
   -webkit-transition: all 0.3s;
   -moz-transition: all 0.3s;
   -ms-transition: all 0.3s;
   -o-transition: all 0.3s;
   transition: all 0.3s;
 }
-input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, textarea:focus {
+input:focus, textarea:focus, select:focus, button:focus {
   border-color: rgba(70, 117, 150, 0.54);
   -webkit-transition: all 0.3s;
   -moz-transition: all 0.3s;
@@ -1217,6 +1232,20 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, tex
   -moz-box-shadow: 0 0 0 2px rgba(70, 117, 150, 0.54);
   box-shadow: 0 0 0 2px rgba(70, 117, 150, 0.54);
   outline: none;
+}
+
+input[type=text], input[type=password], input[type=email], textarea {
+  background: white;
+  border: 1px solid #D9D9D6;
+  padding: 7px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+}
+
+select {
+  border: 1px solid #F0F0EC;
+  height: 28px;
 }
 
 textarea {
@@ -1274,11 +1303,6 @@ input.text-l, textarea.text-l {
 
 .w-100 {
   width: 100%;
-}
-
-select {
-  border: 1px solid #CCC;
-  height: 28px;
 }
 
 /**
@@ -1347,7 +1371,7 @@ select {
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   border-radius: 2px;
-  color: #FFF;
+  color: white;
 }
 .primary:hover {
   -webkit-transition: background-color 0.4s;
@@ -1376,7 +1400,7 @@ select {
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   border-radius: 2px;
-  color: #FFF;
+  color: white;
 }
 .btn-warn:hover {
   -webkit-transition: background-color 0.4s;
@@ -1414,12 +1438,12 @@ select {
 .dropdown-menu {
   list-style: none;
   position: absolute;
-  z-index: 2;
+  z-index: 10;
   left: 0;
   margin: 0;
   padding: 0;
   border: 1px solid #D9D9D6;
-  background: #FFF;
+  background: white;
   text-align: left;
   min-width: 108px;
   display: none;
@@ -1492,7 +1516,7 @@ select {
   vertical-align: text-top;
   text-align: center;
   font-size: 12px;
-  color: #FFF;
+  color: white;
   -webkit-border-radius: 20px;
   -moz-border-radius: 20px;
   border-radius: 20px;
@@ -1558,7 +1582,7 @@ select {
   margin-bottom: 2em;
   padding: 2em 0;
   background-color: #292D33;
-  color: #FFF;
+  color: white;
   text-align: center;
 }
 .typecho-install-patch ol {
@@ -1572,11 +1596,11 @@ select {
   margin: 0 0.8em 0.5em;
 }
 .typecho-install-patch ol li .current {
-  color: #FFF;
+  color: white;
   font-weight: bold;
 }
 .typecho-install-patch ol li .current span {
-  border-color: #FFF;
+  border-color: white;
 }
 .typecho-install-patch ol li span {
   display: inline-block;
@@ -1586,6 +1610,8 @@ select {
   line-height: 20px;
   border: 2px solid #999;
   text-align: center;
+  -webkit-border-radius: 2em;
+  -moz-border-radius: 2em;
   border-radius: 2em;
 }
 
@@ -1607,7 +1633,7 @@ select {
 }
 .typecho-head-nav .operate a:hover {
   background-color: #202328;
-  color: #FFF;
+  color: white;
   text-decoration: none;
 }
 
@@ -1636,7 +1662,7 @@ select {
 }
 #typecho-nav-list .root .parent a:hover {
   background: #202328;
-  color: #FFF;
+  color: white;
   text-decoration: none;
 }
 #typecho-nav-list .root .child {
@@ -1647,7 +1673,7 @@ select {
   min-width: 160px;
   max-width: 240;
   background: #202328;
-  z-index: 250;
+  z-index: 100;
 }
 #typecho-nav-list .root .child li.focus a {
   color: #499BC3;
@@ -1665,7 +1691,7 @@ select {
 }
 #typecho-nav-list .root .child li a:hover, #typecho-nav-list .root .child li afocus {
   background: #292D33;
-  color: #FFF;
+  color: white;
   text-decoration: none;
 }
 #typecho-nav-list .root.focus .parent a {
@@ -1680,19 +1706,16 @@ select {
 */
 .typecho-foot {
   padding: 4em 0 3em;
-  color: #999;
+  color: #AAA;
   line-height: 1.8;
   text-align: center;
 }
 .typecho-foot .copyright p {
   margin: 10px 0 0;
 }
-.typecho-foot .resource {
-  color: #CCC;
-}
 .typecho-foot .resource a {
   margin: 0 3px;
-  color: #999;
+  color: #AAA;
 }
 
 /* 低版本浏览器升级提示 */
@@ -2017,7 +2040,7 @@ a.operate-reply {
 
 .typecho-table-wrap {
   padding: 30px;
-  background: #FFF;
+  background: white;
 }
 
 .typecho-list-table {
@@ -2249,7 +2272,7 @@ a.operate-reply {
 .typecho-post-area .out-date {
   border: 1px solid #D3DBB3;
   padding: 3px;
-  background: #fff;
+  background: white;
 }
 
 .typecho-post-area input.title {
@@ -2282,7 +2305,7 @@ a.operate-reply {
 #custom-field {
   margin: 1em 0;
   padding: 10px 15px;
-  background: #FFF;
+  background: white;
 }
 #custom-field.fold table, #custom-field.fold .description {
   display: none;
@@ -2341,7 +2364,7 @@ a.operate-reply {
   padding: 6px 12px;
   max-height: 240px;
   overflow: auto;
-  background-color: #FFF;
+  background-color: white;
   border-radius: 2px;
 }
 
@@ -2362,7 +2385,7 @@ a.operate-reply {
   list-style: none;
   margin: 0;
   padding: 20px;
-  background-color: #FFF;
+  background-color: white;
 }
 
 .typecho-page-main ul.tag-list li {
@@ -2422,7 +2445,7 @@ a.operate-reply {
 */
 #upload-panel {
   border: 1px dashed #D9D9D6;
-  background-color: #FFF;
+  background-color: white;
   color: #999;
   font-size: 0.92857em;
 }
