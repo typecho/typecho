@@ -10,6 +10,7 @@
 * @link    http://www.typecho.org/
 * @version 1.0
 */
+/* SIZE */
 /**
 * Typecho 全局样式
 */
@@ -1602,7 +1603,7 @@ select {
   display: inline-block;
   padding: 0 20px;
   line-height: 36px;
-  color: #BBB;
+  color: #bbb;
 }
 .typecho-head-nav .operate a:hover {
   background-color: #202328;
@@ -1631,7 +1632,7 @@ select {
   padding: 0 20px;
   height: 36px;
   line-height: 36px;
-  color: #BBB;
+  color: #bbb;
 }
 #typecho-nav-list .root .parent a:hover {
   background: #202328;
@@ -1644,7 +1645,7 @@ select {
   display: none;
   margin: 0;
   min-width: 160px;
-  max-width: 240px;
+  max-width: 240;
   background: #202328;
   z-index: 250;
 }
@@ -1653,7 +1654,7 @@ select {
   font-weight: bold;
 }
 #typecho-nav-list .root .child li a {
-  color: #BBB;
+  color: #bbb;
   display: block;
   padding: 0 20px;
   overflow: hidden;

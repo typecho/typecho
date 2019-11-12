@@ -2,8 +2,6 @@
 * 后台头部导航
 */
 
-$navbar-height: 36px;
-
 .typecho-head-nav {
   padding: 0 10px;
   background: $bg-navbar;
@@ -12,8 +10,8 @@ $navbar-height: 36px;
     a {
       display: inline-block;
       padding: 0 20px;
-      line-height: $navbar-height;
-      color: #BBB;
+      line-height: $nav-height;
+      color: $text-nav;
       &:hover{
         background-color: $bg-navbar-active;
         color: #FFF;
@@ -21,9 +19,7 @@ $navbar-height: 36px;
       }
     }
   }
-
 }
-
 
 
 #typecho-nav-list {
@@ -46,9 +42,9 @@ $navbar-height: 36px;
         display: block;
         float: left;
         padding: 0 20px;
-        height: $navbar-height;
-        line-height: $navbar-height;
-        color: #BBB;
+        height: $nav-height;
+        line-height: $nav-height;
+        color: $text-nav;
         &:hover{
           background: $bg-navbar-active;
           color: #FFF;
@@ -58,11 +54,11 @@ $navbar-height: 36px;
     }
     .child{
       position: absolute;
-      top: $navbar-height;
+      top: $nav-height;
       display: none;
       margin: 0;
-      min-width: 160px;
-      max-width: 240px;
+      min-width: $nav-menu-width-min;
+      max-width: $nav-menu-width-max;
       background: $bg-navbar-active;
       z-index: 250;
       li{
@@ -73,14 +69,14 @@ $navbar-height: 36px;
           }
         }
         a{
-          color: #BBB;
+          color: $text-nav;
           display: block;
           padding: 0 20px;
           overflow: hidden;
           text-overflow : ellipsis;
           white-space: nowrap;
-          height: $navbar-height;
-          line-height: $navbar-height;
+          height: $nav-height;
+          line-height: $nav-height;
           &:hover, &focus{
             background: $bg-navbar;
             color: #FFF;
@@ -88,7 +84,6 @@ $navbar-height: 36px;
           }
         }
       }
-
     }
     &.focus{
       .parent a{

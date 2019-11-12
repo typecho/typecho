@@ -1,6 +1,6 @@
-$color-border: #eee;
+// COLORS
 
-
+// root color
 $red:       #000000;
 $darkred:   #B94A48;
 $green:     #000000;
@@ -9,19 +9,33 @@ $orange:    #000000;
 $purple:    #000000;
 $syan:      #000000;
 
-
+// link color
 $color-link: #467B96;
 $color-link-hover: #499BC3;
 
+// color border
+$color-border: #F0F0EC;
+
+// background color
 $bg-main: #F6F6F3;
 $bg-navbar: #292D33;
 $bg-navbar-active: #202328;
 
 $color-input-outline-focus: rgba(70, 117, 150, 0.54);
 
+// text color
 $text-main: #444;
 $text-comment: #999;
+$text-nav: #bbb;
 
 $color-danger: $darkred;
 $color-success: $green;
 $color-danger: $darkred;
+
+
+
+/* SIZE */
+$nav-height: 36px;
+$nav-menu-width-min: 160px;
+$nav-menu-width-max: 240;
+
