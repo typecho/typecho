@@ -1214,14 +1214,14 @@ div.token-input-dropdown ul li.token-input-selected-dropdown-item {
 /**
 * Forms
 */
-input, textarea, select, button {
+input[type=text], input[type=password], input[type=email], textarea, select, button {
   -webkit-transition: all 0.3s;
   -moz-transition: all 0.3s;
   -ms-transition: all 0.3s;
   -o-transition: all 0.3s;
   transition: all 0.3s;
 }
-input:focus, textarea:focus, select:focus, button:focus {
+input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, textarea:focus, select:focus, button:focus {
   border-color: rgba(70, 117, 150, 0.54) !important;
   -webkit-transition: all 0.3s;
   -moz-transition: all 0.3s;
@@ -1848,18 +1848,23 @@ input.text-l, textarea.text-l {
 }
 
 .latest-link li {
+  display: flex;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.latest-link span {
-  display: inline-block;
-  margin-right: 4px;
+.latest-link li span {
+  flex-shrink: 0;
+  display: block;
   padding-right: 8px;
-  border-right: 1px solid #ECECEC;
-  width: 37px;
+  border-right: 1px solid #D9D9D6;
+  width: 4rem;
   text-align: right;
   color: #999;
+}
+.latest-link li a {
+  padding-left: 8px;
+  flex-grow: 1;
 }
 
 .update-check {

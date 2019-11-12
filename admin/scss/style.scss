@@ -145,18 +145,23 @@
 
 .latest-link {
   li {
+    display: flex;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
-  span {
-    display: inline-block;
-    margin-right: 4px;
-    padding-right: 8px;
-    border-right: 1px solid #ECECEC;
-    width: 37px;
-    text-align: right;
-    color: $text-comment;
+    span {
+      flex-shrink: 0;
+      display: block;
+      padding-right: 8px;
+      border-right: 1px solid $color-border-dark;
+      width: 4rem;
+      text-align: right;
+      color: $text-comment;
+    }
+    a{
+      padding-left: 8px;
+      flex-grow: 1;
+    }
   }
 }
 

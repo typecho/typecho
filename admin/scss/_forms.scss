@@ -2,7 +2,7 @@
 * Forms
 */
 
-input, textarea, select, button{
+input[type=text], input[type=password], input[type=email],textarea, select, button{
   @include transition(all .3s);
   &:focus {
     border-color: $color-input-outline-focus !important;
