@@ -30,7 +30,7 @@ html {
 }
 
 body {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "SF UI Display", "PingFang SC", "Microsoft Yahei UI", "Microsoft Yahei", "Helvetica", sans-serif;
   background: #F6F6F3;
   color: #444;
   font-size: 87.5%;
@@ -1244,7 +1244,7 @@ input[type=text], input[type=password], input[type=email], textarea {
 }
 
 select {
-  border: 1px solid #F0F0EC;
+  border: 1px solid #D9D9D6;
   height: 28px;
 }
 
@@ -1483,7 +1483,6 @@ input.text-l, textarea.text-l {
   background: #FBE3E4;
   color: #8A1F11;
 }
-
 .error a {
   color: #8A1F11;
 }
@@ -1492,7 +1491,6 @@ input.text-l, textarea.text-l {
   background: #FFF6BF;
   color: #8A6D3B;
 }
-
 .notice a {
   color: #8A6D3B;
 }
@@ -1501,7 +1499,6 @@ input.text-l, textarea.text-l {
   background: #E6EFC2;
   color: #264409;
 }
-
 .success a {
   color: #264409;
 }
@@ -1534,27 +1531,23 @@ input.text-l, textarea.text-l {
   text-align: center;
   zoom: 1;
 }
-
 .typecho-pager li {
   display: inline-block;
   margin: 0 3px;
   height: 28px;
   line-height: 28px;
 }
-
-.typecho-pager a {
+.typecho-pager li a {
   display: block;
   padding: 0 10px;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   border-radius: 2px;
 }
-
-.typecho-pager a:hover {
+.typecho-pager li a:hover {
   text-decoration: none;
-  background: #E9E9E6;
+  background: #f0f0ee;
 }
-
 .typecho-pager li.current a {
   background: #E9E9E6;
   color: #444;
@@ -1770,30 +1763,19 @@ input.text-l, textarea.text-l {
 */
 .typecho-option {
   list-style: none;
-  margin: 1em 0;
+  margin-bottom: 1em;
   padding: 0;
 }
-
-.typecho-option-submit li {
-  border-bottom: none;
-}
-
 .typecho-option label.typecho-label {
   display: block;
   margin-bottom: 0.5em;
   font-weight: bold;
 }
-
 .typecho-option label.required:after {
   content: " *";
   color: #B94A48;
 }
-
-.typecho-option span {
-  margin-right: 15px;
-}
-
-.typecho-option .description {
+.typecho-option p.description {
   margin: 0.5em 0 0;
   color: #999;
   font-size: 0.92857em;
@@ -2038,6 +2020,9 @@ a.operate-reply {
 }
 
 .typecho-table-wrap {
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
   padding: 30px;
   background: white;
 }

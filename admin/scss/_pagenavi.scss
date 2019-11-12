@@ -10,27 +10,23 @@
   line-height: 1;
   text-align: center;
   zoom: 1;
-}
-
-.typecho-pager li {
-  display: inline-block;
-  margin: 0 3px;
-  height: 28px;
-  line-height: 28px;
-}
-
-.typecho-pager a {
-  display: block;
-  padding: 0 10px;
-  @include border-radius(2px);
-}
-
-.typecho-pager a:hover {
-  text-decoration: none;
-  background: #E9E9E6;
-}
-
-.typecho-pager li.current a {
-  background: #E9E9E6;
-  color: $text-main;
+  li {
+    display: inline-block;
+    margin: 0 3px;
+    height: 28px;
+    line-height: 28px;
+    a {
+      display: block;
+      padding: 0 10px;
+      @include border-radius(2px);
+      &:hover {
+        text-decoration: none;
+        background: $bg-tabs-hover;
+      }
+    }
+    &.current a {
+      background: $bg-tabs-active;
+      color: $text-main;
+    }
+  }
 }
