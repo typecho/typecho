@@ -108,6 +108,9 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
             // 完成发布插件接口
             $this->pluginHandle()->finishSave($contents, $this);
 
+            /** 设置高亮 */
+            $this->widget('Widget_Notice')->highlight($this->cid);
+
             if ($this->request->isAjax()) {
                 $created = new Typecho_Date($this->options->time);
                 $this->response->throwJson(array(
