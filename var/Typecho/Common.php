@@ -267,7 +267,7 @@ class Typecho_Common
      */
     public static function exceptionHandle($exception)
     {
-        if (defined('__TYPECHO_DEBUG__')) {
+        if (defined('__TYPECHO_DEBUG__') && __TYPECHO_DEBUG__) {
             echo '<pre><code>';
             echo '<h1>' . htmlspecialchars($exception->getMessage()) . '</h1>';
             echo htmlspecialchars($exception->__toString());
