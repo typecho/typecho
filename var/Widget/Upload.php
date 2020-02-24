@@ -123,7 +123,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         } else if (isset($file['bytes'])) {
 
             //直接写入文件
-            if (!file_put_contents($path, base64_decode($file['bytes']) ) {
+            if (!file_put_contents($path, base64_decode($file['bytes']))) {
                 return false;
             }
         } else {
