@@ -244,7 +244,11 @@ class Typecho_Common
         spl_autoload_register(array('Typecho_Common', '__autoLoad'));
 
         /** 兼容php6 */
-        if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc()) {
+        if (
+            version_compare(PHP_VERSION, '7.0.0', "<=") &&
+            function_exists('get_magic_quotes_gpc') &&
+            get_magic_quotes_gpc()
+        ) {
             $_GET = self::stripslashesDeep($_GET);
             $_POST = self::stripslashesDeep($_POST);
             $_COOKIE = self::stripslashesDeep($_COOKIE);
