@@ -243,17 +243,6 @@ class Typecho_Common
         /** 设置自动载入函数 */
         spl_autoload_register(array('Typecho_Common', '__autoLoad'));
 
-        /** 兼容php6 */
-        if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc()) {
-            $_GET = self::stripslashesDeep($_GET);
-            $_POST = self::stripslashesDeep($_POST);
-            $_COOKIE = self::stripslashesDeep($_COOKIE);
-
-            reset($_GET);
-            reset($_POST);
-            reset($_COOKIE);
-        }
-
         /** 设置异常截获函数 */
         set_exception_handler(array('Typecho_Common', 'exceptionHandle'));
     }
@@ -451,18 +440,6 @@ EOF;
             || !!getenv('HTTP_BAE_LOGID')                           // BAE 3.0
             || (isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false) // GAE
             ;
-    }
-
-    /**
-     * 递归去掉数组反斜线
-     *
-     * @access public
-     * @param mixed $value
-     * @return mixed
-     */
-    public static function stripslashesDeep($value)
-    {
-        return is_array($value) ? array_map(array('Typecho_Common', 'stripslashesDeep'), $value) : stripslashes($value);
     }
 
     /**
