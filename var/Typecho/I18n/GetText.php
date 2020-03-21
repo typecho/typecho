@@ -352,6 +352,8 @@ class Typecho_I18n_GetText
             else
                 return $single;
         }
+        
+        $number = escapeshellcmd($number);
 
         // find out the appropriate form
         $select = $this->select_string($number);
