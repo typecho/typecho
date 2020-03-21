@@ -329,7 +329,14 @@ class Typecho_I18n_GetText
         $total = 0;
         $plural = 0;
 
-        eval("$string");
+        if (is_numeric($string))
+        {
+          eval("$string");
+        }
+        else
+        {
+          echo "Number has to be numeric";
+        }
         if ($plural >= $total) $plural = $total - 1;
         return $plural;
     }
