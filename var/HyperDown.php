@@ -536,7 +536,7 @@ class HyperDown
         // autolink url
         if ($enableAutoLink) {
             $text = preg_replace_callback(
-                "/(^|[^\"])((https?):[\p{L}_0-9-\.\/%#!@\?\+=~\|\,&\(\)]+)($|[^\"])/iu",
+                "/(^|[^\"])((https?):[\p{L}_0-9-\.\/%#!@\?\+=~\|\,&\(\):]+)($|[^\"])/iu",
                 function ($matches) use ($self) {
                     $link = $self->call('parseLink', $matches[2]);
                     return "{$matches[1]}<a href=\"{$matches[2]}\">{$link}</a>{$matches[4]}";
