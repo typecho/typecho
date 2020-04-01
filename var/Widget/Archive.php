@@ -1189,8 +1189,14 @@ class Widget_Archive extends Widget_Abstract_Contents
             $searchQuery = '%' . str_replace(' ', '%', $keywords) . '%';
 
             /** 搜索无法进入隐私项保护归档 */
-            $select->where("table.contents.password IS NULL OR table.contents.password = ''")
-            ->where('table.contents.title LIKE ? OR table.contents.text LIKE ?', $searchQuery, $searchQuery)
+            if ($this->user->hasLogin()) {
+                //~ fix issue 941
+                $select->where("table.contents.password IS NULL OR table.contents.password = '' OR talble.contents.authorId = ?", $this->user->uid);
+            } else {
+                $select->where("table.contents.password IS NULL OR table.contents.password = ''");
+            }
+
+            $select->where('table.contents.title LIKE ? OR table.contents.text LIKE ?', $searchQuery, $searchQuery)
             ->where('table.contents.type = ?', 'post');
         }
 
