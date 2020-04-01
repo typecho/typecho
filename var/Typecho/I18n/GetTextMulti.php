@@ -21,7 +21,7 @@ class Typecho_I18n_GetTextMulti
      * 所有的文件读写句柄
      *
      * @access private
-     * @var array
+     * @var Typecho_I18n_GetText[]
      */
     private $_handles = array();
 

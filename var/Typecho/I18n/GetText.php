@@ -346,6 +346,8 @@ class Typecho_I18n_GetText
      */
     public function ngettext($single, $plural, $number, &$num)
     {
+        $number = intval($number);
+
         if ($this->short_circuit) {
             if ($number != 1)
                 return $plural;

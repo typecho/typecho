@@ -18,7 +18,7 @@ class Typecho_I18n
      * 是否已经载入的标志位
      *
      * @access private
-     * @var boolean
+     * @var boolean|Typecho_I18n_GetTextMulti
      */
     private static $_loaded = false;
 

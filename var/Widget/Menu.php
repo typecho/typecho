@@ -188,7 +188,10 @@ class Widget_Menu extends Typecho_Widget
             foreach ($childNodes[$key] as $inKey => $childNode) {
                 // magic merge
                 $childNode += $defaultChildeNode;
-                list ($name, $title, $url, $access, $hidden, $addLink) = $childNode;
+                list ($name, $title, $url, $access) = $childNode;
+
+                $hidden = $childNode[4] ?? false;
+                $addLink = $childNode[5] ?? NULL;
 
                 // 保存最原始的hidden信息
                 $orgHidden = $hidden;
@@ -275,7 +278,7 @@ class Widget_Menu extends Typecho_Widget
                 );
             }
 
-            $menu[$key] = array($parentNode, $showedChildrenCount > 0, $firstUrl,$children);
+            $menu[$key] = array($parentNode, $showedChildrenCount > 0, $firstUrl, $children);
         }
 
         $this->_menu = $menu;
