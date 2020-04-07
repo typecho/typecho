@@ -1191,7 +1191,7 @@ class Widget_Archive extends Widget_Abstract_Contents
             /** 搜索无法进入隐私项保护归档 */
             if ($this->user->hasLogin()) {
                 //~ fix issue 941
-                $select->where("table.contents.password IS NULL OR table.contents.password = '' OR talble.contents.authorId = ?", $this->user->uid);
+                $select->where("table.contents.password IS NULL OR table.contents.password = '' OR table.contents.authorId = ?", $this->user->uid);
             } else {
                 $select->where("table.contents.password IS NULL OR table.contents.password = ''");
             }
