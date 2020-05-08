@@ -1669,7 +1669,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         $result = Widget_Upload::uploadHandle($data);
 
         if (false === $result) {
-            return IXR_Error(500, _t('上传失败'));
+            return new IXR_Error(500, _t('上传失败'));
         } else {
 
             $insertId = $this->insert(array(
@@ -2169,7 +2169,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                     return new IXR_Error(48, _t('PingBack已经存在'));
                 }
             } else {
-                return IXR_Error(49, _t('目标地址禁止Ping'));
+                return new IXR_Error(49, _t('目标地址禁止Ping'));
             }
         } else {
             return new IXR_Error(33, _t('这个目标地址不存在'));
