@@ -401,7 +401,13 @@ class Typecho_Db_Query
      */
     public function order($orderby, $sort = Typecho_Db::SORT_ASC)
     {
-        $this->_sqlPreBuild['order'] = ' ORDER BY ' . $this->filterColumn($orderby) . (empty($sort) ? NULL : ' ' . $sort);
+        if (empty($this->_sqlPreBuild['order'])) {
+            $this->_sqlPreBuild['order'] = ' ORDER BY ';
+        } else {
+            $this->_sqlPreBuild['order'] .= ', ';
+        }
+
+        $this->_sqlPreBuild['order'] .= $this->filterColumn($orderby) . (empty($sort) ? NULL : ' ' . $sort);
         return $this;
     }
 
