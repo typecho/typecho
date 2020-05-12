@@ -72,13 +72,17 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Do
         $this->request->password, 1 == $this->request->remember);
 
         /** 跳转验证后地址 */
-        if (NULL != $this->request->referer) {
-            $this->response->redirect($this->request->referer);
+        if (!empty($this->request->referer)) {
+            /** fix #952 & validate redirect url */
+            if (0 === strpos($this->request->referer, $this->options->adminUrl)
+                || 0 === strpos($this->request->referer, $this->options->siteUrl)) {
+                $this->response->redirect($this->request->referer);
+            }
         } else if (!$this->user->pass('contributor', true)) {
             /** 不允许普通用户直接跳转后台 */
             $this->response->redirect($this->options->profileUrl);
-        } else {
-            $this->response->redirect($this->options->adminUrl);
         }
+
+        $this->response->redirect($this->options->adminUrl);
     }
 }
