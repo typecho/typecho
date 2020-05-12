@@ -126,7 +126,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
             if (!file_put_contents($path, $file['bytes'])) {
                 return false;
             }
-		} else if (isset($file['bits'])) {
+        } else if (isset($file['bits'])) {
 
             //直接写入文件
             if (!file_put_contents($path, $file['bits'])) {
@@ -203,7 +203,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
             if (!file_put_contents($path, $file['bytes'])) {
                 return false;
             }
-		} else if (isset($file['bits'])) {
+        } else if (isset($file['bits'])) {
             
             @unlink($path);
 
