@@ -1,0 +1,46 @@
+name: Typecho Build Dev Ci
+
+on: [push, pull_request]
+
+jobs:
+  php:
+    name: PHP ${{ matrix.php }} Tests
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['7.0','7.2', '7.3', '7.4']
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Setup PHP only
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php }}
+    - name: Test
+      run: |
+        cd ./tools/
+        make test
+  build:
+    name: Typecho Build
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Install tree
+      run: sudo apt-get -y install tree
+    - name: Build
+      run: |
+        cd ./tools/
+        make update
+        make rm
+        mkdir build/usr/uploads/
+        chmod 777 build/usr/uploads/
+        tree -d build
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2
+      with:
+          name: typecho_build
+          path: ./tools/build/
