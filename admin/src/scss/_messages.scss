@@ -1,11 +1,10 @@
-@import "compass";
 
 /**
 * 提示信息框
 */
 .message {
   padding: 8px 10px;
-  @include border-radius(2px);
+  border-radius: 2px;
 }
 
 .message a {
@@ -45,7 +44,6 @@
   font-size: 12px;
   color: #FFF;
 
-  @include border-radius(20px);
-
+  border-radius: 20px;
 }
 

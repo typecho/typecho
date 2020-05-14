@@ -1,12 +1,21 @@
 /**
  * icons
  */
-$sprites: sprite-map("icons/*.png");
-$sprites-retina: sprite-map("icons-2x/*.png");
+@import "icons/*.png";
+@include all-icons-sprites(true);
 
+@media
+(-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
+  @import "icons-2x/*.png";
+  @include all-icons-sprites();
+}
+
+/*
 @mixin sprite-background($name) {
   // background-image: sprite-url($sprites);
-  background-position: sprite-position($sprites, $name);
+  // background-position: sprite-position($sprites, $name);
+  @include icons-sprite($name);
   // background-repeat: no-repeat;
   // display: block;
   // height: image-height(sprite-file($sprites, $name));
@@ -14,33 +23,31 @@ $sprites-retina: sprite-map("icons-2x/*.png");
   @media 
   (-webkit-min-device-pixel-ratio: 2), 
   (min-resolution: 192dpi) {
+    @include icons-2x-sprite($name);
     // Workaround for https://gist.github.com/2140082
-    @if (sprite-position($sprites, $name) != sprite-position($sprites-retina, $name)) {
-      $ypos: round(nth(sprite-position($sprites-retina, $name), 2) / 2);
-      background-position: 0 $ypos;
-    }
+    //@if (sprite-position($sprites, $name) != sprite-position($sprites-retina, $name)) {
+    //  $ypos: round(nth(sprite-position($sprites-retina, $name), 2) / 2);
+    //  background-position: 0 $ypos;
+    //}
     // Hard coded width of the normal sprite image. There must be a smarter way to do this.
     // @include background-size(auto 256px);
     // background-image: sprite-url($sprites-retina);
   }
 }
-
+ */
 
 %i-base {
   display: inline-block;
   vertical-align: text-bottom;
   text-indent: -9999em;
-  background-image: sprite-url($sprites);
-  background-repeat: no-repeat;
   &:hover {
-    @include opacity(0.75);
+    opacity: 0.75;
   }
   @media
   (-webkit-min-device-pixel-ratio: 2), 
   (min-resolution: 192dpi) {
     // Hard coded width of the normal sprite image. There must be a smarter way to do this.
-    @include background-size(auto 256px);
-    background-image: sprite-url($sprites-retina);
+    background-size: auto 256px;
   }
 }
 
@@ -58,11 +65,11 @@ $sprites-retina: sprite-map("icons-2x/*.png");
 
 .i-edit {
   @extend %i-16;
-  @include sprite-background(icon-edit);
+  @include icons-sprite(icon-edit);
 }
 .i-delete {
   @extend %i-16;
-  @include sprite-background(icon-delete);
+  @include icons-sprite(icon-delete);
 }
 
 
@@ -70,12 +77,12 @@ $sprites-retina: sprite-map("icons-2x/*.png");
 
 .i-upload {
   @extend %i-24;
-  @include sprite-background(icon-upload);
+  @include icons-sprite(icon-upload);
 }
 
 .i-upload-active {
   @extend %i-24;
-  @include sprite-background(icon-upload-active);
+  @include icons-sprite(icon-upload-active);
 }
 
 // 小箭头
@@ -100,7 +107,7 @@ $sprites-retina: sprite-map("icons-2x/*.png");
 
 .i-exlink {
   @extend %i-16;
-  @include sprite-background(icon-exlink);
+  @include icons-sprite(icon-exlink);
 }
 
 
@@ -108,52 +115,52 @@ $sprites-retina: sprite-map("icons-2x/*.png");
 
 .mime-office {
   @extend %i-16;
-  @include sprite-background(mime-office);
+  @include icons-sprite(mime-office);
 }
 
 .mime-text {
   @extend %i-16;
-  @include sprite-background(mime-text);
+  @include icons-sprite(mime-text);
 }
 
 .mime-image {
   @extend %i-16;
-  @include sprite-background(mime-image);
+  @include icons-sprite(mime-image);
 }
 
 .mime-html {
   @extend %i-16;
-  @include sprite-background(mime-html);
+  @include icons-sprite(mime-html);
 }
 
 .mime-archive {
   @extend %i-16;
-  @include sprite-background(mime-archive);
+  @include icons-sprite(mime-archive);
 }
 
 .mime-application {
   @extend %i-16;
-  @include sprite-background(mime-application);
+  @include icons-sprite(mime-application);
 }
 
 .mime-audio {
   @extend %i-16;
-  @include sprite-background(mime-audio);
+  @include icons-sprite(mime-audio);
 }
 
 .mime-script {
   @extend %i-16;
-  @include sprite-background(mime-script);
+  @include icons-sprite(mime-script);
 }
 
 .mime-video {
   @extend %i-16;
-  @include sprite-background(mime-video);
+  @include icons-sprite(mime-video);
 }
 
 .mime-unknow {
   @extend %i-16;
-  @include sprite-background(mime-unknow);
+  @include icons-sprite(mime-unknow);
 }
 
 
@@ -164,15 +171,15 @@ $sprites-retina: sprite-map("icons-2x/*.png");
   display: inline-block;
   background: url("../img/typecho-logo.svg") no-repeat;
   text-indent: -9999em;
-  @include background-size(auto 40px);
-  @include opacity(.15);
+  background-size: auto 40px;
+  opacity: .15;
   &:hover {
-    @include opacity(.2);
+    opacity: .2;
   }
 }
 .i-logo-s {
   width: 26px;
   height: 26px;
-  @include background-size(auto 26px);
+  background-size: auto 26px;
 }
 

@@ -9,7 +9,6 @@
 * @version 0.9
 */
 
-@import "compass";
 
 /**
 * Typecho 全局样式
@@ -387,7 +386,7 @@ a.button:hover, a.balloon-button:hover {
   height: 26px;
   line-height: 26px;
   color: #666;
-  @include box-sizing(border-box);
+  box-sizing: border-box;
   
 }
 .typecho-option-tabs a:hover {
@@ -399,10 +398,10 @@ a.button:hover, a.balloon-button:hover {
 .typecho-option-tabs li {
   float: left;
   &:first-child a {
-    @include border-radius(2px 0 0 2px);
+    border-radius: 2px 0 0 2px;
   }
   &:last-child a {
-    @include border-radius(0 2px 2px 0);
+    border-radius: 0 2px 2px 0;
   }
 }
 
@@ -481,52 +480,58 @@ a.operate-reply {
 .typecho-list-table {
   width: 100%;
   border-collapse: collapse;
-}
+  table-layout: fixed;
 
-.typecho-list-table.deactivate {
-  color: #999;
-}
+  &.deactivate {
+    color: #999;
+  }
 
-.typecho-list-table .right {
-  text-align: right;
-}
+  .right {
+    text-align: right;
+  }
 
-.typecho-list-table th {
-  padding: 0 10px 10px;
-  border-bottom: 2px solid #F0F0EC;
-  text-align: left;
-}
+  th {
+    padding: 0 10px 10px;
+    border-bottom: 2px solid #F0F0EC;
+    text-align: left;
+  }
 
-.typecho-list-table td {
-  padding: 10px;
-  border-top: 1px solid #F0F0EC;
-  word-break: break-all;
-}
-.typecho-list-table .status {
-  margin-left: 5px;
-  color: #999;
-  font-size: .92857em;
-  font-style: normal;
-}
-.typecho-list-table tbody tr:hover td {
-  background-color: #F6F6F3;
-}
+  td {
+    padding: 10px;
+    border-top: 1px solid #F0F0EC;
+    word-break: break-all;
 
-.typecho-list-table tbody tr.checked td {
-  background-color: #FFF9E8;
+    pre {
+        overflow: auto;
+    }
+  }
+
+  .status {
+    margin-left: 5px;
+    color: #999;
+    font-size: .92857em;
+    font-style: normal;
+  }
+
+  tbody tr:hover td {
+    background-color: #F6F6F3;
+  }
+
+  tbody tr.checked td {
+    background-color: #FFF9E8;
+  }
+
+  tr td .hidden-by-mouse {
+    opacity: 0; 
+  }
+
+  tr:hover td .hidden-by-mouse {
+    opacity: 1;
+  }
 }
 
 .warning {
   color: #B94A48;
-}
-
-
-.typecho-list-table tr td .hidden-by-mouse {
-  @include opacity(0); 
-}
-
-.typecho-list-table tr:hover td .hidden-by-mouse {
-  @include opacity(1);
 }
 
 
