@@ -556,23 +556,23 @@ a.operate-reply { color: #545c30; }
 
 .icons-mime-video { background-position: 0 -192px; width: 16px; height: 16px; }
 
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) { .icons-sprite, .icons-icon-delete, .icons-icon-edit, .icons-icon-exlink, .icons-icon-upload-active, .icons-icon-upload, .icons-mime-application, .icons-mime-archive, .icons-mime-audio, .icons-mime-html, .icons-mime-image, .icons-mime-office, .icons-mime-script, .icons-mime-text, .icons-mime-unknow, .icons-mime-video { background-image: url("../img/icons-2x.png?_=dffe302"); background-repeat: no-repeat; }
-  .icons-icon-delete { background-position: 0 -32px; }
-  .icons-icon-edit { background-position: 0 -224px; }
-  .icons-icon-exlink { background-position: 0 -64px; }
-  .icons-icon-upload-active { background-position: 0 -464px; }
-  .icons-icon-upload { background-position: 0 -416px; }
-  .icons-icon-upload:active, .icons-icon-upload.icon-upload-active { background-position: 0 -464px; }
-  .icons-mime-application { background-position: 0 -160px; }
-  .icons-mime-archive { background-position: 0 -192px; }
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) { .icons-sprite, .icons-icon-delete, .icons-icon-edit, .icons-icon-exlink, .icons-icon-upload-active, .icons-icon-upload, .icons-mime-application, .icons-mime-archive, .icons-mime-audio, .icons-mime-html, .icons-mime-image, .icons-mime-office, .icons-mime-script, .icons-mime-text, .icons-mime-unknow, .icons-mime-video { background-image: url("../img/icons@2x.png?_=e65bc46"); background-repeat: no-repeat; background-size: 24px 256px; }
+  .icons-icon-delete { background-position: 0 -16px; }
+  .icons-icon-edit { background-position: 0 -112px; }
+  .icons-icon-exlink { background-position: 0 -32px; }
+  .icons-icon-upload-active { background-position: 0 -232px; }
+  .icons-icon-upload { background-position: 0 -208px; }
+  .icons-icon-upload:active, .icons-icon-upload.icon-upload-active { background-position: 0 -232px; }
+  .icons-mime-application { background-position: 0 -80px; }
+  .icons-mime-archive { background-position: 0 -96px; }
   .icons-mime-audio { background-position: 0 0; }
-  .icons-mime-html { background-position: 0 -256px; }
-  .icons-mime-image { background-position: 0 -288px; }
-  .icons-mime-office { background-position: 0 -320px; }
-  .icons-mime-script { background-position: 0 -352px; }
-  .icons-mime-text { background-position: 0 -128px; }
-  .icons-mime-unknow { background-position: 0 -96px; }
-  .icons-mime-video { background-position: 0 -384px; } }
+  .icons-mime-html { background-position: 0 -128px; }
+  .icons-mime-image { background-position: 0 -144px; }
+  .icons-mime-office { background-position: 0 -160px; }
+  .icons-mime-script { background-position: 0 -176px; }
+  .icons-mime-text { background-position: 0 -64px; }
+  .icons-mime-unknow { background-position: 0 -48px; }
+  .icons-mime-video { background-position: 0 -192px; } }
 
 /* @mixin sprite-background($name) { // background-image: sprite-url($sprites); // background-position: sprite-position($sprites, $name); @include icons-sprite($name); // background-repeat: no-repeat; // display: block; // height: image-height(sprite-file($sprites, $name)); // width: image-width(sprite-file($sprites, $name)); @media  (-webkit-min-device-pixel-ratio: 2),  (min-resolution: 192dpi) { @include icons-2x-sprite($name); // Workaround for https://gist.github.com/2140082 //@if (sprite-position($sprites, $name) != sprite-position($sprites-retina, $name)) { //  $ypos: round(nth(sprite-position($sprites-retina, $name), 2) / 2); //  background-position: 0 $ypos; //} // Hard coded width of the normal sprite image. There must be a smarter way to do this. // @include background-size(auto 256px); // background-image: sprite-url($sprites-retina); } } */
 .i-edit, .i-delete, .i-exlink, .mime-office, .mime-text, .mime-image, .mime-html, .mime-archive, .mime-application, .mime-audio, .mime-script, .mime-video, .mime-unknow, .i-upload, .i-upload-active { display: inline-block; vertical-align: text-bottom; text-indent: -9999em; }
@@ -636,6 +636,55 @@ a.operate-reply { color: #545c30; }
 /* Editor */
 .editor { margin-bottom: -0.5em; }
 
+.editor-sprite, .editor-editor-bold, .editor-editor-code, .editor-editor-exit-fullscreen, .editor-editor-fullscreen, .editor-editor-heading, .editor-editor-hr, .editor-editor-image, .editor-editor-italic, .editor-editor-link, .editor-editor-more, .editor-editor-olist, .editor-editor-quote, .editor-editor-redo, .editor-editor-ulist, .editor-editor-undo, .wmd-button-row li#wmd-bold-button span, .wmd-button-row li#wmd-italic-button span, .wmd-button-row li#wmd-link-button span, .wmd-button-row li#wmd-quote-button span, .wmd-button-row li#wmd-code-button span, .wmd-button-row li#wmd-image-button span, .wmd-button-row li#wmd-olist-button span, .wmd-button-row li#wmd-ulist-button span, .wmd-button-row li#wmd-heading-button span, .wmd-button-row li#wmd-hr-button span, .wmd-button-row li#wmd-more-button span, .wmd-button-row li#wmd-undo-button span, .wmd-button-row li#wmd-redo-button span, .wmd-button-row li#wmd-fullscreen-button span, .wmd-button-row li#wmd-exit-fullscreen-button span { background-image: url("../img/editor.png?_=ce98884"); background-repeat: no-repeat; }
+
+.editor-editor-bold { background-position: 0 -20px; width: 20px; height: 20px; }
+
+.editor-editor-code { background-position: 0 -140px; width: 20px; height: 20px; }
+
+.editor-editor-exit-fullscreen { background-position: 0 -40px; width: 20px; height: 20px; }
+
+.editor-editor-fullscreen { background-position: 0 -60px; width: 20px; height: 20px; }
+
+.editor-editor-heading { background-position: 0 -80px; width: 20px; height: 20px; }
+
+.editor-editor-hr { background-position: 0 -100px; width: 20px; height: 20px; }
+
+.editor-editor-image { background-position: 0 -120px; width: 20px; height: 20px; }
+
+.editor-editor-italic { background-position: 0 0; width: 20px; height: 20px; }
+
+.editor-editor-link { background-position: 0 -160px; width: 20px; height: 20px; }
+
+.editor-editor-more { background-position: 0 -180px; width: 20px; height: 20px; }
+
+.editor-editor-olist { background-position: 0 -200px; width: 20px; height: 20px; }
+
+.editor-editor-quote { background-position: 0 -220px; width: 20px; height: 20px; }
+
+.editor-editor-redo { background-position: 0 -240px; width: 20px; height: 20px; }
+
+.editor-editor-ulist { background-position: 0 -260px; width: 20px; height: 20px; }
+
+.editor-editor-undo { background-position: 0 -280px; width: 20px; height: 20px; }
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) { .editor-sprite, .editor-editor-bold, .editor-editor-code, .editor-editor-exit-fullscreen, .editor-editor-fullscreen, .editor-editor-heading, .editor-editor-hr, .editor-editor-image, .editor-editor-italic, .editor-editor-link, .editor-editor-more, .editor-editor-olist, .editor-editor-quote, .editor-editor-redo, .editor-editor-ulist, .editor-editor-undo { background-image: url("../img/editor@2x.png?_=f3643ed"); background-repeat: no-repeat; background-size: 20px 300px; }
+  .editor-editor-bold { background-position: 0 -20px; }
+  .editor-editor-code { background-position: 0 -140px; }
+  .editor-editor-exit-fullscreen { background-position: 0 -40px; }
+  .editor-editor-fullscreen { background-position: 0 -60px; }
+  .editor-editor-heading { background-position: 0 -80px; }
+  .editor-editor-hr { background-position: 0 -100px; }
+  .editor-editor-image { background-position: 0 -120px; }
+  .editor-editor-italic { background-position: 0 0; }
+  .editor-editor-link { background-position: 0 -160px; }
+  .editor-editor-more { background-position: 0 -180px; }
+  .editor-editor-olist { background-position: 0 -200px; }
+  .editor-editor-quote { background-position: 0 -220px; }
+  .editor-editor-redo { background-position: 0 -240px; }
+  .editor-editor-ulist { background-position: 0 -260px; }
+  .editor-editor-undo { background-position: 0 -280px; } }
+
 .wmd-button-row { list-style: none; margin: 0; padding: 0; height: 26px; line-height: 1; }
 
 .wmd-button-row li { display: inline-block; margin-right: 4px; padding: 3px; cursor: pointer; vertical-align: middle; border-radius: 2px; }
@@ -644,11 +693,39 @@ a.operate-reply { color: #545c30; }
 
 .wmd-button-row li.wmd-spacer { height: 20px; margin: 0 10px 0 6px; padding: 0; width: 1px; background: #E9E9E6; cursor: default; }
 
-#wmd-button-row span { display: block; width: 20px; height: 20px; background: transparent url(../img/editor.png) no-repeat; }
+.wmd-button-row li span { display: block; width: 20px; height: 20px; }
+
+.wmd-button-row li#wmd-bold-button span { background-position: 0 -20px; }
+
+.wmd-button-row li#wmd-italic-button span { background-position: 0 0; }
+
+.wmd-button-row li#wmd-link-button span { background-position: 0 -160px; }
+
+.wmd-button-row li#wmd-quote-button span { background-position: 0 -220px; }
+
+.wmd-button-row li#wmd-code-button span { background-position: 0 -140px; }
+
+.wmd-button-row li#wmd-image-button span { background-position: 0 -120px; }
+
+.wmd-button-row li#wmd-olist-button span { background-position: 0 -200px; }
+
+.wmd-button-row li#wmd-ulist-button span { background-position: 0 -260px; }
+
+.wmd-button-row li#wmd-heading-button span { background-position: 0 -80px; }
+
+.wmd-button-row li#wmd-hr-button span { background-position: 0 -100px; }
+
+.wmd-button-row li#wmd-more-button span { background-position: 0 -180px; }
+
+.wmd-button-row li#wmd-undo-button span { background-position: 0 -280px; }
+
+.wmd-button-row li#wmd-redo-button span { background-position: 0 -240px; }
+
+.wmd-button-row li#wmd-fullscreen-button span { background-position: 0 -60px; }
+
+.wmd-button-row li#wmd-exit-fullscreen-button span { background-position: 0 -40px; }
 
 #btn-cancel-preview { display: none; }
-
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) { #wmd-button-row span { background-image: url(../img/editor@2x.png); background-size: 320px auto; } }
 
 .wmd-edittab { float: right; margin-top: 3px; font-size: .92857em; }
 

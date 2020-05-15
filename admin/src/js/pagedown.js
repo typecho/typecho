@@ -3195,11 +3195,15 @@ else
 
         function setupButton(button, isEnabled) {
 
+            /*
             var normalYShift = "0px";
             var disabledYShift = "-20px";
             var highlightYShift = "-40px";
             var image = button.getElementsByTagName("span")[0];
+            */
+
             if (isEnabled) {
+                /*
                 image.style.backgroundPosition = button.XShift + " " + normalYShift;
                 button.onmouseover = function () {
                     image.style.backgroundPosition = this.XShift + " " + highlightYShift;
@@ -3208,6 +3212,7 @@ else
                 button.onmouseout = function () {
                     image.style.backgroundPosition = this.XShift + " " + normalYShift;
                 };
+                */
 
                 // IE tries to select the background image "button" text (it's
                 // implemented in a list item) so we have to cache the selection
@@ -3233,7 +3238,7 @@ else
                 }
             }
             else {
-                image.style.backgroundPosition = button.XShift + " " + disabledYShift;
+                // image.style.backgroundPosition = button.XShift + " " + disabledYShift;
                 button.onmouseover = button.onmouseout = button.onclick = function () { };
             }
         }

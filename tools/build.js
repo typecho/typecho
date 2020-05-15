@@ -14,11 +14,10 @@ let spriteImporter = SpriteMagicImporter({
     http_stylesheets_path: '.',
     http_generated_images_path: 'img',
     use_cache: false,
-    retina_mark: /-(\d)x$/,
 
     // spritesmith options
     spritesmith: {
-        algorithm: `top-down`,
+        algorithm: 'top-down',
         padding: 0
     },
 

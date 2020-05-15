@@ -5,6 +5,22 @@
   margin-bottom: -0.5em;
 }
 
+@import "editor/*.png";
+@include all-editor-sprites(true);
+
+@media 
+(-webkit-min-device-pixel-ratio: 2), 
+(min-resolution: 192dpi) {
+  @import "editor/*@2x.png";
+  @include all-editor-sprites();
+}
+
+@mixin editor-button($name) {
+  &#wmd-#{$name}-button span {
+    @include editor-sprite(editor-#{$name})
+  }
+}
+
 .wmd-button-row {
   list-style: none;
   margin: 0;
@@ -30,26 +46,31 @@
       background: #E9E9E6;
       cursor: default;
     }
-  }
-}
+    span {
+      display: block;
+      width: 20px;
+      height: 20px;
+    }
 
-#wmd-button-row span {
-  display: block;
-  width: 20px;
-  height: 20px;
-  background: transparent url(../img/editor.png) no-repeat;
+    @include editor-button(bold)
+    @include editor-button(italic)
+    @include editor-button(link)
+    @include editor-button(quote)
+    @include editor-button(code)
+    @include editor-button(image)
+    @include editor-button(olist)
+    @include editor-button(ulist)
+    @include editor-button(heading)
+    @include editor-button(hr)
+    @include editor-button(more)
+    @include editor-button(undo)
+    @include editor-button(redo)
+    @include editor-button(fullscreen)
+    @include editor-button(exit-fullscreen)
+  }
 }
 
 #btn-cancel-preview { display: none }
-
-@media 
-(-webkit-min-device-pixel-ratio: 2), 
-(min-resolution: 192dpi) {
-  #wmd-button-row span {
-    background-image: url(../img/editor@2x.png);
-    background-size: 320px auto;
-  }
-}
 
 // 撰写预览切换 tab
 .wmd-edittab {
