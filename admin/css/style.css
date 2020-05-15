@@ -556,7 +556,7 @@ a.operate-reply { color: #545c30; }
 
 .icons-mime-video { background-position: 0 -192px; width: 16px; height: 16px; }
 
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) { .icons-sprite, .icons-icon-delete, .icons-icon-edit, .icons-icon-exlink, .icons-icon-upload-active, .icons-icon-upload, .icons-mime-application, .icons-mime-archive, .icons-mime-audio, .icons-mime-html, .icons-mime-image, .icons-mime-office, .icons-mime-script, .icons-mime-text, .icons-mime-unknow, .icons-mime-video { background-image: url("../img/icons@2x.png?_=e65bc46"); background-repeat: no-repeat; background-size: 24px 256px; }
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) { .icons-sprite, .icons-icon-delete, .icons-icon-edit, .icons-icon-exlink, .icons-icon-upload-active, .icons-icon-upload, .icons-mime-application, .icons-mime-archive, .icons-mime-audio, .icons-mime-html, .icons-mime-image, .icons-mime-office, .icons-mime-script, .icons-mime-text, .icons-mime-unknow, .icons-mime-video, .i-edit, .i-delete, .i-upload, .i-upload-active, .i-exlink, .mime-office, .mime-text, .mime-image, .mime-html, .mime-archive, .mime-application, .mime-audio, .mime-script, .mime-video, .mime-unknow { background-image: url("../img/icons@2x.png?_=e65bc46"); background-repeat: no-repeat; background-size: 24px 256px; }
   .icons-icon-delete { background-position: 0 -16px; }
   .icons-icon-edit { background-position: 0 -112px; }
   .icons-icon-exlink { background-position: 0 -32px; }
@@ -572,14 +572,28 @@ a.operate-reply { color: #545c30; }
   .icons-mime-script { background-position: 0 -176px; }
   .icons-mime-text { background-position: 0 -64px; }
   .icons-mime-unknow { background-position: 0 -48px; }
-  .icons-mime-video { background-position: 0 -192px; } }
+  .icons-mime-video { background-position: 0 -192px; }
+  .i-edit { background-position: 0 -112px; }
+  .i-delete { background-position: 0 -16px; }
+  .i-upload { background-position: 0 -208px; }
+  .i-upload:active, .i-upload.icon-upload-active { background-position: 0 -232px; }
+  .i-upload-active { background-position: 0 -232px; }
+  .i-exlink { background-position: 0 -32px; }
+  .mime-office { background-position: 0 -160px; }
+  .mime-text { background-position: 0 -64px; }
+  .mime-image { background-position: 0 -144px; }
+  .mime-html { background-position: 0 -128px; }
+  .mime-archive { background-position: 0 -96px; }
+  .mime-application { background-position: 0 -80px; }
+  .mime-audio { background-position: 0 0; }
+  .mime-script { background-position: 0 -176px; }
+  .mime-video { background-position: 0 -192px; }
+  .mime-unknow { background-position: 0 -48px; } }
 
 /* @mixin sprite-background($name) { // background-image: sprite-url($sprites); // background-position: sprite-position($sprites, $name); @include icons-sprite($name); // background-repeat: no-repeat; // display: block; // height: image-height(sprite-file($sprites, $name)); // width: image-width(sprite-file($sprites, $name)); @media  (-webkit-min-device-pixel-ratio: 2),  (min-resolution: 192dpi) { @include icons-2x-sprite($name); // Workaround for https://gist.github.com/2140082 //@if (sprite-position($sprites, $name) != sprite-position($sprites-retina, $name)) { //  $ypos: round(nth(sprite-position($sprites-retina, $name), 2) / 2); //  background-position: 0 $ypos; //} // Hard coded width of the normal sprite image. There must be a smarter way to do this. // @include background-size(auto 256px); // background-image: sprite-url($sprites-retina); } } */
 .i-edit, .i-delete, .i-exlink, .mime-office, .mime-text, .mime-image, .mime-html, .mime-archive, .mime-application, .mime-audio, .mime-script, .mime-video, .mime-unknow, .i-upload, .i-upload-active { display: inline-block; vertical-align: text-bottom; text-indent: -9999em; }
 
 .i-edit:hover, .i-delete:hover, .i-exlink:hover, .mime-office:hover, .mime-text:hover, .mime-image:hover, .mime-html:hover, .mime-archive:hover, .mime-application:hover, .mime-audio:hover, .mime-script:hover, .mime-video:hover, .mime-unknow:hover, .i-upload:hover, .i-upload-active:hover { opacity: 0.75; }
-
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) { .i-edit, .i-delete, .i-exlink, .mime-office, .mime-text, .mime-image, .mime-html, .mime-archive, .mime-application, .mime-audio, .mime-script, .mime-video, .mime-unknow, .i-upload, .i-upload-active { background-size: auto 256px; } }
 
 .i-edit, .i-delete, .i-exlink, .mime-office, .mime-text, .mime-image, .mime-html, .mime-archive, .mime-application, .mime-audio, .mime-script, .mime-video, .mime-unknow { width: 16px; height: 16px; }
 
@@ -668,7 +682,7 @@ a.operate-reply { color: #545c30; }
 
 .editor-editor-undo { background-position: 0 -280px; width: 20px; height: 20px; }
 
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) { .editor-sprite, .editor-editor-bold, .editor-editor-code, .editor-editor-exit-fullscreen, .editor-editor-fullscreen, .editor-editor-heading, .editor-editor-hr, .editor-editor-image, .editor-editor-italic, .editor-editor-link, .editor-editor-more, .editor-editor-olist, .editor-editor-quote, .editor-editor-redo, .editor-editor-ulist, .editor-editor-undo { background-image: url("../img/editor@2x.png?_=f3643ed"); background-repeat: no-repeat; background-size: 20px 300px; }
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) { .editor-sprite, .editor-editor-bold, .editor-editor-code, .editor-editor-exit-fullscreen, .editor-editor-fullscreen, .editor-editor-heading, .editor-editor-hr, .editor-editor-image, .editor-editor-italic, .editor-editor-link, .editor-editor-more, .editor-editor-olist, .editor-editor-quote, .editor-editor-redo, .editor-editor-ulist, .editor-editor-undo, .wmd-button-row li#wmd-bold-button span, .wmd-button-row li#wmd-italic-button span, .wmd-button-row li#wmd-link-button span, .wmd-button-row li#wmd-quote-button span, .wmd-button-row li#wmd-code-button span, .wmd-button-row li#wmd-image-button span, .wmd-button-row li#wmd-olist-button span, .wmd-button-row li#wmd-ulist-button span, .wmd-button-row li#wmd-heading-button span, .wmd-button-row li#wmd-hr-button span, .wmd-button-row li#wmd-more-button span, .wmd-button-row li#wmd-undo-button span, .wmd-button-row li#wmd-redo-button span, .wmd-button-row li#wmd-fullscreen-button span, .wmd-button-row li#wmd-exit-fullscreen-button span { background-image: url("../img/editor@2x.png?_=f3643ed"); background-repeat: no-repeat; background-size: 20px 300px; }
   .editor-editor-bold { background-position: 0 -20px; }
   .editor-editor-code { background-position: 0 -140px; }
   .editor-editor-exit-fullscreen { background-position: 0 -40px; }
@@ -683,7 +697,22 @@ a.operate-reply { color: #545c30; }
   .editor-editor-quote { background-position: 0 -220px; }
   .editor-editor-redo { background-position: 0 -240px; }
   .editor-editor-ulist { background-position: 0 -260px; }
-  .editor-editor-undo { background-position: 0 -280px; } }
+  .editor-editor-undo { background-position: 0 -280px; }
+  .wmd-button-row li#wmd-bold-button span { background-position: 0 -20px; }
+  .wmd-button-row li#wmd-italic-button span { background-position: 0 0; }
+  .wmd-button-row li#wmd-link-button span { background-position: 0 -160px; }
+  .wmd-button-row li#wmd-quote-button span { background-position: 0 -220px; }
+  .wmd-button-row li#wmd-code-button span { background-position: 0 -140px; }
+  .wmd-button-row li#wmd-image-button span { background-position: 0 -120px; }
+  .wmd-button-row li#wmd-olist-button span { background-position: 0 -200px; }
+  .wmd-button-row li#wmd-ulist-button span { background-position: 0 -260px; }
+  .wmd-button-row li#wmd-heading-button span { background-position: 0 -80px; }
+  .wmd-button-row li#wmd-hr-button span { background-position: 0 -100px; }
+  .wmd-button-row li#wmd-more-button span { background-position: 0 -180px; }
+  .wmd-button-row li#wmd-undo-button span { background-position: 0 -280px; }
+  .wmd-button-row li#wmd-redo-button span { background-position: 0 -240px; }
+  .wmd-button-row li#wmd-fullscreen-button span { background-position: 0 -60px; }
+  .wmd-button-row li#wmd-exit-fullscreen-button span { background-position: 0 -40px; } }
 
 .wmd-button-row { list-style: none; margin: 0; padding: 0; height: 26px; line-height: 1; }
 

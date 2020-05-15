@@ -8,16 +8,42 @@
 @import "editor/*.png";
 @include all-editor-sprites(true);
 
+@mixin editor-button($name) {
+  &#wmd-#{$name}-button span {
+    @include editor-sprite(editor-#{$name})
+  }
+}
+
 @media 
 (-webkit-min-device-pixel-ratio: 2), 
 (min-resolution: 192dpi) {
   @import "editor/*@2x.png";
   @include all-editor-sprites();
-}
 
-@mixin editor-button($name) {
-  &#wmd-#{$name}-button span {
-    @include editor-sprite(editor-#{$name})
+  @mixin editor-button-2x($name) {
+    &#wmd-#{$name}-button span {
+      @include editor-sprite(editor-#{$name})
+    }
+  }
+  
+  .wmd-button-row {
+    li {
+      @include editor-button-2x(bold)
+      @include editor-button-2x(italic)
+      @include editor-button-2x(link)
+      @include editor-button-2x(quote)
+      @include editor-button-2x(code)
+      @include editor-button-2x(image)
+      @include editor-button-2x(olist)
+      @include editor-button-2x(ulist)
+      @include editor-button-2x(heading)
+      @include editor-button-2x(hr)
+      @include editor-button-2x(more)
+      @include editor-button-2x(undo)
+      @include editor-button-2x(redo)
+      @include editor-button-2x(fullscreen)
+      @include editor-button-2x(exit-fullscreen)
+    }
   }
 }
 

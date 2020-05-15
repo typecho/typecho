@@ -9,6 +9,32 @@
 (min-resolution: 192dpi) {
   @import "icons/*@2x.png";
   @include all-icons-sprites();
+
+  @mixin icon-style($type, $name) {
+    .#{$type}-#{$name} {
+      @if $type == i {
+        @include icons-sprite(icon-#{$name});
+      } @else {
+        @include icons-sprite(#{mime}-#{$name});
+      }
+    }
+  }
+
+  @include icon-style(i, edit)
+  @include icon-style(i, delete)
+  @include icon-style(i, upload)
+  @include icon-style(i, upload-active)
+  @include icon-style(i, exlink)
+  @include icon-style(mime, office)
+  @include icon-style(mime, text)
+  @include icon-style(mime, image)
+  @include icon-style(mime, html)
+  @include icon-style(mime, archive)
+  @include icon-style(mime, application)
+  @include icon-style(mime, audio)
+  @include icon-style(mime, script)
+  @include icon-style(mime, video)
+  @include icon-style(mime, unknow)
 }
 
 /*
@@ -42,12 +68,6 @@
   text-indent: -9999em;
   &:hover {
     opacity: 0.75;
-  }
-  @media
-  (-webkit-min-device-pixel-ratio: 2), 
-  (min-resolution: 192dpi) {
-    // Hard coded width of the normal sprite image. There must be a smarter way to do this.
-    background-size: auto 256px;
   }
 }
 
