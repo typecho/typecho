@@ -811,17 +811,8 @@ a.operate-reply { color: #545c30; }
 #wmd-preview .focus, #wmd-preview .focus * { background-color: rgba(255, 230, 0, 0.5) !important; }
 
 /* 上传面板动画效果 */
-@keyframes fullscreen-upload { 0% { right: -280px; }
-  100% { right: -1px; } }
-
-@-moz-keyframes fullscreen-upload { 0% { right: -280px; }
-  100% { right: -1px; } }
-
-@-webkit-keyframes fullscreen-upload { 0% { right: -280px; }
-  100% { right: -1px; } }
-
-@-o-keyframes fullscreen-upload { 0% { right: -280px; }
-  100% { right: -1px; } }
+@keyframes fullscreen-upload { 0% { opacity: 0; }
+  100% { opacity: 1; } }
 
 /* 编辑器全屏 */
 .fullscreen #wmd-button-bar, .fullscreen #text, .fullscreen #wmd-preview, .fullscreen .submit { position: absolute; top: 0; width: 50%; background: #FFF; z-index: 999; box-sizing: border-box; border-radius: 0; }
@@ -836,7 +827,7 @@ a.operate-reply { color: #545c30; }
 
 .fullscreen #upload-panel { -webkit-box-shadow: 0 4px 16px rgba(0, 0, 0, 0.225); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.225); border-style: solid; }
 
-.fullscreen #tab-files { position: absolute; top: 52px; right: -1px; width: 280px; z-index: 1001; animation: fullscreen-upload 0.5s; -moz-animation: fullscreen-upload 0.5s; -webkit-animation: fullscreen-upload 0.5s; -o-animation: fullscreen-upload 0.5s; }
+.fullscreen #tab-files { position: absolute; top: 52px; right: 0; width: 280px; z-index: 1001; animation: fullscreen-upload 0.5s; }
 
 .fullscreen .wmd-edittab, .fullscreen .typecho-post-option, .fullscreen .title, .fullscreen .url-slug, .fullscreen .typecho-page-title, .fullscreen .typecho-head-nav, .fullscreen .message { display: none; }
 
