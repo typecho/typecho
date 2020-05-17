@@ -20,21 +20,21 @@
     }
   }
 
-  @include icon-style(i, edit)
-  @include icon-style(i, delete)
-  @include icon-style(i, upload)
-  @include icon-style(i, upload-active)
-  @include icon-style(i, exlink)
-  @include icon-style(mime, office)
-  @include icon-style(mime, text)
-  @include icon-style(mime, image)
-  @include icon-style(mime, html)
-  @include icon-style(mime, archive)
-  @include icon-style(mime, application)
-  @include icon-style(mime, audio)
-  @include icon-style(mime, script)
-  @include icon-style(mime, video)
-  @include icon-style(mime, unknow)
+  @include icon-style(i, edit);
+  @include icon-style(i, delete);
+  @include icon-style(i, upload);
+  @include icon-style(i, upload-active);
+  @include icon-style(i, exlink);
+  @include icon-style(mime, office);
+  @include icon-style(mime, text);
+  @include icon-style(mime, image);
+  @include icon-style(mime, html);
+  @include icon-style(mime, archive);
+  @include icon-style(mime, application);
+  @include icon-style(mime, audio);
+  @include icon-style(mime, script);
+  @include icon-style(mime, video);
+  @include icon-style(mime, unknow);
 }
 
 /*
