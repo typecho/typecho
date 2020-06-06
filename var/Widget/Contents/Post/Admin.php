@@ -121,22 +121,27 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
         /** 构建基础查询 */
         $select = $this->select();
 
-        /** 如果具有编辑以上权限,可以查看所有文章,反之只能查看自己的文章 */
-        if (!$this->user->pass('editor', true)) {
-            $select->where('table.contents.authorId = ?', $this->user->uid);
-        } else {
-            if ('on' == $this->request->__typecho_all_posts) {
-                Typecho_Cookie::set('__typecho_all_posts', 'on');
+        /** 首先判断是否按照作者筛选,然后在判断编辑权限,如果具有编辑以上权限,可以查看所有文章,反之只能查看自己的文章 */
+        if (NULL != ($uid = $this->request->uid)) {
+            $select->where('table.contents.authorId = ?', $uid);
+        } else{
+            if (!$this->user->pass('editor', true)) {
+                $select->where('table.contents.authorId = ?', $this->user->uid);
             } else {
-                if ('off' == $this->request->__typecho_all_posts) {
-                    Typecho_Cookie::set('__typecho_all_posts', 'off');
-                }
+                if ('on' == $this->request->__typecho_all_posts) {
+                    Typecho_Cookie::set('__typecho_all_posts', 'on');
+                } else {
+                    if ('off' == $this->request->__typecho_all_posts) {
+                        Typecho_Cookie::set('__typecho_all_posts', 'off');
+                    }
 
-                if ('on' != Typecho_Cookie::get('__typecho_all_posts')) {
-                    $select->where('table.contents.authorId = ?', isset($this->request->uid) ?
-                        $this->request->filter('int')->uid : $this->user->uid);
+                    if ('on' != Typecho_Cookie::get('__typecho_all_posts')) {
+                        $select->where('table.contents.authorId = ?', isset($this->request->uid) ?
+                            $this->request->filter('int')->uid : $this->user->uid);
+                    }
                 }
             }
+
         }
 
         /** 按状态查询 */
