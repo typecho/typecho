@@ -46,17 +46,17 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         Typecho_Widget_Helper_Form::POST_METHOD);
 
         /** 用户昵称 */
-        $screenName = new Typecho_Widget_Helper_Form_Element_Text('screenName', NULL, NULL, _t('昵称'), _t('用户昵称可以与用户名不同, 用于前台显示.')
-            . '<br />' . _t('如果你将此项留空, 将默认使用用户名.'));
+        $screenName = new Typecho_Widget_Helper_Form_Element_Text('screenName', NULL, NULL, _t('昵称'), _t('用户昵称可以与用户名不同，用于前台显示。')
+            . '<br />' . _t('如果你将此项留空，将默认使用用户名。'));
         $form->addInput($screenName);
 
         /** 个人主页地址 */
-        $url = new Typecho_Widget_Helper_Form_Element_Text('url', NULL, NULL, _t('个人主页地址'), _t('此用户的个人主页地址, 请用 <code>http://</code> 开头.'));
+        $url = new Typecho_Widget_Helper_Form_Element_Text('url', NULL, NULL, _t('个人主页地址'), _t('此用户的个人主页地址，请用 <code>http://</code> 开头。'));
         $form->addInput($url);
 
         /** 电子邮箱地址 */
-        $mail = new Typecho_Widget_Helper_Form_Element_Text('mail', NULL, NULL, _t('电子邮箱地址 *'), _t('电子邮箱地址将作为此用户的主要联系方式.')
-            . '<br />' . _t('请不要与系统中现有的电子邮箱地址重复.'));
+        $mail = new Typecho_Widget_Helper_Form_Element_Text('mail', NULL, NULL, _t('电子邮箱地址 *'), _t('电子邮箱地址将作为此用户的主要联系方式')
+            . '<br />' . _t('请不要与系统中现有的电子邮箱地址重复'));
         $form->addInput($mail);
 
         /** 用户动作 */
@@ -98,21 +98,21 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         /** 撰写设置 */
         $markdown = new Typecho_Widget_Helper_Form_Element_Radio('markdown',
         array('0' => _t('关闭'), '1' => _t('打开')),
-        $this->options->markdown, _t('使用 Markdown 语法编辑和解析内容'), 
-            _t('使用 <a href="http://daringfireball.net/projects/markdown/">Markdown</a> 语法能够使您的撰写过程更加简便直观.')
-                . '<br />' . _t('此功能开启不会影响以前没有使用 Markdown 语法编辑的内容.'));
+        $this->options->markdown, _t('使用 Markdown 语法编辑和解析内容'),
+            _t('使用 <a href="http://daringfireball.net/projects/markdown/">Markdown</a> 语法能够使您的撰写过程更加简便直观')
+                . '<br />' . _t('此功能开启不会影响以前没有使用 Markdown 语法编辑的内容'));
         $form->addInput($markdown);
 
         $xmlrpcMarkdown = new Typecho_Widget_Helper_Form_Element_Radio('xmlrpcMarkdown',
         array('0' => _t('关闭'), '1' => _t('打开')),
         $this->options->xmlrpcMarkdown, _t('在 XMLRPC 接口中使用 Markdown 语法'), 
-            _t('对于完全支持 <a href="http://daringfireball.net/projects/markdown/">Markdown</a> 语法写作的离线编辑器, 打开此选项后将避免内容被转换为 HTML.'));
+            _t('对于完全支持 <a href="http://daringfireball.net/projects/markdown/">Markdown</a> 语法写作的离线编辑器，打开此选项后将避免内容被转换为 HTML。'));
         $form->addInput($xmlrpcMarkdown);
 
         /** 自动保存 */
         $autoSave = new Typecho_Widget_Helper_Form_Element_Radio('autoSave',
         array('0' => _t('关闭'), '1' => _t('打开')),
-        $this->options->autoSave, _t('自动保存'), _t('自动保存功能可以更好地保护你的文章不会丢失.'));
+        $this->options->autoSave, _t('自动保存'), _t('自动保存功能可以防止文章在撰写过程中丢失'));
         $form->addInput($autoSave);
 
         /** 默认允许 */
@@ -224,13 +224,13 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         Typecho_Widget_Helper_Form::POST_METHOD);
 
         /** 用户密码 */
-        $password = new Typecho_Widget_Helper_Form_Element_Password('password', NULL, NULL, _t('用户密码'), _t('为此用户分配一个密码.')
-            . '<br />' . _t('建议使用特殊字符与字母、数字的混编样式,以增加系统安全性.'));
+        $password = new Typecho_Widget_Helper_Form_Element_Password('password', NULL, NULL, _t('用户密码'), _t('为此用户分配一个密码')
+            . '<br />' . _t('建议使用特殊字符与字母、数字的混编样式，以增加系统安全性。'));
         $password->input->setAttribute('class', 'w-60');
         $form->addInput($password);
 
         /** 用户密码确认 */
-        $confirm = new Typecho_Widget_Helper_Form_Element_Password('confirm', NULL, NULL, _t('用户密码确认'), _t('请确认你的密码, 与上面输入的密码保持一致.'));
+        $confirm = new Typecho_Widget_Helper_Form_Element_Password('confirm', NULL, NULL, _t('用户密码确认'), _t('请确认你的密码，与上面输入的密码保持一致。'));
         $confirm->input->setAttribute('class', 'w-60');
         $form->addInput($confirm);
 
@@ -244,7 +244,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         $form->addItem($submit);
 
         $password->addRule('required', _t('必须填写密码'));
-        $password->addRule('minLength', _t('为了保证账户安全, 请输入至少六位的密码'), 6);
+        $password->addRule('minLength', _t('为了保证账户安全，请输入至少六位的密码！'), 6);
         $confirm->addRule('confirm', _t('两次输入的密码不一致'), 'password');
 
         return $form;

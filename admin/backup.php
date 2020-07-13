@@ -19,9 +19,9 @@ $backupFiles = Typecho_Widget::widget('Widget_Backup')->listFiles();
                     <form action="<?php echo $actionUrl; ?>" method="post">
                     <h3><?php _e('备份您的数据'); ?></h3>
                     <ul>
-                        <li><?php _e('此备份操作仅包含<strong>内容数据</strong>, 并不会涉及任何<strong>设置信息</strong>'); ?></li>
-                        <li><?php _e('如果您的数据量过大, 为了避免操作超时, 建议您直接使用数据库提供的备份工具备份数据'); ?></li>
-                        <li><strong class="warning"><?php _e('为了缩小备份文件体积, 建议您在备份前删除不必要的数据'); ?></strong></li>
+                        <li><?php _e('此备份操作仅包含<strong>内容数据</strong>，并不会涉及任何<strong>设置信息</strong>；'); ?></li>
+                        <li><?php _e('如果您的数据量过大，为了避免操作超时，建议直接使用数据库提供的备份工具备份数据；'); ?></li>
+                        <li><strong class="warning"><?php _e('为了缩小备份文件体积，建议在备份前删除不必要的数据；'); ?></strong></li>
                     </ul>
                     <p><button class="btn primary" type="submit"><?php _e('开始备份 &raquo;'); ?></button></p>
                         <input tabindex="1" type="hidden" name="do" value="export">
@@ -54,7 +54,7 @@ $backupFiles = Typecho_Widget::widget('Widget_Backup')->listFiles();
                     <?php if (empty($backupFiles)): ?>
                     <ul class="typecho-option">
                         <li>
-                            <p class="description"><?php _e('将备份文件手动上传至服务器的 %s 目录下后, 这里会出现文件选项', __TYPECHO_BACKUP_DIR__); ?></p>
+                            <p class="description"><?php _e('将备份文件手动上传至服务器的 %s 目录下后，这里会出现文件列表选项。', __TYPECHO_BACKUP_DIR__); ?></p>
                         </li>
                     </ul>
                     <?php else: ?>
