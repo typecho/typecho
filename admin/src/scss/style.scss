@@ -4,9 +4,9 @@
 *
 * @author  Typecho Team
 * @since   2008-09-26
-* @update  2013-11-02
+* @update  2020-07-25
 * @link    http://www.typecho.org/
-* @version 0.9
+* @version 1.0
 */
 
 
@@ -19,7 +19,7 @@ html {
 }
 
 body {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, Consolas, "Helvetica Neue", "PingFang SC", "Microsoft YaHei", "Source Han Sans SC", "Noto Sans CJK SC", "WenQuanYi Micro Hei", Helvetica, Arial, sans-serif;
   background: #F6F6F3;
   color: #444;
   font-size: 87.5%;
@@ -746,6 +746,7 @@ a.operate-reply {
 }
 
 .typecho-post-area #text {
+  font-family: -apple-system, BlinkMacSystemFont, Consolas, "Helvetica Neue", "PingFang SC", "Microsoft YaHei", "Source Han Sans SC", "Noto Sans CJK SC", "WenQuanYi Micro Hei", Helvetica, Arial, sans-serif;
   resize: none;
 }
 
