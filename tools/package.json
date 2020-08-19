@@ -4,7 +4,8 @@
   "description": "Typecho build tools",
   "main": "build.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build_js":   "node build.js js",
+    "build_css":  "node build.js css"
   },
   "keywords": [
     "typecho"

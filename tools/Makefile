@@ -59,7 +59,6 @@ langs:
 	rm -rf ../usr/langs
 	mkdir ../usr/langs
 	git clone https://github.com/typecho/languages.git
-	#for i in `find . -name '*.po'`; do echo $$i && php msgfmt.php $$i; done;
 	cd languages/ && for i in `find . -name '*.po'`; do echo `basename $$i` && msgfmt -o `basename $$i .po`.mo `basename $$i`; done;
 	cp languages/*.mo ../usr/langs/
 	rm -rf languages
@@ -82,9 +81,7 @@ install:
 
 
 pot:
-	cd ../ && php tools/list.php ./ > tools/files.txt	
-	cd ../ && xgettext --files-from=tools/files.txt -Lphp --from-code=UTF-8 --keyword=_t --keyword=_e --keyword=_n:1,2 --no-location --copyright-holder=Typecho --package-name=Typecho --package-version=`grep -E "VERSION = '(.*)'" ./var/Typecho/Common.php | cut -d "'" -f 2` --no-wrap --output=tools/messages.pot	
-	rm -f files.txt
+	php build_pot.php > messages.pot
 
 
 test:
