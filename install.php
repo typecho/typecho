@@ -3,7 +3,7 @@
 /**
  * Typecho Blog Platform
  *
- * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
+ * @copyright  Copyright (c) 2008 Typecho team (https://www.typecho.org)
  * @license    GNU General Public License 2.0
  * @version    $Id$
  */
@@ -367,7 +367,7 @@ Typecho_Cookie::set('__typecho_lang', $lang);
                                         'allowPing' => 1, 'allowFeed' => 1, 'parent' => 0)));
 
                                         /** 初始评论 */
-                                        $installDb->query($installDb->insert('table.comments')->rows(array('cid' => 1, 'created' => Typecho_Date::time(), 'author' => 'Typecho', 'ownerId' => 1, 'url' => 'http://typecho.org',
+                                        $installDb->query($installDb->insert('table.comments')->rows(array('cid' => 1, 'created' => Typecho_Date::time(), 'author' => 'Typecho', 'ownerId' => 1, 'url' => 'https://typecho.org',
                                         'ip' => '127.0.0.1', 'agent' => $options->generator, 'text' => '欢迎加入 Typecho 大家族', 'type' => 'comment', 'status' => 'approved', 'parent' => 0)));
 
                                         /** 初始用户 */
@@ -375,7 +375,7 @@ Typecho_Cookie::set('__typecho_lang', $lang);
                                         $hasher = new PasswordHash(8, true);
 
                                         $installDb->query($installDb->insert('table.users')->rows(array('name' => $config['userName'], 'password' => $hasher->HashPassword($password), 'mail' => $config['userMail'],
-                                        'url' => 'http://www.typecho.org', 'screenName' => $config['userName'], 'group' => 'administrator', 'created' => Typecho_Date::time())));
+                                        'url' => 'https://www.typecho.org', 'screenName' => $config['userName'], 'group' => 'administrator', 'created' => Typecho_Date::time())));
 
                                         unset($_SESSION['typecho']);
                                         header('Location: ./install.php?finish&user=' . urlencode($config['userName'])

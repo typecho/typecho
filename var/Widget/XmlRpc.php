@@ -3,7 +3,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
  * Typecho Blog Platform
  *
- * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
+ * @copyright  Copyright (c) 2008 Typecho team (https://www.typecho.org)
  * @license    GNU General Public License 2.0
  * @version    $Id$
  */
@@ -14,7 +14,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * @author blankyao
  * @category typecho
  * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
+ * @copyright Copyright (c) 2008 Typecho team (https://www.typecho.org)
  * @license GNU General Public License 2.0
  */
 class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface_Do
@@ -2212,7 +2212,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 <rsd version="1.0" xmlns="http://archipelago.phrasewise.com/rsd">
     <service>
         <engineName>Typecho</engineName>
-        <engineLink>http://www.typecho.org/</engineLink>
+        <engineLink>https://www.typecho.org/</engineLink>
         <homePageLink>{$this->options->siteUrl}</homePageLink>
         <apis>
             <api name="WordPress" blogID="1" preferred="true" apiLink="{$this->options->xmlRpcUrl}" />

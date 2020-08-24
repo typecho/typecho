@@ -6,7 +6,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  *
  * @category typecho
  * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
+ * @copyright Copyright (c) 2008 Typecho team (https://www.typecho.org)
  * @license GNU General Public License 2.0
  */
 class Widget_User extends Typecho_Widget

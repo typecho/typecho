@@ -4,7 +4,7 @@
  *
  * @package Widget
  * @version $id$
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
+ * @copyright Copyright (c) 2008 Typecho team (https://www.typecho.org)
  * @author qining <magike.net@gmail.com>
  * @license GNU General Public License 2.0
  */

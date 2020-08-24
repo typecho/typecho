@@ -2,7 +2,7 @@
 /**
  * Typecho Blog Platform
  *
- * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
+ * @copyright  Copyright (c) 2008 Typecho team (https://www.typecho.org)
  * @license    GNU General Public License 2.0
  * @version    $Id: I18n.php 106 2008-04-11 02:23:54Z magike.net $
  */

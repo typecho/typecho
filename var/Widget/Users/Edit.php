@@ -5,7 +5,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  *
  * @link typecho
  * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
+ * @copyright Copyright (c) 2008 Typecho team (https://www.typecho.org)
  * @license GNU General Public License 2.0
  * @version $Id$
  */
@@ -15,7 +15,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  *
  * @link typecho
  * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
+ * @copyright Copyright (c) 2008 Typecho team (https://www.typecho.org)
  * @license GNU General Public License 2.0
  */
 class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interface_Do
@@ -128,7 +128,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         $group =  new Typecho_Widget_Helper_Form_Element_Select('group', array('subscriber' => _t('关注者'),
                 'contributor' => _t('贡献者'), 'editor' => _t('编辑'), 'administrator' => _t('管理员')),
                 NULL, _t('用户组'), _t('不同的用户组拥有不同的权限.')
-            . '<br />' . _t('具体的权限分配表请<a href="http://docs.typecho.org/develop/acl">参考这里</a>.'));
+            . '<br />' . _t('具体的权限分配表请<a href="https://docs.typecho.org/develop/acl">参考这里</a>.'));
         $form->addInput($group);
 
         /** 用户动作 */

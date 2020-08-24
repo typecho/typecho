@@ -7,13 +7,13 @@ Typecho is a PHP Blogging Platform. Simple and Powerful.
 https://t.me/typechodev
 
 #### Homepage
-http://typecho.org/
+https://typecho.org/
 
 #### Documents
-http://docs.typecho.org/
+https://docs.typecho.org/
 
 #### Community
-http://forum.typecho.org/
+https://forum.typecho.org/
 
 #### Download
-http://typecho.org/download
+https://typecho.org/download

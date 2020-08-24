@@ -5,7 +5,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * Widget_Metas_Category_Admin  
  * 
  * @uses Widget_Metas_Category_List
- * @copyright Copyright (c) 2012 Typecho Team. (http://typecho.org)
+ * @copyright Copyright (c) 2012 Typecho Team. (https://typecho.org)
  * @author Joyqi <magike.net@gmail.com> 
  * @license GNU General Public License 2.0
  */

@@ -5,7 +5,7 @@
  * @author qining
  * @category typecho
  * @package Http
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
+ * @copyright Copyright (c) 2008 Typecho team (https://www.typecho.org)
  * @license GNU General Public License 2.0
  * @version $Id$
  */

@@ -4,7 +4,7 @@
  *
  * @category typecho
  * @package Upgrade
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
+ * @copyright Copyright (c) 2008 Typecho team (https://www.typecho.org)
  * @license GNU General Public License 2.0
  * @version $Id$
  */
@@ -14,7 +14,7 @@
  *
  * @category typecho
  * @package Upgrade
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
+ * @copyright Copyright (c) 2008 Typecho team (https://www.typecho.org)
  * @license GNU General Public License 2.0
  */
 class Upgrade
@@ -541,7 +541,7 @@ Typecho_Date::setTimezoneOffset($options->timezone);
 
         } else {
             /** 升级提示 */
-            return _t('建议您在升级到 Typecho 0.7/9.7.2 以后的版本后, 立刻执行<a href="http://typecho.org/upgrade/9.7.2">以下优化步骤</a>');
+            return _t('建议您在升级到 Typecho 0.7/9.7.2 以后的版本后, 立刻执行<a href="https://typecho.org/upgrade/9.7.2">以下优化步骤</a>');
         }
     }
 

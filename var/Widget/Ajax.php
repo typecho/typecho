@@ -5,7 +5,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  *
  * @category typecho
  * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
+ * @copyright Copyright (c) 2008 Typecho team (https://www.typecho.org)
  * @license GNU General Public License 2.0
  * @version $Id$
  */
@@ -47,7 +47,7 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
             $result = array('available' => 0);
 
             try {
-                $client->send('http://typecho.org/version.json');
+                $client->send('https://typecho.org/version.json');
 
                 /** 匹配内容体 */
                 $response = $client->getResponseBody();
@@ -66,7 +66,7 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
                             'available' => 1,
                             'latest' => $json['release'] . '-' . $json['version'],
                             'current' => $current[0] . '-' . $current[1],
-                            'link' => 'http://typecho.org/download'
+                            'link' => 'https://typecho.org/download'
                         );
                     }
                 }
@@ -93,7 +93,7 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
         if ($client) {
             $client->setHeader('User-Agent', $this->options->generator)
                 ->setTimeout(10)
-                ->send('http://typecho.org/feed/');
+                ->send('https://typecho.org/feed/');
 
             /** 匹配内容体 */
             $response = $client->getResponseBody();

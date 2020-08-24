@@ -3,7 +3,7 @@
 /**
  * AutoP 
  * 
- * @copyright Copyright (c) 2012 Typecho Team. (http://typecho.org)
+ * @copyright Copyright (c) 2012 Typecho Team. (https://typecho.org)
  * @author Joyqi <magike.net@gmail.com> 
  * @license GNU General Public License 2.0
  */

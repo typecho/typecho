@@ -6,7 +6,7 @@
  * @package Helper
  * @author qining
  * @version 1.0.0
- * @link http://typecho.org
+ * @link https://typecho.org
  */
 class Helper
 {

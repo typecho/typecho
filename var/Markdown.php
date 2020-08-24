@@ -5,7 +5,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * Markdown解析
  *
  * @package Markdown
- * @copyright Copyright (c) 2014 Typecho team (http://www.typecho.org)
+ * @copyright Copyright (c) 2014 Typecho team (https://www.typecho.org)
  * @license GNU General Public License 2.0
  */
 class Markdown
