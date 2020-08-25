@@ -5,7 +5,7 @@
  * @author Anis uddin Ahmad <anisniit@gmail.com>
  * @category typecho
  * @package Feed
- * @copyright Copyright (c) 2008 Typecho team (https://www.typecho.org)
+ * @copyright Copyright (c) 2008 Typecho team (https://typecho.org)
  * @license GNU General Public License 2.0
  * @version $Id: Feed.php 219 2008-05-27 09:06:15Z magike.net $
  */
@@ -16,7 +16,7 @@
  * @author qining
  * @category typecho
  * @package Feed
- * @copyright Copyright (c) 2008 Typecho team (https://www.typecho.org)
+ * @copyright Copyright (c) 2008 Typecho team (https://typecho.org)
  * @license GNU General Public License 2.0
  */
 class Typecho_Feed

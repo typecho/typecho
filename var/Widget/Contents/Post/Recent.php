@@ -5,7 +5,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  *
  * @category typecho
  * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (https://www.typecho.org)
+ * @copyright Copyright (c) 2008 Typecho team (https://typecho.org)
  * @license GNU General Public License 2.0
  * @version $Id$
  */
@@ -15,7 +15,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  *
  * @category typecho
  * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (https://www.typecho.org)
+ * @copyright Copyright (c) 2008 Typecho team (https://typecho.org)
  * @license GNU General Public License 2.0
  */
 class Widget_Contents_Post_Recent extends Widget_Abstract_Contents

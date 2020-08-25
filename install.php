@@ -3,7 +3,7 @@
 /**
  * Typecho Blog Platform
  *
- * @copyright  Copyright (c) 2008 Typecho team (https://www.typecho.org)
+ * @copyright  Copyright (c) 2008 Typecho team (https://typecho.org)
  * @license    GNU General Public License 2.0
  * @version    $Id$
  */
@@ -375,7 +375,7 @@ Typecho_Cookie::set('__typecho_lang', $lang);
                                         $hasher = new PasswordHash(8, true);
 
                                         $installDb->query($installDb->insert('table.users')->rows(array('name' => $config['userName'], 'password' => $hasher->HashPassword($password), 'mail' => $config['userMail'],
-                                        'url' => 'https://www.typecho.org', 'screenName' => $config['userName'], 'group' => 'administrator', 'created' => Typecho_Date::time())));
+                                        'url' => 'https://typecho.org', 'screenName' => $config['userName'], 'group' => 'administrator', 'created' => Typecho_Date::time())));
 
                                         unset($_SESSION['typecho']);
                                         header('Location: ./install.php?finish&user=' . urlencode($config['userName'])

@@ -3,7 +3,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
  * Typecho Blog Platform
  *
- * @copyright  Copyright (c) 2008 Typecho team (https://www.typecho.org)
+ * @copyright  Copyright (c) 2008 Typecho team (https://typecho.org)
  * @license    GNU General Public License 2.0
  * @version    $Id$
  */
@@ -14,7 +14,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * @author qining
  * @category typecho
  * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (https://www.typecho.org)
+ * @copyright Copyright (c) 2008 Typecho team (https://typecho.org)
  * @license GNU General Public License 2.0
  */
 class Widget_Users_Admin extends Widget_Abstract_Users
