@@ -14,8 +14,8 @@
         ), '', ' - '); ?><?php $this->options->title(); ?></title>
 
     <!-- 使用url函数转换相关路径 -->
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('normalize.css'); ?>">
-    <link rel="stylesheet" href="<?php $this->options->themeUrl('grid.css'); ?>">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@csstools/normalize.css@11.0.1/normalize.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fenbox/bento@master/bento.min.css">
     <link rel="stylesheet" href="<?php $this->options->themeUrl('style.css'); ?>">
 
     <!--[if lt IE 9]>
