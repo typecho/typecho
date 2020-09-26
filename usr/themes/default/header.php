@@ -12,10 +12,11 @@
             'tag'       =>  _t('标签 %s 下的文章'),
             'author'    =>  _t('%s 发布的文章')
         ), '', ' - '); ?><?php $this->options->title(); ?></title>
-
-    <!-- 使用url函数转换相关路径 -->
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@csstools/normalize.css@11.0.1/normalize.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fenbox/bento@master/bento.min.css">
+
+    <!-- 使用url函数转换相关路径 -->
     <link rel="stylesheet" href="<?php $this->options->themeUrl('style.css'); ?>">
 
     <!--[if lt IE 9]>
