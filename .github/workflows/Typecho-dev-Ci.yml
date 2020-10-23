@@ -39,8 +39,9 @@ jobs:
         mkdir build/usr/uploads/
         chmod 777 build/usr/uploads/
         tree -d build
+        tar -cvvzf build.tar.gz build/
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2
       with:
-          name: typecho_build
-          path: ./tools/build/
+          name: typecho_devbuild
+          path: ./tools/build.tar.gz
