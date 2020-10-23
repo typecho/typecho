@@ -12,6 +12,7 @@ update:
 	rm -Rf build/.github
 	rm -f build/.gitignore
 	rm -f build/.gitattributes
+	rm -f build/.gitmodules
 	for i in `find build/ -name '*.css'`; do echo $$i && java -Xmx32m -jar yuicompressor-2.4.2.jar $$i --charset UTF-8 -o $$i; done;
 	for i in `find build/admin/js/ -name '*.js'`; do echo $$i && java -Xmx32m -jar yuicompressor-2.4.2.jar $$i --charset UTF-8 -o $$i; done;
 	for i in `find build/ -name '*.php'`; do php -l $$i; done;
@@ -22,13 +23,7 @@ rm:
 	rm -Rf build/.git*
 	rm -f build/changelog.txt
 	rm -f build/.editorconfig
-	rm -f build/.travis.yml
 	rm -f build/README.md
-	rm -Rf build/admin/scss
-	rm -Rf build/admin/img/editor
-	rm -Rf build/admin/img/icons
-	rm -Rf build/admin/img/icons-2x
-	
 
 
 package:
@@ -46,9 +41,9 @@ clear:
 upgrade:
 	make update
 	rm -Rf ${DIR}/admin/
-	cp -Rf build/admin/ ${DIR}
+	cp -Rf build/admin ${DIR}
 	rm -Rf ${DIR}/var/
-	cp -Rf build/var/ ${DIR}
+	cp -Rf build/var ${DIR}
 	rm -Rf ${DIR}/index.php
 	cp build/index.php ${DIR}
 	cp build/install.php ${DIR}
@@ -67,7 +62,7 @@ langs:
 theme:
 	make update
 	rm -Rf ${DIR}/usr/themes/default/
-	cp -Rf build/usr/themes/default/ ${DIR}/usr/themes/
+	cp -Rf build/usr/themes/default ${DIR}/usr/themes/
 	make clear
 
 
