@@ -29,7 +29,7 @@ $response = $options->response;
 /** 检测是否是第一次登录 */
 $currentMenu = $menu->getCurrentMenu();
 list($prefixVersion, $suffixVersion) = explode('/', $options->version);
-$params = parse_url($currentMenu[2]);
+$params = parse_url(isset($currentMenu[2]) ? $currentMenu[2] : null);
 $adminFile = basename($params['path']);
 
 if (!$user->logged && !Typecho_Cookie::get('__typecho_first_run') && !empty($currentMenu)) {
