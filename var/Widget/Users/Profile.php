@@ -172,7 +172,9 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
 
         if (!empty($options)) {
             foreach ($options as $key => $val) {
-                $form->getInput($key)->value($val);
+                if (!$form->getInput($key)){
+                    $form->getInput($key)->value($val);
+                }
             }
         }
 
