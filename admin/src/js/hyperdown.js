@@ -291,7 +291,7 @@
     };
 
     Parser.prototype.parseInline = function(text, whiteList, clearHolders, enableAutoLink) {
-      var parseBackSlash, regex;
+      var regex;
       if (whiteList == null) {
         whiteList = '';
       }
@@ -301,20 +301,7 @@
       if (enableAutoLink == null) {
         enableAutoLink = true;
       }
-      parseBackSlash = (function(_this) {
-        return function(text) {
-          return text.replace(/\\{1,}/g, function(str) {
-            return str.length % 2 > 0 && '' + str + '\\' || str;
-          });
-        };
-      })(this);
       text = this.call('beforeParseInline', text);
-      text = String.raw`` + text + '';
-      text = text.split(/(`.+?`)/g).reduce(function(str, cur) {
-        str = str || '';
-        cur = cur || '';
-        return ((str.match(/`.+?`/g)) && str || parseBackSlash(str)) + ((cur.match(/`.+?`/g)) && cur || parseBackSlash(cur));
-      });
       text = text.replace(/(^|[^\\])(`+)(.+?)\2/mg, (function(_this) {
         return function() {
           var matches;
@@ -331,11 +318,12 @@
       })(this));
       text = text.replace(/\\(.)/g, (function(_this) {
         return function() {
-          var escaped, matches;
+          var escaped, matches, prefix;
           matches = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+          prefix = matches[1].match(/^[-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]$/) ? '' : '\\';
           escaped = htmlspecialchars(matches[1]);
           escaped = escaped.replace(/\$/g, '&dollar;');
-          return _this.makeHolder(escaped);
+          return _this.makeHolder(prefix + escaped);
         };
       })(this));
       text = text.replace(/<(https?:\/\/.+)>/ig, (function(_this) {
