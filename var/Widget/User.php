@@ -184,12 +184,14 @@ class Widget_User extends Typecho_Widget
         ->limit(1));
         
         if (empty($user)) {
+            $this->pluginHandle()->simpleLoginFail($this);
             return false;
         }
         
         $this->push($user);
         $this->_hasLogin = true;
         
+        $this->pluginHandle()->simpleLoginSucceed($this, $user);
         return true;
     }
 

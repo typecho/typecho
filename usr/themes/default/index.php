@@ -1,6 +1,6 @@
 <?php
 /**
- * 这是 Typecho 0.9 系统的一套默认皮肤
+ * Default theme for Typecho
  * 
  * @package Typecho Replica Theme 
  * @author Typecho Team

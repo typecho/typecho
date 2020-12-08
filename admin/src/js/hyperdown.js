@@ -318,11 +318,12 @@
       })(this));
       text = text.replace(/\\(.)/g, (function(_this) {
         return function() {
-          var escaped, matches;
+          var escaped, matches, prefix;
           matches = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+          prefix = matches[1].match(/^[-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]$/) ? '' : '\\';
           escaped = htmlspecialchars(matches[1]);
           escaped = escaped.replace(/\$/g, '&dollar;');
-          return _this.makeHolder(escaped);
+          return _this.makeHolder(prefix + escaped);
         };
       })(this));
       text = text.replace(/<(https?:\/\/.+)>/ig, (function(_this) {
@@ -341,7 +342,7 @@
           if (_this.html || (('|' + _this.commonWhiteList + '|' + whiteList + '|').indexOf('|' + matches[2].toLowerCase() + '|')) >= 0) {
             return _this.makeHolder(matches[0]);
           } else {
-            return htmlspecialchars(matches[0]);
+            return _this.makeHolder(htmlspecialchars(matches[0]));
           }
         };
       })(this));
@@ -520,16 +521,7 @@
 
     Parser.prototype.parseBlockList = function(block, key, line, state) {
       var matches, space;
-      if (!!(matches = line.match(/^(\s*)((?:[0-9]+\.)|\-|\+|\*)\s+/i))) {
-        space = matches[1].length;
-        state.empty = 0;
-        if (this.isBlock('list')) {
-          this.setBlock(key, space);
-        } else {
-          this.startBlock('list', key, space);
-        }
-        return false;
-      } else if ((this.isBlock('list')) && !line.match(/^\s*\[((?:[^\]]|\\\]|\\\[)+?)\]:\s*(.+)$/)) {
+      if ((this.isBlock('list')) && !line.match(/^\s*\[((?:[^\]]|\\\]|\\\[)+?)\]:\s*(.+)$/)) {
         if ((state.empty <= 1) && !!(matches = line.match(/^(\s+)/)) && matches[1].length > block[3]) {
           state.empty = 0;
           this.setBlock(key);
@@ -539,6 +531,16 @@
           this.setBlock(key);
           return false;
         }
+      }
+      if (!!(matches = line.match(/^(\s*)((?:[0-9]+\.)|\-|\+|\*)\s+/i))) {
+        space = matches[1].length;
+        state.empty = 0;
+        if (this.isBlock('list')) {
+          this.setBlock(key, space);
+        } else {
+          this.startBlock('list', key, space);
+        }
+        return false;
       }
       return true;
     };
@@ -1162,7 +1164,7 @@
 
     Parser.prototype.cleanUrl = function(url) {
       var matches, regexUrl, regexWord;
-      regexUrl = new RegExp("^\\s*((http|https|ftp|mailto):[" + pL + "_a-z0-9-:\\.\\*/%#!@\\?\\+=~\\|\\,&\\(\\)]+)", 'i');
+      regexUrl = new RegExp("^\\s*((http|https|ftp|mailto):[" + pL + "_a-z0-9-:\\.\\*/%#;!@\\?\\+=~\\|\\,&\\(\\)]+)", 'i');
       regexWord = new RegExp("^\\s*([" + pL + "_a-z0-9-:\\.\\*/%#!@\\?\\+=~\\|\\,&]+)", 'i');
       if (!!(matches = url.match(regexUrl))) {
         return matches[1];

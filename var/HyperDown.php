@@ -385,8 +385,8 @@ class HyperDown
             "/(^|[^\\\])(`+)(.+?)\\2/",
             function ($matches) use ($self) {
                 return  $matches[1] . $self->makeHolder(
-                        '<code>' . htmlspecialchars($matches[3]) . '</code>'
-                    );
+                    '<code>' . htmlspecialchars($matches[3]) . '</code>'
+                );
             },
             $text
         );
@@ -396,8 +396,8 @@ class HyperDown
             "/(^|[^\\\])(\\$+)(.+?)\\2/",
             function ($matches) use ($self) {
                 return  $matches[1] . $self->makeHolder(
-                        $matches[2] . htmlspecialchars($matches[3]) . $matches[2]
-                    );
+                    $matches[2] . htmlspecialchars($matches[3]) . $matches[2]
+                );
             },
             $text
         );
@@ -406,9 +406,10 @@ class HyperDown
         $text = preg_replace_callback(
             "/\\\(.)/u",
             function ($matches) use ($self) {
+                $prefix = preg_match("/^[-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]$/", $matches[1]) ? '' : '\\';
                 $escaped = htmlspecialchars($matches[1]);
                 $escaped = str_replace('$', '&dollar;', $escaped);
-                return  $self->makeHolder($escaped);
+                return  $self->makeHolder($prefix . $escaped);
             },
             $text
         );
@@ -432,11 +433,11 @@ class HyperDown
             "/<(\/?)([a-z0-9-]+)(\s+[^>]*)?>/i",
             function ($matches) use ($self, $whiteList) {
                 if ($self->_html || false !== stripos(
-                        '|' . $self->_commonWhiteList . '|' . $whiteList . '|', '|' . $matches[2] . '|'
-                    )) {
+                    '|' . $self->_commonWhiteList . '|' . $whiteList . '|', '|' . $matches[2] . '|'
+                )) {
                     return $self->makeHolder($matches[0]);
                 } else {
-                    return htmlspecialchars($matches[0]);
+                    return $self->makeHolder(htmlspecialchars($matches[0]));
                 }
             },
             $text
@@ -690,19 +691,7 @@ class HyperDown
      */
     private function parseBlockList($block, $key, $line, &$state)
     {
-        if (preg_match("/^(\s*)((?:[0-9]+\.)|\-|\+|\*)\s+/i", $line, $matches)) {
-            $space = strlen($matches[1]);
-            $state['empty'] = 0;
-
-            // opened
-            if ($this->isBlock('list')) {
-                $this->setBlock($key, $space);
-            } else {
-                $this->startBlock('list', $key, $space);
-            }
-
-            return false;
-        } else if ($this->isBlock('list') && !preg_match("/^\s*\[((?:[^\]]|\\]|\\[)+?)\]:\s*(.+)$/", $line)) {
+        if ($this->isBlock('list') && !preg_match("/^\s*\[((?:[^\]]|\\]|\\[)+?)\]:\s*(.+)$/", $line)) {
             if ($state['empty'] <= 1
                 && preg_match("/^(\s+)/", $line, $matches)
                 && strlen($matches[1]) > $block[3]) {
@@ -715,6 +704,20 @@ class HyperDown
                 $this->setBlock($key);
                 return false;
             }
+        }
+
+        if (preg_match("/^(\s*)((?:[0-9]+\.)|\-|\+|\*)\s+/i", $line, $matches)) {
+            $space = strlen($matches[1]);
+            $state['empty'] = 0;
+
+            // opened
+            if ($this->isBlock('list')) {
+                $this->setBlock($key, $space);
+            } else {
+                $this->startBlock('list', $key, $space);
+            }
+
+            return false;
         }
 
         return true;
@@ -1068,7 +1071,7 @@ class HyperDown
     private function parseBlockMh($block, $key, $line, &$state, $lines)
     {
         if (preg_match("/^\s*((=|-){2,})\s*$/", $line, $matches)
-            && ($block && $block[0] == "normal" && !preg_match("/^\s*$/", $lines[$block[2]]))) {    // check if last line isn't empty
+                    && ($block && $block[0] == "normal" && !preg_match("/^\s*$/", $lines[$block[2]]))) {    // check if last line isn't empty
             if ($this->isBlock('normal')) {
                 $this->backBlock(1, 'mh', $matches[1][0] == '=' ? 1 : 2)
                     ->setBlock($key)
@@ -1649,7 +1652,7 @@ class HyperDown
      */
     public function cleanUrl($url)
     {
-        if (preg_match("/^\s*((http|https|ftp|mailto):[\p{L}_a-z0-9-:\.\*\/%#!@\?\+=~\|\,&\(\)]+)/iu", $url, $matches)) {
+        if (preg_match("/^\s*((http|https|ftp|mailto):[\p{L}_a-z0-9-:\.\*\/%#;!@\?\+=~\|\,&\(\)]+)/iu", $url, $matches)) {
             return $matches[1];
         } else if (preg_match("/^\s*([\p{L}_a-z0-9-:\.\*\/%#!@\?\+=~\|\,&]+)/iu", $url, $matches)) {
             return $matches[1];
