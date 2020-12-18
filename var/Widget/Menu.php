@@ -265,7 +265,7 @@ class Widget_Menu extends Typecho_Widget
                     $this->_currentChild = $inKey;
                     $this->title = $title;
                     $this->addLink = $addLink ? Typecho_Common::url($addLink, $adminUrl) : NULL;
-                } 
+                }
 
                 $children[$inKey] = array(
                     $name,

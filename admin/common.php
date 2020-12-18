@@ -29,21 +29,20 @@ $response = $options->response;
 /** 检测是否是第一次登录 */
 $currentMenu = $menu->getCurrentMenu();
 list($prefixVersion, $suffixVersion) = explode('/', $options->version);
-$params = parse_url($currentMenu[2]);
-$adminFile = basename($params['path']);
 
-if (!$user->logged && !Typecho_Cookie::get('__typecho_first_run') && !empty($currentMenu)) {
-    
-    if ('welcome.php' != $adminFile) {
-        $response->redirect(Typecho_Common::url('welcome.php', $options->adminUrl));
-    } else {
-        Typecho_Cookie::set('__typecho_first_run', 1);
-    }
-    
-} else {
+if (!empty($currentMenu)) {
+    $params = parse_url($currentMenu[2]);
+    $adminFile = basename($params['path']);
 
-    /** 检测版本是否升级 */
-    if ($user->pass('administrator', true) && !empty($currentMenu)) {
+    if (!$user->logged && !Typecho_Cookie::get('__typecho_first_run')) {
+        
+        if ('welcome.php' != $adminFile) {
+            $response->redirect(Typecho_Common::url('welcome.php', $options->adminUrl));
+        } else {
+            Typecho_Cookie::set('__typecho_first_run', 1);
+        }
+    } elseif ($user->pass('administrator', true)) {
+        /** 检测版本是否升级 */
         $mustUpgrade = (!defined('Typecho_Common::VERSION') || version_compare(str_replace('/', '.', Typecho_Common::VERSION),
         str_replace('/', '.', $options->version), '>'));
 
@@ -55,5 +54,4 @@ if (!$user->logged && !Typecho_Cookie::get('__typecho_first_run') && !empty($cur
             $response->redirect($options->adminUrl);
         }
     }
-
 }
