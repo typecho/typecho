@@ -78,20 +78,20 @@
       height: 20px;
     }
 
-    @include editor-button(bold)
-    @include editor-button(italic)
-    @include editor-button(link)
-    @include editor-button(quote)
-    @include editor-button(code)
-    @include editor-button(image)
-    @include editor-button(olist)
-    @include editor-button(ulist)
-    @include editor-button(heading)
-    @include editor-button(hr)
-    @include editor-button(more)
-    @include editor-button(undo)
-    @include editor-button(redo)
-    @include editor-button(fullscreen)
+    @include editor-button(bold);
+    @include editor-button(italic);
+    @include editor-button(link);
+    @include editor-button(quote);
+    @include editor-button(code);
+    @include editor-button(image);
+    @include editor-button(olist);
+    @include editor-button(ulist);
+    @include editor-button(heading);
+    @include editor-button(hr);
+    @include editor-button(more);
+    @include editor-button(undo);
+    @include editor-button(redo);
+    @include editor-button(fullscreen);
     @include editor-button(exit-fullscreen)
   }
 }
@@ -246,6 +246,7 @@
     z-index: 1000;
   }
   #text {
+    font-family: -apple-system, BlinkMacSystemFont, Consolas, "Helvetica Neue", "PingFang SC", "Microsoft YaHei", "Source Han Sans SC", "Noto Sans CJK SC", "WenQuanYi Micro Hei", Helvetica, Arial, sans-serif;
     top: 53px;
     left: 0;
     padding: 20px;
