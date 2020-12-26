@@ -1404,6 +1404,14 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             $input['template'] = $content['wp_page_template'];
         }
 
+        /** 添加自定义字段 */
+        foreach (['fieldNames', 'fieldTypes', 'fieldValues'] as $fieldKey) {
+            $fieldValue = array_key_exists($fieldKey, $content) ? $content[$fieldKey] : NULL;
+            if (!empty($fieldValue)) {
+                $input[$fieldKey] = $fieldValue;
+            }
+        }
+
         if (isset($content['dateCreated'])) {
             /** 解决客户端与服务器端时间偏移 */
             $input['created'] = $content['dateCreated']->getTimestamp() - $this->options->timezone + $this->options->serverTimezone;
