@@ -2205,6 +2205,33 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
     }
 
+
+    /**
+     * 根据分享id查找postId
+     *
+     * @param int $blogId
+     * @param string $userName
+     * @param string $password
+     * @access public
+     * @return void
+     */
+    public function getPostIdByShareId($blogId, $userName, $password, $shareId)
+    {
+        if (!$this->checkAccess($userName, $password)) {
+            return ($this->error);
+        }
+
+        if (empty($shareId)) {
+            return new IXR_Error(1001, _t('无效的shareId'));
+        }
+
+        $db = Typecho_Db::get();
+        $query = $db->select()->from('table.fields')->where('str_value = ?', $shareId);
+        $result = $db->fetchRow($query);
+
+        return count($result) ? $result['cid'] : NULL;
+    }
+
     /**
      * 入口执行方法
      *
@@ -2348,6 +2375,9 @@ EOF;
                 
                 /** hook after */
                 'hook.afterCall'            => array($this, 'hookAfterCall'),
+
+                /** blog share */
+                'share.getPostIdByShareId'  => array($this, 'getPostIdByShareId'),
             );
 
             if (1 == $this->options->allowXmlRpc) {
