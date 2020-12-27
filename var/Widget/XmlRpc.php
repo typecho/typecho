@@ -1682,6 +1682,8 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             return IXR_Error(500, _t('上传失败'));
         } else {
 
+            $result = $this->pluginHandle()->beforeUpload($result);
+
             $insertId = $this->insert(array(
                 'title'     =>  $result['name'],
                 'slug'      =>  $result['name'],
