@@ -611,6 +611,10 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         try {
             /** 插入 */
              $categoryWidget = $this->singletonWidget('Widget_Metas_Category_Edit', NULL, $input, false);
+
+             /** 如果是已经实例化过了，则会直接取到之前实例化的对象，$request参数是旧的数据。比如在newPost里调用此函数创建多个分类时有问题 */
+             $categoryWidget->request->setParams($input);
+
              $categoryWidget->action();
              return $categoryWidget->mid;
         } catch (Typecho_Widget_Exception $e) {
@@ -1422,7 +1426,9 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 if (!$this->db->fetchRow($this->db->select('mid')
                 ->from('table.metas')->where('type = ? AND name = ?', 'category', $category))) {
                     $result = $this->wpNewCategory($blogId, $userName, $password, array('name' => $category));
-                    if (true !== $result) {
+                    // if (true !== $result) {
+                    /** 创建分类异常 */
+                    if ($result instanceof IXR_Error) {
                         return $result;
                     }
                 }
