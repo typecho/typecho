@@ -190,8 +190,8 @@ class Widget_Menu extends Typecho_Widget
                 $childNode += $defaultChildeNode;
                 list ($name, $title, $url, $access) = $childNode;
 
-                $hidden = $childNode[4] ?? false;
-                $addLink = $childNode[5] ?? NULL;
+                $hidden = isset($childNode[4]) ? true : false;
+                $addLink = isset($childNode[5]) ? $addLink : NULL;
 
                 // 保存最原始的hidden信息
                 $orgHidden = $hidden;
