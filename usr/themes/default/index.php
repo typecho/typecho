@@ -3,10 +3,10 @@
  * 这是 Typecho 0.9 系统的一套默认皮肤
  * 由ViXbob修复了KaTeX无法渲染的bug
  * 
- * @package Typecho Replica Theme Updated Version
- * @author ViXbob
+ * @package Typecho Replica Theme 
+ * @author Typecho Team
  * @version 1.2.1
- * @link https://vixbob.moe
+ * @link http://typecho.org
  */
 
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
