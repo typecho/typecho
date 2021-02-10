@@ -1,5 +1,17 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <div class="col-mb-12 col-offset-1 col-3 kit-hidden-tb" id="secondary" role="complementary">
+    <?php if (!empty($this->options->sidebarBlock) && in_array('ShowBlogInformation', $this->options->sidebarBlock)): ?>
+    <section class="widget">
+        <h3>博客信息</h3>
+        <?php Typecho_Widget::widget('Widget_Stat')->to($stat); ?>
+        <p>文章总数：<?php $stat->publishedPostsNum() ?>篇</p>
+        <p>分类总数：<?php $stat->categoriesNum() ?>个</p>
+        <p>评论总数：<?php $stat->publishedCommentsNum() ?>条</p>
+        <p>页面总数：<?php $stat->publishedPagesNum() ?>个</p>
+        <p>Typecho版本：<?php $this->options->Version(); ?></p>
+    </section>
+    <?php endif; ?>
+    
     <?php if (!empty($this->options->sidebarBlock) && in_array('ShowRecentPosts', $this->options->sidebarBlock)): ?>
     <section class="widget">
 		<h3 class="widget-title"><?php _e('最新文章'); ?></h3>
