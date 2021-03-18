@@ -409,7 +409,7 @@
       text = this.parseInlineCallback(text);
       text = text.replace(/<([_a-z0-9-\.\+]+@[^@]+\.[a-z]{2,})>/ig, '<a href="mailto:$1">$1</a>');
       if (enableAutoLink) {
-        regex = new RegExp("(^|[^\"])((https?):[" + pL + "_0-9-\\./%#!@\\?\\+=~\\|\\,&\\(\\)]+)($|[^\"])", 'ig');
+        regex = new RegExp("(^|[^\"])((https?):[" + pL + "_0-9-\\./%#!@\\?\\[\\]\\+=~\\|\\,&\\(\\)]+)($|[^\"])", 'ig');
         text = text.replace(regex, (function(_this) {
           return function() {
             var link, matches;
@@ -1164,7 +1164,7 @@
 
     Parser.prototype.cleanUrl = function(url) {
       var matches, regexUrl, regexWord;
-      regexUrl = new RegExp("^\\s*((http|https|ftp|mailto):[" + pL + "_a-z0-9-:\\.\\*/%#;!@\\?\\+=~\\|\\,&\\(\\)]+)", 'i');
+      regexUrl = new RegExp("^\\s*((http|https|ftp|mailto):[" + pL + "_a-z0-9-:\\.\\*/%#;!@\\?\\[\\]\\+=~\\|\\,&\\(\\)]+)", 'i');
       regexWord = new RegExp("^\\s*([" + pL + "_a-z0-9-:\\.\\*/%#!@\\?\\+=~\\|\\,&]+)", 'i');
       if (!!(matches = url.match(regexUrl))) {
         return matches[1];
