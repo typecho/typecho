@@ -150,8 +150,8 @@ $baeDbPassword = "getenv('HTTP_BAE_ENV_SK')";
     <li>
         <label class="typecho-label" for="dbCharset"><?php _e('数据库编码'); ?></label>
         <select name="dbCharset" id="dbCharset">
-            <option value="utf8"<?php if (_r('dbCharset') == 'utf8'): ?> selected<?php endif; ?>>utf8</option>
             <option value="utf8mb4"<?php if (_r('dbCharset') == 'utf8mb4'): ?> selected<?php endif; ?>>utf8mb4</option>
+            <option value="utf8"<?php if (_r('dbCharset') == 'utf8'): ?> selected<?php endif; ?>>utf8</option>
         </select>
         <p class="description"><?php _e('选择 utf8mb4 编码至少需要 MySQL 5.5.3 版本'); ?></p>
     </li>
@@ -159,7 +159,7 @@ $baeDbPassword = "getenv('HTTP_BAE_ENV_SK')";
     <li>
         <label class="typecho-label" for="dbEngine"><?php _e('数据库引擎'); ?></label>
         <select name="dbEngine" id="dbEngine">
-            <option value="MyISAM"<?php if (_r('dbEngine') == 'MyISAM'): ?> selected<?php endif; ?>>MyISAM</option>
             <option value="InnoDB"<?php if (_r('dbEngine') == 'InnoDB'): ?> selected<?php endif; ?>>InnoDB</option>
+            <option value="MyISAM"<?php if (_r('dbEngine') == 'MyISAM'): ?> selected<?php endif; ?>>MyISAM</option>
         </select>
     </li>
