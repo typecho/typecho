@@ -38,7 +38,7 @@ class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
      * @param string $url 请求地址
      * @return string
      */
-    public function httpSend($url)
+    protected function httpSend($url)
     {
         $ch = curl_init();
 

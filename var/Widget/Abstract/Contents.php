@@ -727,18 +727,13 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $value['slug'] = $tmpSlug;
         $value['category'] = $tmpCategory;
         $value['directory'] = $tmpDirectory;
-        
+
         /** 处理密码保护流程 */
         if (strlen($value['password']) > 0 &&
         $value['password'] !== Typecho_Cookie::get('protectPassword_' . $value['cid']) &&
         $value['authorId'] != $this->user->uid && 
         !$this->user->pass('editor', true)) {
             $value['hidden'] = true;
-
-            /** 抛出错误 */
-            if ($this->request->isPost() && isset($this->request->protectPassword)) {
-                throw new Typecho_Widget_Exception(_t('对不起,您输入的密码错误'), 403);
-            }
         }
 
         $value = $this->pluginHandle(__CLASS__)->filter($value, $this);

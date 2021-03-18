@@ -38,7 +38,7 @@ class Typecho_Http_Client_Adapter_Socket extends Typecho_Http_Client_Adapter
      * @param string $url 请求地址
      * @return string
      */
-    public function httpSend($url)
+    protected function httpSend($url)
     {
         $eol = Typecho_Http_Client::EOL;
         $request = $this->method . ' ' . $this->path . ' ' . $this->rfc . $eol;

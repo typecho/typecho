@@ -810,12 +810,19 @@ class Widget_Archive extends Widget_Abstract_Contents
         }
 
         /** 保存密码至cookie */
+        $isPasswordPosted = false;
+
         if ($this->request->isPost()
             && isset($this->request->protectPassword)
-            && isset($this->request->protectCID)
             && !$this->parameter->preview) {
             $this->security->protect();
-            Typecho_Cookie::set('protectPassword_' . $this->request->filter('int')->protectCID, $this->request->protectPassword, 0);
+            Typecho_Cookie::set(
+                'protectPassword_' . $this->request->filter('int')->protectCID,
+                $this->request->protectPassword,
+                0
+            );
+
+            $isPasswordPosted = true;
         }
 
         /** 匹配类型 */
@@ -832,6 +839,11 @@ class Widget_Archive extends Widget_Abstract_Contents
                 $hasPushed = true;
                 return;
             }
+        }
+
+        /** 密码表单判断逻辑 */
+        if ($isPasswordPosted && $this->hidden) {
+            throw new Typecho_Widget_Exception(_t('对不起,您输入的密码错误'), 403);
         }
 
         /** 设置模板 */

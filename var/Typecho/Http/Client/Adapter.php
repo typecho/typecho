@@ -425,5 +425,5 @@ abstract class Typecho_Http_Client_Adapter
      * @param string $url 请求地址
      * @return string
      */
-    abstract public function httpSend($url);
+    abstract protected function httpSend($url);
 }
