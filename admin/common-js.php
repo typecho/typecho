@@ -76,16 +76,33 @@
 
 
             // 导航菜单 tab 聚焦时展开下拉菜单
-            (function () {
-                $('#typecho-nav-list').find('.parent a').focus(function() {
-                    $('#typecho-nav-list').find('.child').hide();
-                    $(this).parents('.root').find('.child').show();
-                });
-                $('.operate').find('a').focus(function() {
-                    $('#typecho-nav-list').find('.child').hide();
-                });
-            })();
+            const menuBar = $('.menu-bar').click(function () {
+                const nav = $(this).next('#typecho-nav-list');
+                if (!$(this).toggleClass('focus').hasClass('focus')) {
+                    nav.removeClass('expanded noexpanded');
+                }
+            });
 
+            $('.main, .typecho-foot').click(function () {
+                if (menuBar.hasClass('focus')) {
+                    menuBar.trigger('click');
+                }
+            });
+
+            $('#typecho-nav-list ul.root').each(function () {
+                const ul = $(this), nav = ul.parent();
+
+                ul.on('click', '.parent a', function (e) {
+                    nav.removeClass('noexpanded').addClass('expanded');
+                    if ($(window).width() < 576) {
+                        return false;
+                    }
+                }).find('.child')
+                .append($('<li class="return"><a><?php _e('返回'); ?></a></li>').click(function () {
+                    nav.removeClass('expanded').addClass('noexpanded');
+                    return false;
+                }));
+            });
 
             if ($('.typecho-login').length == 0) {
                 $('a').each(function () {

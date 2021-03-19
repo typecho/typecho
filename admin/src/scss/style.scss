@@ -171,8 +171,9 @@ a.button:hover, a.balloon-button:hover {
 }
 
 .profile-avatar {
-  border: 1px dashed #D9D9D6;
-  max-width: 100%;
+  width: 220px;
+  height: 220px;
+  border-radius: 10px;
 }
 
 /** 增加配置面板内部的错误样式 by 70 */
@@ -435,12 +436,15 @@ a.button:hover, a.balloon-button:hover {
   vertical-align: text-top;
 }
 
-.typecho-list-operate .operate {
-  float: left;
-}
-
-.typecho-list-operate .search {
-  float: right;
+@media (min-width: $screen-phone) {
+  .typecho-list-operate {
+    .operate {
+      float: left;
+    }
+    .search {
+      float: right;
+    }
+  }
 }
 
 .typecho-list-operate span.operate-delete, a.operate-delete,
@@ -949,6 +953,29 @@ background: #FFF1A8;
   background-color: #FFFBCC;
 }
 
+@media (max-width: $screen-phone - 1px) {
+  .typecho-list-operate {
+    .search {
+      margin-top: 10px;
+    }
+  }
+
+  .typecho-table-wrap {
+    padding: 10px;
+    margin: 0 -10px;
+  }
+
+  .typecho-option-submit {
+    button[type="submit"] {
+      width: 100%;
+    }
+  }
+
+  .profile-avatar {
+    width: 110px;
+    height: 110px;
+  }
+}
 
 /**
 * 导入扩展样式
