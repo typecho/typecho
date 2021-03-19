@@ -1,5 +1,6 @@
 <?php if(!defined('__TYPECHO_ADMIN__')) exit; ?>
 <div class="typecho-head-nav clearfix" role="navigation">
+    <a class="menu-bar" href="###" onclick="$(this).toggleClass('focus'); return false;"><?php _e('菜单'); ?></a>
     <nav id="typecho-nav-list">
         <?php $menu->output(); ?>
     </nav>

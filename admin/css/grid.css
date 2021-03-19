@@ -1,5 +1,5 @@
 /* Bento Grid System Source: https://github.com/fenbox/bento Version: 1.2.8 Update: 2013.11.25 */
-.container, .row [class*="col-"] { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
+.container, .row [class*="col-"] { box-sizing: border-box; }
 
 .container { margin-left: auto; margin-right: auto; padding-left: 10px; padding-right: 10px; }
 

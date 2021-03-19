@@ -1,109 +1,166 @@
 /**
 * 后台头部导航
 */
+
+$border-nav: 1px solid #383D45;
+$color-nav-bg: #292D33;
+$color-nav-text-normal: #BBB;
+$color-nav-text-hover: #FFF;
+$color-nav-btn-hover: #202328;
+$color-nav-child-focus: #6DA1BB;
+
 .typecho-head-nav {
   padding: 0 10px;
-  background: #292D33;
-}
+  background: $color-nav-bg;
+  position: relative;
 
-.typecho-head-nav a {
-  color: #BBB;
-}
-.typecho-head-nav a:hover,
-.typecho-head-nav a:focus {
-  color: #FFF;
-  text-decoration: none;
-}
+  a {
+    padding: 0 20px;
+    height: 36px;
+    line-height: 36px;
+    color: $color-nav-text-normal;
 
-#typecho-nav-list {
-  float: left;
-  ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+    &:focus,
+    &:hover {
+      color: $color-nav-text-hover;
+      text-decoration: none;
+    }
+
+    &.menu-bar {
+      display: none;
+      border-right: $border-nav;
+    }
+  }
+
+  #typecho-nav-list {
+    float: left;
+
+    & > ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      position: relative;
+      float: left;
+
+      &:first-child {
+        border-left: $border-nav;
+      }
+
+      .parent {
+        a {
+          display: inline-block;
+          border-right: $border-nav;
+          background: $color-nav-bg;
+        }
+      }
+
+      .child {
+        position: absolute;
+        list-style: none;
+        top: 36px;
+        display: none;
+        margin: 0;
+        padding: 0;
+        min-width: 160px; 
+        max-width: 240px;
+        background: $color-nav-btn-hover;
+        z-index: 250;
+
+        li {
+          a {
+            overflow: hidden;
+            text-overflow : ellipsis;
+            white-space: nowrap;
+            display: block;
+
+            &:hover,
+            &:focus {
+              background: $color-nav-bg;
+            }
+          }
+
+          &.focus a {
+            color: $color-nav-child-focus;
+            font-weight: bold;
+          }
+        }
+      }
+
+      .parent a:hover,
+      &.focus .parent a,
+      &.root:hover .parent a {
+        background: $color-nav-btn-hover;
+      }
+
+      &.focus .parent a {
+        font-weight: bold;
+      }
+
+      &.root:hover .child {
+        display: block;
+      }
+    }
+  }
+
+  .operate {
+    float: right;
+    a {
+      display: inline-block;
+      margin-left: -1px;
+      border: $border-nav;
+      border-width: 0 1px;
+      
+      &:hover {
+        background-color: $color-nav-btn-hover;
+      }
+    }
   }
 }
 
-#typecho-nav-list ul:first-child {
-  border-left: 1px solid #383D45;
-}
+@media (max-width: $screen-phone - 1px) {
+    .typecho-head-nav {
+        padding: 0;
 
-#typecho-nav-list .root {
-  position: relative;
-  float: left;
-}
+        #typecho-nav-list {
+          display: none;
+        }
 
-#typecho-nav-list .parent a {
-  display: block;
-  float: left;
-  padding: 0 20px;
-  border-right: 1px solid #383D45;
-  height: 36px;
-  line-height: 36px;
-  color: #BBB;
-}
+        .operate {
+          a:last-child {
+            border-right-width: 0;
+          }
+        }
 
-#typecho-nav-list .parent a:hover,
-#typecho-nav-list .focus .parent a,
-#typecho-nav-list .root:hover .parent a {
-  background: #202328;
-  color: #FFF;
-  text-decoration: none;
-}
-
-#typecho-nav-list .focus .parent a {
-  font-weight: bold;
-}
-
-#typecho-nav-list .child {
-  position: absolute;
-  top: 36px;
-  display: none;
-  margin: 0;
-  min-width: 160px; 
-  max-width: 240px;
-  background: #202328;
-  z-index: 250;
-}
-
-#typecho-nav-list .root:hover .child {
-  display: block;
-}
-
-#typecho-nav-list .child li a {
-  color: #BBB;
-  display: block;
-  padding: 0 20px;
-  overflow: hidden;
-  text-overflow : ellipsis;
-  white-space: nowrap;
-  height: 36px;
-  line-height: 36px;
-}
-
-#typecho-nav-list .child li a:hover,
-#typecho-nav-list .child li a:focus {
-  background: #292D33;
-  color: #FFF;
-}
-#typecho-nav-list .child li.focus a {
-  color: #6DA1BB;
-  font-weight: bold;
-}
-
-.typecho-head-nav .operate {
-  float: right;
-}
-.typecho-head-nav .operate a {
-  display: inline-block;
-  margin-left: -1px;
-  padding: 0 20px;
-  border: 1px solid #383D45;
-  border-width: 0 1px;
-  line-height: 36px;
-  color: #BBB;
-}
-.typecho-head-nav .operate a:hover {
-  background-color: #202328;
-  color: #FFF;
+        a.menu-bar {
+          display: inline-block;
+          
+          &.focus {
+            color: $color-nav-text-hover;
+      
+            & + #typecho-nav-list {
+              display: block;
+              float: none;
+              position: absolute;
+              top: 36px;
+              width: 240px;
+              
+              & > ul {
+                float: none;
+                &:first-child {
+                  border: none;
+                }
+                .parent {
+                  a {
+                    display: block;
+                    pointer-events: none;
+                  }
+                }
+                .child {
+                  position: static;
+                }
+              }
+            }
+          }
+        }
+    }
 }

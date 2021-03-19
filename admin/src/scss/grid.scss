@@ -5,24 +5,12 @@
  * Update: 2013.11.25
  */
 
-//
-// Config
-//
-$columns: 12;
-$column-width: 100% / $columns;
-$gutter-width: 20px;
 
-
-// Break point
-$screen-tablet:  768px;
-$screen-desktop: 992px;
-$screen-wide: 1200px;
+@import "vars";
 
 
 // Mixins
 %box-sizing {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 

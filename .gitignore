@@ -32,3 +32,4 @@ config.rb
 /usr/themes/
 !/usr/themes/default
 node_modules/
+/tools/tmp/
