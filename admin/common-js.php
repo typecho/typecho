@@ -83,7 +83,7 @@
                 }
             });
 
-            $('.main, .typecho-foot').click(function () {
+            $('.main, .typecho-foot').on('click touchstart', function () {
                 if (menuBar.hasClass('focus')) {
                     menuBar.trigger('click');
                 }
@@ -92,7 +92,7 @@
             $('#typecho-nav-list ul.root').each(function () {
                 const ul = $(this), nav = ul.parent();
 
-                ul.on('click', '.parent a', function (e) {
+                ul.on('click touchend', '.parent a', function (e) {
                     nav.removeClass('noexpanded').addClass('expanded');
                     if ($(window).width() < 576) {
                         return false;
