@@ -191,8 +191,8 @@ select { border: 1px solid #CCC; height: 28px; }
   .typecho-head-nav button.menu-bar.focus + #typecho-nav-list > ul .child li { border-bottom: 1px solid #383D45; }
   .typecho-head-nav button.menu-bar.focus + #typecho-nav-list > ul .child li.return { display: block; text-align: center; font-size: 12px; }
   .typecho-head-nav button.menu-bar.focus + #typecho-nav-list > ul .child li.return a { color: #777; }
-  .typecho-head-nav button.menu-bar.focus + #typecho-nav-list.expanded { animation: out .3s ease-out forwards; }
-  .typecho-head-nav button.menu-bar.focus + #typecho-nav-list.noexpanded { animation: in .3s ease-out forwards; } }
+  .typecho-head-nav button.menu-bar.focus + #typecho-nav-list.expanded { animation: out .15s ease-out forwards; }
+  .typecho-head-nav button.menu-bar.focus + #typecho-nav-list.noexpanded { animation: in .15s ease-out forwards; } }
 
 /** 注脚 */
 .typecho-foot { padding: 4em 0 3em; color: #999; line-height: 1.8; text-align: center; }
@@ -432,7 +432,7 @@ a.operate-reply { color: #545c30; }
 
 .typecho-post-area .submit .right button { margin-left: 5px; }
 
-.typecho-post-area .right { float: right; padding-left: 24px; }
+.typecho-post-area .right { float: right; }
 
 .typecho-post-area .left { float: left; }
 
@@ -871,7 +871,7 @@ a.operate-reply { color: #545c30; }
 
 .preview #btn-cancel-preview { display: inline-block; }
 
-@media (max-width: 575px) { #wmd-spacer2, #wmd-olist-button, #wmd-ulist-button, #wmd-heading-button, #wmd-hr-button, #wmd-more-button, #wmd-spacer3, #wmd-undo-button, #wmd-redo-button, #wmd-spacer4, #wmd-fullscreen-button, #wmd-exit-fullscreen-button { display: none; } }
+@media (max-width: 575px) { #wmd-spacer2, #wmd-olist-button, #wmd-ulist-button, #wmd-heading-button, #wmd-hr-button, #wmd-more-button, #wmd-spacer3, #wmd-undo-button, #wmd-redo-button, #wmd-spacer4, #wmd-fullscreen-button, #wmd-exit-fullscreen-button, #btn-fullscreen-upload { display: none; } }
 
 /** Jquery Timepicker */
 #ui-datepicker-div { display: none; margin-top: -1px; padding: 10px; border: 1px solid #D9D9D6; background: #FFF; }

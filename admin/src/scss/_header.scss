@@ -206,11 +206,11 @@ $color-nav-child-focus: #6DA1BB;
           }
 
           &.expanded {
-            animation: out .3s ease-out forwards;
+            animation: out .15s ease-out forwards;
           }
 
           &.noexpanded {
-            animation: in .3s ease-out forwards;
+            animation: in .15s ease-out forwards;
           }
         }
       }

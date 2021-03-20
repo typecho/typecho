@@ -94,7 +94,7 @@
 
                 ul.on('click touchend', '.parent a', function (e) {
                     nav.removeClass('noexpanded').addClass('expanded');
-                    if ($(window).width() < 576) {
+                    if ($(window).width() < 576 && e.type == 'click') {
                         return false;
                     }
                 }).find('.child')
