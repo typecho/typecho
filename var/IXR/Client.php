@@ -111,7 +111,7 @@ class IXR_Client
             // Assume we have been given a Url instead
             $bits = parse_url($server);
             $this->server = $bits['host'];
-            $this->port = isset($bits['port']) ? $bits['port'] : 80;
+            $this->port = ('https' == $bits['scheme']) ? 443 : 80;
             $this->path = isset($bits['path']) ? $bits['path'] : '/';
 
             // Make absolutely sure we have a path
@@ -122,8 +122,10 @@ class IXR_Client
             /** Typecho_Common */
             require_once 'Typecho/Common.php';
 
+            $scheme = (443 == $port) ? 'https' : 'http';
+
             $this->url = Typecho_Common::buildUrl(array(
-                'scheme'    =>  'http',
+                'scheme'    =>  $scheme,
                 'host'      =>  $server,
                 'path'      =>  $path,
                 'port'      =>  $port
