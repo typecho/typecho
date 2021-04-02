@@ -90,7 +90,7 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
                 $urlPart = parse_url($url);
 
                 if (isset($urlPart['scheme'])) {
-                    if ('http' != $urlPart['scheme'] || 'https' != $urlPart['scheme']) {
+                    if ('http' != $urlPart['scheme'] && 'https' != $urlPart['scheme']) {
                         continue;
                     }
                 } else {
