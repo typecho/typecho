@@ -90,7 +90,7 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
                 $urlPart = parse_url($url);
 
                 if (isset($urlPart['scheme'])) {
-                    if ('http' != $urlPart['scheme'] || 'https' != $urlPart['scheme']) {
+                    if ('http' != $urlPart['scheme'] && 'https' != $urlPart['scheme']) {
                         continue;
                     }
                 } else {
@@ -131,8 +131,8 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
         }
 
         /** 发送trackback */
-        if ($post->have() && !empty($this->request->trackback)) {
-            $links = $this->request->trackback;
+        if ($post->have() && !empty($this->request->getArray('trackback'))) {
+            $links = $this->request->getArray('trackback');
             foreach ($links as $url) {
 
                 $client = Typecho_Http_Client::get();
