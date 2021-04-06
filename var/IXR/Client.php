@@ -35,6 +35,14 @@ class IXR_Client
     private $port;
 
     /**
+     * 协议
+     *
+     * @access private
+     * @var string
+     */
+    private $scheme;
+
+    /**
      * 路径名称
      *
      * @access private
@@ -110,8 +118,16 @@ class IXR_Client
 
             // Assume we have been given a Url instead
             $bits = parse_url($server);
+
+            if (isset($bits['port'])) {
+                $this->port = $bits['port'];
+            } else if ('https' == $bits['scheme']) {
+                $this->port = 443;
+            } else {
+                $this->port = 80;
+            }
             $this->server = $bits['host'];
-            $this->port = ('https' == $bits['scheme']) ? 443 : 80;
+            $this->scheme = $bits['scheme'];
             $this->path = isset($bits['path']) ? $bits['path'] : '/';
 
             // Make absolutely sure we have a path
@@ -122,10 +138,12 @@ class IXR_Client
             /** Typecho_Common */
             require_once 'Typecho/Common.php';
 
-            $scheme = (443 == $port) ? 'https' : 'http';
+            if (is_null($this->scheme)) {
+                $this->scheme = 'http';
+            }
 
             $this->url = Typecho_Common::buildUrl(array(
-                'scheme'    =>  $scheme,
+                'scheme'    =>  $this->scheme,
                 'host'      =>  $server,
                 'path'      =>  $path,
                 'port'      =>  $port
