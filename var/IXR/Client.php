@@ -111,7 +111,7 @@ class IXR_Client
      * @param string $useragent 客户端
      * @return void
      */
-    public function __construct($server, $path = false, $port = 80, $useragent = self::DEFAULT_USERAGENT, $prefix = NULL)
+    public function __construct($server, $path = false, $port = 80, $scheme = 'http', $useragent = self::DEFAULT_USERAGENT, $prefix = NULL)
     {
         if (!$path) {
             $this->url = $server;
@@ -138,12 +138,8 @@ class IXR_Client
             /** Typecho_Common */
             require_once 'Typecho/Common.php';
 
-            if (is_null($this->scheme)) {
-                $this->scheme = 'http';
-            }
-
             $this->url = Typecho_Common::buildUrl(array(
-                'scheme'    =>  $this->scheme,
+                'scheme'    =>  $scheme,
                 'host'      =>  $server,
                 'path'      =>  $path,
                 'port'      =>  $port
@@ -152,6 +148,7 @@ class IXR_Client
             $this->server = $server;
             $this->path = $path;
             $this->port = $port;
+            $this->scheme = $scheme;
         }
 
         $this->prefix = $prefix;
@@ -229,7 +226,7 @@ class IXR_Client
      */
     public function __get($prefix)
     {
-        return new IXR_Client($this->server, $this->path, $this->port, $this->useragent, $this->prefix . $prefix . '.');
+        return new IXR_Client($this->server, $this->path, $this->port, $this->scheme, $this->useragent, $this->prefix . $prefix . '.');
     }
 
     /**
