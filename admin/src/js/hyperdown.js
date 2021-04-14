@@ -518,7 +518,9 @@
     Parser.prototype.parseBlockList = function(block, key, line, state) {
       var matches, space, type;
       if ((this.isBlock('list')) && !line.match(/^\s*\[((?:[^\]]|\\\]|\\\[)+?)\]:\s*(.+)$/)) {
-        if ((state.empty <= 1) && !!(matches = line.match(/^(\s*)\S+/)) && matches[1].length >= (block[3][0] + state.empty)) {
+        if (!!(line.match(/^(\s*)(~{3,}|`{3,})([^`~]*)$/i))) {
+          return true;
+        } else if ((state.empty <= 1) && !!(matches = line.match(/^(\s*)\S+/)) && matches[1].length >= (block[3][0] + state.empty)) {
           state.empty = 0;
           this.setBlock(key);
           return false;
@@ -546,7 +548,7 @@
       return true;
     };
 
-    Parser.prototype.parseBlockCode = function(block, key, line) {
+    Parser.prototype.parseBlockCode = function(block, key, line, state) {
       var isAfterList, matches, space;
       if (!!(matches = line.match(/^(\s*)(~{3,}|`{3,})([^`~]*)$/i))) {
         if (this.isBlock('code')) {
@@ -559,8 +561,8 @@
         } else {
           isAfterList = false;
           if (this.isBlock('list')) {
-            space = block[3];
-            isAfterList = (space > 0 && matches[1].length >= space) || matches[1].length > space;
+            space = block[3][0];
+            isAfterList = matches[1].length >= space + state.empty;
           }
           this.startBlock('code', key, [matches[1], matches[3], isAfterList]);
         }
