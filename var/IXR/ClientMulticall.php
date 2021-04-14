@@ -15,8 +15,8 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  */
 class IXR_ClientMulticall extends IXR_Client {
     var $calls = array();
-    function IXR_ClientMulticall($server, $path = false, $port = 80) {
-        parent::IXR_Client($server, $path, $port);
+    function IXR_ClientMulticall($server, $path = false, $port = 80, $scheme = 'http') {
+        parent::IXR_Client($server, $path, $port, $scheme);
         $this->useragent = 'The Incutio XML-RPC PHP Library (multicall client)';
     }
     function addCall() {
