@@ -13,6 +13,7 @@ $color-nav-child-focus: #6DA1BB;
   padding: 0 10px;
   background: $color-nav-bg;
   position: relative;
+  z-index: 1;
 
   a {
     padding: 0 20px;

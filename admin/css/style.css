@@ -25,7 +25,7 @@ input[type=text], input[type=password], input[type=email], textarea { background
 
 textarea { resize: vertical; line-height: 1.5; }
 
-input[type="radio"], input[type="checkbox"] { margin-right: 3px; }
+input[type="radio"], input[type="checkbox"] { margin-right: 3px; vertical-align: middle; }
 
 input.text-s, textarea.text-s { padding: 5px; }
 
@@ -136,7 +136,7 @@ select { border: 1px solid #CCC; height: 28px; }
 .typecho-pager li.current a { background: #E9E9E6; color: #444; }
 
 /** 后台头部导航 */
-.typecho-head-nav { padding: 0 10px; background: #292D33; position: relative; }
+.typecho-head-nav { padding: 0 10px; background: #292D33; position: relative; z-index: 1; }
 
 .typecho-head-nav a { padding: 0 20px; height: 36px; line-height: 36px; color: #BBB; }
 
@@ -333,17 +333,19 @@ a.operate-reply { color: #545c30; }
 /** 增加表格标题 by 70 */
 .typecho-list-table-title { margin: 1em 0; color: #999; text-align: center; }
 
-.typecho-table-wrap { padding: 30px; background: #FFF; }
+.typecho-table-wrap { width: 100%; padding-top: 10px; overflow-x: auto; background: #FFF; }
 
-.typecho-list-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.typecho-list-table { width: 100%; border-collapse: separate; border-spacing: 0; }
 
 .typecho-list-table.deactivate { color: #999; }
 
 .typecho-list-table .right { text-align: right; }
 
-.typecho-list-table th { padding: 0 10px 10px; border-bottom: 2px solid #F0F0EC; text-align: left; }
+.typecho-list-table th, .typecho-list-table td { position: relative; box-sizing: border-box; white-space: nowrap; }
 
-.typecho-list-table td { padding: 10px; border-top: 1px solid #F0F0EC; word-break: break-all; }
+.typecho-list-table th { padding: 0 10px 10px; border-bottom: 2px solid #F0F0EC; text-align: left; overflow: hidden; text-overflow: ellipsis; }
+
+.typecho-list-table td { padding: 10px; border-top: 1px solid #F0F0EC; }
 
 .typecho-list-table td pre { overflow: auto; }
 

@@ -23,6 +23,7 @@
 .smbdelete*
 *.sublime*
 .sass-cache
+.htaccess
 config.rb
 /config.inc.php
 /usr/uploads/

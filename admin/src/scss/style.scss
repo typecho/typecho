@@ -470,13 +470,15 @@ a.operate-reply {
   text-align: center;
 }
 .typecho-table-wrap {
-  padding: 30px;
+  width: 100%;
+  padding-top: 10px;
+  overflow-x: auto;
   background: #FFF;
 }
 .typecho-list-table {
   width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
 
   &.deactivate {
     color: #999;
@@ -486,16 +488,23 @@ a.operate-reply {
     text-align: right;
   }
 
+  th, td{
+    position: relative;
+    box-sizing: border-box;
+    white-space: nowrap;
+  }
+
   th {
     padding: 0 10px 10px;
     border-bottom: 2px solid #F0F0EC;
     text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   td {
     padding: 10px;
     border-top: 1px solid #F0F0EC;
-    word-break: break-all;
 
     pre {
         overflow: auto;

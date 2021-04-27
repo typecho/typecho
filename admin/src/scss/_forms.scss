@@ -18,7 +18,10 @@ textarea {
   line-height: 1.5;
 }
 
-input[type="radio"], input[type="checkbox"] { margin-right: 3px; }
+input[type="radio"], input[type="checkbox"] {
+  margin-right: 3px;
+  vertical-align:middle;
+}
 
 input, textarea {
   &.text-s { padding: 5px; }
