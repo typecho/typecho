@@ -54,8 +54,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
     {
         //根据客户端显示来判断是否显示html代码
         $agent = $this->request->getAgent();
-        $text = '';
-        
+
         switch (true) {
             case false !== strpos($agent, 'wp-iphone'):   // wordpress iphone客户端
             case false !== strpos($agent, 'wp-blackberry'):  // 黑莓

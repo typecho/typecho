@@ -16,7 +16,7 @@ class IXR_Request {
     var $method;
     var $args;
     var $xml;
-    function IXR_Request($method, $args) {
+    function __construct($method, $args) {
         $this->method = $method;
         $this->args = $args;
         $this->xml = <<<EOD
