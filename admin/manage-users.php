@@ -33,20 +33,20 @@ include 'menu.php';
                 <div class="typecho-table-wrap">
                     <table class="typecho-list-table">
                         <colgroup>
-                            <col width="20"/>
-                            <col width="6%"/>
+                            <col width="20" class="kit-hidden-mb"/>
+                            <col width="6%" class="kit-hidden-mb"/>
                             <col width="30%"/>
-                            <col width=""/>
-                            <col width="25%"/>
+                            <col width="" class="kit-hidden-mb"/>
+                            <col width="25%" class="kit-hidden-mb"/>
                             <col width="15%"/>
                         </colgroup>
                         <thead>
                             <tr>
-                                <th> </th>
-                                <th> </th>
+                                <th class="kit-hidden-mb"> </th>
+                                <th class="kit-hidden-mb"> </th>
                                 <th><?php _e('用户名'); ?></th>
-                                <th><?php _e('昵称'); ?></th>
-                                <th><?php _e('电子邮件'); ?></th>
+                                <th class="kit-hidden-mb"><?php _e('昵称'); ?></th>
+                                <th class="kit-hidden-mb"><?php _e('电子邮件'); ?></th>
                                 <th><?php _e('用户组'); ?></th>
                             </tr>
                         </thead>
@@ -54,13 +54,13 @@ include 'menu.php';
                         	<?php Typecho_Widget::widget('Widget_Users_Admin')->to($users); ?>
                             <?php while($users->next()): ?>
                             <tr id="user-<?php $users->uid(); ?>">
-                                <td><input type="checkbox" value="<?php $users->uid(); ?>" name="uid[]"/></td>
-                                <td><a href="<?php $options->adminUrl('manage-posts.php?uid=' . $users->uid); ?>" class="balloon-button left size-<?php echo Typecho_Common::splitByCount($users->postsNum, 1, 10, 20, 50, 100); ?>"><?php $users->postsNum(); ?></a></td>
+                                <td class="kit-hidden-mb"><input type="checkbox" value="<?php $users->uid(); ?>" name="uid[]"/></td>
+                                <td class="kit-hidden-mb"><a href="<?php $options->adminUrl('manage-posts.php?uid=' . $users->uid); ?>" class="balloon-button left size-<?php echo Typecho_Common::splitByCount($users->postsNum, 1, 10, 20, 50, 100); ?>"><?php $users->postsNum(); ?></a></td>
                                 <td><a href="<?php $options->adminUrl('user.php?uid=' . $users->uid); ?>"><?php $users->name(); ?></a>
                                 <a href="<?php $users->permalink(); ?>" title="<?php _e('浏览 %s', $users->screenName); ?>"><i class="i-exlink"></i></a>
                                 </td>
-                                <td><?php $users->screenName(); ?></td>
-                                <td><?php if($users->mail): ?><a href="mailto:<?php $users->mail(); ?>"><?php $users->mail(); ?></a><?php else: _e('暂无'); endif; ?></td>
+                                <td class="kit-hidden-mb"><?php $users->screenName(); ?></td>
+                                <td class="kit-hidden-mb"><?php if($users->mail): ?><a href="mailto:<?php $users->mail(); ?>"><?php $users->mail(); ?></a><?php else: _e('暂无'); endif; ?></td>
                                 <td><?php switch ($users->group) {
                                     case 'administrator':
                                         _e('管理员');

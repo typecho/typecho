@@ -197,11 +197,11 @@
   .col-wd-push-12 { left: 100%; } }
 
 /* Responsive kit */
-@media (max-width: 767px) { .kit-hidden-mb { display: none; } }
+@media (max-width: 575px) { .kit-hidden-mb { display: none; } }
 
-@media (max-width: 991px) { .kit-hidden-tb { display: none; } }
+@media (max-width: 767px) { .kit-hidden-tb { display: none; } }
 
-@media (max-width: 1199px) { .kit-hidden { display: none; } }
+@media (max-width: 991px) { .kit-hidden { display: none; } }
 
 /* Clearfix */
 .clearfix, .row { zoom: 1; }

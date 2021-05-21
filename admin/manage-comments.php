@@ -85,16 +85,16 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == Typ
                 <div class="typecho-table-wrap">
                     <table class="typecho-list-table">
                         <colgroup>
-                            <col width="3%"/>
-                            <col width="6%" />
+                            <col width="3%" class="kit-hidden-mb"/>
+                            <col width="6%" class="kit-hidden-mb" />
                             <col width="20%"/>
                             <col width="71%"/>
                         </colgroup>
                         <thead>
                             <tr>
-                                <th> </th>
+                                <th class="kit-hidden-mb"> </th>
                                 <th><?php _e('作者'); ?></th>
-                                <th> </th>
+                                <th class="kit-hidden-mb"> </th>
                                 <th><?php _e('内容'); ?></th>
                             </tr>
                         </thead>
@@ -114,10 +114,10 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == Typ
 
                         echo htmlspecialchars(Json::encode($comment));
                         ?>">
-                            <td valign="top">
+                            <td valign="top" class="kit-hidden-mb">
                                 <input type="checkbox" value="<?php $comments->coid(); ?>" name="coid[]"/>
                             </td>
-                            <td valign="top">
+                            <td valign="top" class="kit-hidden-mb">
                                 <div class="comment-avatar">
                                     <?php if ('comment' == $comments->type): ?>
                                     <?php $comments->gravatar(40); ?>

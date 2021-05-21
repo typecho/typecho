@@ -16,16 +16,16 @@ include 'menu.php';
                         <colgroup>
                             <col width="25%"/>
                             <col width="45%"/>
-                            <col width="8%"/>
-                            <col width="10%"/>
+                            <col width="8%" class="kit-hidden-mb"/>
+                            <col width="10%" class="kit-hidden-mb"/>
                             <col width=""/>
                         </colgroup>
                         <thead>
                             <tr>
                                 <th><?php _e('名称'); ?></th>
                                 <th><?php _e('描述'); ?></th>
-                                <th><?php _e('版本'); ?></th>
-                                <th><?php _e('作者'); ?></th>
+                                <th class="kit-hidden-mb"><?php _e('版本'); ?></th>
+                                <th class="kit-hidden-mb"><?php _e('作者'); ?></th>
                                 <th><?php _e('操作'); ?></th>
                             </tr>
                         </thead>
@@ -38,8 +38,8 @@ include 'menu.php';
                                 <?php endif; ?>
                                 </td>
                                 <td><?php $activatedPlugins->description(); ?></td>
-                                <td><?php $activatedPlugins->version(); ?></td>
-                                <td><?php echo empty($activatedPlugins->homepage) ? $activatedPlugins->author : '<a href="' . $activatedPlugins->homepage
+                                <td class="kit-hidden-mb"><?php $activatedPlugins->version(); ?></td>
+                                <td class="kit-hidden-mb"><?php echo empty($activatedPlugins->homepage) ? $activatedPlugins->author : '<a href="' . $activatedPlugins->homepage
                                 . '">' . $activatedPlugins->author . '</a>'; ?></td>
                                 <td>
                                     <?php if ($activatedPlugins->activate || $activatedPlugins->deactivate || $activatedPlugins->config || $activatedPlugins->personalConfig): ?>
@@ -78,16 +78,16 @@ include 'menu.php';
                         <colgroup>
                             <col width="25%"/>
                             <col width="45%"/>
-                            <col width="8%"/>
-                            <col width="10%"/>
+                            <col width="8%" class="kit-hidden-mb"/>
+                            <col width="10%" class="kit-hidden-mb"/>
                             <col width=""/>
                         </colgroup>
                         <thead>
                             <tr>
                                 <th><?php _e('名称'); ?></th>
                                 <th><?php _e('描述'); ?></th>
-                                <th><?php _e('版本'); ?></th>
-                                <th><?php _e('作者'); ?></th>
+                                <th class="kit-hidden-mb"><?php _e('版本'); ?></th>
+                                <th class="kit-hidden-mb"><?php _e('作者'); ?></th>
                                 <th class="typecho-radius-topright"><?php _e('操作'); ?></th>
                             </tr>
                         </thead>
@@ -97,8 +97,8 @@ include 'menu.php';
                             <tr id="plugin-<?php $deactivatedPlugins->name(); ?>">
                                 <td><?php $deactivatedPlugins->title(); ?></td>
                                 <td><?php $deactivatedPlugins->description(); ?></td>
-                                <td><?php $deactivatedPlugins->version(); ?></td>
-                                <td><?php echo empty($deactivatedPlugins->homepage) ? $deactivatedPlugins->author : '<a href="' . $deactivatedPlugins->homepage
+                                <td class="kit-hidden-mb"><?php $deactivatedPlugins->version(); ?></td>
+                                <td class="kit-hidden-mb"><?php echo empty($deactivatedPlugins->homepage) ? $deactivatedPlugins->author : '<a href="' . $deactivatedPlugins->homepage
                                 . '">' . $deactivatedPlugins->author . '</a>'; ?></td>
                                 <td>
                                     <a href="<?php $security->index('/action/plugins-edit?activate=' . $deactivatedPlugins->name); ?>"><?php _e('启用'); ?></a>

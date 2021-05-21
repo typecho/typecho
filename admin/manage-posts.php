@@ -92,20 +92,20 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == Typecho_C
                 <div class="typecho-table-wrap">
                     <table class="typecho-list-table">
                         <colgroup>
-                            <col width="20"/>
-                            <col width="6%"/>
+                            <col width="20" class="kit-hidden-mb"/>
+                            <col width="6%" class="kit-hidden-mb"/>
                             <col width="45%"/>
-                            <col width=""/>
-                            <col width="18%"/>
+                            <col width="" class="kit-hidden-mb"/>
+                            <col width="18%" class="kit-hidden-mb"/>
                             <col width="16%"/>
                         </colgroup>
                         <thead>
                             <tr>
-                                <th> </th>
-                                <th> </th>
+                                <th class="kit-hidden-mb"> </th>
+                                <th class="kit-hidden-mb"> </th>
                                 <th><?php _e('标题'); ?></th>
-                                <th><?php _e('作者'); ?></th>
-                                <th><?php _e('分类'); ?></th>
+                                <th class="kit-hidden-mb"><?php _e('作者'); ?></th>
+                                <th class="kit-hidden-mb"><?php _e('分类'); ?></th>
                                 <th><?php _e('日期'); ?></th>
                             </tr>
                         </thead>
@@ -113,8 +113,8 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == Typecho_C
                         	<?php if($posts->have()): ?>
                             <?php while($posts->next()): ?>
                             <tr id="<?php $posts->theId(); ?>">
-                                <td><input type="checkbox" value="<?php $posts->cid(); ?>" name="cid[]"/></td>
-                                <td><a href="<?php $options->adminUrl('manage-comments.php?cid=' . ($posts->parentId ? $posts->parentId : $posts->cid)); ?>" class="balloon-button size-<?php echo Typecho_Common::splitByCount($posts->commentsNum, 1, 10, 20, 50, 100); ?>" title="<?php $posts->commentsNum(); ?> <?php _e('评论'); ?>"><?php $posts->commentsNum(); ?></a></td>
+                                <td class="kit-hidden-mb"><input type="checkbox" value="<?php $posts->cid(); ?>" name="cid[]"/></td>
+                                <td class="kit-hidden-mb"><a href="<?php $options->adminUrl('manage-comments.php?cid=' . ($posts->parentId ? $posts->parentId : $posts->cid)); ?>" class="balloon-button size-<?php echo Typecho_Common::splitByCount($posts->commentsNum, 1, 10, 20, 50, 100); ?>" title="<?php $posts->commentsNum(); ?> <?php _e('评论'); ?>"><?php $posts->commentsNum(); ?></a></td>
                                 <td>
                                 <a href="<?php $options->adminUrl('write-post.php?cid=' . $posts->cid); ?>"><?php $posts->title(); ?></a>
                                 <?php 
@@ -137,8 +137,8 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == Typecho_C
                                 <a href="<?php $posts->permalink(); ?>" title="<?php _e('浏览 %s', htmlspecialchars($posts->title)); ?>"><i class="i-exlink"></i></a>
                                 <?php endif; ?>
                                 </td>
-                                <td><a href="<?php $options->adminUrl('manage-posts.php?uid=' . $posts->author->uid); ?>"><?php $posts->author(); ?></a></td>
-                                <td><?php $categories = $posts->categories; $length = count($categories); ?>
+                                <td class="kit-hidden-mb"><a href="<?php $options->adminUrl('manage-posts.php?uid=' . $posts->author->uid); ?>"><?php $posts->author(); ?></a></td>
+                                <td class="kit-hidden-mb"><?php $categories = $posts->categories; $length = count($categories); ?>
                                 <?php foreach ($categories as $key => $val): ?>
                                     <?php echo '<a href="';
                                     $options->adminUrl('manage-posts.php?category=' . $val['mid']

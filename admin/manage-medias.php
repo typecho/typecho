@@ -39,20 +39,20 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 <div class="typecho-table-wrap">
                     <table class="typecho-list-table draggable">
                         <colgroup>
-                            <col width="20"/>
-                            <col width="6%"/>
+                            <col width="20" class="kit-hidden-mb"/>
+                            <col width="6%" class="kit-hidden-mb"/>
                             <col width="30%"/>
-                            <col width=""/>
-                            <col width="30%"/>
+                            <col width="" class="kit-hidden-mb"/>
+                            <col width="30%" class="kit-hidden-mb"/>
                             <col width="16%"/>
                         </colgroup>
                         <thead>
                             <tr>
-                                <th> </th>
-                                <th> </th>
+                                <th class="kit-hidden-mb"> </th>
+                                <th class="kit-hidden-mb"> </th>
                                 <th><?php _e('文件名'); ?></th>
-                                <th><?php _e('上传者'); ?></th>
-                                <th><?php _e('所属文章'); ?></th>
+                                <th class="kit-hidden-mb"><?php _e('上传者'); ?></th>
+                                <th class="kit-hidden-mb"><?php _e('所属文章'); ?></th>
                                 <th><?php _e('发布日期'); ?></th>
                             </tr>
                         </thead>
@@ -61,15 +61,15 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             <?php while($attachments->next()): ?>
                             <?php $mime = Typecho_Common::mimeIconType($attachments->attachment->mime); ?>
                             <tr id="<?php $attachments->theId(); ?>">
-                                <td><input type="checkbox" value="<?php $attachments->cid(); ?>" name="cid[]"/></td>
-                                <td><a href="<?php $options->adminUrl('manage-comments.php?cid=' . $attachments->cid); ?>" class="balloon-button size-<?php echo Typecho_Common::splitByCount($attachments->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $attachments->commentsNum(); ?></a></td>
+                                <td class="kit-hidden-mb"><input type="checkbox" value="<?php $attachments->cid(); ?>" name="cid[]"/></td>
+                                <td class="kit-hidden-mb"><a href="<?php $options->adminUrl('manage-comments.php?cid=' . $attachments->cid); ?>" class="balloon-button size-<?php echo Typecho_Common::splitByCount($attachments->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $attachments->commentsNum(); ?></a></td>
                                 <td>
                                 <i class="mime-<?php echo $mime; ?>"></i>
                                 <a href="<?php $options->adminUrl('media.php?cid=' . $attachments->cid); ?>"><?php $attachments->title(); ?></a>
                                 <a href="<?php $attachments->permalink(); ?>" title="<?php _e('浏览 %s', $attachments->title); ?>"><i class="i-exlink"></i></a>
                                 </td>
-                                <td><?php $attachments->author(); ?></td>
-                                <td>
+                                <td class="kit-hidden-mb"><?php $attachments->author(); ?></td>
+                                <td class="kit-hidden-mb">
                                 <?php if ($attachments->parentPost->cid): ?>
                                 <a href="<?php $options->adminUrl('write-' . (0 === strpos($attachments->parentPost->type, 'post') ? 'post' : 'page') . '.php?cid=' . $attachments->parentPost->cid); ?>"><?php $attachments->parentPost->title(); ?></a>
                                 <?php else: ?>

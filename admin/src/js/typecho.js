@@ -493,7 +493,7 @@ jQuery.tableDnD = {
             if (0 == $('tfoot', this).length
                 && 0 < $('thead', this).length) {
                 var h = $('thead', this), count = $('th', h).length,
-                    f = $('<tfoot><tr><td style="padding:0;height:0;line-height:0;border:none" colspan="' + count 
+                    f = $('<tfoot class="kit-hidden-mb"><tr><td style="padding:0;height:0;line-height:0;border:none" colspan="' + count
                     + '"></td></tr></tfoot>').insertAfter(h),
                     l = $('tr:last', this);
 

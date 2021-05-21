@@ -38,20 +38,20 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 <div class="typecho-table-wrap">
                     <table class="typecho-list-table">
                         <colgroup>
-                            <col width="20"/>
-                            <col width="6%"/>
+                            <col width="20" class="kit-hidden-mb"/>
+                            <col width="6%" class="kit-hidden-mb"/>
                             <col width="30%"/>
                             <col width="30%"/>
-                            <col width=""/>
+                            <col width="" class="kit-hidden-mb"/>
                             <col width="16%"/>
                         </colgroup>
                         <thead>
                             <tr class="nodrag">
-                                <th> </th>
-                                <th> </th>
+                                <th class="kit-hidden-mb"> </th>
+                                <th class="kit-hidden-mb"> </th>
                                 <th><?php _e('标题'); ?></th>
                                 <th><?php _e('缩略名'); ?></th>
-                                <th><?php _e('作者'); ?></th>
+                                <th class="kit-hidden-mb"><?php _e('作者'); ?></th>
                                 <th><?php _e('日期'); ?></th>
                             </tr>
                         </thead>
@@ -60,8 +60,8 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         	<?php if($pages->have()): ?>
                             <?php while($pages->next()): ?>
                             <tr id="<?php $pages->theId(); ?>">
-                                <td><input type="checkbox" value="<?php $pages->cid(); ?>" name="cid[]"/></td>
-                                <td><a href="<?php $options->adminUrl('manage-comments.php?cid=' . $pages->cid); ?>" class="balloon-button size-<?php echo Typecho_Common::splitByCount($pages->commentsNum, 1, 10, 20, 50, 100); ?>" title="<?php $pages->commentsNum(); ?> <?php _e('评论'); ?>"><?php $pages->commentsNum(); ?></a></td>
+                                <td class="kit-hidden-mb"><input type="checkbox" value="<?php $pages->cid(); ?>" name="cid[]"/></td>
+                                <td class="kit-hidden-mb"><a href="<?php $options->adminUrl('manage-comments.php?cid=' . $pages->cid); ?>" class="balloon-button size-<?php echo Typecho_Common::splitByCount($pages->commentsNum, 1, 10, 20, 50, 100); ?>" title="<?php $pages->commentsNum(); ?> <?php _e('评论'); ?>"><?php $pages->commentsNum(); ?></a></td>
                                 <td>
                                 <a href="<?php $options->adminUrl('write-page.php?cid=' . $pages->cid); ?>"><?php $pages->title(); ?></a>
                                 <?php 
@@ -79,7 +79,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                                 <?php endif; ?>
                                 </td>
                                 <td><?php $pages->slug(); ?></td>
-                                <td><?php $pages->author(); ?></td>
+                                <td class="kit-hidden-mb"><?php $pages->author(); ?></td>
                                 <td>
                                 <?php if ($pages->hasSaved): ?>
                                 <span class="description">

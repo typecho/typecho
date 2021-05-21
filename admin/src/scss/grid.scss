@@ -178,21 +178,21 @@
  */
 
 // Hidden in mobile and down
-@media (max-width: $screen-tablet - 1px) {
+@media (max-width: $screen-phone - 1px) {
   .kit-hidden-mb {
     display: none;
   }
 }
 
 // Hidden in tablet and down
-@media (max-width: $screen-desktop - 1px) {
+@media (max-width: $screen-tablet - 1px) {
   .kit-hidden-tb {
     display: none;
   }
 }
 
 // Hidden in descktop and down
-@media (max-width: $screen-wide - 1px) {
+@media (max-width: $screen-desktop - 1px) {
   .kit-hidden {
     display: none;
   }
