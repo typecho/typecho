@@ -19,7 +19,7 @@ class IXR_Date {
     var $hour;
     var $minute;
     var $second;
-    function IXR_Date($time) {
+    function __construct($time) {
         // $time can be a PHP timestamp or an ISO one
         if (is_numeric($time)) {
             $this->parseTimestamp($time);

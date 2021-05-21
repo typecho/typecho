@@ -338,7 +338,7 @@ class Widget_Options extends Typecho_Widget
         if (NULL != $this->attachmentTypes) {
             $attachmentTypes = str_replace(
                 array('@image@', '@media@', '@doc@'), 
-                array('gif,jpg,jpeg,png,tiff,bmp', 'mp3,wmv,wma,rmvb,rm,avi,flv',
+                array('gif,jpg,jpeg,png,tiff,bmp', 'mp3,mp4,mov,wmv,wma,rmvb,rm,avi,flv,ogg,oga,ogv',
                     'txt,doc,docx,xls,xlsx,ppt,pptx,zip,rar,pdf'), $this->attachmentTypes);
             
             $attachmentTypesResult = array_unique(array_map('trim', preg_split("/(,|\.)/", $attachmentTypes)));

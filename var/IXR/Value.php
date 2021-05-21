@@ -15,7 +15,7 @@
 class IXR_Value {
     var $data;
     var $type;
-    function IXR_Value ($data, $type = false) {
+    function __construct ($data, $type = false) {
         $this->data = $data;
         if (!$type) {
             $type = $this->calculateType();

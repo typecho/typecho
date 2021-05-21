@@ -205,7 +205,7 @@ class IXR_Client
      *
      * @access public
      * @param string $prefix 前缀
-     * @return void
+     * @return IXR_Client
      */
     public function __get($prefix)
     {
