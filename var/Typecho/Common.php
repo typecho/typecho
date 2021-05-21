@@ -229,7 +229,18 @@ class Typecho_Common
      */
     public static function __autoLoad($className)
     {
-        @include_once str_replace(array('\\', '_'), '/', $className) . '.php';
+        $classFile = str_replace(array('\\', '_'), '/', $className) . '.php';
+        $systemPath = self::url($classFile, __TYPECHO_ROOT_DIR__ . '/var');
+
+        if (file_exists($systemPath)) {
+            @include_once $systemPath;
+        } else {
+            $pluginPath = self::url($classFile, __TYPECHO_ROOT_DIR__ . __TYPECHO_PLUGIN_DIR__);
+
+            if (file_exists($pluginPath)) {
+                @include_once $pluginPath;
+            }
+        }
     }
 
     /**
