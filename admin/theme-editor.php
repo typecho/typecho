@@ -31,7 +31,7 @@ Typecho_Widget::widget('Widget_Themes_Files')->to($files);
                     <form method="post" name="theme" id="theme" action="<?php $security->index('/action/themes-edit'); ?>">
                         <label for="content" class="sr-only"><?php _e('编辑源码'); ?></label>
                         <textarea name="content" id="content" class="w-100 mono" <?php if(!$files->currentIsWriteable()): ?>readonly<?php endif; ?>><?php echo $files->currentContent(); ?></textarea>
-                        <p class="submit">
+                        <p class="typecho-option typecho-option-submit">
                             <?php if($files->currentIsWriteable()): ?>
                             <input type="hidden" name="theme" value="<?php echo $files->currentTheme(); ?>" />
                             <input type="hidden" name="edit" value="<?php echo $files->currentFile(); ?>" />

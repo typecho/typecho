@@ -138,11 +138,11 @@ select { border: 1px solid #CCC; height: 28px; }
 /** 后台头部导航 */
 .typecho-head-nav { padding: 0 10px; background: #292D33; position: relative; }
 
-.typecho-head-nav a { padding: 0 20px; height: 36px; line-height: 36px; color: #BBB; }
+.typecho-head-nav a, .typecho-head-nav button.menu-bar { padding: 0 20px; height: 36px; line-height: 36px; color: #BBB; }
 
-.typecho-head-nav a:focus, .typecho-head-nav a:hover { color: #FFF; text-decoration: none; }
+.typecho-head-nav a:focus, .typecho-head-nav a:hover, .typecho-head-nav button.menu-bar:focus, .typecho-head-nav button.menu-bar:hover { color: #FFF; text-decoration: none; }
 
-.typecho-head-nav a.menu-bar { display: none; border-right: 1px solid #383D45; }
+.typecho-head-nav button.menu-bar { display: none; }
 
 .typecho-head-nav #typecho-nav-list { float: left; }
 
@@ -153,6 +153,8 @@ select { border: 1px solid #CCC; height: 28px; }
 .typecho-head-nav #typecho-nav-list > ul .parent a { display: inline-block; border-right: 1px solid #383D45; background: #292D33; }
 
 .typecho-head-nav #typecho-nav-list > ul .child { position: absolute; list-style: none; top: 36px; display: none; margin: 0; padding: 0; min-width: 160px; max-width: 240px; background: #202328; z-index: 250; }
+
+.typecho-head-nav #typecho-nav-list > ul .child li.return { display: none; }
 
 .typecho-head-nav #typecho-nav-list > ul .child li a { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; }
 
@@ -172,16 +174,25 @@ select { border: 1px solid #CCC; height: 28px; }
 
 .typecho-head-nav .operate a:hover { background-color: #202328; }
 
-@media (max-width: 575px) { .typecho-head-nav { padding: 0; }
+@media (max-width: 575px) { @keyframes out { from { left: 0%; }
+    to { left: -100%; } }
+  @keyframes in { from { left: -100%; }
+    to { left: 0%; } }
+  .typecho-head-nav { padding: 0; position: fixed; bottom: 0; width: 100%; z-index: 10; }
   .typecho-head-nav #typecho-nav-list { display: none; }
   .typecho-head-nav .operate a:last-child { border-right-width: 0; }
-  .typecho-head-nav a.menu-bar { display: inline-block; }
-  .typecho-head-nav a.menu-bar.focus { color: #FFF; }
-  .typecho-head-nav a.menu-bar.focus + #typecho-nav-list { display: block; float: none; position: absolute; top: 36px; width: 240px; }
-  .typecho-head-nav a.menu-bar.focus + #typecho-nav-list > ul { float: none; }
-  .typecho-head-nav a.menu-bar.focus + #typecho-nav-list > ul:first-child { border: none; }
-  .typecho-head-nav a.menu-bar.focus + #typecho-nav-list > ul .parent a { display: block; pointer-events: none; }
-  .typecho-head-nav a.menu-bar.focus + #typecho-nav-list > ul .child { position: static; } }
+  .typecho-head-nav button.menu-bar { display: inline-block; border: none; background: #292D33; border-right: 1px solid #383D45; }
+  .typecho-head-nav button.menu-bar.focus { color: #FFF; }
+  .typecho-head-nav button.menu-bar.focus + #typecho-nav-list { display: block; float: none; position: absolute; bottom: 36px; width: 100%; }
+  .typecho-head-nav button.menu-bar.focus + #typecho-nav-list > ul { float: none; border-bottom: 1px solid #383D45; position: static; }
+  .typecho-head-nav button.menu-bar.focus + #typecho-nav-list > ul:first-child { border-left: none; }
+  .typecho-head-nav button.menu-bar.focus + #typecho-nav-list > ul .parent a { display: block; border: none; background: #202328; }
+  .typecho-head-nav button.menu-bar.focus + #typecho-nav-list > ul .child { position: absolute; bottom: 0; left: 100%; top: auto; z-index: 20; width: 100%; max-width: 100%; min-width: auto; }
+  .typecho-head-nav button.menu-bar.focus + #typecho-nav-list > ul .child li { border-bottom: 1px solid #383D45; }
+  .typecho-head-nav button.menu-bar.focus + #typecho-nav-list > ul .child li.return { display: block; text-align: center; font-size: 12px; }
+  .typecho-head-nav button.menu-bar.focus + #typecho-nav-list > ul .child li.return a { color: #777; }
+  .typecho-head-nav button.menu-bar.focus + #typecho-nav-list.expanded { animation: out .15s ease-out forwards; }
+  .typecho-head-nav button.menu-bar.focus + #typecho-nav-list.noexpanded { animation: in .15s ease-out forwards; } }
 
 /** 注脚 */
 .typecho-foot { padding: 4em 0 3em; color: #999; line-height: 1.8; text-align: center; }
@@ -223,7 +234,7 @@ select { border: 1px solid #CCC; height: 28px; }
 
 .front-archive { padding-left: 1.5em; }
 
-.profile-avatar { border: 1px dashed #D9D9D6; max-width: 100%; }
+.profile-avatar { width: 220px; height: 220px; border-radius: 10px; }
 
 /** 增加配置面板内部的错误样式 by 70 */
 /**  安装样式 @author mingcheng @date   2008-09-06 */
@@ -317,9 +328,8 @@ select { border: 1px solid #CCC; height: 28px; }
 
 .typecho-list-operate input[type="checkbox"] { vertical-align: text-top; }
 
-.typecho-list-operate .operate { float: left; }
-
-.typecho-list-operate .search { float: right; }
+@media (min-width: 576px) { .typecho-list-operate .operate { float: left; }
+  .typecho-list-operate .search { float: right; } }
 
 .typecho-list-operate span.operate-delete, a.operate-delete, .typecho-list-operate span.operate-button-delete, a.operate-button-delete { color: #B94A48; }
 
@@ -422,7 +432,7 @@ a.operate-reply { color: #545c30; }
 
 .typecho-post-area .submit .right button { margin-left: 5px; }
 
-.typecho-post-area .right { float: right; padding-left: 24px; }
+.typecho-post-area .right { float: right; }
 
 .typecho-post-area .left { float: left; }
 
@@ -530,6 +540,11 @@ a.operate-reply { color: #545c30; }
 
 /* 拖动排序 */
 .tDnD_whileDrag { background-color: #FFFBCC; }
+
+@media (max-width: 575px) { .typecho-list-operate .search { margin-top: 10px; }
+  .typecho-table-wrap { padding: 10px; margin: 0 -10px; }
+  .typecho-option-submit button[type="submit"] { width: 100%; }
+  .profile-avatar { width: 110px; height: 110px; } }
 
 /** 导入扩展样式 */
 /** icons */
@@ -855,6 +870,8 @@ a.operate-reply { color: #545c30; }
 .preview .preview-loading { background-image: url(../img/ajax-loader.gif); background-position: center; background-repeat: no-repeat; }
 
 .preview #btn-cancel-preview { display: inline-block; }
+
+@media (max-width: 575px) { #wmd-spacer2, #wmd-olist-button, #wmd-ulist-button, #wmd-heading-button, #wmd-hr-button, #wmd-more-button, #wmd-spacer3, #wmd-undo-button, #wmd-redo-button, #wmd-spacer4, #wmd-fullscreen-button, #wmd-exit-fullscreen-button, #btn-fullscreen-upload { display: none; } }
 
 /** Jquery Timepicker */
 #ui-datepicker-div { display: none; margin-top: -1px; padding: 10px; border: 1px solid #D9D9D6; background: #FFF; }
