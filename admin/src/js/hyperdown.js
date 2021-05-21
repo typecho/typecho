@@ -516,7 +516,7 @@
     };
 
     Parser.prototype.parseBlockList = function(block, key, line, state) {
-      var matches, space, type;
+      var matches, space, tab, type;
       if ((this.isBlock('list')) && !line.match(/^\s*\[((?:[^\]]|\\\]|\\\[)+?)\]:\s*(.+)$/)) {
         if (!!(line.match(/^(\s*)(~{3,}|`{3,})([^`~]*)$/i))) {
           return true;
@@ -532,16 +532,17 @@
       }
       if (!!(matches = line.match(/^(\s*)((?:[0-9]+\.)|\-|\+|\*)\s+/i))) {
         space = matches[1].length;
+        tab = matches[0].length - space;
         state.empty = 0;
         type = 0 <= '+-*'.indexOf(matches[2]) ? 'ul' : 'ol';
         if (this.isBlock('list')) {
           if (space < block[3][0] || (space === block[3][0] && type !== block[3][1])) {
-            this.startBlock('list', key, [space, type]);
+            this.startBlock('list', key, [space, type, tab]);
           } else {
             this.setBlock(key);
           }
         } else {
-          this.startBlock('list', key, [space, type]);
+          this.startBlock('list', key, [space, type, tab]);
         }
         return false;
       }
@@ -552,6 +553,10 @@
       var isAfterList, matches, space;
       if (!!(matches = line.match(/^(\s*)(~{3,}|`{3,})([^`~]*)$/i))) {
         if (this.isBlock('code')) {
+          if (state.code !== matches[2]) {
+            this.setBlock(key);
+            return false;
+          }
           isAfterList = block[3][2];
           if (isAfterList) {
             this.combineBlock().setBlock(key);
@@ -564,6 +569,7 @@
             space = block[3][0];
             isAfterList = matches[1].length >= space + state.empty;
           }
+          state.code = matches[2];
           this.startBlock('code', key, [matches[1], matches[3], isAfterList]);
         }
         return false;
@@ -888,7 +894,7 @@
       }
       isEmpty = true;
       lines = lines.slice(1, -1).map(function(line) {
-        line = line.replace(new RegExp("/^[ ]{" + count + "}/"), '');
+        line = line.replace(new RegExp("^[ ]{" + count + "}"), '');
         if (isEmpty && !line.match(/^\s*$/)) {
           isEmpty = false;
         }
@@ -955,18 +961,25 @@
     };
 
     Parser.prototype.parseList = function(lines, value, start) {
-      var html, j, l, last, len, len1, line, matches, row, rows, space, type;
+      var html, j, key, l, last, len, len1, line, matches, row, rows, space, suffix, tab, type;
       html = '';
-      space = value[0], type = value[1];
+      space = value[0], type = value[1], tab = value[2];
       rows = [];
+      suffix = '';
       last = 0;
-      for (j = 0, len = lines.length; j < len; j++) {
-        line = lines[j];
+      for (key = j = 0, len = lines.length; j < len; key = ++j) {
+        line = lines[key];
         if (matches = line.match(new RegExp("^(\\s{" + space + "})((?:[0-9]+\\.?)|\\-|\\+|\\*)(\\s+)(.*)$"))) {
+          if (type === 'ol' && key === 0) {
+            start = parseInt(matches[2]);
+            if (start !== 1) {
+              suffix = ' start="' + start + '"';
+            }
+          }
           rows.push([matches[4]]);
           last = rows.length - 1;
         } else {
-          rows[last].push(line.replace(new RegExp("^\\s{" + space + "}"), ''));
+          rows[last].push(line.replace(new RegExp("^\\s{" + (tab + space) + "}"), ''));
         }
       }
       for (l = 0, len1 = rows.length; l < len1; l++) {
@@ -974,7 +987,7 @@
         html += '<li>' + (this.parse(row.join("\n"), true, start)) + '</li>';
         start += row.length;
       }
-      return "<" + type + ">" + html + "</" + type + ">";
+      return "<" + type + suffix + ">" + html + "</" + type + ">";
     };
 
     Parser.prototype.parseTable = function(lines, value, start) {
