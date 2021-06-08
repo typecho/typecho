@@ -3,6 +3,7 @@
 <script src="<?php $options->adminStaticUrl('js', 'hyperdown.js?v=' . $suffixVersion); ?>"></script>
 <script src="<?php $options->adminStaticUrl('js', 'pagedown.js?v=' . $suffixVersion); ?>"></script>
 <script src="<?php $options->adminStaticUrl('js', 'paste.js?v=' . $suffixVersion); ?>"></script>
+<script src="<?php $options->adminStaticUrl('js', 'purify.js?v=' . $suffixVersion); ?>"></script>
 <script>
 $(document).ready(function () {
     var textarea = $('#text'),
@@ -85,11 +86,11 @@ $(document).ready(function () {
                 src = src.substring(0, src.length - 1);
             }
 
-            return '<div style="border: 1px solid #ccc; height: 40px; overflow: hidden; line-height: 40px; text-align: center; font-size: 12px; color: #777"><strong>'
+            return '<div class="embed"><strong>'
                 + tag + '</strong> : ' + $.trim(src) + '</div>';
         });
 
-        return html;
+        return DOMPurify.sanitize(html, {USE_PROFILES: {html: true}});
     });
 
     editor.hooks.chain('onPreviewRefresh', function () {

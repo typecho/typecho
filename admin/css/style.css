@@ -826,6 +826,8 @@ a.operate-reply { color: #545c30; }
 
 #wmd-preview .summary:after { display: block; margin: 2em 0; background: #FFF9E8; color: #cf9900; font-size: .85714em; text-align: center; content: "- more -"; }
 
+#wmd-preview .embed { border: 1px solid #ccc; height: 40px; overflow: hidden; line-height: 40px; text-align: center; font-size: 12px; color: #777; }
+
 #wmd-preview table { width: 100%; }
 
 #wmd-preview table th, #wmd-preview table td { border: 1px solid #DDD; padding: 5px 8px; word-break: break-all; }

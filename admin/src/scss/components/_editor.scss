@@ -195,6 +195,15 @@
     text-align: center;
     content: "- more -";
   }
+  .embed {
+    border: 1px solid #ccc;
+    height: 40px;
+    overflow: hidden;
+    line-height: 40px;
+    text-align: center;
+    font-size: 12px;
+    color: #777;
+  }
 
   table {
     width: 100%;
