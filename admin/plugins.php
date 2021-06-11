@@ -8,6 +8,28 @@ include 'menu.php';
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main" role="main">
             <div class="col-mb-12 typecho-list">
+
+            <div class="typecho-list-operate clearfix">
+                    <form method="get">
+                        <div class="search" role="search">
+                            <?php $request->keywords = trim($request->keywords); ?>
+                            <?php if ('' != $request->keywords || '' != $request->category): ?>
+                            <a href="<?php $options->adminUrl('plugins.php'); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
+                            <?php endif; ?>
+                            <input type="text" class="text-s" placeholder="<?php _e('请输入关键字'); ?>" value="<?php echo htmlspecialchars($request->keywords); ?>" name="keywords" />
+                            <select name="category">
+                                <?php foreach(Typecho_Plugin::getCategory() as $key => $lang) : ?>
+                                <option value="<?php echo $key; ?>" <?php if($request->category == $key) echo 'selected';?>><?php _e($lang); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <button type="submit" class="btn btn-s"><?php _e('筛选'); ?></button>
+                            <?php if(isset($request->uid)): ?>
+                            <input type="hidden" value="<?php echo htmlspecialchars($request->get('uid')); ?>" name="uid" />
+                            <?php endif; ?>
+                        </div>
+                    </form>
+                </div>
+
                 <?php Typecho_Widget::widget('Widget_Plugins_List@activated', 'activated=1')->to($activatedPlugins); ?>
                 <?php if ($activatedPlugins->have() || !empty($activatedPlugins->activatedPlugins)): ?>
                 <h4 class="typecho-list-table-title"><?php _e('启用的插件'); ?></h4>
@@ -31,6 +53,8 @@ include 'menu.php';
                         </thead>
                         <tbody>
                             <?php while ($activatedPlugins->next()): ?>
+                            <?php if ( (empty($request->keywords) || false !== stripos($activatedPlugins->name, $request->keywords)) &&
+                             (empty($request->category) || $request->category == $activatedPlugins->category) ): ?>
                             <tr id="plugin-<?php $activatedPlugins->name(); ?>">
                                 <td><?php $activatedPlugins->title(); ?>
                                 <?php if (!$activatedPlugins->dependence): ?>
@@ -53,6 +77,7 @@ include 'menu.php';
                                     <?php endif; ?>
                                 </td>
                             </tr>
+                            <?php endif; ?>
                             <?php endwhile; ?>
                             
                             <?php if (!empty($activatedPlugins->activatedPlugins)): ?>
@@ -94,6 +119,8 @@ include 'menu.php';
                         <tbody>
                             <?php if ($deactivatedPlugins->have()): ?>
                             <?php while ($deactivatedPlugins->next()): ?>
+                            <?php if ( (empty($request->keywords) || false !== stripos($deactivatedPlugins->name, $request->keywords)) &&
+                             (empty($request->category) || $request->category == $deactivatedPlugins->category) ): ?>
                             <tr id="plugin-<?php $deactivatedPlugins->name(); ?>">
                                 <td><?php $deactivatedPlugins->title(); ?></td>
                                 <td><?php $deactivatedPlugins->description(); ?></td>
@@ -104,6 +131,7 @@ include 'menu.php';
                                     <a href="<?php $security->index('/action/plugins-edit?activate=' . $deactivatedPlugins->name); ?>"><?php _e('启用'); ?></a>
                                 </td>
                             </tr>
+                            <?php endif; ?>
                             <?php endwhile; ?>
                             <?php else: ?>
                             <tr>

@@ -26,6 +26,23 @@ class Typecho_Plugin
     private static $_plugins = array();
 
     /**
+     * 插件分类
+     */
+    private static $_category = array(
+        '' => '所有分类',
+        'system' => '系统',
+        'editor' => '编辑器',
+        'player' => '播放器',
+        'content' => '内容',
+        'comment' => '评论',
+        'picture' => '图片',
+        'widget' => '挂件',
+        'data' => '数据',
+        'effect' => '网页效果',
+        'unknow' => '未分类',
+    );
+
+    /**
      * 已经加载的文件
      *
      * @access private
@@ -102,6 +119,17 @@ class Typecho_Plugin
         }
 
         return $pluginHandles;
+    }
+
+    /**
+     * 获取分类
+     *
+     * @access public
+     * @return array
+     */
+    public static function getCategory()
+    {
+        return self::$_category;
     }
 
     /**
@@ -204,6 +232,7 @@ class Typecho_Plugin
         $info = array(
             'description'       => '',
             'title'             => '',
+            'category'          => 'unknow',
             'author'            => '',
             'homepage'          => '',
             'version'           => '',
@@ -215,6 +244,7 @@ class Typecho_Plugin
         );
 
         $map = array(
+            'category'  =>  'category',
             'package'   =>  'title',
             'author'    =>  'author',
             'link'      =>  'homepage',
