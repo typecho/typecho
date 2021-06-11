@@ -179,7 +179,7 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
 
         /** 设置提示信息 */
         $this->widget('Widget_Notice')->set($markCount > 0 ? _t('页面已经被标记为<strong>%s</strong>', $statusList[$status]) : _t('没有页面被标记'),
-        $deleteCount > 0 ? 'success' : 'notice');
+        $markCount > 0 ? 'success' : 'notice');
 
         /** 返回原网页 */
         $this->response->goBack();

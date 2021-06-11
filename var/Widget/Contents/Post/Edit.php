@@ -874,7 +874,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
 
         /** 设置提示信息 */
         $this->widget('Widget_Notice')->set($markCount > 0 ? _t('文章已经被标记为<strong>%s</strong>', $statusList[$status]) : _t('没有文章被标记'),
-        $deleteCount > 0 ? 'success' : 'notice');
+        $markCount > 0 ? 'success' : 'notice');
 
         /** 返回原网页 */
         $this->response->goBack();

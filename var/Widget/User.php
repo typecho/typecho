@@ -263,9 +263,9 @@ class Widget_User extends Typecho_Widget
                 return false;
             } else {
                 //防止循环重定向
-                $this->response->redirect($this->options->loginUrl .
+                $this->response->redirect(defined('__TYPECHO_ADMIN__') ? $this->options->loginUrl .
                 (0 === strpos($this->request->getReferer(), $this->options->loginUrl) ? '' :
-                '?referer=' . urlencode($this->request->makeUriByRequest())), false);
+                '?referer=' . urlencode($this->request->makeUriByRequest())) : $this->options->siteUrl, false);
             }
         }
 
