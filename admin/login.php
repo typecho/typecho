@@ -43,6 +43,7 @@ include 'header.php';
 </div>
 <?php 
 include 'common-js.php';
+Typecho_Plugin::factory('admin/login.php')->bottom();
 ?>
 <script>
 $(document).ready(function () {
