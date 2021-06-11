@@ -114,9 +114,11 @@ class Widget_Abstract_Contents extends Widget_Abstract
         }
 
         $contents = explode('<!--more-->', $content);
+        if(count($contents) > 2 )
+            array_splice($contents,0,1);
         list($excerpt) = $contents;
 
-        return Typecho_Common::fixHtml($this->pluginHandle(__CLASS__)->excerptEx($excerpt, $this));
+        return Typecho_Common::fixHtml($this->pluginHandle(__CLASS__)->excerptEx($excerpt, $this)); //TODO哪里定义的excerptEx?
     }
 
     /**
