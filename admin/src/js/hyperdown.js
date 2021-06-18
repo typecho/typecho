@@ -406,12 +406,12 @@
       text = this.parseInlineCallback(text);
       text = text.replace(/<([_a-z0-9-\.\+]+@[^@]+\.[a-z]{2,})>/ig, '<a href="mailto:$1">$1</a>');
       if (enableAutoLink) {
-        text = text.replace(/(^|[^\"])((https?):\S+)($|[^\"])/ig, (function(_this) {
+        text = text.replace(/(^|[^\"])(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/=]*))($|[^\"])/g, (function(_this) {
           return function() {
             var link, matches;
             matches = 1 <= arguments.length ? slice.call(arguments, 0) : [];
             link = _this.call('parseLink', matches[2]);
-            return matches[1] + "<a href=\"" + matches[2] + "\">" + link + "</a>" + matches[4];
+            return matches[1] + "<a href=\"" + matches[2] + "\">" + link + "</a>" + matches[5];
           };
         })(this));
       }
@@ -1139,9 +1139,9 @@
 
     Parser.prototype.cleanUrl = function(url) {
       var matches;
-      if (!!(matches = url.match(/^\s*((http|https|ftp|mailto):\S+)/i))) {
+      if (!!(matches = url.match(/^\s*(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/=]*))/))) {
         return matches[1];
-      } else if (!!(matches = url.match(/^\s*(\S+)/))) {
+      } else if (!!(matches = url.match(/^\s*([-a-zA-Z0-9()@:%_\+.~#?&\/=]+)/))) {
         return matches[1];
       } else {
         return '#';
