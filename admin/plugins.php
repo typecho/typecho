@@ -33,7 +33,7 @@ include 'menu.php';
                             <?php while ($activatedPlugins->next()): ?>
                             <tr id="plugin-<?php $activatedPlugins->name(); ?>">
                                 <td><?php $activatedPlugins->title(); ?>
-                                <?php if ($activatedPlugins->dependence): ?>
+                                <?php if (!$activatedPlugins->dependence): ?>
                                 <i class="i-delete" title="<?php _e('%s 无法在此版本的typecho下正常工作', $activatedPlugins->title); ?>"></i>
                                 <?php endif; ?>
                                 </td>
