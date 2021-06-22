@@ -323,12 +323,12 @@
           return _this.makeHolder(prefix + escaped);
         };
       })(this));
-      text = text.replace(/<(https?:\/\/.+)>/ig, (function(_this) {
+      text = text.replace(/<(https?:\/\/.+|(?:mailto:)?[_a-z0-9-\.\+]+@[_\w-]+\.[a-z]{2,})>/ig, (function(_this) {
         return function() {
           var link, matches, url;
           matches = 1 <= arguments.length ? slice.call(arguments, 0) : [];
           url = _this.cleanUrl(matches[1]);
-          link = _this.call('parseLink', matches[1]);
+          link = _this.call('parseLink', url);
           return _this.makeHolder("<a href=\"" + url + "\">" + link + "</a>");
         };
       })(this));
@@ -404,14 +404,14 @@
         };
       })(this));
       text = this.parseInlineCallback(text);
-      text = text.replace(/<([_a-z0-9-\.\+]+@[^@]+\.[a-z]{2,})>/ig, '<a href="mailto:$1">$1</a>');
       if (enableAutoLink) {
-        text = text.replace(/(^|[^\"])(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/=]*))($|[^\"])/g, (function(_this) {
+        text = text.replace(/(^|[^\"])(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/=]*)|(?:mailto:)?[_a-z0-9-\.\+]+@[_\w-]+\.[a-z]{2,})($|[^\"])/g, (function(_this) {
           return function() {
-            var link, matches;
+            var link, matches, url;
             matches = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-            link = _this.call('parseLink', matches[2]);
-            return matches[1] + "<a href=\"" + matches[2] + "\">" + link + "</a>" + matches[5];
+            url = _this.cleanUrl(matches[2]);
+            link = _this.call('parseLink', url);
+            return matches[1] + "<a href=\"" + link + "\">" + matches[2] + "</a>" + matches[5];
           };
         })(this));
       }
@@ -1138,8 +1138,14 @@
     };
 
     Parser.prototype.cleanUrl = function(url) {
+      var matches;
       url = url.replace(/["'<>\s]/g, '');
-      if ((url.match(/^\w+:/i)) && !(url.match(/^https?:/i))) {
+      if (!!(matches = url.match(/^(mailto:)?[_a-z0-9-\.\+]+@[_\w-]+\.[a-z]{2,}$/i))) {
+        if (matches[1] == null) {
+          url = 'mailto:' + url;
+        }
+      }
+      if ((url.match(/^\w+:/i)) && !(url.match(/^(https?|mailto):/i))) {
         return '#';
       }
       return url;
