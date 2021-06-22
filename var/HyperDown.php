@@ -1627,13 +1627,13 @@ class HyperDown
      */
     public function cleanUrl($url)
     {
-        if (preg_match("/^\s*(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/=]*))/", $url, $matches)) {
-            return $matches[1];
-        } elseif (preg_match("/^\s*([-a-zA-Z0-9()@:%_\+.~#?&\/=]+)/", $url, $matches)) {
-            return $matches[1];
-        } else {
+        $url = preg_replace("/[\"'<>\s]/", '', $url);
+
+        if (preg_match("/^\w+:/i", $url) && !preg_match("/^https?:/i", $url)) {
             return '#';
         }
+
+        return $url;
     }
 
     /**

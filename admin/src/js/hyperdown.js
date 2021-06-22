@@ -1138,14 +1138,11 @@
     };
 
     Parser.prototype.cleanUrl = function(url) {
-      var matches;
-      if (!!(matches = url.match(/^\s*(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/=]*))/))) {
-        return matches[1];
-      } else if (!!(matches = url.match(/^\s*([-a-zA-Z0-9()@:%_\+.~#?&\/=]+)/))) {
-        return matches[1];
-      } else {
+      url = url.replace(/["'<>\s]/g, '');
+      if ((url.match(/^\w+:/i)) && !(url.match(/^https?:/i))) {
         return '#';
       }
+      return url;
     };
 
     Parser.prototype.escapeBracket = function(str) {
