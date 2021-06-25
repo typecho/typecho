@@ -211,6 +211,9 @@ class Typecho_Db
      */
     public function sql()
     {
+        $op = func_get_arg(0);
+        if ($op != null) $this->selectDb($op);
+        
         return new Typecho_Db_Query($this->_adapter, $this->_prefix);
     }
 
@@ -290,7 +293,7 @@ class Typecho_Db
     public function select()
     {
         $args = func_get_args();
-        return call_user_func_array(array($this->sql(), 'select'), $args ? $args : array('*'));
+        return call_user_func_array(array($this->sql(self::READ), 'select'), $args ? $args : array('*'));
     }
 
     /**
