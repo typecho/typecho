@@ -21,6 +21,7 @@ function scrollableEditor(el, preview) {
         lastFocus = null,
         merge = [],
         rows = [],
+        duration = 500,
         previewRows = [],
         css = {display: 'block', 'position': 'absolute', 'left': '-99999px', 'top': '-99999px'},
         test = $('<div></div>').appendTo(document.body),
@@ -52,6 +53,41 @@ function scrollableEditor(el, preview) {
 
         test.html('');
         reloadPreview(input);
+    }
+
+    // native scroll
+    var scrollLock = {};
+
+    function requestScrollTop(sel, top) {
+        var el = sel.get(0),
+            id = el.id;
+
+        if (scrollLock[id] == top) {
+            return;
+        }
+        
+        scrollLock[id] = top;
+        var start = performance.now(),
+            startTop = el.scrollTop;
+
+        function scrollStep(time) {
+            if (scrollLock[id] != top) {
+                return;
+            }
+
+            var interval = time - start,
+                currentTop = startTop + (top - startTop) * (interval / duration);
+
+            if (interval < duration) {
+                el.scrollTo({top: currentTop});
+                window.requestAnimationFrame(scrollStep);
+            } else {
+                el.scrollTo({top: top});
+                scrollLock[id] = -1;
+            }
+        }
+
+        window.requestAnimationFrame(scrollStep);
     }
 
     function scroll(inputLine) {
@@ -100,7 +136,7 @@ function scrollableEditor(el, preview) {
                 var nextPos = previewRows[j + 1] ? previewRows[j + 1][2] : preview.get(0).scrollHeight;
                 scrollPos = (i == 0 ? 0 : item[2]) + (nextPos - item[2]) * percent;
 
-                preview.scrollTop(scrollPos);
+                requestScrollTop(preview, scrollPos);
                 break;
             }
         }
@@ -133,7 +169,7 @@ function scrollableEditor(el, preview) {
             nextPos = found ? previewRows[i > 0 ? i : 1][2] : preview.get(0).scrollHeight,
             percent = (previewScrollTop - current[2]) / (nextPos - current[2]);
 
-        el.scrollTop(start + (end - start) * percent + offset);
+        requestScrollTop(el, start + (end - start) * percent + offset);
     }
 
     function reloadPreview(input) {
@@ -212,15 +248,7 @@ function scrollableEditor(el, preview) {
         }
 
         return current;
-    }
-
-    // 检测宽度
-    setInterval(function () {
-        if (el.width() != lastWidth) {
-            lastWidth = el.width();
-            el.trigger('resize');
-        }
-    }, 150);
+    } 
 
     // 检测输入
     el.on('touch keypress click', reloadInput);
@@ -233,13 +261,34 @@ function scrollableEditor(el, preview) {
 
     el.on('resize', reload);
 
+    var lastScroll = {editor: [false, 0, scroll], preview: [false, 0, scrollPreview]}
+
     el.on('DOMMouseScroll mousewheel touchmove', function () {
-        scroll();
+        lastScroll.editor[0] = true;
+        lastScroll.editor[1] = performance.now();
     });
 
     preview.on('DOMMouseScroll mousewheel touchmove', function () {
-        scrollPreview();
+        lastScroll.preview[0] = true;
+        lastScroll.preview[1] = performance.now();
     });
+
+    // 检测宽度
+    setInterval(function () {
+        if (el.width() != lastWidth) {
+            lastWidth = el.width();
+            el.trigger('resize');
+        }
+
+        for (k in lastScroll) {
+            var item = lastScroll[k];
+
+            if (item[0] && performance.now() - item[1] >= 100) {
+                item[0] = false;
+                item[2]();
+            }
+        }
+    }, 50);
 
     return reload;
 }
