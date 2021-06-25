@@ -367,12 +367,13 @@
       })(this));
       text = text.replace(/!\[((?:[^\]]|\\\]|\\\[)*?)\]\(((?:[^\)]|\\\)|\\\()+?)\)/g, (function(_this) {
         return function() {
-          var escaped, matches, url;
+          var escaped, matches, ref, title, url;
           matches = 1 <= arguments.length ? slice.call(arguments, 0) : [];
           escaped = htmlspecialchars(_this.escapeBracket(matches[1]));
           url = _this.escapeBracket(matches[2]);
-          url = _this.cleanUrl(url);
-          return _this.makeHolder("<img src=\"" + url + "\" alt=\"" + escaped + "\" title=\"" + escaped + "\">");
+          ref = _this.cleanUrl(url, true), url = ref[0], title = ref[1];
+          title = title == null ? escaped : " title=\"" + title + "\"";
+          return _this.makeHolder("<img src=\"" + url + "\" alt=\"" + title + "\" title=\"" + title + "\">");
         };
       })(this));
       text = text.replace(/!\[((?:[^\]]|\\\]|\\\[)*?)\]\[((?:[^\]]|\\\]|\\\[)+?)\]/g, (function(_this) {
@@ -386,12 +387,13 @@
       })(this));
       text = text.replace(/\[((?:[^\]]|\\\]|\\\[)+?)\]\(((?:[^\)]|\\\)|\\\()+?)\)/g, (function(_this) {
         return function() {
-          var escaped, matches, url;
+          var escaped, matches, ref, title, url;
           matches = 1 <= arguments.length ? slice.call(arguments, 0) : [];
           escaped = _this.parseInline(_this.escapeBracket(matches[1]), '', false, false);
           url = _this.escapeBracket(matches[2]);
-          url = _this.cleanUrl(url);
-          return _this.makeHolder("<a href=\"" + url + "\">" + escaped + "</a>");
+          ref = _this.cleanUrl(url, true), url = ref[0], title = ref[1];
+          title = title == null ? '' : " title=\"" + title + "\"";
+          return _this.makeHolder("<a href=\"" + url + "\"" + title + ">" + escaped + "</a>");
         };
       })(this));
       text = text.replace(/\[((?:[^\]]|\\\]|\\\[)+?)\]\[((?:[^\]]|\\\]|\\\[)+?)\]/g, (function(_this) {
@@ -1137,8 +1139,19 @@
       return (this.markLines(lines, start)).join("\n");
     };
 
-    Parser.prototype.cleanUrl = function(url) {
-      var matches;
+    Parser.prototype.cleanUrl = function(url, parseTitle) {
+      var matches, pos, title;
+      if (parseTitle == null) {
+        parseTitle = false;
+      }
+      title = null;
+      if (parseTitle) {
+        pos = url.indexOf(' ');
+        if (pos > 0) {
+          title = htmlspecialchars(trim(url.substring(pos + 1), ' "\''));
+          url = url.substring(0, pos);
+        }
+      }
       url = url.replace(/["'<>\s]/g, '');
       if (!!(matches = url.match(/^(mailto:)?[_a-z0-9-\.\+]+@[_\w-]+\.[a-z]{2,}$/i))) {
         if (matches[1] == null) {
@@ -1148,7 +1161,11 @@
       if ((url.match(/^\w+:/i)) && !(url.match(/^(https?|mailto):/i))) {
         return '#';
       }
-      return url;
+      if (parseTitle) {
+        return [url, title];
+      } else {
+        return url;
+      }
     };
 
     Parser.prototype.escapeBracket = function(str) {

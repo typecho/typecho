@@ -385,8 +385,8 @@ class HyperDown
             "/(^|[^\\\])(`+)(.+?)\\2/",
             function ($matches) use ($self) {
                 return  $matches[1] . $self->makeHolder(
-                    '<code>' . htmlspecialchars($matches[3]) . '</code>'
-                );
+                        '<code>' . htmlspecialchars($matches[3]) . '</code>'
+                    );
             },
             $text
         );
@@ -396,8 +396,8 @@ class HyperDown
             "/(^|[^\\\])(\\$+)(.+?)\\2/",
             function ($matches) use ($self) {
                 return  $matches[1] . $self->makeHolder(
-                    $matches[2] . htmlspecialchars($matches[3]) . $matches[2]
-                );
+                        $matches[2] . htmlspecialchars($matches[3]) . $matches[2]
+                    );
             },
             $text
         );
@@ -433,8 +433,8 @@ class HyperDown
             "/<(\/?)([a-z0-9-]+)(\s+[^>]*)?>/i",
             function ($matches) use ($self, $whiteList) {
                 if ($self->_html || false !== stripos(
-                    '|' . $self->_commonWhiteList . '|' . $whiteList . '|', '|' . $matches[2] . '|'
-                )) {
+                        '|' . $self->_commonWhiteList . '|' . $whiteList . '|', '|' . $matches[2] . '|'
+                    )) {
                     return $self->makeHolder($matches[0]);
                 } else {
                     return $self->makeHolder(htmlspecialchars($matches[0]));
@@ -475,9 +475,11 @@ class HyperDown
             function ($matches) use ($self) {
                 $escaped = htmlspecialchars($self->escapeBracket($matches[1]));
                 $url = $self->escapeBracket($matches[2]);
-                $url = $self->cleanUrl($url);
+                list ($url, $title) = $self->cleanUrl($url, true);
+                $title = empty($title)? $escaped : " title=\"{$title}\"";
+
                 return $self->makeHolder(
-                    "<img src=\"{$url}\" alt=\"{$escaped}\" title=\"{$escaped}\">"
+                    "<img src=\"{$url}\" alt=\"{$title}\" title=\"{$title}\">"
                 );
             },
             $text
@@ -505,8 +507,10 @@ class HyperDown
                     $self->escapeBracket($matches[1]),  '',  false, false
                 );
                 $url = $self->escapeBracket($matches[2]);
-                $url = $self->cleanUrl($url);
-                return $self->makeHolder("<a href=\"{$url}\">{$escaped}</a>");
+                list ($url, $title) = $self->cleanUrl($url, true);
+                $title = empty($title) ? '' : " title=\"{$title}\"";
+
+                return $self->makeHolder("<a href=\"{$url}\"{$title}>{$escaped}</a>");
             },
             $text
         );
@@ -1088,7 +1092,7 @@ class HyperDown
     private function parseBlockMh($block, $key, $line, &$state, $lines)
     {
         if (preg_match("/^\s*((=|-){2,})\s*$/", $line, $matches)
-                    && ($block && $block[0] == "normal" && !preg_match("/^\s*$/", $lines[$block[2]]))) {    // check if last line isn't empty
+            && ($block && $block[0] == "normal" && !preg_match("/^\s*$/", $lines[$block[2]]))) {    // check if last line isn't empty
             if ($this->isBlock('normal')) {
                 $this->backBlock(1, 'mh', $matches[1][0] == '=' ? 1 : 2)
                     ->setBlock($key)
@@ -1624,10 +1628,23 @@ class HyperDown
 
     /**
      * @param $url
-     * @return string
+     * @param bool $parseTitle
+     *
+     * @return mixed
      */
-    public function cleanUrl($url)
+    public function cleanUrl($url, $parseTitle = false)
     {
+        $title = null;
+
+        if ($parseTitle) {
+            $pos = strpos($url, ' ');
+
+            if ($pos !== false) {
+                $title = htmlspecialchars(trim(substr($url, $pos + 1), ' "\''));
+                $url = substr($url, 0, $pos);
+            }
+        }
+
         $url = preg_replace("/[\"'<>\s]/", '', $url);
 
         if (preg_match("/^(mailto:)?[_a-z0-9-\.\+]+@[_\w-]+\.[a-z]{2,}$/i", $url, $matches)) {
@@ -1640,7 +1657,7 @@ class HyperDown
             return '#';
         }
 
-        return $url;
+        return $parseTitle ? [$url, $title] : $url;
     }
 
     /**
