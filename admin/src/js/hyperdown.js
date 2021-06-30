@@ -413,7 +413,7 @@
             matches = 1 <= arguments.length ? slice.call(arguments, 0) : [];
             url = _this.cleanUrl(matches[2]);
             link = _this.call('parseLink', url);
-            return matches[1] + "<a href=\"" + link + "\">" + matches[2] + "</a>" + matches[5];
+            return matches[1] + "<a href=\"" + url + "\">" + link + "</a>" + matches[5];
           };
         })(this));
       }

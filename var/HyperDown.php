@@ -545,7 +545,7 @@ class HyperDown
                 function ($matches) use ($self) {
                     $url = $self->cleanUrl($matches[2]);
                     $link = $self->call('parseLink', $url);
-                    return "{$matches[1]}<a href=\"{$link}\">{$matches[2]}</a>{$matches[5]}";
+                    return "{$matches[1]}<a href=\"{$url}\">{$link}</a>{$matches[5]}";
                 },
                 $text
             );
