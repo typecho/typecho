@@ -48,7 +48,7 @@ class Typecho_Widget_Helper_PageNavigator_Box extends Typecho_Widget_Helper_Page
         extract($template);
 
         // 定义item
-        $itemBegin = empty($itemTag) ? '' : ('<' . $itemTag . '>');
+        $itemBegin = empty($itemTag) ? '' : ('<' . $itemTag . (empty($itemClass) ? '' : ' class="' . $itemClass . '"') . '>');
         $itemCurrentBegin = empty($itemTag) ? '' : ('<' . $itemTag 
             . (empty($currentClass) ? '' : ' class="' . $currentClass . '"') . '>');
         $itemPrevBegin = empty($itemTag) ? '' : ('<' . $itemTag 
