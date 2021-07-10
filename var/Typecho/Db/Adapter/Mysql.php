@@ -54,7 +54,7 @@ class Typecho_Db_Adapter_Mysql implements Typecho_Db_Adapter
         }
 
         /** 数据库异常 */
-        throw new Typecho_Db_Adapter_Exception(@mysql_error($this->_dbLink));
+        throw new Typecho_Db_Adapter_Exception('[' . mysql_errno() . ']' . mysql_error());
     }
 
     /**
