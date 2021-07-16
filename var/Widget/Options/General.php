@@ -73,14 +73,14 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
         Typecho_Widget_Helper_Form::POST_METHOD);
 
         /** 站点名称 */
-        $title = new Typecho_Widget_Helper_Form_Element_Text('title', NULL, $this->options->title, _t('站点名称'), _t('站点的名称将显示在网页的标题处.'));
+        $title = new Typecho_Widget_Helper_Form_Element_Text('title', NULL, $this->options->title, _t('站点名称'), _t('站点的名称将显示在网页的标题处'));
         $title->input->setAttribute('class', 'w-100');
         $form->addInput($title->addRule('required', _t('请填写站点名称'))
             ->addRule('xssCheck', _t('请不要在站点名称中使用特殊字符')));
 
         /** 站点地址 */
         if (!defined('__TYPECHO_SITE_URL__')) {
-            $siteUrl = new Typecho_Widget_Helper_Form_Element_Text('siteUrl', NULL, $this->options->originalSiteUrl, _t('站点地址'), _t('站点地址主要用于生成内容的永久链接.') . ($this->options->originalSiteUrl == $this->options->rootUrl ? 
+            $siteUrl = new Typecho_Widget_Helper_Form_Element_Text('siteUrl', NULL, $this->options->originalSiteUrl, _t('站点地址'), _t('站点地址主要用于生成内容的永久链接') . ($this->options->originalSiteUrl == $this->options->rootUrl ?
                     '' : '</p><p class="message notice mono">' . _t('当前地址 <strong>%s</strong> 与上述设定值不一致',
                     $this->options->rootUrl)));
             $siteUrl->input->setAttribute('class', 'w-100 mono');
@@ -89,16 +89,16 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
         }
 
         /** 站点描述 */
-        $description = new Typecho_Widget_Helper_Form_Element_Text('description', NULL, $this->options->description, _t('站点描述'), _t('站点描述将显示在网页代码的头部.'));
+        $description = new Typecho_Widget_Helper_Form_Element_Text('description', NULL, $this->options->description, _t('站点描述'), _t('站点描述将显示在网页代码的头部'));
         $form->addInput($description->addRule('xssCheck', _t('请不要在站点描述中使用特殊字符')));
 
         /** 关键词 */
-        $keywords = new Typecho_Widget_Helper_Form_Element_Text('keywords', NULL, $this->options->keywords, _t('关键词'), _t('请以半角逗号 "," 分割多个关键字.'));
+        $keywords = new Typecho_Widget_Helper_Form_Element_Text('keywords', NULL, $this->options->keywords, _t('关键词'), _t('用半角逗号 "," 分割多个关键字'));
         $form->addInput($keywords->addRule('xssCheck', _t('请不要在关键词中使用特殊字符')));
 
         /** 注册 */
         $allowRegister = new Typecho_Widget_Helper_Form_Element_Radio('allowRegister', array('0' => _t('不允许'), '1' => _t('允许')), $this->options->allowRegister, _t('是否允许注册'),
-        _t('允许访问者注册到你的网站, 默认的注册用户不享有任何写入权限.'));
+        _t('允许访问者注册到你的网站，默认的注册用户不享有任何写入权限。'));
         $form->addInput($allowRegister);
  
         /** XMLRPC */
@@ -180,7 +180,7 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
         );
         
         $attachmentTypes = new Typecho_Widget_Helper_Form_Element_Checkbox('attachmentTypes', $attachmentTypesOptions,
-        $attachmentTypesOptionsValue, _t('允许上传的文件类型'), _t('用逗号 "," 将后缀名隔开, 例如: %s', '<code>cpp, h, mak</code>'));
+        $attachmentTypesOptionsValue, _t('允许上传的文件类型'), _t('用半角逗号 "," 将后缀名隔开，例如：%s', '<code>cpp, h, mak</code>。'));
         $form->addInput($attachmentTypes->multiMode());
 
         /** 提交按钮 */

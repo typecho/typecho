@@ -143,7 +143,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                             <section class="typecho-post-option">
                                 <label for="trackback" class="typecho-label"><?php _e('引用通告'); ?></label>
                                 <p><textarea id="trackback" class="w-100 mono" name="trackback" rows="2"></textarea></p>
-                                <p class="description"><?php _e('每一行一个引用地址, 用回车隔开'); ?></p>
+                                <p class="description"><?php _e('每一行一个引用地址（需用换行符隔开）'); ?></p>
                             </section>
 
                             <?php Typecho_Plugin::factory('admin/write-post.php')->advanceOption($post); ?>

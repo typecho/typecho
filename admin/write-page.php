@@ -76,7 +76,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                         <section class="typecho-post-option">
                             <label for="order" class="typecho-label"><?php _e('页面顺序'); ?></label>
                             <p><input type="text" id="order" name="order" value="<?php $page->order(); ?>" class="w-100" /></p>
-                            <p class="description"><?php _e('为你的自定义页面设定一个序列值以后, 能够使得它们按此值从小到大排列'); ?></p>
+                            <p class="description"><?php _e('为你的自定义页面设定一个序列值以后，能够使得它们按此值从小到大排列。'); ?></p>
                         </section>
 
                         <section  class="typecho-post-option">
@@ -89,7 +89,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                                         <?php endforeach; ?>
                                     </select>
                                 </p>
-                                <p class="description"><?php _e('如果你为此页面选择了一个自定义模板, 系统将按照你选择的模板文件展现它'); ?></p>
+                                <p class="description"><?php _e('如果你为此页面选择了一个自定义模板，系统将按照你选择的模板文件展现它。'); ?></p>
                         </section>
 
                         <?php Typecho_Plugin::factory('admin/write-page.php')->option($page); ?>

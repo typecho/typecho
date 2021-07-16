@@ -133,7 +133,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
 
         /** 分类缩略名 */
         $slug = new Typecho_Widget_Helper_Form_Element_Text('slug', NULL, NULL, _t('分类缩略名'),
-        _t('分类缩略名用于创建友好的链接形式, 建议使用字母, 数字, 下划线和横杠.'));
+        _t('分类缩略名用于创建友好的链接形式，建议使用字母、数字、下划线和横杠。'));
         $form->addInput($slug);
 
         /** 父级分类 */
@@ -146,12 +146,12 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         }
 
         $parent = new Typecho_Widget_Helper_Form_Element_Select('parent', $options, $this->request->parent, _t('父级分类'),
-        _t('此分类将归档在您选择的父级分类下.'));
+        _t('此分类将归档在您选择的父级分类下'));
         $form->addInput($parent);
 
         /** 分类描述 */
         $description =  new Typecho_Widget_Helper_Form_Element_Textarea('description', NULL, NULL,
-        _t('分类描述'), _t('此文字用于描述分类, 在有的主题中它会被显示.'));
+        _t('分类描述'), _t('此文字用于描述分类，在有的主题中它会被显示。'));
         $form->addInput($description);
 
         /** 分类动作 */
