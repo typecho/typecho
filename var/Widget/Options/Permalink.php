@@ -202,7 +202,7 @@ RewriteRule . {$basePath}index.php [L]
     public function form()
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form($this->security->getRootUrl('index.php/action/options-permalink'),
+        $form = new Typecho_Widget_Helper_Form($this->security->getIndex('/action/options-permalink'),
         Typecho_Widget_Helper_Form::POST_METHOD);
 
         if (!defined('__TYPECHO_REWRITE__')) {
