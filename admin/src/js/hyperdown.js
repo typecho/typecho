@@ -412,7 +412,7 @@
             var link, matches, url;
             matches = 1 <= arguments.length ? slice.call(arguments, 0) : [];
             url = _this.cleanUrl(matches[2]);
-            link = _this.call('parseLink', url);
+            link = _this.call('parseLink', matches[2]);
             return matches[1] + "<a href=\"" + url + "\">" + link + "</a>" + matches[5];
           };
         })(this));
@@ -521,7 +521,6 @@
       var matches, space, tab, type;
       if ((this.isBlock('list')) && !line.match(/^\s*\[((?:[^\]]|\\\]|\\\[)+?)\]:\s*(.+)$/)) {
         if (!!(line.match(/^(\s*)(~{3,}|`{3,})([^`~]*)$/i))) {
-          state.empty = 0;
           return true;
         } else if ((state.empty <= 1) && !!(matches = line.match(/^(\s*)\S+/)) && matches[1].length >= (block[3][0] + state.empty)) {
           state.empty = 0;
@@ -562,6 +561,7 @@
           }
           isAfterList = block[3][2];
           if (isAfterList) {
+            state.empty = 0;
             this.combineBlock().setBlock(key);
           } else {
             (this.setBlock(key)).endBlock();

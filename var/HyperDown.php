@@ -544,7 +544,7 @@ class HyperDown
                 "/(^|[^\"])(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/=]*)|(?:mailto:)?[_a-z0-9-\.\+]+@[_\w-]+\.[a-z]{2,})($|[^\"])/",
                 function ($matches) use ($self) {
                     $url = $self->cleanUrl($matches[2]);
-                    $link = $self->call('parseLink', $url);
+                    $link = $self->call('parseLink', $matches[2]);
                     return "{$matches[1]}<a href=\"{$url}\">{$link}</a>{$matches[5]}";
                 },
                 $text
@@ -699,7 +699,6 @@ class HyperDown
         if ($this->isBlock('list') && !preg_match("/^\s*\[((?:[^\]]|\\]|\\[)+?)\]:\s*(.+)$/", $line)) {
             if (preg_match("/^(\s*)(~{3,}|`{3,})([^`~]*)$/i", $line)) {
                 // ignore code
-                $state['empty'] = 0;
                 return true;
             } elseif ($state['empty'] <= 1
                 && preg_match("/^(\s*)\S+/", $line, $matches)
@@ -757,6 +756,7 @@ class HyperDown
                 $isAfterList = $block[3][2];
 
                 if ($isAfterList) {
+                    $state['empty'] = 0;
                     $this->combineBlock()
                         ->setBlock($key);
                 } else {
