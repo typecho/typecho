@@ -79,6 +79,8 @@ class Typecho_I18n_GetTextMulti
      */
     public function ngettext($single, $plural, $number)
     {
+        $count = -1;
+        
         foreach ($this->_handles as $handle) {
             $string = $handle->ngettext($single, $plural, $number, $count);
             if (-1 != $count) {
