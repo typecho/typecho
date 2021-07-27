@@ -54,8 +54,8 @@ class Typecho_Http_Client_Adapter_Socket extends Typecho_Http_Client_Adapter
             }
         }
 
-        /** 发送POST信息 */
-        if (Typecho_Http_Client::METHOD_POST == $this->method) {
+        /** 发送提交信息 */
+        if (Typecho_Http_Client::METHOD_GET !== $this->method) {
             if (empty($this->files)) {
                 $content = is_array($this->data) ? http_build_query($this->data) : $this->data;
                 $request .= 'Content-Length: ' . strlen($content) . $eol;
