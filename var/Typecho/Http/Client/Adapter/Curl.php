@@ -108,8 +108,7 @@ class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
                 }
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $this->files);
             }
-        }
-       
+        }      
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $this->method); 
         $response = curl_exec($ch);
         if (false === $response) {
