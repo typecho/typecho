@@ -208,30 +208,32 @@ abstract class Typecho_Http_Client_Adapter
     }
 
     /**
-     * 设置需要POST的数据
+     * 设置需要的数据
      *
      * @access public
-     * @param array $data 需要POST的数据
+     * @param array $data 需要的数据
+     * @param string $method 提交方法
      * @return Typecho_Http_Client_Adapter
      */
-    public function setData($data)
+    public function setData($data,$method = Typecho_Http_Client::METHOD_POST)
     {
         $this->data = $data;
-        $this->setMethod(Typecho_Http_Client::METHOD_POST);
+        $this->setMethod($method);
         return $this;
     }
 
     /**
-     * 设置需要POST的文件
+     * 设置需要提交的文件
      *
      * @access public
-     * @param array $files 需要POST的文件
+     * @param array $files 需要提交的文件
+     * @param string $method 提交方法
      * @return Typecho_Http_Client_Adapter
      */
-    public function setFiles(array $files)
+    public function setFiles(array $files,$method = Typecho_Http_Client::METHOD_POST)
     {
         $this->files = empty($this->files) ? $files : array_merge($this->files, $files);
-        $this->setMethod(Typecho_Http_Client::METHOD_POST);
+        $this->setMethod($method);
         return $this;
     }
 
