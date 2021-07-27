@@ -93,7 +93,7 @@ class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
         }
 
         /** 数据提交模式 */
-        if (Typecho_Http_Client::METHOD_GET !== $this->method && Typecho_Http_Client::METHOD_HEAD !== $this->method) {
+        if (Typecho_Http_Client::METHOD_GET !== $this->method) {
             if (!isset($this->headers['content-type'])) {
                 curl_setopt($ch, CURLOPT_POST, true);
             }
