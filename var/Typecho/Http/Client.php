@@ -19,11 +19,22 @@
  */
 class Typecho_Http_Client
 {
-    /** POST方法 */
-    const METHOD_POST = 'POST';
-
-    /** GET方法 */
+      /** HTTP方法 */
     const METHOD_GET = 'GET';
+    
+    const METHOD_POST = 'POST';
+    
+    const METHOD_TRACE = 'TRACE';
+    
+    const METHOD_PUT   =   'PUT';
+    
+    const METHOD_DELETE = 'DELETE';
+    
+    const METHOD_OPTIONS = 'OPTIONS';
+    
+    const METHOD_HEAD = 'HEAD';
+    
+    //const METHOD_CONNECTA = 'CONNECTA';
 
     /** 定义行结束符 */
     const EOL = "\r\n";
