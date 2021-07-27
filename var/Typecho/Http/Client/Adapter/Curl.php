@@ -92,14 +92,14 @@ class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         }
 
-        /** POST模式 */
-        if (Typecho_Http_Client::METHOD_POST == $this->method) {
+        /** 数据提交模式 */
+        if (Typecho_Http_Client::METHOD_GET !== $this->method && Typecho_Http_Client::METHOD_HEAD !== $this->method) {
             if (!isset($this->headers['content-type'])) {
                 curl_setopt($ch, CURLOPT_POST, true);
             }
 
             if (!empty($this->data)) {
-                curl_setopt($ch, CURLOPT_POSTFIELDS, is_array($this->data) ? http_build_query($this->data) : $this->data);
+                curl_setopt($ch, CURLOPT_FIELDS, is_array($this->data) ? http_build_query($this->data) : $this->data);
             }
 
             if (!empty($this->files)) {
@@ -109,7 +109,8 @@ class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $this->files);
             }
         }
-
+       
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $this->method); 
         $response = curl_exec($ch);
         if (false === $response) {
             throw new Typecho_Http_Client_Exception(curl_error($ch), 500);
