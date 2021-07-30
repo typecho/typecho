@@ -64,6 +64,8 @@ class Widget_User extends Typecho_Widget
      * @param mixed $request request对象
      * @param mixed $response response对象
      * @param mixed $params 参数列表
+     * @throws Typecho_Db_Exception
+     * @throws Typecho_Exception
      */
     public function __construct($request, $response, $params = NULL)
     {
@@ -75,18 +77,27 @@ class Widget_User extends Typecho_Widget
     }
 
     /**
+     * 当前用户数据
+     *
+     * @return array
+     */
+    public function ____user()
+    {
+        return $this->_user;
+    }
+
+    /**
      * 执行函数
      *
      * @access public
      * @return void
+     * @throws Typecho_Db_Exception
      */
     public function execute()
     {
         if ($this->hasLogin()) {
             $rows = $this->db->fetchAll($this->db->select()
             ->from('table.options')->where('user = ?', $this->_user['uid']));
-
-            $this->push($this->_user);
 
             foreach ($rows as $row) {
                 $this->options->__set($row['name'], $row['value']);
@@ -101,6 +112,19 @@ class Widget_User extends Typecho_Widget
     }
 
     /**
+     * 将每一行的值压入堆栈
+     *
+     * @param array $value
+     * @return array
+     */
+    public function push(array $value)
+    {
+        $this->_user = $value;
+        $this->_hasLogin = true;
+        return parent::push($value);
+    }
+
+    /**
      * 以用户名和密码登录
      *
      * @access public
@@ -109,6 +133,7 @@ class Widget_User extends Typecho_Widget
      * @param boolean $temporarily 是否为临时登录
      * @param integer $expire 过期时间
      * @return boolean
+     * @throws Typecho_Db_Exception
      */
     public function login($name, $password, $temporarily = false, $expire = 0)
     {
@@ -158,20 +183,17 @@ class Widget_User extends Typecho_Widget
 
             /** 压入数据 */
             $this->push($user);
-            $this->_user = $user;
-            $this->_hasLogin = true;
             $this->pluginHandle()->loginSucceed($this, $name, $password, $temporarily, $expire);
-
             return true;
         }
 
         $this->pluginHandle()->loginFail($this, $name, $password, $temporarily, $expire);
         return false;
     }
-    
+
     /**
      * 只需要提供uid即可登录的方法, 多用于插件等特殊场合
-     * 
+     *
      * @access public
      * @param integer $uid 用户id
      * @return boolean
@@ -182,15 +204,13 @@ class Widget_User extends Typecho_Widget
         ->from('table.users')
         ->where('uid = ?', $uid)
         ->limit(1));
-        
+
         if (empty($user)) {
             $this->pluginHandle()->simpleLoginFail($this);
             return false;
         }
-        
+
         $this->push($user);
-        $this->_hasLogin = true;
-        
         $this->pluginHandle()->simpleLoginSucceed($this, $user);
         return true;
     }
