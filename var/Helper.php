@@ -366,6 +366,26 @@ class Helper
     {
         return Typecho_Common::url('extending.php?panel=' . (trim($fileName, '/')), self::options()->adminUrl);
     }
+
+    /**
+     * 手动配置主题外观
+     *
+     * @access public
+     * @static
+     * @param mixed $themeName 主题名称
+     * @param array $settings 变量键值对
+     * @return void
+     * @throws Typecho_Db_Exception
+     * @throws Typecho_Exception
+     */
+    public static function configTheme($themeName, array $settings)
+    {
+        if (empty($settings)) {
+            return;
+        }
+
+        Widget_Themes_Edit::configTheme($themeName, $settings);
+    }
     
     /**
      * 手动配置插件变量

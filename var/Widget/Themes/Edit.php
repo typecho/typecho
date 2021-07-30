@@ -21,13 +21,43 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  */
 class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Interface_Do
 {
+
+    /**
+     * 手动配置主题外观
+     *
+     * @param string $themeName 主题名称
+     * @param array $settings 变量键值对
+     * @throws Typecho_Db_Exception|Typecho_Exception
+     */
+    public static function configTheme($themeName, array $settings)
+    {
+        $db = Typecho_Db::get();
+        $options = Typecho_Widget::widget('Widget_Options');
+
+        $name = 'theme:' . $themeName;
+        $value = serialize($settings);
+
+        if ($options->__isSet($name)) {
+            $db->query($db->update('table.options')
+                ->rows(array('value' => $value))
+                ->where('name = ?', $name));
+        } else {
+            $db->query($db->insert('table.options')
+                ->rows(array(
+                    'name' => $name,
+                    'value' => $value,
+                    'user' => 0
+                )));
+        }
+    }
+
     /**
      * 更换外观
      *
      * @access public
      * @param string $theme 外观名称
      * @return void
-     * @throws Typecho_Widget_Exception
+     * @throws Typecho_Widget_Exception|Typecho_Exception
      */
     public function changeTheme($theme)
     {
@@ -42,12 +72,12 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
             if (0 === strpos($this->options->frontPage, 'file:')) {
                 $this->update(array('value' => 'recent'), $this->db->sql()->where('name = ?', 'frontPage'));
             }
-            
+
             $configFile = $this->options->themeFile($theme, 'functions.php');
-            
+
             if (file_exists($configFile)) {
                 require_once $configFile;
-                
+
                 if (function_exists('themeConfig')) {
                     $form = new Typecho_Widget_Helper_Form();
                     themeConfig($form);
@@ -78,7 +108,7 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
      * @param string $theme 外观名称
      * @param string $file 文件名
      * @return void
-     * @throws Typecho_Widget_Exception
+     * @throws Typecho_Widget_Exception|Typecho_Exception
      */
     public function editThemeFile($theme, $file)
     {
@@ -98,13 +128,15 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
             throw new Typecho_Widget_Exception(_t('您编辑的文件不存在'));
         }
     }
-    
+
     /**
      * 配置外观
      *
      * @access public
      * @param string $theme 外观名
      * @return void
+     * @throws Typecho_Db_Exception
+     * @throws Typecho_Exception
      */
     public function config($theme)
     {
@@ -119,16 +151,7 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
         $settings = $form->getAllRequest();
 
         if (!$this->configHandle($settings, false)) {
-            if ($this->options->__get('theme:' . $theme)) {
-                $this->update(array('value' => serialize($settings)),
-                $this->db->sql()->where('name = ?', 'theme:' . $theme));
-            } else {
-                $this->insert(array(
-                    'name'  =>  'theme:' . $theme,
-                    'value' =>  serialize($settings),
-                    'user'  =>  0
-                ));
-            }
+            self::configTheme($theme, $settings);
         }
 
         /** 设置高亮 */
@@ -164,6 +187,7 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
      *
      * @access public
      * @return void
+     * @throws Typecho_Widget_Exception
      */
     public function action()
     {
