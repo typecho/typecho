@@ -12,14 +12,6 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 class Widget_User extends Typecho_Widget
 {
     /**
-     * 用户
-     *
-     * @access private
-     * @var array
-     */
-    private $_user;
-
-    /**
      * 是否已经登录
      *
      * @access private
@@ -77,16 +69,6 @@ class Widget_User extends Typecho_Widget
     }
 
     /**
-     * 当前用户数据
-     *
-     * @return array
-     */
-    public function ____user()
-    {
-        return $this->_user;
-    }
-
-    /**
      * 执行函数
      *
      * @access public
@@ -97,7 +79,7 @@ class Widget_User extends Typecho_Widget
     {
         if ($this->hasLogin()) {
             $rows = $this->db->fetchAll($this->db->select()
-            ->from('table.options')->where('user = ?', $this->_user['uid']));
+            ->from('table.options')->where('user = ?', $this->uid));
 
             foreach ($rows as $row) {
                 $this->options->__set($row['name'], $row['value']);
@@ -107,7 +89,7 @@ class Widget_User extends Typecho_Widget
             $this->db->query($this->db
             ->update('table.users')
             ->rows(array('activated' => $this->options->time))
-            ->where('uid = ?', $this->_user['uid']));
+            ->where('uid = ?', $this->uid));
         }
     }
 
@@ -119,7 +101,6 @@ class Widget_User extends Typecho_Widget
      */
     public function push(array $value)
     {
-        $this->_user = $value;
         $this->_hasLogin = true;
         return parent::push($value);
     }
