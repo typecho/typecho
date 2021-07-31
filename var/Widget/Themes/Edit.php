@@ -49,6 +49,7 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
                     'user' => 0
                 )));
         }
+        $options->__set($name, $value);
     }
 
     /**
