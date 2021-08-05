@@ -170,18 +170,22 @@ class Widget_User extends Typecho_Widget
     }
     
     /**
-     * 只需要提供uid即可登录的方法, 多用于插件等特殊场合
+     * 只需要提供uid或者完整user数组即可登录的方法, 多用于插件等特殊场合
      * 
      * @access public
-     * @param integer $uid 用户id
+     * @param int | array $uid 用户id或者用户数据数组
      * @return boolean
      */
     public function simpleLogin($uid)
     {
-        $user = $this->db->fetchRow($this->db->select()
-        ->from('table.users')
-        ->where('uid = ?', $uid)
-        ->limit(1));
+        if (is_array($uid)) {
+            $user = $uid;
+        } else {
+            $user = $this->db->fetchRow($this->db->select()
+                ->from('table.users')
+                ->where('uid = ?', $uid)
+                ->limit(1));
+        }
         
         if (empty($user)) {
             $this->pluginHandle()->simpleLoginFail($this);
