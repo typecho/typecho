@@ -141,19 +141,7 @@ class Widget_User extends Typecho_Widget
         if ($user && $hashValidate) {
 
             if (!$temporarily) {
-                $authCode = function_exists('openssl_random_pseudo_bytes') ?
-                    bin2hex(openssl_random_pseudo_bytes(16)) : sha1(Typecho_Common::randString(20));
-                $user['authCode'] = $authCode;
-
-                Typecho_Cookie::set('__typecho_uid', $user['uid'], $expire);
-                Typecho_Cookie::set('__typecho_authCode', Typecho_Common::hash($authCode), $expire);
-
-                //更新最后登录时间以及验证码
-                $this->db->query($this->db
-                ->update('table.users')
-                ->expression('logged', 'activated')
-                ->rows(array('authCode' => $authCode))
-                ->where('uid = ?', $user['uid']));
+                $this->commitLogin($user, $expire);
             }
 
             /** 压入数据 */
@@ -174,9 +162,11 @@ class Widget_User extends Typecho_Widget
      * 
      * @access public
      * @param int | array $uid 用户id或者用户数据数组
+     * @param boolean $temporarily 是否为临时登录，默认为临时登录以兼容以前的方法
+     * @param integer $expire 过期时间
      * @return boolean
      */
-    public function simpleLogin($uid)
+    public function simpleLogin($uid, $temporarily = true, $expire = 0)
     {
         if (is_array($uid)) {
             $user = $uid;
@@ -191,12 +181,40 @@ class Widget_User extends Typecho_Widget
             $this->pluginHandle()->simpleLoginFail($this);
             return false;
         }
-        
+
+        if (!$temporarily) {
+            $this->commitLogin($user, $expire);
+        }
+
         $this->push($user);
+        $this->_user = $user;
         $this->_hasLogin = true;
         
         $this->pluginHandle()->simpleLoginSucceed($this, $user);
         return true;
+    }
+
+    /**
+     * @param $user
+     * @param int $expire
+     *
+     * @throws Typecho_Db_Exception
+     */
+    public function commitLogin(&$user, $expire = 0)
+    {
+        $authCode = function_exists('openssl_random_pseudo_bytes') ?
+            bin2hex(openssl_random_pseudo_bytes(16)) : sha1(Typecho_Common::randString(20));
+        $user['authCode'] = $authCode;
+
+        Typecho_Cookie::set('__typecho_uid', $user['uid'], $expire);
+        Typecho_Cookie::set('__typecho_authCode', Typecho_Common::hash($authCode), $expire);
+
+        //更新最后登录时间以及验证码
+        $this->db->query($this->db
+            ->update('table.users')
+            ->expression('logged', 'activated')
+            ->rows(array('authCode' => $authCode))
+            ->where('uid = ?', $user['uid']));
     }
 
     /**
