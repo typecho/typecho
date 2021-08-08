@@ -385,8 +385,8 @@ class HyperDown
             "/(^|[^\\\])(`+)(.+?)\\2/",
             function ($matches) use ($self) {
                 return  $matches[1] . $self->makeHolder(
-                        '<code>' . htmlspecialchars($matches[3]) . '</code>'
-                    );
+                    '<code>' . htmlspecialchars($matches[3]) . '</code>'
+                );
             },
             $text
         );
@@ -396,8 +396,8 @@ class HyperDown
             "/(^|[^\\\])(\\$+)(.+?)\\2/",
             function ($matches) use ($self) {
                 return  $matches[1] . $self->makeHolder(
-                        $matches[2] . htmlspecialchars($matches[3]) . $matches[2]
-                    );
+                    $matches[2] . htmlspecialchars($matches[3]) . $matches[2]
+                );
             },
             $text
         );
@@ -416,7 +416,7 @@ class HyperDown
 
         // link
         $text = preg_replace_callback(
-            "/<(https?:\/\/.+|(?:mailto:)?[_a-z0-9-\.\+]+@[_\w-]+\.[a-z]{2,})>/i",
+            "/<(https?:\/\/.+|(?:mailto:)?[_a-z0-9-\.\+]+@[_\w-]+(?:\.[a-z]{2,})+)>/i",
             function ($matches) use ($self) {
                 $url = $self->cleanUrl($matches[1]);
                 $link = $self->call('parseLink', $url);
@@ -433,8 +433,8 @@ class HyperDown
             "/<(\/?)([a-z0-9-]+)(\s+[^>]*)?>/i",
             function ($matches) use ($self, $whiteList) {
                 if ($self->_html || false !== stripos(
-                        '|' . $self->_commonWhiteList . '|' . $whiteList . '|', '|' . $matches[2] . '|'
-                    )) {
+                    '|' . $self->_commonWhiteList . '|' . $whiteList . '|', '|' . $matches[2] . '|'
+                )) {
                     return $self->makeHolder($matches[0]);
                 } else {
                     return $self->makeHolder(htmlspecialchars($matches[0]));
@@ -541,7 +541,7 @@ class HyperDown
         // autolink url
         if ($enableAutoLink) {
             $text = preg_replace_callback(
-                "/(^|[^\"])(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\b([-a-zA-Z0-9()@:%_\+.~#?&\/=]*)|(?:mailto:)?[_a-z0-9-\.\+]+@[_\w-]+\.[a-z]{2,})($|[^\"])/",
+                "/(^|[^\"])(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\b([-a-zA-Z0-9()@:%_\+.~#?&\/=]*)|(?:mailto:)?[_a-z0-9-\.\+]+@[_\w-]+(?:\.[a-z]{2,})+)($|[^\"])/",
                 function ($matches) use ($self) {
                     $url = $self->cleanUrl($matches[2]);
                     $link = $self->call('parseLink', $matches[2]);
@@ -1093,7 +1093,7 @@ class HyperDown
     private function parseBlockMh($block, $key, $line, &$state, $lines)
     {
         if (preg_match("/^\s*((=|-){2,})\s*$/", $line, $matches)
-            && ($block && $block[0] == "normal" && !preg_match("/^\s*$/", $lines[$block[2]]))) {    // check if last line isn't empty
+                    && ($block && $block[0] == "normal" && !preg_match("/^\s*$/", $lines[$block[2]]))) {    // check if last line isn't empty
             if ($this->isBlock('normal')) {
                 $this->backBlock(1, 'mh', $matches[1][0] == '=' ? 1 : 2)
                     ->setBlock($key)
@@ -1649,7 +1649,7 @@ class HyperDown
 
         $url = preg_replace("/[\"'<>\s]/", '', $url);
 
-        if (preg_match("/^(mailto:)?[_a-z0-9-\.\+]+@[_\w-]+\.[a-z]{2,}$/i", $url, $matches)) {
+        if (preg_match("/^(mailto:)?[_a-z0-9-\.\+]+@[_\w-]+(?:\.[a-z]{2,})+$/i", $url, $matches)) {
             if (empty($matches[1])) {
                 $url = 'mailto:' . $url;
             }
