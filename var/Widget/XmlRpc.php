@@ -609,6 +609,10 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         try {
             /** 插入 */
              $categoryWidget = $this->singletonWidget('Widget_Metas_Category_Edit', NULL, $input, false);
+
+             /** 如果是已经实例化过了，则会直接取到之前实例化的对象，$request参数是旧的数据。比如在newPost里调用此函数创建多个分类时有问题 */
+             $categoryWidget->request->setParams($input);
+
              $categoryWidget->action();
              return $categoryWidget->mid;
         } catch (Typecho_Widget_Exception $e) {
@@ -1401,6 +1405,14 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             $input['template'] = $content['wp_page_template'];
         }
 
+        /** 添加自定义字段 */
+        foreach (['fieldNames', 'fieldTypes', 'fieldValues'] as $fieldKey) {
+            $fieldValue = array_key_exists($fieldKey, $content) ? $content[$fieldKey] : NULL;
+            if (!empty($fieldValue)) {
+                $input[$fieldKey] = $fieldValue;
+            }
+        }
+
         if (isset($content['dateCreated'])) {
             /** 解决客户端与服务器端时间偏移 */
             $input['created'] = $content['dateCreated']->getTimestamp() - $this->options->timezone + $this->options->serverTimezone;
@@ -1411,7 +1423,9 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
                 if (!$this->db->fetchRow($this->db->select('mid')
                 ->from('table.metas')->where('type = ? AND name = ?', 'category', $category))) {
                     $result = $this->wpNewCategory($blogId, $userName, $password, array('name' => $category));
-                    if (true !== $result) {
+                    // if (true !== $result) {
+                    /** 创建分类异常 */
+                    if ($result instanceof IXR_Error) {
                         return $result;
                     }
                 }
@@ -1670,6 +1684,8 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         if (false === $result) {
             return new IXR_Error(500, _t('上传失败'));
         } else {
+
+            $result = $this->pluginHandle()->beforeUpload($result);
 
             $insertId = $this->insert(array(
                 'title'     =>  $result['name'],
@@ -2192,6 +2208,33 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         }
     }
 
+
+    /**
+     * 根据分享id查找postId
+     *
+     * @param int $blogId
+     * @param string $userName
+     * @param string $password
+     * @access public
+     * @return void
+     */
+    public function getPostIdByShareId($blogId, $userName, $password, $shareId)
+    {
+        if (!$this->checkAccess($userName, $password)) {
+            return ($this->error);
+        }
+
+        if (empty($shareId)) {
+            return new IXR_Error(1001, _t('无效的shareId'));
+        }
+
+        $db = Typecho_Db::get();
+        $query = $db->select()->from('table.fields')->where('str_value = ?', $shareId);
+        $result = $db->fetchRow($query);
+
+        return count($result) ? $result['cid'] : NULL;
+    }
+
     /**
      * 入口执行方法
      *
@@ -2335,6 +2378,9 @@ EOF;
                 
                 /** hook after */
                 'hook.afterCall'            => array($this, 'hookAfterCall'),
+
+                /** blog share */
+                'share.getPostIdByShareId'  => array($this, 'getPostIdByShareId'),
             );
 
             if (1 == $this->options->allowXmlRpc) {
