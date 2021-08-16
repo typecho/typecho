@@ -18,7 +18,6 @@ $header = Typecho_Plugin::factory('admin/header.php')->header($header);
 <html class="no-js">
     <head>
         <meta charset="<?php $options->charset(); ?>">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="renderer" content="webkit">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
         <title><?php _e('%s - %s - Powered by Typecho', $menu->title, $options->title); ?></title>

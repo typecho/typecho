@@ -52,12 +52,17 @@ class Widget_Options extends Typecho_Widget
      * @param mixed $response response对象
      * @param mixed $params 参数列表
      */
-    public function __construct($request, $response, $params = NULL)
+    public function __construct($request, $response, $params = null)
     {
-        parent::__construct($request, $response, $params);
+        parent::__construct($request, $response, null);
 
-        /** 初始化数据库 */
-        $this->db = Typecho_Db::get();
+        if (!empty($params)) {
+            // 使用参数初始化而不使用数据库
+            $this->row = $params;
+        } else {
+            /** 初始化数据库 */
+            $this->db = Typecho_Db::get();
+        }
     }
 
     /**
@@ -335,7 +340,7 @@ class Widget_Options extends Typecho_Widget
     {
         $attachmentTypesResult = array();
     
-        if (NULL != $this->attachmentTypes) {
+        if (null != $this->attachmentTypes) {
             $attachmentTypes = str_replace(
                 array('@image@', '@media@', '@doc@'), 
                 array('gif,jpg,jpeg,png,tiff,bmp', 'mp3,mp4,mov,wmv,wma,rmvb,rm,avi,flv,ogg,oga,ogv',
@@ -355,12 +360,14 @@ class Widget_Options extends Typecho_Widget
      */
     public function execute()
     {
-        $this->db->fetchAll($this->db->select()->from('table.options')
-        ->where('user = 0'), array($this, 'push'));
-        
+        if (!empty($this->db)) {
+            $this->db->fetchAll($this->db->select()->from('table.options')
+                ->where('user = 0'), array($this, 'push'));
+        }
+
         /** 支持皮肤变量重载 */
         if (!empty($this->row['theme:' . $this->row['theme']])) {
-            $themeOptions = NULL;
+            $themeOptions = null;
         
             /** 解析变量 */
             if ($themeOptions = unserialize($this->row['theme:' . $this->row['theme']])) {
@@ -387,7 +394,7 @@ class Widget_Options extends Typecho_Widget
         }
 
         $this->originalSiteUrl = $this->siteUrl;
-        $this->siteUrl = Typecho_Common::url(NULL, $this->siteUrl);
+        $this->siteUrl = Typecho_Common::url(null, $this->siteUrl);
         $this->plugins = unserialize($this->plugins);
 
         /** 动态判断皮肤目录 */
@@ -400,7 +407,7 @@ class Widget_Options extends Typecho_Widget
 
         /** 自动初始化路由表 */
         $this->routingTable = unserialize($this->routingTable);
-        if (!isset($this->routingTable[0])) {
+        if (!empty($this->db) && !isset($this->routingTable[0])) {
             /** 解析路由并缓存 */
             $parser = new Typecho_Router_Parser($this->routingTable);
             $parsedRoutingTable = $parser->parse();
@@ -431,7 +438,7 @@ class Widget_Options extends Typecho_Widget
      * @param string $path 子路径
      * @return void
      */
-    public function siteUrl($path = NULL)
+    public function siteUrl($path = null)
     {
         echo Typecho_Common::url($path, $this->siteUrl);
     }
@@ -443,7 +450,7 @@ class Widget_Options extends Typecho_Widget
      * @param string $path 子路径
      * @return void
      */
-    public function index($path = NULL)
+    public function index($path = null)
     {
         echo Typecho_Common::url($path, $this->index);
     }
@@ -456,7 +463,7 @@ class Widget_Options extends Typecho_Widget
      * @param string $theme 模版名称
      * @return string
      */
-    public function themeUrl($path = NULL, $theme = NULL)
+    public function themeUrl($path = null, $theme = null)
     {
         if (empty($theme)) {
             echo Typecho_Common::url($path, $this->themeUrl);
@@ -475,7 +482,7 @@ class Widget_Options extends Typecho_Widget
      * @param string $path 子路径
      * @return void
      */
-    public function pluginUrl($path = NULL)
+    public function pluginUrl($path = null)
     {
         echo Typecho_Common::url($path, $this->pluginUrl);
     }
@@ -498,7 +505,7 @@ class Widget_Options extends Typecho_Widget
      * @param $plugin
      * @return string
      */
-    public function pluginDir($plugin = NULL)
+    public function pluginDir($plugin = null)
     {
         return __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__;
     }
@@ -510,7 +517,7 @@ class Widget_Options extends Typecho_Widget
      * @param string $path 子路径
      * @return void
      */
-    public function adminUrl($path = NULL)
+    public function adminUrl($path = null)
     {
         echo Typecho_Common::url($path, $this->adminUrl);
     }
@@ -522,7 +529,7 @@ class Widget_Options extends Typecho_Widget
      * @param string $file
      * @return void|string
      */
-    public function adminStaticUrl($type, $file = NULL)
+    public function adminStaticUrl($type, $file = null)
     {
         $url = Typecho_Common::url($type, $this->adminUrl);
 

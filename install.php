@@ -44,7 +44,246 @@ else:
 
 endif;
 
-ob_start();
+define('__TYPECHO_INSTALL__', true);
+
+/**
+ * 获取系统语言
+ *
+ * @return string
+ */
+function install_get_lang(): string {
+    if (isset($_SERVER['TYPECHO_LANG'])) {
+        return $_SERVER['TYPECHO_LANG'];
+    } else {
+        $lang = 'zh_CN';
+        $request = Typecho_Request::getInstance();
+
+        if ($request->is('lang')) {
+            $lang = $request->get('lang');
+            Typecho_Cookie::set('lang', $lang);
+        }
+
+        return Typecho_Cookie::get('lang', $lang);
+    }
+}
+
+/**
+ * 获取站点地址
+ *
+ * @return string
+ */
+function install_get_site_url(): string {
+    if (isset($_SERVER['TYPECHO_SITE_URL'])) {
+        return $_SERVER['TYPECHO_SITE_URL'];
+    } else {
+        $request = Typecho_Request::getInstance();
+        return $request->get('userUrl', $request->getRequestRoot());
+    }
+}
+
+/**
+ * 获取默认参数
+ *
+ * @return array
+ */
+function install_get_default_options(): array {
+    return [
+        'theme' => 'default',
+        'theme:default' => 'a:2:{s:7:"logoUrl";N;s:12:"sidebarBlock";a:5:{i:0;s:15:"ShowRecentPosts";i:1;s:18:"ShowRecentComments";i:2;s:12:"ShowCategory";i:3;s:11:"ShowArchive";i:4;s:9:"ShowOther";}}',
+        'timezone' => '28800',
+        'lang' => install_get_lang(),
+        'charset' => _('UTF-8'),
+        'contentType' => 'text/html',
+        'gzip' => 0,
+        'generator' => 'Typecho ' . Typecho_Common::VERSION,
+        'title' => 'Hello World',
+        'description' => 'Your description here.',
+        'keywords' => 'typecho,php,blog',
+        'rewrite' => 0,
+        'frontPage' => 'recent',
+        'frontArchive' => 0,
+        'commentsRequireMail' => 1,
+        'commentsWhitelist' => 0,
+        'commentsRequireURL' => 0,
+        'commentsRequireModeration' => 0,
+        'plugins' => 'a:0:{}',
+        'commentDateFormat' => 'F jS, Y \a\t h:i a',
+        'siteUrl' => install_get_site_url(),
+        'defaultCategory' => 1,
+        'allowRegister' => 0,
+        'defaultAllowComment' => 1,
+        'defaultAllowPing' => 1,
+        'defaultAllowFeed' => 1,
+        'pageSize' => 5,
+        'postsListSize' => 10,
+        'commentsListSize' => 10,
+        'commentsHTMLTagAllowed' => null,
+        'postDateFormat' => 'Y-m-d',
+        'feedFullText' => 1,
+        'editorSize' => 350,
+        'autoSave' => 0,
+        'markdown' => 1,
+        'xmlrpcMarkdown' => 0,
+        'commentsMaxNestingLevels' => 5,
+        'commentsPostTimeout' => 24 * 3600 * 30,
+        'commentsUrlNofollow' => 1,
+        'commentsShowUrl' => 1,
+        'commentsMarkdown' => 0,
+        'commentsPageBreak' => 0,
+        'commentsThreaded' => 1,
+        'commentsPageSize' => 20,
+        'commentsPageDisplay' => 'last',
+        'commentsOrder' => 'ASC',
+        'commentsCheckReferer' => 1,
+        'commentsAutoClose' => 0,
+        'commentsPostIntervalEnable' => 1,
+        'commentsPostInterval' => 60,
+        'commentsShowCommentOnly' => 0,
+        'commentsAvatar' => 1,
+        'commentsAvatarRating' => 'G',
+        'commentsAntiSpam' => 1,
+        'routingTable' => 'a:25:{s:5:"index";a:3:{s:3:"url";s:1:"/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:7:"archive";a:3:{s:3:"url";s:6:"/blog/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:2:"do";a:3:{s:3:"url";s:22:"/action/[action:alpha]";s:6:"widget";s:9:"Widget_Do";s:6:"action";s:6:"action";}s:4:"post";a:3:{s:3:"url";s:24:"/archives/[cid:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:10:"attachment";a:3:{s:3:"url";s:26:"/attachment/[cid:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:8:"category";a:3:{s:3:"url";s:17:"/category/[slug]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:3:"tag";a:3:{s:3:"url";s:12:"/tag/[slug]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:6:"author";a:3:{s:3:"url";s:22:"/author/[uid:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:6:"search";a:3:{s:3:"url";s:19:"/search/[keywords]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:10:"index_page";a:3:{s:3:"url";s:21:"/page/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:12:"archive_page";a:3:{s:3:"url";s:26:"/blog/page/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:13:"category_page";a:3:{s:3:"url";s:32:"/category/[slug]/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:8:"tag_page";a:3:{s:3:"url";s:27:"/tag/[slug]/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:11:"author_page";a:3:{s:3:"url";s:37:"/author/[uid:digital]/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:11:"search_page";a:3:{s:3:"url";s:34:"/search/[keywords]/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:12:"archive_year";a:3:{s:3:"url";s:18:"/[year:digital:4]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:13:"archive_month";a:3:{s:3:"url";s:36:"/[year:digital:4]/[month:digital:2]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:11:"archive_day";a:3:{s:3:"url";s:52:"/[year:digital:4]/[month:digital:2]/[day:digital:2]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:17:"archive_year_page";a:3:{s:3:"url";s:38:"/[year:digital:4]/page/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:18:"archive_month_page";a:3:{s:3:"url";s:56:"/[year:digital:4]/[month:digital:2]/page/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:16:"archive_day_page";a:3:{s:3:"url";s:72:"/[year:digital:4]/[month:digital:2]/[day:digital:2]/page/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:12:"comment_page";a:3:{s:3:"url";s:53:"[permalink:string]/comment-page-[commentPage:digital]";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:4:"feed";a:3:{s:3:"url";s:20:"/feed[feed:string:0]";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:4:"feed";}s:8:"feedback";a:3:{s:3:"url";s:31:"[permalink:string]/[type:alpha]";s:6:"widget";s:15:"Widget_Feedback";s:6:"action";s:6:"action";}s:4:"page";a:3:{s:3:"url";s:12:"/[slug].html";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}}',
+        'actionTable' => 'a:0:{}',
+        'panelTable' => 'a:0:{}',
+        'attachmentTypes' => '@image@',
+        'secret' => Typecho_Common::randString(32, true),
+        'installed' => 0,
+        'allowXmlRpc' => 2
+    ];
+}
+
+/**
+ * 获取所有可用数据库驱动
+ *
+ * @return array
+ */
+function install_get_db_drivers(): array {
+    $drivers = [];
+
+    if (Typecho_Db_Adapter_Mysqli::isAvailable()) {
+        $drivers['Mysqli'] = _t('Mysql 原生函数适配器');
+    }
+
+    if (Typecho_Db_Adapter_SQLite::isAvailable()) {
+        $drivers['SQLite'] = _t('SQLite 原生函数适配器 (SQLite 2.x)');
+    }
+
+    if (Typecho_Db_Adapter_Pgsql::isAvailable()) {
+        $drivers['Pgsql'] = _t('Pgsql 原生函数适配器');
+    }
+
+    if (Typecho_Db_Adapter_Pdo_Mysql::isAvailable()) {
+        $drivers['Pdo_Mysql'] = _t('Pdo 驱动 Mysql 适配器');
+    }
+
+    if (Typecho_Db_Adapter_Pdo_SQLite::isAvailable()) {
+        $drivers['Pdo_SQLite'] = _t('Pdo 驱动 SQLite 适配器 (SQLite 3.x)');
+    }
+
+    if (Typecho_Db_Adapter_Pdo_Pgsql::isAvailable()) {
+        $drivers['Pdo_Pgsql'] = _t('Pdo 驱动 PostgreSql 适配器');
+    }
+
+    return $drivers;
+}
+
+function install_ajax_support() {
+?>
+<script>
+    let form = document.querySelector('form'), errorBox = document.createElement('div');
+    form.insertBefore(errorBox, form.firstChild);
+
+    errorBox.classList.add('error', 'hidden');
+
+    function showError(error) {
+        let str = '<?php _t('安装程序捕捉到以下错误: " %s ". 程序被终止, 请检查您的配置信息.', '%') ?>';
+        errorBox.innerHTML = str.replace('%', error);
+
+        errorBox.classList.remove('hidden');
+    }
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        errorBox.classList.add('hidden');
+
+        fetch(this.getAttribute('action'), {
+            method: 'POST',
+            body: new FormData(this)
+        }).then(function (response) {
+            return response.json();
+        }).then(function (data) {
+            if (data.success) {
+                location.href = '?step=' + data.message;
+            } else {
+                showError(data.message);
+            }
+        }).catch(function (error) {
+            showError(error.message);
+        });
+    }, true);
+</script>
+<?php
+}
+
+function install_step_1() {
+    $langs = Widget_Options_General::getLangs();
+    $lang = install_get_lang();
+?>
+<form method="get" action="?step=2">
+    <h1><?php _e('欢迎使用 Typecho'); ?></h1>
+    <h2><?php _e('安装说明'); ?></h2>
+    <p><strong><?php _e('本安装程序将自动检测服务器环境是否符合最低配置需求. 如果不符合, 将在上方出现提示信息, 请按照提示信息检查您的主机配置. 如果服务器环境符合要求, 将在下方出现 "开始下一步" 的按钮, 点击此按钮即可一步完成安装.'); ?></strong></p>
+    <h2><?php _e('许可及协议'); ?></h2>
+    <p><?php _e('Typecho 基于 <a href="http://www.gnu.org/copyleft/gpl.html">GPL</a> 协议发布, 我们允许用户在 GPL 协议许可的范围内使用, 拷贝, 修改和分发此程序.'); ?>
+        <?php _e('在GPL许可的范围内, 您可以自由地将其用于商业以及非商业用途.'); ?></p>
+    <p><?php _e('Typecho 软件由其社区提供支持, 核心开发团队负责维护程序日常开发工作以及新特性的制定.'); ?>
+        <?php _e('如果您遇到使用上的问题, 程序中的 BUG, 以及期许的新功能, 欢迎您在社区中交流或者直接向我们贡献代码.'); ?>
+        <?php _e('对于贡献突出者, 他的名字将出现在贡献者名单中.'); ?></p>
+    <p class="submit">
+        <button type="submit"><?php _e('我准备好了, 开始下一步 &raquo;'); ?></button>
+
+        <?php if (count($langs) > 1): ?>
+            <select style="float: right" onchange="location.href='?lang=' + this.value">
+                <?php foreach ($langs as $key => $val): ?>
+                    <option value="<?php echo $key; ?>"<?php if ($lang == $key): ?> selected<?php endif; ?>><?php echo $val; ?></option>
+                <?php endforeach; ?>
+            </select>
+        <?php endif; ?>
+    </p>
+</form>
+<?php
+}
+
+function install_step_2() {
+    $drivers = install_get_db_drivers();
+    $adapter = _r('driver', key($drivers));
+    $parts = explode('_', $adapter);
+    $type = $adapter == 'Mysqli' ? 'Mysql' : array_pop($parts);
+?>
+<ul class="typecho-option">
+    <li>
+        <label for="dbAdapter" class="typecho-label"><?php _e('数据库适配器'); ?></label>
+        <select name="dbAdapter" id="dbAdapter" onchange="location.href='?step=2&driver=' + this.value">
+            <?php foreach ($drivers as $driver => $name): ?>
+                <option value="<?php echo $driver; ?>"<?php if($driver == $adapter): ?> selected="selected"<?php endif; ?>><?php echo $name; ?></option>
+            <?php endforeach; ?>
+        </select>
+        <p class="description"><?php _e('请根据您的数据库类型选择合适的适配器'); ?></p>
+    </li>
+    <?php require_once './install/' . $type . '.php'; ?>
+    <li>
+        <label class="typecho-label" for="dbPrefix"><?php _e('数据库前缀'); ?></label>
+        <input type="text" class="text" name="dbPrefix" id="dbPrefix" value="<?php _v('dbPrefix', 'typecho_'); ?>" />
+        <p class="description"><?php _e('默认前缀是 "typecho_"'); ?></p>
+    </li>
+</ul>
+<?php
+    install_ajax_support();
+}
+
+$options = Typecho_Widget::widget('Widget_Options', install_get_default_options());
+Typecho_Widget::widget('Widget_Init');
 
 // 挡掉可能的跨站请求
 if (!empty($_GET) || !empty($_POST)) {
@@ -66,12 +305,12 @@ if (!empty($_GET) || !empty($_POST)) {
  * 获取传递参数
  *
  * @param string $name 参数名称
- * @param string $default 默认值
- * @return string
+ * @param string|null $default 默认值
+ *
+ * @return mixed
  */
-function _r($name, $default = NULL) {
-    return isset($_REQUEST[$name]) ?
-        (is_array($_REQUEST[$name]) ? $default : $_REQUEST[$name]) : $default;
+function _r(string $name, string $default = NULL) {
+    return Typecho_Request::getInstance()->get($name, $default);
 }
 
 /**
@@ -96,9 +335,8 @@ function _rFrom() {
  *
  * @param string $name 参数名称
  * @param string $default 默认值
- * @return string
  */
-function _v($name, $default = '') {
+function _v(string $name, string $default = '') {
     echo _r($name, $default);
 }
 
@@ -145,12 +383,12 @@ function _u() {
 
 $options = new stdClass();
 $options->generator = 'Typecho ' . Typecho_Common::VERSION;
-list($soft, $currentVersion) = explode(' ', $options->generator);
+[$soft, $currentVersion] = explode(' ', $options->generator);
 
 $options->software = $soft;
 $options->version = $currentVersion;
 
-list($prefixVersion, $suffixVersion) = explode('/', $currentVersion);
+[$prefixVersion, $suffixVersion] = explode('/', $currentVersion);
 
 /** 获取语言 */
 $lang = _r('lang', Typecho_Cookie::get('__typecho_lang'));
@@ -167,10 +405,11 @@ if ('zh_CN' != $lang) {
 
 Typecho_Cookie::set('__typecho_lang', $lang);
 ?><!DOCTYPE HTML>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head lang="zh-CN">
+<html>
+<head>
     <meta charset="<?php _e('UTF-8'); ?>" />
-	<title><?php _e('Typecho 安装程序'); ?></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title><?php _e('Typecho 安装程序'); ?></title>
     <link rel="stylesheet" type="text/css" href="admin/css/normalize.css" />
     <link rel="stylesheet" type="text/css" href="admin/css/grid.css" />
     <link rel="stylesheet" type="text/css" href="admin/css/style.css" />
@@ -219,10 +458,6 @@ Typecho_Cookie::set('__typecho_lang', $lang);
                             <?php _e('您的密码是'); ?>: <strong class="mono"><?php echo htmlspecialchars(_r('password')); ?></strong>
                         <?php endif;?>
                     <?php endif;?>
-                    </div>
-
-                    <div class="p message notice">
-                    <a target="_blank" href="http://spreadsheets.google.com/viewform?key=pd1Gl4Ur_pbniqgebs5JRIg&hl=en">参与用户调查, 帮助我们完善产品</a>
                     </div>
 
                     <div class="session">
