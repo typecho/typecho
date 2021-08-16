@@ -8,22 +8,22 @@
  * @version    $Id$
  */
 
-/** 定义根目录 */
+// site root path
 define('__TYPECHO_ROOT_DIR__', dirname(__FILE__));
 
-/** 定义插件目录(相对路径) */
+// plugin directory (relative path)
 define('__TYPECHO_PLUGIN_DIR__', '/usr/plugins');
 
-/** 定义模板目录(相对路径) */
+// theme directory (relative path)
 define('__TYPECHO_THEME_DIR__', '/usr/themes');
 
-/** 后台路径(相对路径) */
+// admin directory (relative path)
 define('__TYPECHO_ADMIN_DIR__', '/admin/');
 
-/** 载入API支持 */
+// register autoload
 require_once __TYPECHO_ROOT_DIR__ . '/var/Typecho/Common.php';
 
-/** 程序初始化 */
+// init
 Typecho_Common::init();
 
 else:
@@ -35,8 +35,7 @@ else:
     try {
         $installed = $db->fetchRow($db->select()->from('table.options')->where('name = ?', 'installed'));
         if (empty($installed) || $installed['value'] == 1) {
-            Typecho_Response::setStatus(404);
-            exit;
+            exit(1);
         }
     } catch (Exception $e) {
         // do nothing
@@ -47,13 +46,15 @@ endif;
 define('__TYPECHO_INSTALL__', true);
 
 /**
- * 获取系统语言
+ * get lang
  *
  * @return string
  */
 function install_get_lang(): string {
-    if (isset($_SERVER['TYPECHO_LANG'])) {
-        return $_SERVER['TYPECHO_LANG'];
+    $serverLang = Typecho_Request::getInstance()->getServer('TYPECHO_LANG');
+
+    if (!empty($serverLang)) {
+        return $serverLang;
     } else {
         $lang = 'zh_CN';
         $request = Typecho_Request::getInstance();
@@ -68,13 +69,15 @@ function install_get_lang(): string {
 }
 
 /**
- * 获取站点地址
+ * get site url
  *
  * @return string
  */
 function install_get_site_url(): string {
-    if (isset($_SERVER['TYPECHO_SITE_URL'])) {
-        return $_SERVER['TYPECHO_SITE_URL'];
+    $serverSiteUrl = Typecho_Request::getInstance()->getServer('TYPECHO_SITE_URL');
+
+    if (!empty($serverSiteUrl)) {
+        return $serverSiteUrl;
     } else {
         $request = Typecho_Request::getInstance();
         return $request->get('userUrl', $request->getRequestRoot());
@@ -82,7 +85,16 @@ function install_get_site_url(): string {
 }
 
 /**
- * 获取默认参数
+ * detect cli mode
+ *
+ * @return bool
+ */
+function install_is_cli(): bool {
+    return php_sapi_name() == 'cli';
+}
+
+/**
+ * list all default options
  *
  * @return array
  */
@@ -153,7 +165,18 @@ function install_get_default_options(): array {
 }
 
 /**
- * 获取所有可用数据库驱动
+ * get database driver type
+ *
+ * @param string $driver
+ * @return string
+ */
+function install_get_db_type(string $driver): string {
+    $parts = explode('_', $driver);
+    return $driver == 'Mysqli' ? 'Mysql' : array_pop($parts);
+}
+
+/**
+ * list all available database drivers
  *
  * @return array
  */
@@ -187,6 +210,68 @@ function install_get_db_drivers(): array {
     return $drivers;
 }
 
+/**
+ * generate config file
+ *
+ * @param string $adapter
+ * @param string $dbPrefix
+ * @param array $dbConfig
+ * @return string
+ */
+function install_config_file(string $adapter, string $dbPrefix, array $dbConfig): string {
+    $lines = array_slice(file(__FILE__), 1, 26);
+    $lines[] = "
+/** 定义数据库参数 */
+\$db = new Typecho_Db('{$adapter}', '{$dbPrefix}');
+\$db->addServer(" . (var_export($dbConfig, true)) . ", Typecho_Db::READ | Typecho_Db::WRITE);
+Typecho_Db::set(\$db);
+";
+    return implode('', $lines);
+}
+
+/**
+ * raise install error
+ *
+ * @param mixed $error
+ * @param mixed $config
+ */
+function install_raise_error($error, $config = null) {
+    $lines = [];
+
+    if (is_array($error)) {
+        foreach ($error as $key => $value) {
+            $lines[] = $key . ': ' . $value;
+        }
+    } else {
+        $lines[] = $error;
+    }
+
+    if (install_is_cli()) {
+        echo implode("\n", $lines);
+        exit(1);
+    } else {
+        Typecho_Response::getInstance()->throwJson([
+            'success' => 0,
+            'message' => implode("<br>", $lines),
+            'config' => $config
+        ]);
+    }
+}
+
+/**
+ * @param $step
+ */
+function install_success($step) {
+    if (install_is_cli()) {
+        $method = 'install_step_' . $step . '_perform';
+        $method();
+    } else {
+        Typecho_Response::getInstance()->throwJson([
+            'success' => $step
+        ]);
+    }
+}
+
 function install_ajax_support() {
 ?>
 <script>
@@ -200,6 +285,8 @@ function install_ajax_support() {
         errorBox.innerHTML = str.replace('%', error);
 
         errorBox.classList.remove('hidden');
+
+        return errorBox;
     }
 
     form.addEventListener('submit', function (e) {
@@ -219,7 +306,11 @@ function install_ajax_support() {
                 showError(data.message);
             }
         }).catch(function (error) {
-            showError(error.message);
+            let el = showError(error.message);
+
+            if (typeof configError == 'function' && error.config) {
+                configError(error.config, el);
+            }
         });
     }, true);
 </script>
@@ -255,31 +346,270 @@ function install_step_1() {
 <?php
 }
 
+/**
+ * check step 2
+ */
+function install_step_2_check(): bool {
+    return !file_exists(__TYPECHO_ROOT_DIR__ . '/config.inc.php');
+}
+
+/**
+ * display step 2
+ */
 function install_step_2() {
     $drivers = install_get_db_drivers();
-    $adapter = _r('driver', key($drivers));
-    $parts = explode('_', $adapter);
-    $type = $adapter == 'Mysqli' ? 'Mysql' : array_pop($parts);
+    $adapter = Typecho_Request::getInstance()->get('driver', key($drivers));
+    $type = install_get_db_type($adapter);
 ?>
-<ul class="typecho-option">
-    <li>
-        <label for="dbAdapter" class="typecho-label"><?php _e('数据库适配器'); ?></label>
-        <select name="dbAdapter" id="dbAdapter" onchange="location.href='?step=2&driver=' + this.value">
-            <?php foreach ($drivers as $driver => $name): ?>
-                <option value="<?php echo $driver; ?>"<?php if($driver == $adapter): ?> selected="selected"<?php endif; ?>><?php echo $name; ?></option>
-            <?php endforeach; ?>
-        </select>
-        <p class="description"><?php _e('请根据您的数据库类型选择合适的适配器'); ?></p>
-    </li>
-    <?php require_once './install/' . $type . '.php'; ?>
-    <li>
-        <label class="typecho-label" for="dbPrefix"><?php _e('数据库前缀'); ?></label>
-        <input type="text" class="text" name="dbPrefix" id="dbPrefix" value="<?php _v('dbPrefix', 'typecho_'); ?>" />
-        <p class="description"><?php _e('默认前缀是 "typecho_"'); ?></p>
-    </li>
-</ul>
+<form action="?step=2" method="post">
+    <ul class="typecho-option">
+        <li>
+            <label for="dbAdapter" class="typecho-label"><?php _e('数据库适配器'); ?></label>
+            <select name="dbAdapter" id="dbAdapter" onchange="location.href='?step=2&driver=' + this.value">
+                <?php foreach ($drivers as $driver => $name): ?>
+                    <option value="<?php echo $driver; ?>"<?php if($driver == $adapter): ?> selected="selected"<?php endif; ?>><?php echo $name; ?></option>
+                <?php endforeach; ?>
+            </select>
+            <p class="description"><?php _e('请根据您的数据库类型选择合适的适配器'); ?></p>
+            <input type="hidden" id="dbNext" name="dbNext" value="none">
+        </li>
+        <?php require_once './install/' . $type . '.php'; ?>
+        <li>
+            <label class="typecho-label" for="dbPrefix"><?php _e('数据库前缀'); ?></label>
+            <input type="text" class="text" name="dbPrefix" id="dbPrefix" value="<?php _v('dbPrefix', 'typecho_'); ?>" />
+            <p class="description"><?php _e('默认前缀是 "typecho_"'); ?></p>
+        </li>
+    </ul>
+</form>
+<script>
+    function configError(config, errorBox) {
+        let next = document.querySelector('#dbNext'),
+            line = document.createElement('p'),
+            form = document.querySelector('form');
+
+        errorBox.appendChild(line);
+
+        config.forEach(function (word, key) {
+            let btn = document.createElement('button');
+
+            btn.innerHTML = word;
+            btn.addEventListener('click', function () {
+                next.setAttribute('value', key);
+            });
+
+            line.appendChild(btn);
+            form.submit();
+        });
+    }
+</script>
 <?php
     install_ajax_support();
+}
+
+function install_step_2_perform() {
+    $request = Typecho_Request::getInstance();
+    $drivers = install_get_db_drivers();
+
+    $configMap = [
+        'Mysql' => [
+            'dbHost' => 'localhost',
+            'dbPort' => 3306,
+            'dbUser' => null,
+            'dbPassword' => null,
+            'dbCharset' => 'utf8mb4',
+            'dbDatabase' => null,
+            'dbEngine' => 'InnoDB'
+        ],
+        'Pgsql' => [
+            'dbHost' => 'localhost',
+            'dbPort' => 5432,
+            'dbUser' => null,
+            'dbPassword' => null,
+            'dbCharset' => 'utf8',
+            'dbDatabase' => null,
+        ],
+        'SQLite' => [
+            'dbFile' => __TYPECHO_ROOT_DIR__ . '/usr/' . uniqid() . '.db'
+        ]
+    ];
+
+    if (install_is_cli()) {
+        $config = [
+            'dbHost' => $request->getServer('TYPECHO_DB_HOST'),
+            'dbUser' => $request->getServer('TYPECHO_DB_USER'),
+            'dbPassword' => $request->getServer('TYPECHO_DB_PASSWORD'),
+            'dbCharset' => $request->getServer('TYPECHO_DB_CHARSET'),
+            'dbPort' => $request->getServer('TYPECHO_DB_PORT'),
+            'dbDatabase' => $request->getServer('TYPECHO_DB_DATABASE'),
+            'dbFile' => $request->getServer('TYPECHO_DB_FILE'),
+            'dbDsn' => $request->getServer('TYPECHO_DB_DSN'),
+            'dbEngine' => $request->getServer('TYPECHO_DB_ENGINE'),
+            'dbPrefix' => $request->getServer('TYPECHO_DB_PREFIX'),
+            'dbAdapter' => $request->getServer('TYPECHO_DB_ADAPTER'),
+            'dbNext' => $request->getServer('TYPECHO_DB_NEXT', 'none')
+        ];
+    } else {
+        $config = $request->from([
+            'dbHost',
+            'dbUser',
+            'dbPassword',
+            'dbCharset',
+            'dbPort',
+            'dbDatabase',
+            'dbFile',
+            'dbDsn',
+            'dbEngine',
+            'dbPrefix',
+            'dbAdapter',
+            'dbNext'
+        ]);
+    }
+
+    $error = (new Typecho_Validate())
+        ->addRule('dbPrefix', 'required', _t('确认您的配置'))
+        ->addRule('dbPrefix', 'minLength', _t('确认您的配置'), 1)
+        ->addRule('dbPrefix', 'maxLength', _t('确认您的配置'), 16)
+        ->addRule('dbPrefix', 'alphaDash', _t('确认您的配置'))
+        ->addRule('dbAdapter', 'required', _t('确认您的配置'))
+        ->addRule('dbAdapter', 'enum', _t('确认您的配置'), array_keys($drivers))
+        ->addRule('dbNext', 'required', _t('确认您的配置'))
+        ->addRule('dbNext', 'enum', _t('确认您的配置'), ['none', 'delete', 'keep'])
+        ->run($config);
+
+    if (!empty($error)) {
+        install_raise_error($error);
+    }
+
+    $type = install_get_db_type($config['dbAdapter']);
+    $dbConfig = [];
+
+    foreach ($configMap[$type] as $key => $value) {
+        $dbConfig[strtolower(substr($key, 2))]
+            = $config[$key] === null ? (install_is_cli() ? $value : null) : $config[$key];
+    }
+
+    switch ($type) {
+        case 'Mysql':
+            $error = (new Typecho_Validate())
+                ->addRule('host', 'required', _t('确认您的配置'))
+                ->addRule('port', 'required', _t('确认您的配置'))
+                ->addRule('port', 'isInteger', _t('确认您的配置'))
+                ->addRule('user', 'required', _t('确认您的配置'))
+                ->addRule('charset', 'required', _t('确认您的配置'))
+                ->addRule('charset', 'enum', _t('确认您的配置'), ['utf8', 'utf8mb4'])
+                ->addRule('database', 'required', _t('确认您的配置'))
+                ->addRule('engine', 'required', _t('确认您的配置'))
+                ->addRule('engine', 'enum', _t('确认您的配置'), ['InnoDB', 'MyISAM'])
+                ->run($dbConfig);
+            break;
+        case 'Pgsql':
+            $error = (new Typecho_Validate())
+                ->addRule('host', 'required', _t('确认您的配置'))
+                ->addRule('port', 'required', _t('确认您的配置'))
+                ->addRule('port', 'isInteger', _t('确认您的配置'))
+                ->addRule('user', 'required', _t('确认您的配置'))
+                ->addRule('charset', 'required', _t('确认您的配置'))
+                ->addRule('charset', 'enum', _t('确认您的配置'), ['utf8'])
+                ->addRule('database', 'required', _t('确认您的配置'))
+                ->run($dbConfig);
+            break;
+        case 'SQLite':
+            $error = (new Typecho_Validate())
+                ->addRule('file', 'required', _t('确认您的配置'))
+                ->run($dbConfig);
+            break;
+        default:
+            install_raise_error(_t('确认您的配置'));
+            break;
+    }
+
+    if (!empty($error)) {
+        install_raise_error($error);
+    }
+
+    // detect db config
+    try {
+        $installDb = new Typecho_Db($config['dbAdapter'], $config['dbPrefix']);
+        $installDb->addServer($dbConfig, Typecho_Db::READ | Typecho_Db::WRITE);
+        $installDb->query('SELECT 1=1');
+    } catch (Typecho_Db_Adapter_Exception $e) {
+        install_raise_error(_t('对不起, 无法连接数据库, 请先检查数据库配置再继续进行安装'));
+    } catch (Typecho_Db_Exception $e) {
+        install_raise_error(_t('安装程序捕捉到以下错误: " %s ". 程序被终止, 请检查您的配置信息.', $e->getMessage()));
+    }
+
+    if (!isset($installDb)) {
+        return;
+    }
+
+    // delete exists db
+    if($config['dbNext'] == 'delete') {
+        $tables = [
+            $config['dbPrefix'] . 'comments',
+            $config['dbPrefix'] . 'contents',
+            $config['dbPrefix'] . 'fields',
+            $config['dbPrefix'] . 'metas',
+            $config['dbPrefix'] . 'options',
+            $config['dbPrefix'] . 'relationships',
+            $config['dbPrefix'] . 'users'
+        ];
+
+        try {
+            foreach ($tables as $table) {
+                if ($type == 'Mysql') {
+                    $installDb->query("DROP TABLE IF EXISTS `{$table}`");
+                } elseif ($type == 'Pgsql') {
+                    $installDb->query("DROP TABLE {$table}");
+                } elseif ($type == 'SQLite') {
+                    $installDb->query("DROP TABLE {$table}");
+                }
+            }
+        } catch (Typecho_Db_Exception $e) {
+            install_raise_error(_t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.', $e->getMessage()));
+        }
+    }
+
+    // init db structure
+    try {
+        $scripts = file_get_contents(__TYPECHO_ROOT_DIR__ . '/install/' . $type . '.sql');
+        $scripts = str_replace('typecho_', $config['dbPrefix'], $scripts);
+
+        if (isset($dbConfig['charset'])) {
+            $scripts = str_replace('%charset%', $dbConfig['charset'], $scripts);
+        }
+
+        if (isset($dbConfig['engine'])) {
+            $scripts = str_replace('%engine%', $dbConfig['engine'], $scripts);
+        }
+
+        $scripts = explode(';', $scripts);
+        foreach ($scripts as $script) {
+            $script = trim($script);
+            if ($script) {
+                $installDb->query($script, Typecho_Db::WRITE);
+            }
+        }
+    } catch (Typecho_Db_Exception $e) {
+        $code = $e->getCode();
+
+        if(('Mysql' == $type && (1050 == $code || '42S01' == $code)) ||
+            ('SQLite' == $type && ('HY000' == $code || 1 == $code)) ||
+            ('Pgsql' == $type && '42P07' == $code)) {
+
+            if ($config['dbNext'] == 'keep') {
+                install_success(3);
+            } elseif ($config['dbNext' == 'none']) {
+                install_raise_error(_t('安装程序检查到原有数据表已经存在.'), [
+                    'delete' => _t('删除原有数据'),
+                    'keep' => _t('使用原有数据')
+                ]);
+            }
+        } else {
+            install_raise_error(_t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.', $e->getMessage()));
+        }
+    }
+
+    install_success(3);
 }
 
 $options = Typecho_Widget::widget('Widget_Options', install_get_default_options());

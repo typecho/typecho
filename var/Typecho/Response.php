@@ -25,7 +25,7 @@ class Typecho_Response
      * @access private
      * @var array
      */
-    private static $_httpCode = array(
+    private static $_httpCode = [
         100 => 'Continue',
         101 => 'Switching Protocols',
         200 => 'OK',
@@ -66,7 +66,7 @@ class Typecho_Response
         503 => 'Service Unavailable',
         504 => 'Gateway Timeout',
         505 => 'HTTP Version Not Supported'
-    );
+    ];
 
     /**
      * 字符编码
@@ -85,14 +85,14 @@ class Typecho_Response
      * @access private
      * @var Typecho_Response
      */
-    private static $_instance = null;
+    private static $_instance;
 
     /**
      * 结束前回调函数
      *
      * @var array
      */
-    private static $_callbacks = array();
+    private static $_callbacks = [];
 
     /**
      * 获取单例句柄
@@ -100,9 +100,9 @@ class Typecho_Response
      * @access public
      * @return Typecho_Response
      */
-    public static function getInstance()
+    public static function getInstance(): Typecho_Response
     {
-        if (null === self::$_instance) {
+        if (!isset(self::$_instance)) {
             self::$_instance = new Typecho_Response();
         }
 
@@ -116,7 +116,7 @@ class Typecho_Response
      * @param mixed $message 格式化数据
      * @return string
      */
-    private function _parseXml($message)
+    private function _parseXml($message): string
     {
         /** 对于数组型则继续递归 */
         if (is_array($message)) {
@@ -164,10 +164,10 @@ class Typecho_Response
      * 设置默认回执编码
      *
      * @access public
-     * @param string $charset 字符集
+     * @param string|null $charset 字符集
      * @return void
      */
-    public function setCharset($charset = null)
+    public function setCharset(string $charset = null)
     {
         $this->_charset = empty($charset) ? self::CHARSET : $charset;
     }
@@ -178,7 +178,7 @@ class Typecho_Response
      * @access public
      * @return string
      */
-    public function getCharset()
+    public function getCharset(): string
     {
         if (empty($this->_charset)) {
             $this->setCharset();
@@ -194,7 +194,7 @@ class Typecho_Response
      * @param string $contentType 文档类型
      * @return void
      */
-    public function setContentType($contentType = 'text/html')
+    public function setContentType(string $contentType = 'text/html')
     {
         header('Content-Type: ' . $contentType . '; charset=' . $this->getCharset(), true);
     }
@@ -207,7 +207,7 @@ class Typecho_Response
      * @param string $value 对应值
      * @return void
      */
-    public function setHeader($name, $value)
+    public function setHeader(string $name, string $value)
     {
         header($name . ': ' . $value, true);
     }
@@ -219,10 +219,11 @@ class Typecho_Response
      * @param integer $code http代码
      * @return void
      */
-    public static function setStatus($code)
+    public static function setStatus(int $code)
     {
         if (isset(self::$_httpCode[$code])) {
-            header((isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.1') . ' ' . $code . ' ' . self::$_httpCode[$code], true, $code);
+            header(($_SERVER['SERVER_PROTOCOL'] ?? 'HTTP/1.1')
+                . ' ' . $code . ' ' . self::$_httpCode[$code], true, $code);
         }
     }
 
@@ -233,7 +234,7 @@ class Typecho_Response
      * @param string $message 消息体
      * @return void
      */
-    public function throwXml($message)
+    public function throwXml(string $message)
     {
         /** 设置http头信息 */
         $this->setContentType('text/xml');
@@ -276,33 +277,33 @@ class Typecho_Response
      * @param boolean $isPermanently 是否为永久重定向
      * @return void
      */
-    public function redirect($location, $isPermanently = false)
+    public function redirect(string $location, bool $isPermanently = false)
     {
         /** Typecho_Common */
         $location = Typecho_Common::safeUrl($location);
 
+        self::callback();
+
         if ($isPermanently) {
-            self::callback();
             header('Location: ' . $location, false, 301);
-            exit;
         } else {
-            self::callback();
             header('Location: ' . $location, false, 302);
-            exit;
         }
+
+        exit;
     }
 
     /**
      * 返回来路
      *
      * @access public
-     * @param string $suffix 附加地址
-     * @param string $default 默认来路
+     * @param string|null $suffix 附加地址
+     * @param string|null $default 默认来路
      */
-    public function goBack($suffix = NULL, $default = NULL)
+    public function goBack(string $suffix = null, string $default = null)
     {
         //获取来源
-        $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
+        $referer = $_SERVER['HTTP_REFERER'] ?? '';
 
         //判断来源
         if (!empty($referer)) {
@@ -316,7 +317,7 @@ class Typecho_Response
                 }
 
                 if (isset($myParts['query'])) {
-                    $args = array();
+                    $args = [];
                     if (isset($parts['query'])) {
                         parse_str($parts['query'], $args);
                     }

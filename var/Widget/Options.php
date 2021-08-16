@@ -361,8 +361,14 @@ class Widget_Options extends Typecho_Widget
     public function execute()
     {
         if (!empty($this->db)) {
-            $this->db->fetchAll($this->db->select()->from('table.options')
+            $values = $this->db->fetchAll($this->db->select()->from('table.options')
                 ->where('user = 0'), array($this, 'push'));
+
+            // finish install
+            if (empty($values)) {
+                $this->response->redirect(defined('__TYPECHO_ADMIN__')
+                    ? '../install.php?step=3' : 'install.php?step=3');
+            }
         }
 
         /** 支持皮肤变量重载 */

@@ -62,16 +62,16 @@ class Typecho_Validate
      * @param string $key 数值键值
      * @param string $rule 规则名称
      * @param string $message 错误字符串
-     * @return Typecho_Validation
+     * @return $this
      */
-    public function addRule($key, $rule, $message)
+    public function addRule(string $key, string $rule, string $message): Typecho_Validate
     {
         if (func_num_args() <= 3) {
-            $this->_rules[$key][] = array($rule, $message);
+            $this->_rules[$key][] = [$rule, $message];
         } else {
             $params = func_get_args();
             $params = array_splice($params, 3);
-            $this->_rules[$key][] = array_merge(array($rule, $message), $params);
+            $this->_rules[$key][] = array_merge([$rule, $message], $params);
         }
 
         return $this;
@@ -94,13 +94,12 @@ class Typecho_Validate
      *
      * @access	public
      * @param   array $data 需要验证的数据
-     * @param   array $rules 验证数据遵循的规则
+     * @param array|null $rules 验证数据遵循的规则
      * @return	array
-     * @throws  Typecho_Validate_Exception
      */
-    public function run(array $data, $rules = NULL)
+    public function run(array $data, array $rules = null): array
     {
-        $result = array();
+        $result = [];
         $this->_data = $data;
         $rules = empty($rules) ? $this->_rules : $rules;
 
@@ -108,7 +107,7 @@ class Typecho_Validate
         foreach ($rules as $key => $rules) {
             $this->_key = $key;
             $data[$key] = (is_array($data[$key]) ? 0 == count($data[$key])
-                : 0 == strlen($data[$key])) ? NULL : $data[$key];
+                : 0 == strlen($data[$key])) ? null : $data[$key];
 
             foreach ($rules as $params) {
                 $method = $params[0];
@@ -121,7 +120,7 @@ class Typecho_Validate
                 $params[1] = $data[$key];
                 $params = array_slice($params, 1);
 
-                if (!call_user_func_array(is_array($method) ? $method : array($this, $method), $params)) {
+                if (!call_user_func_array(is_array($method) ? $method : [$this, $method], $params)) {
                     $result[$key] = $message;
                     break;
                 }
@@ -144,7 +143,7 @@ class Typecho_Validate
      * @param integer $length 最小长度
      * @return boolean
      */
-    public static function minLength($str, $length)
+    public static function minLength(string $str, int $length): bool
     {
         return (Typecho_Common::strLen($str) >= $length);
     }
@@ -153,11 +152,11 @@ class Typecho_Validate
      * 验证输入是否一致
      *
      * @access public
-     * @param string $str 待处理的字符串
+     * @param string|null $str 待处理的字符串
      * @param string $key 需要一致性检查的键值
      * @return boolean
      */
-    public function confirm($str, $key)
+    public function confirm(?string $str, string $key): bool
     {
         return !empty($this->_data[$key]) ? ($str == $this->_data[$key]) : empty($str);
     }
@@ -169,7 +168,7 @@ class Typecho_Validate
      * @param string $str 待处理的字符串
      * @return boolean
      */
-    public function required($str)
+    public function required(string $str): bool
     {
         return !empty($this->_data[$this->_key]);
     }
@@ -180,9 +179,9 @@ class Typecho_Validate
      * @access public
      * @param string $str 待处理的字符串
      * @param array $params 枚举值
-     * @return unknown
+     * @return bool
      */
-    public static function enum($str, array $params)
+    public static function enum(string $str, array $params): bool
     {
         $keys = array_flip($params);
         return isset($keys[$str]);
@@ -191,11 +190,11 @@ class Typecho_Validate
     /**
      * Max Length
      *
-     * @param $str
-     * @param $length
+     * @param string $str
+     * @param int $length
      * @return bool
      */
-    public static function maxLength($str, $length)
+    public static function maxLength(string $str, int $length): bool
     {
         return (Typecho_Common::strLen($str) < $length);
     }
@@ -204,10 +203,10 @@ class Typecho_Validate
      * Valid Email
      *
      * @access public
-     * @param string
+     * @param string $str
      * @return boolean
      */
-    public static function email($str)
+    public static function email(string $str): bool
     {
         return preg_match("/^[_a-z0-9-\.+]+@([-a-z0-9]+\.)+[a-z]{2,}$/i", $str);
     }
@@ -219,7 +218,7 @@ class Typecho_Validate
      * @param string $str
      * @return boolean
      */
-    public static function url($str)
+    public static function url(string $str): bool
     {
         $parts = @parse_url($str);
         if (!$parts) {
@@ -227,8 +226,8 @@ class Typecho_Validate
         }
 
         return isset($parts['scheme']) &&
-        in_array($parts['scheme'], array('http', 'https', 'ftp')) &&
-        !preg_match('/(\(|\)|\\\|"|<|>|[\x00-\x08]|[\x0b-\x0c]|[\x0e-\x19])/', $str);
+            in_array($parts['scheme'], ['http', 'https', 'ftp']) &&
+            !preg_match('/(\(|\)|\\\|"|<|>|[\x00-\x08]|[\x0b-\x0c]|[\x0e-\x19])/', $str);
     }
 
     /**
@@ -238,7 +237,7 @@ class Typecho_Validate
      * @param string
      * @return boolean
      */
-    public static function alpha($str)
+    public static function alpha(string $str): bool
     {
         return preg_match("/^([a-z])+$/i", $str) ? true : false;
     }
@@ -250,7 +249,7 @@ class Typecho_Validate
      * @param string
      * @return boolean
      */
-    public static function alphaNumeric($str)
+    public static function alphaNumeric(string $str): bool
     {
         return preg_match("/^([a-z0-9])+$/i", $str);
     }
@@ -262,7 +261,7 @@ class Typecho_Validate
      * @param string
      * @return boolean
      */
-    public static function alphaDash($str)
+    public static function alphaDash(string $str): bool
     {
         return preg_match("/^([_a-z0-9-])+$/i", $str) ? true : false;
     }
@@ -274,7 +273,7 @@ class Typecho_Validate
      * @param string $str
      * @return boolean
      */
-    public static function xssCheck($str)
+    public static function xssCheck(string $str): bool
     {
         $search = 'abcdefghijklmnopqrstuvwxyz';
         $search .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -298,10 +297,10 @@ class Typecho_Validate
      * Numeric
      *
      * @access public
-     * @param integer
+     * @param mixed $str
      * @return boolean
      */
-    public static function isFloat($str)
+    public static function isFloat($str): bool
     {
         return preg_match("/^[0-9\.]+$/", $str);
     }
@@ -310,10 +309,10 @@ class Typecho_Validate
      * Is Numeric
      *
      * @access public
-     * @param string
+     * @param mixed $str
      * @return boolean
      */
-    public static function isInteger($str)
+    public static function isInteger($str): bool
     {
         return is_numeric($str);
     }
