@@ -110,7 +110,7 @@ function install_get_default_options(): array {
         'commentsRequireModeration' => 0,
         'plugins' => 'a:0:{}',
         'commentDateFormat' => 'F jS, Y \a\t h:i a',
-        'siteUrl' => install_get_site_url(),
+        'siteUrl' => install_is_cli() ? 'http://localhost' : install_get_site_url(),
         'defaultCategory' => 1,
         'allowRegister' => 0,
         'defaultAllowComment' => 1,
@@ -303,7 +303,7 @@ function install_raise_error($error, $config = null) {
     if (install_is_cli()) {
         if (is_array($error)) {
             foreach ($error as $key => $value) {
-                echo (is_int($key) ? '' : $key . ': ') . $value;
+                echo (is_int($key) ? '' : $key . ': ') . $value . "\n";
             }
         } else {
             echo $error;
