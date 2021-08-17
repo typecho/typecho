@@ -981,7 +981,11 @@ EOF;
     public static function url($path, $prefix)
     {
         $path = (0 === strpos($path, './')) ? substr($path, 2) : $path;
-        return rtrim($prefix, '/') . '/' . str_replace('//', '/', ltrim($path, '/'));
+        return rtrim(
+            rtrim($prefix, '/') . '/'
+            . str_replace('//', '/', ltrim($path, '/')),
+            '/'
+        );
     }
 
     /**

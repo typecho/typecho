@@ -165,10 +165,10 @@ class Typecho_Validate
      * 是否为空
      *
      * @access public
-     * @param string $str 待处理的字符串
+     * @param string|null $str 待处理的字符串
      * @return boolean
      */
-    public function required(string $str): bool
+    public function required(?string $str): bool
     {
         return !empty($this->_data[$this->_key]);
     }

@@ -29,17 +29,7 @@ Typecho_Common::init();
 else:
 
     require_once dirname(__FILE__) . '/config.inc.php';
-
-    //判断是否已经安装
-    $db = Typecho_Db::get();
-    try {
-        $installed = $db->fetchRow($db->select()->from('table.options')->where('name = ?', 'installed'));
-        if (empty($installed) || $installed['value'] == 1) {
-            exit(1);
-        }
-    } catch (Exception $e) {
-        // do nothing
-    }
+    $installDb = Typecho_Db::get();
 
 endif;
 
@@ -211,6 +201,28 @@ function install_get_db_drivers(): array {
 }
 
 /**
+ * get current db driver
+ *
+ * @return string
+ */
+function install_get_current_db_driver(): string {
+    global $installDb;
+
+    if (empty($installDb)) {
+        $driver = Typecho_Request::getInstance()->get('driver');
+        $drivers = install_get_db_drivers();
+
+        if (empty($driver) || !isset($drivers[$driver])) {
+            return key($drivers);
+        }
+
+        return $driver;
+    } else {
+        return $installDb->getAdapterName();
+    }
+}
+
+/**
  * generate config file
  *
  * @param string $adapter
@@ -219,6 +231,8 @@ function install_get_db_drivers(): array {
  * @return string
  */
 function install_config_file(string $adapter, string $dbPrefix, array $dbConfig): string {
+    global $configWritten;
+
     $lines = array_slice(file(__FILE__), 1, 26);
     $lines[] = "
 /** 定义数据库参数 */
@@ -226,7 +240,57 @@ function install_config_file(string $adapter, string $dbPrefix, array $dbConfig)
 \$db->addServer(" . (var_export($dbConfig, true)) . ", Typecho_Db::READ | Typecho_Db::WRITE);
 Typecho_Db::set(\$db);
 ";
-    return implode('', $lines);
+
+    $code = implode('', $lines);
+    $configWritten = @file_put_contents(__TYPECHO_ROOT_DIR__ . '/config.inc.php', $code) !== false;
+    return $code;
+}
+
+/**
+ * remove config file if written
+ */
+function install_remove_config_file() {
+    global $configWritten;
+
+    if ($configWritten) {
+        unlink(__TYPECHO_ROOT_DIR__ . '/config.inc.php');
+    }
+}
+
+/**
+ * check install
+ *
+ * @param string $type
+ * @return bool
+ */
+function install_check(string $type): bool {
+    switch ($type) {
+        case 'config':
+            return file_exists(__TYPECHO_ROOT_DIR__ . '/config.inc.php');
+        case 'db_structure':
+        case 'db_data':
+            global $installDb;
+
+            if (empty($installDb)) {
+                return false;
+            }
+
+            try {
+                // check if table exists
+                $values = $installDb->fetchAll($installDb->select()->from('table.options')
+                    ->where('user = 0'));
+
+                if ($type == 'db_data' && empty($values)) {
+                    return false;
+                }
+            } catch (Typecho_Db_Exception $e) {
+                return false;
+            }
+
+            return true;
+        default:
+            return false;
+    }
 }
 
 /**
@@ -236,23 +300,20 @@ Typecho_Db::set(\$db);
  * @param mixed $config
  */
 function install_raise_error($error, $config = null) {
-    $lines = [];
-
-    if (is_array($error)) {
-        foreach ($error as $key => $value) {
-            $lines[] = $key . ': ' . $value;
-        }
-    } else {
-        $lines[] = $error;
-    }
-
     if (install_is_cli()) {
-        echo implode("\n", $lines);
+        if (is_array($error)) {
+            foreach ($error as $key => $value) {
+                echo (is_int($key) ? '' : $key . ': ') . $value;
+            }
+        } else {
+            echo $error;
+        }
+
         exit(1);
     } else {
         Typecho_Response::getInstance()->throwJson([
             'success' => 0,
-            'message' => implode("<br>", $lines),
+            'message' => is_string($error) ? nl2br($error) : $error,
             'config' => $config
         ]);
     }
@@ -260,60 +321,124 @@ function install_raise_error($error, $config = null) {
 
 /**
  * @param $step
+ * @param array|null $config
  */
-function install_success($step) {
+function install_success($step, ?array $config = null) {
     if (install_is_cli()) {
-        $method = 'install_step_' . $step . '_perform';
-        $method();
+        if ($step > 0) {
+            $method = 'install_step_' . $step . '_perform';
+            $method();
+        }
+
+        if (!empty($config)) {
+            echo implode("\n", $config);
+        }
     } else {
         Typecho_Response::getInstance()->throwJson([
-            'success' => $step
+            'success' => 1,
+            'message' => $step,
+            'config'  => $config
         ]);
     }
 }
 
 function install_ajax_support() {
-?>
-<script>
-    let form = document.querySelector('form'), errorBox = document.createElement('div');
-    form.insertBefore(errorBox, form.firstChild);
+    $options = Typecho_Widget::widget('Widget_Options');
 
-    errorBox.classList.add('error', 'hidden');
+    ?>
+    <div id="success" class="hidden">
+        <h2><?php _e('安装成功'); ?></h2>
+        <p class="keep-word">
+           <?php _e('您选择了使用原有的数据, 您的用户名和密码和原来的一致'); ?>
+        </p>
+        <p class="fresh-word">
+            <?php _e('您的用户名是'); ?>: <strong id="success-user"></strong><br>
+            <?php _e('您的密码是'); ?>: <strong id="success-password"></strong>
+        </p>
+        <ul>
+            <li><a href="<?php $options->loginUrl(); ?>"><?php _e('点击这里访问您的控制面板'); ?></a></li>
+            <li><a href="<?php $options->siteUrl(); ?>"><?php _e('点击这里查看您的 Blog'); ?></a></li>
+        </ul>
+        <p><?php _e('希望您能尽情享用 Typecho 带来的乐趣!'); ?></p>
+    </div>
+    <script>
+        let form = document.querySelector('form'), errorBox = document.createElement('div');
 
-    function showError(error) {
-        let str = '<?php _t('安装程序捕捉到以下错误: " %s ". 程序被终止, 请检查您的配置信息.', '%') ?>';
-        errorBox.innerHTML = str.replace('%', error);
+        form.insertBefore(errorBox, form.firstChild);
+        errorBox.classList.add('message', 'error');
 
-        errorBox.classList.remove('hidden');
-
-        return errorBox;
-    }
-
-    form.addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        errorBox.classList.add('hidden');
-
-        fetch(this.getAttribute('action'), {
-            method: 'POST',
-            body: new FormData(this)
-        }).then(function (response) {
-            return response.json();
-        }).then(function (data) {
-            if (data.success) {
-                location.href = '?step=' + data.message;
+        function showError(error) {
+            if (typeof error == 'string') {
+                window.scrollTo({ top: 0 });
+                errorBox.innerHTML = error;
+                errorBox.classList.add('fade');
             } else {
-                showError(data.message);
-            }
-        }).catch(function (error) {
-            let el = showError(error.message);
+                for (let k in error) {
+                    let input = document.querySelector('#' + k), msg = error[k], p = document.createElement('p');
 
-            if (typeof configError == 'function' && error.config) {
-                configError(error.config, el);
+                    p.classList.add('message', 'error');
+                    p.innerHTML = msg;
+
+                    input.parentNode.insertBefore(p, input.nextSibling);
+
+                    input.addEventListener('input', function () {
+                        p.remove();
+                    });
+                }
             }
-        });
-    }, true);
-</script>
+
+            return errorBox;
+        }
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            errorBox.classList.remove('fade');
+            form.querySelectorAll('button').forEach(function (btn) {
+               btn.setAttribute('disabled', 'disabled');
+            });
+
+            form.querySelectorAll('.typecho-option .error').forEach(function (el) {
+                el.remove();
+            });
+
+            fetch(this.getAttribute('action'), {
+                method: 'POST',
+                body: new FormData(this)
+            }).then(function (response) {
+                return response.json();
+            }).then(function (data) {
+                form.querySelectorAll('button').forEach(function (btn) {
+                    btn.removeAttribute('disabled');
+                });
+
+                if (data.success) {
+                    if (data.message) {
+                        location.href = '?step=' + data.message;
+                    } else {
+                        let success = document.querySelector('#success');
+
+                        form.classList.add('hidden');
+                        success.classList.remove('hidden');
+
+                        if (data.config) {
+                            success.classList.add('fresh');
+                        } else {
+                            success.classList.add('keep');
+                        }
+                    }
+                } else {
+                    let el = showError(data.message);
+
+                    if (typeof configError == 'function' && data.config) {
+                        configError(data.config, el);
+                    }
+                }
+            }).catch(function (error) {
+                showError(error.message);
+            });
+        }, true);
+    </script>
 <?php
 }
 
@@ -321,92 +446,168 @@ function install_step_1() {
     $langs = Widget_Options_General::getLangs();
     $lang = install_get_lang();
 ?>
-<form method="get" action="?step=2">
-    <h1><?php _e('欢迎使用 Typecho'); ?></h1>
-    <h2><?php _e('安装说明'); ?></h2>
-    <p><strong><?php _e('本安装程序将自动检测服务器环境是否符合最低配置需求. 如果不符合, 将在上方出现提示信息, 请按照提示信息检查您的主机配置. 如果服务器环境符合要求, 将在下方出现 "开始下一步" 的按钮, 点击此按钮即可一步完成安装.'); ?></strong></p>
-    <h2><?php _e('许可及协议'); ?></h2>
-    <p><?php _e('Typecho 基于 <a href="http://www.gnu.org/copyleft/gpl.html">GPL</a> 协议发布, 我们允许用户在 GPL 协议许可的范围内使用, 拷贝, 修改和分发此程序.'); ?>
-        <?php _e('在GPL许可的范围内, 您可以自由地将其用于商业以及非商业用途.'); ?></p>
-    <p><?php _e('Typecho 软件由其社区提供支持, 核心开发团队负责维护程序日常开发工作以及新特性的制定.'); ?>
-        <?php _e('如果您遇到使用上的问题, 程序中的 BUG, 以及期许的新功能, 欢迎您在社区中交流或者直接向我们贡献代码.'); ?>
-        <?php _e('对于贡献突出者, 他的名字将出现在贡献者名单中.'); ?></p>
-    <p class="submit">
-        <button type="submit"><?php _e('我准备好了, 开始下一步 &raquo;'); ?></button>
+    <div class="row typecho-page-main">
+        <div class="col-mb-12 col-tb-8 col-tb-offset-2">
+            <div class="typecho-page-title">
+                <h2><?php _e('欢迎使用 Typecho'); ?></h2>
+            </div>
+            <div id="typecho-welcome">
+                <form method="get" action="install.php">
+                    <h3><?php _e('安装说明'); ?></h3>
+                    <ul>
+                        <li class="warning"><strong><?php _e('本安装程序将自动检测服务器环境是否符合最低配置需求. 如果不符合, 将在上方出现提示信息, 请按照提示信息检查您的主机配置. 如果服务器环境符合要求, 将在下方出现 "开始下一步" 的按钮, 点击此按钮即可一步完成安装.'); ?></strong></li>
+                    </ul>
+                    <h3><?php _e('许可及协议'); ?></h3>
+                    <ul>
+                        <li><?php _e('Typecho 基于 <a href="http://www.gnu.org/copyleft/gpl.html">GPL</a> 协议发布, 我们允许用户在 GPL 协议许可的范围内使用, 拷贝, 修改和分发此程序.'); ?>
+                            <?php _e('在GPL许可的范围内, 您可以自由地将其用于商业以及非商业用途.'); ?></li>
+                        <li><?php _e('Typecho 软件由其社区提供支持, 核心开发团队负责维护程序日常开发工作以及新特性的制定.'); ?>
+                            <?php _e('如果您遇到使用上的问题, 程序中的 BUG, 以及期许的新功能, 欢迎您在社区中交流或者直接向我们贡献代码.'); ?>
+                            <?php _e('对于贡献突出者, 他的名字将出现在贡献者名单中.'); ?></li>
+                    </ul>
 
-        <?php if (count($langs) > 1): ?>
-            <select style="float: right" onchange="location.href='?lang=' + this.value">
-                <?php foreach ($langs as $key => $val): ?>
-                    <option value="<?php echo $key; ?>"<?php if ($lang == $key): ?> selected<?php endif; ?>><?php echo $val; ?></option>
-                <?php endforeach; ?>
-            </select>
-        <?php endif; ?>
-    </p>
-</form>
+                    <p class="submit">
+                        <button class="btn primary" type="submit"><?php _e('我准备好了, 开始下一步 &raquo;'); ?></button>
+                        <input type="hidden" name="step" value="2">
+
+                        <?php if (count($langs) > 1): ?>
+                            <select style="float: right" onchange="location.href='?lang=' + this.value">
+                                <?php foreach ($langs as $key => $val): ?>
+                                    <option value="<?php echo $key; ?>"<?php if ($lang == $key): ?> selected<?php endif; ?>><?php echo $val; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        <?php endif; ?>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
 <?php
-}
-
-/**
- * check step 2
- */
-function install_step_2_check(): bool {
-    return !file_exists(__TYPECHO_ROOT_DIR__ . '/config.inc.php');
 }
 
 /**
  * display step 2
  */
 function install_step_2() {
+    global $installDb;
+
     $drivers = install_get_db_drivers();
-    $adapter = Typecho_Request::getInstance()->get('driver', key($drivers));
+    $adapter = install_get_current_db_driver();
     $type = install_get_db_type($adapter);
-?>
-<form action="?step=2" method="post">
-    <ul class="typecho-option">
-        <li>
-            <label for="dbAdapter" class="typecho-label"><?php _e('数据库适配器'); ?></label>
-            <select name="dbAdapter" id="dbAdapter" onchange="location.href='?step=2&driver=' + this.value">
-                <?php foreach ($drivers as $driver => $name): ?>
-                    <option value="<?php echo $driver; ?>"<?php if($driver == $adapter): ?> selected="selected"<?php endif; ?>><?php echo $name; ?></option>
-                <?php endforeach; ?>
-            </select>
-            <p class="description"><?php _e('请根据您的数据库类型选择合适的适配器'); ?></p>
-            <input type="hidden" id="dbNext" name="dbNext" value="none">
-        </li>
-        <?php require_once './install/' . $type . '.php'; ?>
-        <li>
-            <label class="typecho-label" for="dbPrefix"><?php _e('数据库前缀'); ?></label>
-            <input type="text" class="text" name="dbPrefix" id="dbPrefix" value="<?php _v('dbPrefix', 'typecho_'); ?>" />
-            <p class="description"><?php _e('默认前缀是 "typecho_"'); ?></p>
-        </li>
-    </ul>
-</form>
-<script>
-    function configError(config, errorBox) {
-        let next = document.querySelector('#dbNext'),
-            line = document.createElement('p'),
-            form = document.querySelector('form');
 
-        errorBox.appendChild(line);
-
-        config.forEach(function (word, key) {
-            let btn = document.createElement('button');
-
-            btn.innerHTML = word;
-            btn.addEventListener('click', function () {
-                next.setAttribute('value', key);
-            });
-
-            line.appendChild(btn);
-            form.submit();
-        });
+    if (!empty($installDb)) {
+        $config = $installDb->getConfig(Typecho_Db::WRITE)->toArray();
+        $config['prefix'] = $installDb->getPrefix();
+        $config['adapter'] = $adapter;
     }
-</script>
+?>
+    <div class="row typecho-page-main">
+        <div class="col-mb-12 col-tb-8 col-tb-offset-2">
+            <div class="typecho-page-title">
+                <h2><?php _e('初始化配置'); ?></h2>
+            </div>
+            <form action="install.php" method="post">
+                <ul class="typecho-option">
+                    <li>
+                        <label for="dbAdapter" class="typecho-label"><?php _e('数据库适配器'); ?></label>
+                        <select name="dbAdapter" id="dbAdapter" onchange="location.href='?step=2&driver=' + this.value">
+                            <?php foreach ($drivers as $driver => $name): ?>
+                                <option value="<?php echo $driver; ?>"<?php if($driver == $adapter): ?> selected="selected"<?php endif; ?>><?php echo $name; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                        <p class="description"><?php _e('请根据您的数据库类型选择合适的适配器'); ?></p>
+                        <input type="hidden" id="dbNext" name="dbNext" value="none">
+                    </li>
+                </ul>
+                <ul class="typecho-option">
+                    <li>
+                        <label class="typecho-label" for="dbPrefix"><?php _e('数据库前缀'); ?></label>
+                        <input type="text" class="text" name="dbPrefix" id="dbPrefix" value="<?php _v('dbPrefix', 'typecho_'); ?>" />
+                        <p class="description"><?php _e('默认前缀是 "typecho_"'); ?></p>
+                    </li>
+                </ul>
+                <?php require_once './install/' . $type . '.php'; ?>
+
+
+                <ul class="typecho-option typecho-option-submit">
+                    <li>
+                        <button type="submit" class="btn primary"><?php _e('确认, 开始安装 &raquo;'); ?></button>
+                        <input type="hidden" name="step" value="2">
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+    <script>
+        function configError(config, errorBox) {
+            let next = document.querySelector('#dbNext'),
+                line = document.createElement('p'),
+                form = document.querySelector('form');
+
+            if (config.code) {
+                let text = document.createElement('textarea');
+                text.value = config.code;
+                text.setAttribute('readonly', 'readonly');
+
+                errorBox.appendChild(text);
+                return;
+            }
+
+            errorBox.appendChild(line);
+
+            for (let key in config) {
+                let word = config[key],
+                    btn = document.createElement('button');
+
+                btn.innerHTML = word;
+                btn.setAttribute('type', 'button');
+                btn.classList.add('btn', 'btn-s', 'primary');
+
+                btn.addEventListener('click', function () {
+                    next.value = key;
+                    form.dispatchEvent(new Event('submit'));
+                });
+
+                line.appendChild(btn);
+            }
+        }
+
+        <?php if (!empty($config)): ?>
+        function fillInput(config) {
+            for (let k in config) {
+                let value = config[k],
+                    key = 'db' + k.charAt(0).toUpperCase() + k.slice(1),
+                    input = document.querySelector('#' + key);
+
+                input.value = value;
+
+                if (input.children.length > 0) {
+                    for (let i = 0; i < input.children.length; i ++) {
+                        let option = input.children[i];
+
+                        if (!option.selected) {
+                            option.setAttribute('disabled', 'disabled');
+                        }
+                    }
+                }
+
+                input.setAttribute('readonly', 'readonly');
+            }
+        }
+
+        fillInput(<?php echo Json::encode($config); ?>);
+        <?php endif; ?>
+    </script>
 <?php
     install_ajax_support();
 }
 
+/**
+ * perform install step 2
+ */
 function install_step_2_perform() {
+    global $installDb;
+
     $request = Typecho_Request::getInstance();
     $drivers = install_get_db_drivers();
 
@@ -484,38 +685,37 @@ function install_step_2_perform() {
     $dbConfig = [];
 
     foreach ($configMap[$type] as $key => $value) {
-        $dbConfig[strtolower(substr($key, 2))]
-            = $config[$key] === null ? (install_is_cli() ? $value : null) : $config[$key];
+        $dbConfig[$key] = $config[$key] === null ? (install_is_cli() ? $value : null) : $config[$key];
     }
 
     switch ($type) {
         case 'Mysql':
             $error = (new Typecho_Validate())
-                ->addRule('host', 'required', _t('确认您的配置'))
-                ->addRule('port', 'required', _t('确认您的配置'))
-                ->addRule('port', 'isInteger', _t('确认您的配置'))
-                ->addRule('user', 'required', _t('确认您的配置'))
-                ->addRule('charset', 'required', _t('确认您的配置'))
-                ->addRule('charset', 'enum', _t('确认您的配置'), ['utf8', 'utf8mb4'])
-                ->addRule('database', 'required', _t('确认您的配置'))
-                ->addRule('engine', 'required', _t('确认您的配置'))
-                ->addRule('engine', 'enum', _t('确认您的配置'), ['InnoDB', 'MyISAM'])
+                ->addRule('dbHost', 'required', _t('确认您的配置'))
+                ->addRule('dbPort', 'required', _t('确认您的配置'))
+                ->addRule('dbPort', 'isInteger', _t('确认您的配置'))
+                ->addRule('dbUser', 'required', _t('确认您的配置'))
+                ->addRule('dbCharset', 'required', _t('确认您的配置'))
+                ->addRule('dbCharset', 'enum', _t('确认您的配置'), ['utf8', 'utf8mb4'])
+                ->addRule('dbDatabase', 'required', _t('确认您的配置'))
+                ->addRule('dbEngine', 'required', _t('确认您的配置'))
+                ->addRule('dbEngine', 'enum', _t('确认您的配置'), ['InnoDB', 'MyISAM'])
                 ->run($dbConfig);
             break;
         case 'Pgsql':
             $error = (new Typecho_Validate())
-                ->addRule('host', 'required', _t('确认您的配置'))
-                ->addRule('port', 'required', _t('确认您的配置'))
-                ->addRule('port', 'isInteger', _t('确认您的配置'))
-                ->addRule('user', 'required', _t('确认您的配置'))
-                ->addRule('charset', 'required', _t('确认您的配置'))
-                ->addRule('charset', 'enum', _t('确认您的配置'), ['utf8'])
-                ->addRule('database', 'required', _t('确认您的配置'))
+                ->addRule('dbHost', 'required', _t('确认您的配置'))
+                ->addRule('dbPort', 'required', _t('确认您的配置'))
+                ->addRule('dbPort', 'isInteger', _t('确认您的配置'))
+                ->addRule('dbUser', 'required', _t('确认您的配置'))
+                ->addRule('dbCharset', 'required', _t('确认您的配置'))
+                ->addRule('dbCharset', 'enum', _t('确认您的配置'), ['utf8'])
+                ->addRule('dbDatabase', 'required', _t('确认您的配置'))
                 ->run($dbConfig);
             break;
         case 'SQLite':
             $error = (new Typecho_Validate())
-                ->addRule('file', 'required', _t('确认您的配置'))
+                ->addRule('dbFile', 'required', _t('确认您的配置'))
                 ->run($dbConfig);
             break;
         default:
@@ -527,19 +727,32 @@ function install_step_2_perform() {
         install_raise_error($error);
     }
 
-    // detect db config
-    try {
-        $installDb = new Typecho_Db($config['dbAdapter'], $config['dbPrefix']);
-        $installDb->addServer($dbConfig, Typecho_Db::READ | Typecho_Db::WRITE);
-        $installDb->query('SELECT 1=1');
-    } catch (Typecho_Db_Adapter_Exception $e) {
-        install_raise_error(_t('对不起, 无法连接数据库, 请先检查数据库配置再继续进行安装'));
-    } catch (Typecho_Db_Exception $e) {
-        install_raise_error(_t('安装程序捕捉到以下错误: " %s ". 程序被终止, 请检查您的配置信息.', $e->getMessage()));
+    foreach ($dbConfig as $key => $value) {
+        $dbConfig[strtolower(substr($key, 2))] = $value;
     }
 
-    if (!isset($installDb)) {
-        return;
+    if (empty($installDb)) {
+        // detect db config
+        try {
+            $installDb = new Typecho_Db($config['dbAdapter'], $config['dbPrefix']);
+            $installDb->addServer($dbConfig, Typecho_Db::READ | Typecho_Db::WRITE);
+            $installDb->query('SELECT 1=1');
+        } catch (Typecho_Db_Adapter_Exception $e) {
+            install_raise_error(_t('对不起, 无法连接数据库, 请先检查数据库配置再继续进行安装'));
+        } catch (Typecho_Db_Exception $e) {
+            install_raise_error(_t('安装程序捕捉到以下错误: " %s ". 程序被终止, 请检查您的配置信息.', $e->getMessage()));
+        }
+
+        $code = install_config_file($config['dbAdapter'], $config['dbPrefix'], $dbConfig);
+
+        if (!install_check('config')) {
+            install_raise_error(
+                _t('安装程序无法自动创建 <strong>config.inc.php</strong> 文件') . "\n" .
+                _t('您可以在网站根目录下手动创建 <strong>config.inc.php</strong> 文件, 并复制如下代码至其中')
+            , [
+                'code' => $code
+            ]);
+        }
     }
 
     // delete exists db
@@ -597,14 +810,22 @@ function install_step_2_perform() {
             ('Pgsql' == $type && '42P07' == $code)) {
 
             if ($config['dbNext'] == 'keep') {
-                install_success(3);
-            } elseif ($config['dbNext' == 'none']) {
+                if (install_check('db_data')) {
+                    install_success(0);
+                } else {
+                    install_success(3);
+                }
+            } elseif ($config['dbNext'] == 'none') {
+                install_remove_config_file();
+
                 install_raise_error(_t('安装程序检查到原有数据表已经存在.'), [
                     'delete' => _t('删除原有数据'),
                     'keep' => _t('使用原有数据')
                 ]);
             }
         } else {
+            install_remove_config_file();
+
             install_raise_error(_t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.', $e->getMessage()));
         }
     }
@@ -612,8 +833,279 @@ function install_step_2_perform() {
     install_success(3);
 }
 
-$options = Typecho_Widget::widget('Widget_Options', install_get_default_options());
-Typecho_Widget::widget('Widget_Init');
+/**
+ * display step 3
+ */
+function install_step_3() {
+    $options = Typecho_Widget::widget('Widget_Options');
+?>
+    <div class="row typecho-page-main">
+        <div class="col-mb-12 col-tb-8 col-tb-offset-2">
+            <div class="typecho-page-title">
+                <h2><?php _e('创建您的管理员帐号'); ?></h2>
+            </div>
+            <form action="install.php" method="post">
+                <ul class="typecho-option">
+                    <li>
+                        <label class="typecho-label" for="userUrl"><?php _e('网站地址'); ?></label>
+                        <input type="text" name="userUrl" id="userUrl" class="text" value="<?php $options->siteUrl(); ?>" />
+                        <p class="description"><?php _e('这是程序自动匹配的网站路径, 如果不正确请修改它'); ?></p>
+                    </li>
+                </ul>
+                <ul class="typecho-option">
+                    <li>
+                        <label class="typecho-label" for="userName"><?php _e('用户名'); ?></label>
+                        <input type="text" name="userName" id="userName" class="text" />
+                        <p class="description"><?php _e('请填写您的用户名'); ?></p>
+                    </li>
+                </ul>
+                <ul class="typecho-option">
+                    <li>
+                        <label class="typecho-label" for="userPassword"><?php _e('登录密码'); ?></label>
+                        <input type="password" name="userPassword" id="userPassword" class="text" />
+                        <p class="description"><?php _e('请填写您的登录密码, 如果留空系统将为您随机生成一个'); ?></p>
+                    </li>
+                </ul>
+                <ul class="typecho-option">
+                    <li>
+                        <label class="typecho-label" for="userMail"><?php _e('邮件地址'); ?></label>
+                        <input type="text" name="userMail" id="userMail" class="text" />
+                        <p class="description"><?php _e('请填写一个您的常用邮箱'); ?></p>
+                    </li>
+                </ul>
+                <ul class="typecho-option typecho-option-submit">
+                    <li>
+                        <button type="submit" class="btn primary"><?php _e('继续安装 &raquo;'); ?></button>
+                        <input type="hidden" name="step" value="3">
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+<?php
+    install_ajax_support();
+}
+
+/**
+ * perform step 3
+ */
+function install_step_3_perform() {
+    global $installDb;
+
+    $request = Typecho_Request::getInstance();
+    $defaultPassword = Typecho_Common::randString(8);
+    $options = Typecho_Widget::widget('Widget_Options');
+
+    if (install_is_cli()) {
+        $config = [
+            'userUrl' => $request->getServer('TYPECHO_SITE_URL', 'http://localhost'),
+            'userName' => $request->getServer('TYPECHO_USER_NAME', 'typecho'),
+            'userPassword' => $request->getServer('TYPECHO_USER_PASSWORD'),
+            'userMail' => $request->getServer('TYPECHO_USER_MAIL', 'admin@localhost')
+        ];
+    } else {
+        $config = $request->from([
+            'userUrl',
+            'userName',
+            'userPassword',
+            'userMail',
+        ]);
+    }
+
+    $error = (new Typecho_Validate())
+        ->addRule('userUrl', 'required', _t('请填写您的网站地址'))
+        ->addRule('userUrl', 'url', _t('请填写您的网站地址'))
+        ->addRule('userName', 'required', _t('请填写您的用户名'))
+        ->addRule('userName', 'maxLength', _t('用户名长度超过限制, 请不要超过 32 个字符'), 32)
+        ->addRule('userMail', 'required', _t('请填写您的邮箱地址'))
+        ->addRule('userMail', 'email', _t('请填写您的邮箱地址'))
+        ->addRule('userMail', 'maxLength', _t('邮箱长度超过限制, 请不要超过 200 个字符'), 200)
+        ->run($config);
+
+    if (!empty($error)) {
+        install_raise_error($error);
+    }
+
+    if (empty($config['userPassword'])) {
+        $config['userPassword'] = $defaultPassword;
+    }
+
+    try {
+        // write options
+        foreach (install_get_default_options() as $key => $value) {
+            $installDb->query(
+                $installDb->insert('table.options')->rows(['name' => $key, 'user' => 0, 'value' => $value])
+            );
+        }
+
+        // write user
+        $hasher = new PasswordHash(8, true);
+        $installDb->query(
+            $installDb->insert('table.users')->rows([
+                'name' => $config['userName'],
+                'password' => $hasher->HashPassword($config['userPassword']),
+                'mail' => $config['userMail'],
+                'url' => $options->siteUrl,
+                'screenName' => $config['userName'],
+                'group' => 'administrator',
+                'created' => Typecho_Date::time()
+            ])
+        );
+
+        // write category
+        $installDb->query(
+            $installDb->insert('table.metas')
+                ->rows([
+                    'name' => _t('默认分类'),
+                    'slug' => 'default',
+                    'type' => 'category',
+                    'description' => _t('只是一个默认分类')
+                ])
+        );
+
+        $installDb->query($installDb->insert('table.relationships')->rows(['cid' => 1, 'mid' => 1]));
+
+        // write first page and post
+        $installDb->query(
+            $installDb->insert('table.contents')->rows([
+                'title' => _t('欢迎使用 Typecho'),
+                'slug' => 'start', 'created' => Typecho_Date::time(),
+                'modified' => Typecho_Date::time(),
+                'text' => '<!--markdown-->' . _t('如果您看到这篇文章,表示您的 blog 已经安装成功.'),
+                'authorId' => 1,
+                'type' => 'post',
+                'status' => 'publish',
+                'commentsNum' => 1,
+                'allowComment' => 1,
+                'allowPing' => 1,
+                'allowFeed' => 1,
+                'parent' => 0
+            ])
+        );
+
+        $installDb->query(
+            $installDb->insert('table.contents')->rows([
+                'title' => _t('关于'),
+                'slug' => 'start-page',
+                'created' => Typecho_Date::time(),
+                'modified' => Typecho_Date::time(),
+                'text' => '<!--markdown-->' . _t('本页面由 Typecho 创建, 这只是个测试页面.'),
+                'authorId' => 1,
+                'order' => 0,
+                'type' => 'page',
+                'status' => 'publish',
+                'commentsNum' => 0,
+                'allowComment' => 1,
+                'allowPing' => 1,
+                'allowFeed' => 1,
+                'parent' => 0
+            ])
+        );
+
+        // write comment
+        $installDb->query(
+            $installDb->insert('table.comments')->rows([
+                'cid' => 1, 'created' => Typecho_Date::time(),
+                'author' => 'Typecho',
+                'ownerId' => 1,
+                'url' => 'http://typecho.org',
+                'ip' => '127.0.0.1',
+                'agent' => $options->generator,
+                'text' => '欢迎加入 Typecho 大家族',
+                'type' => 'comment',
+                'status' => 'approved',
+                'parent' => 0
+            ])
+        );
+    } catch (Typecho_Db_Exception $e) {
+        install_raise_error($e->getMessage());
+    }
+
+    install_success(0, [
+        $config['userName'],
+        $config['userPassword']
+    ]);
+}
+
+/**
+ * dispatch install action
+ *
+ * @throws Typecho_Exception
+ */
+function install_dispatch() {
+    // init default options
+    $options = Typecho_Widget::widget('Widget_Options', install_get_default_options());
+    Typecho_Widget::widget('Widget_Init');
+
+    // install finished yet
+    if (
+        install_check('config')
+        && install_check('db_structure')
+        && install_check('db_data')
+    ) {
+        exit;
+    }
+
+    if (install_is_cli()) {
+        install_step_2_perform();
+    } else {
+        $request = Typecho_Request::getInstance();
+        $response = Typecho_Response::getInstance();
+        $step = $request->get('step');
+
+        $action = 1;
+
+        switch (true) {
+            case $step == 2:
+                if (!install_check('db_structure')) {
+                    $action = 2;
+                } else {
+                    $response->redirect('install.php?step=3');
+                }
+                break;
+            case $step == 3:
+                if (install_check('db_structure')) {
+                    $action = 3;
+                } else {
+                    $response->redirect('install.php?step=2');
+                }
+                break;
+            default:
+                break;
+        }
+
+        $method = 'install_step_' . $action;
+
+        if ($request->isPost() && $action > 1) {
+            $method .= '_perform';
+            $method();
+            exit;
+        }
+?>
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="<?php _e('UTF-8'); ?>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title><?php _e('Typecho 安装程序'); ?></title>
+    <link rel="stylesheet" type="text/css" href="<?php $options->adminStaticUrl('css', 'normalize.css') ?>" />
+    <link rel="stylesheet" type="text/css" href="<?php $options->adminStaticUrl('css', 'grid.css') ?>" />
+    <link rel="stylesheet" type="text/css" href="<?php $options->adminStaticUrl('css', 'style.css') ?>" />
+    <link rel="stylesheet" type="text/css" href="<?php $options->adminStaticUrl('css', 'install.css') ?>" />
+</head>
+<body>
+    <div class="body container">
+        <h1><a href="http://typecho.org" target="_blank" class="i-logo">Typecho</a></h1>
+        <?php $method(); ?>
+    </div>
+</body>
+</html>
+<?php
+    }
+}
+
+install_dispatch();
+exit;
 
 // 挡掉可能的跨站请求
 if (!empty($_GET) || !empty($_POST)) {

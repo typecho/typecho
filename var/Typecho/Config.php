@@ -25,7 +25,7 @@ class Typecho_Config implements Iterator
      * @access private
      * @var array
      */
-    private $_currentConfig = array();
+    private $_currentConfig = [];
 
     /**
      * 实例化一个当前配置
@@ -33,7 +33,7 @@ class Typecho_Config implements Iterator
      * @access public
      * @param mixed $config 配置列表
      */
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         /** 初始化参数 */
         $this->setDefault($config);
@@ -43,10 +43,12 @@ class Typecho_Config implements Iterator
      * 工厂模式实例化一个当前配置
      *
      * @access public
-     * @param array $config 配置列表
+     *
+     * @param array|string $config 配置列表
+     *
      * @return Typecho_Config
      */
-    public static function factory($config = array())
+    public static function factory($config = []): Typecho_Config
     {
         return new Typecho_Config($config);
     }
@@ -55,11 +57,13 @@ class Typecho_Config implements Iterator
      * 设置默认的配置
      *
      * @access public
+     *
      * @param mixed $config 配置信息
      * @param boolean $replace 是否替换已经存在的信息
+     *
      * @return void
      */
-    public function setDefault($config, $replace = false)
+    public function setDefault($config, bool $replace = false)
     {
         if (empty($config)) {
             return;
@@ -130,7 +134,7 @@ class Typecho_Config implements Iterator
      * @access public
      * @return boolean
      */
-    public function valid()
+    public function valid(): bool
     {
         return false !== $this->current();
     }
@@ -142,9 +146,9 @@ class Typecho_Config implements Iterator
      * @param string $name 配置名称
      * @return mixed
      */
-    public function __get($name)
+    public function __get(string $name)
     {
-        return isset($this->_currentConfig[$name]) ? $this->_currentConfig[$name] : NULL;
+        return $this->_currentConfig[$name] ?? null;
     }
 
     /**
@@ -155,7 +159,7 @@ class Typecho_Config implements Iterator
      * @param mixed $value 配置值
      * @return void
      */
-    public function __set($name, $value)
+    public function __set(string $name, $value)
     {
         $this->_currentConfig[$name] = $value;
     }
@@ -165,10 +169,10 @@ class Typecho_Config implements Iterator
      *
      * @access public
      * @param string $name 配置名称
-     * @param array $args 参数
+     * @param array|null $args 参数
      * @return void
      */
-    public function __call($name, $args)
+    public function __call(string $name, ?array $args)
     {
         echo $this->_currentConfig[$name];
     }
@@ -180,7 +184,7 @@ class Typecho_Config implements Iterator
      * @param string $name 配置名称
      * @return boolean
      */
-    public function __isSet($name)
+    public function __isSet(string $name): bool
     {
         return isset($this->_currentConfig[$name]);
     }
@@ -191,8 +195,16 @@ class Typecho_Config implements Iterator
      * @access public
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return serialize($this->_currentConfig);
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return $this->_currentConfig;
     }
 }

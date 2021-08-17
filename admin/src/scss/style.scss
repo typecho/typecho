@@ -179,68 +179,6 @@ a.button:hover, a.balloon-button:hover {
 /** 增加配置面板内部的错误样式 by 70 */
 
 
-/** 
-* 安装样式
-* 
-* @author mingcheng
-* @date   2008-09-06
-*/
-
-/**
-* 安装向导
-*/
-.typecho-install {
-  padding-bottom: 2em;
-}
-.typecho-install-patch {
-  margin-bottom: 2em;
-  padding: 2em 0;
-  background-color: #292D33;
-  color: #FFF;
-  text-align: center;
-}
-
-.typecho-install-patch ol {
-  list-style: none;
-  margin: 3em 0 1em;
-  padding: 0;
-  color: #999;
-}
-.typecho-install-patch li {
-  display: inline-block;
-  margin: 0 .8em;
-}
-.typecho-install-patch span {
-  display: inline-block;
-  margin-right: 5px;
-  width: 20px;
-  height: 20px;
-  line-height: 20px;
-  border: 2px solid #999;
-  text-align: center;
-  border-radius: 2em;
-}
-.typecho-install-patch li.current {
-  color: #FFF;
-  font-weight: bold;
-}
-.typecho-install-patch li.current span {
-  border-color: #FFF;
-}
-
-
-/**
-* 安装主体内容
-*/
-
-.typecho-install .typecho-install-body input {
-  width: 100%;
-}
-.typecho-install-body .typecho-option li {
-  margin: 1em 0;
-}
-
-
 /**
 * 欢迎界面
 */

@@ -1,0 +1,18 @@
+h1 { text-align: center; }
+
+details summary { cursor: pointer; }
+
+@keyframes fadein { from { opacity: 0; }
+  to { opacity: 1; } }
+
+form > .message { display: none; }
+
+.message.fade { display: block; animation: fadein .5s linear; }
+
+.message *:last-child { margin-bottom: 0; }
+
+.message p { margin-top: 8px; }
+
+.message p button { margin-left: 5px; }
+
+.message p button:first-child { margin-left: 0; }

@@ -1,0 +1,41 @@
+h1 {
+  text-align: center;
+}
+
+details {
+  summary {
+    cursor: pointer;
+  }
+}
+
+@keyframes fadein {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.message {
+  form > & {
+    display: none;
+  }
+
+  &.fade {
+    display: block;
+    animation: fadein .5s linear;
+  }
+
+  *:last-child {
+    margin-bottom: 0;
+  }
+
+  p {
+    margin-top: 8px;
+
+    button {
+      margin-left: 5px;
+    }
+
+    button:first-child {
+      margin-left: 0;
+    }
+  }
+}
