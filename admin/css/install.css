@@ -5,6 +5,10 @@ details summary { cursor: pointer; }
 @keyframes fadein { from { opacity: 0; }
   to { opacity: 1; } }
 
+.fresh .keep-word { display: none; }
+
+.keep .fresh-word { display: none; }
+
 form > .message { display: none; }
 
 .message.fade { display: block; animation: fadein .5s linear; }

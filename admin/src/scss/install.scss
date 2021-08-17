@@ -13,6 +13,18 @@ details {
   to { opacity: 1; }
 }
 
+.fresh {
+    .keep-word {
+        display: none;
+    }
+}
+
+.keep {
+    .fresh-word {
+        display: none;
+    }
+}
+
 .message {
   form > & {
     display: none;

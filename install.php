@@ -173,18 +173,6 @@ function install_get_db_type(string $driver): string {
 function install_get_db_drivers(): array {
     $drivers = [];
 
-    if (Typecho_Db_Adapter_Mysqli::isAvailable()) {
-        $drivers['Mysqli'] = _t('Mysql 原生函数适配器');
-    }
-
-    if (Typecho_Db_Adapter_SQLite::isAvailable()) {
-        $drivers['SQLite'] = _t('SQLite 原生函数适配器 (SQLite 2.x)');
-    }
-
-    if (Typecho_Db_Adapter_Pgsql::isAvailable()) {
-        $drivers['Pgsql'] = _t('Pgsql 原生函数适配器');
-    }
-
     if (Typecho_Db_Adapter_Pdo_Mysql::isAvailable()) {
         $drivers['Pdo_Mysql'] = _t('Pdo 驱动 Mysql 适配器');
     }
@@ -195,6 +183,18 @@ function install_get_db_drivers(): array {
 
     if (Typecho_Db_Adapter_Pdo_Pgsql::isAvailable()) {
         $drivers['Pdo_Pgsql'] = _t('Pdo 驱动 PostgreSql 适配器');
+    }
+
+    if (Typecho_Db_Adapter_Mysqli::isAvailable()) {
+        $drivers['Mysqli'] = _t('Mysql 原生函数适配器');
+    }
+
+    if (Typecho_Db_Adapter_SQLite::isAvailable()) {
+        $drivers['SQLite'] = _t('SQLite 原生函数适配器 (SQLite 2.x)');
+    }
+
+    if (Typecho_Db_Adapter_Pgsql::isAvailable()) {
+        $drivers['Pgsql'] = _t('Pgsql 原生函数适配器');
     }
 
     return $drivers;
@@ -331,8 +331,13 @@ function install_success($step, ?array $config = null) {
         }
 
         if (!empty($config)) {
-            echo implode("\n", $config);
+            [$userName, $userPassword] = $config;
+            echo _t('安装成功') . "\n";
+            echo _t('您的用户名是') . " {$userName}\n";
+            echo _t('您的密码是') . " {$userPassword}\n";
         }
+
+        exit(0);
     } else {
         Typecho_Response::getInstance()->throwJson([
             'success' => 1,
@@ -342,24 +347,35 @@ function install_success($step, ?array $config = null) {
     }
 }
 
+/**
+ * add ajax support
+ *
+ * @throws Typecho_Exception
+ */
 function install_ajax_support() {
     $options = Typecho_Widget::widget('Widget_Options');
 
     ?>
-    <div id="success" class="hidden">
-        <h2><?php _e('安装成功'); ?></h2>
-        <p class="keep-word">
-           <?php _e('您选择了使用原有的数据, 您的用户名和密码和原来的一致'); ?>
-        </p>
-        <p class="fresh-word">
-            <?php _e('您的用户名是'); ?>: <strong id="success-user"></strong><br>
-            <?php _e('您的密码是'); ?>: <strong id="success-password"></strong>
-        </p>
-        <ul>
-            <li><a href="<?php $options->loginUrl(); ?>"><?php _e('点击这里访问您的控制面板'); ?></a></li>
-            <li><a href="<?php $options->siteUrl(); ?>"><?php _e('点击这里查看您的 Blog'); ?></a></li>
-        </ul>
-        <p><?php _e('希望您能尽情享用 Typecho 带来的乐趣!'); ?></p>
+    <div id="success" class="row typecho-page-main hidden">
+        <div class="col-mb-12 col-tb-8 col-tb-offset-2">
+            <div class="typecho-page-title">
+                <h2><?php _e('安装成功'); ?></h2>
+            </div>
+            <div id="typecho-welcome">
+                <p class="keep-word">
+                    <?php _e('您选择了使用原有的数据, 您的用户名和密码和原来的一致'); ?>
+                </p>
+                <p class="fresh-word">
+                    <?php _e('您的用户名是'); ?>: <strong class="warning" id="success-user"></strong><br>
+                    <?php _e('您的密码是'); ?>: <strong class="warning" id="success-password"></strong>
+                </p>
+                <ul>
+                    <li><a href="<?php $options->loginUrl(); ?>"><?php _e('点击这里访问您的控制面板'); ?></a></li>
+                    <li><a href="<?php $options->siteUrl(); ?>"><?php _e('点击这里查看您的 Blog'); ?></a></li>
+                </ul>
+                <p><?php _e('希望您能尽情享用 Typecho 带来的乐趣!'); ?></p>
+            </div>
+        </div>
     </div>
     <script>
         let form = document.querySelector('form'), errorBox = document.createElement('div');
@@ -423,6 +439,10 @@ function install_ajax_support() {
 
                         if (data.config) {
                             success.classList.add('fresh');
+
+                            document.querySelector('.typecho-page-main').classList.add('hidden');
+                            success.querySelector('#success-user').innerHTML = data.config[0];
+                            success.querySelector('#success-password').innerHTML = data.config[1];
                         } else {
                             success.classList.add('keep');
                         }
@@ -685,7 +705,7 @@ function install_step_2_perform() {
     $dbConfig = [];
 
     foreach ($configMap[$type] as $key => $value) {
-        $dbConfig[$key] = $config[$key] === null ? (install_is_cli() ? $value : null) : $config[$key];
+        $config[$key] = $config[$key] === null ? (install_is_cli() ? $value : null) : $config[$key];
     }
 
     switch ($type) {
@@ -700,7 +720,7 @@ function install_step_2_perform() {
                 ->addRule('dbDatabase', 'required', _t('确认您的配置'))
                 ->addRule('dbEngine', 'required', _t('确认您的配置'))
                 ->addRule('dbEngine', 'enum', _t('确认您的配置'), ['InnoDB', 'MyISAM'])
-                ->run($dbConfig);
+                ->run($config);
             break;
         case 'Pgsql':
             $error = (new Typecho_Validate())
@@ -711,12 +731,12 @@ function install_step_2_perform() {
                 ->addRule('dbCharset', 'required', _t('确认您的配置'))
                 ->addRule('dbCharset', 'enum', _t('确认您的配置'), ['utf8'])
                 ->addRule('dbDatabase', 'required', _t('确认您的配置'))
-                ->run($dbConfig);
+                ->run($config);
             break;
         case 'SQLite':
             $error = (new Typecho_Validate())
                 ->addRule('dbFile', 'required', _t('确认您的配置'))
-                ->run($dbConfig);
+                ->run($config);
             break;
         default:
             install_raise_error(_t('确认您的配置'));
@@ -727,8 +747,8 @@ function install_step_2_perform() {
         install_raise_error($error);
     }
 
-    foreach ($dbConfig as $key => $value) {
-        $dbConfig[strtolower(substr($key, 2))] = $value;
+    foreach ($configMap[$type] as $key => $value) {
+        $dbConfig[strtolower(substr($key, 2))] = $config[$key];
     }
 
     if (empty($installDb)) {
@@ -901,7 +921,7 @@ function install_step_3_perform() {
             'userUrl' => $request->getServer('TYPECHO_SITE_URL', 'http://localhost'),
             'userName' => $request->getServer('TYPECHO_USER_NAME', 'typecho'),
             'userPassword' => $request->getServer('TYPECHO_USER_PASSWORD'),
-            'userMail' => $request->getServer('TYPECHO_USER_MAIL', 'admin@localhost')
+            'userMail' => $request->getServer('TYPECHO_USER_MAIL', 'admin@localhost.local')
         ];
     } else {
         $config = $request->from([
@@ -1053,7 +1073,6 @@ function install_dispatch() {
 
     if (install_is_cli()) {
         install_step_2_perform();
-        install_step_3_perform();
     } else {
         $request = Typecho_Request::getInstance();
         $response = Typecho_Response::getInstance();
