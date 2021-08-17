@@ -306,7 +306,7 @@ function install_raise_error($error, $config = null) {
                 echo (is_int($key) ? '' : $key . ': ') . $value . "\n";
             }
         } else {
-            echo $error;
+            echo $error . "\n";
         }
 
         exit(1);
@@ -645,8 +645,8 @@ function install_step_2_perform() {
             'dbFile' => $request->getServer('TYPECHO_DB_FILE'),
             'dbDsn' => $request->getServer('TYPECHO_DB_DSN'),
             'dbEngine' => $request->getServer('TYPECHO_DB_ENGINE'),
-            'dbPrefix' => $request->getServer('TYPECHO_DB_PREFIX'),
-            'dbAdapter' => $request->getServer('TYPECHO_DB_ADAPTER'),
+            'dbPrefix' => $request->getServer('TYPECHO_DB_PREFIX', 'typecho_'),
+            'dbAdapter' => $request->getServer('TYPECHO_DB_ADAPTER', install_get_current_db_driver()),
             'dbNext' => $request->getServer('TYPECHO_DB_NEXT', 'none')
         ];
     } else {
@@ -1033,6 +1033,11 @@ function install_step_3_perform() {
  * @throws Typecho_Exception
  */
 function install_dispatch() {
+    // disable root url on cli mode
+    if (install_is_cli()) {
+        define('__TYPECHO_ROOT_URL__', 'http://localhost');
+    }
+
     // init default options
     $options = Typecho_Widget::widget('Widget_Options', install_get_default_options());
     Typecho_Widget::widget('Widget_Init');
@@ -1048,6 +1053,7 @@ function install_dispatch() {
 
     if (install_is_cli()) {
         install_step_2_perform();
+        install_step_3_perform();
     } else {
         $request = Typecho_Request::getInstance();
         $response = Typecho_Response::getInstance();
