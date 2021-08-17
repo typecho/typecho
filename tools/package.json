@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Typecho build tools",
   "main": "build.js",
+  "engines": {
+      "node": "16.x"
+  },
   "scripts": {
     "build_js": "node build.js js",
     "build_css": "node build.js css"
