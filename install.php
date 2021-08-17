@@ -33,8 +33,6 @@ else:
 
 endif;
 
-define('__TYPECHO_INSTALL__', true);
-
 /**
  * get lang
  *
@@ -1053,6 +1051,8 @@ function install_step_3_perform() {
  * @throws Typecho_Exception
  */
 function install_dispatch() {
+    define('__TYPECHO_INSTALL__', true);
+
     // disable root url on cli mode
     if (install_is_cli()) {
         define('__TYPECHO_ROOT_URL__', 'http://localhost');
@@ -1068,7 +1068,7 @@ function install_dispatch() {
         && install_check('db_structure')
         && install_check('db_data')
     ) {
-        exit;
+        exit(1);
     }
 
     if (install_is_cli()) {
