@@ -84,7 +84,7 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
     {
         $path = $this->options->themeFile($theme, $file);
 
-        if (file_exists($path) && is_writeable($path) && !Typecho_Common::isAppEngine()
+        if (file_exists($path) && is_writeable($path)
             && (!defined('__TYPECHO_THEME_WRITEABLE__') || __TYPECHO_THEME_WRITEABLE__)) {
             $handle = fopen($path, 'wb');
             if ($handle && fwrite($handle, $this->request->content)) {

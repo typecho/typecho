@@ -112,7 +112,7 @@ class Widget_Themes_Files extends Typecho_Widget
     public function currentIsWriteable()
     {
         return is_writeable($this->widget('Widget_Options')
-            ->themeFile($this->_currentTheme, $this->_currentFile)) && !Typecho_Common::isAppEngine()
+            ->themeFile($this->_currentTheme, $this->_currentFile))
         && (!defined('__TYPECHO_THEME_WRITEABLE__') || __TYPECHO_THEME_WRITEABLE__);
     }
 

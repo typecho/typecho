@@ -122,7 +122,7 @@ class Widget_Options_Permalink extends Widget_Abstract_Options implements Widget
             $hasWrote = false;
 
             if (!file_exists(__TYPECHO_ROOT_DIR__ . '/.htaccess')
-                && !Typecho_Common::isAppEngine()) {
+                && strpos(php_sapi_name(), 'apache') !== false) {
                 if (is_writeable(__TYPECHO_ROOT_DIR__)) {
                     $parsed = parse_url($this->options->siteUrl);
                     $basePath = empty($parsed['path']) ? '/' : $parsed['path'];
