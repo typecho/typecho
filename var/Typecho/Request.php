@@ -804,17 +804,6 @@ class Typecho_Request
     }
 
     /**
-     * 判断是否为flash
-     *
-     * @access public
-     * @return boolean
-     */
-    public function isFlash(): bool
-    {
-        return 'Shockwave Flash' == $this->getServer('USER_AGENT');
-    }
-
-    /**
      * 判断输入是否满足要求
      *
      * @access public
