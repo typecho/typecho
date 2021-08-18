@@ -255,10 +255,14 @@ abstract class Typecho_Widget
      */
     public function next()
     {
-        if ($this->sequence < count($this->stack)) {
-            $this->row = $this->stack[$this->sequence];
+        $key = key($this->stack);
+
+        if ($key !== null && isset($this->stack[$key])) {
+            $this->row = current($this->stack);
+            next($this->stack);
             $this->sequence ++;
         } else {
+            reset($this->stack);
             $this->sequence = 0;
             return false;
         }

@@ -239,12 +239,12 @@ class Typecho_Validate
      * @access public
      *
      * @param string $key 数值键值
-     * @param string $rule 规则名称
+     * @param string|array $rule 规则名称
      * @param string $message 错误字符串
      *
      * @return $this
      */
-    public function addRule(string $key, string $rule, string $message): Typecho_Validate
+    public function addRule(string $key, $rule, string $message): Typecho_Validate
     {
         if (func_num_args() <= 3) {
             $this->_rules[$key][] = [$rule, $message];

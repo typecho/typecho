@@ -70,14 +70,11 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
     /**
      * 输出文章评论数
      *
-     * @access public
-     * @param string $string 评论数格式化数据
-     * @return void
+     * @param ...$args
      */
-    public function num()
+    public function num(...$args)
     {
-        $args = func_get_args();
-        if (!$args) {
+        if (empty($args)) {
             $args[] = '%d';
         }
 
