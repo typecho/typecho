@@ -95,9 +95,10 @@ class Widget_Security extends Typecho_Widget
      * 生成带token的路径
      *
      * @param $path
+     * @param string|null $url
      * @return string
      */
-    public function getTokenUrl($path)
+    public function getTokenUrl($path, ?string $url = null)
     {
         $parts = parse_url($path);
         $params = array();
@@ -106,7 +107,7 @@ class Widget_Security extends Typecho_Widget
             parse_str($parts['query'], $params);
         }
 
-        $params['_'] = $this->getToken($this->request->getRequestUrl());
+        $params['_'] = $this->getToken($url ?: $this->request->getRequestUrl());
         $parts['query'] = http_build_query($params);
 
         return Typecho_Common::buildUrl($parts);

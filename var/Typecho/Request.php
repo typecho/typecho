@@ -748,9 +748,9 @@ class Typecho_Request
      * 获取客户端
      *
      * @access public
-     * @return string
+     * @return string|null
      */
-    public function getReferer(): string
+    public function getReferer(): ?string
     {
         if (null === $this->_referer) {
             $this->setReferer();
