@@ -45,7 +45,7 @@ class Typecho_Validate
      * @access private
      * @var array
      */
-    private $_rules = array();
+    private $_rules = [];
 
     /**
      * 中断模式,一旦出现验证错误即抛出而不再继续执行
@@ -56,12 +56,192 @@ class Typecho_Validate
     private $_break = false;
 
     /**
+     * 最小长度
+     *
+     * @access public
+     *
+     * @param string $str 待处理的字符串
+     * @param integer $length 最小长度
+     *
+     * @return boolean
+     */
+    public static function minLength(string $str, int $length): bool
+    {
+        return (Typecho_Common::strLen($str) >= $length);
+    }
+
+    /**
+     * 枚举类型判断
+     *
+     * @access public
+     *
+     * @param string $str 待处理的字符串
+     * @param array $params 枚举值
+     *
+     * @return bool
+     */
+    public static function enum(string $str, array $params): bool
+    {
+        $keys = array_flip($params);
+        return isset($keys[$str]);
+    }
+
+    /**
+     * Max Length
+     *
+     * @param string $str
+     * @param int $length
+     *
+     * @return bool
+     */
+    public static function maxLength(string $str, int $length): bool
+    {
+        return (Typecho_Common::strLen($str) < $length);
+    }
+
+    /**
+     * Valid Email
+     *
+     * @access public
+     *
+     * @param string $str
+     *
+     * @return boolean
+     */
+    public static function email(string $str): bool
+    {
+        return preg_match("/^[_a-z0-9-\.+]+@([-a-z0-9]+\.)+[a-z]{2,}$/i", $str);
+    }
+
+    /**
+     * 验证是否为网址
+     *
+     * @access public
+     *
+     * @param string $str
+     *
+     * @return boolean
+     */
+    public static function url(string $str): bool
+    {
+        $parts = @parse_url($str);
+        if (!$parts) {
+            return false;
+        }
+
+        return isset($parts['scheme']) &&
+            in_array($parts['scheme'], ['http', 'https', 'ftp']) &&
+            !preg_match('/(\(|\)|\\\|"|<|>|[\x00-\x08]|[\x0b-\x0c]|[\x0e-\x19])/', $str);
+    }
+
+    /**
+     * Alpha
+     *
+     * @access public
+     *
+     * @param string
+     *
+     * @return boolean
+     */
+    public static function alpha(string $str): bool
+    {
+        return preg_match("/^([a-z])+$/i", $str) ? true : false;
+    }
+
+    /**
+     * Alpha-numeric
+     *
+     * @access public
+     *
+     * @param string
+     *
+     * @return boolean
+     */
+    public static function alphaNumeric(string $str): bool
+    {
+        return preg_match("/^([a-z0-9])+$/i", $str);
+    }
+
+    /**
+     * Alpha-numeric with underscores and dashes
+     *
+     * @access public
+     *
+     * @param string
+     *
+     * @return boolean
+     */
+    public static function alphaDash(string $str): bool
+    {
+        return preg_match("/^([_a-z0-9-])+$/i", $str) ? true : false;
+    }
+
+    /**
+     * 对xss字符串的检测
+     *
+     * @access public
+     *
+     * @param string $str
+     *
+     * @return boolean
+     */
+    public static function xssCheck(string $str): bool
+    {
+        $search = 'abcdefghijklmnopqrstuvwxyz';
+        $search .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $search .= '1234567890!@#$%^&*()';
+        $search .= '~`";:?+/={}[]-_|\'\\';
+
+        for ($i = 0; $i < strlen($search); $i++) {
+            // ;? matches the ;, which is optional
+            // 0{0,7} matches any padded zeros, which are optional and go up to 8 chars
+
+            // &#x0040 @ search for the hex values
+            $str = preg_replace('/(&#[xX]0{0,8}' . dechex(ord($search[$i])) . ';?)/i', $search[$i], $str); // with a ;
+            // &#00064 @ 0{0,7} matches '0' zero to seven times
+            $str = preg_replace('/(&#0{0,8}' . ord($search[$i]) . ';?)/', $search[$i], $str); // with a ;
+        }
+
+        return !preg_match('/(\(|\)|\\\|"|<|>|[\x00-\x08]|[\x0b-\x0c]|[\x0e-\x19]|' . "\r|\n|\t" . ')/', $str);
+    }
+
+    /**
+     * Numeric
+     *
+     * @access public
+     *
+     * @param mixed $str
+     *
+     * @return boolean
+     */
+    public static function isFloat($str): bool
+    {
+        return preg_match("/^[0-9\.]+$/", $str);
+    }
+
+    /**
+     * Is Numeric
+     *
+     * @access public
+     *
+     * @param mixed $str
+     *
+     * @return boolean
+     */
+    public static function isInteger($str): bool
+    {
+        return is_numeric($str);
+    }
+
+    /**
      * 增加验证规则
      *
      * @access public
+     *
      * @param string $key 数值键值
      * @param string $rule 规则名称
      * @param string $message 错误字符串
+     *
      * @return $this
      */
     public function addRule(string $key, string $rule, string $message): Typecho_Validate
@@ -92,10 +272,12 @@ class Typecho_Validate
      * Run the Validator
      * This function does all the work.
      *
-     * @access	public
-     * @param   array $data 需要验证的数据
+     * @access    public
+     *
+     * @param array $data 需要验证的数据
      * @param array|null $rules 验证数据遵循的规则
-     * @return	array
+     *
+     * @return    array
      */
     public function run(array $data, array $rules = null): array
     {
@@ -136,24 +318,13 @@ class Typecho_Validate
     }
 
     /**
-     * 最小长度
-     *
-     * @access public
-     * @param string $str 待处理的字符串
-     * @param integer $length 最小长度
-     * @return boolean
-     */
-    public static function minLength(string $str, int $length): bool
-    {
-        return (Typecho_Common::strLen($str) >= $length);
-    }
-
-    /**
      * 验证输入是否一致
      *
      * @access public
+     *
      * @param string|null $str 待处理的字符串
      * @param string $key 需要一致性检查的键值
+     *
      * @return boolean
      */
     public function confirm(?string $str, string $key): bool
@@ -165,155 +336,13 @@ class Typecho_Validate
      * 是否为空
      *
      * @access public
+     *
      * @param string|null $str 待处理的字符串
+     *
      * @return boolean
      */
     public function required(?string $str): bool
     {
         return !empty($this->_data[$this->_key]);
-    }
-
-    /**
-     * 枚举类型判断
-     *
-     * @access public
-     * @param string $str 待处理的字符串
-     * @param array $params 枚举值
-     * @return bool
-     */
-    public static function enum(string $str, array $params): bool
-    {
-        $keys = array_flip($params);
-        return isset($keys[$str]);
-    }
-
-    /**
-     * Max Length
-     *
-     * @param string $str
-     * @param int $length
-     * @return bool
-     */
-    public static function maxLength(string $str, int $length): bool
-    {
-        return (Typecho_Common::strLen($str) < $length);
-    }
-
-    /**
-     * Valid Email
-     *
-     * @access public
-     * @param string $str
-     * @return boolean
-     */
-    public static function email(string $str): bool
-    {
-        return preg_match("/^[_a-z0-9-\.+]+@([-a-z0-9]+\.)+[a-z]{2,}$/i", $str);
-    }
-
-    /**
-     * 验证是否为网址
-     *
-     * @access public
-     * @param string $str
-     * @return boolean
-     */
-    public static function url(string $str): bool
-    {
-        $parts = @parse_url($str);
-        if (!$parts) {
-            return false;
-        }
-
-        return isset($parts['scheme']) &&
-            in_array($parts['scheme'], ['http', 'https', 'ftp']) &&
-            !preg_match('/(\(|\)|\\\|"|<|>|[\x00-\x08]|[\x0b-\x0c]|[\x0e-\x19])/', $str);
-    }
-
-    /**
-     * Alpha
-     *
-     * @access public
-     * @param string
-     * @return boolean
-     */
-    public static function alpha(string $str): bool
-    {
-        return preg_match("/^([a-z])+$/i", $str) ? true : false;
-    }
-
-    /**
-     * Alpha-numeric
-     *
-     * @access public
-     * @param string
-     * @return boolean
-     */
-    public static function alphaNumeric(string $str): bool
-    {
-        return preg_match("/^([a-z0-9])+$/i", $str);
-    }
-
-    /**
-     * Alpha-numeric with underscores and dashes
-     *
-     * @access public
-     * @param string
-     * @return boolean
-     */
-    public static function alphaDash(string $str): bool
-    {
-        return preg_match("/^([_a-z0-9-])+$/i", $str) ? true : false;
-    }
-
-    /**
-     * 对xss字符串的检测
-     *
-     * @access public
-     * @param string $str
-     * @return boolean
-     */
-    public static function xssCheck(string $str): bool
-    {
-        $search = 'abcdefghijklmnopqrstuvwxyz';
-        $search .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $search .= '1234567890!@#$%^&*()';
-        $search .= '~`";:?+/={}[]-_|\'\\';
-
-        for ($i = 0; $i < strlen($search); $i++) {
-            // ;? matches the ;, which is optional
-            // 0{0,7} matches any padded zeros, which are optional and go up to 8 chars
-
-            // &#x0040 @ search for the hex values
-            $str = preg_replace('/(&#[xX]0{0,8}'.dechex(ord($search[$i])).';?)/i', $search[$i], $str); // with a ;
-            // &#00064 @ 0{0,7} matches '0' zero to seven times
-            $str = preg_replace('/(&#0{0,8}'.ord($search[$i]).';?)/', $search[$i], $str); // with a ;
-        }
-
-        return !preg_match('/(\(|\)|\\\|"|<|>|[\x00-\x08]|[\x0b-\x0c]|[\x0e-\x19]|' . "\r|\n|\t" . ')/', $str);
-    }
-
-    /**
-     * Numeric
-     *
-     * @access public
-     * @param mixed $str
-     * @return boolean
-     */
-    public static function isFloat($str): bool
-    {
-        return preg_match("/^[0-9\.]+$/", $str);
-    }
-
-    /**
-     * Is Numeric
-     *
-     * @access public
-     * @param mixed $str
-     * @return boolean
-     */
-    public static function isInteger($str): bool
-    {
-        return is_numeric($str);
     }
 }

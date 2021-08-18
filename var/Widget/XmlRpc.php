@@ -2186,7 +2186,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
     {
         if (!empty($this->_usedWidgetNameList)) {
             foreach ($this->_usedWidgetNameList as $key => $widgetName) {
-                $this->destory($widgetName);
+                $this->destroy($widgetName);
                 unset($this->_usedWidgetNameList[$key]);
             }
         }

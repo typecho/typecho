@@ -20,7 +20,7 @@ class Typecho_Cookie
 {
     /**
      * 前缀
-     * 
+     *
      * @var string
      * @access private
      */
@@ -28,46 +28,47 @@ class Typecho_Cookie
 
     /**
      * 路径
-     * 
+     *
      * @var string
      * @access private
      */
     private static $_path = '/';
 
     /**
-     * 设置前缀 
-     * 
-     * @param string $url
-     * @access public
-     * @return void
-     */
-    public static function setPrefix($url)
-    {
-        self::$_prefix = md5($url);
-        $parsed = parse_url($url);
-
-        /** 在路径后面强制加上斜杠 */
-        self::$_path = empty($parsed['path']) ? '/' : Typecho_Common::url(NULL, $parsed['path']);
-    }
-
-    /**
-     * 获取前缀 
-     * 
+     * 获取前缀
+     *
      * @access public
      * @return string
      */
-    public static function getPrefix()
+    public static function getPrefix(): string
     {
         return self::$_prefix;
     }
 
     /**
-     * 获取目录 
-     * 
+     * 设置前缀
+     *
+     * @param string $url
+     *
+     * @access public
+     * @return void
+     */
+    public static function setPrefix(string $url)
+    {
+        self::$_prefix = md5($url);
+        $parsed = parse_url($url);
+
+        /** 在路径后面强制加上斜杠 */
+        self::$_path = empty($parsed['path']) ? '/' : Typecho_Common::url(null, $parsed['path']);
+    }
+
+    /**
+     * 获取目录
+     *
      * @access public
      * @return string
      */
-    public static function getPath()
+    public static function getPath(): string
     {
         return self::$_path;
     }
@@ -76,14 +77,16 @@ class Typecho_Cookie
      * 获取指定的COOKIE值
      *
      * @access public
+     *
      * @param string $key 指定的参数
-     * @param string $default 默认的参数
+     * @param string|null $default 默认的参数
+     *
      * @return mixed
      */
-    public static function get($key, $default = NULL)
+    public static function get(string $key, ?string $default = null)
     {
         $key = self::$_prefix . $key;
-        $value = isset($_COOKIE[$key]) ? $_COOKIE[$key] : $default;
+        $value = $_COOKIE[$key] ?? $default;
         return is_array($value) ? $default : $value;
     }
 
@@ -91,12 +94,14 @@ class Typecho_Cookie
      * 设置指定的COOKIE值
      *
      * @access public
+     *
      * @param string $key 指定的参数
      * @param mixed $value 设置的值
      * @param integer $expire 过期时间,默认为0,表示随会话时间结束
+     *
      * @return void
      */
-    public static function set($key, $value, $expire = 0)
+    public static function set(string $key, $value, int $expire = 0)
     {
         $key = self::$_prefix . $key;
         setrawcookie($key, rawurlencode($value), $expire, self::$_path);
@@ -107,10 +112,12 @@ class Typecho_Cookie
      * 删除指定的COOKIE值
      *
      * @access public
+     *
      * @param string $key 指定的参数
+     *
      * @return void
      */
-    public static function delete($key)
+    public static function delete(string $key)
     {
         $key = self::$_prefix . $key;
         if (!isset($_COOKIE[$key])) {

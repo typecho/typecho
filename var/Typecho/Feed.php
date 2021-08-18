@@ -75,7 +75,7 @@ class Typecho_Feed
      * 基本地址
      *
      * @access private
-     * @var unknown
+     * @var string
      */
     private $_baseUrl;
 
@@ -109,7 +109,7 @@ class Typecho_Feed
      * @access private
      * @var array
      */
-    private $_items = array();
+    private $_items = [];
 
     /**
      * 创建Feed对象
@@ -129,10 +129,12 @@ class Typecho_Feed
      * 设置标题
      *
      * @access public
+     *
      * @param string $title 标题
+     *
      * @return void
      */
-    public function setTitle($title)
+    public function setTitle(string $title)
     {
         $this->_title = $title;
     }
@@ -141,10 +143,12 @@ class Typecho_Feed
      * 设置副标题
      *
      * @access public
+     *
      * @param string $subTitle 副标题
+     *
      * @return void
      */
-    public function setSubTitle($subTitle)
+    public function setSubTitle(string $subTitle)
     {
         $this->_subTitle = $subTitle;
     }
@@ -153,10 +157,12 @@ class Typecho_Feed
      * 设置聚合地址
      *
      * @access public
+     *
      * @param string $feedUrl 聚合地址
+     *
      * @return void
      */
-    public function setFeedUrl($feedUrl)
+    public function setFeedUrl(string $feedUrl)
     {
         $this->_feedUrl = $feedUrl;
     }
@@ -165,28 +171,14 @@ class Typecho_Feed
      * 设置主页
      *
      * @access public
+     *
      * @param string $baseUrl 主页地址
+     *
      * @return void
      */
-    public function setBaseUrl($baseUrl)
+    public function setBaseUrl(string $baseUrl)
     {
         $this->_baseUrl = $baseUrl;
-    }
-
-    /**
-     * 获取Feed时间格式
-     *
-     * @access public
-     * @param integer $stamp 时间戳
-     * @return string
-     */
-    public function dateFormat($stamp)
-    {
-        if (self::RSS2 == $this->_type) {
-            return date(self::DATE_RFC822, $stamp);
-        } else if (self::RSS1 == $this->_type || self::ATOM1 == $this->_type) {
-            return date(self::DATE_W3CDTF, $stamp);
-        }
     }
 
     /**
@@ -206,8 +198,8 @@ class Typecho_Feed
      * </code>
      *
      * @access public
+     *
      * @param array $item
-     * @return unknown
      */
     public function addItem(array $item)
     {
@@ -231,7 +223,7 @@ xmlns="http://purl.org/rss/1.0/"
 xmlns:dc="http://purl.org/dc/elements/1.1/">' . self::EOL;
 
             $content = '';
-            $links = array();
+            $links = [];
             $lastUpdate = 0;
 
             foreach ($this->_items as $item) {
@@ -301,9 +293,9 @@ xmlns:wfw="http://wellformedweb.org/CommentAPI/">
 
                 if (!empty($item['content'])) {
                     $content .= '<content:encoded xml:lang="' . $this->_lang . '"><![CDATA['
-                    . self::EOL .
-                    $item['content'] . self::EOL .
-                    ']]></content:encoded>' . self::EOL;
+                        . self::EOL .
+                        $item['content'] . self::EOL .
+                        ']]></content:encoded>' . self::EOL;
                 }
 
                 if (isset($item['comments']) && strlen($item['comments']) > 0) {
@@ -371,9 +363,9 @@ xml:base="' . $this->_baseUrl . '"
 
                 if (!empty($item['content'])) {
                     $content .= '<content type="html" xml:base="' . $item['link'] . '" xml:lang="' . $this->_lang . '"><![CDATA['
-                    . self::EOL .
-                    $item['content'] . self::EOL .
-                    ']]></content>' . self::EOL;
+                        . self::EOL .
+                        $item['content'] . self::EOL .
+                        ']]></content>' . self::EOL;
                 }
 
                 if (isset($item['comments']) && strlen($item['comments']) > 0) {
@@ -407,5 +399,23 @@ xml:base="' . $this->_baseUrl . '"
         }
 
         return $result;
+    }
+
+    /**
+     * 获取Feed时间格式
+     *
+     * @access public
+     *
+     * @param integer $stamp 时间戳
+     *
+     * @return string
+     */
+    public function dateFormat(int $stamp): string
+    {
+        if (self::RSS2 == $this->_type) {
+            return date(self::DATE_RFC822, $stamp);
+        } else if (self::RSS1 == $this->_type || self::ATOM1 == $this->_type) {
+            return date(self::DATE_W3CDTF, $stamp);
+        }
     }
 }

@@ -66,14 +66,6 @@ class Typecho_Db
     private $_config;
 
     /**
-     * 连接池
-     *
-     * @access private
-     * @var array
-     */
-    private $_pool;
-
-    /**
      * 已经连接
      *
      * @access private
@@ -126,7 +118,6 @@ class Typecho_Db
         $this->_prefix = $prefix;
 
         /** 初始化内部变量 */
-        $this->_pool = [];
         $this->_connectedPool = [];
 
         $this->_config = [

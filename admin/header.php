@@ -3,9 +3,9 @@ if (!defined('__TYPECHO_ADMIN__')) {
     exit;
 }
 
-$header = '<link rel="stylesheet" href="' . Typecho_Common::url('normalize.css?v=' . $suffixVersion, $options->adminStaticUrl('css')) . '">
-<link rel="stylesheet" href="' . Typecho_Common::url('grid.css?v=' . $suffixVersion, $options->adminStaticUrl('css')) . '">
-<link rel="stylesheet" href="' . Typecho_Common::url('style.css?v=' . $suffixVersion, $options->adminStaticUrl('css')) . '">';
+$header = '<link rel="stylesheet" href="' . $options->adminStaticUrl('css', 'normalize.css', true) . '">
+<link rel="stylesheet" href="' . $options->adminStaticUrl('css', 'grid.css', true) . '">
+<link rel="stylesheet" href="' . $options->adminStaticUrl('css', 'style.css', true) . '">';
 
 /** 注册一个初始化插件 */
 $header = Typecho_Plugin::factory('admin/header.php')->header($header);

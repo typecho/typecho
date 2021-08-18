@@ -105,7 +105,7 @@ class Widget_Comments_Ping extends Widget_Abstract_Comments
             $args[] = '%d';
         }
 
-        echo sprintf(isset($args[$this->length]) ? $args[$this->length] : array_pop($this->length), $this->length);
+        echo sprintf($args[$this->length] ?? array_pop($this->length), $this->length);
     }
 
     /**

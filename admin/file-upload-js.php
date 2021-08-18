@@ -13,8 +13,8 @@ if (preg_match("/^([0-9]+)([a-z]{1,2})$/i", $phpMaxFilesize, $matches)) {
 }
 ?>
 
-<script src="<?php $options->adminStaticUrl('js', 'moxie.js?v=' . $suffixVersion); ?>"></script>
-<script src="<?php $options->adminStaticUrl('js', 'plupload.js?v=' . $suffixVersion); ?>"></script>
+<script src="<?php $options->adminStaticUrl('js', 'moxie.js'); ?>"></script>
+<script src="<?php $options->adminStaticUrl('js', 'plupload.js'); ?>"></script>
 <script>
 $(document).ready(function() {
     function updateAttacmentNumber () {

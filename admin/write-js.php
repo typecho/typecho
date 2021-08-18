@@ -2,8 +2,8 @@
 <?php Typecho_Plugin::factory('admin/write-js.php')->write(); ?>
 <?php Typecho_Widget::widget('Widget_Metas_Tag_Cloud', 'sort=count&desc=1&limit=200')->to($tags); ?>
 
-<script src="<?php $options->adminStaticUrl('js', 'timepicker.js?v=' . $suffixVersion); ?>"></script>
-<script src="<?php $options->adminStaticUrl('js', 'tokeninput.js?v=' . $suffixVersion); ?>"></script>
+<script src="<?php $options->adminStaticUrl('js', 'timepicker.js'); ?>"></script>
+<script src="<?php $options->adminStaticUrl('js', 'tokeninput.js'); ?>"></script>
 <script>
 $(document).ready(function() {
     // 日期时间控件

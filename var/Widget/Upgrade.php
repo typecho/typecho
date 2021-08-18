@@ -31,16 +31,18 @@ class Widget_Upgrade extends Widget_Abstract_Options implements Widget_Interface
      * 对升级包按版本进行排序
      *
      * @access public
+     *
      * @param string $a a版本
      * @param string $b b版本
+     *
      * @return integer
      */
     public function sortPackage($a, $b)
     {
-        list ($ver, $rev) = explode('r', $a);
+        [$ver, $rev] = explode('r', $a);
         $a = str_replace('_', '.', $rev);
 
-        list ($ver, $rev) = explode('r', $b);
+        [$ver, $rev] = explode('r', $b);
         $b = str_replace('_', '.', $rev);
 
         return version_compare($a, $b, '>') ? 1 : -1;
@@ -50,12 +52,14 @@ class Widget_Upgrade extends Widget_Abstract_Options implements Widget_Interface
      * 过滤低版本的升级包
      *
      * @access public
+     *
      * @param string $version 版本号
+     *
      * @return boolean
      */
     public function filterPackage($version)
     {
-        list ($ver, $rev) = explode('r', $version);
+        [$ver, $rev] = explode('r', $version);
         $rev = str_replace('_', '.', $rev);
         return version_compare($rev, $this->_currentVersion, '>');
     }
@@ -68,19 +72,19 @@ class Widget_Upgrade extends Widget_Abstract_Options implements Widget_Interface
      */
     public function upgrade()
     {
-        list($prefix, $this->_currentVersion) = explode('/', $this->options->generator);
+        [$prefix, $this->_currentVersion] = explode('/', $this->options->generator);
         $packages = get_class_methods('Upgrade');
-        $packages = array_filter($packages, array($this, 'filterPackage'));
-        usort($packages, array($this, 'sortPackage'));
+        $packages = array_filter($packages, [$this, 'filterPackage']);
+        usort($packages, [$this, 'sortPackage']);
 
-        $message = array();
+        $message = [];
 
         foreach ($packages as $package) {
             $options = $this->widget('Widget_Options@' . $package);
 
             /** 执行升级脚本 */
             try {
-                $result = call_user_func(array('Upgrade', $package), $this->db, $options);
+                $result = call_user_func(['Upgrade', $package], $this->db, $options);
                 if (!empty($result)) {
                     $message[] = $result;
                 }
@@ -90,23 +94,23 @@ class Widget_Upgrade extends Widget_Abstract_Options implements Widget_Interface
                 return;
             }
 
-            list ($ver, $rev) = explode('r', $package);
+            [$ver, $rev] = explode('r', $package);
             $ver = substr(str_replace('_', '.', $ver), 1);
             $rev = str_replace('_', '.', $rev);
 
             /** 更新版本号 */
-            $this->update(array('value' => 'Typecho ' . $ver . '/' . $rev),
-            $this->db->sql()->where('name = ?', 'generator'));
+            $this->update(['value' => 'Typecho ' . $ver . '/' . $rev],
+                $this->db->sql()->where('name = ?', 'generator'));
 
-            $this->destory('Widget_Options@' . $package);
+            $this->destroy('Widget_Options@' . $package);
         }
 
         /** 更新版本号 */
-        $this->update(array('value' => 'Typecho ' . Typecho_Common::VERSION),
-        $this->db->sql()->where('name = ?', 'generator'));
+        $this->update(['value' => 'Typecho ' . Typecho_Common::VERSION],
+            $this->db->sql()->where('name = ?', 'generator'));
 
         $this->widget('Widget_Notice')->set(empty($message) ? _t("升级已经完成") : $message,
-        empty($message) ? 'success' : 'notice');
+            empty($message) ? 'success' : 'notice');
     }
 
     /**

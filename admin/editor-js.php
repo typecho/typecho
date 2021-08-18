@@ -1,9 +1,9 @@
 <?php if(!defined('__TYPECHO_ADMIN__')) exit; ?>
 <?php $content = !empty($post) ? $post : $page; if ($options->markdown): ?>
-<script src="<?php $options->adminStaticUrl('js', 'hyperdown.js?v=' . $suffixVersion); ?>"></script>
-<script src="<?php $options->adminStaticUrl('js', 'pagedown.js?v=' . $suffixVersion); ?>"></script>
-<script src="<?php $options->adminStaticUrl('js', 'paste.js?v=' . $suffixVersion); ?>"></script>
-<script src="<?php $options->adminStaticUrl('js', 'purify.js?v=' . $suffixVersion); ?>"></script>
+<script src="<?php $options->adminStaticUrl('js', 'hyperdown.js'); ?>"></script>
+<script src="<?php $options->adminStaticUrl('js', 'pagedown.js'); ?>"></script>
+<script src="<?php $options->adminStaticUrl('js', 'paste.js'); ?>"></script>
+<script src="<?php $options->adminStaticUrl('js', 'purify.js'); ?>"></script>
 <script>
 $(document).ready(function () {
     var textarea = $('#text'),

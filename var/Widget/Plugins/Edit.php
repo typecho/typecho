@@ -82,8 +82,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
         $info = Typecho_Plugin::parseInfo($pluginFileName);
 
         /** 检测依赖信息 */
-        list ($version, $build) = explode('/', Typecho_Common::VERSION);
-        if (Typecho_Plugin::checkDependence($build, $info['dependence'])) {
+        if (Typecho_Plugin::checkDependence(Typecho_Common::VERSION, $info['dependence'])) {
 
             /** 获取已启用插件 */
             $plugins = Typecho_Plugin::export();

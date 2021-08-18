@@ -314,7 +314,7 @@ class Widget_Options extends Typecho_Widget
      */
     protected function ___software()
     {
-        list($software, $version) = explode(' ', $this->generator);
+        [$software, $version] = explode(' ', $this->generator);
         return $software;
     }
     
@@ -326,7 +326,14 @@ class Widget_Options extends Typecho_Widget
      */
     protected function ___version()
     {
-        list($software, $version) = explode(' ', $this->generator);
+        [$software, $version] = explode(' ', $this->generator);
+        $pos = strpos($version, '/');
+
+        // fix for old version
+        if ($pos !== false) {
+            $version = substr($version, 0, $pos);
+        }
+
         return $version;
     }
     
@@ -520,22 +527,33 @@ class Widget_Options extends Typecho_Widget
      * 输出后台路径
      *
      * @access public
-     * @param string $path 子路径
-     * @return void
+     *
+     * @param string|null $path 子路径
+     * @param bool $return
+     *
+     * @return void|string
      */
-    public function adminUrl($path = null)
+    public function adminUrl(?string $path = null, bool $return = false)
     {
-        echo Typecho_Common::url($path, $this->adminUrl);
+        $url = Typecho_Common::url($path, $this->adminUrl);
+
+        if ($return) {
+            return $url;
+        }
+
+        echo $url;
     }
 
     /**
      * 获取或输出后台静态文件路径
      *
      * @param string $type
-     * @param string $file
+     * @param string|null $file
+     * @param bool $return
+     *
      * @return void|string
      */
-    public function adminStaticUrl($type, $file = null)
+    public function adminStaticUrl(string $type, ?string $file = null, bool $return = false)
     {
         $url = Typecho_Common::url($type, $this->adminUrl);
 
@@ -543,7 +561,13 @@ class Widget_Options extends Typecho_Widget
             return $url;
         }
 
-        echo Typecho_Common::url($file, $url);
+        $url = Typecho_Common::url($file, $url) . '?v=' . $this->version;
+
+        if ($return) {
+            return $url;
+        }
+
+        echo $url;
     }
 
     /**
