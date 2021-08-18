@@ -25,7 +25,7 @@ class Typecho_Widget_Helper_Layout
      * @access private
      * @var array
      */
-    private $_items = array();
+    private $_items = [];
 
     /**
      * 表单属性列表
@@ -33,7 +33,7 @@ class Typecho_Widget_Helper_Layout
      * @access private
      * @var array
      */
-    private $_attributes = array();
+    private $_attributes = [];
 
     /**
      * 标签名称
@@ -57,7 +57,7 @@ class Typecho_Widget_Helper_Layout
      * @access private
      * @var boolean
      */
-    private $_forceClose = NULL;
+    private $_forceClose = null;
 
     /**
      * 内部数据
@@ -83,7 +83,7 @@ class Typecho_Widget_Helper_Layout
      * @param array $attributes 属性列表
      * @return void
      */
-    public function __construct($tagName = 'div', array $attributes = NULL)
+    public function __construct($tagName = 'div', array $attributes = null)
     {
         $this->setTagName($tagName);
 
@@ -95,16 +95,16 @@ class Typecho_Widget_Helper_Layout
     }
 
     /**
-     * 增加元素
+     * 设置表单属性
      *
      * @access public
-     * @param Typecho_Widget_Helper_Layout $item 元素
+     * @param string $attributeName 属性名称
+     * @param string $attributeValue 属性值
      * @return Typecho_Widget_Helper_Layout
      */
-    public function addItem(Typecho_Widget_Helper_Layout $item)
+    public function setAttribute($attributeName, $attributeValue)
     {
-        $item->setParent($this);
-        $this->_items[] = $item;
+        $this->_attributes[$attributeName] = $attributeValue;
         return $this;
     }
 
@@ -122,8 +122,8 @@ class Typecho_Widget_Helper_Layout
     }
 
     /**
-     * getItems  
-     * 
+     * getItems
+     *
      * @access public
      * @return array
      */
@@ -133,26 +133,14 @@ class Typecho_Widget_Helper_Layout
     }
 
     /**
-     * 设置内部数据
+     * getTagName
      *
+     * @param mixed $tagName
      * @access public
-     * @param mixed $html 内部数据
-     * @return unknown
+     * @return void
      */
-    public function html($html = false)
+    public function getTagName($tagName)
     {
-        if (false === $html) {
-            if (empty($this->_html)) {
-                foreach ($this->_items as $item) {
-                    $item->render();
-                }
-            } else {
-                echo $this->_html;
-            }
-        } else {
-            $this->_html = $html;
-            return $this;
-        }
     }
 
     /**
@@ -165,30 +153,6 @@ class Typecho_Widget_Helper_Layout
     public function setTagName($tagName)
     {
         $this->_tagName = $tagName;
-    }
-    
-    /**
-     * getTagName  
-     * 
-     * @param mixed $tagName 
-     * @access public
-     * @return void
-     */
-    public function getTagName($tagName)
-    {}
-
-    /**
-     * 设置表单属性
-     *
-     * @access public
-     * @param string $attributeName 属性名称
-     * @param string $attributeValue 属性值
-     * @return Typecho_Widget_Helper_Layout
-     */
-    public function setAttribute($attributeName, $attributeValue)
-    {
-        $this->_attributes[$attributeName] = $attributeValue;
-        return $this;
     }
 
     /**
@@ -216,7 +180,7 @@ class Typecho_Widget_Helper_Layout
      */
     public function getAttribute($attributeName)
     {
-        return isset($this->_attributes[$attributeName]) ? $this->_attributes[$attributeName] : NULL;
+        return $this->_attributes[$attributeName] ?? null;
     }
 
     /**
@@ -233,6 +197,17 @@ class Typecho_Widget_Helper_Layout
     }
 
     /**
+     * 获取父节点
+     *
+     * @access public
+     * @return Typecho_Widget_Helper_Layout
+     */
+    public function getParent()
+    {
+        return $this->_parent;
+    }
+
+    /**
      * 设置父节点
      *
      * @access public
@@ -243,17 +218,6 @@ class Typecho_Widget_Helper_Layout
     {
         $this->_parent = $parent;
         return $this;
-    }
-
-    /**
-     * 获取父节点
-     *
-     * @access public
-     * @return Typecho_Widget_Helper_Layout
-     */
-    public function getParent()
-    {
-        return $this->_parent;
     }
 
     /**
@@ -270,38 +234,29 @@ class Typecho_Widget_Helper_Layout
     }
 
     /**
-     * 开始标签
+     * 增加元素
      *
      * @access public
-     * @return void
+     * @param Typecho_Widget_Helper_Layout $item 元素
+     * @return Typecho_Widget_Helper_Layout
      */
-    public function start()
+    public function addItem(Typecho_Widget_Helper_Layout $item)
     {
-        /** 输出标签 */
-        echo $this->_tagName ? "<{$this->_tagName}" : NULL;
-
-        /** 输出属性 */
-        foreach ($this->_attributes as $attributeName => $attributeValue) {
-            echo " {$attributeName}=\"{$attributeValue}\"";
-        }
-
-        /** 支持自闭合 */
-        if (!$this->_close && $this->_tagName) {
-            echo ">\n";
-        }
+        $item->setParent($this);
+        $this->_items[] = $item;
+        return $this;
     }
 
     /**
-     * 结束标签
+     * 获取属性
      *
      * @access public
+     * @param string $attributeName 属性名称
      * @return void
      */
-    public function end()
+    public function __get($name)
     {
-        if ($this->_tagName) {
-            echo $this->_close ? " />\n" : "</{$this->_tagName}>\n";
-        }
+        return $this->_attributes[$name] ?? null;
     }
 
     /**
@@ -318,18 +273,6 @@ class Typecho_Widget_Helper_Layout
     }
 
     /**
-     * 获取属性
-     *
-     * @access public
-     * @param string $attributeName 属性名称
-     * @return void
-     */
-    public function __get($name)
-    {
-        return isset($this->_attributes[$name]) ? $this->_attributes[$name] : NULL;
-    }
-
-    /**
      * 输出所有元素
      *
      * @access public
@@ -341,12 +284,70 @@ class Typecho_Widget_Helper_Layout
             $this->_close = true;
         }
 
-        if (NULL !== $this->_forceClose) {
+        if (null !== $this->_forceClose) {
             $this->_close = $this->_forceClose;
         }
 
         $this->start();
         $this->html();
         $this->end();
+    }
+
+    /**
+     * 开始标签
+     *
+     * @access public
+     * @return void
+     */
+    public function start()
+    {
+        /** 输出标签 */
+        echo $this->_tagName ? "<{$this->_tagName}" : null;
+
+        /** 输出属性 */
+        foreach ($this->_attributes as $attributeName => $attributeValue) {
+            echo " {$attributeName}=\"{$attributeValue}\"";
+        }
+
+        /** 支持自闭合 */
+        if (!$this->_close && $this->_tagName) {
+            echo ">\n";
+        }
+    }
+
+    /**
+     * 设置内部数据
+     *
+     * @access public
+     * @param mixed $html 内部数据
+     * @return unknown
+     */
+    public function html($html = false)
+    {
+        if (false === $html) {
+            if (empty($this->_html)) {
+                foreach ($this->_items as $item) {
+                    $item->render();
+                }
+            } else {
+                echo $this->_html;
+            }
+        } else {
+            $this->_html = $html;
+            return $this;
+        }
+    }
+
+    /**
+     * 结束标签
+     *
+     * @access public
+     * @return void
+     */
+    public function end()
+    {
+        if ($this->_tagName) {
+            echo $this->_close ? " />\n" : "</{$this->_tagName}>\n";
+        }
     }
 }

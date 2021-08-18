@@ -19,143 +19,6 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 class Widget_Abstract_Comments extends Widget_Abstract
 {
     /**
-     * 获取当前内容结构
-     *
-     * @access protected
-     * @return array
-     */
-    protected function ___parentContent()
-    {
-        return $this->db->fetchRow($this->widget('Widget_Abstract_Contents')->select()
-        ->where('table.contents.cid = ?', $this->cid)
-        ->limit(1), array($this->widget('Widget_Abstract_Contents'), 'filter'));
-    }
-
-    /**
-     * 获取当前评论标题
-     *
-     * @access protected
-     * @return string
-     */
-    protected function ___title()
-    {
-        return $this->parentContent['title'];
-    }
-
-    /**
-     * 获取当前评论链接
-     *
-     * @access protected
-     * @return string
-     */
-    protected function ___permalink()
-    {
-
-        if ($this->options->commentsPageBreak && 'approved' == $this->status) {
-            
-            $coid = $this->coid;
-            $parent = $this->parent;
-            
-            while ($parent > 0 && $this->options->commentsThreaded) {
-                $parentRows = $this->db->fetchRow($this->db->select('parent')->from('table.comments')
-                ->where('coid = ? AND status = ?', $parent, 'approved')->limit(1));
-                
-                if (!empty($parentRows)) {
-                    $coid = $parent;
-                    $parent = $parentRows['parent'];
-                } else {
-                    break;
-                }
-            }
-
-            $select  = $this->db->select('coid', 'parent')
-            ->from('table.comments')->where('cid = ? AND status = ?', $this->parentContent['cid'], 'approved')
-            ->where('coid ' . ('DESC' == $this->options->commentsOrder ? '>=' : '<=') . ' ?', $coid)
-            ->order('coid', Typecho_Db::SORT_ASC);
-
-            if ($this->options->commentsShowCommentOnly) {
-                $select->where('type = ?', 'comment');
-            }
-            
-            $comments = $this->db->fetchAll($select);
-            
-            $commentsMap = array();
-            $total = 0;
-            
-            foreach ($comments as $comment) {
-                $commentsMap[$comment['coid']] = $comment['parent'];
-                
-                if (0 == $comment['parent'] || !isset($commentsMap[$comment['parent']])) {
-                    $total ++;
-                }
-            }
-
-            $currentPage = ceil($total / $this->options->commentsPageSize);
-            
-            $pageRow = array('permalink' => $this->parentContent['pathinfo'], 'commentPage' => $currentPage);
-            return Typecho_Router::url('comment_page',
-                        $pageRow, $this->options->index) . '#' . $this->theId;
-        }
-        
-        return $this->parentContent['permalink'] . '#' . $this->theId;
-    }
-
-    /**
-     * 获取当前评论内容
-     *
-     * @access protected
-     * @return string
-     */
-    protected function ___content()
-    {
-        $text = $this->parentContent['hidden'] ? _t('内容被隐藏') : $this->text;
-
-        $text = $this->pluginHandle(__CLASS__)->trigger($plugged)->content($text, $this);
-        if (!$plugged) {
-            $text = $this->options->commentsMarkdown ? $this->markdown($text)
-                : $this->autoP($text);
-        }
-
-        $text = $this->pluginHandle(__CLASS__)->contentEx($text, $this);
-        return Typecho_Common::stripTags($text, '<p><br>' . $this->options->commentsHTMLTagAllowed);
-    }
-
-    /**
-     * 输出词义化日期
-     *
-     * @access protected
-     * @return string
-     */
-    protected function ___dateWord()
-    {
-        return $this->date->word();
-    }
-
-    /**
-     * 锚点id
-     *
-     * @access protected
-     * @return string
-     */
-    protected function ___theId()
-    {
-        return $this->type . '-' . $this->coid;
-    }
-
-    /**
-     * 获取查询对象
-     *
-     * @access public
-     * @return Typecho_Db_Query
-     */
-    public function select()
-    {
-        return $this->db->select('table.comments.coid', 'table.comments.cid', 'table.comments.author', 'table.comments.mail', 'table.comments.url', 'table.comments.ip',
-        'table.comments.authorId', 'table.comments.ownerId', 'table.comments.agent', 'table.comments.text', 'table.comments.type', 'table.comments.status', 'table.comments.parent', 'table.comments.created')
-        ->from('table.comments');
-    }
-
-    /**
      * 增加评论
      *
      * @access public
@@ -165,21 +28,21 @@ class Widget_Abstract_Comments extends Widget_Abstract
     public function insert(array $comment)
     {
         /** 构建插入结构 */
-        $insertStruct = array(
-            'cid'       =>  $comment['cid'],
-            'created'   =>  empty($comment['created']) ? $this->options->time : $comment['created'],
-            'author'    =>  !isset($comment['author']) || strlen($comment['author']) === 0 ? NULL : $comment['author'],
-            'authorId'  =>  empty($comment['authorId']) ? 0 : $comment['authorId'],
-            'ownerId'   =>  empty($comment['ownerId']) ? 0 : $comment['ownerId'],
-            'mail'      =>  !isset($comment['mail']) || strlen($comment['mail']) === 0 ? NULL : $comment['mail'],
-            'url'       =>  !isset($comment['url']) || strlen($comment['url']) === 0 ? NULL : $comment['url'],
-            'ip'        =>  !isset($comment['ip']) || strlen($comment['ip']) === 0 ? $this->request->getIp() : $comment['ip'],
-            'agent'     =>  !isset($comment['agent']) || strlen($comment['agent']) === 0 ? $_SERVER["HTTP_USER_AGENT"] : $comment['agent'],
-            'text'      =>  !isset($comment['text']) || strlen($comment['text']) === 0 ? NULL : $comment['text'],
-            'type'      =>  empty($comment['type']) ? 'comment' : $comment['type'],
-            'status'    =>  empty($comment['status']) ? 'approved' : $comment['status'],
-            'parent'    =>  empty($comment['parent']) ? 0 : $comment['parent'],
-        );
+        $insertStruct = [
+            'cid'      => $comment['cid'],
+            'created'  => empty($comment['created']) ? $this->options->time : $comment['created'],
+            'author'   => !isset($comment['author']) || strlen($comment['author']) === 0 ? null : $comment['author'],
+            'authorId' => empty($comment['authorId']) ? 0 : $comment['authorId'],
+            'ownerId'  => empty($comment['ownerId']) ? 0 : $comment['ownerId'],
+            'mail'     => !isset($comment['mail']) || strlen($comment['mail']) === 0 ? null : $comment['mail'],
+            'url'      => !isset($comment['url']) || strlen($comment['url']) === 0 ? null : $comment['url'],
+            'ip'       => !isset($comment['ip']) || strlen($comment['ip']) === 0 ? $this->request->getIp() : $comment['ip'],
+            'agent'    => !isset($comment['agent']) || strlen($comment['agent']) === 0 ? $_SERVER["HTTP_USER_AGENT"] : $comment['agent'],
+            'text'     => !isset($comment['text']) || strlen($comment['text']) === 0 ? null : $comment['text'],
+            'type'     => empty($comment['type']) ? 'comment' : $comment['type'],
+            'status'   => empty($comment['status']) ? 'approved' : $comment['status'],
+            'parent'   => empty($comment['parent']) ? 0 : $comment['parent'],
+        ];
 
         if (!empty($comment['coid'])) {
             $insertStruct['coid'] = $comment['coid'];
@@ -194,11 +57,11 @@ class Widget_Abstract_Comments extends Widget_Abstract
         $insertId = $this->db->query($this->db->insert('table.comments')->rows($insertStruct));
 
         /** 更新评论数 */
-        $num = $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))->from('table.comments')
-        ->where('status = ? AND cid = ?', 'approved', $comment['cid']))->num;
+        $num = $this->db->fetchObject($this->db->select(['COUNT(coid)' => 'num'])->from('table.comments')
+            ->where('status = ? AND cid = ?', 'approved', $comment['cid']))->num;
 
-        $this->db->query($this->db->update('table.contents')->rows(array('commentsNum' => $num))
-        ->where('cid = ?', $comment['cid']));
+        $this->db->query($this->db->update('table.contents')->rows(['commentsNum' => $num])
+            ->where('cid = ?', $comment['cid']));
 
         return $insertId;
     }
@@ -224,21 +87,21 @@ class Widget_Abstract_Comments extends Widget_Abstract
         }
 
         /** 构建插入结构 */
-        $preUpdateStruct = array(
-            'author'    =>  !isset($comment['author']) || strlen($comment['author']) === 0 ? NULL : $comment['author'],
-            'mail'      =>  !isset($comment['mail']) || strlen($comment['mail']) === 0 ? NULL : $comment['mail'],
-            'url'       =>  !isset($comment['url']) || strlen($comment['url']) === 0 ? NULL : $comment['url'],
-            'text'      =>  !isset($comment['text']) || strlen($comment['text']) === 0 ? NULL : $comment['text'],
-            'status'    =>  empty($comment['status']) ? 'approved' : $comment['status'],
-        );
+        $preUpdateStruct = [
+            'author' => !isset($comment['author']) || strlen($comment['author']) === 0 ? null : $comment['author'],
+            'mail'   => !isset($comment['mail']) || strlen($comment['mail']) === 0 ? null : $comment['mail'],
+            'url'    => !isset($comment['url']) || strlen($comment['url']) === 0 ? null : $comment['url'],
+            'text'   => !isset($comment['text']) || strlen($comment['text']) === 0 ? null : $comment['text'],
+            'status' => empty($comment['status']) ? 'approved' : $comment['status'],
+        ];
 
-        $updateStruct = array();
+        $updateStruct = [];
         foreach ($comment as $key => $val) {
             if ((array_key_exists($key, $preUpdateStruct))) {
                 $updateStruct[$key] = $preUpdateStruct[$key];
             }
         }
-        
+
         /** 更新创建时间 */
         if (!empty($comment['created'])) {
             $updateStruct['created'] = $comment['created'];
@@ -248,11 +111,11 @@ class Widget_Abstract_Comments extends Widget_Abstract
         $updateRows = $this->db->query($updateCondition->update('table.comments')->rows($updateStruct));
 
         /** 更新评论数 */
-        $num = $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))->from('table.comments')
-        ->where('status = ? AND cid = ?', 'approved', $cid))->num;
+        $num = $this->db->fetchObject($this->db->select(['COUNT(coid)' => 'num'])->from('table.comments')
+            ->where('status = ? AND cid = ?', 'approved', $cid))->num;
 
-        $this->db->query($this->db->update('table.contents')->rows(array('commentsNum' => $num))
-        ->where('cid = ?', $cid));
+        $this->db->query($this->db->update('table.contents')->rows(['commentsNum' => $num])
+            ->where('cid = ?', $cid));
 
         return $updateRows;
     }
@@ -280,11 +143,11 @@ class Widget_Abstract_Comments extends Widget_Abstract
         $deleteRows = $this->db->query($deleteCondition->delete('table.comments'));
 
         /** 更新评论数 */
-        $num = $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))->from('table.comments')
-        ->where('status = ? AND cid = ?', 'approved', $cid))->num;
+        $num = $this->db->fetchObject($this->db->select(['COUNT(coid)' => 'num'])->from('table.comments')
+            ->where('status = ? AND cid = ?', 'approved', $cid))->num;
 
-        $this->db->query($this->db->update('table.contents')->rows(array('commentsNum' => $num))
-        ->where('cid = ?', $cid));
+        $this->db->query($this->db->update('table.contents')->rows(['commentsNum' => $num])
+            ->where('cid = ?', $cid));
 
         return $deleteRows;
     }
@@ -296,7 +159,7 @@ class Widget_Abstract_Comments extends Widget_Abstract
      * @param Typecho_Db_Query $condition 条件
      * @return mixed
      */
-    public function commentIsWriteable(Typecho_Db_Query $condition = NULL)
+    public function commentIsWriteable(Typecho_Db_Query $condition = null)
     {
         if (empty($condition)) {
             if ($this->have() && ($this->user->pass('editor', true) || $this->ownerId == $this->user->uid)) {
@@ -322,7 +185,20 @@ class Widget_Abstract_Comments extends Widget_Abstract
      */
     public function size(Typecho_Db_Query $condition)
     {
-        return $this->db->fetchObject($condition->select(array('COUNT(coid)' => 'num'))->from('table.comments'))->num;
+        return $this->db->fetchObject($condition->select(['COUNT(coid)' => 'num'])->from('table.comments'))->num;
+    }
+
+    /**
+     * 将每行的值压入堆栈
+     *
+     * @access public
+     * @param array $value 每行的值
+     * @return array
+     */
+    public function push(array $value)
+    {
+        $value = $this->filter($value);
+        return parent::push($value);
     }
 
     /**
@@ -340,26 +216,13 @@ class Widget_Abstract_Comments extends Widget_Abstract
     }
 
     /**
-     * 将每行的值压入堆栈
-     *
-     * @access public
-     * @param array $value 每行的值
-     * @return array
-     */
-    public function push(array $value)
-    {
-        $value = $this->filter($value);
-        return parent::push($value);
-    }
-
-    /**
      * 输出文章发布日期
      *
      * @access public
      * @param string $format 日期格式
      * @return void
      */
-    public function date($format = NULL)
+    public function date($format = null)
     {
         echo $this->date->format(empty($format) ? $this->options->commentDateFormat : $format);
     }
@@ -372,13 +235,13 @@ class Widget_Abstract_Comments extends Widget_Abstract
      * @param boolean $noFollow 是否加上nofollow标签
      * @return void
      */
-    public function author($autoLink = NULL, $noFollow = NULL)
+    public function author($autoLink = null, $noFollow = null)
     {
-        $autoLink = (NULL === $autoLink) ? $this->options->commentsShowUrl : $autoLink;
-        $noFollow = (NULL === $noFollow) ? $this->options->commentsUrlNofollow : $noFollow;
+        $autoLink = (null === $autoLink) ? $this->options->commentsShowUrl : $autoLink;
+        $noFollow = (null === $noFollow) ? $this->options->commentsUrlNofollow : $noFollow;
 
         if ($this->url && $autoLink) {
-            echo '<a href="' , $this->url , '"' , ($noFollow ? ' rel="external nofollow"' : NULL) , '>' , $this->author , '</a>';
+            echo '<a href="', $this->url, '"', ($noFollow ? ' rel="external nofollow"' : null), '>', $this->author, '</a>';
         } else {
             echo $this->author;
         }
@@ -392,16 +255,16 @@ class Widget_Abstract_Comments extends Widget_Abstract
      * @param string $default 默认输出头像
      * @return void
      */
-    public function gravatar($size = 32, $default = NULL)
+    public function gravatar($size = 32, $default = null)
     {
         if ($this->options->commentsAvatar && 'comment' == $this->type) {
             $rating = $this->options->commentsAvatarRating;
-            
+
             $this->pluginHandle(__CLASS__)->trigger($plugged)->gravatar($size, $rating, $default, $this);
             if (!$plugged) {
                 $url = Typecho_Common::gravatarUrl($this->mail, $size, $rating, $default, $this->request->isSecure());
                 echo '<img class="avatar" src="' . $url . '" alt="' .
-                $this->author . '" width="' . $size . '" height="' . $size . '" />';
+                    $this->author . '" width="' . $size . '" height="' . $size . '" />';
             }
         }
     }
@@ -420,9 +283,142 @@ class Widget_Abstract_Comments extends Widget_Abstract
     }
 
     /**
-     * autoP 
-     * 
-     * @param mixed $text 
+     * 获取当前内容结构
+     *
+     * @access protected
+     * @return array
+     */
+    protected function ___parentContent()
+    {
+        return $this->db->fetchRow($this->widget('Widget_Abstract_Contents')->select()
+            ->where('table.contents.cid = ?', $this->cid)
+            ->limit(1), [$this->widget('Widget_Abstract_Contents'), 'filter']);
+    }
+
+    /**
+     * 获取查询对象
+     *
+     * @access public
+     * @return Typecho_Db_Query
+     */
+    public function select()
+    {
+        return $this->db->select('table.comments.coid', 'table.comments.cid', 'table.comments.author', 'table.comments.mail', 'table.comments.url', 'table.comments.ip',
+            'table.comments.authorId', 'table.comments.ownerId', 'table.comments.agent', 'table.comments.text', 'table.comments.type', 'table.comments.status', 'table.comments.parent', 'table.comments.created')
+            ->from('table.comments');
+    }
+
+    /**
+     * 获取当前评论标题
+     *
+     * @access protected
+     * @return string
+     */
+    protected function ___title()
+    {
+        return $this->parentContent['title'];
+    }
+
+    /**
+     * 获取当前评论链接
+     *
+     * @access protected
+     * @return string
+     */
+    protected function ___permalink()
+    {
+
+        if ($this->options->commentsPageBreak && 'approved' == $this->status) {
+
+            $coid = $this->coid;
+            $parent = $this->parent;
+
+            while ($parent > 0 && $this->options->commentsThreaded) {
+                $parentRows = $this->db->fetchRow($this->db->select('parent')->from('table.comments')
+                    ->where('coid = ? AND status = ?', $parent, 'approved')->limit(1));
+
+                if (!empty($parentRows)) {
+                    $coid = $parent;
+                    $parent = $parentRows['parent'];
+                } else {
+                    break;
+                }
+            }
+
+            $select = $this->db->select('coid', 'parent')
+                ->from('table.comments')->where('cid = ? AND status = ?', $this->parentContent['cid'], 'approved')
+                ->where('coid ' . ('DESC' == $this->options->commentsOrder ? '>=' : '<=') . ' ?', $coid)
+                ->order('coid', Typecho_Db::SORT_ASC);
+
+            if ($this->options->commentsShowCommentOnly) {
+                $select->where('type = ?', 'comment');
+            }
+
+            $comments = $this->db->fetchAll($select);
+
+            $commentsMap = [];
+            $total = 0;
+
+            foreach ($comments as $comment) {
+                $commentsMap[$comment['coid']] = $comment['parent'];
+
+                if (0 == $comment['parent'] || !isset($commentsMap[$comment['parent']])) {
+                    $total ++;
+                }
+            }
+
+            $currentPage = ceil($total / $this->options->commentsPageSize);
+
+            $pageRow = ['permalink' => $this->parentContent['pathinfo'], 'commentPage' => $currentPage];
+            return Typecho_Router::url('comment_page',
+                    $pageRow, $this->options->index) . '#' . $this->theId;
+        }
+
+        return $this->parentContent['permalink'] . '#' . $this->theId;
+    }
+
+    /**
+     * 获取当前评论内容
+     *
+     * @access protected
+     * @return string
+     */
+    protected function ___content()
+    {
+        $text = $this->parentContent['hidden'] ? _t('内容被隐藏') : $this->text;
+
+        $text = $this->pluginHandle(__CLASS__)->trigger($plugged)->content($text, $this);
+        if (!$plugged) {
+            $text = $this->options->commentsMarkdown ? $this->markdown($text)
+                : $this->autoP($text);
+        }
+
+        $text = $this->pluginHandle(__CLASS__)->contentEx($text, $this);
+        return Typecho_Common::stripTags($text, '<p><br>' . $this->options->commentsHTMLTagAllowed);
+    }
+
+    /**
+     * markdown
+     *
+     * @param mixed $text
+     * @access public
+     * @return string
+     */
+    public function markdown($text)
+    {
+        $html = $this->pluginHandle(__CLASS__)->trigger($parsed)->markdown($text);
+
+        if (!$parsed) {
+            $html = Markdown::convert($text);
+        }
+
+        return $html;
+    }
+
+    /**
+     * autoP
+     *
+     * @param mixed $text
      * @access public
      * @return string
      */
@@ -444,21 +440,25 @@ class Widget_Abstract_Comments extends Widget_Abstract
     }
 
     /**
-     * markdown  
-     * 
-     * @param mixed $text 
-     * @access public
+     * 输出词义化日期
+     *
+     * @access protected
      * @return string
      */
-    public function markdown($text)
+    protected function ___dateWord()
     {
-        $html = $this->pluginHandle(__CLASS__)->trigger($parsed)->markdown($text);
+        return $this->date->word();
+    }
 
-        if (!$parsed) {
-            $html = Markdown::convert($text);
-        }
-
-        return $html;
+    /**
+     * 锚点id
+     *
+     * @access protected
+     * @return string
+     */
+    protected function ___theId()
+    {
+        return $this->type . '-' . $this->coid;
     }
 }
 

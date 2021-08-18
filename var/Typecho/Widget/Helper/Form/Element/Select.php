@@ -26,7 +26,7 @@ class Typecho_Widget_Helper_Form_Element_Select extends Typecho_Widget_Helper_Fo
      * @access private
      * @var array
      */
-    private $_options = array();
+    private $_options = [];
 
     /**
      * 初始化当前输入项
@@ -36,11 +36,11 @@ class Typecho_Widget_Helper_Form_Element_Select extends Typecho_Widget_Helper_Fo
      * @param array $options 选择项
      * @return Typecho_Widget_Helper_Layout
      */
-    public function input($name = NULL, array $options = NULL)
+    public function input($name = null, array $options = null)
     {
         $input = new Typecho_Widget_Helper_Layout('select');
         $this->container($input->setAttribute('name', $name)
-        ->setAttribute('id', $name . '-0-' . self::$uniqueId));
+            ->setAttribute('id', $name . '-0-' . self::$uniqueId));
         $this->label->setAttribute('for', $name . '-0-' . self::$uniqueId);
         $this->inputs[] = $input;
 

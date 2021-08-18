@@ -45,7 +45,7 @@ class Widget_Upgrade extends Widget_Abstract_Options implements Widget_Interface
         [$ver, $rev] = explode('r', $b);
         $b = str_replace('_', '.', $rev);
 
-        return version_compare($a, $b, '>') ? 1 : -1;
+        return version_compare($a, $b, '>') ? 1 : - 1;
     }
 
     /**

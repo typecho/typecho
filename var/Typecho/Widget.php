@@ -175,8 +175,8 @@ abstract class Typecho_Widget
     /**
      * 释放组件
      *
-     * @deprecated alias for destroy
      * @param string $alias 组件名称
+     * @deprecated alias for destroy
      */
     public static function destory(string $alias)
     {
@@ -257,7 +257,7 @@ abstract class Typecho_Widget
     {
         if ($this->sequence < count($this->stack)) {
             $this->row = $this->stack[$this->sequence];
-            $this->sequence++;
+            $this->sequence ++;
         } else {
             $this->sequence = 0;
             return false;
@@ -277,7 +277,7 @@ abstract class Typecho_Widget
     {
         //将行数据按顺序置位
         $this->row = $value;
-        $this->length++;
+        $this->length ++;
 
         $this->stack[] = $value;
         return $value;

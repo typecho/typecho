@@ -45,7 +45,7 @@ class Widget_Stat extends Typecho_Widget
      * @param mixed $params 参数列表
      * @return void
      */
-    public function __construct($request, $response, $params = NULL)
+    public function __construct($request, $response, $params = null)
     {
         parent::__construct($request, $response, $params);
 
@@ -64,10 +64,10 @@ class Widget_Stat extends Typecho_Widget
      */
     protected function ___publishedPostsNum()
     {
-        return $this->db->fetchObject($this->db->select(array('COUNT(cid)' => 'num'))
-                    ->from('table.contents')
-                    ->where('table.contents.type = ?', 'post')
-                    ->where('table.contents.status = ?', 'publish'))->num;
+        return $this->db->fetchObject($this->db->select(['COUNT(cid)' => 'num'])
+            ->from('table.contents')
+            ->where('table.contents.type = ?', 'post')
+            ->where('table.contents.status = ?', 'publish'))->num;
     }
 
     /**
@@ -78,10 +78,10 @@ class Widget_Stat extends Typecho_Widget
      */
     protected function ___waitingPostsNum()
     {
-        return $this->db->fetchObject($this->db->select(array('COUNT(cid)' => 'num'))
-                    ->from('table.contents')
-                    ->where('table.contents.type = ? OR table.contents.type = ?', 'post', 'post_draft')
-                    ->where('table.contents.status = ?', 'waiting'))->num;
+        return $this->db->fetchObject($this->db->select(['COUNT(cid)' => 'num'])
+            ->from('table.contents')
+            ->where('table.contents.type = ? OR table.contents.type = ?', 'post', 'post_draft')
+            ->where('table.contents.status = ?', 'waiting'))->num;
     }
 
     /**
@@ -92,9 +92,9 @@ class Widget_Stat extends Typecho_Widget
      */
     protected function ___draftPostsNum()
     {
-        return $this->db->fetchObject($this->db->select(array('COUNT(cid)' => 'num'))
-                    ->from('table.contents')
-                    ->where('table.contents.type = ?', 'post_draft'))->num;
+        return $this->db->fetchObject($this->db->select(['COUNT(cid)' => 'num'])
+            ->from('table.contents')
+            ->where('table.contents.type = ?', 'post_draft'))->num;
     }
 
     /**
@@ -105,11 +105,11 @@ class Widget_Stat extends Typecho_Widget
      */
     protected function ___myPublishedPostsNum()
     {
-        return $this->db->fetchObject($this->db->select(array('COUNT(cid)' => 'num'))
-                    ->from('table.contents')
-                    ->where('table.contents.type = ?', 'post')
-                    ->where('table.contents.status = ?', 'publish')
-                    ->where('table.contents.authorId = ?', $this->user->uid))->num;
+        return $this->db->fetchObject($this->db->select(['COUNT(cid)' => 'num'])
+            ->from('table.contents')
+            ->where('table.contents.type = ?', 'post')
+            ->where('table.contents.status = ?', 'publish')
+            ->where('table.contents.authorId = ?', $this->user->uid))->num;
     }
 
     /**
@@ -120,11 +120,11 @@ class Widget_Stat extends Typecho_Widget
      */
     protected function ___myWaitingPostsNum()
     {
-        return $this->db->fetchObject($this->db->select(array('COUNT(cid)' => 'num'))
-                    ->from('table.contents')
-                    ->where('table.contents.type = ? OR table.contents.type = ?', 'post', 'post_draft')
-                    ->where('table.contents.status = ?', 'waiting')
-                    ->where('table.contents.authorId = ?', $this->user->uid))->num;
+        return $this->db->fetchObject($this->db->select(['COUNT(cid)' => 'num'])
+            ->from('table.contents')
+            ->where('table.contents.type = ? OR table.contents.type = ?', 'post', 'post_draft')
+            ->where('table.contents.status = ?', 'waiting')
+            ->where('table.contents.authorId = ?', $this->user->uid))->num;
     }
 
     /**
@@ -135,10 +135,10 @@ class Widget_Stat extends Typecho_Widget
      */
     protected function ___myDraftPostsNum()
     {
-        return $this->db->fetchObject($this->db->select(array('COUNT(cid)' => 'num'))
-                    ->from('table.contents')
-                    ->where('table.contents.type = ?', 'post_draft')
-                    ->where('table.contents.authorId = ?', $this->user->uid))->num;
+        return $this->db->fetchObject($this->db->select(['COUNT(cid)' => 'num'])
+            ->from('table.contents')
+            ->where('table.contents.type = ?', 'post_draft')
+            ->where('table.contents.authorId = ?', $this->user->uid))->num;
     }
 
     /**
@@ -149,11 +149,11 @@ class Widget_Stat extends Typecho_Widget
      */
     protected function ___currentPublishedPostsNum()
     {
-        return $this->db->fetchObject($this->db->select(array('COUNT(cid)' => 'num'))
-                    ->from('table.contents')
-                    ->where('table.contents.type = ?', 'post')
-                    ->where('table.contents.status = ?', 'publish')
-                    ->where('table.contents.authorId = ?', $this->request->filter('int')->uid))->num;
+        return $this->db->fetchObject($this->db->select(['COUNT(cid)' => 'num'])
+            ->from('table.contents')
+            ->where('table.contents.type = ?', 'post')
+            ->where('table.contents.status = ?', 'publish')
+            ->where('table.contents.authorId = ?', $this->request->filter('int')->uid))->num;
     }
 
     /**
@@ -164,11 +164,11 @@ class Widget_Stat extends Typecho_Widget
      */
     protected function ___currentWaitingPostsNum()
     {
-        return $this->db->fetchObject($this->db->select(array('COUNT(cid)' => 'num'))
-                    ->from('table.contents')
-                    ->where('table.contents.type = ? OR table.contents.type = ?', 'post', 'post_draft')
-                    ->where('table.contents.status = ?', 'waiting')
-                    ->where('table.contents.authorId = ?', $this->request->filter('int')->uid))->num;
+        return $this->db->fetchObject($this->db->select(['COUNT(cid)' => 'num'])
+            ->from('table.contents')
+            ->where('table.contents.type = ? OR table.contents.type = ?', 'post', 'post_draft')
+            ->where('table.contents.status = ?', 'waiting')
+            ->where('table.contents.authorId = ?', $this->request->filter('int')->uid))->num;
     }
 
     /**
@@ -179,10 +179,10 @@ class Widget_Stat extends Typecho_Widget
      */
     protected function ___currentDraftPostsNum()
     {
-        return $this->db->fetchObject($this->db->select(array('COUNT(cid)' => 'num'))
-                    ->from('table.contents')
-                    ->where('table.contents.type = ?', 'post_draft')
-                    ->where('table.contents.authorId = ?', $this->request->filter('int')->uid))->num;
+        return $this->db->fetchObject($this->db->select(['COUNT(cid)' => 'num'])
+            ->from('table.contents')
+            ->where('table.contents.type = ?', 'post_draft')
+            ->where('table.contents.authorId = ?', $this->request->filter('int')->uid))->num;
     }
 
     /**
@@ -193,10 +193,10 @@ class Widget_Stat extends Typecho_Widget
      */
     protected function ___publishedPagesNum()
     {
-        return $this->db->fetchObject($this->db->select(array('COUNT(cid)' => 'num'))
-                    ->from('table.contents')
-                    ->where('table.contents.type = ?', 'page')
-                    ->where('table.contents.status = ?', 'publish'))->num;
+        return $this->db->fetchObject($this->db->select(['COUNT(cid)' => 'num'])
+            ->from('table.contents')
+            ->where('table.contents.type = ?', 'page')
+            ->where('table.contents.status = ?', 'publish'))->num;
     }
 
     /**
@@ -207,9 +207,9 @@ class Widget_Stat extends Typecho_Widget
      */
     protected function ___draftPagesNum()
     {
-        return $this->db->fetchObject($this->db->select(array('COUNT(cid)' => 'num'))
-                    ->from('table.contents')
-                    ->where('table.contents.type = ?', 'page_draft'))->num;
+        return $this->db->fetchObject($this->db->select(['COUNT(cid)' => 'num'])
+            ->from('table.contents')
+            ->where('table.contents.type = ?', 'page_draft'))->num;
     }
 
     /**
@@ -220,9 +220,9 @@ class Widget_Stat extends Typecho_Widget
      */
     protected function ___publishedCommentsNum()
     {
-        return $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))
-                    ->from('table.comments')
-                    ->where('table.comments.status = ?', 'approved'))->num;
+        return $this->db->fetchObject($this->db->select(['COUNT(coid)' => 'num'])
+            ->from('table.comments')
+            ->where('table.comments.status = ?', 'approved'))->num;
     }
 
     /**
@@ -233,9 +233,9 @@ class Widget_Stat extends Typecho_Widget
      */
     protected function ___waitingCommentsNum()
     {
-        return $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))
-                    ->from('table.comments')
-                    ->where('table.comments.status = ?', 'waiting'))->num;
+        return $this->db->fetchObject($this->db->select(['COUNT(coid)' => 'num'])
+            ->from('table.comments')
+            ->where('table.comments.status = ?', 'waiting'))->num;
     }
 
     /**
@@ -246,9 +246,9 @@ class Widget_Stat extends Typecho_Widget
      */
     protected function ___spamCommentsNum()
     {
-        return $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))
-                    ->from('table.comments')
-                    ->where('table.comments.status = ?', 'spam'))->num;
+        return $this->db->fetchObject($this->db->select(['COUNT(coid)' => 'num'])
+            ->from('table.comments')
+            ->where('table.comments.status = ?', 'spam'))->num;
     }
 
     /**
@@ -259,10 +259,10 @@ class Widget_Stat extends Typecho_Widget
      */
     protected function ___myPublishedCommentsNum()
     {
-        return $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))
-                    ->from('table.comments')
-                    ->where('table.comments.status = ?', 'approved')
-                    ->where('table.comments.ownerId = ?', $this->user->uid))->num;
+        return $this->db->fetchObject($this->db->select(['COUNT(coid)' => 'num'])
+            ->from('table.comments')
+            ->where('table.comments.status = ?', 'approved')
+            ->where('table.comments.ownerId = ?', $this->user->uid))->num;
     }
 
     /**
@@ -273,10 +273,10 @@ class Widget_Stat extends Typecho_Widget
      */
     protected function ___myWaitingCommentsNum()
     {
-        return $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))
-                    ->from('table.comments')
-                    ->where('table.comments.status = ?', 'waiting')
-                    ->where('table.comments.ownerId = ?', $this->user->uid))->num;
+        return $this->db->fetchObject($this->db->select(['COUNT(coid)' => 'num'])
+            ->from('table.comments')
+            ->where('table.comments.status = ?', 'waiting')
+            ->where('table.comments.ownerId = ?', $this->user->uid))->num;
     }
 
     /**
@@ -287,12 +287,12 @@ class Widget_Stat extends Typecho_Widget
      */
     protected function ___mySpamCommentsNum()
     {
-        return $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))
-                    ->from('table.comments')
-                    ->where('table.comments.status = ?', 'spam')
-                    ->where('table.comments.ownerId = ?', $this->user->uid))->num;
+        return $this->db->fetchObject($this->db->select(['COUNT(coid)' => 'num'])
+            ->from('table.comments')
+            ->where('table.comments.status = ?', 'spam')
+            ->where('table.comments.ownerId = ?', $this->user->uid))->num;
     }
-    
+
     /**
      * 获取当前文章的评论数目
      *
@@ -301,9 +301,9 @@ class Widget_Stat extends Typecho_Widget
      */
     protected function ___currentCommentsNum()
     {
-        return $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))
-                    ->from('table.comments')
-                    ->where('table.comments.cid = ?', $this->request->filter('int')->cid))->num;
+        return $this->db->fetchObject($this->db->select(['COUNT(coid)' => 'num'])
+            ->from('table.comments')
+            ->where('table.comments.cid = ?', $this->request->filter('int')->cid))->num;
     }
 
     /**
@@ -314,10 +314,10 @@ class Widget_Stat extends Typecho_Widget
      */
     protected function ___currentPublishedCommentsNum()
     {
-        return $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))
-                    ->from('table.comments')
-                    ->where('table.comments.status = ?', 'approved')
-                    ->where('table.comments.cid = ?', $this->request->filter('int')->cid))->num;
+        return $this->db->fetchObject($this->db->select(['COUNT(coid)' => 'num'])
+            ->from('table.comments')
+            ->where('table.comments.status = ?', 'approved')
+            ->where('table.comments.cid = ?', $this->request->filter('int')->cid))->num;
     }
 
     /**
@@ -328,10 +328,10 @@ class Widget_Stat extends Typecho_Widget
      */
     protected function ___currentWaitingCommentsNum()
     {
-        return $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))
-                    ->from('table.comments')
-                    ->where('table.comments.status = ?', 'waiting')
-                    ->where('table.comments.cid = ?', $this->request->filter('int')->cid))->num;
+        return $this->db->fetchObject($this->db->select(['COUNT(coid)' => 'num'])
+            ->from('table.comments')
+            ->where('table.comments.status = ?', 'waiting')
+            ->where('table.comments.cid = ?', $this->request->filter('int')->cid))->num;
     }
 
     /**
@@ -342,10 +342,10 @@ class Widget_Stat extends Typecho_Widget
      */
     protected function ___currentSpamCommentsNum()
     {
-        return $this->db->fetchObject($this->db->select(array('COUNT(coid)' => 'num'))
-                    ->from('table.comments')
-                    ->where('table.comments.status = ?', 'spam')
-                    ->where('table.comments.cid = ?', $this->request->filter('int')->cid))->num;
+        return $this->db->fetchObject($this->db->select(['COUNT(coid)' => 'num'])
+            ->from('table.comments')
+            ->where('table.comments.status = ?', 'spam')
+            ->where('table.comments.cid = ?', $this->request->filter('int')->cid))->num;
     }
 
     /**
@@ -356,12 +356,12 @@ class Widget_Stat extends Typecho_Widget
      */
     protected function ___categoriesNum()
     {
-        return $this->db->fetchObject($this->db->select(array('COUNT(mid)' => 'num'))
-                    ->from('table.metas')
-                    ->where('table.metas.type = ?', 'category'))->num;
+        return $this->db->fetchObject($this->db->select(['COUNT(mid)' => 'num'])
+            ->from('table.metas')
+            ->where('table.metas.type = ?', 'category'))->num;
     }
-    
-     /**
+
+    /**
      * 获取标签数目
      *
      * @access protected
@@ -369,8 +369,8 @@ class Widget_Stat extends Typecho_Widget
      */
     protected function ___tagsNum()
     {
-        return $this->db->fetchObject($this->db->select(array('COUNT(mid)' => 'num'))
-                    ->from('table.metas')
-                    ->where('table.metas.type = ?', 'tag'))->num;
+        return $this->db->fetchObject($this->db->select(['COUNT(mid)' => 'num'])
+            ->from('table.metas')
+            ->where('table.metas.type = ?', 'tag'))->num;
     }
 }

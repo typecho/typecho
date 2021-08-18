@@ -40,9 +40,9 @@ class Typecho_Widget_Helper_Form_Element_Hidden extends Typecho_Widget_Helper_Fo
      * @param array $options 选择项
      * @return Typecho_Widget_Helper_Layout
      */
-    public function input($name = NULL, array $options = NULL)
+    public function input($name = null, array $options = null)
     {
-        $input = new Typecho_Widget_Helper_Layout('input', array('name' => $name, 'type' => 'hidden'));
+        $input = new Typecho_Widget_Helper_Layout('input', ['name' => $name, 'type' => 'hidden']);
         $this->container($input);
         $this->inputs[] = $input;
         return $input;

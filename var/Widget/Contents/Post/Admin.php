@@ -45,32 +45,6 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
     private $_currentPage;
 
     /**
-     * 当前文章的草稿
-     *
-     * @access protected
-     * @return bool
-     */
-    protected function ___hasSaved()
-    {
-        if (in_array($this->type, array('post_draft', 'page_draft'))) {
-            return true;
-        }
-
-        $savedPost = $this->db->fetchRow($this->db->select('cid', 'modified', 'status')
-        ->from('table.contents')
-        ->where('table.contents.parent = ? AND (table.contents.type = ? OR table.contents.type = ?)',
-            $this->cid, 'post_draft', 'page_draft')
-        ->limit(1));
-
-        if ($savedPost) {
-            $this->modified = $savedPost['modified'];
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * 获取菜单标题
      *
      * @return string
@@ -142,7 +116,7 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
         /** 按状态查询 */
         if ('draft' == $this->request->status) {
             $select->where('table.contents.type = ?', 'post_draft');
-        } else if ('waiting' == $this->request->status) {
+        } elseif ('waiting' == $this->request->status) {
             $select->where('(table.contents.type = ? OR table.contents.type = ?) AND table.contents.status = ?',
                 'post', 'post_draft', 'waiting');
         } else {
@@ -151,14 +125,14 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
         }
 
         /** 过滤分类 */
-        if (NULL != ($category = $this->request->category)) {
+        if (null != ($category = $this->request->category)) {
             $select->join('table.relationships', 'table.contents.cid = table.relationships.cid')
-            ->where('table.relationships.mid = ?', $category);
+                ->where('table.relationships.mid = ?', $category);
         }
 
         /** 过滤标题 */
-        if (NULL != ($keywords = $this->request->filter('search')->keywords)) {
-            $args = array();
+        if (null != ($keywords = $this->request->filter('search')->keywords)) {
+            $args = [];
             $keywordsList = explode(' ', $keywords);
             $args[] = implode(' OR ', array_fill(0, count($keywordsList), 'table.contents.title LIKE ?'));
 
@@ -166,7 +140,7 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
                 $args[] = '%' . $keyword . '%';
             }
 
-            call_user_func_array(array($select, 'where'), $args);
+            call_user_func_array([$select, 'where'], $args);
         }
 
         /** 给计算数目对象赋值,克隆对象 */
@@ -174,9 +148,9 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
 
         /** 提交查询 */
         $select->order('table.contents.cid', Typecho_Db::SORT_DESC)
-        ->page($this->_currentPage, $this->parameter->pageSize);
+            ->page($this->_currentPage, $this->parameter->pageSize);
 
-        $this->db->fetchAll($select, array($this, 'push'));
+        $this->db->fetchAll($select, [$this, 'push']);
     }
 
     /**
@@ -191,8 +165,34 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
 
         /** 使用盒状分页 */
         $nav = new Typecho_Widget_Helper_PageNavigator_Box(false === $this->_total ? $this->_total = $this->size($this->_countSql) : $this->_total,
-        $this->_currentPage, $this->parameter->pageSize, $query);
+            $this->_currentPage, $this->parameter->pageSize, $query);
         $nav->render('&laquo;', '&raquo;');
+    }
+
+    /**
+     * 当前文章的草稿
+     *
+     * @access protected
+     * @return bool
+     */
+    protected function ___hasSaved()
+    {
+        if (in_array($this->type, ['post_draft', 'page_draft'])) {
+            return true;
+        }
+
+        $savedPost = $this->db->fetchRow($this->db->select('cid', 'modified', 'status')
+            ->from('table.contents')
+            ->where('table.contents.parent = ? AND (table.contents.type = ? OR table.contents.type = ?)',
+                $this->cid, 'post_draft', 'page_draft')
+            ->limit(1));
+
+        if ($savedPost) {
+            $this->modified = $savedPost['modified'];
+            return true;
+        }
+
+        return false;
     }
 }
 

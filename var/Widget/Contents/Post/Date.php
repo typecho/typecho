@@ -13,7 +13,6 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
  * 按日期归档列表组件
  *
- * @fixme 交给缓存
  * @author qining
  * @category typecho
  * @package Widget
@@ -44,7 +43,7 @@ class Widget_Contents_Post_Date extends Typecho_Widget
      * @param mixed $response response对象
      * @param mixed $params 参数列表
      */
-    public function __construct($request, $response, $params = NULL)
+    public function __construct($request, $response, $params = null)
     {
         parent::__construct($request, $response, $params);
 
@@ -67,13 +66,13 @@ class Widget_Contents_Post_Date extends Typecho_Widget
         $this->parameter->setDefault('format=Y-m&type=month&limit=0');
 
         $resource = $this->db->query($this->db->select('created')->from('table.contents')
-        ->where('type = ?', 'post')
-        ->where('table.contents.status = ?', 'publish')
-        ->where('table.contents.created < ?', $this->options->time)
-        ->order('table.contents.created', Typecho_Db::SORT_DESC));
+            ->where('type = ?', 'post')
+            ->where('table.contents.status = ?', 'publish')
+            ->where('table.contents.created < ?', $this->options->time)
+            ->order('table.contents.created', Typecho_Db::SORT_DESC));
 
         $offset = $this->options->timezone - $this->options->serverTimezone;
-        $result = array();
+        $result = [];
         while ($post = $this->db->fetchRow($resource)) {
             $timeStamp = $post['created'] + $offset;
             $date = date($this->parameter->format, $timeStamp);

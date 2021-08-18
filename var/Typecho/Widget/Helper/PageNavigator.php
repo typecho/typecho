@@ -68,7 +68,7 @@ abstract class Typecho_Widget_Helper_PageNavigator
      * @access protected
      * @var mixed
      */
-    protected $_pageHolder = array('{page}', '%7Bpage%7D');
+    protected $_pageHolder = ['{page}', '%7Bpage%7D'];
 
     /**
      * 构造函数,初始化页面基本信息
@@ -102,8 +102,8 @@ abstract class Typecho_Widget_Helper_PageNavigator
      */
     public function setPageHolder($holder)
     {
-        $this->_pageHolder = array('{' . $holder . '}',
-        str_replace(array('{', '}'), array('%7B', '%7D'), $holder));
+        $this->_pageHolder = ['{' . $holder . '}',
+            str_replace(['{', '}'], ['%7B', '%7D'], $holder)];
     }
 
     /**

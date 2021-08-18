@@ -38,8 +38,8 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
      * 数据库连接函数
      *
      * @param Typecho_Config $config 数据库配置
-     * @throws Typecho_Db_Exception
      * @return resource
+     * @throws Typecho_Db_Exception
      */
     public function connect(Typecho_Config $config)
     {
@@ -52,8 +52,8 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
     }
 
     /**
-     * 获取数据库版本 
-     * 
+     * 获取数据库版本
+     *
      * @param mixed $handle
      * @return string
      */
@@ -86,7 +86,7 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
      * @return resource|SQLiteResult
      * @throws Typecho_Db_Query_Exception
      */
-    public function query($query, $handle, $op = Typecho_Db::READ, $action = NULL, $table = NULL)
+    public function query($query, $handle, $op = Typecho_Db::READ, $action = null, $table = null)
     {
         if ($resource = @sqlite_query($query, $handle)) {
             return $resource;
@@ -95,39 +95,6 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
         /** 数据库异常 */
         $errorCode = sqlite_last_error($this->_dbHandle);
         throw new Typecho_Db_Query_Exception(sqlite_error_string($errorCode), $errorCode);
-    }
-
-    /**
-     * 将数据查询的其中一行作为数组取出,其中字段名对应数组键值
-     *
-     * @param resource $resource 查询返回资源标识
-     * @return array
-     */
-    public function fetch($resource)
-    {
-        return Typecho_Common::filterSQLite2ColumnName(sqlite_fetch_array($resource, SQLITE_ASSOC));
-    }
-
-    /**
-     * 将数据查询的其中一行作为对象取出,其中字段名对应对象属性
-     *
-     * @param resource $resource 查询的资源数据
-     * @return object
-     */
-    public function fetchObject($resource)
-    {
-        return (object) $this->fetch($resource);
-    }
-
-    /**
-     * 引号转义函数
-     *
-     * @param string $string 需要转义的字符串
-     * @return string
-     */
-    public function quoteValue($string)
-    {
-        return '\'' . str_replace('\'', '\'\'', $string) . '\'';
     }
 
     /**
@@ -143,6 +110,39 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
     }
 
     /**
+     * 将数据查询的其中一行作为对象取出,其中字段名对应对象属性
+     *
+     * @param resource $resource 查询的资源数据
+     * @return object
+     */
+    public function fetchObject($resource)
+    {
+        return (object)$this->fetch($resource);
+    }
+
+    /**
+     * 将数据查询的其中一行作为数组取出,其中字段名对应数组键值
+     *
+     * @param resource $resource 查询返回资源标识
+     * @return array
+     */
+    public function fetch($resource)
+    {
+        return Typecho_Common::filterSQLite2ColumnName(sqlite_fetch_array($resource, SQLITE_ASSOC));
+    }
+
+    /**
+     * 引号转义函数
+     *
+     * @param string $string 需要转义的字符串
+     * @return string
+     */
+    public function quoteValue($string)
+    {
+        return '\'' . str_replace('\'', '\'\'', $string) . '\'';
+    }
+
+    /**
      * 合成查询语句
      *
      * @access public
@@ -153,16 +153,16 @@ class Typecho_Db_Adapter_SQLite implements Typecho_Db_Adapter
     {
         if (!empty($sql['join'])) {
             foreach ($sql['join'] as $val) {
-                list($table, $condition, $op) = $val;
+                [$table, $condition, $op] = $val;
                 $sql['table'] = "{$sql['table']} {$op} JOIN {$table} ON {$condition}";
             }
         }
 
-        $sql['limit'] = (0 == strlen($sql['limit'])) ? NULL : ' LIMIT ' . $sql['limit'];
-        $sql['offset'] = (0 == strlen($sql['offset'])) ? NULL : ' OFFSET ' . $sql['offset'];
+        $sql['limit'] = (0 == strlen($sql['limit'])) ? null : ' LIMIT ' . $sql['limit'];
+        $sql['offset'] = (0 == strlen($sql['offset'])) ? null : ' OFFSET ' . $sql['offset'];
 
         return Typecho_Common::filterSQLite2CountQuery('SELECT ' . $sql['fields'] . ' FROM ' . $sql['table'] .
-        $sql['where'] . $sql['group'] . $sql['having'] . $sql['order'] . $sql['limit'] . $sql['offset']);
+            $sql['where'] . $sql['group'] . $sql['having'] . $sql['order'] . $sql['limit'] . $sql['offset']);
     }
 
     /**

@@ -59,7 +59,7 @@ abstract class Widget_Abstract extends Typecho_Widget
      * @param mixed $response response对象
      * @param mixed $params 参数列表
      */
-    public function __construct($request, $response, $params = NULL)
+    public function __construct($request, $response, $params = null)
     {
         parent::__construct($request, $response, $params);
 

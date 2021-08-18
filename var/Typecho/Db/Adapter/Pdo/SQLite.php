@@ -45,6 +45,18 @@ class Typecho_Db_Adapter_Pdo_SQLite extends Typecho_Db_Adapter_Pdo
     }
 
     /**
+     * 对象引号过滤
+     *
+     * @access public
+     * @param string $string
+     * @return string
+     */
+    public function quoteColumn($string)
+    {
+        return '"' . $string . '"';
+    }
+
+    /**
      * 初始化数据库
      *
      * @param Typecho_Config $config 数据库配置
@@ -60,32 +72,20 @@ class Typecho_Db_Adapter_Pdo_SQLite extends Typecho_Db_Adapter_Pdo
 
     /**
      * @param resource $resource
+     * @return object
+     */
+    public function fetchObject($resource)
+    {
+        return (object)$this->fetch($resource);
+    }
+
+    /**
+     * @param resource $resource
      * @return array
      */
     public function fetch($resource)
     {
         return Typecho_Common::filterSQLite2ColumnName(parent::fetch($resource));
-    }
-
-    /**
-     * @param resource $resource
-     * @return object
-     */
-    public function fetchObject($resource)
-    {
-        return (object) $this->fetch($resource);
-    }
-
-    /**
-     * 对象引号过滤
-     *
-     * @access public
-     * @param string $string
-     * @return string
-     */
-    public function quoteColumn($string)
-    {
-        return '"' . $string . '"';
     }
 
     /**
@@ -99,16 +99,16 @@ class Typecho_Db_Adapter_Pdo_SQLite extends Typecho_Db_Adapter_Pdo
     {
         if (!empty($sql['join'])) {
             foreach ($sql['join'] as $val) {
-                list($table, $condition, $op) = $val;
+                [$table, $condition, $op] = $val;
                 $sql['table'] = "{$sql['table']} {$op} JOIN {$table} ON {$condition}";
             }
         }
 
-        $sql['limit'] = (0 == strlen($sql['limit'])) ? NULL : ' LIMIT ' . $sql['limit'];
-        $sql['offset'] = (0 == strlen($sql['offset'])) ? NULL : ' OFFSET ' . $sql['offset'];
+        $sql['limit'] = (0 == strlen($sql['limit'])) ? null : ' LIMIT ' . $sql['limit'];
+        $sql['offset'] = (0 == strlen($sql['offset'])) ? null : ' OFFSET ' . $sql['offset'];
 
         $query = 'SELECT ' . $sql['fields'] . ' FROM ' . $sql['table'] .
-        $sql['where'] . $sql['group'] . $sql['having'] . $sql['order'] . $sql['limit'] . $sql['offset'];
+            $sql['where'] . $sql['group'] . $sql['having'] . $sql['order'] . $sql['limit'] . $sql['offset'];
 
         if ($this->_isSQLite2) {
             $query = Typecho_Common::filterSQLite2CountQuery($query);

@@ -29,7 +29,7 @@ class Widget_Themes_Config extends Widget_Abstract_Options
     public function execute()
     {
         $this->user->pass('administrator');
-        
+
         if (!self::isExists()) {
             throw new Typecho_Widget_Exception(_t('外观配置功能不存在'), 404);
         }
@@ -37,7 +37,7 @@ class Widget_Themes_Config extends Widget_Abstract_Options
 
     /**
      * 配置功能是否存在
-     * 
+     *
      * @access public
      * @return boolean
      */
@@ -48,12 +48,12 @@ class Widget_Themes_Config extends Widget_Abstract_Options
 
         if (file_exists($configFile)) {
             require_once $configFile;
-            
+
             if (function_exists('themeConfig')) {
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -69,14 +69,14 @@ class Widget_Themes_Config extends Widget_Abstract_Options
             Typecho_Widget_Helper_Form::POST_METHOD);
         themeConfig($form);
         $inputs = $form->getInputs();
-        
+
         if (!empty($inputs)) {
             foreach ($inputs as $key => $val) {
                 $form->getInput($key)->value($this->options->{$key});
             }
         }
 
-        $submit = new Typecho_Widget_Helper_Form_Element_Submit(NULL, NULL, _t('保存设置'));
+        $submit = new Typecho_Widget_Helper_Form_Element_Submit(null, null, _t('保存设置'));
         $submit->input->setAttribute('class', 'btn primary');
         $form->addItem($submit);
         return $form;

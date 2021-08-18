@@ -49,7 +49,7 @@ abstract class Typecho_Http_Client_Adapter
      * @access protected
      * @var array
      */
-    protected $data = array();
+    protected $data = [];
 
     /**
      * 文件列表
@@ -57,7 +57,7 @@ abstract class Typecho_Http_Client_Adapter
      * @access protected
      * @var array
      */
-    protected $files = array();
+    protected $files = [];
 
     /**
      * 头信息参数
@@ -65,7 +65,7 @@ abstract class Typecho_Http_Client_Adapter
      * @access protected
      * @var array
      */
-    protected $headers = array();
+    protected $headers = [];
 
     /**
      * cookies
@@ -73,7 +73,7 @@ abstract class Typecho_Http_Client_Adapter
      * @access protected
      * @var array
      */
-    protected $cookies = array();
+    protected $cookies = [];
 
     /**
      * 协议名称及版本
@@ -137,7 +137,7 @@ abstract class Typecho_Http_Client_Adapter
      * @access protected
      * @var array
      */
-    protected $responseHeader = array();
+    protected $responseHeader = [];
 
     /**
      * 回执代码
@@ -164,19 +164,6 @@ abstract class Typecho_Http_Client_Adapter
     public static function isAvailable()
     {
         return true;
-    }
-
-    /**
-     * 设置方法名
-     *
-     * @access public
-     * @param string $method
-     * @return Typecho_Http_Client_Adapter
-     */
-    public function setMethod($method)
-    {
-        $this->method = $method;
-        return $this;
     }
 
     /**
@@ -218,6 +205,19 @@ abstract class Typecho_Http_Client_Adapter
     {
         $this->data = $data;
         $this->setMethod(Typecho_Http_Client::METHOD_POST);
+        return $this;
+    }
+
+    /**
+     * 设置方法名
+     *
+     * @access public
+     * @param string $method
+     * @return Typecho_Http_Client_Adapter
+     */
+    public function setMethod($method)
+    {
+        $this->method = $method;
         return $this;
     }
 
@@ -275,21 +275,6 @@ abstract class Typecho_Http_Client_Adapter
     }
 
     /**
-     * 设置头信息参数
-     *
-     * @access public
-     * @param string $key 参数名称
-     * @param string $value 参数值
-     * @return Typecho_Http_Client_Adapter
-     */
-    public function setHeader($key, $value)
-    {
-        $key = str_replace(' ', '-', ucwords(str_replace('-', ' ', $key)));
-        $this->headers[$key] = $value;
-        return $this;
-    }
-
-    /**
      * 发送请求
      *
      * @access public
@@ -307,7 +292,7 @@ abstract class Typecho_Http_Client_Adapter
             throw new Typecho_Http_Client_Exception('Unknown Host', 500);
         }
 
-        if (!in_array($params['scheme'], array('http', 'https'))) {
+        if (!in_array($params['scheme'], ['http', 'https'])) {
             throw new Typecho_Http_Client_Exception('Unknown Scheme', 500);
         }
 
@@ -350,7 +335,7 @@ abstract class Typecho_Http_Client_Adapter
 
         $foundStatus = false;
         $foundInfo = false;
-        $lines = array();
+        $lines = [];
 
         foreach ($rows as $key => $line) {
             if (!$foundStatus) {
@@ -384,6 +369,30 @@ abstract class Typecho_Http_Client_Adapter
     }
 
     /**
+     * 设置头信息参数
+     *
+     * @access public
+     * @param string $key 参数名称
+     * @param string $value 参数值
+     * @return Typecho_Http_Client_Adapter
+     */
+    public function setHeader($key, $value)
+    {
+        $key = str_replace(' ', '-', ucwords(str_replace('-', ' ', $key)));
+        $this->headers[$key] = $value;
+        return $this;
+    }
+
+    /**
+     * 需要实现的请求方法
+     *
+     * @access public
+     * @param string $url 请求地址
+     * @return string
+     */
+    abstract protected function httpSend($url);
+
+    /**
      * 获取回执的头部信息
      *
      * @access public
@@ -393,7 +402,7 @@ abstract class Typecho_Http_Client_Adapter
     public function getResponseHeader($key)
     {
         $key = strtolower($key);
-        return isset($this->responseHeader[$key]) ? $this->responseHeader[$key] : NULL;
+        return $this->responseHeader[$key] ?? null;
     }
 
     /**
@@ -417,13 +426,4 @@ abstract class Typecho_Http_Client_Adapter
     {
         return $this->responseBody;
     }
-
-    /**
-     * 需要实现的请求方法
-     *
-     * @access public
-     * @param string $url 请求地址
-     * @return string
-     */
-    abstract protected function httpSend($url);
 }

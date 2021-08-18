@@ -44,19 +44,6 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
     private $_total = false;
 
     /**
-     * 获取当前内容结构
-     *
-     * @return stdClass
-     */
-    protected function ___parentContent()
-    {
-        $cid = isset($this->request->cid) ? $this->request->filter('int')->cid : $this->cid;
-        return $this->db->fetchRow($this->widget('Widget_Abstract_Contents')->select()
-        ->where('table.contents.cid = ?', $cid)
-        ->limit(1), array($this->widget('Widget_Abstract_Contents'), 'filter'));
-    }
-
-    /**
      * 获取菜单标题
      *
      * @return string
@@ -86,14 +73,14 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
         $this->_currentPage = $this->request->get('page', 1);
 
         /** 过滤标题 */
-        if (NULL != ($keywords = $this->request->filter('search')->keywords)) {
+        if (null != ($keywords = $this->request->filter('search')->keywords)) {
             $select->where('table.comments.text LIKE ?', '%' . $keywords . '%');
         }
 
         /** 如果具有贡献者以上权限,可以查看所有评论,反之只能查看自己的评论 */
         if (!$this->user->pass('editor', true)) {
             $select->where('table.comments.ownerId = ?', $this->user->uid);
-        } else if (!isset($this->request->cid)) {
+        } elseif (!isset($this->request->cid)) {
             if ('on' == $this->request->__typecho_all_comments) {
                 Typecho_Cookie::set('__typecho_all_comments', 'on');
             } else {
@@ -107,9 +94,9 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
             }
         }
 
-        if (in_array($this->request->status, array('approved', 'waiting', 'spam'))) {
+        if (in_array($this->request->status, ['approved', 'waiting', 'spam'])) {
             $select->where('table.comments.status = ?', $this->request->status);
-        } else if ('hold' == $this->request->status) {
+        } elseif ('hold' == $this->request->status) {
             $select->where('table.comments.status <> ?', 'approved');
         } else {
             $select->where('table.comments.status = ?', 'approved');
@@ -123,9 +110,9 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
         $this->_countSql = clone $select;
 
         $select->order('table.comments.coid', Typecho_Db::SORT_DESC)
-        ->page($this->_currentPage, $this->parameter->pageSize);
+            ->page($this->_currentPage, $this->parameter->pageSize);
 
-        $this->db->fetchAll($select, array($this, 'push'));
+        $this->db->fetchAll($select, [$this, 'push']);
     }
 
     /**
@@ -140,7 +127,20 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
 
         /** 使用盒状分页 */
         $nav = new Typecho_Widget_Helper_PageNavigator_Box(false === $this->_total ? $this->_total = $this->size($this->_countSql) : $this->_total,
-        $this->_currentPage, $this->parameter->pageSize, $query);
+            $this->_currentPage, $this->parameter->pageSize, $query);
         $nav->render(_t('&laquo;'), _t('&raquo;'));
+    }
+
+    /**
+     * 获取当前内容结构
+     *
+     * @return stdClass
+     */
+    protected function ___parentContent()
+    {
+        $cid = isset($this->request->cid) ? $this->request->filter('int')->cid : $this->cid;
+        return $this->db->fetchRow($this->widget('Widget_Abstract_Contents')->select()
+            ->where('table.contents.cid = ?', $cid)
+            ->limit(1), [$this->widget('Widget_Abstract_Contents'), 'filter']);
     }
 }

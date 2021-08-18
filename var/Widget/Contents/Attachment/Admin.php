@@ -53,19 +53,6 @@ class Widget_Contents_Attachment_Admin extends Widget_Abstract_Contents
     private $_currentPage;
 
     /**
-     * 所属文章
-     *
-     * @access protected
-     * @return Typecho_Config
-     */
-    protected function ___parentPost()
-    {
-        return new Typecho_Config($this->db->fetchRow(
-        $this->select()->where('table.contents.cid = ?', $this->parentId)
-        ->limit(1)));
-    }
-
-    /**
      * 执行函数
      *
      * @access public
@@ -85,8 +72,8 @@ class Widget_Contents_Attachment_Admin extends Widget_Abstract_Contents
         }
 
         /** 过滤标题 */
-        if (NULL != ($keywords = $this->request->filter('search')->keywords)) {
-            $args = array();
+        if (null != ($keywords = $this->request->filter('search')->keywords)) {
+            $args = [];
             $keywordsList = explode(' ', $keywords);
             $args[] = implode(' OR ', array_fill(0, count($keywordsList), 'table.contents.title LIKE ?'));
 
@@ -94,7 +81,7 @@ class Widget_Contents_Attachment_Admin extends Widget_Abstract_Contents
                 $args[] = '%' . $keyword . '%';
             }
 
-            call_user_func_array(array($select, 'where'), $args);
+            call_user_func_array([$select, 'where'], $args);
         }
 
         /** 给计算数目对象赋值,克隆对象 */
@@ -102,9 +89,9 @@ class Widget_Contents_Attachment_Admin extends Widget_Abstract_Contents
 
         /** 提交查询 */
         $select->order('table.contents.created', Typecho_Db::SORT_DESC)
-        ->page($this->_currentPage, $this->parameter->pageSize);
+            ->page($this->_currentPage, $this->parameter->pageSize);
 
-        $this->db->fetchAll($select, array($this, 'push'));
+        $this->db->fetchAll($select, [$this, 'push']);
     }
 
     /**
@@ -119,7 +106,20 @@ class Widget_Contents_Attachment_Admin extends Widget_Abstract_Contents
 
         /** 使用盒状分页 */
         $nav = new Typecho_Widget_Helper_PageNavigator_Box(false === $this->_total ? $this->_total = $this->size($this->_countSql) : $this->_total,
-        $this->_currentPage, $this->parameter->pageSize, $query);
+            $this->_currentPage, $this->parameter->pageSize, $query);
         $nav->render('&laquo;', '&raquo;');
+    }
+
+    /**
+     * 所属文章
+     *
+     * @access protected
+     * @return Typecho_Config
+     */
+    protected function ___parentPost()
+    {
+        return new Typecho_Config($this->db->fetchRow(
+            $this->select()->where('table.contents.cid = ?', $this->parentId)
+                ->limit(1)));
     }
 }

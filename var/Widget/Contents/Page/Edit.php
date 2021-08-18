@@ -22,13 +22,13 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Widget_Interface_Do
 {
     /**
-     * 自定义字段的hook名称 
-     * 
+     * 自定义字段的hook名称
+     *
      * @var string
      * @access protected
      */
     protected $themeCustomFieldsHook = 'themePageFields';
-    
+
     /**
      * 执行函数
      *
@@ -41,12 +41,12 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
         $this->user->pass('editor');
 
         /** 获取文章内容 */
-        if (!empty($this->request->cid) && 'delete' != $this->request->do 
+        if (!empty($this->request->cid) && 'delete' != $this->request->do
             && 'sort' != $this->request->do) {
             $this->db->fetchRow($this->select()
-            ->where('table.contents.type = ? OR table.contents.type = ?', 'page', 'page_draft')
-            ->where('table.contents.cid = ?', $this->request->filter('int')->cid)
-            ->limit(1), array($this, 'push'));
+                ->where('table.contents.type = ? OR table.contents.type = ?', 'page', 'page_draft')
+                ->where('table.contents.cid = ?', $this->request->filter('int')->cid)
+                ->limit(1), [$this, 'push']);
 
             if ('page_draft' == $this->status && $this->parent) {
                 $this->response->redirect(Typecho_Common::url('write-page.php?cid=' . $this->parent, $this->options->adminUrl));
@@ -54,7 +54,7 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
 
             if (!$this->have()) {
                 throw new Typecho_Widget_Exception(_t('页面不存在'), 404);
-            } else if ($this->have() && !$this->allow('edit')) {
+            } elseif ($this->have() && !$this->allow('edit')) {
                 throw new Typecho_Widget_Exception(_t('没有编辑权限'), 403);
             }
         }
@@ -81,7 +81,7 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
 
         $contents = $this->pluginHandle()->write($contents, $this);
 
-        if ($this->request->is('do=publish')) { 
+        if ($this->request->is('do=publish')) {
             /** 重新发布已经存在的文章 */
             $contents['type'] = 'page';
             $this->publish($contents);
@@ -113,12 +113,12 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
 
             if ($this->request->isAjax()) {
                 $created = new Typecho_Date($this->options->time);
-                $this->response->throwJson(array(
-                    'success'   =>  1,
-                    'time'      =>  $created->format('H:i:s A'),
-                    'cid'       =>  $this->cid,
-                    'draftId'   =>  $this->draft['cid']
-                ));
+                $this->response->throwJson([
+                    'success' => 1,
+                    'time'    => $created->format('H:i:s A'),
+                    'cid'     => $this->cid,
+                    'draftId' => $this->draft['cid']
+                ]);
             } else {
                 /** 设置提示信息 */
                 $this->widget('Widget_Notice')->set(_t('草稿 "%s" 已经被保存', $this->title), 'success');
@@ -138,33 +138,33 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
     public function markPage()
     {
         $status = $this->request->get('status');
-        $statusList = array(
-            'publish'   =>  _t('公开'),
-            'hidden'    =>  _t('隐藏')
-        );
+        $statusList = [
+            'publish' => _t('公开'),
+            'hidden'  => _t('隐藏')
+        ];
 
         if (!isset($statusList[$status])) {
             $this->response->goBack();
         }
 
         $pages = $this->request->filter('int')->getArray('cid');
-        $markCount = 0; 
+        $markCount = 0;
 
         foreach ($pages as $page) {
             // 标记插件接口
             $this->pluginHandle()->mark($status, $page, $this);
             $condition = $this->db->sql()->where('cid = ?', $page);
 
-            if ($this->db->query($condition->update('table.contents')->rows(array('status' => $status)))) {
+            if ($this->db->query($condition->update('table.contents')->rows(['status' => $status]))) {
                 // 处理草稿
                 $draft = $this->db->fetchRow($this->db->select('cid')
                     ->from('table.contents')
                     ->where('table.contents.parent = ? AND table.contents.type = ?',
                         $page, 'page_draft')
-                ->limit(1));
+                    ->limit(1));
 
                 if (!empty($draft)) {
-                    $this->db->query($this->db->update('table.contents')->rows(array('status' => $status))
+                    $this->db->query($this->db->update('table.contents')->rows(['status' => $status])
                         ->where('cid = ?', $draft['cid']));
                 }
 
@@ -179,7 +179,7 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
 
         /** 设置提示信息 */
         $this->widget('Widget_Notice')->set($markCount > 0 ? _t('页面已经被标记为<strong>%s</strong>', $statusList[$status]) : _t('没有页面被标记'),
-        $markCount > 0 ? 'success' : 'notice');
+            $markCount > 0 ? 'success' : 'notice');
 
         /** 返回原网页 */
         $this->response->goBack();
@@ -211,7 +211,7 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
                 /** 解除首页关联 */
                 if ($this->options->frontPage == 'page:' . $page) {
                     $this->db->query($this->db->update('table.options')
-                        ->rows(array('value' => 'recent'))
+                        ->rows(['value' => 'recent'])
                         ->where('name = ?', 'frontPage'));
                 }
 
@@ -239,15 +239,15 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
 
         /** 设置提示信息 */
         $this->widget('Widget_Notice')->set($deleteCount > 0 ? _t('页面已经被删除') : _t('没有页面被删除'),
-        $deleteCount > 0 ? 'success' : 'notice');
+            $deleteCount > 0 ? 'success' : 'notice');
 
         /** 返回原网页 */
         $this->response->goBack();
     }
-    
+
     /**
      * 删除页面所属草稿
-     * 
+     *
      * @access public
      * @return void
      */
@@ -273,8 +273,8 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
 
         /** 设置提示信息 */
         $this->widget('Widget_Notice')->set($deleteCount > 0 ? _t('草稿已经被删除') : _t('没有草稿被删除'),
-        $deleteCount > 0 ? 'success' : 'notice');
-        
+            $deleteCount > 0 ? 'success' : 'notice');
+
         /** 返回原网页 */
         $this->response->goBack();
     }
@@ -291,8 +291,8 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
 
         if ($pages) {
             foreach ($pages as $sort => $cid) {
-                $this->db->query($this->db->update('table.contents')->rows(array('order' => $sort + 1))
-                ->where('cid = ?', $cid));
+                $this->db->query($this->db->update('table.contents')->rows(['order' => $sort + 1])
+                    ->where('cid = ?', $cid));
             }
         }
 
@@ -300,7 +300,7 @@ class Widget_Contents_Page_Edit extends Widget_Contents_Post_Edit implements Wid
             /** 转向原页 */
             $this->response->goBack();
         } else {
-            $this->response->throwJson(array('success' => 1, 'message' => _t('页面排序已经完成')));
+            $this->response->throwJson(['success' => 1, 'message' => _t('页面排序已经完成')]);
         }
     }
 

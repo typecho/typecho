@@ -1,5 +1,6 @@
 <?php
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
+
 /**
  * 注册组件
  *
@@ -32,9 +33,9 @@ class Widget_Register extends Widget_Abstract_Users implements Widget_Interface_
         $validator->addRule('name', 'minLength', _t('用户名至少包含2个字符'), 2);
         $validator->addRule('name', 'maxLength', _t('用户名最多包含32个字符'), 32);
         $validator->addRule('name', 'xssCheck', _t('请不要在用户名中使用特殊字符'));
-        $validator->addRule('name', array($this, 'nameExists'), _t('用户名已经存在'));
+        $validator->addRule('name', [$this, 'nameExists'], _t('用户名已经存在'));
         $validator->addRule('mail', 'required', _t('必须填写电子邮箱'));
-        $validator->addRule('mail', array($this, 'mailExists'), _t('电子邮箱地址已经存在'));
+        $validator->addRule('mail', [$this, 'mailExists'], _t('电子邮箱地址已经存在'));
         $validator->addRule('mail', 'email', _t('电子邮箱格式错误'));
         $validator->addRule('mail', 'maxLength', _t('电子邮箱最多包含64个字符'), 64);
 
@@ -59,20 +60,20 @@ class Widget_Register extends Widget_Abstract_Users implements Widget_Interface_
         $hasher = new PasswordHash(8, true);
         $generatedPassword = Typecho_Common::randString(7);
 
-        $dataStruct = array(
-            'name'      =>  $this->request->name,
-            'mail'      =>  $this->request->mail,
-            'screenName'=>  $this->request->name,
-            'password'  =>  $hasher->HashPassword($generatedPassword),
-            'created'   =>  $this->options->time,
-            'group'     =>  'subscriber'
-        );
+        $dataStruct = [
+            'name' => $this->request->name,
+            'mail' => $this->request->mail,
+            'screenName' => $this->request->name,
+            'password' => $hasher->HashPassword($generatedPassword),
+            'created' => $this->options->time,
+            'group' => 'subscriber'
+        ];
 
         $dataStruct = $this->pluginHandle()->register($dataStruct);
 
         $insertId = $this->insert($dataStruct);
         $this->db->fetchRow($this->select()->where('uid = ?', $insertId)
-        ->limit(1), array($this, 'push'));
+            ->limit(1), [$this, 'push']);
 
         $this->pluginHandle()->finishRegister($this);
 

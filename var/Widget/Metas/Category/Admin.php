@@ -2,16 +2,16 @@
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 
 /**
- * Widget_Metas_Category_Admin  
- * 
+ * Widget_Metas_Category_Admin
+ *
  * @uses Widget_Metas_Category_List
  * @copyright Copyright (c) 2012 Typecho Team. (http://typecho.org)
- * @author Joyqi <magike.net@gmail.com> 
+ * @author Joyqi <magike.net@gmail.com>
  * @license GNU General Public License 2.0
  */
 class Widget_Metas_Category_Admin extends Widget_Metas_Category_List
 {
-   /**
+    /**
      * 执行函数
      *
      * @access public
@@ -27,8 +27,8 @@ class Widget_Metas_Category_Admin extends Widget_Metas_Category_List
     }
 
     /**
-     * 向上的返回链接 
-     * 
+     * 向上的返回链接
+     *
      * @access public
      * @return void
      */
@@ -47,7 +47,7 @@ class Widget_Metas_Category_Admin extends Widget_Metas_Category_List
                 } else {
                     echo '<a href="' . Typecho_Common::url('manage-categories.php', $this->options->adminUrl) . '">';
                 }
-                
+
                 echo '&laquo; ';
                 _e('返回父级分类');
                 echo '</a>';

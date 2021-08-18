@@ -78,7 +78,7 @@ class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
                 unset($this->headers['User-Agent']);
             }
 
-            $headers = array();
+            $headers = [];
 
             if (isset($this->headers['Rfc'])) {
                 $headers[] = $this->headers['Rfc'];

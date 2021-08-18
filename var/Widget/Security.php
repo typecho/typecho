@@ -48,7 +48,7 @@ class Widget_Security extends Typecho_Widget
      */
     public function systemCheck()
     {
-        $errors = array();
+        $errors = [];
 
         // 检查安装文件的安全性
         $installFile = __TYPECHO_ROOT_DIR__ . '/install.php';
@@ -81,39 +81,6 @@ class Widget_Security extends Typecho_Widget
     }
 
     /**
-     * 获取token
-     *
-     * @param string $suffix 后缀
-     * @return string
-     */
-    public function getToken($suffix)
-    {
-        return md5($this->_token . '&' . $suffix);
-    }
-
-    /**
-     * 生成带token的路径
-     *
-     * @param $path
-     * @param string|null $url
-     * @return string
-     */
-    public function getTokenUrl($path, ?string $url = null)
-    {
-        $parts = parse_url($path);
-        $params = array();
-
-        if (!empty($parts['query'])) {
-            parse_str($parts['query'], $params);
-        }
-
-        $params['_'] = $this->getToken($url ?: $this->request->getRequestUrl());
-        $parts['query'] = http_build_query($params);
-
-        return Typecho_Common::buildUrl($parts);
-    }
-
-    /**
      * 保护提交数据
      *
      */
@@ -125,25 +92,14 @@ class Widget_Security extends Typecho_Widget
     }
 
     /**
-     * 获取安全的后台路径
+     * 获取token
      *
-     * @param string $path
+     * @param string $suffix 后缀
      * @return string
      */
-    public function getAdminUrl($path)
+    public function getToken($suffix)
     {
-        return Typecho_Common::url($this->getTokenUrl($path), $this->_options->adminUrl);
-    }
-
-    /**
-     * 获取安全的路由路径
-     *
-     * @param $path
-     * @return string
-     */
-    public function getIndex($path)
-    {
-        return Typecho_Common::url($this->getTokenUrl($path), $this->_options->index);
+        return md5($this->_token . '&' . $suffix);
     }
 
     /**
@@ -158,6 +114,28 @@ class Widget_Security extends Typecho_Widget
     }
 
     /**
+     * 生成带token的路径
+     *
+     * @param $path
+     * @param string|null $url
+     * @return string
+     */
+    public function getTokenUrl($path, ?string $url = null)
+    {
+        $parts = parse_url($path);
+        $params = [];
+
+        if (!empty($parts['query'])) {
+            parse_str($parts['query'], $params);
+        }
+
+        $params['_'] = $this->getToken($url ?: $this->request->getRequestUrl());
+        $parts['query'] = http_build_query($params);
+
+        return Typecho_Common::buildUrl($parts);
+    }
+
+    /**
      * 输出后台安全路径
      *
      * @param $path
@@ -168,6 +146,17 @@ class Widget_Security extends Typecho_Widget
     }
 
     /**
+     * 获取安全的后台路径
+     *
+     * @param string $path
+     * @return string
+     */
+    public function getAdminUrl($path)
+    {
+        return Typecho_Common::url($this->getTokenUrl($path), $this->_options->adminUrl);
+    }
+
+    /**
      * 输出安全的路由路径
      *
      * @param $path
@@ -175,6 +164,17 @@ class Widget_Security extends Typecho_Widget
     public function index($path)
     {
         echo $this->getIndex($path);
+    }
+
+    /**
+     * 获取安全的路由路径
+     *
+     * @param $path
+     * @return string
+     */
+    public function getIndex($path)
+    {
+        return Typecho_Common::url($this->getTokenUrl($path), $this->_options->index);
     }
 }
  

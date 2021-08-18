@@ -34,15 +34,15 @@ class Upgrade
 
         while (true) {
             $result = $db->query($db->select('coid', 'text')->from('table.comments')
-            ->order('coid', Typecho_Db::SORT_ASC)->page($i, 100));
+                ->order('coid', Typecho_Db::SORT_ASC)->page($i, 100));
             $j = 0;
 
             while ($row = $db->fetchRow($result)) {
                 $text = nl2br($row['text']);
 
                 $db->query($db->update('table.comments')
-                ->rows(array('text' => $text))
-                ->where('coid = ?', $row['coid']));
+                    ->rows(['text' => $text])
+                    ->where('coid = ?', $row['coid']));
 
                 $j ++;
                 unset($text);
@@ -62,19 +62,19 @@ class Upgrade
 
         while (true) {
             $result = $db->query($db->select('cid', 'text')->from('table.contents')
-            ->order('cid', Typecho_Db::SORT_ASC)->page($i, 100));
+                ->order('cid', Typecho_Db::SORT_ASC)->page($i, 100));
             $j = 0;
 
             while ($row = $db->fetchRow($result)) {
                 $text = preg_replace(
-                array("/\s*<p>/is", "/\s*<\/p>\s*/is", "/\s*<br\s*\/>\s*/is",
-                "/\s*<(div|blockquote|pre|table|ol|ul)>/is", "/<\/(div|blockquote|pre|table|ol|ul)>\s*/is"),
-                array('', "\n\n", "\n", "\n\n<\\1>", "</\\1>\n\n"),
-                $row['text']);
+                    ["/\s*<p>/is", "/\s*<\/p>\s*/is", "/\s*<br\s*\/>\s*/is",
+                        "/\s*<(div|blockquote|pre|table|ol|ul)>/is", "/<\/(div|blockquote|pre|table|ol|ul)>\s*/is"],
+                    ['', "\n\n", "\n", "\n\n<\\1>", "</\\1>\n\n"],
+                    $row['text']);
 
                 $db->query($db->update('table.contents')
-                ->rows(array('text' => $text))
-                ->where('cid = ?', $row['cid']));
+                    ->rows(['text' => $text])
+                    ->where('cid = ?', $row['cid']));
 
                 $j ++;
                 unset($text);
@@ -127,15 +127,15 @@ Typecho_Date::setTimezoneOffset($options->timezone);
 
         while (true) {
             $result = $db->query($db->select('coid', 'text')->from('table.comments')
-            ->order('coid', Typecho_Db::SORT_ASC)->page($i, 100));
+                ->order('coid', Typecho_Db::SORT_ASC)->page($i, 100));
             $j = 0;
 
             while ($row = $db->fetchRow($result)) {
                 $text = preg_replace("/\s*<br\s*\/>\s*/i", "\n", $row['text']);
 
                 $db->query($db->update('table.comments')
-                ->rows(array('text' => $text))
-                ->where('coid = ?', $row['coid']));
+                    ->rows(['text' => $text])
+                    ->where('coid = ?', $row['coid']));
 
                 $j ++;
                 unset($text);
@@ -163,8 +163,8 @@ Typecho_Date::setTimezoneOffset($options->timezone);
     {
         /** 升级编辑器接口 */
         $db->query($db->update('table.options')
-        ->rows(array('value' => 350))
-        ->where('name = ?', 'editorSize'));
+            ->rows(['value' => 350])
+            ->where('name = ?', 'editorSize'));
     }
 
     /**
@@ -179,7 +179,7 @@ Typecho_Date::setTimezoneOffset($options->timezone);
     {
         /** 升级编辑器接口 */
         $db->query($db->insert('table.options')
-        ->rows(array('name' => 'useRichEditor', 'user' => 0, 'value' => 1)));
+            ->rows(['name' => 'useRichEditor', 'user' => 0, 'value' => 1]));
     }
 
     /**
@@ -194,7 +194,7 @@ Typecho_Date::setTimezoneOffset($options->timezone);
     {
         /** 修改数据库字段 */
         $adapterName = $db->getAdapterName();
-        $prefix  = $db->getPrefix();
+        $prefix = $db->getPrefix();
 
         //删除老数据
         try {
@@ -361,23 +361,23 @@ Typecho_Date::setTimezoneOffset($options->timezone);
 
         /** 增加自定义主页 */
         $db->query($db->insert('table.options')
-                ->rows(array('name' => 'customHomePage', 'user' => 0, 'value' => 0)));
+            ->rows(['name' => 'customHomePage', 'user' => 0, 'value' => 0]));
 
         /** 增加文件上传散列函数 */
         $db->query($db->insert('table.options')
-                ->rows(array('name' => 'uploadHandle', 'user' => 0, 'value' => 'a:2:{i:0;s:13:"Widget_Upload";i:1;s:12:"uploadHandle";}')));
+            ->rows(['name' => 'uploadHandle', 'user' => 0, 'value' => 'a:2:{i:0;s:13:"Widget_Upload";i:1;s:12:"uploadHandle";}']));
 
         /** 增加文件删除函数 */
         $db->query($db->insert('table.options')
-                ->rows(array('name' => 'deleteHandle', 'user' => 0, 'value' => 'a:2:{i:0;s:13:"Widget_Upload";i:1;s:12:"deleteHandle";}')));
+            ->rows(['name' => 'deleteHandle', 'user' => 0, 'value' => 'a:2:{i:0;s:13:"Widget_Upload";i:1;s:12:"deleteHandle";}']));
 
         /** 增加文件展现散列函数 */
         $db->query($db->insert('table.options')
-                ->rows(array('name' => 'attachmentHandle', 'user' => 0, 'value' => 'a:2:{i:0;s:13:"Widget_Upload";i:1;s:16:"attachmentHandle";}')));
+            ->rows(['name' => 'attachmentHandle', 'user' => 0, 'value' => 'a:2:{i:0;s:13:"Widget_Upload";i:1;s:16:"attachmentHandle";}']));
 
         /** 增加文件扩展名 */
         $db->query($db->insert('table.options')
-                ->rows(array('name' => 'attachmentTypes', 'user' => 0, 'value' => '*.jpg;*.gif;*.png;*.zip;*.tar.gz')));
+            ->rows(['name' => 'attachmentTypes', 'user' => 0, 'value' => '*.jpg;*.gif;*.png;*.zip;*.tar.gz']));
 
         /** 增加路由 */
         $routingTable = $options->routingTable;
@@ -388,16 +388,16 @@ Typecho_Date::setTimezoneOffset($options->timezone);
         $pre = array_slice($routingTable, 0, 2);
         $next = array_slice($routingTable, 2);
 
-        $routingTable = array_merge($pre, array('attachment' =>
-          array (
-            'url' => '/attachment/[cid:digital]/',
-            'widget' => 'Widget_Archive',
-            'action' => 'render',
-          )), $next);
+        $routingTable = array_merge($pre, ['attachment' =>
+            [
+                'url' => '/attachment/[cid:digital]/',
+                'widget' => 'Widget_Archive',
+                'action' => 'render',
+            ]], $next);
 
         $db->query($db->update('table.options')
-                ->rows(array('value' => serialize($routingTable)))
-                ->where('name = ?', 'routingTable'));
+            ->rows(['value' => serialize($routingTable)])
+            ->where('name = ?', 'routingTable'));
     }
 
     /**
@@ -412,16 +412,16 @@ Typecho_Date::setTimezoneOffset($options->timezone);
     {
         /** 去掉所见即所得编辑器 */
         $db->query($db->delete('table.options')
-        ->where('name = ?', 'useRichEditor'));
+            ->where('name = ?', 'useRichEditor'));
 
         /** 修正自动保存值 */
         $db->query($db->update('table.options')
-        ->rows(array('value' => 0))
-        ->where('name = ?', 'autoSave'));
+            ->rows(['value' => 0])
+            ->where('name = ?', 'autoSave'));
 
         /** 增加堆楼楼层数目限制 */
         $db->query($db->insert('table.options')
-        ->rows(array('name' => 'commentsMaxNestingLevels', 'user' => 0, 'value' => 5)));
+            ->rows(['name' => 'commentsMaxNestingLevels', 'user' => 0, 'value' => 5]));
     }
 
     /**
@@ -436,29 +436,29 @@ Typecho_Date::setTimezoneOffset($options->timezone);
     {
         /** 增加附件handle */
         $db->query($db->insert('table.options')
-        ->rows(array('name' => 'modifyHandle', 'value' => 'a:2:{i:0;s:13:"Widget_Upload";i:1;s:12:"modifyHandle";}')));
+            ->rows(['name' => 'modifyHandle', 'value' => 'a:2:{i:0;s:13:"Widget_Upload";i:1;s:12:"modifyHandle";}']));
 
         /** 增加附件handle */
         $db->query($db->insert('table.options')
-        ->rows(array('name' => 'attachmentDataHandle', 'value' => 'a:2:{i:0;s:13:"Widget_Upload";i:1;s:20:"attachmentDataHandle";}')));
+            ->rows(['name' => 'attachmentDataHandle', 'value' => 'a:2:{i:0;s:13:"Widget_Upload";i:1;s:20:"attachmentDataHandle";}']));
 
         /** 转换附件 */
         $i = 1;
 
         while (true) {
             $result = $db->query($db->select('cid', 'text')->from('table.contents')
-            ->where('type = ?', 'attachment')
-            ->order('cid', Typecho_Db::SORT_ASC)->page($i, 100));
+                ->where('type = ?', 'attachment')
+                ->order('cid', Typecho_Db::SORT_ASC)->page($i, 100));
             $j = 0;
 
             while ($row = $db->fetchRow($result)) {
                 $attachment = unserialize($row['text']);
-                $attachment['modifyHandle'] = array('Widget_Upload', 'modifyHandle');
-                $attachment['attachmentDataHandle'] = array('Widget_Upload', 'attachmentDataHandle');
+                $attachment['modifyHandle'] = ['Widget_Upload', 'modifyHandle'];
+                $attachment['attachmentDataHandle'] = ['Widget_Upload', 'attachmentDataHandle'];
 
                 $db->query($db->update('table.contents')
-                ->rows(array('text' => serialize($attachment)))
-                ->where('cid = ?', $row['cid']));
+                    ->rows(['text' => serialize($attachment)])
+                    ->where('cid = ?', $row['cid']));
 
                 $j ++;
                 unset($text);
@@ -490,20 +490,20 @@ Typecho_Date::setTimezoneOffset($options->timezone);
             unset($routingTable[0]);
         }
 
-        $routingTable['do'] = array (
+        $routingTable['do'] = [
             'url' => '/action/[action:alpha]',
             'widget' => 'Widget_Do',
             'action' => 'action'
-        );
+        ];
 
         $db->query($db->update('table.options')
-                ->rows(array('value' => serialize($routingTable)))
-                ->where('name = ?', 'routingTable'));
+            ->rows(['value' => serialize($routingTable)])
+            ->where('name = ?', 'routingTable'));
 
         //干掉垃圾数据
         $db->query($db->update('table.options')
-                ->rows(array('value' => 'a:0:{}'))
-                ->where('name = ?', 'actionTable'));
+            ->rows(['value' => 'a:0:{}'])
+            ->where('name = ?', 'actionTable'));
     }
 
     /**
@@ -518,14 +518,14 @@ Typecho_Date::setTimezoneOffset($options->timezone);
     {
         /** 增加默认内容格式 */
         $db->query($db->insert('table.options')
-        ->rows(array('name' => 'contentType', 'user' => 0, 'value' => 'text/html')));
+            ->rows(['name' => 'contentType', 'user' => 0, 'value' => 'text/html']));
 
         /** 增加gzip开关 */
         $db->query($db->insert('table.options')
-        ->rows(array('name' => 'gzip', 'user' => 0, 'value' => 0)));
+            ->rows(['name' => 'gzip', 'user' => 0, 'value' => 0]));
 
 
-        if(is_writeable(__TYPECHO_ROOT_DIR__ . '/config.inc.php')) {
+        if (is_writeable(__TYPECHO_ROOT_DIR__ . '/config.inc.php')) {
 
             $contents = file_get_contents(__TYPECHO_ROOT_DIR__ . '/config.inc.php');
             $contents = preg_replace("/Typecho_Common::init([^;]+);/is", "Typecho_Common::init(array(
@@ -557,7 +557,7 @@ Typecho_Date::setTimezoneOffset($options->timezone);
     public static function v0_7r9_9_2($db, $options)
     {
         $adapterName = $db->getAdapterName();
-        $prefix  = $db->getPrefix();
+        $prefix = $db->getPrefix();
 
         if (false !== strpos($adapterName, 'Mysql')) {
             $db->query("ALTER TABLE  `{$prefix}contents` CHANGE  `text`  `text` LONGTEXT NULL DEFAULT NULL COMMENT  '内容文字'", Typecho_Db::WRITE);
@@ -587,11 +587,11 @@ Typecho_Date::setTimezoneOffset($options->timezone);
         $pre = array_slice($routingTable, 0, 1);
         $next = array_slice($routingTable, 1);
 
-        $routingTable = array_merge($pre, array('do' => $do), $next);
+        $routingTable = array_merge($pre, ['do' => $do], $next);
 
         $db->query($db->update('table.options')
-                ->rows(array('value' => serialize($routingTable)))
-                ->where('name = ?', 'routingTable'));
+            ->rows(['value' => serialize($routingTable)])
+            ->where('name = ?', 'routingTable'));
     }
 
     /**
@@ -611,11 +611,11 @@ Typecho_Date::setTimezoneOffset($options->timezone);
             unset($routingTable[0]);
         }
 
-        $routingTable['do'] = array (
+        $routingTable['do'] = [
             'url' => '/action/[action:alpha]',
             'widget' => 'Widget_Do',
             'action' => 'action'
-        );
+        ];
 
         $do = $routingTable['do'];
         unset($routingTable['do']);
@@ -623,11 +623,11 @@ Typecho_Date::setTimezoneOffset($options->timezone);
         $pre = array_slice($routingTable, 0, 1);
         $next = array_slice($routingTable, 1);
 
-        $routingTable = array_merge($pre, array('do' => $do), $next);
+        $routingTable = array_merge($pre, ['do' => $do], $next);
 
         $db->query($db->update('table.options')
-                ->rows(array('value' => serialize($routingTable)))
-                ->where('name = ?', 'routingTable'));
+            ->rows(['value' => serialize($routingTable)])
+            ->where('name = ?', 'routingTable'));
     }
 
     /**
@@ -652,24 +652,24 @@ Typecho_Date::setTimezoneOffset($options->timezone);
         $next_pre = array_slice($next, 0, 5);
         $next_next = array_slice($next, 5);
 
-        $author = array (
+        $author = [
             'url' => '/author/[uid:digital]/',
             'widget' => 'Widget_Archive',
             'action' => 'render',
-        );
+        ];
 
-        $author_page = array (
+        $author_page = [
             'url' => '/author/[uid:digital]/[page:digital]/',
             'widget' => 'Widget_Archive',
             'action' => 'render',
-        );
+        ];
 
-        $routingTable = array_merge($pre, array('author' => $author), $next_pre,
-        array('author_page' => $author_page), $next_next);
+        $routingTable = array_merge($pre, ['author' => $author], $next_pre,
+            ['author_page' => $author_page], $next_next);
 
         $db->query($db->update('table.options')
-                ->rows(array('value' => serialize($routingTable)))
-                ->where('name = ?', 'routingTable'));
+            ->rows(['value' => serialize($routingTable)])
+            ->where('name = ?', 'routingTable'));
     }
 
     /**
@@ -692,17 +692,17 @@ Typecho_Date::setTimezoneOffset($options->timezone);
         $pre = array_slice($routingTable, 0, 20);
         $next = array_slice($routingTable, 20);
 
-        $commentPage = array (
+        $commentPage = [
             'url' => '[permalink:string]/[commentType:alpha]-page-[commentPage:digital]',
             'widget' => 'Widget_Archive',
             'action' => 'render',
-        );
+        ];
 
-        $routingTable = array_merge($pre, array('comment_page' => $commentPage), $next);
+        $routingTable = array_merge($pre, ['comment_page' => $commentPage], $next);
 
         $db->query($db->update('table.options')
-                ->rows(array('value' => serialize($routingTable)))
-                ->where('name = ?', 'routingTable'));
+            ->rows(['value' => serialize($routingTable)])
+            ->where('name = ?', 'routingTable'));
     }
 
     /**
@@ -718,7 +718,7 @@ Typecho_Date::setTimezoneOffset($options->timezone);
     {
         /** 修改数据库字段 */
         $adapterName = $db->getAdapterName();
-        $prefix  = $db->getPrefix();
+        $prefix = $db->getPrefix();
 
         switch (true) {
             case false !== strpos($adapterName, 'Mysql'):
@@ -784,10 +784,10 @@ Typecho_Date::setTimezoneOffset($options->timezone);
         }
 
         $db->query($db->update('table.contents')->expression('parent', 'order')
-        ->where('type = ?', 'attachment'));
+            ->where('type = ?', 'attachment'));
 
-        $db->query($db->update('table.contents')->rows(array('order' => 0))
-        ->where('type = ?', 'attachment'));
+        $db->query($db->update('table.contents')->rows(['order' => 0])
+            ->where('type = ?', 'attachment'));
     }
 
     /**
@@ -801,8 +801,8 @@ Typecho_Date::setTimezoneOffset($options->timezone);
      */
     public static function v0_7r9_10_31($db, $options)
     {
-        $db->query($db->update('table.contents')->rows(array('status' => 'publish'))
-        ->where('type = ?', 'attachment'));
+        $db->query($db->update('table.contents')->rows(['status' => 'publish'])
+            ->where('type = ?', 'attachment'));
     }
 
     /**
@@ -817,34 +817,34 @@ Typecho_Date::setTimezoneOffset($options->timezone);
     {
         /** 增加若干选项 */
         $db->query($db->insert('table.options')
-        ->rows(array('name' => 'commentsPageBreak', 'user' => 0, 'value' => 0)));
+            ->rows(['name' => 'commentsPageBreak', 'user' => 0, 'value' => 0]));
 
         $db->query($db->insert('table.options')
-        ->rows(array('name' => 'commentsThreaded', 'user' => 0, 'value' => 1)));
+            ->rows(['name' => 'commentsThreaded', 'user' => 0, 'value' => 1]));
 
         $db->query($db->insert('table.options')
-        ->rows(array('name' => 'commentsPageSize', 'user' => 0, 'value' => 20)));
+            ->rows(['name' => 'commentsPageSize', 'user' => 0, 'value' => 20]));
 
         $db->query($db->insert('table.options')
-        ->rows(array('name' => 'commentsPageDisplay', 'user' => 0, 'value' => 'last')));
+            ->rows(['name' => 'commentsPageDisplay', 'user' => 0, 'value' => 'last']));
 
         $db->query($db->insert('table.options')
-        ->rows(array('name' => 'commentsOrder', 'user' => 0, 'value' => 'ASC')));
+            ->rows(['name' => 'commentsOrder', 'user' => 0, 'value' => 'ASC']));
 
         $db->query($db->insert('table.options')
-        ->rows(array('name' => 'commentsCheckReferer', 'user' => 0, 'value' => 1)));
+            ->rows(['name' => 'commentsCheckReferer', 'user' => 0, 'value' => 1]));
 
         $db->query($db->insert('table.options')
-        ->rows(array('name' => 'commentsAutoClose', 'user' => 0, 'value' => 0)));
+            ->rows(['name' => 'commentsAutoClose', 'user' => 0, 'value' => 0]));
 
         $db->query($db->insert('table.options')
-        ->rows(array('name' => 'commentsPostIntervalEnable', 'user' => 0, 'value' => 1)));
+            ->rows(['name' => 'commentsPostIntervalEnable', 'user' => 0, 'value' => 1]));
 
         $db->query($db->insert('table.options')
-        ->rows(array('name' => 'commentsPostInterval', 'user' => 0, 'value' => 60)));
+            ->rows(['name' => 'commentsPostInterval', 'user' => 0, 'value' => 60]));
 
         $db->query($db->insert('table.options')
-        ->rows(array('name' => 'commentsShowCommentOnly', 'user' => 0, 'value' => 0)));
+            ->rows(['name' => 'commentsShowCommentOnly', 'user' => 0, 'value' => 0]));
 
         /** 修改路由 */
         $routingTable = $options->routingTable;
@@ -853,27 +853,27 @@ Typecho_Date::setTimezoneOffset($options->timezone);
         }
 
         if (isset($routingTable['comment_page'])) {
-            $routingTable['comment_page'] = array (
+            $routingTable['comment_page'] = [
                 'url' => '[permalink:string]/comment-page-[commentPage:digital]',
                 'widget' => 'Widget_Archive',
                 'action' => 'render',
-            );
+            ];
         } else {
             $pre = array_slice($routingTable, 0, 20);
             $next = array_slice($routingTable, 20);
 
-            $commentPage = array (
+            $commentPage = [
                 'url' => '[permalink:string]/comment-page-[commentPage:digital]',
                 'widget' => 'Widget_Archive',
                 'action' => 'render',
-            );
+            ];
 
-            $routingTable = array_merge($pre, array('comment_page' => $commentPage), $next);
+            $routingTable = array_merge($pre, ['comment_page' => $commentPage], $next);
         }
 
         $db->query($db->update('table.options')
-                ->rows(array('value' => serialize($routingTable)))
-                ->where('name = ?', 'routingTable'));
+            ->rows(['value' => serialize($routingTable)])
+            ->where('name = ?', 'routingTable'));
     }
 
     /**
@@ -888,14 +888,14 @@ Typecho_Date::setTimezoneOffset($options->timezone);
     {
         /** 删除无用选项 */
         $db->query($db->delete('table.options')
-        ->where('name = ? OR name = ? OR name = ? OR name = ? OR name = ? OR name = ? OR name = ?', 'customHomePage', 'uploadHandle',
-        'deleteHandle', 'modifyHandle', 'attachmentHandle', 'attachmentDataHandle', 'gzip'));
+            ->where('name = ? OR name = ? OR name = ? OR name = ? OR name = ? OR name = ? OR name = ?', 'customHomePage', 'uploadHandle',
+                'deleteHandle', 'modifyHandle', 'attachmentHandle', 'attachmentDataHandle', 'gzip'));
 
         // 增加自定义首页
         $db->query($db->insert('table.options')
-        ->rows(array('name' => 'frontPage', 'user' => 0, 'value' => 'recent')));
+            ->rows(['name' => 'frontPage', 'user' => 0, 'value' => 'recent']));
     }
-    
+
     /**
      * 升级至10.2.27
      *
@@ -908,31 +908,31 @@ Typecho_Date::setTimezoneOffset($options->timezone);
     {
         /** 增加若干选项 */
         $db->query($db->insert('table.options')
-        ->rows(array('name' => 'commentsAvatar', 'user' => 0, 'value' => 1)));
-        
+            ->rows(['name' => 'commentsAvatar', 'user' => 0, 'value' => 1]));
+
         $db->query($db->insert('table.options')
-        ->rows(array('name' => 'commentsAvatarRating', 'user' => 0, 'value' => 'G')));
-        
+            ->rows(['name' => 'commentsAvatarRating', 'user' => 0, 'value' => 'G']));
+
         //更新扩展
-        if (NULL != $options->attachmentTypes) {
+        if (null != $options->attachmentTypes) {
             $attachmentTypes = array_map('trim', explode(';', $options->attachmentTypes));
-            $attachmentTypesResult = array();
-            
+            $attachmentTypesResult = [];
+
             foreach ($attachmentTypes as $type) {
                 $type = trim($type, '*.');
                 if (!empty($type)) {
                     $attachmentTypesResult[] = $type;
                 }
             }
-            
+
             if (!empty($attachmentTypesResult)) {
                 $db->query($db->update('table.options')
-                ->rows(array('value' => implode(',', $attachmentTypesResult)))
-                ->where('name = ?', 'attachmentTypes'));
+                    ->rows(['value' => implode(',', $attachmentTypesResult)])
+                    ->where('name = ?', 'attachmentTypes'));
             }
         }
     }
-    
+
     /**
      * 升级至10.3.8
      *
@@ -945,9 +945,9 @@ Typecho_Date::setTimezoneOffset($options->timezone);
     {
         /** 删除无用选项 */
         $db->query($db->delete('table.options')
-        ->where('name = ?', 'commentsAvatarSize'));
+            ->where('name = ?', 'commentsAvatarSize'));
     }
-    
+
     /**
      * 升级至10.5.17
      *
@@ -958,15 +958,15 @@ Typecho_Date::setTimezoneOffset($options->timezone);
      */
     public static function v0_8r10_5_17($db, $options)
     {
-        Typecho_Widget::widget('Widget_Themes_Edit', NULL, 'change=' . $options->theme, false)->action();
+        Typecho_Widget::widget('Widget_Themes_Edit', null, 'change=' . $options->theme, false)->action();
     }
 
-    
+
     /**
-     * 升级至13.10.18 
-     * 
-     * @param mixed $db 
-     * @param mixed $options 
+     * 升级至13.10.18
+     *
+     * @param mixed $db
+     * @param mixed $options
      * @static
      * @access public
      * @return void
@@ -975,29 +975,29 @@ Typecho_Date::setTimezoneOffset($options->timezone);
     {
         // 增加markdown
         $db->query($db->insert('table.options')
-            ->rows(array('name' => 'markdown', 'user' => 0, 'value' => 0)));
+            ->rows(['name' => 'markdown', 'user' => 0, 'value' => 0]));
 
         // 更新原来被搞乱的草稿
         $db->query($db->update('table.contents')
-            ->rows(array(
-                'type'      =>  'post_draft',
-                'status'    =>  'publish'
-            ))
+            ->rows([
+                'type' => 'post_draft',
+                'status' => 'publish'
+            ])
             ->where('type = ? AND status = ?', 'post', 'draft'));
 
         $db->query($db->update('table.contents')
-            ->rows(array(
-                'type'      =>  'page_draft',
-                'status'    =>  'publish'
-            ))
+            ->rows([
+                'type' => 'page_draft',
+                'status' => 'publish'
+            ])
             ->where('type = ? AND status = ?', 'page', 'draft'));
     }
 
     /**
-     * v0_9r13_11_17  
-     * 
-     * @param mixed $db 
-     * @param mixed $options 
+     * v0_9r13_11_17
+     *
+     * @param mixed $db
+     * @param mixed $options
      * @static
      * @access public
      * @return void
@@ -1007,14 +1007,14 @@ Typecho_Date::setTimezoneOffset($options->timezone);
         Helper::addRoute('archive', '/blog/', 'Widget_Archive', 'render', 'index');
         Helper::addRoute('archive_page', '/blog/[page:digital]/', 'Widget_Archive', 'render', 'index_page');
         $db->query($db->insert('table.options')
-            ->rows(array('name' => 'frontArchive', 'user' => 0, 'value' => 0)));
+            ->rows(['name' => 'frontArchive', 'user' => 0, 'value' => 0]));
     }
 
     /**
-     * v0_9r13_11_24  
-     * 
-     * @param mixed $db 
-     * @param mixed $options 
+     * v0_9r13_11_24
+     *
+     * @param mixed $db
+     * @param mixed $options
      * @static
      * @access public
      * @return void
@@ -1023,7 +1023,7 @@ Typecho_Date::setTimezoneOffset($options->timezone);
     {
         /* 增加数据表 */
         $adapterName = $db->getAdapterName();
-        $prefix  = $db->getPrefix();
+        $prefix = $db->getPrefix();
 
         switch (true) {
             case false !== strpos($adapterName, 'Mysql'):
@@ -1073,149 +1073,14 @@ Typecho_Date::setTimezoneOffset($options->timezone);
         }
 
         $db->query($db->insert('table.options')
-            ->rows(array('name' => 'commentsMarkdown', 'user' => 0, 'value' => 0)));
+            ->rows(['name' => 'commentsMarkdown', 'user' => 0, 'value' => 0]));
     }
 
     /**
-     * v0_9r13_11_24  
-     * 
-     * @param mixed $db 
-     * @param mixed $options 
-     * @access public
-     * @return void
-     */
-    public function v0_9r13_12_6($db, $options)
-    {
-        if (!isset($options->frontArchive)) {
-            $db->query($db->insert('table.options')
-                ->rows(array('name' => 'frontArchive', 'user' => 0, 'value' => 0)));
-        }
-    }
-
-    /**
-     * v0_9r13_12_20
-     * 
-     * @param mixed $db 
-     * @param mixed $options 
-     * @access public
-     * @return void
-     */
-    public function v0_9r13_12_20($db, $options)
-    {
-        if (!isset($options->commentsWhitelist)) {
-            $db->query($db->insert('table.options')
-                ->rows(array('name' => 'commentsWhitelist', 'user' => 0, 'value' => 0)));
-        }
-    }
-
-    /**
-     * v0_9r14_2_24
-     * 
-     * @param mixed $db 
-     * @param mixed $options 
-     * @access public
-     * @return void
-     */
-    public function v0_9r14_2_24($db, $options)
-    {
-        /** 修改数据库字段 */
-        $adapterName = $db->getAdapterName();
-        $prefix  = $db->getPrefix();
-
-        switch (true) {
-            case false !== strpos($adapterName, 'Mysql'):
-                $db->query('ALTER TABLE  `' . $prefix . 'metas` ADD  `parent` INT(10) UNSIGNED NULL DEFAULT \'0\'', Typecho_Db::WRITE);
-                break;
-
-            case false !== strpos($adapterName, 'Pgsql'):
-                $db->query('ALTER TABLE  "' . $prefix . 'metas" ADD COLUMN  "parent" INT NULL DEFAULT \'0\'', Typecho_Db::WRITE);
-                break;
-
-            case false !== strpos($adapterName, 'SQLite'):
-                $uuid = uniqid();
-                $db->query('CREATE TABLE ' . $prefix . 'metas' . $uuid . ' ( "mid" INTEGER NOT NULL PRIMARY KEY,
-        "name" varchar(150) default NULL ,
-        "slug" varchar(150) default NULL ,
-        "type" varchar(32) NOT NULL ,
-        "description" varchar(150) default NULL ,
-        "count" int(10) default \'0\' ,
-        "order" int(10) default \'0\' ,
-        "parent" int(10) default \'0\')', Typecho_Db::WRITE);
-                $db->query('INSERT INTO ' . $prefix . 'metas' . $uuid . ' ("mid", "name", "slug", "type", "description", "count", "order") 
-                    SELECT "mid", "name", "slug", "type", "description", "count", "order" FROM ' . $prefix . 'metas', Typecho_Db::WRITE);
-                $db->query('DROP TABLE  ' . $prefix . 'metas', Typecho_Db::WRITE);
-                $db->query('CREATE TABLE ' . $prefix . 'metas ( "mid" INTEGER NOT NULL PRIMARY KEY,
-        "name" varchar(150) default NULL ,
-        "slug" varchar(150) default NULL ,
-        "type" varchar(32) NOT NULL ,
-        "description" varchar(150) default NULL ,
-        "count" int(10) default \'0\' ,
-        "order" int(10) default \'0\' ,
-        "parent" int(10) default \'0\')', Typecho_Db::WRITE);
-                $db->query('INSERT INTO ' . $prefix . 'metas SELECT * FROM ' . $prefix . 'metas' . $uuid, Typecho_Db::WRITE);
-                $db->query('DROP TABLE  ' . $prefix . 'metas' . $uuid, Typecho_Db::WRITE);
-                $db->query('CREATE INDEX ' . $prefix . 'metas_slug ON ' . $prefix . 'metas ("slug")', Typecho_Db::WRITE);
-                $db->flushPool();
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    /**
-     * v0_9r14_3_14
+     * 升级至17.4.24
      *
      * @param mixed $db
      * @param mixed $options
-     * @access public
-     * @return void
-     */
-    public function v0_9r14_3_14($db, $options)
-    {
-        if (!isset($options->secret)) {
-            $db->query($db->insert('table.options')
-                ->rows(array('name' => 'secret', 'user' => 0, 'value' => Typecho_Common::randString(32, true))));
-        }
-    }
-
-    /**
-     * v1_0r14_9_2
-     *
-     * @param mixed $db
-     * @param mixed $options
-     * @access public
-     * @return void
-     */
-    public function v1_0r14_9_2($db, $options)
-    {
-        if (!isset($options->lang)) {
-            $db->query($db->insert('table.options')
-                ->rows(array('name' => 'lang', 'user' => 0, 'value' => 'zh_CN')));
-        }
-    }
-
-    /**
-     * v1_0r14_10_10
-     *
-     * @param mixed $db
-     * @param mixed $options
-     * @access public
-     * @return void
-     */
-    public function v1_0r14_10_10($db, $options)
-    {
-        if (!isset($options->commentsAntiSpam)) {
-            $db->query($db->insert('table.options')
-                ->rows(array('name' => 'commentsAntiSpam', 'user' => 0, 'value' => 1)));
-        }
-    }
-
-    /**
-     * 升级至17.4.24 
-     * 
-     * @param mixed $db 
-     * @param mixed $options 
      * @static
      * @access public
      * @return void
@@ -1225,7 +1090,7 @@ Typecho_Date::setTimezoneOffset($options->timezone);
         // 增加markdown
         if (!isset($options->xmlrpcMarkdown)) {
             $db->query($db->insert('table.options')
-                ->rows(array('name' => 'xmlrpcMarkdown', 'user' => 0, 'value' => 0)));
+                ->rows(['name' => 'xmlrpcMarkdown', 'user' => 0, 'value' => 0]));
         }
     }
 
@@ -1243,7 +1108,7 @@ Typecho_Date::setTimezoneOffset($options->timezone);
         // 增加installed
         if (!isset($options->installed)) {
             $db->query($db->insert('table.options')
-                ->rows(array('name' => 'installed', 'user' => 0, 'value' => 1)));
+                ->rows(['name' => 'installed', 'user' => 0, 'value' => 1]));
         }
     }
 
@@ -1261,7 +1126,7 @@ Typecho_Date::setTimezoneOffset($options->timezone);
         // 增加xmlRpc开关
         if (!isset($options->allowXmlRpc)) {
             $db->query($db->insert('table.options')
-                ->rows(array('name' => 'allowXmlRpc', 'user' => 0, 'value' => 2)));
+                ->rows(['name' => 'allowXmlRpc', 'user' => 0, 'value' => 2]));
         }
     }
 
@@ -1274,7 +1139,7 @@ Typecho_Date::setTimezoneOffset($options->timezone);
     {
         /** 修改数据库字段 */
         $adapterName = $db->getAdapterName();
-        $prefix  = $db->getPrefix();
+        $prefix = $db->getPrefix();
 
         switch (true) {
             case false !== strpos($adapterName, 'Mysql'):
@@ -1338,7 +1203,7 @@ Typecho_Date::setTimezoneOffset($options->timezone);
     {
         /** 修改数据库字段 */
         $adapterName = $db->getAdapterName();
-        $prefix  = $db->getPrefix();
+        $prefix = $db->getPrefix();
 
         switch (true) {
             case false !== strpos($adapterName, 'Mysql'):
@@ -1390,6 +1255,141 @@ Typecho_Date::setTimezoneOffset($options->timezone);
 
             default:
                 break;
+        }
+    }
+
+    /**
+     * v0_9r13_11_24
+     *
+     * @param mixed $db
+     * @param mixed $options
+     * @access public
+     * @return void
+     */
+    public function v0_9r13_12_6($db, $options)
+    {
+        if (!isset($options->frontArchive)) {
+            $db->query($db->insert('table.options')
+                ->rows(['name' => 'frontArchive', 'user' => 0, 'value' => 0]));
+        }
+    }
+
+    /**
+     * v0_9r13_12_20
+     *
+     * @param mixed $db
+     * @param mixed $options
+     * @access public
+     * @return void
+     */
+    public function v0_9r13_12_20($db, $options)
+    {
+        if (!isset($options->commentsWhitelist)) {
+            $db->query($db->insert('table.options')
+                ->rows(['name' => 'commentsWhitelist', 'user' => 0, 'value' => 0]));
+        }
+    }
+
+    /**
+     * v0_9r14_2_24
+     *
+     * @param mixed $db
+     * @param mixed $options
+     * @access public
+     * @return void
+     */
+    public function v0_9r14_2_24($db, $options)
+    {
+        /** 修改数据库字段 */
+        $adapterName = $db->getAdapterName();
+        $prefix = $db->getPrefix();
+
+        switch (true) {
+            case false !== strpos($adapterName, 'Mysql'):
+                $db->query('ALTER TABLE  `' . $prefix . 'metas` ADD  `parent` INT(10) UNSIGNED NULL DEFAULT \'0\'', Typecho_Db::WRITE);
+                break;
+
+            case false !== strpos($adapterName, 'Pgsql'):
+                $db->query('ALTER TABLE  "' . $prefix . 'metas" ADD COLUMN  "parent" INT NULL DEFAULT \'0\'', Typecho_Db::WRITE);
+                break;
+
+            case false !== strpos($adapterName, 'SQLite'):
+                $uuid = uniqid();
+                $db->query('CREATE TABLE ' . $prefix . 'metas' . $uuid . ' ( "mid" INTEGER NOT NULL PRIMARY KEY,
+        "name" varchar(150) default NULL ,
+        "slug" varchar(150) default NULL ,
+        "type" varchar(32) NOT NULL ,
+        "description" varchar(150) default NULL ,
+        "count" int(10) default \'0\' ,
+        "order" int(10) default \'0\' ,
+        "parent" int(10) default \'0\')', Typecho_Db::WRITE);
+                $db->query('INSERT INTO ' . $prefix . 'metas' . $uuid . ' ("mid", "name", "slug", "type", "description", "count", "order") 
+                    SELECT "mid", "name", "slug", "type", "description", "count", "order" FROM ' . $prefix . 'metas', Typecho_Db::WRITE);
+                $db->query('DROP TABLE  ' . $prefix . 'metas', Typecho_Db::WRITE);
+                $db->query('CREATE TABLE ' . $prefix . 'metas ( "mid" INTEGER NOT NULL PRIMARY KEY,
+        "name" varchar(150) default NULL ,
+        "slug" varchar(150) default NULL ,
+        "type" varchar(32) NOT NULL ,
+        "description" varchar(150) default NULL ,
+        "count" int(10) default \'0\' ,
+        "order" int(10) default \'0\' ,
+        "parent" int(10) default \'0\')', Typecho_Db::WRITE);
+                $db->query('INSERT INTO ' . $prefix . 'metas SELECT * FROM ' . $prefix . 'metas' . $uuid, Typecho_Db::WRITE);
+                $db->query('DROP TABLE  ' . $prefix . 'metas' . $uuid, Typecho_Db::WRITE);
+                $db->query('CREATE INDEX ' . $prefix . 'metas_slug ON ' . $prefix . 'metas ("slug")', Typecho_Db::WRITE);
+                $db->flushPool();
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    /**
+     * v0_9r14_3_14
+     *
+     * @param mixed $db
+     * @param mixed $options
+     * @access public
+     * @return void
+     */
+    public function v0_9r14_3_14($db, $options)
+    {
+        if (!isset($options->secret)) {
+            $db->query($db->insert('table.options')
+                ->rows(['name' => 'secret', 'user' => 0, 'value' => Typecho_Common::randString(32, true)]));
+        }
+    }
+
+    /**
+     * v1_0r14_9_2
+     *
+     * @param mixed $db
+     * @param mixed $options
+     * @access public
+     * @return void
+     */
+    public function v1_0r14_9_2($db, $options)
+    {
+        if (!isset($options->lang)) {
+            $db->query($db->insert('table.options')
+                ->rows(['name' => 'lang', 'user' => 0, 'value' => 'zh_CN']));
+        }
+    }
+
+    /**
+     * v1_0r14_10_10
+     *
+     * @param mixed $db
+     * @param mixed $options
+     * @access public
+     * @return void
+     */
+    public function v1_0r14_10_10($db, $options)
+    {
+        if (!isset($options->commentsAntiSpam)) {
+            $db->query($db->insert('table.options')
+                ->rows(['name' => 'commentsAntiSpam', 'user' => 0, 'value' => 1]));
         }
     }
 }

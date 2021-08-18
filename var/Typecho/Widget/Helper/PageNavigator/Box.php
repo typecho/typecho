@@ -30,30 +30,30 @@ class Typecho_Widget_Helper_PageNavigator_Box extends Typecho_Widget_Helper_Page
      * @param string $currentClass 当前激活元素class
      * @return void
      */
-    public function render($prevWord = 'PREV', $nextWord = 'NEXT', $splitPage = 3, $splitWord = '...', array $template = array())
-    { 
+    public function render($prevWord = 'PREV', $nextWord = 'NEXT', $splitPage = 3, $splitWord = '...', array $template = [])
+    {
         if ($this->_total < 1) {
             return;
         }
 
-        $default = array(
-            'itemTag'       =>  'li',
-            'textTag'       =>  'span',
-            'currentClass'  =>  'current',
-            'prevClass'     =>  'prev',
-            'nextClass'     =>  'next'
-        );
+        $default = [
+            'itemTag' => 'li',
+            'textTag' => 'span',
+            'currentClass' => 'current',
+            'prevClass' => 'prev',
+            'nextClass' => 'next'
+        ];
 
         $template = array_merge($default, $template);
         extract($template);
 
         // 定义item
         $itemBegin = empty($itemTag) ? '' : ('<' . $itemTag . '>');
-        $itemCurrentBegin = empty($itemTag) ? '' : ('<' . $itemTag 
+        $itemCurrentBegin = empty($itemTag) ? '' : ('<' . $itemTag
             . (empty($currentClass) ? '' : ' class="' . $currentClass . '"') . '>');
-        $itemPrevBegin = empty($itemTag) ? '' : ('<' . $itemTag 
+        $itemPrevBegin = empty($itemTag) ? '' : ('<' . $itemTag
             . (empty($prevClass) ? '' : ' class="' . $prevClass . '"') . '>');
-        $itemNextBegin = empty($itemTag) ? '' : ('<' . $itemTag 
+        $itemNextBegin = empty($itemTag) ? '' : ('<' . $itemTag
             . (empty($nextClass) ? '' : ' class="' . $nextClass . '"') . '>');
         $itemEnd = empty($itemTag) ? '' : ('</' . $itemTag . '>');
         $textBegin = empty($textTag) ? '' : ('<' . $textTag . '>');
@@ -76,7 +76,7 @@ class Typecho_Widget_Helper_PageNavigator_Box extends Typecho_Widget_Helper_Page
         //输出上一页
         if ($this->_currentPage > 1) {
             echo $itemPrevBegin . sprintf($linkPrevBegin,
-                str_replace($this->_pageHolder, $this->_currentPage - 1, $this->_pageTemplate) . $this->_anchor)
+                    str_replace($this->_pageHolder, $this->_currentPage - 1, $this->_pageTemplate) . $this->_anchor)
                 . $prevWord . $linkEnd . $itemEnd;
         }
 
@@ -94,9 +94,9 @@ class Typecho_Widget_Helper_PageNavigator_Box extends Typecho_Widget_Helper_Page
         //输出中间页
         for ($i = $from; $i <= $to; $i ++) {
             $current = ($i == $this->_currentPage);
-            
+
             echo ($current ? $itemCurrentBegin : $itemBegin) . sprintf(($current ? $linkCurrentBegin : $linkBegin),
-                str_replace($this->_pageHolder, $i, $this->_pageTemplate) . $this->_anchor)
+                    str_replace($this->_pageHolder, $i, $this->_pageTemplate) . $this->_anchor)
                 . $i . $linkEnd . $itemEnd;
         }
 
@@ -105,7 +105,7 @@ class Typecho_Widget_Helper_PageNavigator_Box extends Typecho_Widget_Helper_Page
             if ($to < $this->_totalPage - 1) {
                 echo $itemBegin . $textBegin . $splitWord . $textEnd . $itemEnd;
             }
-            
+
             echo $itemBegin . sprintf($linkBegin, str_replace($this->_pageHolder, $this->_totalPage, $this->_pageTemplate) . $this->_anchor)
                 . $this->_totalPage . $linkEnd . $itemEnd;
         }
@@ -113,7 +113,7 @@ class Typecho_Widget_Helper_PageNavigator_Box extends Typecho_Widget_Helper_Page
         //输出下一页
         if ($this->_currentPage < $this->_totalPage) {
             echo $itemNextBegin . sprintf($linkNextBegin,
-                str_replace($this->_pageHolder, $this->_currentPage + 1, $this->_pageTemplate) . $this->_anchor)
+                    str_replace($this->_pageHolder, $this->_currentPage + 1, $this->_pageTemplate) . $this->_anchor)
                 . $nextWord . $linkEnd . $itemEnd;
         }
     }

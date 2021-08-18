@@ -33,7 +33,7 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
     const MULTIPART_ENCODE = 'multipart/form-data';
 
     /** 文本编码 */
-    const TEXT_ENCODE= 'text/plain';
+    const TEXT_ENCODE = 'text/plain';
 
     /**
      * 输入元素列表
@@ -41,14 +41,14 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
      * @access private
      * @var array
      */
-    private $_inputs = array();
+    private $_inputs = [];
 
     /**
      * 构造函数,设置基本属性
      *
      * @access public
      */
-    public function __construct($action = NULL, $method = self::GET_METHOD, $enctype = self::STANDARD_ENCODE)
+    public function __construct($action = null, $method = self::GET_METHOD, $enctype = self::STANDARD_ENCODE)
     {
         /** 设置表单标签 */
         parent::__construct('form');
@@ -60,6 +60,32 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
         $this->setAction($action);
         $this->setMethod($method);
         $this->setEncodeType($enctype);
+    }
+
+    /**
+     * 设置表单提交目的
+     *
+     * @access public
+     * @param string $action 表单提交目的
+     * @return Typecho_Widget_Helper_Form
+     */
+    public function setAction($action)
+    {
+        $this->setAttribute('action', $action);
+        return $this;
+    }
+
+    /**
+     * 设置表单提交方法
+     *
+     * @access public
+     * @param string $method 表单提交方法
+     * @return Typecho_Widget_Helper_Form
+     */
+    public function setMethod($method)
+    {
+        $this->setAttribute('method', $method);
+        return $this;
     }
 
     /**
@@ -109,39 +135,13 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
      */
     public function getAllRequest()
     {
-        $result = array();
+        $result = [];
         $source = (self::POST_METHOD == $this->getAttribute('method')) ? $_POST : $_GET;
 
         foreach ($this->_inputs as $name => $input) {
-            $result[$name] = isset($source[$name]) ? $source[$name] : NULL;
+            $result[$name] = $source[$name] ?? null;
         }
         return $result;
-    }
-
-    /**
-     * 设置表单提交方法
-     *
-     * @access public
-     * @param string $method 表单提交方法
-     * @return Typecho_Widget_Helper_Form
-     */
-    public function setMethod($method)
-    {
-        $this->setAttribute('method', $method);
-        return $this;
-    }
-
-    /**
-     * 设置表单提交目的
-     *
-     * @access public
-     * @param string $action 表单提交目的
-     * @return Typecho_Widget_Helper_Form
-     */
-    public function setAction($action)
-    {
-        $this->setAttribute('action', $action);
-        return $this;
     }
 
     /**
@@ -152,7 +152,7 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
      */
     public function getValues()
     {
-        $values = array();
+        $values = [];
 
         foreach ($this->_inputs as $name => $input) {
             $values[$name] = $input->value;
@@ -172,25 +172,6 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
     }
 
     /**
-     * 获取提交数据源
-     *
-     * @access public
-     * @param array $params 数据参数集
-     * @return array
-     */
-    public function getParams(array $params)
-    {
-        $result = array();
-        $source = (self::POST_METHOD == $this->getAttribute('method')) ? $_POST : $_GET;
-
-        foreach ($params as $param) {
-            $result[$param] = isset($source[$param]) ? $source[$param] : NULL;
-        }
-
-        return $result;
-    }
-
-    /**
      * 验证表单
      *
      * @access public
@@ -199,7 +180,7 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
     public function validate()
     {
         $validator = new Typecho_Validate();
-        $rules = array();
+        $rules = [];
 
         foreach ($this->_inputs as $name => $input) {
             $rules[$name] = $input->rules;
@@ -223,6 +204,25 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
     }
 
     /**
+     * 获取提交数据源
+     *
+     * @access public
+     * @param array $params 数据参数集
+     * @return array
+     */
+    public function getParams(array $params)
+    {
+        $result = [];
+        $source = (self::POST_METHOD == $this->getAttribute('method')) ? $_POST : $_GET;
+
+        foreach ($params as $param) {
+            $result[$param] = $source[$param] ?? null;
+        }
+
+        return $result;
+    }
+
+    /**
      * 显示表单
      *
      * @access public
@@ -239,7 +239,7 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
             $record = Json::decode($record, true);
             $message = Json::decode($message, true);
             foreach ($this->_inputs as $name => $input) {
-                $input->value(isset($record[$name]) ? $record[$name] : $input->value);
+                $input->value($record[$name] ?? $input->value);
 
                 /** 显示错误消息 */
                 if (isset($message[$name])) {

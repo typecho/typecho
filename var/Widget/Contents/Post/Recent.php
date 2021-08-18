@@ -28,13 +28,13 @@ class Widget_Contents_Post_Recent extends Widget_Abstract_Contents
      */
     public function execute()
     {
-        $this->parameter->setDefault(array('pageSize' => $this->options->postsListSize));
+        $this->parameter->setDefault(['pageSize' => $this->options->postsListSize]);
 
         $this->db->fetchAll($this->select()
-        ->where('table.contents.status = ?', 'publish')
-        ->where('table.contents.created < ?', $this->options->time)
-        ->where('table.contents.type = ?', 'post')
-        ->order('table.contents.created', Typecho_Db::SORT_DESC)
-        ->limit($this->parameter->pageSize), array($this, 'push'));
+            ->where('table.contents.status = ?', 'publish')
+            ->where('table.contents.created < ?', $this->options->time)
+            ->where('table.contents.type = ?', 'post')
+            ->order('table.contents.created', Typecho_Db::SORT_DESC)
+            ->limit($this->parameter->pageSize), [$this, 'push']);
     }
 }

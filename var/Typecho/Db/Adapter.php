@@ -32,8 +32,8 @@ interface Typecho_Db_Adapter
     public function connect(Typecho_Config $config);
 
     /**
-     * 获取数据库版本 
-     * 
+     * 获取数据库版本
+     *
      * @param mixed $handle
      * @return string
      */
@@ -58,7 +58,7 @@ interface Typecho_Db_Adapter
      * @param string $table 数据表
      * @return resource
      */
-    public function query($query, $handle, $op = Typecho_Db::READ, $action = NULL, $table = NULL);
+    public function query($query, $handle, $op = Typecho_Db::READ, $action = null, $table = null);
 
     /**
      * 将数据查询的其中一行作为数组取出,其中字段名对应数组键值

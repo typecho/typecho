@@ -19,6 +19,8 @@
  */
 class Typecho_Response
 {
+    const CHARSET = 'UTF-8';
+
     /**
      * http code
      *
@@ -68,17 +70,7 @@ class Typecho_Response
         505 => 'HTTP Version Not Supported'
     ];
 
-    /**
-     * 字符编码
-     *
-     * @var mixed
-     * @access private
-     */
-    private $_charset;
-
     //默认的字符编码
-    const CHARSET = 'UTF-8';
-
     /**
      * 单例句柄
      *
@@ -95,6 +87,14 @@ class Typecho_Response
     private static $_callbacks = [];
 
     /**
+     * 字符编码
+     *
+     * @var mixed
+     * @access private
+     */
+    private $_charset;
+
+    /**
      * 获取单例句柄
      *
      * @access public
@@ -107,6 +107,106 @@ class Typecho_Response
         }
 
         return self::$_instance;
+    }
+
+    /**
+     * 新增回调
+     *
+     * @param $callback
+     */
+    public static function addCallback($callback)
+    {
+        self::$_callbacks[] = $callback;
+    }
+
+    /**
+     * 设置HTTP状态
+     *
+     * @access public
+     * @param integer $code http代码
+     * @return void
+     */
+    public static function setStatus(int $code)
+    {
+        if (isset(self::$_httpCode[$code])) {
+            header(($_SERVER['SERVER_PROTOCOL'] ?? 'HTTP/1.1')
+                . ' ' . $code . ' ' . self::$_httpCode[$code], true, $code);
+        }
+    }
+
+    /**
+     * 设置http头
+     *
+     * @access public
+     * @param string $name 名称
+     * @param string $value 对应值
+     * @return void
+     */
+    public function setHeader(string $name, string $value)
+    {
+        header($name . ': ' . $value, true);
+    }
+
+    /**
+     * 抛出ajax的回执信息
+     *
+     * @access public
+     * @param string $message 消息体
+     * @return void
+     */
+    public function throwXml(string $message)
+    {
+        /** 设置http头信息 */
+        $this->setContentType('text/xml');
+
+        /** 构建消息体 */
+        echo '<?xml version="1.0" encoding="' . $this->getCharset() . '"?>',
+        '<response>',
+        $this->_parseXml($message),
+        '</response>';
+
+        /** 终止后续输出 */
+        self::callback();
+        exit;
+    }
+
+    /**
+     * 在http头部请求中声明类型和字符集
+     *
+     * @access public
+     * @param string $contentType 文档类型
+     * @return void
+     */
+    public function setContentType(string $contentType = 'text/html')
+    {
+        header('Content-Type: ' . $contentType . '; charset=' . $this->getCharset(), true);
+    }
+
+    /**
+     * 获取字符集
+     *
+     * @access public
+     * @return string
+     */
+    public function getCharset(): string
+    {
+        if (empty($this->_charset)) {
+            $this->setCharset();
+        }
+
+        return $this->_charset;
+    }
+
+    /**
+     * 设置默认回执编码
+     *
+     * @access public
+     * @param string|null $charset 字符集
+     * @return void
+     */
+    public function setCharset(string $charset = null)
+    {
+        $this->_charset = empty($charset) ? self::CHARSET : $charset;
     }
 
     /**
@@ -151,106 +251,6 @@ class Typecho_Response
     }
 
     /**
-     * 新增回调
-     *
-     * @param $callback
-     */
-    public static function addCallback($callback)
-    {
-        self::$_callbacks[] = $callback;
-    }
-
-    /**
-     * 设置默认回执编码
-     *
-     * @access public
-     * @param string|null $charset 字符集
-     * @return void
-     */
-    public function setCharset(string $charset = null)
-    {
-        $this->_charset = empty($charset) ? self::CHARSET : $charset;
-    }
-
-    /**
-     * 获取字符集
-     *
-     * @access public
-     * @return string
-     */
-    public function getCharset(): string
-    {
-        if (empty($this->_charset)) {
-            $this->setCharset();
-        }
-
-        return $this->_charset;
-    }
-
-    /**
-     * 在http头部请求中声明类型和字符集
-     *
-     * @access public
-     * @param string $contentType 文档类型
-     * @return void
-     */
-    public function setContentType(string $contentType = 'text/html')
-    {
-        header('Content-Type: ' . $contentType . '; charset=' . $this->getCharset(), true);
-    }
-
-    /**
-     * 设置http头
-     *
-     * @access public
-     * @param string $name 名称
-     * @param string $value 对应值
-     * @return void
-     */
-    public function setHeader(string $name, string $value)
-    {
-        header($name . ': ' . $value, true);
-    }
-
-    /**
-     * 设置HTTP状态
-     *
-     * @access public
-     * @param integer $code http代码
-     * @return void
-     */
-    public static function setStatus(int $code)
-    {
-        if (isset(self::$_httpCode[$code])) {
-            header(($_SERVER['SERVER_PROTOCOL'] ?? 'HTTP/1.1')
-                . ' ' . $code . ' ' . self::$_httpCode[$code], true, $code);
-        }
-    }
-
-    /**
-     * 抛出ajax的回执信息
-     *
-     * @access public
-     * @param string $message 消息体
-     * @return void
-     */
-    public function throwXml(string $message)
-    {
-        /** 设置http头信息 */
-        $this->setContentType('text/xml');
-
-        /** 构建消息体 */
-        echo '<?xml version="1.0" encoding="' . $this->getCharset() . '"?>',
-        '<response>',
-        $this->_parseXml($message),
-        '</response>';
-
-        /** 终止后续输出 */
-        self::callback();
-        exit;
-    }
-
-    /**
      * 抛出json回执信息
      *
      * @access public
@@ -266,30 +266,6 @@ class Typecho_Response
 
         /** 终止后续输出 */
         self::callback();
-        exit;
-    }
-
-    /**
-     * 重定向函数
-     *
-     * @access public
-     * @param string $location 重定向路径
-     * @param boolean $isPermanently 是否为永久重定向
-     * @return void
-     */
-    public function redirect(string $location, bool $isPermanently = false)
-    {
-        /** Typecho_Common */
-        $location = Typecho_Common::safeUrl($location);
-
-        self::callback();
-
-        if ($isPermanently) {
-            header('Location: ' . $location, false, 301);
-        } else {
-            header('Location: ' . $location, false, 302);
-        }
-
         exit;
     }
 
@@ -331,11 +307,35 @@ class Typecho_Response
             }
 
             $this->redirect($referer, false);
-        } else if (!empty($default)) {
+        } elseif (!empty($default)) {
             $this->redirect($default);
         }
 
         self::callback();
+        exit;
+    }
+
+    /**
+     * 重定向函数
+     *
+     * @access public
+     * @param string $location 重定向路径
+     * @param boolean $isPermanently 是否为永久重定向
+     * @return void
+     */
+    public function redirect(string $location, bool $isPermanently = false)
+    {
+        /** Typecho_Common */
+        $location = Typecho_Common::safeUrl($location);
+
+        self::callback();
+
+        if ($isPermanently) {
+            header('Location: ' . $location, false, 301);
+        } else {
+            header('Location: ' . $location, false, 302);
+        }
+
         exit;
     }
 }

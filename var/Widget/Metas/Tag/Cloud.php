@@ -28,9 +28,9 @@ class Widget_Metas_Tag_Cloud extends Widget_Abstract_Metas
      */
     public function execute()
     {
-        $this->parameter->setDefault(array('sort' => 'count', 'ignoreZeroCount' => false, 'desc' => true, 'limit' => 0));
+        $this->parameter->setDefault(['sort' => 'count', 'ignoreZeroCount' => false, 'desc' => true, 'limit' => 0]);
         $select = $this->select()->where('type = ?', 'tag')->order($this->parameter->sort,
-        $this->parameter->desc ? Typecho_Db::SORT_DESC : Typecho_Db::SORT_ASC);
+            $this->parameter->desc ? Typecho_Db::SORT_DESC : Typecho_Db::SORT_ASC);
 
         /** 忽略零数量 */
         if ($this->parameter->ignoreZeroCount) {
@@ -42,7 +42,7 @@ class Widget_Metas_Tag_Cloud extends Widget_Abstract_Metas
             $select->limit($this->parameter->limit);
         }
 
-        $this->db->fetchAll($select, array($this, 'push'));
+        $this->db->fetchAll($select, [$this, 'push']);
     }
 
     /**
@@ -56,6 +56,6 @@ class Widget_Metas_Tag_Cloud extends Widget_Abstract_Metas
     {
         $args = func_get_args();
         array_unshift($args, $this->count);
-        echo call_user_func_array(array('Typecho_Common', 'splitByCount'), $args);
+        echo call_user_func_array(['Typecho_Common', 'splitByCount'], $args);
     }
 }

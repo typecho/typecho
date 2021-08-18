@@ -38,8 +38,8 @@ class Typecho_Db_Adapter_Mysqli implements Typecho_Db_Adapter
      * 数据库连接函数
      *
      * @param Typecho_Config $config 数据库配置
-     * @throws Typecho_Db_Exception
      * @return mixed
+     * @throws Typecho_Db_Exception
      */
     public function connect(Typecho_Config $config)
     {
@@ -62,8 +62,8 @@ class Typecho_Db_Adapter_Mysqli implements Typecho_Db_Adapter
     }
 
     /**
-     * 获取数据库版本 
-     * 
+     * 获取数据库版本
+     *
      * @param mixed $handle
      * @return string
      */
@@ -93,10 +93,10 @@ class Typecho_Db_Adapter_Mysqli implements Typecho_Db_Adapter
      * @param integer $op 数据库读写状态
      * @param string $action 数据库动作
      * @param string $table 数据表
-     * @throws Typecho_Db_Exception
      * @return resource
+     * @throws Typecho_Db_Exception
      */
-    public function query($query, $handle, $op = Typecho_Db::READ, $action = NULL, $table = NULL)
+    public function query($query, $handle, $op = Typecho_Db::READ, $action = null, $table = null)
     {
         if ($resource = @$this->_dbLink->query($query)) {
             return $resource;
@@ -104,6 +104,18 @@ class Typecho_Db_Adapter_Mysqli implements Typecho_Db_Adapter
 
         /** 数据库异常 */
         throw new Typecho_Db_Query_Exception($this->_dbLink->error, $this->_dbLink->errno);
+    }
+
+    /**
+     * 对象引号过滤
+     *
+     * @access public
+     * @param string $string
+     * @return string
+     */
+    public function quoteColumn($string)
+    {
+        return $this->_dbLink->real_escape_string($string);
     }
 
     /**
@@ -136,19 +148,7 @@ class Typecho_Db_Adapter_Mysqli implements Typecho_Db_Adapter
      */
     public function quoteValue($string)
     {
-        return '\'' . str_replace(array('\'', '\\'), array('\'\'', '\\\\'), $string) . '\'';
-    }
-
-    /**
-     * 对象引号过滤
-     *
-     * @access public
-     * @param string $string
-     * @return string
-     */
-    public function quoteColumn($string)
-    {
-        return $this->_dbLink->real_escape_string($string);
+        return '\'' . str_replace(['\'', '\\'], ['\'\'', '\\\\'], $string) . '\'';
     }
 
     /**
@@ -162,16 +162,16 @@ class Typecho_Db_Adapter_Mysqli implements Typecho_Db_Adapter
     {
         if (!empty($sql['join'])) {
             foreach ($sql['join'] as $val) {
-                list($table, $condition, $op) = $val;
+                [$table, $condition, $op] = $val;
                 $sql['table'] = "{$sql['table']} {$op} JOIN {$table} ON {$condition}";
             }
         }
 
-        $sql['limit'] = (0 == strlen($sql['limit'])) ? NULL : ' LIMIT ' . $sql['limit'];
-        $sql['offset'] = (0 == strlen($sql['offset'])) ? NULL : ' OFFSET ' . $sql['offset'];
+        $sql['limit'] = (0 == strlen($sql['limit'])) ? null : ' LIMIT ' . $sql['limit'];
+        $sql['offset'] = (0 == strlen($sql['offset'])) ? null : ' OFFSET ' . $sql['offset'];
 
         return 'SELECT ' . $sql['fields'] . ' FROM ' . $sql['table'] .
-        $sql['where'] . $sql['group'] . $sql['having'] . $sql['order'] . $sql['limit'] . $sql['offset'];
+            $sql['where'] . $sql['group'] . $sql['having'] . $sql['order'] . $sql['limit'] . $sql['offset'];
     }
 
     /**

@@ -29,7 +29,7 @@ class Widget_Metas_Tag_Admin extends Widget_Metas_Tag_Cloud
     public function execute()
     {
         $select = $this->select()->where('type = ?', 'tag')->order('mid', Typecho_Db::SORT_DESC);
-        $this->db->fetchAll($select, array($this, 'push'));
+        $this->db->fetchAll($select, [$this, 'push']);
     }
 
     /**

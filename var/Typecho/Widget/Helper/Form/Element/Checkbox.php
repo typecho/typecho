@@ -26,7 +26,7 @@ class Typecho_Widget_Helper_Form_Element_Checkbox extends Typecho_Widget_Helper_
      * @access private
      * @var array
      */
-    private $_options = array();
+    private $_options = [];
 
     /**
      * 初始化当前输入项
@@ -36,7 +36,7 @@ class Typecho_Widget_Helper_Form_Element_Checkbox extends Typecho_Widget_Helper_
      * @param array $options 选择项
      * @return Typecho_Widget_Helper_Layout
      */
-    public function input($name = NULL, array $options = NULL)
+    public function input($name = null, array $options = null)
     {
         foreach ($options as $value => $label) {
             $this->_options[$value] = new Typecho_Widget_Helper_Layout('input');
@@ -45,9 +45,9 @@ class Typecho_Widget_Helper_Form_Element_Checkbox extends Typecho_Widget_Helper_
             $this->inputs[] = $this->_options[$value];
 
             $item->addItem($this->_options[$value]->setAttribute('name', $this->name . '[]')
-            ->setAttribute('type', 'checkbox')
-            ->setAttribute('value', $value)
-            ->setAttribute('id', $id));
+                ->setAttribute('type', 'checkbox')
+                ->setAttribute('value', $value)
+                ->setAttribute('id', $id));
 
             $labelItem = new Typecho_Widget_Helper_Layout('label');
             $item->addItem($labelItem->setAttribute('for', $id)->html($label));
@@ -66,7 +66,7 @@ class Typecho_Widget_Helper_Form_Element_Checkbox extends Typecho_Widget_Helper_
      */
     protected function _value($value)
     {
-        $values = is_array($value) ? $value : array($value);
+        $values = is_array($value) ? $value : [$value];
 
         foreach ($this->_options as $option) {
             $option->removeAttribute('checked');

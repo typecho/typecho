@@ -21,37 +21,12 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_Layout
 {
     /**
-     * 表单描述
-     *
-     * @access private
-     * @var string
-     */
-    protected $description;
-
-    /**
-     * 表单消息
-     *
-     * @access protected
-     * @var string
-     */
-    protected $message;
-
-    /**
-     * 多行输入
-     *
-     * @access public
-     * @var array()
-     */
-    protected $multiline = array();
-
-    /**
      * 单例唯一id
      *
      * @access protected
      * @var integer
      */
     protected static $uniqueId = 0;
-
     /**
      * 表单元素容器
      *
@@ -59,7 +34,6 @@ abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_
      * @var Typecho_Widget_Helper_Layout
      */
     public $container;
-
     /**
      * 输入栏
      *
@@ -67,15 +41,13 @@ abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_
      * @var Typecho_Widget_Helper_Layout
      */
     public $input;
-
     /**
-     * inputs  
-     * 
+     * inputs
+     *
      * @var array
      * @access public
      */
-    public $inputs = array();
-
+    public $inputs = [];
     /**
      * 表单标题
      *
@@ -83,15 +55,13 @@ abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_
      * @var Typecho_Widget_Helper_Layout
      */
     public $label;
-
     /**
      * 表单验证器
      *
      * @access public
      * @var array
      */
-    public $rules = array();
-
+    public $rules = [];
     /**
      * 表单名称
      *
@@ -99,7 +69,6 @@ abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_
      * @var string
      */
     public $name;
-
     /**
      * 表单值
      *
@@ -107,6 +76,27 @@ abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_
      * @var mixed
      */
     public $value;
+    /**
+     * 表单描述
+     *
+     * @access private
+     * @var string
+     */
+    protected $description;
+    /**
+     * 表单消息
+     *
+     * @access protected
+     * @var string
+     */
+    protected $message;
+    /**
+     * 多行输入
+     *
+     * @access public
+     * @var array()
+     */
+    protected $multiline = [];
 
     /**
      * 构造函数
@@ -119,10 +109,10 @@ abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_
      * @param string $description 表单描述
      * @return void
      */
-    public function __construct($name = NULL, array $options = NULL, $value = NULL, $label = NULL, $description = NULL)
+    public function __construct($name = null, array $options = null, $value = null, $label = null, $description = null)
     {
         /** 创建html元素,并设置class */
-        parent::__construct('ul', array('class' => 'typecho-option', 'id' => 'typecho-option-item-' . $name . '-' . self::$uniqueId));
+        parent::__construct('ul', ['class' => 'typecho-option', 'id' => 'typecho-option-item-' . $name . '-' . self::$uniqueId]);
         $this->name = $name;
         self::$uniqueId ++;
 
@@ -130,7 +120,7 @@ abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_
         $this->init();
 
         /** 初始化表单标题 */
-        if (NULL !== $label) {
+        if (null !== $label) {
             $this->label($label);
         }
 
@@ -138,30 +128,14 @@ abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_
         $this->input = $this->input($name, $options);
 
         /** 初始化表单值 */
-        if (NULL !== $value) {
+        if (null !== $value) {
             $this->value($value);
         }
 
         /** 初始化表单描述 */
-        if (NULL !== $description) {
+        if (null !== $description) {
             $this->description($description);
         }
-    }
-
-    /**
-     * filterValue  
-     * 
-     * @param mixed $value 
-     * @access protected
-     * @return string
-     */
-    protected function filterValue($value)
-    {
-        if (preg_match_all('/[_0-9a-z-]+/i', $value, $matches)) {
-            return implode('-', $matches[0]);
-        }
-
-        return '';
     }
 
     /**
@@ -170,7 +144,9 @@ abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_
      * @access public
      * @return void
      */
-    public function init(){}
+    public function init()
+    {
+    }
 
     /**
      * 创建表单标题
@@ -183,7 +159,7 @@ abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_
     {
         /** 创建标题元素 */
         if (empty($this->label)) {
-            $this->label = new Typecho_Widget_Helper_Layout('label', array('class' => 'typecho-label'));
+            $this->label = new Typecho_Widget_Helper_Layout('label', ['class' => 'typecho-label']);
             $this->container($this->label);
         }
 
@@ -211,41 +187,15 @@ abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_
     }
 
     /**
-     * 设置提示信息
+     * 初始化当前输入项
      *
      * @access public
-     * @param string $message 提示信息
+     * @param Typecho_Widget_Helper_Layout $container 容器对象
+     * @param string $name 表单元素名称
+     * @param array $options 选择项
      * @return Typecho_Widget_Helper_Form_Element
      */
-    public function message($message)
-    {
-        if (empty($this->message)) {
-            $this->message =  new Typecho_Widget_Helper_Layout('p', array('class' => 'message error'));
-            $this->container($this->message);
-        }
-
-        $this->message->html($message);
-        return $this;
-    }
-
-    /**
-     * 设置描述信息
-     *
-     * @access public
-     * @param string $description 描述信息
-     * @return Typecho_Widget_Helper_Form_Element
-     */
-    public function description($description)
-    {
-        /** 创建描述元素 */
-        if (empty($this->description)) {
-            $this->description = new Typecho_Widget_Helper_Layout('p', array('class' => 'description'));
-            $this->container($this->description);
-        }
-
-        $this->description->html($description);
-        return $this;
-    }
+    abstract public function input($name = null, array $options = null);
 
     /**
      * 设置表单元素值
@@ -258,6 +208,52 @@ abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_
     {
         $this->value = $value;
         $this->_value($value);
+        return $this;
+    }
+
+    /**
+     * 设置表单元素值
+     *
+     * @access protected
+     * @param mixed $value 表单元素值
+     * @return void
+     */
+    abstract protected function _value($value);
+
+    /**
+     * 设置描述信息
+     *
+     * @access public
+     * @param string $description 描述信息
+     * @return Typecho_Widget_Helper_Form_Element
+     */
+    public function description($description)
+    {
+        /** 创建描述元素 */
+        if (empty($this->description)) {
+            $this->description = new Typecho_Widget_Helper_Layout('p', ['class' => 'description']);
+            $this->container($this->description);
+        }
+
+        $this->description->html($description);
+        return $this;
+    }
+
+    /**
+     * 设置提示信息
+     *
+     * @access public
+     * @param string $message 提示信息
+     * @return Typecho_Widget_Helper_Form_Element
+     */
+    public function message($message)
+    {
+        if (empty($this->message)) {
+            $this->message = new Typecho_Widget_Helper_Layout('p', ['class' => 'message error']);
+            $this->container($this->message);
+        }
+
+        $this->message->html($message);
         return $this;
     }
 
@@ -289,26 +285,6 @@ abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_
     }
 
     /**
-     * 初始化当前输入项
-     *
-     * @access public
-     * @param Typecho_Widget_Helper_Layout $container 容器对象
-     * @param string $name 表单元素名称
-     * @param array $options 选择项
-     * @return Typecho_Widget_Helper_Form_Element
-     */
-    abstract public function input($name = NULL, array $options = NULL);
-
-    /**
-     * 设置表单元素值
-     *
-     * @access protected
-     * @param mixed $value 表单元素值
-     * @return void
-     */
-    abstract protected function _value($value);
-
-    /**
      * 增加验证器
      *
      * @access public
@@ -331,5 +307,21 @@ abstract class Typecho_Widget_Helper_Form_Element extends Typecho_Widget_Helper_
         foreach ($this->inputs as $input) {
             $input->setAttribute($attributeName, $attributeValue);
         }
+    }
+
+    /**
+     * filterValue
+     *
+     * @param mixed $value
+     * @access protected
+     * @return string
+     */
+    protected function filterValue($value)
+    {
+        if (preg_match_all('/[_0-9a-z-]+/i', $value, $matches)) {
+            return implode('-', $matches[0]);
+        }
+
+        return '';
     }
 }
