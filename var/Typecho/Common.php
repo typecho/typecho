@@ -14,16 +14,17 @@ define('__TYPECHO_MB_SUPPORTED__', function_exists('mb_get_info') && function_ex
 /**
  * I18n function
  *
- * @param string $string 需要翻译的文字
+ * @param ...$args 需要翻译的文字
  *
  * @return string
  */
-function _t($string)
+function _t(...$args)
 {
-    if (func_num_args() <= 1) {
+    [$string] = $args;
+
+    if (count($args) <= 1) {
         return Typecho_I18n::translate($string);
     } else {
-        $args = func_get_args();
         array_shift($args);
         return vsprintf(Typecho_I18n::translate($string), $args);
     }
@@ -32,13 +33,12 @@ function _t($string)
 /**
  * I18n function, translate and echo
  *
- * @param string $string 需要翻译并输出的文字
+ * @param ...$args 需要翻译的文字
  *
  * @return void
  */
-function _e()
+function _e(...$args)
 {
-    $args = func_get_args();
     echo call_user_func_array('_t', $args);
 }
 

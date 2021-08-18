@@ -48,13 +48,10 @@ class Widget_Metas_Tag_Cloud extends Widget_Abstract_Metas
     /**
      * 按分割数输出字符串
      *
-     * @access public
-     * @param string $param 需要输出的值
-     * @return void
+     * @param ...$args 需要输出的值
      */
-    public function split()
+    public function split(...$args)
     {
-        $args = func_get_args();
         array_unshift($args, $this->count);
         echo call_user_func_array(['Typecho_Common', 'splitByCount'], $args);
     }

@@ -61,11 +61,12 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     /**
      * 获取文章权限
      *
+     * @param mixed ...$permissions
+     *
      * @return bool
      */
-    public function allow()
+    public function allow(...$permissions): bool
     {
-        $permissions = func_get_args();
         $allow = true;
 
         foreach ($permissions as $permission) {

@@ -277,20 +277,18 @@ class Typecho_Db_Query
     /**
      * OR条件查询语句
      *
-     * @param string $condition 查询条件
-     * @param mixed $param 条件值
+     * @param ...$args
      * @return Typecho_Db_Query
      */
-    public function orWhere()
+    public function orWhere(...$args)
     {
-        $condition = func_get_arg(0);
+        [$condition] = $args;
         $condition = str_replace('?', "%s", $this->filterColumn($condition));
         $operator = empty($this->_sqlPreBuild['where']) ? ' WHERE ' : ' OR';
 
         if (func_num_args() <= 1) {
             $this->_sqlPreBuild['where'] .= $operator . ' (' . $condition . ')';
         } else {
-            $args = func_get_args();
             array_shift($args);
             $this->_sqlPreBuild['where'] .= $operator . ' (' . vsprintf($condition, $this->quoteValues($args)) . ')';
         }
@@ -422,14 +420,12 @@ class Typecho_Db_Query
     /**
      * 选择查询字段
      *
-     * @access public
-     * @param mixed $field 查询字段
-     * @return Typecho_Db_Query
+     * @param mixed ...$args 查询字段
+     * @return $this
      */
-    public function select($field = '*')
+    public function select(...$args): Typecho_Db_Query
     {
         $this->_sqlPreBuild['action'] = Typecho_Db::SELECT;
-        $args = func_get_args();
 
         $this->_sqlPreBuild['fields'] = $this->getColumnFromParameters($args);
         return $this;

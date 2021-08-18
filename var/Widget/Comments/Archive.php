@@ -350,14 +350,11 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
     /**
      * 根据深度余数输出
      *
-     * @access public
-     * @param string $param 需要输出的值
-     * @return void
+     * @param ...$args 需要输出的值
      */
-    public function levelsAlt()
+    public function levelsAlt(...$args)
     {
-        $args = func_get_args();
-        $num = func_num_args();
+        $num = count($args);
         $split = $this->levels % $num;
         echo $args[(0 == $split ? $num : $split) - 1];
     }
@@ -365,13 +362,11 @@ class Widget_Comments_Archive extends Widget_Abstract_Comments
     /**
      * 重载alt函数,以适应多级评论
      *
-     * @access public
-     * @return void
+     * @param ...$args
      */
-    public function alt()
+    public function alt(...$args)
     {
-        $args = func_get_args();
-        $num = func_num_args();
+        $num = count($args);
 
         $sequence = $this->levels <= 0 ? $this->sequence : $this->order;
 

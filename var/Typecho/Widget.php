@@ -290,13 +290,12 @@ abstract class Typecho_Widget
     /**
      * 根据余数输出
      *
-     * @access public
+     * @param mixed ...$args
      * @return void
      */
-    public function alt()
+    public function alt(...$args)
     {
-        $args = func_get_args();
-        $num = func_num_args();
+        $num = count($args);
         $split = $this->sequence % $num;
         echo $args[(0 == $split ? $num : $split) - 1];
     }

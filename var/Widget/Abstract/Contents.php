@@ -592,28 +592,26 @@ class Widget_Abstract_Contents extends Widget_Abstract
     /**
      * 输出文章评论数
      *
-     * @access public
+     * @param ...$args
      */
-    public function commentsNum()
+    public function commentsNum(...$args)
     {
-        $args = func_get_args();
-        if (!$args) {
+        if (empty($args)) {
             $args[] = '%d';
         }
 
         $num = intval($this->commentsNum);
 
-        echo sprintf(isset($args[$num]) ? $args[$num] : array_pop($args), $num);
+        echo sprintf($args[$num] ?? array_pop($args), $num);
     }
 
     /**
      * 获取文章权限
      *
-     * @access public
+     * @param ...$permissions
      */
-    public function allow()
+    public function allow(...$permissions): bool
     {
-        $permissions = func_get_args();
         $allow = true;
 
         foreach ($permissions as $permission) {

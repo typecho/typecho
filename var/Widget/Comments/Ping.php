@@ -51,18 +51,15 @@ class Widget_Comments_Ping extends Widget_Abstract_Comments
     /**
      * 输出文章回响数
      *
-     * @access public
-     * @param string $string 评论数格式化数据
-     * @return void
+     * @param ...$args 评论数格式化数据
      */
-    public function num()
+    public function num(...$args)
     {
-        $args = func_get_args();
-        if (!$args) {
+        if (empty($args)) {
             $args[] = '%d';
         }
 
-        echo sprintf($args[$this->length] ?? array_pop($this->length), $this->length);
+        echo sprintf($args[$this->length] ?? array_pop($args), $this->length);
     }
 
     /**

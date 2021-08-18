@@ -257,13 +257,11 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
     /**
      * 根据深度余数输出
      *
-     * @access public
-     * @return void
+     * @param ...$args
      */
-    public function levelsAlt()
+    public function levelsAlt(...$args)
     {
-        $args = func_get_args();
-        $num = func_num_args();
+        $num = count($args);
         $split = $this->levels % $num;
         echo $args[(0 == $split ? $num : $split) - 1];
     }
