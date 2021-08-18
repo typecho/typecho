@@ -438,22 +438,6 @@ EOF;
     }
 
     /**
-     * 检测是否在app engine上运行，屏蔽某些功能 
-     * 
-     * @static
-     * @access public
-     * @return boolean
-     */
-    public static function isAppEngine()
-    {
-        return !empty($_SERVER['HTTP_APPNAME'])                     // SAE
-            || !!getenv('HTTP_BAE_ENV_APPID')                       // BAE
-            || !!getenv('HTTP_BAE_LOGID')                           // BAE 3.0
-            || (isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false) // GAE
-            ;
-    }
-
-    /**
      * 抽取多维数组的某个元素,组成一个新数组,使这个数组变成一个扁平数组
      * 使用方法:
      * <code>
@@ -981,7 +965,11 @@ EOF;
     public static function url($path, $prefix)
     {
         $path = (0 === strpos($path, './')) ? substr($path, 2) : $path;
-        return rtrim($prefix, '/') . '/' . str_replace('//', '/', ltrim($path, '/'));
+        return rtrim(
+            rtrim($prefix, '/') . '/'
+            . str_replace('//', '/', ltrim($path, '/')),
+            '/'
+        );
     }
 
     /**

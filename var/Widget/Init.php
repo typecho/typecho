@@ -27,7 +27,7 @@ class Widget_Init extends Typecho_Widget
         $options = $this->widget('Widget_Options');
 
         /** 检查安装状态 */
-        if (!$options->installed) {
+        if (!defined('__TYPECHO_INSTALL__') && !$options->installed) {
             $options->update(array('value' => 1), Typecho_Db::get()->sql()->where('name = ?', 'installed'));
         }
 
@@ -74,7 +74,7 @@ class Widget_Init extends Typecho_Widget
         Typecho_Date::setTimezoneOffset($options->timezone);
 
         /** 开始会话, 减小负载只针对后台打开session支持 */
-        if ($this->widget('Widget_User')->hasLogin()) {
+        if (!defined('__TYPECHO_INSTALL__') && $this->widget('Widget_User')->hasLogin()) {
             @session_start();
         }
 

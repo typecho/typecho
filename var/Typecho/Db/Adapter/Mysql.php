@@ -39,7 +39,7 @@ class Typecho_Db_Adapter_Mysql implements Typecho_Db_Adapter
      *
      * @param Typecho_Config $config 数据库配置
      * @throws Typecho_Db_Exception
-     * @return resource
+     * @return mixed
      */
     public function connect(Typecho_Config $config)
     {

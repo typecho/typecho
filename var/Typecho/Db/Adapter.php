@@ -27,7 +27,7 @@ interface Typecho_Db_Adapter
      * 数据库连接函数
      *
      * @param Typecho_Config $config 数据库配置
-     * @return resource
+     * @return mixed
      */
     public function connect(Typecho_Config $config);
 

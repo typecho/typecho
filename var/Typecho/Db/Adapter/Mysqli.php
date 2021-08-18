@@ -19,7 +19,7 @@ class Typecho_Db_Adapter_Mysqli implements Typecho_Db_Adapter
      * 数据库连接字符串标示
      *
      * @access private
-     * @var resource
+     * @var mysqli
      */
     private $_dbLink;
 
@@ -39,12 +39,18 @@ class Typecho_Db_Adapter_Mysqli implements Typecho_Db_Adapter
      *
      * @param Typecho_Config $config 数据库配置
      * @throws Typecho_Db_Exception
-     * @return resource
+     * @return mixed
      */
     public function connect(Typecho_Config $config)
     {
 
-        if ($this->_dbLink = @new MySQLi($config->host, $config->user, $config->password, $config->database, (empty($config->port) ? '' : $config->port))) {
+        if ($this->_dbLink = @mysqli_connect(
+            $config->host,
+            $config->user,
+            $config->password,
+            $config->database,
+            (empty($config->port) ? null : $config->port))
+        ) {
             if ($config->charset) {
                 $this->_dbLink->query("SET NAMES '{$config->charset}'");
             }

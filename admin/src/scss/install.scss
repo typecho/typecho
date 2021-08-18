@@ -1,0 +1,63 @@
+h1 {
+  text-align: center;
+}
+
+details {
+  summary {
+    cursor: pointer;
+  }
+}
+
+@keyframes fadein {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fresh {
+    .keep-word {
+        display: none;
+    }
+}
+
+.keep {
+    .fresh-word {
+        display: none;
+    }
+}
+
+.message {
+
+  form > & {
+    display: none;
+    padding: 20px;
+    border-radius: 5px;
+  }
+
+  textarea {
+    width: 100%;
+    height: 200px;
+    resize: none;
+    margin: 10px 0;
+  }
+
+  &.fade {
+    display: block;
+    animation: fadein .5s linear;
+  }
+
+  *:last-child {
+    margin-bottom: 0;
+  }
+
+  p {
+    margin-top: 10px;
+
+    button {
+      margin-left: 5px;
+    }
+
+    button:first-child {
+      margin-left: 0;
+    }
+  }
+}
