@@ -65,7 +65,7 @@ function _n(string $single, string $plural, int $number): string
 class Typecho_Common
 {
     /** 程序版本 */
-    const VERSION = '1.2/18.10.23';
+    const VERSION = '1.2.0';
 
     /**
      * 默认编码

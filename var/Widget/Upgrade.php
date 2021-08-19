@@ -20,66 +20,45 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 class Widget_Upgrade extends Widget_Abstract_Options implements Widget_Interface_Do
 {
     /**
-     * 当前内部版本号
-     *
-     * @access private
-     * @var string
-     */
-    private $_currentVersion;
-
-    /**
-     * 对升级包按版本进行排序
-     *
-     * @access public
-     *
-     * @param string $a a版本
-     * @param string $b b版本
-     *
-     * @return integer
-     */
-    public function sortPackage($a, $b)
-    {
-        [$ver, $rev] = explode('r', $a);
-        $a = str_replace('_', '.', $rev);
-
-        [$ver, $rev] = explode('r', $b);
-        $b = str_replace('_', '.', $rev);
-
-        return version_compare($a, $b, '>') ? 1 : - 1;
-    }
-
-    /**
-     * 过滤低版本的升级包
-     *
-     * @access public
-     *
-     * @param string $version 版本号
-     *
-     * @return boolean
-     */
-    public function filterPackage($version)
-    {
-        [$ver, $rev] = explode('r', $version);
-        $rev = str_replace('_', '.', $rev);
-        return version_compare($rev, $this->_currentVersion, '>');
-    }
-
-    /**
      * 执行升级程序
      *
      * @access public
      * @return void
+     * @throws Typecho_Exception
      */
     public function upgrade()
     {
-        [$prefix, $this->_currentVersion] = explode('/', $this->options->generator);
         $packages = get_class_methods('Upgrade');
-        $packages = array_filter($packages, [$this, 'filterPackage']);
-        usort($packages, [$this, 'sortPackage']);
+
+        preg_match("/^\w+ ([0-9\.]+)(\/[0-9\.]+)?$/i", $this->options->generator, $matches);
+        $currentVersion = $matches[1];
+        $currentMinor = '0';
+        if (isset($matches[2])) {
+            $currentMinor = substr($matches[2], 1);
+        }
 
         $message = [];
 
         foreach ($packages as $package) {
+            preg_match("/^v([_0-9]+)(r[_0-9]+)?$/", $package, $matches);
+
+            $version = str_replace('_', '.', $matches[1]);
+
+            if (version_compare($currentVersion, $version, '>')) {
+                break;
+            }
+
+            if (isset($matches[2])) {
+                $minor = substr(str_replace('_', '.', $matches[2]), 1);
+
+                if (version_compare($currentVersion, $version, '=')
+                    && version_compare($currentMinor, $minor, '>=')) {
+                    break;
+                }
+
+                $version .= '/' . $minor;
+            }
+
             $options = $this->widget('Widget_Options@' . $package);
 
             /** 执行升级脚本 */
@@ -94,12 +73,8 @@ class Widget_Upgrade extends Widget_Abstract_Options implements Widget_Interface
                 return;
             }
 
-            [$ver, $rev] = explode('r', $package);
-            $ver = substr(str_replace('_', '.', $ver), 1);
-            $rev = str_replace('_', '.', $rev);
-
             /** 更新版本号 */
-            $this->update(['value' => 'Typecho ' . $ver . '/' . $rev],
+            $this->update(['value' => 'Typecho ' . $version],
                 $this->db->sql()->where('name = ?', 'generator'));
 
             $this->destroy('Widget_Options@' . $package);

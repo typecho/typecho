@@ -210,7 +210,7 @@ abstract class Typecho_Widget
      *
      * @param boolean $condition 触发条件
      *
-     * @return mixed
+     * @return $this|Typecho_Widget_Helper_Empty
      */
     public function on(bool $condition)
     {
