@@ -34,8 +34,6 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-    - name: Install tree
-      run: sudo apt-get -y install tree
     - name: Build
       run: |
         mkdir build
@@ -43,9 +41,8 @@ jobs:
         mkdir build/usr/uploads/
         chmod 777 build/usr/uploads/
         rm -rf build/admin/src
-        tree -d build
+        cd build && tar -cvvzf typecho.tar.gz * && mv typecho.tar.gz && cd ..
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2
       with:
-          name: typecho
-          path: ./build/
+          path: typecho.tar.gz
