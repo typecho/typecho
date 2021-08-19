@@ -52,7 +52,7 @@ class Widget_Options extends Typecho_Widget
      */
     public function __construct($request, $response, $params = null)
     {
-        parent::__construct($request, $response, null);
+        parent::__construct($request, $response);
 
         if (!empty($params)) {
             // 使用参数初始化而不使用数据库
