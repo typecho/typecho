@@ -287,7 +287,7 @@
         text = this.parseInlineCallback(text);
         // autolink url
         if (enableAutoLink) {
-          text = text.replace(/(^|[^\"])(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\b([-a-zA-Z0-9()@:%_\+.~#?&\/=]*)|(?:mailto:)?[_a-z0-9-\.\+]+@[_\w-]+(?:\.[a-z]{2,})+)($|[^\"])/g, (...matches) => {
+          text = text.replace(/(^|[^\"])(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\b([-a-zA-Z0-9@:%_\+.~#?&\/=]*)|(?:mailto:)?[_a-z0-9-\.\+]+@[_\w-]+(?:\.[a-z]{2,})+)($|[^\"])/g, (...matches) => {
             var link, url;
             url = this.cleanUrl(matches[2]);
             link = this.call('parseLink', matches[2]);
