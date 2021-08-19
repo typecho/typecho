@@ -68,6 +68,7 @@ class Typecho_Common
 {
     /** 程序版本 */
     const VERSION = '1.2/18.10.23';
+
     /**
      * 默认编码
      *
@@ -75,6 +76,7 @@ class Typecho_Common
      * @var string
      */
     public static $charset = 'UTF-8';
+
     /**
      * 异常处理类
      *
@@ -82,6 +84,7 @@ class Typecho_Common
      * @var string
      */
     public static $exceptionHandle;
+
     /**
      * 允许的属性
      *

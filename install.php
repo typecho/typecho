@@ -1102,6 +1102,11 @@ function install_dispatch() {
         && install_check('db_structure')
         && install_check('db_data')
     ) {
+        // redirect to siteUrl if not cli
+        if (!install_is_cli()) {
+            Typecho_Response::getInstance()->redirect($options->siteUrl);
+        }
+
         exit(1);
     }
 
