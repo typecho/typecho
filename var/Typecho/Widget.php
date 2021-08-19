@@ -409,6 +409,22 @@ abstract class Typecho_Widget
     }
 
     /**
+     * @return int
+     */
+    public function getSequence(): int
+    {
+        return $this->sequence;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLength(): int
+    {
+        return $this->length;
+    }
+
+    /**
      * 验证堆栈值是否存在
      *
      * @access public

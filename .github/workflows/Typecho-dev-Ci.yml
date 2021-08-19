@@ -47,5 +47,8 @@ jobs:
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2
       with:
-          name: typecho
-          path: ./build/
+        name: typecho
+        path: ./build/
+    - name: Trigger build
+      run: |
+        curl -XPOST -u "${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/vnd.github.everest-preview+json" -H "Content-Type: application/json" https://api.github.com/repos/typecho/languages/actions/workflows/update.yml/dispatches --data '{"ref": "master"}'
