@@ -41,7 +41,7 @@ jobs:
         mkdir build/usr/uploads/
         chmod 777 build/usr/uploads/
         rm -rf build/admin/src
-        cd build && tar -cvvzf typecho.tar.gz * && mv typecho.tar.gz && cd ..
+        cd build && tar -cvvzf typecho.tar.gz * && mv typecho.tar.gz .. && cd ..
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2
       with:
