@@ -1,11 +1,4 @@
 <?php
-/**
- * Typecho Blog Platform
- *
- * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license    GNU General Public License 2.0
- * @version    $Id: Db.php 107 2008-04-11 07:14:43Z magike.net $
- */
 
 /**
  * 包含获取数据支持方法的类.
@@ -17,53 +10,53 @@
 class Typecho_Db
 {
     /** 读取数据库 */
-    const READ = 1;
+    public const READ = 1;
 
     /** 写入数据库 */
-    const WRITE = 2;
+    public const WRITE = 2;
 
     /** 升序方式 */
-    const SORT_ASC = 'ASC';
+    public const SORT_ASC = 'ASC';
 
     /** 降序方式 */
-    const SORT_DESC = 'DESC';
+    public const SORT_DESC = 'DESC';
 
     /** 表内连接方式 */
-    const INNER_JOIN = 'INNER';
+    public const INNER_JOIN = 'INNER';
 
     /** 表外连接方式 */
-    const OUTER_JOIN = 'OUTER';
+    public const OUTER_JOIN = 'OUTER';
 
     /** 表左连接方式 */
-    const LEFT_JOIN = 'LEFT';
+    public const LEFT_JOIN = 'LEFT';
 
     /** 表右连接方式 */
-    const RIGHT_JOIN = 'RIGHT';
+    public const RIGHT_JOIN = 'RIGHT';
 
     /** 数据库查询操作 */
-    const SELECT = 'SELECT';
+    public const SELECT = 'SELECT';
 
     /** 数据库更新操作 */
-    const UPDATE = 'UPDATE';
+    public const UPDATE = 'UPDATE';
 
     /** 数据库插入操作 */
-    const INSERT = 'INSERT';
+    public const INSERT = 'INSERT';
 
     /** 数据库删除操作 */
-    const DELETE = 'DELETE';
+    public const DELETE = 'DELETE';
 
     /**
      * 数据库适配器
      * @var Typecho_Db_Adapter
      */
-    private $_adapter;
+    private $adapter;
 
     /**
      * 默认配置
      *
      * @var array
      */
-    private $_config;
+    private $config;
 
     /**
      * 已经连接
@@ -71,7 +64,7 @@ class Typecho_Db
      * @access private
      * @var array
      */
-    private $_connectedPool;
+    private $connectedPool;
 
     /**
      * 前缀
@@ -79,7 +72,7 @@ class Typecho_Db
      * @access private
      * @var string
      */
-    private $_prefix;
+    private $prefix;
 
     /**
      * 适配器名称
@@ -87,13 +80,13 @@ class Typecho_Db
      * @access private
      * @var string
      */
-    private $_adapterName;
+    private $adapterName;
 
     /**
      * 实例化的数据库对象
      * @var Typecho_Db
      */
-    private static $_instance;
+    private static $instance;
 
     /**
      * 数据库类构造函数
@@ -106,7 +99,7 @@ class Typecho_Db
     public function __construct($adapterName, string $prefix = 'typecho_')
     {
         /** 获取适配器名称 */
-        $this->_adapterName = $adapterName;
+        $this->adapterName = $adapterName;
 
         /** 数据库适配器 */
         $adapterName = 'Typecho_Db_Adapter_' . $adapterName;
@@ -115,18 +108,18 @@ class Typecho_Db
             throw new Typecho_Db_Exception("Adapter {$adapterName} is not available");
         }
 
-        $this->_prefix = $prefix;
+        $this->prefix = $prefix;
 
         /** 初始化内部变量 */
-        $this->_connectedPool = [];
+        $this->connectedPool = [];
 
-        $this->_config = [
+        $this->config = [
             self::READ => [],
             self::WRITE => []
         ];
 
         //实例化适配器对象
-        $this->_adapter = new $adapterName();
+        $this->adapter = new $adapterName();
     }
 
     /**
@@ -137,7 +130,7 @@ class Typecho_Db
      */
     public function getAdapterName(): string
     {
-        return $this->_adapterName;
+        return $this->adapterName;
     }
 
     /**
@@ -148,7 +141,7 @@ class Typecho_Db
      */
     public function getPrefix(): string
     {
-        return $this->_prefix;
+        return $this->prefix;
     }
 
     /**
@@ -158,11 +151,11 @@ class Typecho_Db
     public function addConfig(Typecho_Config $config, int $op)
     {
         if ($op & self::READ) {
-            $this->_config[self::READ][] = $config;
+            $this->config[self::READ][] = $config;
         }
 
         if ($op & self::WRITE) {
-            $this->_config[self::WRITE][] = $config;
+            $this->config[self::WRITE][] = $config;
         }
     }
 
@@ -176,13 +169,13 @@ class Typecho_Db
      */
     public function getConfig(int $op): Typecho_Config
     {
-        if (empty($this->_config[$op])) {
+        if (empty($this->config[$op])) {
             /** Typecho_Db_Exception */
             throw new Typecho_Db_Exception('Missing Database Connection');
         }
 
-        $key = array_rand($this->_config[$op]);
-        return $this->_config[$op][$key];
+        $key = array_rand($this->config[$op]);
+        return $this->config[$op][$key];
     }
 
     /**
@@ -192,7 +185,7 @@ class Typecho_Db
      */
     public function flushPool()
     {
-        $this->_connectedPool = [];
+        $this->connectedPool = [];
     }
 
     /**
@@ -205,13 +198,13 @@ class Typecho_Db
      */
     public function selectDb(int $op)
     {
-        if (!isset($this->_connectedPool[$op])) {
+        if (!isset($this->connectedPool[$op])) {
             $selectConnectionConfig = $this->getConfig($op);
-            $selectConnectionHandle = $this->_adapter->connect($selectConnectionConfig);
-            $this->_connectedPool[$op] = $selectConnectionHandle;
+            $selectConnectionHandle = $this->adapter->connect($selectConnectionConfig);
+            $this->connectedPool[$op] = $selectConnectionHandle;
         }
 
-        return $this->_connectedPool[$op];
+        return $this->connectedPool[$op];
     }
 
     /**
@@ -221,7 +214,7 @@ class Typecho_Db
      */
     public function sql(): Typecho_Db_Query
     {
-        return new Typecho_Db_Query($this->_adapter, $this->_prefix);
+        return new Typecho_Db_Query($this->adapter, $this->prefix);
     }
 
     /**
@@ -248,7 +241,7 @@ class Typecho_Db
      */
     public function getVersion(int $op = self::READ): string
     {
-        return $this->_adapter->getVersion($this->selectDb($op));
+        return $this->adapter->getVersion($this->selectDb($op));
     }
 
     /**
@@ -260,7 +253,7 @@ class Typecho_Db
      */
     public static function set(Typecho_Db $db)
     {
-        self::$_instance = $db;
+        self::$instance = $db;
     }
 
     /**
@@ -272,12 +265,12 @@ class Typecho_Db
      */
     public static function get(): Typecho_Db
     {
-        if (empty(self::$_instance)) {
+        if (empty(self::$instance)) {
             /** Typecho_Db_Exception */
             throw new Typecho_Db_Exception('Missing Database Object');
         }
 
-        return self::$_instance;
+        return self::$instance;
     }
 
     /**
@@ -347,8 +340,8 @@ class Typecho_Db
      */
     public function truncate($table)
     {
-        $table = preg_replace("/^table\./", $this->_prefix, $table);
-        $this->_adapter->truncate($table, $this->selectDb(self::WRITE));
+        $table = preg_replace("/^table\./", $this->prefix, $table);
+        $this->adapter->truncate($table, $this->selectDb(self::WRITE));
     }
 
     /**
@@ -371,7 +364,7 @@ class Typecho_Db
             $table = $query->getAttribute('table');
             $op = (self::UPDATE == $action || self::DELETE == $action
                 || self::INSERT == $action) ? self::WRITE : self::READ;
-        } else if (!is_string($query)) {
+        } elseif (!is_string($query)) {
             /** 如果query不是对象也不是字符串,那么将其判断为查询资源句柄,直接返回 */
             return $query;
         }
@@ -380,7 +373,7 @@ class Typecho_Db
         $handle = $this->selectDb($op);
 
         /** 提交查询 */
-        $resource = $this->_adapter->query($query instanceof Typecho_Db_Query ?
+        $resource = $this->adapter->query($query instanceof Typecho_Db_Query ?
             $query->prepare($query) : $query, $handle, $op, $action, $table);
 
         if ($action) {
@@ -388,9 +381,9 @@ class Typecho_Db
             switch ($action) {
                 case self::UPDATE:
                 case self::DELETE:
-                    return $this->_adapter->affectedRows($resource, $handle);
+                    return $this->adapter->affectedRows($resource, $handle);
                 case self::INSERT:
-                    return $this->_adapter->lastInsertId($resource, $handle);
+                    return $this->adapter->lastInsertId($resource, $handle);
                 case self::SELECT:
                 default:
                     return $resource;
@@ -405,26 +398,21 @@ class Typecho_Db
      * 一次取出所有行
      *
      * @param mixed $query 查询对象
-     * @param array|null $filter 行过滤器函数,将查询的每一行作为第一个参数传入指定的过滤器中
+     * @param callable|null $filter 行过滤器函数,将查询的每一行作为第一个参数传入指定的过滤器中
      *
      * @return array
      * @throws Typecho_Db_Exception
      */
-    public function fetchAll($query, ?array $filter = null): array
+    public function fetchAll($query, ?callable $filter = null): array
     {
         //执行查询
-        $resource = $this->query($query, self::READ);
+        $resource = $this->query($query);
         $result = [];
 
-        /** 取出过滤器 */
-        if (!empty($filter)) {
-            [$object, $method] = $filter;
-        }
-
         //取出每一行
-        while ($rows = $this->_adapter->fetch($resource)) {
+        while ($rows = $this->adapter->fetch($resource)) {
             //判断是否有过滤器
-            $result[] = $filter ? call_user_func([&$object, $method], $rows) : $rows;
+            $result[] = $filter ? call_user_func($filter, $rows) : $rows;
         }
 
         return $result;
@@ -434,22 +422,17 @@ class Typecho_Db
      * 一次取出一行
      *
      * @param mixed $query 查询对象
-     * @param array|null $filter 行过滤器函数,将查询的每一行作为第一个参数传入指定的过滤器中
+     * @param callable|null $filter 行过滤器函数,将查询的每一行作为第一个参数传入指定的过滤器中
      *
      * @return mixed
      * @throws Typecho_Db_Exception
      */
-    public function fetchRow($query, ?array $filter = null)
+    public function fetchRow($query, ?callable $filter = null)
     {
-        $resource = $this->query($query, self::READ);
+        $resource = $this->query($query);
 
-        /** 取出过滤器 */
-        if ($filter) {
-            [$object, $method] = $filter;
-        }
-
-        return ($rows = $this->_adapter->fetch($resource)) ?
-            ($filter ? $object->$method($rows) : $rows) :
+        return ($rows = $this->adapter->fetch($resource)) ?
+            ($filter ? call_user_func($filter, $rows) : $rows) :
             [];
     }
 
@@ -464,14 +447,14 @@ class Typecho_Db
      */
     public function fetchObject($query, ?array $filter = null)
     {
-        $resource = $this->query($query, self::READ);
+        $resource = $this->query($query);
 
         /** 取出过滤器 */
         if ($filter) {
             [$object, $method] = $filter;
         }
 
-        return ($rows = $this->_adapter->fetchObject($resource)) ?
+        return ($rows = $this->adapter->fetchObject($resource)) ?
             ($filter ? $object->$method($rows) : $rows) :
             new stdClass();
     }
