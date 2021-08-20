@@ -98,7 +98,7 @@ function install_get_default_options(): array {
             'theme:default' => 'a:2:{s:7:"logoUrl";N;s:12:"sidebarBlock";a:5:{i:0;s:15:"ShowRecentPosts";i:1;s:18:"ShowRecentComments";i:2;s:12:"ShowCategory";i:3;s:11:"ShowArchive";i:4;s:9:"ShowOther";}}',
             'timezone' => '28800',
             'lang' => install_get_lang(),
-            'charset' => _('UTF-8'),
+            'charset' => function_exists('_') ? _('UTF-8') : 'UTF-8',
             'contentType' => 'text/html',
             'gzip' => 0,
             'generator' => 'Typecho ' . Typecho_Common::VERSION,
