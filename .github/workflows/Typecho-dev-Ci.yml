@@ -51,4 +51,4 @@ jobs:
         path: ./build/
     - name: Trigger build
       run: |
-        curl -XPOST -u "username:${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/vnd.github.everest-preview+json" -H "Content-Type: application/json" https://api.github.com/repos/typecho/languages/actions/workflows/update.yml/dispatches --data '{"ref": "master"}'
+        curl -XPOST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/vnd.github.everest-preview+json" -H "Content-Type: application/json" https://api.github.com/repos/typecho/languages/actions/workflows/update.yml/dispatches --data '{"ref": "master"}'
