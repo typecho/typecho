@@ -86,7 +86,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                             <ul>
                                 <?php
                                 if ($post->have()) {
-                                    $categories = Typecho_Common::arrayFlatten($post->categories, 'mid');
+                                    $categories = array_column($post->categories, 'mid');
                                 } else {
                                     $categories = array();
                                 }

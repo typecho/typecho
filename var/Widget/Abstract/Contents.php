@@ -218,7 +218,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     public function applyFields(array $fields, $cid)
     {
-        $exists = array_flip(Typecho_Common::arrayFlatten($this->db->fetchAll($this->db->select('name')
+        $exists = array_flip(array_column($this->db->fetchAll($this->db->select('name')
             ->from('table.fields')->where('cid = ?', $cid)), 'name'));
 
         foreach ($fields as $name => $value) {

@@ -22,7 +22,7 @@ class Widget_Metas_Category_Admin extends Widget_Metas_Category_List
         $select = $this->db->select('mid')->from('table.metas')->where('type = ?', 'category');
         $select->where('parent = ?', $this->request->parent ? $this->request->parent : 0);
 
-        $this->stack = $this->getCategories(Typecho_Common::arrayFlatten(
+        $this->stack = $this->getCategories(array_column(
             $this->db->fetchAll($select->order('table.metas.order', Typecho_Db::SORT_ASC)), 'mid'));
     }
 

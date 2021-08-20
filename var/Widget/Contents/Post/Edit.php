@@ -473,7 +473,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         $categories = array_unique(array_map('trim', $categories));
 
         /** 取出已有category */
-        $existCategories = Typecho_Common::arrayFlatten($this->db->fetchAll(
+        $existCategories = array_column($this->db->fetchAll(
             $this->db->select('table.metas.mid')
                 ->from('table.metas')
                 ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
@@ -538,7 +538,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         $tags = array_filter($tags, ['Typecho_Validate', 'xssCheck']);
 
         /** 取出已有tag */
-        $existTags = Typecho_Common::arrayFlatten($this->db->fetchAll(
+        $existTags = array_column($this->db->fetchAll(
             $this->db->select('table.metas.mid')
                 ->from('table.metas')
                 ->join('table.relationships', 'table.relationships.mid = table.metas.mid')

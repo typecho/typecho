@@ -132,13 +132,13 @@ class Widget_Abstract_Metas extends Widget_Abstract
      */
     public function merge($mid, $type, array $metas)
     {
-        $contents = Typecho_Common::arrayFlatten($this->db->fetchAll($this->select('cid')
+        $contents = array_column($this->db->fetchAll($this->select('cid')
             ->from('table.relationships')
             ->where('mid = ?', $mid)), 'cid');
 
         foreach ($metas as $meta) {
             if ($mid != $meta) {
-                $existsContents = Typecho_Common::arrayFlatten($this->db->fetchAll($this->db
+                $existsContents = array_column($this->db->fetchAll($this->db
                     ->select('cid')->from('table.relationships')
                     ->where('mid = ?', $meta)), 'cid');
 
@@ -250,7 +250,7 @@ class Widget_Abstract_Metas extends Widget_Abstract
     public function clearTags()
     {
         // 取出count为0的标签
-        $tags = Typecho_Common::arrayFlatten($this->db->fetchAll($this->db->select('mid')
+        $tags = array_column($this->db->fetchAll($this->db->select('mid')
             ->from('table.metas')->where('type = ? AND count = ?', 'tags', 0)), 'mid');
 
         foreach ($tags as $tag) {

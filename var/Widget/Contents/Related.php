@@ -32,7 +32,7 @@ class Widget_Contents_Related extends Widget_Abstract_Contents
         $this->parameter->setDefault('limit=5');
 
         if ($this->parameter->tags) {
-            $tagsGroup = implode(',', Typecho_Common::arrayFlatten($this->parameter->tags, 'mid'));
+            $tagsGroup = implode(',', array_column($this->parameter->tags, 'mid'));
             $this->db->fetchAll($this->select()
                 ->join('table.relationships', 'table.contents.cid = table.relationships.cid')
                 ->where('table.relationships.mid IN (' . $tagsGroup . ')')

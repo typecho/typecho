@@ -269,7 +269,7 @@ class Widget_Contents_Attachment_Edit extends Widget_Contents_Post_Edit implemen
         $deleteCount = 0;
 
         do {
-            $posts = Typecho_Common::arrayFlatten($this->db->fetchAll($this->select('cid')
+            $posts = array_column($this->db->fetchAll($this->select('cid')
                 ->from('table.contents')
                 ->where('type = ? AND parent = ?', 'attachment', 0)
                 ->page($page, 100)), 'cid');

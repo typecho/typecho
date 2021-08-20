@@ -1748,7 +1748,7 @@ class Widget_Archive extends Widget_Abstract_Contents
             $this->_archiveTitle = $this->title;
 
             /** 设置关键词 */
-            $this->_keywords = implode(',', Typecho_Common::arrayFlatten($this->tags, 'name'));
+            $this->_keywords = implode(',', array_column($this->tags, 'name'));
 
             /** 设置描述 */
             $this->_description = $this->description;

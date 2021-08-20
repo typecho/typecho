@@ -1513,8 +1513,8 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
         /** 对文章内容做截取处理，以获得description和text_more*/
         [$excerpt, $more] = $this->getPostExtended($post);
         /** 只需要分类的name*/
-        $categories = Typecho_Common::arrayFlatten($post->categories, 'name');
-        $tags = Typecho_Common::arrayFlatten($post->tags, 'name');
+        $categories = array_column($post->categories, 'name');
+        $tags = array_column($post->tags, 'name');
 
         $postStruct = [
             'dateCreated' => new IXR_Date($this->options->timezone + $post->created),
@@ -1570,8 +1570,8 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
             /** 只需要分类的name*/
             /** 可以用flatten函数处理 */
-            $categories = Typecho_Common::arrayFlatten($posts->categories, 'name');
-            $tags = Typecho_Common::arrayFlatten($posts->tags, 'name');
+            $categories = array_column($posts->categories, 'name');
+            $tags = array_column($posts->tags, 'name');
 
             $postStructs[] = [
                 'dateCreated' => new IXR_Date($this->options->timezone + $posts->created),
@@ -1804,7 +1804,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             return new IXR_Error($e->getCode(), $e->getMessage());
         }
 
-        $post->setCategories($postId, Typecho_Common::arrayFlatten($categories, 'categoryId'),
+        $post->setCategories($postId, array_column($categories, 'categoryId'),
             'publish' == $post->status);
         return true;
     }
@@ -1916,7 +1916,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
             return new IXR_Error($e->getCode(), $e->getMessage());
         }
 
-        $categories = Typecho_Common::arrayFlatten($post->categories, 'name');
+        $categories = array_column($post->categories, 'name');
 
         $content = '<title>' . $post->title . '</title>';
         $content .= '<category>' . implode(',', $categories) . '</category>';
@@ -1973,7 +1973,7 @@ class Widget_XmlRpc extends Widget_Abstract_Contents implements Widget_Interface
 
         $postStructs = [];
         while ($posts->next()) {
-            $categories = Typecho_Common::arrayFlatten($posts->categories, 'name');
+            $categories = array_column($posts->categories, 'name');
 
             $content = '<title>' . $posts->title . '</title>';
             $content .= '<category>' . implode(',', $categories) . '</category>';
