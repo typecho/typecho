@@ -53,7 +53,7 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Do
 
         /** 开始验证用户 **/
         $valid = $this->user->login($this->request->name, $this->request->password,
-        false, 1 == $this->request->remember ? $this->options->time + $this->options->timezone + 30*24*3600 : 0);
+            false, 1 == $this->request->remember ? $this->options->time + $this->options->timezone + 30 * 24 * 3600 : 0);
 
         /** 比对密码 */
         if (!$valid) {
@@ -61,7 +61,7 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Do
             sleep(3);
 
             $this->pluginHandle()->loginFail($this->user, $this->request->name,
-            $this->request->password, 1 == $this->request->remember);
+                $this->request->password, 1 == $this->request->remember);
 
             Typecho_Cookie::set('__typecho_remember_name', $this->request->name);
             $this->widget('Widget_Notice')->set(_t('用户名或密码无效'), 'error');
@@ -69,7 +69,7 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Do
         }
 
         $this->pluginHandle()->loginSucceed($this->user, $this->request->name,
-        $this->request->password, 1 == $this->request->remember);
+            $this->request->password, 1 == $this->request->remember);
 
         /** 跳转验证后地址 */
         if (!empty($this->request->referer)) {
@@ -78,7 +78,7 @@ class Widget_Login extends Widget_Abstract_Users implements Widget_Interface_Do
                 || 0 === strpos($this->request->referer, $this->options->siteUrl)) {
                 $this->response->redirect($this->request->referer);
             }
-        } else if (!$this->user->pass('contributor', true)) {
+        } elseif (!$this->user->pass('contributor', true)) {
             /** 不允许普通用户直接跳转后台 */
             $this->response->redirect($this->options->profileUrl);
         }

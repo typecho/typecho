@@ -40,7 +40,7 @@ class Typecho_Widget_Helper_Form_Element_Fake extends Typecho_Widget_Helper_Form
         $this->input = $this->input($name);
 
         /** 初始化表单值 */
-        if (NULL !== $value) {
+        if (null !== $value) {
             $this->value($value);
         }
     }
@@ -52,7 +52,8 @@ class Typecho_Widget_Helper_Form_Element_Fake extends Typecho_Widget_Helper_Form
      * @return void
      */
     public function init()
-    {}
+    {
+    }
 
     /**
      * 初始化当前输入项
@@ -62,7 +63,7 @@ class Typecho_Widget_Helper_Form_Element_Fake extends Typecho_Widget_Helper_Form
      * @param array $options 选择项
      * @return Typecho_Widget_Helper_Layout
      */
-    public function input($name = NULL, array $options = NULL)
+    public function input($name = null, array $options = null)
     {
         $input = new Typecho_Widget_Helper_Layout('input');
         $this->inputs[] = $input;

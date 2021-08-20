@@ -11,9 +11,9 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 class Markdown
 {
     /**
-     * convert 
-     * 
-     * @param string $text 
+     * convert
+     *
+     * @param string $text
      * @return string
      */
     public static function convert($text)
@@ -35,7 +35,7 @@ class Markdown
 
     /**
      * transerCodeClass
-     * 
+     *
      * @param string $html
      * @return string
      */
@@ -50,7 +50,7 @@ class Markdown
      */
     public static function transerComment($html)
     {
-        return preg_replace_callback("/<!\-\-(.+?)\-\->/s", array('Markdown', 'transerCommentCallback'), $html);
+        return preg_replace_callback("/<!\-\-(.+?)\-\->/s", ['Markdown', 'transerCommentCallback'], $html);
     }
 
     /**

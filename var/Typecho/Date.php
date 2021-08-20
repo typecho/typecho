@@ -45,9 +45,10 @@ class Typecho_Date
      * 初始化参数
      *
      * @access public
-     * @param integer $time 时间戳
+     *
+     * @param integer|null $time 时间戳
      */
-    public function __construct($time = NULL)
+    public function __construct(?int $time = NULL)
     {
         $this->timeStamp = (NULL === $time ? self::time() : $time) + (self::$timezoneOffset - self::$serverTimezoneOffset);
     }
@@ -56,10 +57,12 @@ class Typecho_Date
      * 设置当前期望的时区偏移
      *
      * @access public
+     *
      * @param integer $offset
+     *
      * @return void
      */
-    public static function setTimezoneOffset($offset)
+    public static function setTimezoneOffset(int $offset)
     {
         self::$timezoneOffset = $offset;
         self::$serverTimezoneOffset = idate('Z');
@@ -69,10 +72,12 @@ class Typecho_Date
      * 获取格式化时间
      *
      * @access public
+     *
      * @param string $format 时间格式
+     *
      * @return string
      */
-    public function format($format)
+    public function format(string $format): string
     {
         return date($format, $this->timeStamp);
     }
@@ -83,7 +88,7 @@ class Typecho_Date
      * @access public
      * @return string
      */
-    public function word()
+    public function word(): string
     {
         return Typecho_I18n::dateWord($this->timeStamp, self::time() + (self::$timezoneOffset - self::$serverTimezoneOffset));
     }
@@ -92,10 +97,12 @@ class Typecho_Date
      * 获取单项数据
      *
      * @access public
+     *
      * @param string $name 名称
+     *
      * @return integer
      */
-    public function __get($name)
+    public function __get(string $name)
     {
         switch ($name) {
             case 'year':
@@ -105,7 +112,7 @@ class Typecho_Date
             case 'day':
                 return date('d', $this->timeStamp);
             default:
-                return;
+                return 0;
         }
     }
 
@@ -115,7 +122,7 @@ class Typecho_Date
      * @deprecated
      * @return int
      */
-    public static function gmtTime()
+    public static function gmtTime(): int
     {
         return self::time();
     }
@@ -125,8 +132,8 @@ class Typecho_Date
      *
      * @return int
      */
-    public static function time()
+    public static function time(): int
     {
-        return self::$serverTimeStamp ? self::$serverTimeStamp : (self::$serverTimeStamp = time());
+        return self::$serverTimeStamp ?: (self::$serverTimeStamp = time());
     }
 }

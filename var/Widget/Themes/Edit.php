@@ -36,29 +36,29 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
             /** 删除原外观设置信息 */
             $this->delete($this->db->sql()->where('name = ?', 'theme:' . $this->options->theme));
 
-            $this->update(array('value' => $theme), $this->db->sql()->where('name = ?', 'theme'));
+            $this->update(['value' => $theme], $this->db->sql()->where('name = ?', 'theme'));
 
             /** 解除首页关联 */
             if (0 === strpos($this->options->frontPage, 'file:')) {
-                $this->update(array('value' => 'recent'), $this->db->sql()->where('name = ?', 'frontPage'));
+                $this->update(['value' => 'recent'], $this->db->sql()->where('name = ?', 'frontPage'));
             }
-            
+
             $configFile = $this->options->themeFile($theme, 'functions.php');
-            
+
             if (file_exists($configFile)) {
                 require_once $configFile;
-                
+
                 if (function_exists('themeConfig')) {
                     $form = new Typecho_Widget_Helper_Form();
                     themeConfig($form);
                     $options = $form->getValues();
 
                     if ($options && !$this->configHandle($options, true)) {
-                        $this->insert(array(
-                            'name'  =>  'theme:' . $theme,
-                            'value' =>  serialize($options),
-                            'user'  =>  0
-                        ));
+                        $this->insert([
+                            'name'  => 'theme:' . $theme,
+                            'value' => serialize($options),
+                            'user'  => 0
+                        ]);
                     }
                 }
             }
@@ -69,6 +69,24 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
         } else {
             throw new Typecho_Widget_Exception(_t('您选择的风格不存在'));
         }
+    }
+
+    /**
+     * 用自有函数处理配置信息
+     *
+     * @access public
+     * @param array $settings 配置值
+     * @param boolean $isInit 是否为初始化
+     * @return boolean
+     */
+    public function configHandle(array $settings, $isInit)
+    {
+        if (function_exists('themeConfigHandle')) {
+            themeConfigHandle($settings, $isInit);
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -98,7 +116,7 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
             throw new Typecho_Widget_Exception(_t('您编辑的文件不存在'));
         }
     }
-    
+
     /**
      * 配置外观
      *
@@ -120,14 +138,14 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
 
         if (!$this->configHandle($settings, false)) {
             if ($this->options->__get('theme:' . $theme)) {
-                $this->update(array('value' => serialize($settings)),
-                $this->db->sql()->where('name = ?', 'theme:' . $theme));
+                $this->update(['value' => serialize($settings)],
+                    $this->db->sql()->where('name = ?', 'theme:' . $theme));
             } else {
-                $this->insert(array(
-                    'name'  =>  'theme:' . $theme,
-                    'value' =>  serialize($settings),
-                    'user'  =>  0
-                ));
+                $this->insert([
+                    'name'  => 'theme:' . $theme,
+                    'value' => serialize($settings),
+                    'user'  => 0
+                ]);
             }
         }
 
@@ -139,24 +157,6 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
 
         /** 转向原页 */
         $this->response->redirect(Typecho_Common::url('options-theme.php', $this->options->adminUrl));
-    }
-
-    /**
-     * 用自有函数处理配置信息
-     *
-     * @access public
-     * @param array $settings 配置值
-     * @param boolean $isInit 是否为初始化
-     * @return boolean
-     */
-    public function configHandle(array $settings, $isInit)
-    {
-        if (function_exists('themeConfigHandle')) {
-            themeConfigHandle($settings, $isInit);
-            return true;
-        }
-
-        return false;
     }
 
     /**

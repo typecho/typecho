@@ -53,14 +53,14 @@ class Typecho_Router_Parser
     {
         $this->_routingTable = $routingTable;
 
-        $this->_defaultRegx = array(
+        $this->_defaultRegx = [
             'string' => '(.%s)',
-            'char'   => '([^/]%s)',
-            'digital'=> '([0-9]%s)',
-            'alpha'  => '([_0-9a-zA-Z-]%s)',
-            'alphaslash'  => '([_0-9a-zA-Z-/]%s)',
-            'split'  => '((?:[^/]+/)%s[^/]+)',
-        );
+            'char' => '([^/]%s)',
+            'digital' => '([0-9]%s)',
+            'alpha' => '([_0-9a-zA-Z-]%s)',
+            'alphaslash' => '([_0-9a-zA-Z-/]%s)',
+            'split' => '((?:[^/]+/)%s[^/]+)',
+        ];
     }
 
     /**
@@ -78,11 +78,11 @@ class Typecho_Router_Parser
 
         if (1 == $paramsNum) {
             return sprintf($this->_defaultRegx['char'], '+');
-        } else if (2 == $paramsNum) {
+        } elseif (2 == $paramsNum) {
             return sprintf($this->_defaultRegx[$params[1]], '+');
-        } else if (3 == $paramsNum) {
+        } elseif (3 == $paramsNum) {
             return sprintf($this->_defaultRegx[$params[1]], $params[2] > 0 ? '{' . $params[2] . '}' : '*');
-        } else if (4 == $paramsNum) {
+        } elseif (4 == $paramsNum) {
             return sprintf($this->_defaultRegx[$params[1]], '{' . $params[2] . ',' . $params[3] . '}');
         }
     }
@@ -95,12 +95,12 @@ class Typecho_Router_Parser
      */
     public function parse()
     {
-        $result = array();
+        $result = [];
 
         foreach ($this->_routingTable as $key => $route) {
-            $this->_params = array();
-            $route['regx'] = preg_replace_callback("/%([^%]+)%/", array($this, '_match'),
-            preg_quote(str_replace(array('[', ']', ':'), array('%', '%', ' '), $route['url'])));
+            $this->_params = [];
+            $route['regx'] = preg_replace_callback("/%([^%]+)%/", [$this, '_match'],
+                preg_quote(str_replace(['[', ']', ':'], ['%', '%', ' '], $route['url'])));
 
             /** 处理斜线 */
             $route['regx'] = rtrim($route['regx'], '/');

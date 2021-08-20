@@ -28,7 +28,7 @@ class Widget_Init extends Typecho_Widget
 
         /** 检查安装状态 */
         if (!defined('__TYPECHO_INSTALL__') && !$options->installed) {
-            $options->update(array('value' => 1), Typecho_Db::get()->sql()->where('name = ?', 'installed'));
+            $options->update(['value' => 1], Typecho_Db::get()->sql()->where('name = ?', 'installed'));
         }
 
         /** 语言包初始化 */

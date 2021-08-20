@@ -27,10 +27,10 @@ class Widget_Comments_Recent extends Widget_Abstract_Comments
      * @param mixed $params 参数列表
      * @return void
      */
-    public function __construct($request, $response, $params = NULL)
+    public function __construct($request, $response, $params = null)
     {
         parent::__construct($request, $response, $params);
-        $this->parameter->setDefault(array('pageSize' => $this->options->commentsListSize, 'parentId' => 0, 'ignoreAuthor' => false));
+        $this->parameter->setDefault(['pageSize' => $this->options->commentsListSize, 'parentId' => 0, 'ignoreAuthor' => false]);
     }
 
     /**
@@ -41,9 +41,9 @@ class Widget_Comments_Recent extends Widget_Abstract_Comments
      */
     public function execute()
     {
-        $select  = $this->select()->limit($this->parameter->pageSize)
-        ->where('table.comments.status = ?', 'approved')
-        ->order('table.comments.coid', Typecho_Db::SORT_DESC);
+        $select = $this->select()->limit($this->parameter->pageSize)
+            ->where('table.comments.status = ?', 'approved')
+            ->order('table.comments.coid', Typecho_Db::SORT_DESC);
 
         if ($this->parameter->parentId) {
             $select->where('cid = ?', $this->parameter->parentId);
@@ -52,12 +52,12 @@ class Widget_Comments_Recent extends Widget_Abstract_Comments
         if ($this->options->commentsShowCommentOnly) {
             $select->where('type = ?', 'comment');
         }
-        
+
         /** 忽略作者评论 */
         if ($this->parameter->ignoreAuthor) {
             $select->where('ownerId <> authorId');
         }
 
-        $this->db->fetchAll($select, array($this, 'push'));
+        $this->db->fetchAll($select, [$this, 'push']);
     }
 }

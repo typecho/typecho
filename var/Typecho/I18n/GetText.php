@@ -35,6 +35,7 @@
  */
 
 //reload by 70 (typecho group)
+
 /**
  * This file is part of PHP-gettext
  *
@@ -49,16 +50,16 @@ class Typecho_I18n_GetText
 
     //private:
     private $BYTEORDER = 0;        // 0: low endian, 1: big endian
-    private $STREAM = NULL;
+    private $STREAM = null;
     private $short_circuit = false;
     private $enable_cache = false;
-    private $originals = NULL;      // offset of original table
-    private $translations = NULL;    // offset of translation table
-    private $pluralheader = NULL;    // cache header field for plural forms
+    private $originals = null;      // offset of original table
+    private $translations = null;    // offset of translation table
+    private $pluralheader = null;    // cache header field for plural forms
     private $total = 0;          // total string count
-    private $table_originals = NULL;  // table for original strings (offsets)
-    private $table_translations = NULL;  // table for translated strings (offsets)
-    private $cache_translations = NULL;  // original -> translation mapping
+    private $table_originals = null;  // table for original strings (offsets)
+    private $table_translations = null;  // table for translated strings (offsets)
+    private $cache_translations = null;  // original -> translation mapping
 
 
     /* Methods */
@@ -79,13 +80,13 @@ class Typecho_I18n_GetText
         // Caching can be turned off
         $this->enable_cache = $enable_cache;
         $this->STREAM = @fopen($file, 'rb');
-        
+
         $unpacked = unpack('c', $this->read(4));
         $magic = array_shift($unpacked);
 
-        if (-34 == $magic) {
+        if (- 34 == $magic) {
             $this->BYTEORDER = 0;
-        } elseif (-107 == $magic) {
+        } elseif (- 107 == $magic) {
             $this->BYTEORDER = 1;
         } else {
             $this->error = 1; // not MO file
@@ -101,9 +102,9 @@ class Typecho_I18n_GetText
     }
 
     /**
-     * read  
-     * 
-     * @param mixed $count 
+     * read
+     *
+     * @param mixed $count
      * @access private
      * @return void
      */
@@ -115,7 +116,7 @@ class Typecho_I18n_GetText
             return fread($this->STREAM, $count);
         }
 
-        return NULL;
+        return null;
     }
 
     /**
@@ -128,130 +129,6 @@ class Typecho_I18n_GetText
     {
         $end = unpack($this->BYTEORDER == 0 ? 'V' : 'N', $this->read(4));
         return array_shift($end);
-    }
-
-    /**
-     * Reads an array of Integers from the Stream
-     *
-     * @param int count How many elements should be read
-     * @return Array of Integers
-     */
-    private function readintarray($count)
-    {
-        return unpack(($this->BYTEORDER == 0 ? 'V' : 'N') . $count, $this->read(4 * $count));
-    }
-
-    /**
-     * Loads the translation tables from the MO file into the cache
-     * If caching is enabled, also loads all strings into a cache
-     * to speed up translation lookups
-     *
-     * @access private
-     */
-    private function load_tables()
-    {
-        if (is_array($this->cache_translations) &&
-                is_array($this->table_originals) &&
-                is_array($this->table_translations))
-            return;
-
-        /* get original and translations tables */
-        fseek($this->STREAM, $this->originals);
-        $this->table_originals = $this->readintarray($this->total * 2);
-        fseek($this->STREAM, $this->translations);
-        $this->table_translations = $this->readintarray($this->total * 2);
-
-        if ($this->enable_cache) {
-            $this->cache_translations = array ('' => NULL);
-            /* read all strings in the cache */
-            for ($i = 0; $i < $this->total; $i++) {
-                if ($this->table_originals[$i * 2 + 1] > 0) {
-                    fseek($this->STREAM, $this->table_originals[$i * 2 + 2]);
-                    $original = fread($this->STREAM, $this->table_originals[$i * 2 + 1]);
-                    fseek($this->STREAM, $this->table_translations[$i * 2 + 2]);
-                    $translation = fread($this->STREAM, $this->table_translations[$i * 2 + 1]);
-                    $this->cache_translations[$original] = $translation;
-                }
-            }
-        }
-    }
-
-    /**
-     * Returns a string from the "originals" table
-     *
-     * @access private
-     * @param int num Offset number of original string
-     * @return string Requested string if found, otherwise ''
-     */
-    private function get_original_string($num)
-    {
-        $length = $this->table_originals[$num * 2 + 1];
-        $offset = $this->table_originals[$num * 2 + 2];
-        if (! $length)
-            return '';
-        fseek($this->STREAM, $offset);
-        $data = fread($this->STREAM, $length);
-        return (string)$data;
-    }
-
-    /**
-     * Returns a string from the "translations" table
-     *
-     * @access private
-     * @param int num Offset number of original string
-     * @return string Requested string if found, otherwise ''
-     */
-    private function get_translation_string($num)
-    {
-        $length = $this->table_translations[$num * 2 + 1];
-        $offset = $this->table_translations[$num * 2 + 2];
-        if (! $length)
-            return '';
-        fseek($this->STREAM, $offset);
-        $data = fread($this->STREAM, $length);
-        return (string)$data;
-    }
-
-    /**
-     * Binary search for string
-     *
-     * @access private
-     * @param string string
-     * @param int start (internally used in recursive function)
-     * @param int end (internally used in recursive function)
-     * @return int string number (offset in originals table)
-     */
-    private function find_string($string, $start = -1, $end = -1)
-    {
-        if (($start == -1) or ($end == -1)) {
-            // find_string is called with only one parameter, set start end end
-            $start = 0;
-            $end = $this->total;
-        }
-        if (abs($start - $end) <= 1) {
-            // We're done, now we either found the string, or it doesn't exist
-            $txt = $this->get_original_string($start);
-            if ($string == $txt)
-                return $start;
-            else
-                return -1;
-        } else if ($start > $end) {
-            // start > end -> turn around and start over
-            return $this->find_string($string, $end, $start);
-        } else {
-            // Divide table in two parts
-            $half = (int)(($start + $end) / 2);
-            $cmp = strcmp($string, $this->get_original_string($half));
-            if ($cmp == 0)
-                // string is exactly in the middle => return it
-                return $half;
-            else if ($cmp < 0)
-                // The string is in the upper half
-                return $this->find_string($string, $start, $half);
-            else
-                // The string is in the lower half
-                return $this->find_string($string, $half, $end);
-        }
     }
 
     /**
@@ -277,7 +154,7 @@ class Typecho_I18n_GetText
         } else {
             // Caching not enabled, try to find string
             $num = $this->find_string($string);
-            if ($num == -1)
+            if ($num == - 1)
                 return $string;
             else
                 return $this->get_translation_string($num);
@@ -285,53 +162,127 @@ class Typecho_I18n_GetText
     }
 
     /**
-     * Get possible plural forms from MO header
+     * Loads the translation tables from the MO file into the cache
+     * If caching is enabled, also loads all strings into a cache
+     * to speed up translation lookups
      *
      * @access private
-     * @return string plural form header
      */
-    private function get_plural_forms()
+    private function load_tables()
     {
-        // lets assume message number 0 is header
-        // this is true, right?
-        $this->load_tables();
+        if (is_array($this->cache_translations) &&
+            is_array($this->table_originals) &&
+            is_array($this->table_translations))
+            return;
 
-        // cache header field for plural forms
-        if (! is_string($this->pluralheader)) {
-            if ($this->enable_cache) {
-                $header = $this->cache_translations[""];
-            } else {
-                $header = $this->get_translation_string(0);
+        /* get original and translations tables */
+        fseek($this->STREAM, $this->originals);
+        $this->table_originals = $this->readintarray($this->total * 2);
+        fseek($this->STREAM, $this->translations);
+        $this->table_translations = $this->readintarray($this->total * 2);
+
+        if ($this->enable_cache) {
+            $this->cache_translations = ['' => null];
+            /* read all strings in the cache */
+            for ($i = 0; $i < $this->total; $i ++) {
+                if ($this->table_originals[$i * 2 + 1] > 0) {
+                    fseek($this->STREAM, $this->table_originals[$i * 2 + 2]);
+                    $original = fread($this->STREAM, $this->table_originals[$i * 2 + 1]);
+                    fseek($this->STREAM, $this->table_translations[$i * 2 + 2]);
+                    $translation = fread($this->STREAM, $this->table_translations[$i * 2 + 1]);
+                    $this->cache_translations[$original] = $translation;
+                }
             }
-            if (preg_match("/plural\-forms: ([^\n]*)\n/i", $header, $regs))
-                $expr = $regs[1];
-            else
-                $expr = "nplurals=2; plural=n == 1 ? 0 : 1;";
-            $this->pluralheader = $expr;
         }
-        return $this->pluralheader;
     }
 
     /**
-     * Detects which plural form to take
+     * Reads an array of Integers from the Stream
+     *
+     * @param int count How many elements should be read
+     * @return Array of Integers
+     */
+    private function readintarray($count)
+    {
+        return unpack(($this->BYTEORDER == 0 ? 'V' : 'N') . $count, $this->read(4 * $count));
+    }
+
+    /**
+     * Binary search for string
      *
      * @access private
-     * @param n count
-     * @return int array index of the right plural form
+     * @param string string
+     * @param int start (internally used in recursive function)
+     * @param int end (internally used in recursive function)
+     * @return int string number (offset in originals table)
      */
-    private function select_string($n)
+    private function find_string($string, $start = - 1, $end = - 1)
     {
-        $string = $this->get_plural_forms();
-        $string = str_replace('nplurals',"\$total",$string);
-        $string = str_replace("n",$n,$string);
-        $string = str_replace('plural',"\$plural",$string);
+        if (($start == - 1) or ($end == - 1)) {
+            // find_string is called with only one parameter, set start end end
+            $start = 0;
+            $end = $this->total;
+        }
+        if (abs($start - $end) <= 1) {
+            // We're done, now we either found the string, or it doesn't exist
+            $txt = $this->get_original_string($start);
+            if ($string == $txt)
+                return $start;
+            else
+                return - 1;
+        } elseif ($start > $end) {
+            // start > end -> turn around and start over
+            return $this->find_string($string, $end, $start);
+        } else {
+            // Divide table in two parts
+            $half = (int)(($start + $end) / 2);
+            $cmp = strcmp($string, $this->get_original_string($half));
+            if ($cmp == 0)
+                // string is exactly in the middle => return it
+                return $half;
+            elseif ($cmp < 0)
+                // The string is in the upper half
+                return $this->find_string($string, $start, $half);
+            else
+                // The string is in the lower half
+                return $this->find_string($string, $half, $end);
+        }
+    }
 
-        $total = 0;
-        $plural = 0;
+    /**
+     * Returns a string from the "originals" table
+     *
+     * @access private
+     * @param int num Offset number of original string
+     * @return string Requested string if found, otherwise ''
+     */
+    private function get_original_string($num)
+    {
+        $length = $this->table_originals[$num * 2 + 1];
+        $offset = $this->table_originals[$num * 2 + 2];
+        if (!$length)
+            return '';
+        fseek($this->STREAM, $offset);
+        $data = fread($this->STREAM, $length);
+        return (string)$data;
+    }
 
-        eval("$string");
-        if ($plural >= $total) $plural = $total - 1;
-        return $plural;
+    /**
+     * Returns a string from the "translations" table
+     *
+     * @access private
+     * @param int num Offset number of original string
+     * @return string Requested string if found, otherwise ''
+     */
+    private function get_translation_string($num)
+    {
+        $length = $this->table_translations[$num * 2 + 1];
+        $offset = $this->table_translations[$num * 2 + 2];
+        if (!$length)
+            return '';
+        fseek($this->STREAM, $offset);
+        $data = fread($this->STREAM, $length);
+        return (string)$data;
     }
 
     /**
@@ -359,11 +310,11 @@ class Typecho_I18n_GetText
         $select = $this->select_string($number);
 
         // this should contains all strings separated by NULLs
-        $key = $single.chr(0).$plural;
+        $key = $single . chr(0) . $plural;
 
 
         if ($this->enable_cache) {
-            if (! array_key_exists($key, $this->cache_translations)) {
+            if (!array_key_exists($key, $this->cache_translations)) {
                 return ($number != 1) ? $plural : $single;
             } else {
                 $result = $this->cache_translations[$key];
@@ -372,7 +323,7 @@ class Typecho_I18n_GetText
             }
         } else {
             $num = $this->find_string($key);
-            if ($num == -1) {
+            if ($num == - 1) {
                 return ($number != 1) ? $plural : $single;
             } else {
                 $result = $this->get_translation_string($num);
@@ -380,6 +331,56 @@ class Typecho_I18n_GetText
                 return $list[$select];
             }
         }
+    }
+
+    /**
+     * Detects which plural form to take
+     *
+     * @access private
+     * @param n count
+     * @return int array index of the right plural form
+     */
+    private function select_string($n)
+    {
+        $string = $this->get_plural_forms();
+        $string = str_replace('nplurals', "\$total", $string);
+        $string = str_replace("n", $n, $string);
+        $string = str_replace('plural', "\$plural", $string);
+
+        $total = 0;
+        $plural = 0;
+
+        eval("$string");
+        if ($plural >= $total) $plural = $total - 1;
+        return $plural;
+    }
+
+    /**
+     * Get possible plural forms from MO header
+     *
+     * @access private
+     * @return string plural form header
+     */
+    private function get_plural_forms()
+    {
+        // lets assume message number 0 is header
+        // this is true, right?
+        $this->load_tables();
+
+        // cache header field for plural forms
+        if (!is_string($this->pluralheader)) {
+            if ($this->enable_cache) {
+                $header = $this->cache_translations[""];
+            } else {
+                $header = $this->get_translation_string(0);
+            }
+            if (preg_match("/plural\-forms: ([^\n]*)\n/i", $header, $regs))
+                $expr = $regs[1];
+            else
+                $expr = "nplurals=2; plural=n == 1 ? 0 : 1;";
+            $this->pluralheader = $expr;
+        }
+        return $this->pluralheader;
     }
 
     /**

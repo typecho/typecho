@@ -32,6 +32,24 @@ class Typecho_Http_Client_Adapter_Socket extends Typecho_Http_Client_Adapter
     }
 
     /**
+     * 获取回执身体
+     *
+     * @access public
+     * @return string
+     */
+    public function getResponseBody()
+    {
+        /** 支持chunked编码 */
+        if ('chunked' == $this->getResponseHeader('Transfer-Encoding')) {
+            $parts = explode("\r\n", $this->responseBody, 2);
+            $counter = hexdec($parts[0]);
+            $this->responseBody = substr($parts[1], 0, $counter);
+        }
+
+        return $this->responseBody;
+    }
+
+    /**
      * 发送请求
      *
      * @access public
@@ -119,7 +137,7 @@ class Typecho_Http_Client_Adapter_Socket extends Typecho_Http_Client_Adapter
                 } else {
                     throw new Typecho_Http_Client_Exception(__CLASS__ . ': could not read from ' . $this->host . ':' . $this->port, 500);
                 }
-            } else if (strlen($buf) < 4096) {
+            } elseif (strlen($buf) < 4096) {
                 $info = stream_get_meta_data($socket);
 
                 if ($info['timed_out']) {
@@ -132,23 +150,5 @@ class Typecho_Http_Client_Adapter_Socket extends Typecho_Http_Client_Adapter
 
         fclose($socket);
         return $response;
-    }
-
-    /**
-     * 获取回执身体
-     *
-     * @access public
-     * @return string
-     */
-    public function getResponseBody()
-    {
-        /** 支持chunked编码 */
-        if ('chunked' == $this->getResponseHeader('Transfer-Encoding')) {
-            $parts = explode("\r\n", $this->responseBody, 2);
-            $counter = hexdec($parts[0]);
-            $this->responseBody = substr($parts[1], 0, $counter);
-        }
-
-        return $this->responseBody;
     }
 }

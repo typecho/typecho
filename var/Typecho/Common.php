@@ -15,14 +15,15 @@ define('__TYPECHO_MB_SUPPORTED__', function_exists('mb_get_info') && function_ex
  * I18n function
  *
  * @param string $string 需要翻译的文字
+ * @param mixed ...$args 参数
+ *
  * @return string
  */
-function _t($string) {
-    if (func_num_args() <= 1) {
+function _t(string $string, ...$args): string
+{
+    if (empty($args)) {
         return Typecho_I18n::translate($string);
     } else {
-        $args = func_get_args();
-        array_shift($args);
         return vsprintf(Typecho_I18n::translate($string), $args);
     }
 }
@@ -30,11 +31,12 @@ function _t($string) {
 /**
  * I18n function, translate and echo
  *
- * @param string $string 需要翻译并输出的文字
- * @return void
+ * @param string $string 需要翻译的文字
+ * @param mixed ...$args 参数
  */
-function _e() {
-    $args = func_get_args();
+function _e(string $string, ...$args)
+{
+    array_unshift($args, $string);
     echo call_user_func_array('_t', $args);
 }
 
@@ -44,9 +46,11 @@ function _e() {
  * @param string $single 单数形式的翻译
  * @param string $plural 复数形式的翻译
  * @param integer $number 数字
+ *
  * @return string
  */
-function _n($single, $plural, $number) {
+function _n(string $single, string $plural, int $number): string
+{
     return str_replace('%d', $number, Typecho_I18n::ngettext($single, $plural, $number));
 }
 
@@ -61,15 +65,7 @@ function _n($single, $plural, $number) {
 class Typecho_Common
 {
     /** 程序版本 */
-    const VERSION = '1.2/18.10.23';
-
-    /**
-     * 允许的属性
-     * 
-     * @access private
-     * @var array
-     */
-    private static $_allowableAttributes = array();
+    const VERSION = '1.2.0';
 
     /**
      * 默认编码
@@ -88,9 +84,18 @@ class Typecho_Common
     public static $exceptionHandle;
 
     /**
+     * 允许的属性
+     *
+     * @access private
+     * @var array
+     */
+    private static $_allowableAttributes = [];
+
+    /**
      * 将字符串变成大写的回调函数
-     * 
-     * @param array $matches 
+     *
+     * @param array $matches
+     *
      * @access public
      * @return string
      */
@@ -103,23 +108,27 @@ class Typecho_Common
      * 将url中的非法xss去掉时的数组回调过滤函数
      *
      * @access private
+     *
      * @param string $string 需要过滤的字符串
+     *
      * @return string
      */
     public static function __removeUrlXss($string)
     {
-        $string = str_replace(array('%0d', '%0a'), '', strip_tags($string));
-        return preg_replace(array(
+        $string = str_replace(['%0d', '%0a'], '', strip_tags($string));
+        return preg_replace([
             "/\(\s*(\"|')/i",           //函数开头
             "/(\"|')\s*\)/i",           //函数结尾
-        ), '', $string);
+        ], '', $string);
     }
 
     /**
      * 检查是否为安全路径
      *
      * @access public
+     *
      * @param string $path 检查是否为安全路径
+     *
      * @return boolean
      */
     public static function __safePath($path)
@@ -129,9 +138,10 @@ class Typecho_Common
     }
 
     /**
-     * __filterAttrs  
-     * 
-     * @param mixed $matches 
+     * __filterAttrs
+     *
+     * @param mixed $matches
+     *
      * @static
      * @access public
      * @return bool
@@ -149,7 +159,7 @@ class Typecho_Common
         }
 
         $attrs = self::__parseAttrs($str);
-        $parsedAttrs = array();
+        $parsedAttrs = [];
         $tag = strtolower($matches[1]);
 
         foreach ($attrs as $key => $val) {
@@ -160,28 +170,30 @@ class Typecho_Common
 
         return '<' . $tag . implode('', $parsedAttrs) . '>';
     }
-    
+
     /**
      * 解析属性
-     * 
+     *
      * @access public
+     *
      * @param string $attrs 属性字符串
+     *
      * @return array
      */
     public static function __parseAttrs($attrs)
     {
         $attrs = trim($attrs);
         $len = strlen($attrs);
-        $pos = -1;
-        $result = array();
+        $pos = - 1;
+        $result = [];
         $quote = '';
         $key = '';
         $value = '';
-        
+
         for ($i = 0; $i < $len; $i ++) {
-            if ('=' != $attrs[$i] && !ctype_space($attrs[$i]) && -1 == $pos) {
+            if ('=' != $attrs[$i] && !ctype_space($attrs[$i]) && - 1 == $pos) {
                 $key .= $attrs[$i];
-                
+
                 /** 最后一个 */
                 if ($i == $len - 1) {
                     if ('' != ($key = trim($key))) {
@@ -190,35 +202,35 @@ class Typecho_Common
                         $value = '';
                     }
                 }
-                
-            } else if (ctype_space($attrs[$i]) && -1 == $pos) {
-                $pos = -2;
-            } else if ('=' == $attrs[$i] && 0 > $pos) {
+
+            } elseif (ctype_space($attrs[$i]) && - 1 == $pos) {
+                $pos = - 2;
+            } elseif ('=' == $attrs[$i] && 0 > $pos) {
                 $pos = 0;
-            } else if (('"' == $attrs[$i] || "'" == $attrs[$i]) && 0 == $pos) {
+            } elseif (('"' == $attrs[$i] || "'" == $attrs[$i]) && 0 == $pos) {
                 $quote = $attrs[$i];
                 $value .= $attrs[$i];
                 $pos = 1;
-            } else if ($quote != $attrs[$i] && 1 == $pos) {
+            } elseif ($quote != $attrs[$i] && 1 == $pos) {
                 $value .= $attrs[$i];
-            } else if ($quote == $attrs[$i] && 1 == $pos) {
-                $pos = -1;
+            } elseif ($quote == $attrs[$i] && 1 == $pos) {
+                $pos = - 1;
                 $value .= $attrs[$i];
                 $result[trim($key)] = $value;
                 $key = '';
                 $value = '';
-            } else if ('=' != $attrs[$i] && !ctype_space($attrs[$i]) && -2 == $pos) {
+            } elseif ('=' != $attrs[$i] && !ctype_space($attrs[$i]) && - 2 == $pos) {
                 if ('' != ($key = trim($key))) {
                     $result[$key] = '';
                 }
-                
+
                 $key = '';
                 $value = '';
-                $pos = -1;
+                $pos = - 1;
                 $key .= $attrs[$i];
             }
         }
-        
+
         return $result;
     }
 
@@ -229,7 +241,7 @@ class Typecho_Common
      */
     public static function __autoLoad($className)
     {
-        $classFile = str_replace(array('\\', '_'), '/', $className) . '.php';
+        $classFile = str_replace(['\\', '_'], '/', $className) . '.php';
         $systemPath = self::url($classFile, __TYPECHO_ROOT_DIR__ . '/var');
 
         if (file_exists($systemPath)) {
@@ -244,6 +256,26 @@ class Typecho_Common
     }
 
     /**
+     * 将路径转化为链接
+     *
+     * @access public
+     *
+     * @param string $path 路径
+     * @param string $prefix 前缀
+     *
+     * @return string
+     */
+    public static function url($path, $prefix)
+    {
+        $path = (0 === strpos($path, './')) ? substr($path, 2) : $path;
+        return rtrim(
+            rtrim($prefix, '/') . '/'
+            . str_replace('//', '/', ltrim($path, '/')),
+            '/'
+        );
+    }
+
+    /**
      * 程序初始化方法
      *
      * @access public
@@ -252,17 +284,19 @@ class Typecho_Common
     public static function init()
     {
         /** 设置自动载入函数 */
-        spl_autoload_register(array('Typecho_Common', '__autoLoad'));
+        spl_autoload_register(['Typecho_Common', '__autoLoad']);
 
         /** 设置异常截获函数 */
-        set_exception_handler(array('Typecho_Common', 'exceptionHandle'));
+        set_exception_handler(['Typecho_Common', 'exceptionHandle']);
     }
 
     /**
      * 异常截获函数
      *
      * @access public
+     *
      * @param $exception 截获的异常
+     *
      * @return void
      */
     public static function exceptionHandle($exception)
@@ -289,7 +323,9 @@ class Typecho_Common
      * 输出错误页面
      *
      * @access public
+     *
      * @param mixed $exception 错误信息
+     *
      * @return void
      */
     public static function error($exception)
@@ -316,7 +352,7 @@ class Typecho_Common
             if ($exception instanceof Typecho_Db_Adapter_Exception) {
                 $code = 503;
                 $message = 'Error establishing a database connection';
-            } else if ($exception instanceof Typecho_Db_Query_Exception) {
+            } elseif ($exception instanceof Typecho_Db_Query_Exception) {
                 $message = 'Database Query Error';
             }
         } else {
@@ -347,7 +383,7 @@ class Typecho_Common
             require_once __TYPECHO_EXCEPTION_FILE__;
         } else {
             echo
-<<<EOF
+            <<<EOF
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -404,23 +440,25 @@ EOF;
      * 除了以上情况, 你无需关注那些类无法被加载, 因为当它们不存在时系统会自动停止并报错
      *
      * @access public
+     *
      * @param string $className 类名
      * @param string $path 指定的路径名称
+     *
      * @return boolean
      */
-    public static function isAvailableClass($className, $path = NULL)
+    public static function isAvailableClass($className, $path = null)
     {
         /** 获取所有include目录 */
         //增加安全目录检测 fix issue 106
         $dirs = array_map('realpath', array_filter(explode(PATH_SEPARATOR, get_include_path()),
-        array('Typecho_Common', '__safePath')));
+            ['Typecho_Common', '__safePath']));
 
         $file = str_replace('_', '/', $className) . '.php';
 
         if (!empty($path)) {
             $path = realpath($path);
             if (in_array($path, $dirs)) {
-                $dirs = array($path);
+                $dirs = [$path];
             } else {
                 return false;
             }
@@ -450,13 +488,15 @@ EOF;
      * </code>
      *
      * @access public
+     *
      * @param array $value 被处理的数组
      * @param string $key 需要抽取的键值
+     *
      * @return array
      */
     public static function arrayFlatten(array $value, $key)
     {
-        $result = array();
+        $result = [];
 
         if ($value) {
             foreach ($value as $inval) {
@@ -472,31 +512,15 @@ EOF;
     }
 
     /**
-     * 根据parse_url的结果重新组合url
-     *
-     * @access public
-     * @param array $params 解析后的参数
-     * @return string
-     */
-    public static function buildUrl($params)
-    {
-        return (isset($params['scheme']) ? $params['scheme'] . '://' : NULL)
-        . (isset($params['user']) ? $params['user'] . (isset($params['pass']) ? ':' . $params['pass'] : NULL) . '@' : NULL)
-        . (isset($params['host']) ? $params['host'] : NULL)
-        . (isset($params['port']) ? ':' . $params['port'] : NULL)
-        . (isset($params['path']) ? $params['path'] : NULL)
-        . (isset($params['query']) ? '?' . $params['query'] : NULL)
-        . (isset($params['fragment']) ? '#' . $params['fragment'] : NULL);
-    }
-
-    /**
      * 根据count数目来输出字符
      * <code>
      * echo splitByCount(20, 10, 20, 30, 40, 50);
      * </code>
      *
      * @access public
+     *
      * @param int $count
+     *
      * @return string
      */
     public static function splitByCount($count)
@@ -523,7 +547,9 @@ EOF;
      * </code>
      *
      * @access public
+     *
      * @param string $string 需要修复处理的字符串
+     *
      * @return string
      */
     public static function fixHtml($string)
@@ -583,20 +609,22 @@ EOF;
      * </code>
      *
      * @access public
+     *
      * @param string $html 需要处理的字符串
      * @param string $allowableTags 需要忽略的html标签
+     *
      * @return string
      */
-    public static function stripTags($html, $allowableTags = NULL)
+    public static function stripTags($html, $allowableTags = null)
     {
         $normalizeTags = '';
-        $allowableAttributes = array();
+        $allowableAttributes = [];
 
         if (!empty($allowableTags) && preg_match_all("/\<([_a-z0-9-]+)([^>]*)\>/is", $allowableTags, $tags)) {
             $normalizeTags = '<' . implode('><', array_map('strtolower', $tags[1])) . '>';
             $attributes = array_map('trim', $tags[2]);
             foreach ($attributes as $key => $val) {
-                $allowableAttributes[strtolower($tags[1][$key])] = 
+                $allowableAttributes[strtolower($tags[1][$key])] =
                     array_map('strtolower', array_keys(self::__parseAttrs($val)));
             }
         }
@@ -604,7 +632,7 @@ EOF;
         self::$_allowableAttributes = $allowableAttributes;
         $html = strip_tags($html, $normalizeTags);
         $html = preg_replace_callback("/<([_a-z0-9-]+)(\s+[^>]+)?>/is",
-            array('Typecho_Common', '__filterAttrs'), $html);
+            ['Typecho_Common', '__filterAttrs'], $html);
 
         return $html;
     }
@@ -613,7 +641,9 @@ EOF;
      * 过滤用于搜索的字符串
      *
      * @access public
+     *
      * @param string $query 搜索字符串
+     *
      * @return string
      */
     public static function filterSearchQuery($query)
@@ -622,104 +652,179 @@ EOF;
     }
 
     /**
+     * 生成缩略名
+     *
+     * @access public
+     *
+     * @param string $str 需要生成缩略名的字符串
+     * @param string $default 默认的缩略名
+     * @param integer $maxLength 缩略名最大长度
+     *
+     * @return string
+     */
+    public static function slugName($str, $default = null, $maxLength = 128)
+    {
+        $str = trim($str);
+
+        if (!strlen($str)) {
+            return $default;
+        }
+
+        if (__TYPECHO_MB_SUPPORTED__) {
+            mb_regex_encoding(self::$charset);
+            mb_ereg_search_init($str, "[\w" . preg_quote('_-') . "]+");
+            $result = mb_ereg_search();
+            $return = '';
+
+            if ($result) {
+                $regs = mb_ereg_search_getregs();
+                $pos = 0;
+                do {
+                    $return .= ($pos > 0 ? '-' : '') . $regs[0];
+                    $pos ++;
+                } while ($regs = mb_ereg_search_regs());
+            }
+
+            $str = $return;
+        } elseif ('UTF-8' == strtoupper(self::$charset)) {
+            if (preg_match_all("/[\w" . preg_quote('_-') . "]+/u", $str, $matches)) {
+                $str = implode('-', $matches[0]);
+            }
+        } else {
+            $str = str_replace(["'", ":", "\\", "/", '"'], "", $str);
+            $str = str_replace(["+", ",", ' ', '，', ' ', ".", "?", "=", "&", "!", "<", ">", "(", ")", "[", "]", "{", "}"], "-", $str);
+        }
+
+        $str = trim($str, '-_');
+        $str = !strlen($str) ? $default : $str;
+        return substr($str, 0, $maxLength);
+    }
+
+    /**
      * 将url中的非法字符串
      *
      * @param string $url 需要过滤的url
+     *
      * @return string
      */
     public static function safeUrl($url)
     {
         //~ 针对location的xss过滤, 因为其特殊性无法使用removeXSS函数
         //~ fix issue 66
-        $params = parse_url(str_replace(array("\r", "\n", "\t", ' '), '', $url));
+        $params = parse_url(str_replace(["\r", "\n", "\t", ' '], '', $url));
 
         /** 禁止非法的协议跳转 */
         if (isset($params['scheme'])) {
-            if (!in_array($params['scheme'], array('http', 'https'))) {
+            if (!in_array($params['scheme'], ['http', 'https'])) {
                 return '/';
             }
         }
 
         /** 过滤解析串 */
-        $params = array_map(array('Typecho_Common', '__removeUrlXss'), $params);
+        $params = array_map(['Typecho_Common', '__removeUrlXss'], $params);
         return self::buildUrl($params);
+    }
+
+    /**
+     * 根据parse_url的结果重新组合url
+     *
+     * @access public
+     *
+     * @param array $params 解析后的参数
+     *
+     * @return string
+     */
+    public static function buildUrl($params)
+    {
+        return (isset($params['scheme']) ? $params['scheme'] . '://' : null)
+            . (isset($params['user']) ? $params['user'] . (isset($params['pass']) ? ':' . $params['pass'] : null) . '@' : null)
+            . (isset($params['host']) ? $params['host'] : null)
+            . (isset($params['port']) ? ':' . $params['port'] : null)
+            . (isset($params['path']) ? $params['path'] : null)
+            . (isset($params['query']) ? '?' . $params['query'] : null)
+            . (isset($params['fragment']) ? '#' . $params['fragment'] : null);
     }
 
     /**
      * 处理XSS跨站攻击的过滤函数
      *
+     * @param string $val 需要处理的字符串
+     *
+     * @return string
      * @author kallahar@kallahar.com
      * @link http://kallahar.com/smallprojects/php_xss_filter_function.php
      * @access public
-     * @param string $val 需要处理的字符串
-     * @return string
      */
     public static function removeXSS($val)
     {
-       // remove all non-printable characters. CR(0a) and LF(0b) and TAB(9) are allowed
-       // this prevents some character re-spacing such as <java\0script>
-       // note that you have to handle splits with \n, \r, and \t later since they *are* allowed in some inputs
-       $val = preg_replace('/([\x00-\x08]|[\x0b-\x0c]|[\x0e-\x19])/', '', $val);
+        // remove all non-printable characters. CR(0a) and LF(0b) and TAB(9) are allowed
+        // this prevents some character re-spacing such as <java\0script>
+        // note that you have to handle splits with \n, \r, and \t later since they *are* allowed in some inputs
+        $val = preg_replace('/([\x00-\x08]|[\x0b-\x0c]|[\x0e-\x19])/', '', $val);
 
-       // straight replacements, the user should never need these since they're normal characters
-       // this prevents like <IMG SRC=&#X40&#X61&#X76&#X61&#X73&#X63&#X72&#X69&#X70&#X74&#X3A&#X61&#X6C&#X65&#X72&#X74&#X28&#X27&#X58&#X53&#X53&#X27&#X29>
-       $search = 'abcdefghijklmnopqrstuvwxyz';
-       $search .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-       $search .= '1234567890!@#$%^&*()';
-       $search .= '~`";:?+/={}[]-_|\'\\';
+        // straight replacements, the user should never need these since they're normal characters
+        // this prevents like <IMG SRC=&#X40&#X61&#X76&#X61&#X73&#X63&#X72&#X69&#X70&#X74&#X3A&#X61&#X6C&#X65&#X72&#X74&#X28&#X27&#X58&#X53&#X53&#X27&#X29>
+        $search = 'abcdefghijklmnopqrstuvwxyz';
+        $search .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $search .= '1234567890!@#$%^&*()';
+        $search .= '~`";:?+/={}[]-_|\'\\';
 
-       for ($i = 0; $i < strlen($search); $i++) {
-          // ;? matches the ;, which is optional
-          // 0{0,7} matches any padded zeros, which are optional and go up to 8 chars
+        for ($i = 0; $i < strlen($search); $i ++) {
+            // ;? matches the ;, which is optional
+            // 0{0,7} matches any padded zeros, which are optional and go up to 8 chars
 
-          // &#x0040 @ search for the hex values
-          $val = preg_replace('/(&#[xX]0{0,8}'.dechex(ord($search[$i])).';?)/i', $search[$i], $val); // with a ;
-          // &#00064 @ 0{0,7} matches '0' zero to seven times
-          $val = preg_replace('/(&#0{0,8}'.ord($search[$i]).';?)/', $search[$i], $val); // with a ;
-       }
+            // &#x0040 @ search for the hex values
+            $val = preg_replace('/(&#[xX]0{0,8}' . dechex(ord($search[$i])) . ';?)/i', $search[$i], $val); // with a ;
+            // &#00064 @ 0{0,7} matches '0' zero to seven times
+            $val = preg_replace('/(&#0{0,8}' . ord($search[$i]) . ';?)/', $search[$i], $val); // with a ;
+        }
 
-       // now the only remaining whitespace attacks are \t, \n, and \r
-       $ra1 = Array('javascript', 'vbscript', 'expression', 'applet', 'meta', 'xml', 'blink', 'link', 'style', 'script', 'embed', 'object', 'iframe', 'frame', 'frameset', 'ilayer', 'layer', 'bgsound', 'title', 'base');
-       $ra2 = Array('onabort', 'onactivate', 'onafterprint', 'onafterupdate', 'onbeforeactivate', 'onbeforecopy', 'onbeforecut', 'onbeforedeactivate', 'onbeforeeditfocus', 'onbeforepaste', 'onbeforeprint', 'onbeforeunload', 'onbeforeupdate', 'onblur', 'onbounce', 'oncellchange', 'onchange', 'onclick', 'oncontextmenu', 'oncontrolselect', 'oncopy', 'oncut', 'ondataavailable', 'ondatasetchanged', 'ondatasetcomplete', 'ondblclick', 'ondeactivate', 'ondrag', 'ondragend', 'ondragenter', 'ondragleave', 'ondragover', 'ondragstart', 'ondrop', 'onerror', 'onerrorupdate', 'onfilterchange', 'onfinish', 'onfocus', 'onfocusin', 'onfocusout', 'onhelp', 'onkeydown', 'onkeypress', 'onkeyup', 'onlayoutcomplete', 'onload', 'onlosecapture', 'onmousedown', 'onmouseenter', 'onmouseleave', 'onmousemove', 'onmouseout', 'onmouseover', 'onmouseup', 'onmousewheel', 'onmove', 'onmoveend', 'onmovestart', 'onpaste', 'onpropertychange', 'onreadystatechange', 'onreset', 'onresize', 'onresizeend', 'onresizestart', 'onrowenter', 'onrowexit', 'onrowsdelete', 'onrowsinserted', 'onscroll', 'onselect', 'onselectionchange', 'onselectstart', 'onstart', 'onstop', 'onsubmit', 'onunload');
-       $ra = array_merge($ra1, $ra2);
+        // now the only remaining whitespace attacks are \t, \n, and \r
+        $ra1 = ['javascript', 'vbscript', 'expression', 'applet', 'meta', 'xml', 'blink', 'link', 'style', 'script', 'embed', 'object', 'iframe', 'frame', 'frameset', 'ilayer', 'layer', 'bgsound', 'title', 'base'];
+        $ra2 = [
+            'onabort', 'onactivate', 'onafterprint', 'onafterupdate', 'onbeforeactivate', 'onbeforecopy', 'onbeforecut', 'onbeforedeactivate', 'onbeforeeditfocus', 'onbeforepaste', 'onbeforeprint', 'onbeforeunload', 'onbeforeupdate', 'onblur', 'onbounce', 'oncellchange', 'onchange', 'onclick', 'oncontextmenu', 'oncontrolselect', 'oncopy', 'oncut', 'ondataavailable', 'ondatasetchanged', 'ondatasetcomplete', 'ondblclick', 'ondeactivate', 'ondrag', 'ondragend', 'ondragenter', 'ondragleave', 'ondragover', 'ondragstart', 'ondrop', 'onerror', 'onerrorupdate', 'onfilterchange', 'onfinish', 'onfocus', 'onfocusin', 'onfocusout', 'onhelp', 'onkeydown', 'onkeypress', 'onkeyup', 'onlayoutcomplete', 'onload', 'onlosecapture', 'onmousedown', 'onmouseenter', 'onmouseleave', 'onmousemove', 'onmouseout', 'onmouseover', 'onmouseup', 'onmousewheel', 'onmove', 'onmoveend', 'onmovestart', 'onpaste', 'onpropertychange', 'onreadystatechange', 'onreset', 'onresize', 'onresizeend', 'onresizestart', 'onrowenter', 'onrowexit', 'onrowsdelete', 'onrowsinserted', 'onscroll', 'onselect', 'onselectionchange', 'onselectstart', 'onstart', 'onstop', 'onsubmit', 'onunload'
+        ];
+        $ra = array_merge($ra1, $ra2);
 
-       $found = true; // keep replacing as long as the previous round replaced something
-       while ($found == true) {
-          $val_before = $val;
-          for ($i = 0; $i < sizeof($ra); $i++) {
-             $pattern = '/';
-             for ($j = 0; $j < strlen($ra[$i]); $j++) {
-                if ($j > 0) {
-                   $pattern .= '(';
-                   $pattern .= '(&#[xX]0{0,8}([9ab]);)';
-                   $pattern .= '|';
-                   $pattern .= '|(&#0{0,8}([9|10|13]);)';
-                   $pattern .= ')*';
+        $found = true; // keep replacing as long as the previous round replaced something
+        while ($found == true) {
+            $val_before = $val;
+            for ($i = 0; $i < sizeof($ra); $i ++) {
+                $pattern = '/';
+                for ($j = 0; $j < strlen($ra[$i]); $j ++) {
+                    if ($j > 0) {
+                        $pattern .= '(';
+                        $pattern .= '(&#[xX]0{0,8}([9ab]);)';
+                        $pattern .= '|';
+                        $pattern .= '|(&#0{0,8}([9|10|13]);)';
+                        $pattern .= ')*';
+                    }
+                    $pattern .= $ra[$i][$j];
                 }
-                $pattern .= $ra[$i][$j];
-             }
-             $pattern .= '/i';
-             $replacement = substr($ra[$i], 0, 2).'<x>'.substr($ra[$i], 2); // add in <> to nerf the tag
-             $val = preg_replace($pattern, $replacement, $val); // filter out the hex tags
+                $pattern .= '/i';
+                $replacement = substr($ra[$i], 0, 2) . '<x>' . substr($ra[$i], 2); // add in <> to nerf the tag
+                $val = preg_replace($pattern, $replacement, $val); // filter out the hex tags
 
-             if ($val_before == $val) {
-                // no replacements were made, so exit the loop
-                $found = false;
-             }
-          }
-       }
+                if ($val_before == $val) {
+                    // no replacements were made, so exit the loop
+                    $found = false;
+                }
+            }
+        }
 
-       return $val;
+        return $val;
     }
 
     /**
      * 宽字符串截字函数
      *
      * @access public
+     *
      * @param string $str 需要截取的字符串
      * @param integer $start 开始截取的位置
      * @param integer $length 需要截取的长度
      * @param string $trim 截取后的截断标示符
+     *
      * @return string
      */
     public static function subStr($str, $start, $length, $trim = "...")
@@ -742,7 +847,7 @@ EOF;
                 $str = substr($str, $start, $tLength);
             }
         }
-        
+
         return $length < $iLength ? ($str . $trim) : $str;
     }
 
@@ -750,7 +855,9 @@ EOF;
      * 获取宽字符串长度函数
      *
      * @access public
+     *
      * @param string $str 需要获取长度的字符串
+     *
      * @return integer
      */
     public static function strLen($str)
@@ -758,15 +865,16 @@ EOF;
         if (__TYPECHO_MB_SUPPORTED__) {
             return mb_strlen($str, self::$charset);
         } else {
-            return 'UTF-8' == strtoupper(self::$charset) 
+            return 'UTF-8' == strtoupper(self::$charset)
                 ? strlen(utf8_decode($str)) : strlen($str);
         }
     }
 
     /**
      * 获取大写字符串
-     * 
-     * @param string $str 
+     *
+     * @param string $str
+     *
      * @access public
      * @return string
      */
@@ -776,7 +884,7 @@ EOF;
             return mb_strtoupper($str, self::$charset);
         } else {
             return 'UTF-8' == strtoupper(self::$charset)
-                ? preg_replace_callback("/[a-z]+/u", array('Typecho_Common', '__strToUpper'), $str) : strtoupper($str);
+                ? preg_replace_callback("/[a-z]+/u", ['Typecho_Common', '__strToUpper'], $str) : strtoupper($str);
         }
     }
 
@@ -784,12 +892,13 @@ EOF;
      * 检查是否为合法的编码数据
      *
      * @param string|array $str
+     *
      * @return boolean
      */
     public static function checkStrEncoding($str)
     {
         if (is_array($str)) {
-            return array_map(array('Typecho_Common', 'checkStrEncoding'), $str);
+            return array_map(['Typecho_Common', 'checkStrEncoding'], $str);
         }
 
         if (__TYPECHO_MB_SUPPORTED__) {
@@ -801,84 +910,36 @@ EOF;
     }
 
     /**
-     * 生成缩略名
+     * 判断hash值是否相等
      *
      * @access public
-     * @param string $str 需要生成缩略名的字符串
-     * @param string $default 默认的缩略名
-     * @param integer $maxLength 缩略名最大长度
-     * @return string
+     *
+     * @param string $from 源字符串
+     * @param string $to 目标字符串
+     *
+     * @return boolean
      */
-    public static function slugName($str, $default = NULL, $maxLength = 128)
+    public static function hashValidate($from, $to)
     {
-        $str = trim($str);
-
-        if (!strlen($str)) {
-            return $default;
-        }
-        
-        if (__TYPECHO_MB_SUPPORTED__) {
-            mb_regex_encoding(self::$charset);
-            mb_ereg_search_init($str, "[\w" . preg_quote('_-') . "]+");
-            $result = mb_ereg_search();
-            $return = '';
-
-            if ($result) {
-                $regs = mb_ereg_search_getregs();
-                $pos = 0;
-                do {
-                    $return .= ($pos > 0 ? '-' : '') . $regs[0];
-                    $pos ++;
-                } while ($regs = mb_ereg_search_regs());
-            }
-
-            $str = $return;
-        } else if ('UTF-8' == strtoupper(self::$charset)) {
-            if (preg_match_all("/[\w" . preg_quote('_-') . "]+/u", $str, $matches)) {
-                $str = implode('-', $matches[0]);
-            }
+        if ('$T$' == substr($to, 0, 3)) {
+            $salt = substr($to, 3, 9);
+            return self::hash($from, $salt) === $to;
         } else {
-            $str = str_replace(array("'", ":", "\\", "/", '"'), "", $str);
-            $str = str_replace(array("+", ",", ' ', '，', ' ', ".", "?", "=", "&", "!", "<", ">", "(", ")", "[", "]", "{", "}"), "-", $str);
+            return md5($from) === $to;
         }
-
-        $str = trim($str, '-_');
-        $str = !strlen($str) ? $default : $str;
-        return substr($str, 0, $maxLength);
-    }
-
-    /**
-     * 生成随机字符串
-     *
-     * @access public
-     * @param integer $length 字符串长度
-     * @param boolean $specialChars 是否有特殊字符
-     * @return string
-     */
-    public static function randString($length, $specialChars = false)
-    {
-        $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        if ($specialChars) {
-            $chars .= '!@#$%^&*()';
-        }
-
-        $result = '';
-        $max = strlen($chars) - 1;
-        for ($i = 0; $i < $length; $i++) {
-            $result .= $chars[rand(0, $max)];
-        }
-        return $result;
     }
 
     /**
      * 对字符串进行hash加密
      *
      * @access public
+     *
      * @param string $string 需要hash的字符串
      * @param string $salt 扰码
+     *
      * @return string
      */
-    public static function hash($string, $salt = NULL)
+    public static function hash($string, $salt = null)
     {
         /** 生成随机字符串 */
         $salt = empty($salt) ? self::randString(9) : $salt;
@@ -904,27 +965,35 @@ EOF;
     }
 
     /**
-     * 判断hash值是否相等
+     * 生成随机字符串
      *
      * @access public
-     * @param string $from 源字符串
-     * @param string $to 目标字符串
-     * @return boolean
+     *
+     * @param integer $length 字符串长度
+     * @param boolean $specialChars 是否有特殊字符
+     *
+     * @return string
      */
-    public static function hashValidate($from, $to)
+    public static function randString($length, $specialChars = false)
     {
-        if ('$T$' == substr($to, 0, 3)) {
-            $salt = substr($to, 3, 9);
-            return self::hash($from, $salt) === $to;
-        } else {
-            return md5($from) === $to;
+        $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        if ($specialChars) {
+            $chars .= '!@#$%^&*()';
         }
+
+        $result = '';
+        $max = strlen($chars) - 1;
+        for ($i = 0; $i < $length; $i ++) {
+            $result .= $chars[rand(0, $max)];
+        }
+        return $result;
     }
 
     /**
      * 创建一个会过期的Token
      *
      * @param $secret
+     *
      * @return string
      */
     public static function timeToken($secret)
@@ -938,6 +1007,7 @@ EOF;
      * @param $token
      * @param $secret
      * @param int $timeout
+     *
      * @return bool
      */
     public static function timeTokenValidate($token, $secret, $timeout = 5)
@@ -955,31 +1025,14 @@ EOF;
     }
 
     /**
-     * 将路径转化为链接
+     * 获取gravatar头像地址
      *
-     * @access public
-     * @param string $path 路径
-     * @param string $prefix 前缀
-     * @return string
-     */
-    public static function url($path, $prefix)
-    {
-        $path = (0 === strpos($path, './')) ? substr($path, 2) : $path;
-        return rtrim(
-            rtrim($prefix, '/') . '/'
-            . str_replace('//', '/', ltrim($path, '/')),
-            '/'
-        );
-    }
-
-    /**
-     * 获取gravatar头像地址 
-     * 
-     * @param string $mail 
-     * @param int $size 
-     * @param string $rating 
-     * @param string $default 
-     * @param bool $isSecure 
+     * @param string $mail
+     * @param int $size
+     * @param string $rating
+     * @param string $default
+     * @param bool $isSecure
+     *
      * @return string
      */
     public static function gravatarUrl($mail, $size, $rating, $default, $isSecure = false)
@@ -1003,9 +1056,10 @@ EOF;
     }
 
     /**
-     * 给javascript赋值加入扰码设计 
-     * 
-     * @param string $value 
+     * 给javascript赋值加入扰码设计
+     *
+     * @param string $value
+     *
      * @return string
      */
     public static function shuffleScriptVar($value)
@@ -1013,8 +1067,8 @@ EOF;
         $length = strlen($value);
         $max = 3;
         $offset = 0;
-        $result = array();
-        $cut = array();
+        $result = [];
+        $cut = [];
 
         while ($length > 0) {
             $len = rand(0, min($max, $length));
@@ -1028,7 +1082,7 @@ EOF;
                     $result[] = rand(0, 1) ? "''///*{$rand}*/{$rand}\n" : "/* {$rand}//{$rand} */''";
                 } else {
                     $result[] = rand(0, 1) ? "//{$rand}\n{$rand}" : "{$rand}//{$rand}\n";
-                    $cut[] = array($offset, strlen($rand) - 2 + $offset);
+                    $cut[] = [$offset, strlen($rand) - 2 + $offset];
                 }
             }
 
@@ -1055,7 +1109,9 @@ EOF;
      * 过滤字段名
      *
      * @access private
+     *
      * @param mixed $result
+     *
      * @return array
      */
     public static function filterSQLite2ColumnName($result)
@@ -1065,7 +1121,7 @@ EOF;
             return $result;
         }
 
-        $tResult = array();
+        $tResult = [];
 
         /** 遍历数组 */
         foreach ($result as $key => $val) {
@@ -1084,6 +1140,7 @@ EOF;
      * 处理sqlite2的distinct count
      *
      * @param $sql
+     *
      * @return string
      */
     public static function filterSQLite2CountQuery($sql)
@@ -1102,6 +1159,7 @@ EOF;
      * @param $type
      * @param $header
      * @param $body
+     *
      * @return string
      */
     public static function buildBackupBuffer($type, $header, $body)
@@ -1121,6 +1179,7 @@ EOF;
      * @param $fp
      * @param bool $offset
      * @param string $version
+     *
      * @return array|bool
      */
     public static function extractBackupBuffer($fp, &$offset, $version)
@@ -1135,7 +1194,7 @@ EOF;
             return false;
         }
 
-        list ($type, $headerLen, $bodyLen) = array_values(unpack($version == 'FILE' ? 'v3' : 'v1type/v1headerLen/V1bodyLen', $meta));
+        [$type, $headerLen, $bodyLen] = array_values(unpack($version == 'FILE' ? 'v3' : 'v1type/v1headerLen/V1bodyLen', $meta));
 
         $header = @fread($fp, $headerLen);
         $offset += $headerLen;
@@ -1146,7 +1205,7 @@ EOF;
 
         if ('FILE' == $version) {
             $bodyLen = array_reduce(json_decode($header, true), function ($carry, $len) {
-                return NULL === $len ? $carry : $carry + $len;
+                return null === $len ? $carry : $carry + $len;
             }, 0);
         }
 
@@ -1164,13 +1223,14 @@ EOF;
             return false;
         }
 
-        return array($type, $header, $body);
+        return [$type, $header, $body];
     }
 
     /**
      * 检查是否是一个安全的主机名
      *
      * @param $host
+     *
      * @return bool
      */
     public static function checkSafeHost($host)
@@ -1197,18 +1257,18 @@ EOF;
         if (strpos($address, '.')) {
             // ipv4
             // 非公网地址
-            $privateNetworks = array(
+            $privateNetworks = [
                 '10.0.0.0|10.255.255.255',
                 '172.16.0.0|172.31.255.255',
                 '192.168.0.0|192.168.255.255',
                 '169.254.0.0|169.254.255.255',
                 '127.0.0.0|127.255.255.255'
-            );
+            ];
 
             $long = ip2long($address);
 
             foreach ($privateNetworks as $network) {
-                list ($from, $to) = explode('|', $network);
+                [$from, $to] = explode('|', $network);
 
                 if ($long >= ip2long($from) && $long <= ip2long($to)) {
                     return false;
@@ -1232,7 +1292,9 @@ EOF;
      * 获取图片
      *
      * @access public
+     *
      * @param string $fileName 文件名
+     *
      * @return string
      */
     public static function mimeContentType($fileName)
@@ -1252,321 +1314,321 @@ EOF;
             }
         }
 
-        $mimeTypes = array(
-          'ez' => 'application/andrew-inset',
-          'csm' => 'application/cu-seeme',
-          'cu' => 'application/cu-seeme',
-          'tsp' => 'application/dsptype',
-          'spl' => 'application/x-futuresplash',
-          'hta' => 'application/hta',
-          'cpt' => 'image/x-corelphotopaint',
-          'hqx' => 'application/mac-binhex40',
-          'nb' => 'application/mathematica',
-          'mdb' => 'application/msaccess',
-          'doc' => 'application/msword',
-          'dot' => 'application/msword',
-          'bin' => 'application/octet-stream',
-          'oda' => 'application/oda',
-          'ogg' => 'application/ogg',
-          'oga' => 'audio/ogg',
-          'ogv' => 'video/ogg',
-          'prf' => 'application/pics-rules',
-          'key' => 'application/pgp-keys',
-          'pdf' => 'application/pdf',
-          'pgp' => 'application/pgp-signature',
-          'ps' => 'application/postscript',
-          'ai' => 'application/postscript',
-          'eps' => 'application/postscript',
-          'rss' => 'application/rss+xml',
-          'rtf' => 'text/rtf',
-          'smi' => 'application/smil',
-          'smil' => 'application/smil',
-          'wp5' => 'application/wordperfect5.1',
-          'xht' => 'application/xhtml+xml',
-          'xhtml' => 'application/xhtml+xml',
-          'zip' => 'application/zip',
-          'cdy' => 'application/vnd.cinderella',
-          'mif' => 'application/x-mif',
-          'xls' => 'application/vnd.ms-excel',
-          'xlb' => 'application/vnd.ms-excel',
-          'cat' => 'application/vnd.ms-pki.seccat',
-          'stl' => 'application/vnd.ms-pki.stl',
-          'ppt' => 'application/vnd.ms-powerpoint',
-          'pps' => 'application/vnd.ms-powerpoint',
-          'pot' => 'application/vnd.ms-powerpoint',
-          'sdc' => 'application/vnd.stardivision.calc',
-          'sda' => 'application/vnd.stardivision.draw',
-          'sdd' => 'application/vnd.stardivision.impress',
-          'sdp' => 'application/vnd.stardivision.impress',
-          'smf' => 'application/vnd.stardivision.math',
-          'sdw' => 'application/vnd.stardivision.writer',
-          'vor' => 'application/vnd.stardivision.writer',
-          'sgl' => 'application/vnd.stardivision.writer-global',
-          'sxc' => 'application/vnd.sun.xml.calc',
-          'stc' => 'application/vnd.sun.xml.calc.template',
-          'sxd' => 'application/vnd.sun.xml.draw',
-          'std' => 'application/vnd.sun.xml.draw.template',
-          'sxi' => 'application/vnd.sun.xml.impress',
-          'sti' => 'application/vnd.sun.xml.impress.template',
-          'sxm' => 'application/vnd.sun.xml.math',
-          'sxw' => 'application/vnd.sun.xml.writer',
-          'sxg' => 'application/vnd.sun.xml.writer.global',
-          'stw' => 'application/vnd.sun.xml.writer.template',
-          'sis' => 'application/vnd.symbian.install',
-          'wbxml' => 'application/vnd.wap.wbxml',
-          'wmlc' => 'application/vnd.wap.wmlc',
-          'wmlsc' => 'application/vnd.wap.wmlscriptc',
-          'wk' => 'application/x-123',
-          'dmg' => 'application/x-apple-diskimage',
-          'bcpio' => 'application/x-bcpio',
-          'torrent' => 'application/x-bittorrent',
-          'cdf' => 'application/x-cdf',
-          'vcd' => 'application/x-cdlink',
-          'pgn' => 'application/x-chess-pgn',
-          'cpio' => 'application/x-cpio',
-          'csh' => 'text/x-csh',
-          'deb' => 'application/x-debian-package',
-          'dcr' => 'application/x-director',
-          'dir' => 'application/x-director',
-          'dxr' => 'application/x-director',
-          'wad' => 'application/x-doom',
-          'dms' => 'application/x-dms',
-          'dvi' => 'application/x-dvi',
-          'pfa' => 'application/x-font',
-          'pfb' => 'application/x-font',
-          'gsf' => 'application/x-font',
-          'pcf' => 'application/x-font',
-          'pcf.Z' => 'application/x-font',
-          'gnumeric' => 'application/x-gnumeric',
-          'sgf' => 'application/x-go-sgf',
-          'gcf' => 'application/x-graphing-calculator',
-          'gtar' => 'application/x-gtar',
-          'tgz' => 'application/x-gtar',
-          'taz' => 'application/x-gtar',
-          'gz'  => 'application/x-gtar',
-          'hdf' => 'application/x-hdf',
-          'phtml' => 'application/x-httpd-php',
-          'pht' => 'application/x-httpd-php',
-          'php' => 'application/x-httpd-php',
-          'phps' => 'application/x-httpd-php-source',
-          'php3' => 'application/x-httpd-php3',
-          'php3p' => 'application/x-httpd-php3-preprocessed',
-          'php4' => 'application/x-httpd-php4',
-          'ica' => 'application/x-ica',
-          'ins' => 'application/x-internet-signup',
-          'isp' => 'application/x-internet-signup',
-          'iii' => 'application/x-iphone',
-          'jar' => 'application/x-java-archive',
-          'jnlp' => 'application/x-java-jnlp-file',
-          'ser' => 'application/x-java-serialized-object',
-          'class' => 'application/x-java-vm',
-          'js' => 'application/x-javascript',
-          'chrt' => 'application/x-kchart',
-          'kil' => 'application/x-killustrator',
-          'kpr' => 'application/x-kpresenter',
-          'kpt' => 'application/x-kpresenter',
-          'skp' => 'application/x-koan',
-          'skd' => 'application/x-koan',
-          'skt' => 'application/x-koan',
-          'skm' => 'application/x-koan',
-          'ksp' => 'application/x-kspread',
-          'kwd' => 'application/x-kword',
-          'kwt' => 'application/x-kword',
-          'latex' => 'application/x-latex',
-          'lha' => 'application/x-lha',
-          'lzh' => 'application/x-lzh',
-          'lzx' => 'application/x-lzx',
-          'frm' => 'application/x-maker',
-          'maker' => 'application/x-maker',
-          'frame' => 'application/x-maker',
-          'fm' => 'application/x-maker',
-          'fb' => 'application/x-maker',
-          'book' => 'application/x-maker',
-          'fbdoc' => 'application/x-maker',
-          'wmz' => 'application/x-ms-wmz',
-          'wmd' => 'application/x-ms-wmd',
-          'com' => 'application/x-msdos-program',
-          'exe' => 'application/x-msdos-program',
-          'bat' => 'application/x-msdos-program',
-          'dll' => 'application/x-msdos-program',
-          'msi' => 'application/x-msi',
-          'nc' => 'application/x-netcdf',
-          'pac' => 'application/x-ns-proxy-autoconfig',
-          'nwc' => 'application/x-nwc',
-          'o' => 'application/x-object',
-          'oza' => 'application/x-oz-application',
-          'pl' => 'application/x-perl',
-          'pm' => 'application/x-perl',
-          'p7r' => 'application/x-pkcs7-certreqresp',
-          'crl' => 'application/x-pkcs7-crl',
-          'qtl' => 'application/x-quicktimeplayer',
-          'rpm' => 'audio/x-pn-realaudio-plugin',
-          'shar' => 'application/x-shar',
-          'swf' => 'application/x-shockwave-flash',
-          'swfl' => 'application/x-shockwave-flash',
-          'sh' => 'text/x-sh',
-          'sit' => 'application/x-stuffit',
-          'sv4cpio' => 'application/x-sv4cpio',
-          'sv4crc' => 'application/x-sv4crc',
-          'tar' => 'application/x-tar',
-          'tcl' => 'text/x-tcl',
-          'tex' => 'text/x-tex',
-          'gf' => 'application/x-tex-gf',
-          'pk' => 'application/x-tex-pk',
-          'texinfo' => 'application/x-texinfo',
-          'texi' => 'application/x-texinfo',
-          '~' => 'application/x-trash',
-          '%' => 'application/x-trash',
-          'bak' => 'application/x-trash',
-          'old' => 'application/x-trash',
-          'sik' => 'application/x-trash',
-          't' => 'application/x-troff',
-          'tr' => 'application/x-troff',
-          'roff' => 'application/x-troff',
-          'man' => 'application/x-troff-man',
-          'me' => 'application/x-troff-me',
-          'ms' => 'application/x-troff-ms',
-          'ustar' => 'application/x-ustar',
-          'src' => 'application/x-wais-source',
-          'wz' => 'application/x-wingz',
-          'crt' => 'application/x-x509-ca-cert',
-          'fig' => 'application/x-xfig',
-          'au' => 'audio/basic',
-          'snd' => 'audio/basic',
-          'mid' => 'audio/midi',
-          'midi' => 'audio/midi',
-          'kar' => 'audio/midi',
-          'mpga' => 'audio/mpeg',
-          'mpega' => 'audio/mpeg',
-          'mp2' => 'audio/mpeg',
-          'mp3' => 'audio/mpeg',
-          'mp4' => 'video/mp4',
-          'm3u' => 'audio/x-mpegurl',
-          'sid' => 'audio/prs.sid',
-          'aif' => 'audio/x-aiff',
-          'aiff' => 'audio/x-aiff',
-          'aifc' => 'audio/x-aiff',
-          'gsm' => 'audio/x-gsm',
-          'wma' => 'audio/x-ms-wma',
-          'wax' => 'audio/x-ms-wax',
-          'ra' => 'audio/x-realaudio',
-          'rm' => 'audio/x-pn-realaudio',
-          'ram' => 'audio/x-pn-realaudio',
-          'pls' => 'audio/x-scpls',
-          'sd2' => 'audio/x-sd2',
-          'wav' => 'audio/x-wav',
-          'pdb' => 'chemical/x-pdb',
-          'xyz' => 'chemical/x-xyz',
-          'bmp' => 'image/x-ms-bmp',
-          'gif' => 'image/gif',
-          'ief' => 'image/ief',
-          'jpeg' => 'image/jpeg',
-          'jpg' => 'image/jpeg',
-          'jpe' => 'image/jpeg',
-          'pcx' => 'image/pcx',
-          'png' => 'image/png',
-          'svg' => 'image/svg+xml',
-          'svgz' => 'image/svg+xml',
-          'tiff' => 'image/tiff',
-          'tif' => 'image/tiff',
-          'wbmp' => 'image/vnd.wap.wbmp',
-          'ras' => 'image/x-cmu-raster',
-          'cdr' => 'image/x-coreldraw',
-          'pat' => 'image/x-coreldrawpattern',
-          'cdt' => 'image/x-coreldrawtemplate',
-          'djvu' => 'image/x-djvu',
-          'djv' => 'image/x-djvu',
-          'ico' => 'image/x-icon',
-          'art' => 'image/x-jg',
-          'jng' => 'image/x-jng',
-          'psd' => 'image/x-photoshop',
-          'pnm' => 'image/x-portable-anymap',
-          'pbm' => 'image/x-portable-bitmap',
-          'pgm' => 'image/x-portable-graymap',
-          'ppm' => 'image/x-portable-pixmap',
-          'rgb' => 'image/x-rgb',
-          'xbm' => 'image/x-xbitmap',
-          'xpm' => 'image/x-xpixmap',
-          'xwd' => 'image/x-xwindowdump',
-          'igs' => 'model/iges',
-          'iges' => 'model/iges',
-          'msh' => 'model/mesh',
-          'mesh' => 'model/mesh',
-          'silo' => 'model/mesh',
-          'wrl' => 'x-world/x-vrml',
-          'vrml' => 'x-world/x-vrml',
-          'csv' => 'text/comma-separated-values',
-          'css' => 'text/css',
-          '323' => 'text/h323',
-          'htm' => 'text/html',
-          'html' => 'text/html',
-          'uls' => 'text/iuls',
-          'mml' => 'text/mathml',
-          'asc' => 'text/plain',
-          'txt' => 'text/plain',
-          'text' => 'text/plain',
-          'diff' => 'text/plain',
-          'rtx' => 'text/richtext',
-          'sct' => 'text/scriptlet',
-          'wsc' => 'text/scriptlet',
-          'tm' => 'text/texmacs',
-          'ts' => 'text/texmacs',
-          'tsv' => 'text/tab-separated-values',
-          'jad' => 'text/vnd.sun.j2me.app-descriptor',
-          'wml' => 'text/vnd.wap.wml',
-          'wmls' => 'text/vnd.wap.wmlscript',
-          'xml' => 'text/xml',
-          'xsl' => 'text/xml',
-          'h++' => 'text/x-c++hdr',
-          'hpp' => 'text/x-c++hdr',
-          'hxx' => 'text/x-c++hdr',
-          'hh' => 'text/x-c++hdr',
-          'c++' => 'text/x-c++src',
-          'cpp' => 'text/x-c++src',
-          'cxx' => 'text/x-c++src',
-          'cc' => 'text/x-c++src',
-          'h' => 'text/x-chdr',
-          'c' => 'text/x-csrc',
-          'java' => 'text/x-java',
-          'moc' => 'text/x-moc',
-          'p' => 'text/x-pascal',
-          'pas' => 'text/x-pascal',
-          '***' => 'text/x-pcs-***',
-          'shtml' => 'text/x-server-parsed-html',
-          'etx' => 'text/x-setext',
-          'tk' => 'text/x-tcl',
-          'ltx' => 'text/x-tex',
-          'sty' => 'text/x-tex',
-          'cls' => 'text/x-tex',
-          'vcs' => 'text/x-vcalendar',
-          'vcf' => 'text/x-vcard',
-          'dl' => 'video/dl',
-          'fli' => 'video/fli',
-          'gl' => 'video/gl',
-          'mpeg' => 'video/mpeg',
-          'mpg' => 'video/mpeg',
-          'mpe' => 'video/mpeg',
-          'qt' => 'video/quicktime',
-          'mov' => 'video/quicktime',
-          'mxu' => 'video/vnd.mpegurl',
-          'dif' => 'video/x-dv',
-          'dv' => 'video/x-dv',
-          'lsf' => 'video/x-la-asf',
-          'lsx' => 'video/x-la-asf',
-          'mng' => 'video/x-mng',
-          'asf' => 'video/x-ms-asf',
-          'asx' => 'video/x-ms-asf',
-          'wm' => 'video/x-ms-wm',
-          'wmv' => 'video/x-ms-wmv',
-          'wmx' => 'video/x-ms-wmx',
-          'wvx' => 'video/x-ms-wvx',
-          'avi' => 'video/x-msvideo',
-          'movie' => 'video/x-sgi-movie',
-          'ice' => 'x-conference/x-cooltalk',
-          'vrm' => 'x-world/x-vrml',
-          'rar' => 'application/x-rar-compressed',
-          'cab' => 'application/vnd.ms-cab-compressed'
-        );
+        $mimeTypes = [
+            'ez'       => 'application/andrew-inset',
+            'csm'      => 'application/cu-seeme',
+            'cu'       => 'application/cu-seeme',
+            'tsp'      => 'application/dsptype',
+            'spl'      => 'application/x-futuresplash',
+            'hta'      => 'application/hta',
+            'cpt'      => 'image/x-corelphotopaint',
+            'hqx'      => 'application/mac-binhex40',
+            'nb'       => 'application/mathematica',
+            'mdb'      => 'application/msaccess',
+            'doc'      => 'application/msword',
+            'dot'      => 'application/msword',
+            'bin'      => 'application/octet-stream',
+            'oda'      => 'application/oda',
+            'ogg'      => 'application/ogg',
+            'oga'      => 'audio/ogg',
+            'ogv'      => 'video/ogg',
+            'prf'      => 'application/pics-rules',
+            'key'      => 'application/pgp-keys',
+            'pdf'      => 'application/pdf',
+            'pgp'      => 'application/pgp-signature',
+            'ps'       => 'application/postscript',
+            'ai'       => 'application/postscript',
+            'eps'      => 'application/postscript',
+            'rss'      => 'application/rss+xml',
+            'rtf'      => 'text/rtf',
+            'smi'      => 'application/smil',
+            'smil'     => 'application/smil',
+            'wp5'      => 'application/wordperfect5.1',
+            'xht'      => 'application/xhtml+xml',
+            'xhtml'    => 'application/xhtml+xml',
+            'zip'      => 'application/zip',
+            'cdy'      => 'application/vnd.cinderella',
+            'mif'      => 'application/x-mif',
+            'xls'      => 'application/vnd.ms-excel',
+            'xlb'      => 'application/vnd.ms-excel',
+            'cat'      => 'application/vnd.ms-pki.seccat',
+            'stl'      => 'application/vnd.ms-pki.stl',
+            'ppt'      => 'application/vnd.ms-powerpoint',
+            'pps'      => 'application/vnd.ms-powerpoint',
+            'pot'      => 'application/vnd.ms-powerpoint',
+            'sdc'      => 'application/vnd.stardivision.calc',
+            'sda'      => 'application/vnd.stardivision.draw',
+            'sdd'      => 'application/vnd.stardivision.impress',
+            'sdp'      => 'application/vnd.stardivision.impress',
+            'smf'      => 'application/vnd.stardivision.math',
+            'sdw'      => 'application/vnd.stardivision.writer',
+            'vor'      => 'application/vnd.stardivision.writer',
+            'sgl'      => 'application/vnd.stardivision.writer-global',
+            'sxc'      => 'application/vnd.sun.xml.calc',
+            'stc'      => 'application/vnd.sun.xml.calc.template',
+            'sxd'      => 'application/vnd.sun.xml.draw',
+            'std'      => 'application/vnd.sun.xml.draw.template',
+            'sxi'      => 'application/vnd.sun.xml.impress',
+            'sti'      => 'application/vnd.sun.xml.impress.template',
+            'sxm'      => 'application/vnd.sun.xml.math',
+            'sxw'      => 'application/vnd.sun.xml.writer',
+            'sxg'      => 'application/vnd.sun.xml.writer.global',
+            'stw'      => 'application/vnd.sun.xml.writer.template',
+            'sis'      => 'application/vnd.symbian.install',
+            'wbxml'    => 'application/vnd.wap.wbxml',
+            'wmlc'     => 'application/vnd.wap.wmlc',
+            'wmlsc'    => 'application/vnd.wap.wmlscriptc',
+            'wk'       => 'application/x-123',
+            'dmg'      => 'application/x-apple-diskimage',
+            'bcpio'    => 'application/x-bcpio',
+            'torrent'  => 'application/x-bittorrent',
+            'cdf'      => 'application/x-cdf',
+            'vcd'      => 'application/x-cdlink',
+            'pgn'      => 'application/x-chess-pgn',
+            'cpio'     => 'application/x-cpio',
+            'csh'      => 'text/x-csh',
+            'deb'      => 'application/x-debian-package',
+            'dcr'      => 'application/x-director',
+            'dir'      => 'application/x-director',
+            'dxr'      => 'application/x-director',
+            'wad'      => 'application/x-doom',
+            'dms'      => 'application/x-dms',
+            'dvi'      => 'application/x-dvi',
+            'pfa'      => 'application/x-font',
+            'pfb'      => 'application/x-font',
+            'gsf'      => 'application/x-font',
+            'pcf'      => 'application/x-font',
+            'pcf.Z'    => 'application/x-font',
+            'gnumeric' => 'application/x-gnumeric',
+            'sgf'      => 'application/x-go-sgf',
+            'gcf'      => 'application/x-graphing-calculator',
+            'gtar'     => 'application/x-gtar',
+            'tgz'      => 'application/x-gtar',
+            'taz'      => 'application/x-gtar',
+            'gz'       => 'application/x-gtar',
+            'hdf'      => 'application/x-hdf',
+            'phtml'    => 'application/x-httpd-php',
+            'pht'      => 'application/x-httpd-php',
+            'php'      => 'application/x-httpd-php',
+            'phps'     => 'application/x-httpd-php-source',
+            'php3'     => 'application/x-httpd-php3',
+            'php3p'    => 'application/x-httpd-php3-preprocessed',
+            'php4'     => 'application/x-httpd-php4',
+            'ica'      => 'application/x-ica',
+            'ins'      => 'application/x-internet-signup',
+            'isp'      => 'application/x-internet-signup',
+            'iii'      => 'application/x-iphone',
+            'jar'      => 'application/x-java-archive',
+            'jnlp'     => 'application/x-java-jnlp-file',
+            'ser'      => 'application/x-java-serialized-object',
+            'class'    => 'application/x-java-vm',
+            'js'       => 'application/x-javascript',
+            'chrt'     => 'application/x-kchart',
+            'kil'      => 'application/x-killustrator',
+            'kpr'      => 'application/x-kpresenter',
+            'kpt'      => 'application/x-kpresenter',
+            'skp'      => 'application/x-koan',
+            'skd'      => 'application/x-koan',
+            'skt'      => 'application/x-koan',
+            'skm'      => 'application/x-koan',
+            'ksp'      => 'application/x-kspread',
+            'kwd'      => 'application/x-kword',
+            'kwt'      => 'application/x-kword',
+            'latex'    => 'application/x-latex',
+            'lha'      => 'application/x-lha',
+            'lzh'      => 'application/x-lzh',
+            'lzx'      => 'application/x-lzx',
+            'frm'      => 'application/x-maker',
+            'maker'    => 'application/x-maker',
+            'frame'    => 'application/x-maker',
+            'fm'       => 'application/x-maker',
+            'fb'       => 'application/x-maker',
+            'book'     => 'application/x-maker',
+            'fbdoc'    => 'application/x-maker',
+            'wmz'      => 'application/x-ms-wmz',
+            'wmd'      => 'application/x-ms-wmd',
+            'com'      => 'application/x-msdos-program',
+            'exe'      => 'application/x-msdos-program',
+            'bat'      => 'application/x-msdos-program',
+            'dll'      => 'application/x-msdos-program',
+            'msi'      => 'application/x-msi',
+            'nc'       => 'application/x-netcdf',
+            'pac'      => 'application/x-ns-proxy-autoconfig',
+            'nwc'      => 'application/x-nwc',
+            'o'        => 'application/x-object',
+            'oza'      => 'application/x-oz-application',
+            'pl'       => 'application/x-perl',
+            'pm'       => 'application/x-perl',
+            'p7r'      => 'application/x-pkcs7-certreqresp',
+            'crl'      => 'application/x-pkcs7-crl',
+            'qtl'      => 'application/x-quicktimeplayer',
+            'rpm'      => 'audio/x-pn-realaudio-plugin',
+            'shar'     => 'application/x-shar',
+            'swf'      => 'application/x-shockwave-flash',
+            'swfl'     => 'application/x-shockwave-flash',
+            'sh'       => 'text/x-sh',
+            'sit'      => 'application/x-stuffit',
+            'sv4cpio'  => 'application/x-sv4cpio',
+            'sv4crc'   => 'application/x-sv4crc',
+            'tar'      => 'application/x-tar',
+            'tcl'      => 'text/x-tcl',
+            'tex'      => 'text/x-tex',
+            'gf'       => 'application/x-tex-gf',
+            'pk'       => 'application/x-tex-pk',
+            'texinfo'  => 'application/x-texinfo',
+            'texi'     => 'application/x-texinfo',
+            '~'        => 'application/x-trash',
+            '%'        => 'application/x-trash',
+            'bak'      => 'application/x-trash',
+            'old'      => 'application/x-trash',
+            'sik'      => 'application/x-trash',
+            't'        => 'application/x-troff',
+            'tr'       => 'application/x-troff',
+            'roff'     => 'application/x-troff',
+            'man'      => 'application/x-troff-man',
+            'me'       => 'application/x-troff-me',
+            'ms'       => 'application/x-troff-ms',
+            'ustar'    => 'application/x-ustar',
+            'src'      => 'application/x-wais-source',
+            'wz'       => 'application/x-wingz',
+            'crt'      => 'application/x-x509-ca-cert',
+            'fig'      => 'application/x-xfig',
+            'au'       => 'audio/basic',
+            'snd'      => 'audio/basic',
+            'mid'      => 'audio/midi',
+            'midi'     => 'audio/midi',
+            'kar'      => 'audio/midi',
+            'mpga'     => 'audio/mpeg',
+            'mpega'    => 'audio/mpeg',
+            'mp2'      => 'audio/mpeg',
+            'mp3'      => 'audio/mpeg',
+            'mp4'      => 'video/mp4',
+            'm3u'      => 'audio/x-mpegurl',
+            'sid'      => 'audio/prs.sid',
+            'aif'      => 'audio/x-aiff',
+            'aiff'     => 'audio/x-aiff',
+            'aifc'     => 'audio/x-aiff',
+            'gsm'      => 'audio/x-gsm',
+            'wma'      => 'audio/x-ms-wma',
+            'wax'      => 'audio/x-ms-wax',
+            'ra'       => 'audio/x-realaudio',
+            'rm'       => 'audio/x-pn-realaudio',
+            'ram'      => 'audio/x-pn-realaudio',
+            'pls'      => 'audio/x-scpls',
+            'sd2'      => 'audio/x-sd2',
+            'wav'      => 'audio/x-wav',
+            'pdb'      => 'chemical/x-pdb',
+            'xyz'      => 'chemical/x-xyz',
+            'bmp'      => 'image/x-ms-bmp',
+            'gif'      => 'image/gif',
+            'ief'      => 'image/ief',
+            'jpeg'     => 'image/jpeg',
+            'jpg'      => 'image/jpeg',
+            'jpe'      => 'image/jpeg',
+            'pcx'      => 'image/pcx',
+            'png'      => 'image/png',
+            'svg'      => 'image/svg+xml',
+            'svgz'     => 'image/svg+xml',
+            'tiff'     => 'image/tiff',
+            'tif'      => 'image/tiff',
+            'wbmp'     => 'image/vnd.wap.wbmp',
+            'ras'      => 'image/x-cmu-raster',
+            'cdr'      => 'image/x-coreldraw',
+            'pat'      => 'image/x-coreldrawpattern',
+            'cdt'      => 'image/x-coreldrawtemplate',
+            'djvu'     => 'image/x-djvu',
+            'djv'      => 'image/x-djvu',
+            'ico'      => 'image/x-icon',
+            'art'      => 'image/x-jg',
+            'jng'      => 'image/x-jng',
+            'psd'      => 'image/x-photoshop',
+            'pnm'      => 'image/x-portable-anymap',
+            'pbm'      => 'image/x-portable-bitmap',
+            'pgm'      => 'image/x-portable-graymap',
+            'ppm'      => 'image/x-portable-pixmap',
+            'rgb'      => 'image/x-rgb',
+            'xbm'      => 'image/x-xbitmap',
+            'xpm'      => 'image/x-xpixmap',
+            'xwd'      => 'image/x-xwindowdump',
+            'igs'      => 'model/iges',
+            'iges'     => 'model/iges',
+            'msh'      => 'model/mesh',
+            'mesh'     => 'model/mesh',
+            'silo'     => 'model/mesh',
+            'wrl'      => 'x-world/x-vrml',
+            'vrml'     => 'x-world/x-vrml',
+            'csv'      => 'text/comma-separated-values',
+            'css'      => 'text/css',
+            '323'      => 'text/h323',
+            'htm'      => 'text/html',
+            'html'     => 'text/html',
+            'uls'      => 'text/iuls',
+            'mml'      => 'text/mathml',
+            'asc'      => 'text/plain',
+            'txt'      => 'text/plain',
+            'text'     => 'text/plain',
+            'diff'     => 'text/plain',
+            'rtx'      => 'text/richtext',
+            'sct'      => 'text/scriptlet',
+            'wsc'      => 'text/scriptlet',
+            'tm'       => 'text/texmacs',
+            'ts'       => 'text/texmacs',
+            'tsv'      => 'text/tab-separated-values',
+            'jad'      => 'text/vnd.sun.j2me.app-descriptor',
+            'wml'      => 'text/vnd.wap.wml',
+            'wmls'     => 'text/vnd.wap.wmlscript',
+            'xml'      => 'text/xml',
+            'xsl'      => 'text/xml',
+            'h++'      => 'text/x-c++hdr',
+            'hpp'      => 'text/x-c++hdr',
+            'hxx'      => 'text/x-c++hdr',
+            'hh'       => 'text/x-c++hdr',
+            'c++'      => 'text/x-c++src',
+            'cpp'      => 'text/x-c++src',
+            'cxx'      => 'text/x-c++src',
+            'cc'       => 'text/x-c++src',
+            'h'        => 'text/x-chdr',
+            'c'        => 'text/x-csrc',
+            'java'     => 'text/x-java',
+            'moc'      => 'text/x-moc',
+            'p'        => 'text/x-pascal',
+            'pas'      => 'text/x-pascal',
+            '***'      => 'text/x-pcs-***',
+            'shtml'    => 'text/x-server-parsed-html',
+            'etx'      => 'text/x-setext',
+            'tk'       => 'text/x-tcl',
+            'ltx'      => 'text/x-tex',
+            'sty'      => 'text/x-tex',
+            'cls'      => 'text/x-tex',
+            'vcs'      => 'text/x-vcalendar',
+            'vcf'      => 'text/x-vcard',
+            'dl'       => 'video/dl',
+            'fli'      => 'video/fli',
+            'gl'       => 'video/gl',
+            'mpeg'     => 'video/mpeg',
+            'mpg'      => 'video/mpeg',
+            'mpe'      => 'video/mpeg',
+            'qt'       => 'video/quicktime',
+            'mov'      => 'video/quicktime',
+            'mxu'      => 'video/vnd.mpegurl',
+            'dif'      => 'video/x-dv',
+            'dv'       => 'video/x-dv',
+            'lsf'      => 'video/x-la-asf',
+            'lsx'      => 'video/x-la-asf',
+            'mng'      => 'video/x-mng',
+            'asf'      => 'video/x-ms-asf',
+            'asx'      => 'video/x-ms-asf',
+            'wm'       => 'video/x-ms-wm',
+            'wmv'      => 'video/x-ms-wmv',
+            'wmx'      => 'video/x-ms-wmx',
+            'wvx'      => 'video/x-ms-wvx',
+            'avi'      => 'video/x-msvideo',
+            'movie'    => 'video/x-sgi-movie',
+            'ice'      => 'x-conference/x-cooltalk',
+            'vrm'      => 'x-world/x-vrml',
+            'rar'      => 'application/x-rar-compressed',
+            'cab'      => 'application/vnd.ms-cab-compressed'
+        ];
 
         $part = explode('.', $fileName);
         $size = count($part);
@@ -1585,7 +1647,9 @@ EOF;
      * 寻找匹配的mime图标
      *
      * @access public
+     *
      * @param string $mime mime类型
+     *
      * @return string
      */
     public static function mimeIconType($mime)
@@ -1596,17 +1660,17 @@ EOF;
             return 'unknown';
         }
 
-        list ($type, $stream) = $parts;
+        [$type, $stream] = $parts;
 
-        if (in_array($type, array('image', 'video', 'audio', 'text', 'application'))) {
+        if (in_array($type, ['image', 'video', 'audio', 'text', 'application'])) {
             switch (true) {
-                case in_array($stream, array('msword', 'msaccess', 'ms-powerpoint', 'ms-powerpoint')):
+                case in_array($stream, ['msword', 'msaccess', 'ms-powerpoint', 'ms-powerpoint']):
                 case 0 === strpos($stream, 'vnd.'):
                     return 'office';
                 case false !== strpos($stream, 'html') || false !== strpos($stream, 'xml') || false !== strpos($stream, 'wml'):
                     return 'html';
                 case false !== strpos($stream, 'compressed') || false !== strpos($stream, 'zip') ||
-                in_array($stream, array('application/x-gtar', 'application/x-tar')):
+                    in_array($stream, ['application/x-gtar', 'application/x-tar']):
                     return 'archive';
                 case 'text' == $type && 0 === strpos($stream, 'x-'):
                     return 'script';

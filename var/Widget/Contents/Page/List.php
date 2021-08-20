@@ -30,9 +30,9 @@ class Widget_Contents_Page_List extends Widget_Abstract_Contents
     public function execute()
     {
         $select = $this->select()->where('table.contents.type = ?', 'page')
-        ->where('table.contents.status = ?', 'publish')
-        ->where('table.contents.created < ?', $this->options->time)
-        ->order('table.contents.order', Typecho_Db::SORT_ASC);
+            ->where('table.contents.status = ?', 'publish')
+            ->where('table.contents.created < ?', $this->options->time)
+            ->order('table.contents.order', Typecho_Db::SORT_ASC);
 
         //去掉自定义首页
         $frontPage = explode(':', $this->options->frontPage);
@@ -40,6 +40,6 @@ class Widget_Contents_Page_List extends Widget_Abstract_Contents
             $select->where('table.contents.cid <> ?', $frontPage[1]);
         }
 
-        $this->db->fetchAll($select, array($this, 'push'));
+        $this->db->fetchAll($select, [$this, 'push']);
     }
 }

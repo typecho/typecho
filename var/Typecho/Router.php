@@ -29,7 +29,7 @@ class Typecho_Router
      * @access private
      * @var mixed
      */
-    private static $_routingTable = array();
+    private static $_routingTable = [];
 
     /**
      * 全路径
@@ -37,18 +37,20 @@ class Typecho_Router
      * @access private
      * @var string
      */
-    private static $_pathInfo = NULL;
+    private static $_pathInfo = null;
 
     /**
      * 解析路径
      *
      * @access public
+     *
      * @param string $pathInfo 全路径
      * @param mixed $parameter 输入参数
+     *
      * @return mixed
      * @throws Exception
      */
-    public static function match($pathInfo, $parameter = NULL)
+    public static function match(string $pathInfo, $parameter = null)
     {
         foreach (self::$_routingTable as $key => $route) {
             if (preg_match($route['regx'], $pathInfo, $matches)) {
@@ -56,7 +58,7 @@ class Typecho_Router
 
                 try {
                     /** 载入参数 */
-                    $params = NULL;
+                    $params = null;
 
                     if (!empty($route['params'])) {
                         unset($matches[0]);
@@ -69,7 +71,7 @@ class Typecho_Router
 
                 } catch (Exception $e) {
                     if (404 == $e->getCode()) {
-                        Typecho_Widget::destory($route['widget']);
+                        Typecho_Widget::destroy($route['widget']);
                         continue;
                     }
 
@@ -79,33 +81,6 @@ class Typecho_Router
         }
 
         return false;
-    }
-
-    /**
-     * 设置全路径
-     *
-     * @access public
-     * @param string $pathInfo
-     * @return void
-     */
-    public static function setPathInfo($pathInfo = '/')
-    {
-        self::$_pathInfo = $pathInfo;
-    }
-
-    /**
-     * 获取全路径
-     *
-     * @access public
-     * @return string
-     */
-    public static function getPathInfo()
-    {
-        if (NULL === self::$_pathInfo) {
-            self::setPathInfo();
-        }
-
-        return self::$_pathInfo;
     }
 
     /**
@@ -125,14 +100,14 @@ class Typecho_Router
 
                 try {
                     /** 载入参数 */
-                    $params = NULL;
+                    $params = null;
 
                     if (!empty($route['params'])) {
                         unset($matches[0]);
                         $params = array_combine($route['params'], $matches);
                     }
 
-                    $widget = Typecho_Widget::widget($route['widget'], NULL, $params);
+                    $widget = Typecho_Widget::widget($route['widget'], null, $params);
 
                     if (isset($route['action'])) {
                         $widget->{$route['action']}();
@@ -143,7 +118,7 @@ class Typecho_Router
 
                 } catch (Exception $e) {
                     if (404 == $e->getCode()) {
-                        Typecho_Widget::destory($route['widget']);
+                        Typecho_Widget::destroy($route['widget']);
                         continue;
                     }
 
@@ -157,21 +132,51 @@ class Typecho_Router
     }
 
     /**
+     * 获取全路径
+     *
+     * @access public
+     * @return string
+     */
+    public static function getPathInfo(): ?string
+    {
+        if (null === self::$_pathInfo) {
+            self::setPathInfo();
+        }
+
+        return self::$_pathInfo;
+    }
+
+    /**
+     * 设置全路径
+     *
+     * @access public
+     *
+     * @param string $pathInfo
+     *
+     * @return void
+     */
+    public static function setPathInfo(string $pathInfo = '/')
+    {
+        self::$_pathInfo = $pathInfo;
+    }
+
+    /**
      * 路由反解析函数
      *
      * @param string $name 路由配置表名称
-     * @param array $value 路由填充值
-     * @param string $prefix 最终合成路径的前缀
+     * @param array|null $value 路由填充值
+     * @param string|null $prefix 最终合成路径的前缀
+     *
      * @return string
      */
-    public static function url($name, array $value = NULL, $prefix = NULL)
+    public static function url(string $name, ?array $value = null, ?string $prefix = null): string
     {
         $route = self::$_routingTable[$name];
 
         //交换数组键值
-        $pattern = array();
+        $pattern = [];
         foreach ($route['params'] as $row) {
-            $pattern[$row] = isset($value[$row]) ? $value[$row] : '{' . $row . '}';
+            $pattern[$row] = $value[$row] ?? '{' . $row . '}';
         }
 
         return Typecho_Common::url(vsprintf($route['format'], $pattern), $prefix);
@@ -181,7 +186,9 @@ class Typecho_Router
      * 设置路由器默认配置
      *
      * @access public
+     *
      * @param mixed $routes 配置信息
+     *
      * @return void
      */
     public static function setRoutes($routes)
@@ -199,12 +206,13 @@ class Typecho_Router
      * 获取路由信息
      *
      * @param string $routeName 路由名称
+     *
      * @static
      * @access public
      * @return mixed
      */
-    public static function get($routeName)
+    public static function get(string $routeName)
     {
-        return isset(self::$_routingTable[$routeName]) ? self::$_routingTable[$routeName] : NULL;
+        return self::$_routingTable[$routeName] ?? null;
     }
 }

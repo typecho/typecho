@@ -28,10 +28,10 @@ class Typecho_Widget_Helper_Form_Element_Password extends Typecho_Widget_Helper_
      * @param array $options 选择项
      * @return Typecho_Widget_Helper_Layout
      */
-    public function input($name = NULL, array $options = NULL)
+    public function input($name = null, array $options = null)
     {
-        $input = new Typecho_Widget_Helper_Layout('input', array('id' => $name . '-0-' . self::$uniqueId,
-        'name' => $name, 'type' => 'password', 'class' => 'password'));
+        $input = new Typecho_Widget_Helper_Layout('input', ['id' => $name . '-0-' . self::$uniqueId,
+            'name' => $name, 'type' => 'password', 'class' => 'password']);
         $this->label->setAttribute('for', $name . '-0-' . self::$uniqueId);
         $this->container($input);
         $this->inputs[] = $input;

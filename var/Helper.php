@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 插件帮手将默认出现在所有的typecho发行版中.
  * 因此你可以放心使用它的功能, 以方便你的插件安装在用户的系统里.
@@ -10,17 +11,6 @@
  */
 class Helper
 {
-    /**
-     * 获取Widget_Options对象
-     *
-     * @access public
-     * @return Widget_Options
-     */
-    public static function options()
-    {
-        return Typecho_Widget::widget('Widget_Options');
-    }
-
     /**
      * 获取Widget_Security对象
      *
@@ -40,25 +30,25 @@ class Helper
     public static function widgetById($table, $pkId)
     {
         $table = ucfirst($table);
-        if (!in_array($table, array('Contents', 'Comments', 'Metas', 'Users'))) {
-            return NULL;
+        if (!in_array($table, ['Contents', 'Comments', 'Metas', 'Users'])) {
+            return null;
         }
 
-        $keys = array(
-            'Contents'  =>  'cid',
-            'Comments'  =>  'coid',
-            'Metas'     =>  'mid',
-            'Users'     =>  'uid'
-        );
+        $keys = [
+            'Contents' => 'cid',
+            'Comments' => 'coid',
+            'Metas' => 'mid',
+            'Users' => 'uid'
+        ];
 
         $className = "Widget_Abstract_{$table}";
         $key = $keys[$table];
         $db = Typecho_Db::get();
         $widget = new $className(Typecho_Request::getInstance(), Typecho_Widget_Helper_Empty::getInstance());
-        
+
         $db->fetchRow(
             $widget->select()->where("{$key} = ?", $pkId)->limit(1),
-                array($widget, 'push'));
+            [$widget, 'push']);
 
         return $widget;
     }
@@ -85,7 +75,7 @@ class Helper
     {
         try {
             /** 获取插件入口 */
-            list($pluginFileName, $className) = Typecho_Plugin::portal($pluginName, __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
+            [$pluginFileName, $className] = Typecho_Plugin::portal($pluginName, __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
 
             /** 获取已启用插件 */
             $plugins = Typecho_Plugin::export();
@@ -96,11 +86,11 @@ class Helper
 
             /** 判断实例化是否成功 */
             if (!isset($activatedPlugins[$pluginName]) || !class_exists($className)
-            || !method_exists($className, 'deactivate')) {
+                || !method_exists($className, 'deactivate')) {
                 throw new Typecho_Widget_Exception(_t('无法禁用插件'), 500);
             }
 
-            $result = call_user_func(array($className, 'deactivate'));
+            $result = call_user_func([$className, 'deactivate']);
 
         } catch (Exception $e) {
             //nothing to do
@@ -111,8 +101,8 @@ class Helper
         try {
             Typecho_Plugin::deactivate($pluginName);
             $db->query($db->update('table.options')
-            ->rows(array('value' => serialize(Typecho_Plugin::export())))
-            ->where('name = ?', 'plugins'));
+                ->rows(['value' => serialize(Typecho_Plugin::export())])
+                ->where('name = ?', 'plugins'));
         } catch (Typecho_Plugin_Exception $e) {
             //nothing to do
         }
@@ -150,7 +140,7 @@ class Helper
      * @param string $after 在某个路由后面
      * @return integer
      */
-    public static function addRoute($name, $url, $widget, $action = NULL, $after = NULL)
+    public static function addRoute($name, $url, $widget, $action = null, $after = null)
     {
         $routingTable = self::options()->routingTable;
         if (isset($routingTable[0])) {
@@ -169,16 +159,27 @@ class Helper
         $pre = array_slice($routingTable, 0, $pos);
         $next = array_slice($routingTable, $pos);
 
-        $routingTable = array_merge($pre, array($name => array(
-            'url'       =>  $url,
-            'widget'    =>  $widget,
-            'action'    =>  $action
-        )), $next);
+        $routingTable = array_merge($pre, [$name => [
+            'url' => $url,
+            'widget' => $widget,
+            'action' => $action
+        ]], $next);
         self::options()->routingTable = $routingTable;
 
         $db = Typecho_Db::get();
-        return Typecho_Widget::widget('Widget_Abstract_Options')->update(array('value' => serialize($routingTable))
-        , $db->sql()->where('name = ?', 'routingTable'));
+        return Typecho_Widget::widget('Widget_Abstract_Options')->update(['value' => serialize($routingTable)]
+            , $db->sql()->where('name = ?', 'routingTable'));
+    }
+
+    /**
+     * 获取Widget_Options对象
+     *
+     * @access public
+     * @return Widget_Options
+     */
+    public static function options()
+    {
+        return Typecho_Widget::widget('Widget_Options');
     }
 
     /**
@@ -199,8 +200,8 @@ class Helper
         self::options()->routingTable = $routingTable;
 
         $db = Typecho_Db::get();
-        return Typecho_Widget::widget('Widget_Abstract_Options')->update(array('value' => serialize($routingTable))
-        , $db->sql()->where('name = ?', 'routingTable'));
+        return Typecho_Widget::widget('Widget_Abstract_Options')->update(['value' => serialize($routingTable)]
+            , $db->sql()->where('name = ?', 'routingTable'));
     }
 
     /**
@@ -214,12 +215,12 @@ class Helper
     public static function addAction($actionName, $widgetName)
     {
         $actionTable = unserialize(self::options()->actionTable);
-        $actionTable = empty($actionTable) ? array() : $actionTable;
+        $actionTable = empty($actionTable) ? [] : $actionTable;
         $actionTable[$actionName] = $widgetName;
 
         $db = Typecho_Db::get();
-        return Typecho_Widget::widget('Widget_Abstract_Options')->update(array('value' => (self::options()->actionTable = serialize($actionTable)))
-        , $db->sql()->where('name = ?', 'actionTable'));
+        return Typecho_Widget::widget('Widget_Abstract_Options')->update(['value' => (self::options()->actionTable = serialize($actionTable))]
+            , $db->sql()->where('name = ?', 'actionTable'));
     }
 
     /**
@@ -232,7 +233,7 @@ class Helper
     public static function removeAction($actionName)
     {
         $actionTable = unserialize(self::options()->actionTable);
-        $actionTable = empty($actionTable) ? array() : $actionTable;
+        $actionTable = empty($actionTable) ? [] : $actionTable;
 
         if (isset($actionTable[$actionName])) {
             unset($actionTable[$actionName]);
@@ -240,8 +241,8 @@ class Helper
         }
 
         $db = Typecho_Db::get();
-        return Typecho_Widget::widget('Widget_Abstract_Options')->update(array('value' => (self::options()->actionTable = serialize($actionTable)))
-        , $db->sql()->where('name = ?', 'actionTable'));
+        return Typecho_Widget::widget('Widget_Abstract_Options')->update(['value' => (self::options()->actionTable = serialize($actionTable))]
+            , $db->sql()->where('name = ?', 'actionTable'));
     }
 
     /**
@@ -254,12 +255,12 @@ class Helper
     public static function addMenu($menuName)
     {
         $panelTable = unserialize(self::options()->panelTable);
-        $panelTable['parent'] = empty($panelTable['parent']) ? array() : $panelTable['parent'];
+        $panelTable['parent'] = empty($panelTable['parent']) ? [] : $panelTable['parent'];
         $panelTable['parent'][] = $menuName;
 
         $db = Typecho_Db::get();
-        Typecho_Widget::widget('Widget_Abstract_Options')->update(array('value' => (self::options()->panelTable = serialize($panelTable)))
-        , $db->sql()->where('name = ?', 'panelTable'));
+        Typecho_Widget::widget('Widget_Abstract_Options')->update(['value' => (self::options()->panelTable = serialize($panelTable))]
+            , $db->sql()->where('name = ?', 'panelTable'));
 
         end($panelTable['parent']);
         return key($panelTable['parent']) + 10;
@@ -275,15 +276,15 @@ class Helper
     public static function removeMenu($menuName)
     {
         $panelTable = unserialize(self::options()->panelTable);
-        $panelTable['parent'] = empty($panelTable['parent']) ? array() : $panelTable['parent'];
+        $panelTable['parent'] = empty($panelTable['parent']) ? [] : $panelTable['parent'];
 
         if (false !== ($index = array_search($menuName, $panelTable['parent']))) {
             unset($panelTable['parent'][$index]);
         }
 
         $db = Typecho_Db::get();
-        Typecho_Widget::widget('Widget_Abstract_Options')->update(array('value' => (self::options()->panelTable = serialize($panelTable)))
-        , $db->sql()->where('name = ?', 'panelTable'));
+        Typecho_Widget::widget('Widget_Abstract_Options')->update(['value' => (self::options()->panelTable = serialize($panelTable))]
+            , $db->sql()->where('name = ?', 'panelTable'));
 
         return $index + 10;
     }
@@ -304,18 +305,18 @@ class Helper
     public static function addPanel($index, $fileName, $title, $subTitle, $level, $hidden = false, $addLink = '')
     {
         $panelTable = unserialize(self::options()->panelTable);
-        $panelTable['child'] = empty($panelTable['child']) ? array() : $panelTable['child'];
-        $panelTable['child'][$index] = empty($panelTable['child'][$index]) ? array() : $panelTable['child'][$index];
+        $panelTable['child'] = empty($panelTable['child']) ? [] : $panelTable['child'];
+        $panelTable['child'][$index] = empty($panelTable['child'][$index]) ? [] : $panelTable['child'][$index];
         $fileName = urlencode(trim($fileName, '/'));
-        $panelTable['child'][$index][] = array($title, $subTitle, 'extending.php?panel=' . $fileName, $level, $hidden, $addLink);
+        $panelTable['child'][$index][] = [$title, $subTitle, 'extending.php?panel=' . $fileName, $level, $hidden, $addLink];
 
-        $panelTable['file'] = empty($panelTable['file']) ? array() : $panelTable['file'];
+        $panelTable['file'] = empty($panelTable['file']) ? [] : $panelTable['file'];
         $panelTable['file'][] = $fileName;
         $panelTable['file'] = array_unique($panelTable['file']);
 
         $db = Typecho_Db::get();
-        Typecho_Widget::widget('Widget_Abstract_Options')->update(array('value' => (self::options()->panelTable = serialize($panelTable)))
-        , $db->sql()->where('name = ?', 'panelTable'));
+        Typecho_Widget::widget('Widget_Abstract_Options')->update(['value' => (self::options()->panelTable = serialize($panelTable))]
+            , $db->sql()->where('name = ?', 'panelTable'));
 
         end($panelTable['child'][$index]);
         return key($panelTable['child'][$index]);
@@ -332,9 +333,9 @@ class Helper
     public static function removePanel($index, $fileName)
     {
         $panelTable = unserialize(self::options()->panelTable);
-        $panelTable['child'] = empty($panelTable['child']) ? array() : $panelTable['child'];
-        $panelTable['child'][$index] = empty($panelTable['child'][$index]) ? array() : $panelTable['child'][$index];
-        $panelTable['file'] = empty($panelTable['file']) ? array() : $panelTable['file'];
+        $panelTable['child'] = empty($panelTable['child']) ? [] : $panelTable['child'];
+        $panelTable['child'][$index] = empty($panelTable['child'][$index]) ? [] : $panelTable['child'][$index];
+        $panelTable['file'] = empty($panelTable['file']) ? [] : $panelTable['file'];
         $fileName = urlencode(trim($fileName, '/'));
 
         if (false !== ($key = array_search($fileName, $panelTable['file']))) {
@@ -350,8 +351,8 @@ class Helper
         }
 
         $db = Typecho_Db::get();
-        Typecho_Widget::widget('Widget_Abstract_Options')->update(array('value' => (self::options()->panelTable = serialize($panelTable)))
-        , $db->sql()->where('name = ?', 'panelTable'));
+        Typecho_Widget::widget('Widget_Abstract_Options')->update(['value' => (self::options()->panelTable = serialize($panelTable))]
+            , $db->sql()->where('name = ?', 'panelTable'));
         return $return;
     }
 
@@ -366,15 +367,15 @@ class Helper
     {
         return Typecho_Common::url('extending.php?panel=' . (trim($fileName, '/')), self::options()->adminUrl);
     }
-    
+
     /**
      * 手动配置插件变量
-     * 
+     *
      * @access public
      * @static
      * @param mixed $pluginName 插件名称
      * @param array $settings 变量键值对
-     * @param bool $isPersonal. (default: false) 是否为私人变量
+     * @param bool $isPersonal . (default: false) 是否为私人变量
      * @return void
      */
     public static function configPlugin($pluginName, array $settings, $isPersonal = false)
@@ -382,7 +383,7 @@ class Helper
         if (empty($settings)) {
             return;
         }
-        
+
         Widget_Plugins_Edit::configPlugin($pluginName, $settings, $isPersonal);
     }
 
@@ -401,7 +402,7 @@ class Helper
     {
         if (self::options()->commentsThreaded) {
             echo '<a href="#' . $formId . '" rel="nofollow" onclick="return typechoAddCommentReply(\'' .
-            $theId . '\', ' . $coid . ', \'' . $formId . '\', ' . $style . ');">' . $word . '</a>';
+                $theId . '\', ' . $coid . ', \'' . $formId . '\', ' . $style . ');">' . $word . '</a>';
         }
     }
 
@@ -417,7 +418,7 @@ class Helper
     {
         if (self::options()->commentsThreaded) {
             echo '<a href="#' . $formId . '" rel="nofollow" onclick="return typechoCancelCommentReply(\'' .
-            $formId . '\');">' . $word . '</a>';
+                $formId . '\');">' . $word . '</a>';
         }
     }
 
@@ -431,7 +432,7 @@ class Helper
     {
         if (self::options()->commentsThreaded) {
             echo
-<<<EOF
+            <<<EOF
 <script type="text/javascript">
 var typechoAddCommentReply = function (cid, coid, cfid, style) {
     var _ce = document.getElementById(cid), _cp = _ce.parentNode;

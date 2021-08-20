@@ -111,21 +111,15 @@ function get_pot($file) {
 
 require_once __DIR__ . '/../var/Typecho/Common.php';
 
-$version = Typecho_Common::VERSION;
-$date = date('Y-m-d H:iO');
-$year = date('Y');
 
 echo <<<EOF
-# Copyright (C) {$year} Typecho
+# Copyright (C) Typecho
 # This file is distributed under the same license as the Typecho Project.
-# FIRST AUTHOR <joyqi@typecho.org>, {$year}.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: {$version}\\n"
 "Report-Msgid-Bugs-To: \\n"
-"POT-Creation-Date: {$date}\\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\\n"
 "Language-Team: Typecho Dev <team@typecho.org>\\n"

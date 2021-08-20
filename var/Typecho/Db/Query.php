@@ -10,7 +10,7 @@
 /**
  * Typecho数据库查询语句构建类
  * 使用方法:
- * $query = new Typecho_Db_Query();	//或者使用DB积累的sql方法返回实例化对象
+ * $query = new Typecho_Db_Query();    //或者使用DB积累的sql方法返回实例化对象
  * $query->select('posts', 'post_id, post_title')
  * ->where('post_id = %d', 1)
  * ->limit(1);
@@ -27,24 +27,24 @@ class Typecho_Db_Query
     const KEYWORDS = '*PRIMARY|AND|OR|LIKE|BINARY|BY|DISTINCT|AS|IN|IS|NULL';
 
     /**
-     * 默认字段 
-     * 
+     * 默认字段
+     *
      * @var array
      * @access private
      */
-    private static $_default = array(
-        'action' => NULL,
-        'table'  => NULL,
+    private static $_default = [
+        'action' => null,
+        'table'  => null,
         'fields' => '*',
-        'join'   => array(),
-        'where'  => NULL,
-        'limit'  => NULL,
-        'offset' => NULL,
-        'order'  => NULL,
-        'group'  => NULL,
-        'having'  => NULL,
-        'rows'   => array(),
-    );
+        'join'   => [],
+        'where'  => null,
+        'limit'  => null,
+        'offset' => null,
+        'order'  => null,
+        'group'  => null,
+        'having' => null,
+        'rows'   => [],
+    ];
 
     /**
      * 数据库适配器
@@ -71,7 +71,7 @@ class Typecho_Db_Query
     /**
      * @var array
      */
-    private $_params = array();
+    private $_params = [];
 
     /**
      * 构造函数,引用数据库适配器作为内部数据
@@ -85,6 +85,67 @@ class Typecho_Db_Query
         $this->_prefix = $prefix;
 
         $this->_sqlPreBuild = self::$_default;
+    }
+
+    /**
+     * set default params
+     *
+     * @param array $default
+     */
+    public static function setDefault(array $default)
+    {
+        self::$_default = array_merge(self::$_default, $default);
+    }
+
+    /**
+     * 获取参数
+     *
+     * @return array
+     */
+    public function getParams()
+    {
+        return $this->_params;
+    }
+
+    /**
+     * 获取查询字串属性值
+     *
+     * @access public
+     * @param string $attributeName 属性名称
+     * @return string
+     */
+    public function getAttribute($attributeName)
+    {
+        return $this->_sqlPreBuild[$attributeName] ?? null;
+    }
+
+    /**
+     * 清除查询字串属性值
+     *
+     * @access public
+     * @param string $attributeName 属性名称
+     * @return Typecho_Db_Query
+     */
+    public function cleanAttribute($attributeName)
+    {
+        if (isset($this->_sqlPreBuild[$attributeName])) {
+            $this->_sqlPreBuild[$attributeName] = self::$_default[$attributeName];
+        }
+        return $this;
+    }
+
+    /**
+     * 连接表
+     *
+     * @param string $table 需要连接的表
+     * @param string $condition 连接条件
+     * @param string $op 连接方法(LEFT, RIGHT, INNER)
+     * @return Typecho_Db_Query
+     */
+    public function join($table, $condition, $op = Typecho_Db::INNER_JOIN)
+    {
+        $this->_sqlPreBuild['join'][] = [$this->filterPrefix($table), $this->filterColumn($condition), $op];
+        return $this;
     }
 
     /**
@@ -121,9 +182,9 @@ class Typecho_Db_Query
             if (ctype_alnum($cha) || false !== strpos('_*', $cha)) {
                 if (!$lastIsAlnum) {
                     if ($quotes > 0 && !ctype_digit($word) && '.' != $split
-                    && false === strpos(self::KEYWORDS, strtoupper($word))) {
+                        && false === strpos(self::KEYWORDS, strtoupper($word))) {
                         $word = $this->_adapter->quoteColumn($word);
-                    } else if ('.' == $split && 'table' == $word) {
+                    } elseif ('.' == $split && 'table' == $word) {
                         $word = $this->_prefix;
                         $split = '';
                     }
@@ -142,8 +203,8 @@ class Typecho_Db_Query
                     if (0 == $quotes) {
                         if (false !== strpos(' ,)=<>.+-*/', $cha)) {
                             $quotes = 1;
-                        } else if ('(' == $cha) {
-                            $quotes = -1;
+                        } elseif ('(' == $cha) {
+                            $quotes = - 1;
                         }
                     }
 
@@ -160,33 +221,31 @@ class Typecho_Db_Query
     }
 
     /**
-     * 从参数中合成查询字段
+     * AND条件查询语句
      *
-     * @access private
-     * @param array $parameters
-     * @return string
+     * @param ...$args
+     * @return $this
      */
-    private function getColumnFromParameters(array $parameters)
+    public function where(...$args)
     {
-        $fields = array();
+        [$condition] = $args;
+        $condition = str_replace('?', "%s", $this->filterColumn($condition));
+        $operator = empty($this->_sqlPreBuild['where']) ? ' WHERE ' : ' AND';
 
-        foreach ($parameters as $value) {
-            if (is_array($value)) {
-                foreach ($value as $key => $val) {
-                    $fields[] = $key . ' AS ' . $val;
-                }
-            } else {
-                 $fields[] = $value;
-            }
+        if (count($args) <= 1) {
+            $this->_sqlPreBuild['where'] .= $operator . ' (' . $condition . ')';
+        } else {
+            array_shift($args);
+            $this->_sqlPreBuild['where'] .= $operator . ' (' . vsprintf($condition, $this->quoteValues($args)) . ')';
         }
 
-        return $this->filterColumn(implode(' , ', $fields));
+        return $this;
     }
 
     /**
-     * 转义参数 
-     * 
-     * @param array $values 
+     * 转义参数
+     *
+     * @param array $values
      * @access protected
      * @return array
      */
@@ -194,7 +253,7 @@ class Typecho_Db_Query
     {
         foreach ($values as &$value) {
             if (is_array($value)) {
-                $value = '(' . implode(',', array_map(array($this, 'quoteValue'), $value)) . ')';
+                $value = '(' . implode(',', array_map([$this, 'quoteValue'], $value)) . ')';
             } else {
                 $value = $this->quoteValue($value);
             }
@@ -216,107 +275,20 @@ class Typecho_Db_Query
     }
 
     /**
-     * 获取参数
-     *
-     * @return array
-     */
-    public function getParams()
-    {
-        return $this->_params;
-    }
-
-    /**
-     * set default params
-     *
-     * @param array $default
-     */
-    public static function setDefault(array $default)
-    {
-        self::$_default = array_merge(self::$_default, $default);
-    }
-
-    /**
-     * 获取查询字串属性值
-     *
-     * @access public
-     * @param string $attributeName 属性名称
-     * @return string
-     */
-    public function getAttribute($attributeName)
-    {
-        return isset($this->_sqlPreBuild[$attributeName]) ? $this->_sqlPreBuild[$attributeName] : NULL;
-    }
-
-    /**
-     * 清除查询字串属性值
-     *
-     * @access public
-     * @param string $attributeName 属性名称
-     * @return Typecho_Db_Query
-     */
-    public function cleanAttribute($attributeName)
-    {
-        if (isset($this->_sqlPreBuild[$attributeName])) {
-            $this->_sqlPreBuild[$attributeName] = self::$_default[$attributeName];
-        }
-        return $this;
-    }
-
-    /**
-     * 连接表
-     *
-     * @param string $table 需要连接的表
-     * @param string $condition 连接条件
-     * @param string $op 连接方法(LEFT, RIGHT, INNER)
-     * @return Typecho_Db_Query
-     */
-    public function join($table, $condition, $op = Typecho_Db::INNER_JOIN)
-    {
-        $this->_sqlPreBuild['join'][] = array($this->filterPrefix($table), $this->filterColumn($condition), $op);
-        return $this;
-    }
-
-    /**
-     * AND条件查询语句
-     *
-     * @param string $condition 查询条件
-     * @param mixed $param 条件值
-     * @return Typecho_Db_Query
-     */
-    public function where()
-    {
-        $condition = func_get_arg(0);
-        $condition = str_replace('?', "%s", $this->filterColumn($condition));
-        $operator = empty($this->_sqlPreBuild['where']) ? ' WHERE ' : ' AND';
-
-        if (func_num_args() <= 1) {
-            $this->_sqlPreBuild['where'] .= $operator . ' (' . $condition . ')';
-        } else {
-            $args = func_get_args();
-            array_shift($args);
-            $this->_sqlPreBuild['where'] .= $operator . ' (' . vsprintf($condition, $this->quoteValues($args)) . ')';
-        }
-
-        return $this;
-    }
-
-    /**
      * OR条件查询语句
      *
-     * @param string $condition 查询条件
-     * @param mixed $param 条件值
+     * @param ...$args
      * @return Typecho_Db_Query
      */
-    public function orWhere()
+    public function orWhere(...$args)
     {
-        $condition = func_get_arg(0);
+        [$condition] = $args;
         $condition = str_replace('?', "%s", $this->filterColumn($condition));
         $operator = empty($this->_sqlPreBuild['where']) ? ' WHERE ' : ' OR';
 
         if (func_num_args() <= 1) {
             $this->_sqlPreBuild['where'] .= $operator . ' (' . $condition . ')';
         } else {
-            $args = func_get_args();
             array_shift($args);
             $this->_sqlPreBuild['where'] .= $operator . ' (' . vsprintf($condition, $this->quoteValues($args)) . ')';
         }
@@ -407,7 +379,7 @@ class Typecho_Db_Query
             $this->_sqlPreBuild['order'] .= ', ';
         }
 
-        $this->_sqlPreBuild['order'] .= $this->filterColumn($orderby) . (empty($sort) ? NULL : ' ' . $sort);
+        $this->_sqlPreBuild['order'] .= $this->filterColumn($orderby) . (empty($sort) ? null : ' ' . $sort);
         return $this;
     }
 
@@ -448,17 +420,39 @@ class Typecho_Db_Query
     /**
      * 选择查询字段
      *
-     * @access public
-     * @param mixed $field 查询字段
-     * @return Typecho_Db_Query
+     * @param mixed ...$args 查询字段
+     * @return $this
      */
-    public function select($field = '*')
+    public function select(...$args): Typecho_Db_Query
     {
         $this->_sqlPreBuild['action'] = Typecho_Db::SELECT;
-        $args = func_get_args();
 
         $this->_sqlPreBuild['fields'] = $this->getColumnFromParameters($args);
         return $this;
+    }
+
+    /**
+     * 从参数中合成查询字段
+     *
+     * @access private
+     * @param array $parameters
+     * @return string
+     */
+    private function getColumnFromParameters(array $parameters)
+    {
+        $fields = [];
+
+        foreach ($parameters as $value) {
+            if (is_array($value)) {
+                foreach ($value as $key => $val) {
+                    $fields[] = $key . ' AS ' . $val;
+                }
+            } else {
+                $fields[] = $value;
+            }
+        }
+
+        return $this->filterColumn(implode(' , ', $fields));
     }
 
     /**
@@ -542,17 +536,17 @@ class Typecho_Db_Query
                 return $this->_adapter->parseSelect($this->_sqlPreBuild);
             case Typecho_Db::INSERT:
                 return 'INSERT INTO '
-                . $this->_sqlPreBuild['table']
-                . '(' . implode(' , ', array_keys($this->_sqlPreBuild['rows'])) . ')'
-                . ' VALUES '
-                . '(' . implode(' , ', array_values($this->_sqlPreBuild['rows'])) . ')'
-                . $this->_sqlPreBuild['limit'];
+                    . $this->_sqlPreBuild['table']
+                    . '(' . implode(' , ', array_keys($this->_sqlPreBuild['rows'])) . ')'
+                    . ' VALUES '
+                    . '(' . implode(' , ', array_values($this->_sqlPreBuild['rows'])) . ')'
+                    . $this->_sqlPreBuild['limit'];
             case Typecho_Db::DELETE:
                 return 'DELETE FROM '
-                . $this->_sqlPreBuild['table']
-                . $this->_sqlPreBuild['where'];
+                    . $this->_sqlPreBuild['table']
+                    . $this->_sqlPreBuild['where'];
             case Typecho_Db::UPDATE:
-                $columns = array();
+                $columns = [];
                 if (isset($this->_sqlPreBuild['rows'])) {
                     foreach ($this->_sqlPreBuild['rows'] as $key => $val) {
                         $columns[] = "$key = $val";
@@ -560,11 +554,11 @@ class Typecho_Db_Query
                 }
 
                 return 'UPDATE '
-                . $this->_sqlPreBuild['table']
-                . ' SET ' . implode(' , ', $columns)
-                . $this->_sqlPreBuild['where'];
+                    . $this->_sqlPreBuild['table']
+                    . ' SET ' . implode(' , ', $columns)
+                    . $this->_sqlPreBuild['where'];
             default:
-                return NULL;
+                return null;
         }
     }
 }

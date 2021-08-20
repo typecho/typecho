@@ -31,7 +31,7 @@ class Widget_Users_Author extends Widget_Abstract_Users
     {
         if ($this->parameter->uid) {
             $this->db->fetchRow($this->select()
-            ->where('uid = ?', $this->parameter->uid), array($this, 'push'));
+                ->where('uid = ?', $this->parameter->uid), [$this, 'push']);
         }
     }
 }

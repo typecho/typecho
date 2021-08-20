@@ -52,6 +52,6 @@ class Widget_Contents_Attachment_Related extends Widget_Abstract_Contents
             $select->offset($this->parameter->offset);
         }
 
-        $this->db->fetchAll($select, array($this, 'push'));
+        $this->db->fetchAll($select, [$this, 'push']);
     }
 }

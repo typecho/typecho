@@ -21,60 +21,60 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 class Widget_Metas_Category_List extends Widget_Abstract_Metas
 {
     /**
-     * 树状分类结构 
-     * 
+     * 树状分类结构
+     *
      * @var array
      * @access private
      */
-    private $_treeViewCategories = array();
+    private $_treeViewCategories = [];
 
     /**
      * _categoryOptions
-     * 
+     *
      * @var mixed
      * @access private
      */
-    private $_categoryOptions = NULL;
+    private $_categoryOptions = null;
 
     /**
      * 顶层分类
-     * 
+     *
      * @var array
      * @access private
      */
-    private $_top = array();
+    private $_top = [];
 
     /**
-     * 所有分类哈希表 
-     * 
+     * 所有分类哈希表
+     *
      * @var array
      * @access private
      */
-    private $_map = array();
+    private $_map = [];
 
     /**
      * 顺序流
-     * 
+     *
      * @var array
      * @access private
      */
-    private $_orders = array();
+    private $_orders = [];
 
     /**
-     * 所有子节点列表 
-     * 
+     * 所有子节点列表
+     *
      * @var array
      * @access private
      */
-    private $_children = array();
+    private $_children = [];
 
     /**
-     * 所有父节点列表 
-     * 
+     * 所有父节点列表
+     *
      * @var array
      * @access private
      */
-    private $_parents = array();
+    private $_parents = [];
 
     /**
      * 构造函数,初始化组件
@@ -84,7 +84,7 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
      * @param mixed $response response对象
      * @param mixed $params 参数列表
      */
-    public function __construct($request, $response, $params = NULL)
+    public function __construct($request, $response, $params = null)
     {
         parent::__construct($request, $response, $params);
         $this->parameter->setDefault('ignore=0&current=');
@@ -107,15 +107,103 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
                 $this->_top[] = $mid;
             }
         }
-        
+
         // 预处理深度
         $this->levelWalkCallback($this->_top);
-        $this->_map = array_map(array($this, 'filter'), $this->_map);
+        $this->_map = array_map([$this, 'filter'], $this->_map);
+    }
+
+    /**
+     * 预处理分类迭代
+     *
+     * @param array $categories
+     * @param array $parents
+     * @access private
+     */
+    private function levelWalkCallback(array $categories, $parents = [])
+    {
+        foreach ($parents as $parent) {
+            if (!isset($this->_children[$parent])) {
+                $this->_children[$parent] = [];
+            }
+
+            $this->_children[$parent] = array_merge($this->_children[$parent], $categories);
+        }
+
+        foreach ($categories as $mid) {
+            $this->_orders[] = $mid;
+            $parent = $this->_map[$mid]['parent'];
+
+            if (0 != $parent && isset($this->_map[$parent])) {
+                $levels = $this->_map[$parent]['levels'] + 1;
+                $this->_map[$mid]['levels'] = $levels;
+            }
+
+            $this->_parents[$mid] = $parents;
+
+            if (!empty($this->_treeViewCategories[$mid])) {
+                $new = $parents;
+                $new[] = $mid;
+                $this->levelWalkCallback($this->_treeViewCategories[$mid], $new);
+            }
+        }
+    }
+
+    /**
+     * 执行函数
+     *
+     * @access public
+     * @return void
+     */
+    public function execute()
+    {
+        $this->stack = $this->getCategories($this->_orders);
+    }
+
+    /**
+     * treeViewCategories
+     *
+     * @param $categoryOptions 输出选项
+     * @access public
+     * @return void
+     */
+    public function listCategories($categoryOptions = null)
+    {
+        //初始化一些变量
+        $this->_categoryOptions = Typecho_Config::factory($categoryOptions);
+        $this->_categoryOptions->setDefault([
+            'wrapTag'       => 'ul',
+            'wrapClass'     => '',
+            'itemTag'       => 'li',
+            'itemClass'     => '',
+            'showCount'     => false,
+            'showFeed'      => false,
+            'countTemplate' => '(%d)',
+            'feedTemplate'  => '<a href="%s">RSS</a>'
+        ]);
+
+        // 插件插件接口
+        $this->pluginHandle()->trigger($plugged)->listCategories($this->_categoryOptions, $this);
+
+        if (!$plugged) {
+            $this->stack = $this->getCategories($this->_top);
+
+            if ($this->have()) {
+                echo '<' . $this->_categoryOptions->wrapTag . (empty($this->_categoryOptions->wrapClass)
+                        ? '' : ' class="' . $this->_categoryOptions->wrapClass . '"') . '>';
+                while ($this->next()) {
+                    $this->treeViewCategoriesCallback();
+                }
+                echo '</' . $this->_categoryOptions->wrapTag . '>';
+            }
+
+            $this->stack = $this->_map;
+        }
     }
 
     /**
      * 列出分类回调
-     * 
+     *
      * @access private
      */
     private function treeViewCategoriesCallback()
@@ -125,7 +213,7 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
             return treeViewCategories($this, $categoryOptions);
         }
 
-        $classes = array();
+        $classes = [];
 
         if ($categoryOptions->itemClass) {
             $classes[] = $categoryOptions->itemClass;
@@ -135,7 +223,7 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
 
         echo '<' . $categoryOptions->itemTag . ' class="'
             . implode(' ', $classes);
-        
+
         if ($this->levels > 0) {
             echo ' category-child';
             $this->levelsAlt(' category-level-odd', ' category-level-even');
@@ -145,7 +233,7 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
 
         if ($this->mid == $this->parameter->current) {
             echo ' category-active';
-        } else if (isset($this->_children[$this->mid]) && in_array($this->parameter->current, $this->_children[$this->mid])) {
+        } elseif (isset($this->_children[$this->mid]) && in_array($this->parameter->current, $this->_children[$this->mid])) {
             echo ' category-parent-active';
         }
 
@@ -167,67 +255,20 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
     }
 
     /**
-     * 预处理分类迭代
-     * 
-     * @param array $categories
-     * @param array $parents
-     * @access private
-     */
-    private function levelWalkCallback(array $categories, $parents = array())
-    {
-        foreach ($parents as $parent) {
-            if (!isset($this->_children[$parent])) {
-                $this->_children[$parent] = array();
-            }
-
-            $this->_children[$parent] = array_merge($this->_children[$parent], $categories);
-        }
-        
-        foreach ($categories as $mid) {
-            $this->_orders[] = $mid;
-            $parent = $this->_map[$mid]['parent'];
-
-            if (0 != $parent && isset($this->_map[$parent])) {
-                $levels = $this->_map[$parent]['levels'] + 1;
-                $this->_map[$mid]['levels'] = $levels;
-            }
-
-            $this->_parents[$mid] = $parents;
-
-            if (!empty($this->_treeViewCategories[$mid])) {
-                $new = $parents;
-                $new[] = $mid;
-                $this->levelWalkCallback($this->_treeViewCategories[$mid], $new);
-            }
-        }
-    }
-
-    /**
-     * 子评论
+     * 根据深度余数输出
      *
-     * @access protected
-     * @return array
+     * @param ...$args
      */
-    protected function ___children()
+    public function levelsAlt(...$args)
     {
-        return isset($this->_treeViewCategories[$this->mid]) ?
-            $this->getCategories($this->_treeViewCategories[$this->mid]) : array();
+        $num = count($args);
+        $split = $this->levels % $num;
+        echo $args[(0 == $split ? $num : $split) - 1];
     }
 
     /**
-     * 执行函数
+     * treeViewCategories
      *
-     * @access public
-     * @return void
-     */
-    public function execute()
-    {
-        $this->stack = $this->getCategories($this->_orders);
-    }
-
-    /**
-     * treeViewCategories  
-     * 
      * @access public
      * @return void
      */
@@ -241,7 +282,7 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
 
             //在子评论之前输出
             echo '<' . $this->_categoryOptions->wrapTag . (empty($this->_categoryOptions->wrapClass)
-                ? '' : ' class="' . $this->_categoryOptions->wrapClass . '"') . '>';
+                    ? '' : ' class="' . $this->_categoryOptions->wrapClass . '"') . '>';
 
             foreach ($children as $child) {
                 $this->row = $child;
@@ -254,61 +295,6 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
 
             $this->sequence --;
         }
-    }
-
-    /**
-     * treeViewCategories  
-     *
-     * @param $categoryOptions 输出选项
-     * @access public
-     * @return void
-     */
-    public function listCategories($categoryOptions = NULL)
-    {
-        //初始化一些变量
-        $this->_categoryOptions = Typecho_Config::factory($categoryOptions);
-        $this->_categoryOptions->setDefault(array(
-            'wrapTag'           =>  'ul',
-            'wrapClass'         =>  '',
-            'itemTag'           =>  'li',
-            'itemClass'         =>  '',
-            'showCount'         =>  false,
-            'showFeed'          =>  false,
-            'countTemplate'     =>  '(%d)',
-            'feedTemplate'      =>  '<a href="%s">RSS</a>'
-        ));
-
-        // 插件插件接口
-        $this->pluginHandle()->trigger($plugged)->listCategories($this->_categoryOptions, $this);
-
-        if (!$plugged) {
-            $this->stack = $this->getCategories($this->_top);
-
-            if ($this->have()) { 
-                echo '<' . $this->_categoryOptions->wrapTag . (empty($this->_categoryOptions->wrapClass)
-                    ? '' : ' class="' . $this->_categoryOptions->wrapClass . '"') . '>';
-                while ($this->next()) {
-                    $this->treeViewCategoriesCallback();
-                }
-                echo '</' . $this->_categoryOptions->wrapTag . '>';
-            }
-
-            $this->stack = $this->_map;
-        }
-    }
-
-    /**
-     * 根据深度余数输出
-     *
-     * @access public
-     * @return void
-     */
-    public function levelsAlt()
-    {
-        $args = func_get_args();
-        $num = func_num_args();
-        $split = $this->levels % $num;
-        echo $args[(0 == $split ? $num : $split) -1];
     }
 
     /**
@@ -333,28 +319,48 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
     }
 
     /**
+     * 获取某个分类所有父级节点缩略名
+     *
+     * @param mixed $mid
+     * @access public
+     * @return array
+     */
+    public function getAllParentsSlug($mid)
+    {
+        $parents = [];
+
+        if (isset($this->_parents[$mid])) {
+            foreach ($this->_parents[$mid] as $parent) {
+                $parents[] = $this->_map[$parent]['slug'];
+            }
+        }
+
+        return $parents;
+    }
+
+    /**
      * 获取某个分类下的所有子节点
-     * 
-     * @param mixed $mid 
+     *
+     * @param mixed $mid
      * @access public
      * @return array
      */
     public function getAllChildren($mid)
     {
-        return isset($this->_children[$mid]) ? $this->_children[$mid] : array();
+        return isset($this->_children[$mid]) ? $this->_children[$mid] : [];
     }
 
     /**
      * 获取某个分类所有父级节点
-     * 
-     * @param mixed $mid 
+     *
+     * @param mixed $mid
      * @access public
      * @return array
      */
     public function getAllParents($mid)
     {
-        $parents = array();
-        
+        $parents = [];
+
         if (isset($this->_parents[$mid])) {
             foreach ($this->_parents[$mid] as $parent) {
                 $parents[] = $this->_map[$parent];
@@ -365,9 +371,57 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
     }
 
     /**
+     * 获取单个分类
+     *
+     * @param integer $mid
+     * @access public
+     * @return mixed
+     */
+    public function getCategory($mid)
+    {
+        return isset($this->_map[$mid]) ? $this->_map[$mid] : null;
+    }
+
+    /**
+     * 子评论
+     *
+     * @access protected
+     * @return array
+     */
+    protected function ___children()
+    {
+        return isset($this->_treeViewCategories[$this->mid]) ?
+            $this->getCategories($this->_treeViewCategories[$this->mid]) : [];
+    }
+
+    /**
+     * 获取多个分类
+     *
+     * @param mixed $mids
+     * @access public
+     * @return array
+     */
+    public function getCategories($mids)
+    {
+        $result = [];
+
+        if (!empty($mids)) {
+            foreach ($mids as $mid) {
+                if (!$this->parameter->ignore
+                    || ($this->parameter->ignore != $mid
+                        && !$this->hasParent($mid, $this->parameter->ignore))) {
+                    $result[] = $this->_map[$mid];
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * 是否拥有某个父级分类
      *
-     * @param mixed $mid 
+     * @param mixed $mid
      * @param mixed $parentId
      * @access public
      * @return bool
@@ -383,62 +437,6 @@ class Widget_Metas_Category_List extends Widget_Abstract_Metas
         }
 
         return false;
-    }
-
-    /**
-     * 获取某个分类所有父级节点缩略名
-     * 
-     * @param mixed $mid 
-     * @access public
-     * @return array
-     */
-    public function getAllParentsSlug($mid)
-    {
-        $parents = array();
-        
-        if (isset($this->_parents[$mid])) {
-            foreach ($this->_parents[$mid] as $parent) {
-                $parents[] = $this->_map[$parent]['slug'];
-            }
-        }
-
-        return $parents;
-    }
-
-    /**
-     * 获取单个分类
-     * 
-     * @param integer $mid 
-     * @access public
-     * @return mixed
-     */
-    public function getCategory($mid)
-    {
-        return isset($this->_map[$mid]) ? $this->_map[$mid] : NULL;
-    }
-
-    /**
-     * 获取多个分类 
-     * 
-     * @param mixed $mids 
-     * @access public
-     * @return array
-     */
-    public function getCategories($mids)
-    {
-        $result = array();
-
-        if (!empty($mids)) {
-            foreach ($mids as $mid) {
-                if (!$this->parameter->ignore
-                    || ($this->parameter->ignore != $mid
-                    && !$this->hasParent($mid, $this->parameter->ignore))) {
-                    $result[] = $this->_map[$mid];
-                }
-            }
-        }
-
-        return $result;
     }
 }
 

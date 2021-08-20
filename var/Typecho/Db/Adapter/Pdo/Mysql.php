@@ -40,6 +40,18 @@ class Typecho_Db_Adapter_Pdo_Mysql extends Typecho_Db_Adapter_Pdo
     }
 
     /**
+     * 对象引号过滤
+     *
+     * @access public
+     * @param string $string
+     * @return string
+     */
+    public function quoteColumn($string)
+    {
+        return '`' . $string . '`';
+    }
+
+    /**
      * 初始化数据库
      *
      * @param Typecho_Config $config 数据库配置
@@ -56,18 +68,6 @@ class Typecho_Db_Adapter_Pdo_Mysql extends Typecho_Db_Adapter_Pdo
     }
 
     /**
-     * 对象引号过滤
-     *
-     * @access public
-     * @param string $string
-     * @return string
-     */
-    public function quoteColumn($string)
-    {
-        return '`' . $string . '`';
-    }
-
-    /**
      * 引号转义函数
      *
      * @param string $string 需要转义的字符串
@@ -75,7 +75,7 @@ class Typecho_Db_Adapter_Pdo_Mysql extends Typecho_Db_Adapter_Pdo
      */
     public function quoteValue($string)
     {
-        return '\'' . str_replace(array('\'', '\\'), array('\'\'', '\\\\'), $string) . '\'';
+        return '\'' . str_replace(['\'', '\\'], ['\'\'', '\\\\'], $string) . '\'';
     }
 
     /**
@@ -89,15 +89,15 @@ class Typecho_Db_Adapter_Pdo_Mysql extends Typecho_Db_Adapter_Pdo
     {
         if (!empty($sql['join'])) {
             foreach ($sql['join'] as $val) {
-                list($table, $condition, $op) = $val;
+                [$table, $condition, $op] = $val;
                 $sql['table'] = "{$sql['table']} {$op} JOIN {$table} ON {$condition}";
             }
         }
 
-        $sql['limit'] = (0 == strlen($sql['limit'])) ? NULL : ' LIMIT ' . $sql['limit'];
-        $sql['offset'] = (0 == strlen($sql['offset'])) ? NULL : ' OFFSET ' . $sql['offset'];
+        $sql['limit'] = (0 == strlen($sql['limit'])) ? null : ' LIMIT ' . $sql['limit'];
+        $sql['offset'] = (0 == strlen($sql['offset'])) ? null : ' OFFSET ' . $sql['offset'];
 
         return 'SELECT ' . $sql['fields'] . ' FROM ' . $sql['table'] .
-        $sql['where'] . $sql['group'] . $sql['having'] . $sql['order'] . $sql['limit'] . $sql['offset'];
+            $sql['where'] . $sql['group'] . $sql['having'] . $sql['order'] . $sql['limit'] . $sql['offset'];
     }
 }

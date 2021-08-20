@@ -48,8 +48,8 @@ Typecho_Widget::widget('Widget_Contents_Attachment_Edit')->to($attachment);
 include 'copyright.php';
 include 'common-js.php';
 ?>
-<script src="<?php $options->adminStaticUrl('js', 'moxie.js?v=' . $suffixVersion); ?>"></script>
-<script src="<?php $options->adminStaticUrl('js', 'plupload.js?v=' . $suffixVersion); ?>"></script>
+<script src="<?php $options->adminStaticUrl('js', 'moxie.js'); ?>"></script>
+<script src="<?php $options->adminStaticUrl('js', 'plupload.js'); ?>"></script>
 <script type="text/javascript">
 $(document).ready(function() {
     $('#attachment-url').click(function () {

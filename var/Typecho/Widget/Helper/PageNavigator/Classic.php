@@ -45,7 +45,7 @@ class Typecho_Widget_Helper_PageNavigator_Classic extends Typecho_Widget_Helper_
         //输出上一页
         if ($this->_total > 0 && $this->_currentPage > 1) {
             echo '<a class="prev" href="' . str_replace($this->_pageHolder, $this->_currentPage - 1, $this->_pageTemplate) . $this->_anchor . '">'
-            . $prevWord . '</a>';
+                . $prevWord . '</a>';
         }
     }
 
@@ -61,7 +61,7 @@ class Typecho_Widget_Helper_PageNavigator_Classic extends Typecho_Widget_Helper_
         //输出下一页
         if ($this->_total > 0 && $this->_currentPage < $this->_totalPage) {
             echo '<a class="next" title="" href="' . str_replace($this->_pageHolder, $this->_currentPage + 1, $this->_pageTemplate) . $this->_anchor . '">'
-            . $nextWord . '</a>';
+                . $nextWord . '</a>';
         }
     }
 }

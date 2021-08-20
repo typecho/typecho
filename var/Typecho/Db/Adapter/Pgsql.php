@@ -16,20 +16,19 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 class Typecho_Db_Adapter_Pgsql implements Typecho_Db_Adapter
 {
     /**
-     * 数据库连接字符串标示
-     *
-     * @access private
-     * @var resource
-     */
-    private $_dbLink;
-
-    /**
      * 最后一次操作的数据表
      *
      * @access protected
      * @var string
      */
     protected $_lastTable;
+    /**
+     * 数据库连接字符串标示
+     *
+     * @access private
+     * @var resource
+     */
+    private $_dbLink;
 
     /**
      * 判断适配器是否可用
@@ -46,8 +45,8 @@ class Typecho_Db_Adapter_Pgsql implements Typecho_Db_Adapter
      * 数据库连接函数
      *
      * @param Typecho_Config $config 数据库配置
-     * @throws Typecho_Db_Exception
      * @return resource
+     * @throws Typecho_Db_Exception
      */
     public function connect(Typecho_Config $config)
     {
@@ -63,8 +62,8 @@ class Typecho_Db_Adapter_Pgsql implements Typecho_Db_Adapter
     }
 
     /**
-     * 获取数据库版本 
-     * 
+     * 获取数据库版本
+     *
      * @param mixed $handle
      * @return string
      */
@@ -95,10 +94,10 @@ class Typecho_Db_Adapter_Pgsql implements Typecho_Db_Adapter
      * @param integer $op 数据库读写状态
      * @param string $action 数据库动作
      * @param string $table 数据表
-     * @throws Typecho_Db_Exception
      * @return resource
+     * @throws Typecho_Db_Exception
      */
-    public function query($query, $handle, $op = Typecho_Db::READ, $action = NULL, $table = NULL)
+    public function query($query, $handle, $op = Typecho_Db::READ, $action = null, $table = null)
     {
         $this->_lastTable = $table;
         if ($resource = @pg_query($handle, $query)) {
@@ -107,7 +106,19 @@ class Typecho_Db_Adapter_Pgsql implements Typecho_Db_Adapter
 
         /** 数据库异常 */
         throw new Typecho_Db_Query_Exception(@pg_last_error($this->_dbLink),
-        pg_result_error_field(pg_get_result($this->_dbLink), PGSQL_DIAG_SQLSTATE));
+            pg_result_error_field(pg_get_result($this->_dbLink), PGSQL_DIAG_SQLSTATE));
+    }
+
+    /**
+     * 对象引号过滤
+     *
+     * @access public
+     * @param string $string
+     * @return string
+     */
+    public function quoteColumn($string)
+    {
+        return '"' . $string . '"';
     }
 
     /**
@@ -133,29 +144,6 @@ class Typecho_Db_Adapter_Pgsql implements Typecho_Db_Adapter
     }
 
     /**
-     * 引号转义函数
-     *
-     * @param string $string 需要转义的字符串
-     * @return string
-     */
-    public function quoteValue($string)
-    {
-        return '\'' . pg_escape_string($string) . '\'';
-    }
-
-    /**
-     * 对象引号过滤
-     *
-     * @access public
-     * @param string $string
-     * @return string
-     */
-    public function quoteColumn($string)
-    {
-        return '"' . $string . '"';
-    }
-
-    /**
      * 合成查询语句
      *
      * @access public
@@ -166,16 +154,16 @@ class Typecho_Db_Adapter_Pgsql implements Typecho_Db_Adapter
     {
         if (!empty($sql['join'])) {
             foreach ($sql['join'] as $val) {
-                list($table, $condition, $op) = $val;
+                [$table, $condition, $op] = $val;
                 $sql['table'] = "{$sql['table']} {$op} JOIN {$table} ON {$condition}";
             }
         }
 
-        $sql['limit'] = (0 == strlen($sql['limit'])) ? NULL : ' LIMIT ' . $sql['limit'];
-        $sql['offset'] = (0 == strlen($sql['offset'])) ? NULL : ' OFFSET ' . $sql['offset'];
+        $sql['limit'] = (0 == strlen($sql['limit'])) ? null : ' LIMIT ' . $sql['limit'];
+        $sql['offset'] = (0 == strlen($sql['offset'])) ? null : ' OFFSET ' . $sql['offset'];
 
         return 'SELECT ' . $sql['fields'] . ' FROM ' . $sql['table'] .
-        $sql['where'] . $sql['group'] . $sql['having'] . $sql['order'] . $sql['limit'] . $sql['offset'];
+            $sql['where'] . $sql['group'] . $sql['having'] . $sql['order'] . $sql['limit'] . $sql['offset'];
     }
 
     /**
@@ -205,5 +193,16 @@ class Typecho_Db_Adapter_Pgsql implements Typecho_Db_Adapter
         }
 
         return 0;
+    }
+
+    /**
+     * 引号转义函数
+     *
+     * @param string $string 需要转义的字符串
+     * @return string
+     */
+    public function quoteValue($string)
+    {
+        return '\'' . pg_escape_string($string) . '\'';
     }
 }

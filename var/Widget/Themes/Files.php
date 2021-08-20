@@ -61,15 +61,15 @@ class Widget_Themes_Files extends Typecho_Widget
             $this->_currentFile = $this->request->get('file', 'index.php');
 
             if (preg_match("/^([_0-9a-z-\.\ ])+$/i", $this->_currentFile)
-            && file_exists($dir . '/' . $this->_currentFile)) {
+                && file_exists($dir . '/' . $this->_currentFile)) {
                 foreach ($files as $file) {
                     if (file_exists($file)) {
                         $file = basename($file);
-                        $this->push(array(
-                            'file'      =>  $file,
-                            'theme'     =>  $this->_currentTheme,
-                            'current'   =>  ($file == $this->_currentFile)
-                        ));
+                        $this->push([
+                            'file'    => $file,
+                            'theme'   => $this->_currentTheme,
+                            'current' => ($file == $this->_currentFile)
+                        ]);
                     }
                 }
 
@@ -112,8 +112,8 @@ class Widget_Themes_Files extends Typecho_Widget
     public function currentIsWriteable()
     {
         return is_writeable($this->widget('Widget_Options')
-            ->themeFile($this->_currentTheme, $this->_currentFile))
-        && (!defined('__TYPECHO_THEME_WRITEABLE__') || __TYPECHO_THEME_WRITEABLE__);
+                ->themeFile($this->_currentTheme, $this->_currentFile))
+            && (!defined('__TYPECHO_THEME_WRITEABLE__') || __TYPECHO_THEME_WRITEABLE__);
     }
 
     /**

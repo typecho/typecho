@@ -24,34 +24,7 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
      *
      * @var array
      */
-    public $asyncRequests = array();
-
-    /**
-     * 获取真实的 URL
-     *
-     * @return string
-     */
-    private function getServiceUrl()
-    {
-        $url = Typecho_Common::url('/action/service', $this->options->index);
-
-        if (defined('__TYPECHO_SERVICE_URL__')) {
-            $rootPath = rtrim(parse_url($this->options->rootUrl, PHP_URL_PATH), '/');
-            $path = parse_url($url, PHP_URL_PATH);
-            $parts = parse_url(__TYPECHO_SERVICE_URL__);
-
-            if (!empty($parts['path'])
-                && $parts['path'] != '/'
-                && rtrim($parts['path'], '/') != $rootPath) {
-                $path = Typecho_Common::url($path, $parts['path']);
-            }
-
-            $parts['path'] = $path;
-            $url = Typecho_Common::buildUrl($parts);
-        }
-
-        return $url;
-    }
+    public $asyncRequests = [];
 
     /**
      * 发送pingback实现
@@ -106,11 +79,11 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
 
                 if ($spider) {
                     $spider->setTimeout(10)
-                    ->send($url);
+                        ->send($url);
 
                     if (!($xmlrpcUrl = $spider->getResponseHeader('x-pingback'))) {
                         if (preg_match("/<link[^>]*rel=[\"']pingback[\"'][^>]*href=[\"']([^\"']+)[\"'][^>]*>/i",
-                        $spider->getResponseBody(), $out)) {
+                            $spider->getResponseBody(), $out)) {
                             $xmlrpcUrl = $out[1];
                         }
                     }
@@ -141,12 +114,12 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
                 if ($client) {
                     try {
                         $client->setTimeout(5)
-                        ->setData(array(
-                            'blog_name' => $this->options->title . ' &raquo ' . $post->title,
-                            'url'       => $post->permalink,
-                            'excerpt'   => $post->excerpt
-                        ))
-                        ->send($url);
+                            ->setData([
+                                'blog_name' => $this->options->title . ' &raquo ' . $post->title,
+                                'url' => $post->permalink,
+                                'excerpt' => $post->excerpt
+                            ])
+                            ->send($url);
 
                         unset($client);
                     } catch (Typecho_Http_Client_Exception $e) {
@@ -169,18 +142,18 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
      * @param array $trackback trackback的url
      * @return void
      */
-    public function sendPing($cid, array $trackback = NULL)
+    public function sendPing($cid, array $trackback = null)
     {
         $this->user->pass('contributor');
 
         if ($client = Typecho_Http_Client::get()) {
             try {
 
-                $input = array(
+                $input = [
                     'do' => 'ping',
                     'cid' => $cid,
                     'token' => Typecho_Common::timeToken($this->options->secret)
-                );
+                ];
 
                 if (!empty($trackback)) {
                     $input['trackback'] = $trackback;
@@ -199,12 +172,39 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
     }
 
     /**
+     * 获取真实的 URL
+     *
+     * @return string
+     */
+    private function getServiceUrl()
+    {
+        $url = Typecho_Common::url('/action/service', $this->options->index);
+
+        if (defined('__TYPECHO_SERVICE_URL__')) {
+            $rootPath = rtrim(parse_url($this->options->rootUrl, PHP_URL_PATH), '/');
+            $path = parse_url($url, PHP_URL_PATH);
+            $parts = parse_url(__TYPECHO_SERVICE_URL__);
+
+            if (!empty($parts['path'])
+                && $parts['path'] != '/'
+                && rtrim($parts['path'], '/') != $rootPath) {
+                $path = Typecho_Common::url($path, $parts['path']);
+            }
+
+            $parts['path'] = $path;
+            $url = Typecho_Common::buildUrl($parts);
+        }
+
+        return $url;
+    }
+
+    /**
      * 请求异步服务
      *
      * @param $method
      * @param mixed $params
      */
-    public function requestService($method, $params = NULL)
+    public function requestService($method, $params = null)
     {
         static $called;
 
@@ -216,11 +216,11 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
                     try {
                         $client->setHeader('User-Agent', $this->options->generator)
                             ->setTimeout(2)
-                            ->setData(array(
-                                'do'        =>  'async',
-                                'requests'  =>  Json::encode($self->asyncRequests),
-                                'token'     =>  Typecho_Common::timeToken($this->options->secret)
-                            ))
+                            ->setData([
+                                'do' => 'async',
+                                'requests' => Json::encode($self->asyncRequests),
+                                'token' => Typecho_Common::timeToken($this->options->secret)
+                            ])
                             ->setMethod(Typecho_Http_Client::METHOD_POST)
                             ->send($this->getServiceUrl());
 
@@ -233,7 +233,7 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
             $called = true;
         }
 
-        $this->asyncRequests[] = array($method, $params);
+        $this->asyncRequests[] = [$method, $params];
     }
 
     /**
@@ -264,7 +264,7 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
 
         if (!empty($requests)) {
             foreach ($requests as $request) {
-                list ($method, $params) = $request;
+                [$method, $params] = $request;
                 $plugin->{$method}($params);
             }
         }

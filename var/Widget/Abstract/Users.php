@@ -21,24 +21,6 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 class Widget_Abstract_Users extends Widget_Abstract
 {
     /**
-     * ___options  
-     * 
-     * @access protected
-     * @return Typecho_Config
-     */
-    protected function ___options()
-    {
-        $rows = $this->db->fetchAll($this->db->select()
-            ->from('table.options')->where('user = ?', $this->uid));
-        $options = array();
-        foreach ($rows as $row) {
-            $options[$row['name']] = $row['value'];
-        }
-
-        return new Typecho_Config($options);
-    }
-
-    /**
      * 判断用户名称是否存在
      *
      * @access public
@@ -48,9 +30,9 @@ class Widget_Abstract_Users extends Widget_Abstract
     public function nameExists($name)
     {
         $select = $this->db->select()
-        ->from('table.users')
-        ->where('name = ?', $name)
-        ->limit(1);
+            ->from('table.users')
+            ->where('name = ?', $name)
+            ->limit(1);
 
         if ($this->request->uid) {
             $select->where('uid <> ?', $this->request->uid);
@@ -70,9 +52,9 @@ class Widget_Abstract_Users extends Widget_Abstract
     public function mailExists($mail)
     {
         $select = $this->db->select()
-        ->from('table.users')
-        ->where('mail = ?', $mail)
-        ->limit(1);
+            ->from('table.users')
+            ->where('mail = ?', $mail)
+            ->limit(1);
 
         if ($this->request->uid) {
             $select->where('uid <> ?', $this->request->uid);
@@ -92,9 +74,9 @@ class Widget_Abstract_Users extends Widget_Abstract
     public function screenNameExists($screenName)
     {
         $select = $this->db->select()
-        ->from('table.users')
-        ->where('screenName = ?', $screenName)
-        ->limit(1);
+            ->from('table.users')
+            ->where('screenName = ?', $screenName)
+            ->limit(1);
 
         if ($this->request->uid) {
             $select->where('uid <> ?', $this->request->uid);
@@ -105,26 +87,16 @@ class Widget_Abstract_Users extends Widget_Abstract
     }
 
     /**
-     * 获取页面偏移
+     * 将每行的值压入堆栈
      *
-     * @access protected
-     * @param string $column 字段名
-     * @param integer $offset 偏移值
-     * @param string $group 用户组
-     * @param integer $pageSize 分页值
-     * @return integer
+     * @access public
+     * @param array $value 每行的值
+     * @return array
      */
-    protected function getPageOffset($column, $offset, $group = NULL, $pageSize = 20)
+    public function push(array $value)
     {
-        $select = $this->db->select(array('COUNT(uid)' => 'num'))->from('table.users')
-        ->where("table.users.{$column} > {$offset}");
-
-        if (!empty($group)) {
-            $select->where('table.users.group = ?', $group);
-        }
-
-        $count = $this->db->fetchObject($select)->num + 1;
-        return ceil($count / $pageSize);
+        $value = $this->filter($value);
+        return parent::push($value);
     }
 
     /**
@@ -137,7 +109,7 @@ class Widget_Abstract_Users extends Widget_Abstract
     public function filter(array $value)
     {
         //生成静态链接
-        $routeExists = (NULL != Typecho_Router::get('author'));
+        $routeExists = (null != Typecho_Router::get('author'));
 
         $value['permalink'] = $routeExists ? Typecho_Router::url('author', $value, $this->options->index) : '#';
 
@@ -153,19 +125,6 @@ class Widget_Abstract_Users extends Widget_Abstract
 
         $value = $this->pluginHandle(__CLASS__)->filter($value, $this);
         return $value;
-    }
-
-    /**
-     * 将每行的值压入堆栈
-     *
-     * @access public
-     * @param array $value 每行的值
-     * @return array
-     */
-    public function push(array $value)
-    {
-        $value = $this->filter($value);
-        return parent::push($value);
     }
 
     /**
@@ -188,7 +147,7 @@ class Widget_Abstract_Users extends Widget_Abstract
      */
     public function size(Typecho_Db_Query $condition)
     {
-        return $this->db->fetchObject($condition->select(array('COUNT(uid)' => 'num'))->from('table.users'))->num;
+        return $this->db->fetchObject($condition->select(['COUNT(uid)' => 'num'])->from('table.users'))->num;
     }
 
     /**
@@ -238,10 +197,51 @@ class Widget_Abstract_Users extends Widget_Abstract
      * @param string $class 默认css class
      * @return void
      */
-    public function gravatar($size = 40, $rating = 'X', $default = NULL, $class = NULL)
+    public function gravatar($size = 40, $rating = 'X', $default = null, $class = null)
     {
         $url = Typecho_Common::gravatarUrl($this->mail, $size, $rating, $default, $this->request->isSecure());
         echo '<img' . (empty($class) ? '' : ' class="' . $class . '"') . ' src="' . $url . '" alt="' .
-        $this->screenName . '" width="' . $size . '" height="' . $size . '" />';
+            $this->screenName . '" width="' . $size . '" height="' . $size . '" />';
+    }
+
+    /**
+     * ___options
+     *
+     * @access protected
+     * @return Typecho_Config
+     */
+    protected function ___options()
+    {
+        $rows = $this->db->fetchAll($this->db->select()
+            ->from('table.options')->where('user = ?', $this->uid));
+        $options = [];
+        foreach ($rows as $row) {
+            $options[$row['name']] = $row['value'];
+        }
+
+        return new Typecho_Config($options);
+    }
+
+    /**
+     * 获取页面偏移
+     *
+     * @access protected
+     * @param string $column 字段名
+     * @param integer $offset 偏移值
+     * @param string $group 用户组
+     * @param integer $pageSize 分页值
+     * @return integer
+     */
+    protected function getPageOffset($column, $offset, $group = null, $pageSize = 20)
+    {
+        $select = $this->db->select(['COUNT(uid)' => 'num'])->from('table.users')
+            ->where("table.users.{$column} > {$offset}");
+
+        if (!empty($group)) {
+            $select->where('table.users.group = ?', $group);
+        }
+
+        $count = $this->db->fetchObject($select)->num + 1;
+        return ceil($count / $pageSize);
     }
 }

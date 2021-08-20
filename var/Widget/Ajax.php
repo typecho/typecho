@@ -44,7 +44,7 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
         if ($client) {
             $client->setHeader('User-Agent', $this->options->generator)
                 ->setTimeout(10);
-            $result = array('available' => 0);
+            $result = ['available' => 0];
 
             try {
                 $client->send('http://typecho.org/version.json');
@@ -54,7 +54,7 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
                 $json = Json::decode($response, true);
 
                 if (!empty($json)) {
-                    list($soft, $version) = explode(' ', $this->options->generator);
+                    [$soft, $version] = explode(' ', $this->options->generator);
                     $current = explode('/', $version);
 
                     if (isset($json['release']) && isset($json['version'])
@@ -62,12 +62,12 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
                         && preg_match("/^[0-9\.]+$/", $json['version'])
                         && version_compare($json['release'], $current[0], '>=')
                         && version_compare($json['version'], $current[1], '>')) {
-                        $result = array(
+                        $result = [
                             'available' => 1,
-                            'latest' => $json['release'] . '-' . $json['version'],
-                            'current' => $current[0] . '-' . $current[1],
-                            'link' => 'http://typecho.org/download'
-                        );
+                            'latest'    => $json['release'] . '-' . $json['version'],
+                            'current'   => $current[0] . '-' . $current[1],
+                            'link'      => 'http://typecho.org/download'
+                        ];
                     }
                 }
             } catch (Exception $e) {
@@ -99,22 +99,22 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
             $response = $client->getResponseBody();
             preg_match_all("/<item>\s*<title>([^>]*)<\/title>\s*<link>([^>]*)<\/link>\s*<guid>[^>]*<\/guid>\s*<pubDate>([^>]*)<\/pubDate>/is", $response, $matches);
 
-            $data = array();
+            $data = [];
 
             if ($matches) {
                 foreach ($matches[0] as $key => $val) {
-                    $data[] = array(
-                        'title'  =>  $matches[1][$key],
-                        'link'   =>  $matches[2][$key],
-                        'date'   =>  date('n.j', strtotime($matches[3][$key]))
-                    );
+                    $data[] = [
+                        'title' => $matches[1][$key],
+                        'link'  => $matches[2][$key],
+                        'date'  => date('n.j', strtotime($matches[3][$key]))
+                    ];
 
                     if ($key > 8) {
                         break;
                     }
                 }
             }
-            
+
             $this->response->throwJson($data);
             return;
         }
@@ -131,16 +131,16 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
     public function editorResize()
     {
         $this->user->pass('contributor');
-        if ($this->db->fetchObject($this->db->select(array('COUNT(*)' => 'num'))
-        ->from('table.options')->where('name = ? AND user = ?', 'editorSize', $this->user->uid))->num > 0) {
+        if ($this->db->fetchObject($this->db->select(['COUNT(*)' => 'num'])
+                ->from('table.options')->where('name = ? AND user = ?', 'editorSize', $this->user->uid))->num > 0) {
             $this->widget('Widget_Abstract_Options')
-            ->update(array('value' => $this->request->size), $this->db->sql()->where('name = ? AND user = ?', 'editorSize', $this->user->uid));
+                ->update(['value' => $this->request->size], $this->db->sql()->where('name = ? AND user = ?', 'editorSize', $this->user->uid));
         } else {
-            $this->widget('Widget_Abstract_Options')->insert(array(
-                'name'  =>  'editorSize',
-                'value' =>  $this->request->size,
-                'user'  =>  $this->user->uid
-            ));
+            $this->widget('Widget_Abstract_Options')->insert([
+                'name'  => 'editorSize',
+                'value' => $this->request->size,
+                'user'  => $this->user->uid
+            ]);
         }
     }
 

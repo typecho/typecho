@@ -23,7 +23,7 @@ class Typecho_I18n_GetTextMulti
      * @access private
      * @var Typecho_I18n_GetText[]
      */
-    private $_handles = array();
+    private $_handles = [];
 
     /**
      * 构造函数
@@ -60,7 +60,7 @@ class Typecho_I18n_GetTextMulti
     {
         foreach ($this->_handles as $handle) {
             $string = $handle->translate($string, $count);
-            if (-1 != $count) {
+            if (- 1 != $count) {
                 break;
             }
         }
@@ -79,11 +79,11 @@ class Typecho_I18n_GetTextMulti
      */
     public function ngettext($single, $plural, $number)
     {
-        $count = -1;
-        
+        $count = - 1;
+
         foreach ($this->_handles as $handle) {
             $string = $handle->ngettext($single, $plural, $number, $count);
-            if (-1 != $count) {
+            if (- 1 != $count) {
                 break;
             }
         }

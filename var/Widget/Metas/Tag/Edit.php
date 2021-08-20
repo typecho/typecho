@@ -43,9 +43,9 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
     public function tagExists($mid)
     {
         $tag = $this->db->fetchRow($this->db->select()
-        ->from('table.metas')
-        ->where('type = ?', 'tag')
-        ->where('mid = ?', $mid)->limit(1));
+            ->from('table.metas')
+            ->where('type = ?', 'tag')
+            ->where('mid = ?', $mid)->limit(1));
 
         return $tag ? true : false;
     }
@@ -60,10 +60,10 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
     public function nameExists($name)
     {
         $select = $this->db->select()
-        ->from('table.metas')
-        ->where('type = ?', 'tag')
-        ->where('name = ?', $name)
-        ->limit(1);
+            ->from('table.metas')
+            ->where('type = ?', 'tag')
+            ->where('name = ?', $name)
+            ->limit(1);
 
         if ($this->request->mid) {
             $select->where('mid <> ?', $this->request->filter('int')->mid);
@@ -102,10 +102,10 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
     public function slugExists($slug)
     {
         $select = $this->db->select()
-        ->from('table.metas')
-        ->where('type = ?', 'tag')
-        ->where('slug = ?', Typecho_Common::slugName($slug))
-        ->limit(1);
+            ->from('table.metas')
+            ->where('type = ?', 'tag')
+            ->where('slug = ?', Typecho_Common::slugName($slug))
+            ->limit(1);
 
         if ($this->request->mid) {
             $select->where('mid <> ?', $this->request->mid);
@@ -113,86 +113,6 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
 
         $tag = $this->db->fetchRow($select);
         return $tag ? false : true;
-    }
-
-    /**
-     * 生成表单
-     *
-     * @access public
-     * @param string $action 表单动作
-     * @return Typecho_Widget_Helper_Form
-     */
-    public function form($action = NULL)
-    {
-        /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form($this->security->getIndex('/action/metas-tag-edit'),
-            Typecho_Widget_Helper_Form::POST_METHOD);
-
-        /** 标签名称 */
-        $name = new Typecho_Widget_Helper_Form_Element_Text('name', NULL, NULL,
-        _t('标签名称') . ' *', _t('这是标签在站点中显示的名称.可以使用中文,如 "地球".'));
-        $form->addInput($name);
-
-        /** 标签缩略名 */
-        $slug = new Typecho_Widget_Helper_Form_Element_Text('slug', NULL, NULL,
-        _t('标签缩略名'), _t('标签缩略名用于创建友好的链接形式, 如果留空则默认使用标签名称.'));
-        $form->addInput($slug);
-
-        /** 标签动作 */
-        $do = new Typecho_Widget_Helper_Form_Element_Hidden('do');
-        $form->addInput($do);
-
-        /** 标签主键 */
-        $mid = new Typecho_Widget_Helper_Form_Element_Hidden('mid');
-        $form->addInput($mid);
-
-        /** 提交按钮 */
-        $submit = new Typecho_Widget_Helper_Form_Element_Submit();
-        $submit->input->setAttribute('class', 'btn primary');
-        $form->addItem($submit);
-
-        if (isset($this->request->mid) && 'insert' != $action) {
-            /** 更新模式 */
-            $meta = $this->db->fetchRow($this->select()
-            ->where('mid = ?', $this->request->mid)
-            ->where('type = ?', 'tag')->limit(1));
-
-            if (!$meta) {
-                $this->response->redirect(Typecho_Common::url('manage-tags.php', $this->options->adminUrl));
-            }
-
-            $name->value($meta['name']);
-            $slug->value($meta['slug']);
-            $do->value('update');
-            $mid->value($meta['mid']);
-            $submit->value(_t('编辑标签'));
-            $_action = 'update';
-        } else {
-            $do->value('insert');
-            $submit->value(_t('增加标签'));
-            $_action = 'insert';
-        }
-
-        if (empty($action)) {
-            $action = $_action;
-        }
-
-        /** 给表单增加规则 */
-        if ('insert' == $action || 'update' == $action) {
-            $name->addRule('required', _t('必须填写标签名称'));
-            $name->addRule(array($this, 'nameExists'), _t('标签名称已经存在'));
-            $name->addRule(array($this, 'nameToSlug'), _t('标签名称无法被转换为缩略名'));
-            $name->addRule('xssCheck', _t('请不要标签名称中使用特殊字符'));
-            $slug->addRule(array($this, 'slugExists'), _t('缩略名已经存在'));
-            $slug->addRule('xssCheck', _t('请不要在缩略名中使用特殊字符'));
-        }
-
-        if ('update' == $action) {
-            $mid->addRule('required', _t('标签主键不存在'));
-            $mid->addRule(array($this, 'tagExists'), _t('标签不存在'));
-        }
-
-        return $form;
     }
 
     /**
@@ -221,10 +141,90 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
 
         /** 提示信息 */
         $this->widget('Widget_Notice')->set(_t('标签 <a href="%s">%s</a> 已经被增加',
-        $this->permalink, $this->name), 'success');
+            $this->permalink, $this->name), 'success');
 
         /** 转向原页 */
         $this->response->redirect(Typecho_Common::url('manage-tags.php', $this->options->adminUrl));
+    }
+
+    /**
+     * 生成表单
+     *
+     * @access public
+     * @param string $action 表单动作
+     * @return Typecho_Widget_Helper_Form
+     */
+    public function form($action = null)
+    {
+        /** 构建表格 */
+        $form = new Typecho_Widget_Helper_Form($this->security->getIndex('/action/metas-tag-edit'),
+            Typecho_Widget_Helper_Form::POST_METHOD);
+
+        /** 标签名称 */
+        $name = new Typecho_Widget_Helper_Form_Element_Text('name', null, null,
+            _t('标签名称') . ' *', _t('这是标签在站点中显示的名称.可以使用中文,如 "地球".'));
+        $form->addInput($name);
+
+        /** 标签缩略名 */
+        $slug = new Typecho_Widget_Helper_Form_Element_Text('slug', null, null,
+            _t('标签缩略名'), _t('标签缩略名用于创建友好的链接形式, 如果留空则默认使用标签名称.'));
+        $form->addInput($slug);
+
+        /** 标签动作 */
+        $do = new Typecho_Widget_Helper_Form_Element_Hidden('do');
+        $form->addInput($do);
+
+        /** 标签主键 */
+        $mid = new Typecho_Widget_Helper_Form_Element_Hidden('mid');
+        $form->addInput($mid);
+
+        /** 提交按钮 */
+        $submit = new Typecho_Widget_Helper_Form_Element_Submit();
+        $submit->input->setAttribute('class', 'btn primary');
+        $form->addItem($submit);
+
+        if (isset($this->request->mid) && 'insert' != $action) {
+            /** 更新模式 */
+            $meta = $this->db->fetchRow($this->select()
+                ->where('mid = ?', $this->request->mid)
+                ->where('type = ?', 'tag')->limit(1));
+
+            if (!$meta) {
+                $this->response->redirect(Typecho_Common::url('manage-tags.php', $this->options->adminUrl));
+            }
+
+            $name->value($meta['name']);
+            $slug->value($meta['slug']);
+            $do->value('update');
+            $mid->value($meta['mid']);
+            $submit->value(_t('编辑标签'));
+            $_action = 'update';
+        } else {
+            $do->value('insert');
+            $submit->value(_t('增加标签'));
+            $_action = 'insert';
+        }
+
+        if (empty($action)) {
+            $action = $_action;
+        }
+
+        /** 给表单增加规则 */
+        if ('insert' == $action || 'update' == $action) {
+            $name->addRule('required', _t('必须填写标签名称'));
+            $name->addRule([$this, 'nameExists'], _t('标签名称已经存在'));
+            $name->addRule([$this, 'nameToSlug'], _t('标签名称无法被转换为缩略名'));
+            $name->addRule('xssCheck', _t('请不要标签名称中使用特殊字符'));
+            $slug->addRule([$this, 'slugExists'], _t('缩略名已经存在'));
+            $slug->addRule('xssCheck', _t('请不要在缩略名中使用特殊字符'));
+        }
+
+        if ('update' == $action) {
+            $mid->addRule('required', _t('标签主键不存在'));
+            $mid->addRule([$this, 'tagExists'], _t('标签不存在'));
+        }
+
+        return $form;
     }
 
     /**
@@ -253,7 +253,7 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
 
         /** 提示信息 */
         $this->widget('Widget_Notice')->set(_t('标签 <a href="%s">%s</a> 已经被更新',
-        $this->permalink, $this->name), 'success');
+            $this->permalink, $this->name), 'success');
 
         /** 转向原页 */
         $this->response->redirect(Typecho_Common::url('manage-tags.php', $this->options->adminUrl));
@@ -281,7 +281,7 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
 
         /** 提示信息 */
         $this->widget('Widget_Notice')->set($deleteCount > 0 ? _t('标签已经删除') : _t('没有标签被删除'),
-        $deleteCount > 0 ? 'success' : 'notice');
+            $deleteCount > 0 ? 'success' : 'notice');
 
         /** 转向原页 */
         $this->response->redirect(Typecho_Common::url('manage-tags.php', $this->options->adminUrl));
@@ -333,7 +333,7 @@ class Widget_Metas_Tag_Edit extends Widget_Abstract_Metas implements Widget_Inte
         if ($tags) {
             foreach ($tags as $tag) {
                 $this->refreshCountByTypeAndStatus($tag, 'post', 'publish');
-            } 
+            }
 
             // 自动清理标签
             $this->clearTags();

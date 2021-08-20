@@ -32,27 +32,27 @@ class Typecho_Http_Client
      * 获取可用的连接
      *
      * @access public
-     * @return Typecho_Http_Client_Adapter
+     * @return ?Typecho_Http_Client_Adapter
      */
-    public static function get()
+    public static function get(): ?Typecho_Http_Client
     {
         $adapters = func_get_args();
 
         if (empty($adapters)) {
-            $adapters = array();
+            $adapters = [];
             $adapterFiles = glob(dirname(__FILE__) . '/Client/Adapter/*.php');
             foreach ($adapterFiles as $file) {
-                $adapters[] = substr(basename($file), 0, -4);
+                $adapters[] = substr(basename($file), 0, - 4);
             }
         }
 
         foreach ($adapters as $adapter) {
             $adapterName = 'Typecho_Http_Client_Adapter_' . $adapter;
-            if (Typecho_Common::isAvailableClass($adapterName) && call_user_func(array($adapterName, 'isAvailable'))) {
+            if (Typecho_Common::isAvailableClass($adapterName) && call_user_func([$adapterName, 'isAvailable'])) {
                 return new $adapterName();
             }
         }
 
-        return false;
+        return null;
     }
 }

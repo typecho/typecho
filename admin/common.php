@@ -23,12 +23,11 @@ Typecho_Widget::widget('Widget_Security')->to($security);
 Typecho_Widget::widget('Widget_Menu')->to($menu);
 
 /** 初始化上下文 */
-$request = $options->request;
-$response = $options->response;
+$request = Typecho_Request::getInstance();
+$response = Typecho_Response::getInstance();
 
 /** 检测是否是第一次登录 */
 $currentMenu = $menu->getCurrentMenu();
-list($prefixVersion, $suffixVersion) = explode('/', $options->version);
 
 if (!empty($currentMenu)) {
     $params = parse_url($currentMenu[2]);
@@ -43,8 +42,7 @@ if (!empty($currentMenu)) {
         }
     } elseif ($user->pass('administrator', true)) {
         /** 检测版本是否升级 */
-        $mustUpgrade = (!defined('Typecho_Common::VERSION') || version_compare(str_replace('/', '.', Typecho_Common::VERSION),
-        str_replace('/', '.', $options->version), '>'));
+        $mustUpgrade = version_compare(Typecho_Common::VERSION, $options->version, '>');
 
         if ($mustUpgrade && 'upgrade.php' != $adminFile && 'backup.php' != $adminFile) {
             $response->redirect(Typecho_Common::url('upgrade.php', $options->adminUrl));

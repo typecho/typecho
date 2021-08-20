@@ -46,8 +46,8 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
      * 数据库连接函数
      *
      * @param Typecho_Config $config 数据库配置
-     * @throws Typecho_Db_Exception
      * @return PDO
+     * @throws Typecho_Db_Exception
      */
     public function connect(Typecho_Config $config)
     {
@@ -62,18 +62,6 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
     }
 
     /**
-     * 获取数据库版本 
-     * 
-     * @param mixed $handle
-     * @return string
-     */
-    public function getVersion($handle)
-    {
-        return 'pdo:' . $handle->getAttribute(PDO::ATTR_DRIVER_NAME) 
-            . ' ' . $handle->getAttribute(PDO::ATTR_SERVER_VERSION);
-    }
-
-    /**
      * 初始化数据库
      *
      * @param Typecho_Config $config 数据库配置
@@ -84,6 +72,18 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
     abstract public function init(Typecho_Config $config);
 
     /**
+     * 获取数据库版本
+     *
+     * @param mixed $handle
+     * @return string
+     */
+    public function getVersion($handle)
+    {
+        return 'pdo:' . $handle->getAttribute(PDO::ATTR_DRIVER_NAME)
+            . ' ' . $handle->getAttribute(PDO::ATTR_SERVER_VERSION);
+    }
+
+    /**
      * 执行数据库查询
      *
      * @param string $query 数据库查询SQL字符串
@@ -91,10 +91,10 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
      * @param integer $op 数据库读写状态
      * @param string $action 数据库动作
      * @param string $table 数据表
-     * @throws Typecho_Db_Exception
      * @return resource
+     * @throws Typecho_Db_Exception
      */
-    public function query($query, $handle, $op = Typecho_Db::READ, $action = NULL, $table = NULL)
+    public function query($query, $handle, $op = Typecho_Db::READ, $action = null, $table = null)
     {
         try {
             $this->_lastTable = $table;
@@ -140,24 +140,6 @@ abstract class Typecho_Db_Adapter_Pdo implements Typecho_Db_Adapter
     {
         return $this->_object->quote($string);
     }
-
-    /**
-     * 对象引号过滤
-     *
-     * @access public
-     * @param string $string
-     * @return string
-     */
-    public function quoteColumn($string){}
-
-    /**
-     * 合成查询语句
-     *
-     * @access public
-     * @param array $sql 查询对象词法数组
-     * @return string
-     */
-    public function parseSelect(array $sql){}
 
     /**
      * 取出最后一次查询影响的行数

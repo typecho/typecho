@@ -1,4 +1,4 @@
-name: Typecho Build Dev Ci
+name: Typecho Dev Test
 
 on:
   push:
@@ -27,25 +27,4 @@ jobs:
     - name: Test
       run: |
         find . -type f -name '*.php' -print0 | xargs -0 -n1 -P4 php -l -n | (! grep -v "No syntax errors detected" )
-  build:
-    name: Typecho Build
-    runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, 'skip ci')"
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-    - name: Install tree
-      run: sudo apt-get -y install tree
-    - name: Build
-      run: |
-        mkdir build
-        cp -r LICENSE.txt *.php admin install usr var build/
-        mkdir build/usr/uploads/
-        chmod 777 build/usr/uploads/
-        rm -rf build/admin/src
-        tree -d build
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v2
-      with:
-          name: typecho
-          path: ./build/
+
