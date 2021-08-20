@@ -1001,7 +1001,8 @@ function install_step_3_perform() {
                     'name' => _t('默认分类'),
                     'slug' => 'default',
                     'type' => 'category',
-                    'description' => _t('只是一个默认分类')
+                    'description' => _t('只是一个默认分类'),
+                    'count' => 1
                 ])
         );
 
