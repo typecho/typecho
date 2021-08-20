@@ -27,6 +27,7 @@ class Widget_Options extends Typecho_Widget
      * @var Typecho_Db
      */
     protected $db;
+
     /**
      * 缓存的插件配置
      *
@@ -34,6 +35,7 @@ class Widget_Options extends Typecho_Widget
      * @var array
      */
     private $_pluginConfig = [];
+
     /**
      * 缓存的个人插件配置
      *
@@ -46,6 +48,7 @@ class Widget_Options extends Typecho_Widget
      * 构造函数,初始化组件
      *
      * @access public
+     *
      * @param mixed $request request对象
      * @param mixed $response response对象
      * @param mixed $params 参数列表
@@ -139,6 +142,7 @@ class Widget_Options extends Typecho_Widget
      *
      * @param string $theme
      * @param string $file
+     *
      * @return string
      */
     public function themeFile($theme, $file = '')
@@ -150,7 +154,9 @@ class Widget_Options extends Typecho_Widget
      * 重载父类push函数,将所有变量值压入堆栈
      *
      * @access public
+     *
      * @param array $value 每行的值
+     *
      * @return array
      */
     public function push(array $value)
@@ -164,7 +170,9 @@ class Widget_Options extends Typecho_Widget
      * 输出网站路径
      *
      * @access public
+     *
      * @param string $path 子路径
+     *
      * @return void
      */
     public function siteUrl($path = null)
@@ -176,7 +184,9 @@ class Widget_Options extends Typecho_Widget
      * 输出解析地址
      *
      * @access public
+     *
      * @param string $path 子路径
+     *
      * @return void
      */
     public function index($path = null)
@@ -188,8 +198,10 @@ class Widget_Options extends Typecho_Widget
      * 输出模板路径
      *
      * @access public
+     *
      * @param string $path 子路径
      * @param string $theme 模版名称
+     *
      * @return string
      */
     public function themeUrl($path = null, $theme = null)
@@ -208,7 +220,9 @@ class Widget_Options extends Typecho_Widget
      * 输出插件路径
      *
      * @access public
+     *
      * @param string $path 子路径
+     *
      * @return void
      */
     public function pluginUrl($path = null)
@@ -220,6 +234,7 @@ class Widget_Options extends Typecho_Widget
      * 获取插件目录
      *
      * @param $plugin
+     *
      * @return string
      */
     public function pluginDir($plugin = null)
@@ -289,6 +304,7 @@ class Widget_Options extends Typecho_Widget
      * 获取插件系统参数
      *
      * @param mixed $pluginName 插件名称
+     *
      * @return mixed
      * @throws Typecho_Plugin_Exception
      */
@@ -310,6 +326,7 @@ class Widget_Options extends Typecho_Widget
      * 获取个人插件系统参数
      *
      * @param mixed $pluginName 插件名称
+     *
      * @return mixed
      * @throws Typecho_Plugin_Exception
      */
@@ -612,8 +629,10 @@ class Widget_Options extends Typecho_Widget
         if (null != $this->attachmentTypes) {
             $attachmentTypes = str_replace(
                 ['@image@', '@media@', '@doc@'],
-                ['gif,jpg,jpeg,png,tiff,bmp', 'mp3,mp4,mov,wmv,wma,rmvb,rm,avi,flv,ogg,oga,ogv',
-                    'txt,doc,docx,xls,xlsx,ppt,pptx,zip,rar,pdf'], $this->attachmentTypes);
+                [
+                    'gif,jpg,jpeg,png,tiff,bmp', 'mp3,mp4,mov,wmv,wma,rmvb,rm,avi,flv,ogg,oga,ogv',
+                    'txt,doc,docx,xls,xlsx,ppt,pptx,zip,rar,pdf'
+                ], $this->attachmentTypes);
 
             $attachmentTypesResult = array_unique(array_map('trim', preg_split("/(,|\.)/", $attachmentTypes)));
         }
