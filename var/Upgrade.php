@@ -346,16 +346,16 @@ Typecho_Date::setTimezoneOffset($options->timezone);
     public static function v0_6r9_4_21($db, $options)
     {
         //创建上传目录
-        $uploadDir = Typecho_Common::url(Widget_Upload::UPLOAD_PATH, __TYPECHO_ROOT_DIR__);
+        $uploadDir = Typecho_Common::url(Widget_Upload::UPLOAD_DIR, __TYPECHO_ROOT_DIR__);
         if (is_dir($uploadDir)) {
             if (!is_writeable($uploadDir)) {
                 if (!@chmod($uploadDir, 0644)) {
-                    throw new Typecho_Widget_Exception(_t('上传目录无法写入, 请手动将安装目录下的 %s 目录的权限设置为可写然后继续升级', Widget_Upload::UPLOAD_PATH));
+                    throw new Typecho_Widget_Exception(_t('上传目录无法写入, 请手动将安装目录下的 %s 目录的权限设置为可写然后继续升级', Widget_Upload::UPLOAD_DIR));
                 }
             }
         } else {
             if (!@mkdir($uploadDir, 0644)) {
-                throw new Typecho_Widget_Exception(_t('上传目录无法创建, 请手动创建安装目录下的 %s 目录, 并将它的权限设置为可写然后继续升级', Widget_Upload::UPLOAD_PATH));
+                throw new Typecho_Widget_Exception(_t('上传目录无法创建, 请手动创建安装目录下的 %s 目录, 并将它的权限设置为可写然后继续升级', Widget_Upload::UPLOAD_DIR));
             }
         }
 

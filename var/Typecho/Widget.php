@@ -210,7 +210,7 @@ abstract class Typecho_Widget
      *
      * @param boolean $condition 触发条件
      *
-     * @return mixed
+     * @return $this|Typecho_Widget_Helper_Empty
      */
     public function on(bool $condition)
     {
@@ -406,6 +406,22 @@ abstract class Typecho_Widget
     public function __set(string $name, $value)
     {
         $this->row[$name] = $value;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSequence(): int
+    {
+        return $this->sequence;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLength(): int
+    {
+        return $this->length;
     }
 
     /**
