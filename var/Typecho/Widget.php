@@ -1,11 +1,4 @@
 <?php
-/**
- * Typecho Blog Platform
- *
- * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license    GNU General Public License 2.0
- * @version    $Id: Widget.php 107 2008-04-11 07:14:43Z magike.net $
- */
 
 /**
  * Typecho组件基类
@@ -20,7 +13,7 @@ abstract class Typecho_Widget
      * @access private
      * @var array
      */
-    private static $_widgetPool = [];
+    private static $widgetPool = [];
 
     /**
      * widget别名
@@ -28,7 +21,7 @@ abstract class Typecho_Widget
      * @access private
      * @var array
      */
-    private static $_widgetAlias = [];
+    private static $widgetAlias = [];
 
     /**
      * 数据堆栈
@@ -118,7 +111,7 @@ abstract class Typecho_Widget
      */
     public static function alias(string $widgetClass, string $aliasClass)
     {
-        self::$_widgetAlias[$widgetClass] = $aliasClass;
+        self::$widgetAlias[$widgetClass] = $aliasClass;
     }
 
     /**
@@ -134,17 +127,21 @@ abstract class Typecho_Widget
      * @return Typecho_Widget
      * @throws Typecho_Exception
      */
-    public static function widget(string $alias, $params = null, $request = null, bool $enableResponse = true): Typecho_Widget
-    {
+    public static function widget(
+        string $alias,
+        $params = null,
+        $request = null,
+        bool $enableResponse = true
+    ): Typecho_Widget {
         $parts = explode('@', $alias);
         $className = $parts[0];
         $alias = empty($parts[1]) ? $className : $parts[1];
 
-        if (isset(self::$_widgetAlias[$className])) {
-            $className = self::$_widgetAlias[$className];
+        if (isset(self::$widgetAlias[$className])) {
+            $className = self::$widgetAlias[$className];
         }
 
-        if (!isset(self::$_widgetPool[$alias])) {
+        if (!isset(self::$widgetPool[$alias])) {
             /** 如果类不存在 */
             if (!class_exists($className)) {
                 throw new Typecho_Widget_Exception($className);
@@ -166,10 +163,10 @@ abstract class Typecho_Widget
             $widget = new $className($requestObject, $responseObject, $params);
 
             $widget->execute();
-            self::$_widgetPool[$alias] = $widget;
+            self::$widgetPool[$alias] = $widget;
         }
 
-        return self::$_widgetPool[$alias];
+        return self::$widgetPool[$alias];
     }
 
     /**
@@ -190,8 +187,8 @@ abstract class Typecho_Widget
      */
     public static function destroy(string $alias)
     {
-        if (isset(self::$_widgetPool[$alias])) {
-            unset(self::$_widgetPool[$alias]);
+        if (isset(self::$widgetPool[$alias])) {
+            unset(self::$widgetPool[$alias]);
         }
     }
 
@@ -243,8 +240,11 @@ abstract class Typecho_Widget
     public function parse(string $format)
     {
         while ($this->next()) {
-            echo preg_replace_callback("/\{([_a-z0-9]+)\}/i",
-                [$this, '__parseCallback'], $format);
+            echo preg_replace_callback(
+                "/\{([_a-z0-9]+)\}/i",
+                [$this, '__parseCallback'],
+                $format
+            );
         }
     }
 

@@ -1,12 +1,8 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-/**
- * Typecho Blog Platform
- *
- * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license    GNU General Public License 2.0
- * @version    $Id$
- */
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * 执行模块
@@ -21,38 +17,36 @@ class Widget_Do extends Typecho_Widget
      * @access private
      * @var array
      */
-    private $_map = [
-        'ajax' => 'Widget_Ajax',
-        'login' => 'Widget_Login',
-        'logout' => 'Widget_Logout',
-        'register' => 'Widget_Register',
-        'upgrade' => 'Widget_Upgrade',
-        'upload' => 'Widget_Upload',
-        'service' => 'Widget_Service',
-        'xmlrpc' => 'Widget_XmlRpc',
-        'comments-edit' => 'Widget_Comments_Edit',
-        'contents-page-edit' => 'Widget_Contents_Page_Edit',
-        'contents-post-edit' => 'Widget_Contents_Post_Edit',
+    private $map = [
+        'ajax'                     => 'Widget_Ajax',
+        'login'                    => 'Widget_Login',
+        'logout'                   => 'Widget_Logout',
+        'register'                 => 'Widget_Register',
+        'upgrade'                  => 'Widget_Upgrade',
+        'upload'                   => 'Widget_Upload',
+        'service'                  => 'Widget_Service',
+        'xmlrpc'                   => 'Widget_XmlRpc',
+        'comments-edit'            => 'Widget_Comments_Edit',
+        'contents-page-edit'       => 'Widget_Contents_Page_Edit',
+        'contents-post-edit'       => 'Widget_Contents_Post_Edit',
         'contents-attachment-edit' => 'Widget_Contents_Attachment_Edit',
-        'metas-category-edit' => 'Widget_Metas_Category_Edit',
-        'metas-tag-edit' => 'Widget_Metas_Tag_Edit',
-        'options-discussion' => 'Widget_Options_Discussion',
-        'options-general' => 'Widget_Options_General',
-        'options-permalink' => 'Widget_Options_Permalink',
-        'options-reading' => 'Widget_Options_Reading',
-        'plugins-edit' => 'Widget_Plugins_Edit',
-        'themes-edit' => 'Widget_Themes_Edit',
-        'users-edit' => 'Widget_Users_Edit',
-        'users-profile' => 'Widget_Users_Profile',
-        'backup' => 'Widget_Backup'
+        'metas-category-edit'      => 'Widget_Metas_Category_Edit',
+        'metas-tag-edit'           => 'Widget_Metas_Tag_Edit',
+        'options-discussion'       => 'Widget_Options_Discussion',
+        'options-general'          => 'Widget_Options_General',
+        'options-permalink'        => 'Widget_Options_Permalink',
+        'options-reading'          => 'Widget_Options_Reading',
+        'plugins-edit'             => 'Widget_Plugins_Edit',
+        'themes-edit'              => 'Widget_Themes_Edit',
+        'users-edit'               => 'Widget_Users_Edit',
+        'users-profile'            => 'Widget_Users_Profile',
+        'backup'                   => 'Widget_Backup'
     ];
 
     /**
      * 入口函数,初始化路由器
      *
-     * @access public
-     * @return void
-     * @throws Typecho_Widget_Exception
+     * @throws Typecho_Widget_Exception|Typecho_Exception
      */
     public function execute()
     {
@@ -69,7 +63,7 @@ class Widget_Do extends Typecho_Widget
             }
         } else {
             /** 判断是否为plugin */
-            $actionTable = array_merge($this->_map, unserialize($this->widget('Widget_Options')->actionTable));
+            $actionTable = array_merge($this->map, unserialize($this->widget('Widget_Options')->actionTable));
 
             if (isset($actionTable[$action])) {
                 $widgetName = $actionTable[$action];

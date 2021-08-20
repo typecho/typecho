@@ -287,64 +287,39 @@ class Typecho_Common
         spl_autoload_register(['Typecho_Common', '__autoLoad']);
 
         /** 设置异常截获函数 */
-        set_exception_handler(['Typecho_Common', 'exceptionHandle']);
-    }
-
-    /**
-     * 异常截获函数
-     *
-     * @access public
-     *
-     * @param $exception 截获的异常
-     *
-     * @return void
-     */
-    public static function exceptionHandle($exception)
-    {
-        if (defined('__TYPECHO_DEBUG__') && __TYPECHO_DEBUG__) {
-            echo '<pre><code>';
-            echo '<h1>' . htmlspecialchars($exception->getMessage()) . '</h1>';
-            echo htmlspecialchars($exception->__toString());
-            echo '</code></pre>';
-        } else {
-            @ob_end_clean();
-            if (404 == $exception->getCode() && !empty(self::$exceptionHandle)) {
-                $handleClass = self::$exceptionHandle;
-                new $handleClass($exception);
+        set_exception_handler(function (Throwable $exception) {
+            if (defined('__TYPECHO_DEBUG__') && __TYPECHO_DEBUG__) {
+                echo '<pre><code>';
+                echo '<h1>' . htmlspecialchars($exception->getMessage()) . '</h1>';
+                echo htmlspecialchars($exception->__toString());
+                echo '</code></pre>';
             } else {
-                self::error($exception);
+                @ob_end_clean();
+                if (404 == $exception->getCode() && !empty(self::$exceptionHandle)) {
+                    $handleClass = self::$exceptionHandle;
+                    new $handleClass($exception);
+                } else {
+                    self::error($exception);
+                }
             }
-        }
 
-        exit;
+            exit(1);
+        });
     }
 
     /**
      * 输出错误页面
      *
-     * @access public
-     *
-     * @param mixed $exception 错误信息
-     *
-     * @return void
+     * @param Throwable $exception 错误信息
      */
-    public static function error($exception)
+    public static function error(Throwable $exception)
     {
-        $isException = is_object($exception);
-        $message = '';
-
-        if ($isException) {
-            $code = $exception->getCode();
-            $message = $exception->getMessage();
-        } else {
-            $code = $exception;
-        }
-
+        $code = $exception->getCode() ?: 500;
+        $message = $exception->getMessage();
         $charset = self::$charset;
 
-        if ($isException && $exception instanceof Typecho_Db_Exception) {
+        if ($exception instanceof Typecho_Db_Exception) {
             $code = 500;
-            @error_log($message);
 
             //覆盖原始错误信息
             $message = 'Database Server Error';
@@ -355,22 +330,7 @@ class Typecho_Common
             } elseif ($exception instanceof Typecho_Db_Query_Exception) {
                 $message = 'Database Query Error';
             }
-        } else {
-            switch ($code) {
-                case 500:
-                    $message = 'Server Error';
-                    break;
-
-                case 404:
-                    $message = 'Page Not Found';
-                    break;
-
-                default:
-                    $code = 'Error';
-                    break;
-            }
         }
-
 
         /** 设置http code */
         if (is_numeric($code) && $code > 200) {
@@ -428,7 +388,7 @@ class Typecho_Common
 EOF;
         }
 
-        exit;
+        exit(1);
     }
 
     /**

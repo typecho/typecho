@@ -1380,7 +1380,7 @@ class Widget_Archive extends Widget_Abstract_Contents
 
         /** 文件不存在 */
         if (!$validated) {
-            Typecho_Common::error(500);
+            throw new Typecho_Widget_Exception(_t('文件不存在'), 500);
         }
 
         /** 挂接插件 */
