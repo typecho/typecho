@@ -1,21 +1,37 @@
 <?php
-/**
- * Typecho Blog Platform
- *
- * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license    GNU General Public License 2.0
- * @version    $Id$
- */
 
-define('__TYPECHO_FILTER_SUPPORTED__', function_exists('filter_var'));
+namespace Typecho;
 
 /**
  * 服务器请求处理类
  *
  * @package Request
  */
-class Typecho_Request
+class Request
 {
+    /**
+     * 单例句柄
+     *
+     * @access private
+     * @var Request
+     */
+    private static $_instance;
+
+    /**
+     * 支持的过滤器列表
+     *
+     * @access private
+     * @var string
+     */
+    private static $_supportFilters = [
+        'int'     => 'intval',
+        'integer' => 'intval',
+        'search'  => ['Typecho_Common', 'filterSearchQuery'],
+        'xss'     => ['Typecho_Common', 'removeXSS'],
+        'url'     => ['Typecho_Common', 'safeUrl'],
+        'slug'    => ['Typecho_Common', 'slugName']
+    ];
+
     /**
      * 内部参数
      *
@@ -31,14 +47,6 @@ class Typecho_Request
      * @var string
      */
     private $_pathInfo = null;
-
-    /**
-     * 服务端参数
-     *
-     * @access private
-     * @var array
-     */
-    private $_server = [];
 
     /**
      * _requestUri
@@ -89,22 +97,6 @@ class Typecho_Request
     private $_referer = null;
 
     /**
-     * 单例句柄
-     *
-     * @access private
-     * @var Typecho_Request
-     */
-    private static $_instance;
-
-    /**
-     * 全部的http数据
-     *
-     * @var bool|array
-     */
-    private static $_httpParams = false;
-
-
-    /**
      * 域名前缀
      *
      * @var string
@@ -120,97 +112,25 @@ class Typecho_Request
     private $_filter = [];
 
     /**
-     * 支持的过滤器列表
-     *
-     * @access private
-     * @var string
+     * 初始化变量
      */
-    private static $_supportFilters = [
-        'int' => 'intval',
-        'integer' => 'intval',
-        'search' => ['Typecho_Common', 'filterSearchQuery'],
-        'xss' => ['Typecho_Common', 'removeXSS'],
-        'url' => ['Typecho_Common', 'safeUrl'],
-        'slug' => ['Typecho_Common', 'slugName']
-    ];
+    public function __construct()
+    {
+    }
 
     /**
      * 获取单例句柄
      *
      * @access public
-     * @return Typecho_Request
+     * @return Request
      */
-    public static function getInstance(): Typecho_Request
+    public static function getInstance(): Request
     {
         if (!isset(self::$_instance)) {
-            self::$_instance = new Typecho_Request();
+            self::$_instance = new Request();
         }
 
         return self::$_instance;
-    }
-
-    /**
-     * 应用过滤器
-     *
-     * @access private
-     *
-     * @param mixed $value
-     *
-     * @return mixed
-     */
-    private function _applyFilter($value)
-    {
-        if ($this->_filter) {
-            foreach ($this->_filter as $filter) {
-                $value = is_array($value) ? array_map($filter, $value) :
-                    call_user_func($filter, $value);
-            }
-
-            $this->_filter = [];
-        }
-
-        return $value;
-    }
-
-    /**
-     * 检查ip地址是否合法
-     *
-     * @param string $ip ip地址
-     *
-     * @return boolean
-     */
-    private function _checkIp(string $ip): bool
-    {
-        if (__TYPECHO_FILTER_SUPPORTED__) {
-            return false !== (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)
-                    || filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6));
-        }
-
-        return preg_match("/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/", $ip)
-            || preg_match("/^[0-9a-f:]+$/i", $ip);
-    }
-
-    /**
-     * 检查ua是否合法
-     *
-     * @param string $agent ua字符串
-     *
-     * @return boolean
-     */
-    private function _checkAgent(string $agent): bool
-    {
-        return preg_match("/^[_a-z0-9- ,:;=#@\.\(\)\/\+\*\?]+$/i", $agent);
-    }
-
-    /**
-     * 初始化变量
-     */
-    public function __construct()
-    {
-        if (false === self::$_httpParams) {
-            self::$_httpParams = array_filter(array_merge($_POST, $_GET),
-                ['Typecho_Common', 'checkStrEncoding']);
-        }
     }
 
     /**
@@ -224,7 +144,7 @@ class Typecho_Request
         if (empty($this->_urlPrefix)) {
             if (defined('__TYPECHO_URL_PREFIX__')) {
                 $this->_urlPrefix = __TYPECHO_URL_PREFIX__;
-            } else if (!defined('__TYPECHO_CLI__')) {
+            } elseif (php_sapi_name() != 'cli') {
                 $this->_urlPrefix = ($this->isSecure() ? 'https' : 'http') . '://'
                     . ($_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME']);
             }
@@ -252,9 +172,9 @@ class Typecho_Request
      * 设置过滤器
      *
      * @access public
-     * @return Typecho_Request
+     * @return Request
      */
-    public function filter(): Typecho_Request
+    public function filter(): Request
     {
         $filters = func_get_args();
 
@@ -291,7 +211,8 @@ class Typecho_Request
      */
     public function __isset(string $key)
     {
-        return isset(self::$_httpParams[$key])
+        return isset($_GET[$key])
+            || isset($_POST[$key])
             || isset($this->_params[$key]);
     }
 
@@ -311,15 +232,18 @@ class Typecho_Request
             case isset($this->_params[$key]):
                 $value = $this->_params[$key];
                 break;
-            case isset(self::$_httpParams[$key]):
-                $value = self::$_httpParams[$key];
+            case isset($_GET[$key]):
+                $value = $_GET[$key];
+                break;
+            case isset($_POST[$key]):
+                $value = $_POST[$key];
                 break;
             default:
                 $value = $default;
                 break;
         }
 
-        $value = !is_array($value) && strlen($value) > 0 ? $value : $default;
+        $value = ((!is_array($value) && strlen($value) > 0) || is_array($default)) ? $value : $default;
         return $this->_applyFilter($value);
     }
 
@@ -332,11 +256,10 @@ class Typecho_Request
      */
     public function getArray($key): array
     {
-        $result = $this->_params[$key] ?? (self::$_httpParams[$key] ?? []);
+        $result = $this->get($key, []);
 
-        $result = is_array($result) ? $result
+        return is_array($result) ? $result
             : (strlen($result) > 0 ? [$result] : []);
-        return $this->_applyFilter($result);
     }
 
     /**
@@ -372,9 +295,7 @@ class Typecho_Request
      */
     public function setParam(string $name, $value)
     {
-        if (Typecho_Common::checkStrEncoding($value)) {
-            $this->_params[$name] = $value;
-        }
+        $this->_params[$name] = $value;
     }
 
     /**
@@ -394,8 +315,7 @@ class Typecho_Request
             $params = $out;
         }
 
-        $this->_params = array_merge($this->_params,
-            array_filter($params, ['Typecho_Common', 'checkStrEncoding']));
+        $this->_params = array_merge($this->_params, $params);
     }
 
     /**
@@ -524,14 +444,16 @@ class Typecho_Request
         if (0 === strpos($requestUri, $baseUrl)) {
             // full $baseUrl matches
             $finalBaseUrl = $baseUrl;
-        } else if (0 === strpos($requestUri, dirname($baseUrl))) {
+        } elseif (0 === strpos($requestUri, dirname($baseUrl))) {
             // directory portion of $baseUrl matches
             $finalBaseUrl = rtrim(dirname($baseUrl), '/');
-        } else if (!strpos($requestUri, basename($baseUrl))) {
+        } elseif (!strpos($requestUri, basename($baseUrl))) {
             // no match whatsoever; set it blank
             $finalBaseUrl = '';
-        } else if ((strlen($requestUri) >= strlen($baseUrl))
-            && ((false !== ($pos = strpos($requestUri, $baseUrl))) && ($pos !== 0))) {
+        } elseif (
+            (strlen($requestUri) >= strlen($baseUrl))
+            && ((false !== ($pos = strpos($requestUri, $baseUrl))) && ($pos !== 0))
+        ) {
             // If using mod_rewrite or ISAPI_Rewrite strip the script filename
             // out of baseUrl. $pos !== 0 makes sure it is not matching a value
             // from PATH_INFO or QUERY_STRING
@@ -559,7 +481,7 @@ class Typecho_Request
         /** 初始化参数 */
         if (is_string($parameter)) {
             parse_str($parameter, $args);
-        } else if (is_array($parameter)) {
+        } elseif (is_array($parameter)) {
             $args = $parameter;
         } else {
             return $requestUri;
@@ -621,7 +543,7 @@ class Typecho_Request
                     || stripos($_SERVER['SERVER_SOFTWARE'], 'ExpressionDevServer') !== false)) {
                 if (function_exists('mb_convert_encoding')) {
                     $pathInfo = mb_convert_encoding($pathInfo, $outputEncoding, $inputEncoding);
-                } else if (function_exists('iconv')) {
+                } elseif (function_exists('iconv')) {
                     $pathInfo = iconv($inputEncoding, $outputEncoding, $pathInfo);
                 }
             }
@@ -660,23 +582,11 @@ class Typecho_Request
         if (!empty($ip)) {
             $this->_ip = $ip;
         } else {
-            switch (true) {
-                case defined('__TYPECHO_IP_SOURCE__')
-                    && null !== $this->getServer(__TYPECHO_IP_SOURCE__):
-                    list($this->_ip) = array_map(
-                        'trim',
-                        explode(',',
-                            $this->getServer(__TYPECHO_IP_SOURCE__))
-                    );
-                    break;
-                case null !== $this->getServer('REMOTE_ADDR'):
-                    $this->_ip = $this->getServer('REMOTE_ADDR');
-                    break;
-                case null !== $this->getServer('HTTP_CLIENT_IP'):
-                    $this->_ip = $this->getServer('HTTP_CLIENT_IP');
-                    break;
-                default:
-                    break;
+            $header = defined('__TYPECHO_IP_SOURCE__') ? __TYPECHO_IP_SOURCE__ : 'X-Forwarded-For' ;
+            $ips = $this->getHeader($header, $this->getServer('HTTP_CLIENT_IP', $this->getServer('REMOTE_ADDR')));
+
+            if (!empty($ips)) {
+                [$this->_ip] = array_map('trim', explode(',', $ips));
             }
         }
 
@@ -698,6 +608,20 @@ class Typecho_Request
         }
 
         return $this->_ip;
+    }
+
+    /**
+     * get header value
+     *
+     * @param string $key
+     * @param string|null $default
+     *
+     * @return string|null
+     */
+    public function getHeader(string $key, ?string $default = null): ?string
+    {
+        $key = 'HTTP_' . strtoupper(str_replace('-', '_', $key));
+        return $this->getServer($key, $default);
     }
 
     /**
@@ -819,7 +743,7 @@ class Typecho_Request
         /** 解析串 */
         if (is_string($query)) {
             parse_str($query, $params);
-        } else if (is_array($query)) {
+        } elseif (is_array($query)) {
             $params = $query;
         }
 
@@ -836,5 +760,56 @@ class Typecho_Request
         }
 
         return $validated;
+    }
+
+    /**
+     * 应用过滤器
+     *
+     * @param mixed $value
+     *
+     * @return mixed
+     */
+    private function _applyFilter($value)
+    {
+        if ($this->_filter) {
+            foreach ($this->_filter as $filter) {
+                $value = is_array($value) ? array_map($filter, $value) :
+                    call_user_func($filter, $value);
+            }
+
+            $this->_filter = [];
+        }
+
+        return $value;
+    }
+
+    /**
+     * 检查ip地址是否合法
+     *
+     * @param string $ip ip地址
+     *
+     * @return boolean
+     */
+    private function _checkIp(string $ip): bool
+    {
+        if (function_exists('filter_var')) {
+            return false !== (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)
+                    || filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6));
+        }
+
+        return preg_match("/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/", $ip)
+            || preg_match("/^[0-9a-f:]+$/i", $ip);
+    }
+
+    /**
+     * 检查ua是否合法
+     *
+     * @param string $agent ua字符串
+     *
+     * @return boolean
+     */
+    private function _checkAgent(string $agent): bool
+    {
+        return preg_match("/^[_a-z0-9- ,:;=#@\.\(\)\/\+\*\?]+$/i", $agent);
     }
 }
