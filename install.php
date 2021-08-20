@@ -554,7 +554,7 @@ function install_step_2() {
                 <ul class="typecho-option">
                     <li>
                         <label class="typecho-label" for="dbPrefix"><?php _e('数据库前缀'); ?></label>
-                        <input type="text" class="text" name="dbPrefix" id="dbPrefix" value="<?php _v('dbPrefix', 'typecho_'); ?>" />
+                        <input type="text" class="text" name="dbPrefix" id="dbPrefix" value="<?php echo Typecho_Request::getInstance()->get('dbPrefix', 'typecho_'); ?>" />
                         <p class="description"><?php _e('默认前缀是 "typecho_"'); ?></p>
                     </li>
                 </ul>
