@@ -1,19 +1,16 @@
 <?php
-/**
- * Typecho Blog Platform
- *
- * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license    GNU General Public License 2.0
- * @version    $Id: Route.php 107 2008-04-11 07:14:43Z magike.net $
- */
+
+namespace Typecho;
+
+use Typecho\Router\Parser;
+use Typecho\Router\Exception as RouterException;
 
 /**
  * Typecho组件基类
  *
- * TODO 增加cache缓存
  * @package Router
  */
-class Typecho_Router
+class Router
 {
     /**
      * 当前路由名称
@@ -29,7 +26,7 @@ class Typecho_Router
      * @access private
      * @var mixed
      */
-    private static $_routingTable = [];
+    private static $routingTable = [];
 
     /**
      * 全路径
@@ -37,7 +34,7 @@ class Typecho_Router
      * @access private
      * @var string
      */
-    private static $_pathInfo = null;
+    private static $pathInfo = null;
 
     /**
      * 解析路径
@@ -47,12 +44,12 @@ class Typecho_Router
      * @param string $pathInfo 全路径
      * @param mixed $parameter 输入参数
      *
-     * @return mixed
-     * @throws Exception
+     * @return false|Widget
+     * @throws \Exception
      */
     public static function match(string $pathInfo, $parameter = null)
     {
-        foreach (self::$_routingTable as $key => $route) {
+        foreach (self::$routingTable as $key => $route) {
             if (preg_match($route['regx'], $pathInfo, $matches)) {
                 self::$current = $key;
 
@@ -65,13 +62,11 @@ class Typecho_Router
                         $params = array_combine($route['params'], $matches);
                     }
 
-                    $widget = Typecho_Widget::widget($route['widget'], $parameter, $params);
+                    return Widget::widget($route['widget'], $parameter, $params);
 
-                    return $widget;
-
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     if (404 == $e->getCode()) {
-                        Typecho_Widget::destroy($route['widget']);
+                        Widget::destroy($route['widget']);
                         continue;
                     }
 
@@ -86,15 +81,14 @@ class Typecho_Router
     /**
      * 路由分发函数
      *
-     * @return void
-     * @throws Exception
+     * @throws RouterException|\Exception
      */
     public static function dispatch()
     {
         /** 获取PATHINFO */
         $pathInfo = self::getPathInfo();
 
-        foreach (self::$_routingTable as $key => $route) {
+        foreach (self::$routingTable as $key => $route) {
             if (preg_match($route['regx'], $pathInfo, $matches)) {
                 self::$current = $key;
 
@@ -107,18 +101,18 @@ class Typecho_Router
                         $params = array_combine($route['params'], $matches);
                     }
 
-                    $widget = Typecho_Widget::widget($route['widget'], null, $params);
+                    $widget = Widget::widget($route['widget'], null, $params);
 
                     if (isset($route['action'])) {
                         $widget->{$route['action']}();
                     }
 
-                    Typecho_Response::callback();
+                    Response::callback();
                     return;
 
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     if (404 == $e->getCode()) {
-                        Typecho_Widget::destroy($route['widget']);
+                        Widget::destroy($route['widget']);
                         continue;
                     }
 
@@ -128,7 +122,7 @@ class Typecho_Router
         }
 
         /** 载入路由异常支持 */
-        throw new Typecho_Router_Exception("Path '{$pathInfo}' not found", 404);
+        throw new RouterException("Path '{$pathInfo}' not found", 404);
     }
 
     /**
@@ -139,11 +133,11 @@ class Typecho_Router
      */
     public static function getPathInfo(): ?string
     {
-        if (null === self::$_pathInfo) {
+        if (null === self::$pathInfo) {
             self::setPathInfo();
         }
 
-        return self::$_pathInfo;
+        return self::$pathInfo;
     }
 
     /**
@@ -157,7 +151,7 @@ class Typecho_Router
      */
     public static function setPathInfo(string $pathInfo = '/')
     {
-        self::$_pathInfo = $pathInfo;
+        self::$pathInfo = $pathInfo;
     }
 
     /**
@@ -171,7 +165,7 @@ class Typecho_Router
      */
     public static function url(string $name, ?array $value = null, ?string $prefix = null): string
     {
-        $route = self::$_routingTable[$name];
+        $route = self::$routingTable[$name];
 
         //交换数组键值
         $pattern = [];
@@ -179,7 +173,7 @@ class Typecho_Router
             $pattern[$row] = $value[$row] ?? '{' . $row . '}';
         }
 
-        return Typecho_Common::url(vsprintf($route['format'], $pattern), $prefix);
+        return Common::url(vsprintf($route['format'], $pattern), $prefix);
     }
 
     /**
@@ -194,11 +188,11 @@ class Typecho_Router
     public static function setRoutes($routes)
     {
         if (isset($routes[0])) {
-            self::$_routingTable = $routes[0];
+            self::$routingTable = $routes[0];
         } else {
             /** 解析路由配置 */
-            $parser = new Typecho_Router_Parser($routes);
-            self::$_routingTable = $parser->parse();
+            $parser = new Parser($routes);
+            self::$routingTable = $parser->parse();
         }
     }
 
@@ -213,6 +207,6 @@ class Typecho_Router
      */
     public static function get(string $routeName)
     {
-        return self::$_routingTable[$routeName] ?? null;
+        return self::$routingTable[$routeName] ?? null;
     }
 }

@@ -3,7 +3,7 @@
 namespace Typecho;
 
 use Typecho\Widget\Exception as WidgetException;
-use Typecho\Widget\Helper\Faker;
+use Typecho\Widget\Helper\EmptyClass;
 
 /**
  * Typecho组件基类
@@ -155,7 +155,7 @@ abstract class Widget
 
             /** 初始化response */
             $responseObject = $enableResponse ? Response::getInstance()
-                : Faker::getInstance();
+                : EmptyClass::getInstance();
 
             /** 初始化组件 */
             $widget = new $className($requestObject, $responseObject, $params);
@@ -205,14 +205,14 @@ abstract class Widget
      *
      * @param boolean $condition 触发条件
      *
-     * @return $this|Faker
+     * @return $this|EmptyClass
      */
     public function on(bool $condition)
     {
         if ($condition) {
             return $this;
         } else {
-            return new Faker();
+            return new EmptyClass();
         }
     }
 

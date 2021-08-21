@@ -9,7 +9,8 @@
  * @version $Id$
  */
 
-namespace {
+namespace
+{
     define('__TYPECHO_MB_SUPPORTED__', function_exists('mb_get_info') && function_exists('mb_regex_encoding'));
 
     /**
@@ -54,10 +55,23 @@ namespace {
     {
         return str_replace('%d', $number, Typecho_I18n::ngettext($single, $plural, $number));
     }
+}
 
-    // autoload class
-    spl_autoload_register(function ($className) {
-        $path = str_replace(['_', '\\'], '/', $className) . '.php';
+namespace Typecho
+{
+    // rewrite load
+    const REWRITE_CLASS = [
+        'Typecho_Plugin_Interface'    => '\Typecho\Plugin\PluginInterface',
+        'Typecho_Widget_Helper_Empty' => '\Typecho\Widget\Helper\EmptyClass'
+    ];
+
+    spl_autoload_register(function (string $className) {
+        $path = str_replace(
+            ['_', '\\'],
+            '/',
+            REWRITE_CLASS[$className] ?? $className
+        ) . '.php';
+
         $defaultFile = __TYPECHO_ROOT_DIR__ . '/var/' . $path;
 
         if (file_exists($defaultFile)) {
@@ -79,13 +93,10 @@ namespace {
             && !interface_exists($className, false)
             && !trait_exists($className, false)
         ) {
-            $aliasClass = '\\' . str_replace('_', '\\', $className);
+            $aliasClass = REWRITE_CLASS[$className] ?? '\\' . str_replace('_', '\\', $className);
             class_alias($aliasClass, $className);
         }
     });
-}
-
-namespace Typecho {
 
     /**
      * Typecho公用方法
@@ -472,7 +483,12 @@ EOF;
                     }
 
                     // 白名单
-                    if (preg_match("/^(area|base|br|col|embed|hr|img|input|keygen|link|meta|param|source|track|wbr)$/i", $tag)) {
+                    if (
+                        preg_match(
+                            "/^(area|base|br|col|embed|hr|img|input|keygen|link|meta|param|source|track|wbr)$/i",
+                            $tag
+                        )
+                    ) {
                         continue;
                     }
 
