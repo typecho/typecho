@@ -20,7 +20,7 @@ class Response
      * @access private
      * @var array
      */
-    private static $httpCode = [
+    private const HTTP_CODE = [
         100 => 'Continue',
         101 => 'Switching Protocols',
         200 => 'OK',
@@ -121,9 +121,9 @@ class Response
      */
     public static function setStatus(int $code)
     {
-        if (isset(self::$httpCode[$code])) {
+        if (isset(self::HTTP_CODE[$code])) {
             header(($_SERVER['SERVER_PROTOCOL'] ?? 'HTTP/1.1')
-                . ' ' . $code . ' ' . self::$httpCode[$code], true, $code);
+                . ' ' . $code . ' ' . self::HTTP_CODE[$code], true, $code);
         }
     }
 

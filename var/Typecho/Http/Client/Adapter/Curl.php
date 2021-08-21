@@ -1,15 +1,13 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-/**
- * CURL适配器
- *
- * @author qining
- * @category typecho
- * @package Http
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
- * @version $Id$
- */
+
+namespace Typecho\Http\Client\Adapter;
+
+use Typecho\Http\Client;
+use Typecho\Http\Client\Adapter;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * CURL适配器
@@ -18,7 +16,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * @category typecho
  * @package Http
  */
-class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
+class Curl extends Adapter
 {
     /**
      * 判断适配器是否可用
@@ -26,7 +24,7 @@ class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
      * @access public
      * @return boolean
      */
-    public static function isAvailable()
+    public static function isAvailable(): bool
     {
         return function_exists('curl_version');
     }
@@ -37,8 +35,9 @@ class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
      * @access public
      * @param string $url 请求地址
      * @return string
+     * @throws Client\Exception
      */
-    protected function httpSend($url)
+    protected function httpSend(string $url): string
     {
         $ch = curl_init();
 
@@ -93,17 +92,21 @@ class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
         }
 
         /** POST模式 */
-        if (Typecho_Http_Client::METHOD_POST == $this->method) {
+        if (Client::METHOD_POST == $this->method) {
             if (!isset($this->headers['content-type'])) {
                 curl_setopt($ch, CURLOPT_POST, true);
             }
 
             if (!empty($this->data)) {
-                curl_setopt($ch, CURLOPT_POSTFIELDS, is_array($this->data) ? http_build_query($this->data) : $this->data);
+                curl_setopt(
+                    $ch,
+                    CURLOPT_POSTFIELDS,
+                    is_array($this->data) ? http_build_query($this->data) : $this->data
+                );
             }
 
             if (!empty($this->files)) {
-                foreach ($this->files as $key => &$file) {
+                foreach ($this->files as &$file) {
                     $file = '@' . $file;
                 }
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $this->files);
@@ -112,7 +115,7 @@ class Typecho_Http_Client_Adapter_Curl extends Typecho_Http_Client_Adapter
 
         $response = curl_exec($ch);
         if (false === $response) {
-            throw new Typecho_Http_Client_Exception(curl_error($ch), 500);
+            throw new Client\Exception(curl_error($ch), 500);
         }
 
         curl_close($ch);

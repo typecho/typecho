@@ -1,14 +1,8 @@
 <?php
-/**
- * Http客户端
- *
- * @author qining
- * @category typecho
- * @package Http
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
- * @version $Id$
- */
+
+namespace Typecho\Http;
+
+use Typecho\Http\Client\Adapter;
 
 /**
  * Http客户端
@@ -17,38 +11,34 @@
  * @category typecho
  * @package Http
  */
-class Typecho_Http_Client
+class Client
 {
     /** POST方法 */
-    const METHOD_POST = 'POST';
+    public const METHOD_POST = 'POST';
 
     /** GET方法 */
-    const METHOD_GET = 'GET';
+    public const METHOD_GET = 'GET';
 
     /** 定义行结束符 */
-    const EOL = "\r\n";
+    public const EOL = "\r\n";
+
+    private const ADAPTERS = ['Curl', 'Socket'];
 
     /**
      * 获取可用的连接
      *
-     * @access public
-     * @return ?Typecho_Http_Client_Adapter
+     * @param string ...$adapters
+     * @return ?Adapter
      */
-    public static function get(): ?Typecho_Http_Client_Adapter
+    public static function get(string ...$adapters): ?Adapter
     {
-        $adapters = func_get_args();
-
         if (empty($adapters)) {
-            $adapters = [];
-            $adapterFiles = glob(dirname(__FILE__) . '/Client/Adapter/*.php');
-            foreach ($adapterFiles as $file) {
-                $adapters[] = substr(basename($file), 0, - 4);
-            }
+            $adapters = self::ADAPTERS;
         }
 
         foreach ($adapters as $adapter) {
             $adapterName = 'Typecho_Http_Client_Adapter_' . $adapter;
-            if (Typecho_Common::isAvailableClass($adapterName) && call_user_func([$adapterName, 'isAvailable'])) {
+            if (call_user_func([$adapterName, 'isAvailable'])) {
                 return new $adapterName();
             }
         }

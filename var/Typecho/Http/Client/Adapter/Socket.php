@@ -1,15 +1,13 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-/**
- * Socket适配器
- *
- * @author qining
- * @category typecho
- * @package Http
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
- * @version $Id$
- */
+
+namespace Typecho\Http\Client\Adapter;
+
+use Typecho\Http\Client;
+use Typecho\Http\Client\Adapter;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * Socket适配器
@@ -18,7 +16,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * @category typecho
  * @package Http
  */
-class Typecho_Http_Client_Adapter_Socket extends Typecho_Http_Client_Adapter
+class Socket extends Adapter
 {
     /**
      * 判断适配器是否可用
@@ -26,7 +24,7 @@ class Typecho_Http_Client_Adapter_Socket extends Typecho_Http_Client_Adapter
      * @access public
      * @return boolean
      */
-    public static function isAvailable()
+    public static function isAvailable(): bool
     {
         return function_exists("fsockopen");
     }
@@ -37,7 +35,7 @@ class Typecho_Http_Client_Adapter_Socket extends Typecho_Http_Client_Adapter
      * @access public
      * @return string
      */
-    public function getResponseBody()
+    public function getResponseBody(): string
     {
         /** 支持chunked编码 */
         if ('chunked' == $this->getResponseHeader('Transfer-Encoding')) {
@@ -55,10 +53,11 @@ class Typecho_Http_Client_Adapter_Socket extends Typecho_Http_Client_Adapter
      * @access public
      * @param string $url 请求地址
      * @return string
+     * @throws Client\Exception
      */
-    protected function httpSend($url)
+    protected function httpSend(string $url): string
     {
-        $eol = Typecho_Http_Client::EOL;
+        $eol = Client::EOL;
         $request = $this->method . ' ' . $this->path . ' ' . $this->rfc . $eol;
         $request .= 'Host: ' . $this->host . $eol;
         $request .= 'Accept: */*' . $eol;
@@ -73,7 +72,7 @@ class Typecho_Http_Client_Adapter_Socket extends Typecho_Http_Client_Adapter
         }
 
         /** 发送POST信息 */
-        if (Typecho_Http_Client::METHOD_POST == $this->method) {
+        if (Client::METHOD_POST == $this->method) {
             if (empty($this->files)) {
                 $content = is_array($this->data) ? http_build_query($this->data) : $this->data;
                 $request .= 'Content-Length: ' . strlen($content) . $eol;
@@ -81,9 +80,6 @@ class Typecho_Http_Client_Adapter_Socket extends Typecho_Http_Client_Adapter
                 if (!isset($this->headers['content-type'])) {
                     $request .= 'Content-Type: application/x-www-form-urlencoded' . $eol;
                 }
-
-                $request .= $eol;
-                $request .= $content;
             } else {
                 $boundary = '---------------------------' . substr(md5(uniqid()), 0, 16);
                 $content = $eol . $boundary;
@@ -97,7 +93,8 @@ class Typecho_Http_Client_Adapter_Socket extends Typecho_Http_Client_Adapter
                 }
 
                 foreach ($this->files as $key => $file) {
-                    $content .= $eol . 'Content-Disposition: form-data; name="' . $key . '"; filename="' . $file . '"' . $eol;
+                    $content .= $eol . 'Content-Disposition: form-data; name="' . $key
+                        . '"; filename="' . $file . '"' . $eol;
                     $content .= 'Content-Type: ' . mime_content_type($file) . $eol . $eol;
                     $content .= file_get_contents($file) . $eol;
                     $content .= $boundary;
@@ -106,17 +103,18 @@ class Typecho_Http_Client_Adapter_Socket extends Typecho_Http_Client_Adapter
                 $content .= '--' . $eol;
                 $request .= 'Content-Length: ' . strlen($content) . $eol;
                 $request .= 'Content-Type: multipart/form-data; boundary=' . $boundary;
-                $request .= $eol;
-                $request .= $content;
             }
+
+            $request .= $eol;
+            $request .= $content;
         } else {
             $request .= $eol;
         }
 
         /** 打开连接 */
-        $socket = @fsockopen($this->ip ? $this->ip : $this->host, $this->port, $errno, $errstr, $this->timeout);
+        $socket = @fsockopen($this->ip ?: $this->host, $this->port, $errno, $errstr, $this->timeout);
         if (false === $socket) {
-            throw new Typecho_Http_Client_Exception($errno . ':' . $errstr, 500);
+            throw new Client\Exception($errno . ':' . $errstr, 500);
         }
 
         /** 发送数据 */
@@ -133,15 +131,24 @@ class Typecho_Http_Client_Adapter_Socket extends Typecho_Http_Client_Adapter
 
                 //超时判断
                 if ($info['timed_out']) {
-                    throw new Typecho_Http_Client_Exception(__CLASS__ . ': timeout reading from ' . $this->host . ':' . $this->port, 500);
+                    throw new Client\Exception(
+                        __CLASS__ . ': timeout reading from ' . $this->host . ':' . $this->port,
+                        500
+                    );
                 } else {
-                    throw new Typecho_Http_Client_Exception(__CLASS__ . ': could not read from ' . $this->host . ':' . $this->port, 500);
+                    throw new Client\Exception(
+                        __CLASS__ . ': could not read from ' . $this->host . ':' . $this->port,
+                        500
+                    );
                 }
             } elseif (strlen($buf) < 4096) {
                 $info = stream_get_meta_data($socket);
 
                 if ($info['timed_out']) {
-                    throw new Typecho_Http_Client_Exception(__CLASS__ . ': timeout reading from ' . $this->host . ':' . $this->port, 500);
+                    throw new Client\Exception(
+                        __CLASS__ . ': timeout reading from ' . $this->host . ':' . $this->port,
+                        500
+                    );
                 }
             }
 
