@@ -1,13 +1,6 @@
 <?php
-/**
- * API方法,Typecho命名空间
- *
- * @category typecho
- * @package Response
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
- * @version $Id$
- */
+
+namespace Typecho;
 
 /**
  * Typecho公用方法
@@ -17,9 +10,9 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Typecho_Response
+class Response
 {
-    const CHARSET = 'UTF-8';
+    public const CHARSET = 'UTF-8';
 
     /**
      * http code
@@ -27,7 +20,7 @@ class Typecho_Response
      * @access private
      * @var array
      */
-    private static $_httpCode = [
+    private static $httpCode = [
         100 => 'Continue',
         101 => 'Switching Protocols',
         200 => 'OK',
@@ -75,16 +68,16 @@ class Typecho_Response
      * 单例句柄
      *
      * @access private
-     * @var Typecho_Response
+     * @var Response
      */
-    private static $_instance;
+    private static $instance;
 
     /**
      * 结束前回调函数
      *
      * @var array
      */
-    private static $_callbacks = [];
+    private static $callback = [];
 
     /**
      * 字符编码
@@ -92,21 +85,21 @@ class Typecho_Response
      * @var mixed
      * @access private
      */
-    private $_charset;
+    private $charset;
 
     /**
      * 获取单例句柄
      *
      * @access public
-     * @return Typecho_Response
+     * @return Response
      */
-    public static function getInstance(): Typecho_Response
+    public static function getInstance(): Response
     {
-        if (!isset(self::$_instance)) {
-            self::$_instance = new Typecho_Response();
+        if (!isset(self::$instance)) {
+            self::$instance = new self();
         }
 
-        return self::$_instance;
+        return self::$instance;
     }
 
     /**
@@ -116,7 +109,7 @@ class Typecho_Response
      */
     public static function addCallback($callback)
     {
-        self::$_callbacks[] = $callback;
+        self::$callback[] = $callback;
     }
 
     /**
@@ -128,9 +121,9 @@ class Typecho_Response
      */
     public static function setStatus(int $code)
     {
-        if (isset(self::$_httpCode[$code])) {
+        if (isset(self::$httpCode[$code])) {
             header(($_SERVER['SERVER_PROTOCOL'] ?? 'HTTP/1.1')
-                . ' ' . $code . ' ' . self::$_httpCode[$code], true, $code);
+                . ' ' . $code . ' ' . self::$httpCode[$code], true, $code);
         }
     }
 
@@ -162,7 +155,7 @@ class Typecho_Response
         /** 构建消息体 */
         echo '<?xml version="1.0" encoding="' . $this->getCharset() . '"?>',
         '<response>',
-        $this->_parseXml($message),
+        $this->parseXml($message),
         '</response>';
 
         /** 终止后续输出 */
@@ -190,11 +183,11 @@ class Typecho_Response
      */
     public function getCharset(): string
     {
-        if (empty($this->_charset)) {
+        if (empty($this->charset)) {
             $this->setCharset();
         }
 
-        return $this->_charset;
+        return $this->charset;
     }
 
     /**
@@ -206,7 +199,7 @@ class Typecho_Response
      */
     public function setCharset(string $charset = null)
     {
-        $this->_charset = empty($charset) ? self::CHARSET : $charset;
+        $this->charset = empty($charset) ? self::CHARSET : $charset;
     }
 
     /**
@@ -216,7 +209,7 @@ class Typecho_Response
      * @param mixed $message 格式化数据
      * @return string
      */
-    private function _parseXml($message): string
+    private function parseXml($message): string
     {
         /** 对于数组型则继续递归 */
         if (is_array($message)) {
@@ -224,7 +217,7 @@ class Typecho_Response
 
             foreach ($message as $key => $val) {
                 $tagName = is_int($key) ? 'item' : $key;
-                $result .= '<' . $tagName . '>' . $this->_parseXml($val) . '</' . $tagName . '>';
+                $result .= '<' . $tagName . '>' . $this->parseXml($val) . '</' . $tagName . '>';
             }
 
             return $result;
@@ -245,7 +238,7 @@ class Typecho_Response
         }
 
         $called = true;
-        foreach (self::$_callbacks as $callback) {
+        foreach (self::$callback as $callback) {
             call_user_func($callback);
         }
     }
@@ -262,7 +255,7 @@ class Typecho_Response
         /** 设置http头信息 */
         $this->setContentType('application/json');
 
-        echo Json::encode($message);
+        echo \Json::encode($message);
 
         /** 终止后续输出 */
         self::callback();
@@ -303,7 +296,7 @@ class Typecho_Response
                     $parts['query'] = http_build_query($args);
                 }
 
-                $referer = Typecho_Common::buildUrl($parts);
+                $referer = Common::buildUrl($parts);
             }
 
             $this->redirect($referer, false);
@@ -326,7 +319,7 @@ class Typecho_Response
     public function redirect(string $location, bool $isPermanently = false)
     {
         /** Typecho_Common */
-        $location = Typecho_Common::safeUrl($location);
+        $location = Common::safeUrl($location);
 
         self::callback();
 

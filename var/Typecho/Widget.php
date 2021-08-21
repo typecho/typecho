@@ -1,16 +1,20 @@
 <?php
 
+namespace Typecho;
+
+use Typecho\Widget\Exception as WidgetException;
+use Typecho\Widget\Helper\Faker;
+
 /**
  * Typecho组件基类
  *
  * @package Widget
  */
-abstract class Typecho_Widget
+abstract class Widget
 {
     /**
      * widget对象池
      *
-     * @access private
      * @var array
      */
     private static $widgetPool = [];
@@ -18,7 +22,6 @@ abstract class Typecho_Widget
     /**
      * widget别名
      *
-     * @access private
      * @var array
      */
     private static $widgetAlias = [];
@@ -26,7 +29,6 @@ abstract class Typecho_Widget
     /**
      * 数据堆栈
      *
-     * @access public
      * @var array
      */
     protected $stack = [];
@@ -49,31 +51,27 @@ abstract class Typecho_Widget
     /**
      * request对象
      *
-     * @var Typecho_Request
-     * @access public
+     * @var Request
      */
     protected $request;
 
     /**
      * response对象
      *
-     * @var Typecho_Response
-     * @access public
+     * @var Response
      */
     protected $response;
 
     /**
      * config对象
      *
-     * @access public
-     * @var Typecho_Config
+     * @var Config
      */
     protected $parameter;
 
     /**
      * 数据堆栈每一行
      *
-     * @access protected
      * @var array
      */
     protected $row = [];
@@ -92,7 +90,7 @@ abstract class Typecho_Widget
         //设置函数内部对象
         $this->request = $request;
         $this->response = $response;
-        $this->parameter = new Typecho_Config();
+        $this->parameter = new Config();
 
         if (!empty($params)) {
             $this->parameter->setDefault($params);
@@ -124,15 +122,15 @@ abstract class Typecho_Widget
      * @param mixed $request 前端参数
      * @param boolean $enableResponse 是否允许http回执
      *
-     * @return Typecho_Widget
-     * @throws Typecho_Exception
+     * @return Widget
+     * @throws WidgetException
      */
     public static function widget(
         string $alias,
         $params = null,
         $request = null,
         bool $enableResponse = true
-    ): Typecho_Widget {
+    ): Widget {
         $parts = explode('@', $alias);
         $className = $parts[0];
         $alias = empty($parts[1]) ? $className : $parts[1];
@@ -144,20 +142,20 @@ abstract class Typecho_Widget
         if (!isset(self::$widgetPool[$alias])) {
             /** 如果类不存在 */
             if (!class_exists($className)) {
-                throw new Typecho_Widget_Exception($className);
+                throw new WidgetException($className);
             }
 
             /** 初始化request */
             if (!empty($request)) {
-                $requestObject = new Typecho_Request();
+                $requestObject = new Request();
                 $requestObject->setParams($request);
             } else {
-                $requestObject = Typecho_Request::getInstance();
+                $requestObject = Request::getInstance();
             }
 
             /** 初始化response */
-            $responseObject = $enableResponse ? Typecho_Response::getInstance()
-                : Typecho_Widget_Helper_Empty::getInstance();
+            $responseObject = $enableResponse ? Response::getInstance()
+                : Faker::getInstance();
 
             /** 初始化组件 */
             $widget = new $className($requestObject, $responseObject, $params);
@@ -207,14 +205,14 @@ abstract class Typecho_Widget
      *
      * @param boolean $condition 触发条件
      *
-     * @return $this|Typecho_Widget_Helper_Empty
+     * @return $this|Faker
      */
     public function on(bool $condition)
     {
         if ($condition) {
             return $this;
         } else {
-            return new Typecho_Widget_Helper_Empty();
+            return new Faker();
         }
     }
 
@@ -223,9 +221,9 @@ abstract class Typecho_Widget
      *
      * @param mixed $variable 变量名
      *
-     * @return self
+     * @return Widget
      */
-    public function to(&$variable): Typecho_Widget
+    public function to(&$variable): Widget
     {
         return $variable = $this;
     }
@@ -337,11 +335,11 @@ abstract class Typecho_Widget
      *
      * @param string|null $handle 句柄
      *
-     * @return Typecho_Plugin
+     * @return Plugin
      */
-    public function pluginHandle(?string $handle = null): Typecho_Plugin
+    public function pluginHandle(?string $handle = null): Plugin
     {
-        return Typecho_Plugin::factory(empty($handle) ? get_class($this) : $handle);
+        return Plugin::factory(empty($handle) ? get_class($this) : $handle);
     }
 
     /**

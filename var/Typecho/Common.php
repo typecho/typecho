@@ -645,13 +645,11 @@ EOF;
         /**
          * 根据parse_url的结果重新组合url
          *
-         * @access public
-         *
          * @param array $params 解析后的参数
          *
          * @return string
          */
-        public static function buildUrl($params)
+        public static function buildUrl(array $params): string
         {
             return (isset($params['scheme']) ? $params['scheme'] . '://' : null)
                 . (isset($params['user']) ? $params['user']
@@ -985,7 +983,7 @@ EOF;
             $name = '_' . self::randString(rand(3, 7));
             $cutName = '_' . self::randString(rand(3, 7));
             $var = implode('+', $result);
-            $cutVar = Json::encode($cut);
+            $cutVar = \Json::encode($cut);
             return "(function () {
     var {$name} = {$var}, {$cutName} = {$cutVar};
     
@@ -1146,38 +1144,11 @@ EOF;
                 $inet = inet_pton($address);
             }
 
-            if (strpos($address, '.')) {
-                // ipv4
-                // 非公网地址
-                $privateNetworks = [
-                    '10.0.0.0|10.255.255.255',
-                    '172.16.0.0|172.31.255.255',
-                    '192.168.0.0|192.168.255.255',
-                    '169.254.0.0|169.254.255.255',
-                    '127.0.0.0|127.255.255.255'
-                ];
-
-                $long = ip2long($address);
-
-                foreach ($privateNetworks as $network) {
-                    [$from, $to] = explode('|', $network);
-
-                    if ($long >= ip2long($from) && $long <= ip2long($to)) {
-                        return false;
-                    }
-                }
-            } else {
-                // ipv6
-                // https://en.wikipedia.org/wiki/Private_network
-                $from = inet_pton('fd00::');
-                $to = inet_pton('fdff:ffff:ffff:ffff:ffff:ffff:ffff:ffff');
-
-                if ($inet >= $from && $inet <= $to) {
-                    return false;
-                }
-            }
-
-            return true;
+            return filter_var(
+                $address,
+                FILTER_VALIDATE_IP,
+                FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
+            ) !== false;
         }
 
         /**

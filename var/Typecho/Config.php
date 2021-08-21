@@ -1,13 +1,6 @@
 <?php
-/**
- * 配置管理
- *
- * @category typecho
- * @package Config
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
- * @version $Id$
- */
+
+namespace Typecho;
 
 /**
  * 配置管理类
@@ -17,7 +10,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Typecho_Config implements Iterator
+class Config implements \Iterator
 {
     /**
      * 当前配置
@@ -25,7 +18,7 @@ class Typecho_Config implements Iterator
      * @access private
      * @var array
      */
-    private $_currentConfig = [];
+    private $currentConfig = [];
 
     /**
      * 实例化一个当前配置
@@ -46,11 +39,11 @@ class Typecho_Config implements Iterator
      *
      * @param array|string $config 配置列表
      *
-     * @return Typecho_Config
+     * @return Config
      */
-    public static function factory($config = []): Typecho_Config
+    public static function factory($config = []): Config
     {
-        return new Typecho_Config($config);
+        return new self($config);
     }
 
     /**
@@ -68,7 +61,7 @@ class Typecho_Config implements Iterator
         if (empty($config)) {
             return;
         }
-    
+
         /** 初始化参数 */
         if (is_string($config)) {
             parse_str($config, $params);
@@ -78,8 +71,8 @@ class Typecho_Config implements Iterator
 
         /** 设置默认参数 */
         foreach ($params as $name => $value) {
-            if ($replace || !array_key_exists($name, $this->_currentConfig)) {
-                $this->_currentConfig[$name] = $value;
+            if ($replace || !array_key_exists($name, $this->currentConfig)) {
+                $this->currentConfig[$name] = $value;
             }
         }
     }
@@ -92,7 +85,7 @@ class Typecho_Config implements Iterator
      */
     public function rewind()
     {
-        reset($this->_currentConfig);
+        reset($this->currentConfig);
     }
 
     /**
@@ -103,7 +96,7 @@ class Typecho_Config implements Iterator
      */
     public function current()
     {
-        return current($this->_currentConfig);
+        return current($this->currentConfig);
     }
 
     /**
@@ -114,7 +107,7 @@ class Typecho_Config implements Iterator
      */
     public function next()
     {
-        next($this->_currentConfig);
+        next($this->currentConfig);
     }
 
     /**
@@ -125,7 +118,7 @@ class Typecho_Config implements Iterator
      */
     public function key()
     {
-        return key($this->_currentConfig);
+        return key($this->currentConfig);
     }
 
     /**
@@ -148,7 +141,7 @@ class Typecho_Config implements Iterator
      */
     public function __get(string $name)
     {
-        return $this->_currentConfig[$name] ?? null;
+        return $this->currentConfig[$name] ?? null;
     }
 
     /**
@@ -161,7 +154,7 @@ class Typecho_Config implements Iterator
      */
     public function __set(string $name, $value)
     {
-        $this->_currentConfig[$name] = $value;
+        $this->currentConfig[$name] = $value;
     }
 
     /**
@@ -174,7 +167,7 @@ class Typecho_Config implements Iterator
      */
     public function __call(string $name, ?array $args)
     {
-        echo $this->_currentConfig[$name];
+        echo $this->currentConfig[$name];
     }
 
     /**
@@ -186,7 +179,7 @@ class Typecho_Config implements Iterator
      */
     public function __isSet(string $name): bool
     {
-        return isset($this->_currentConfig[$name]);
+        return isset($this->currentConfig[$name]);
     }
 
     /**
@@ -197,7 +190,7 @@ class Typecho_Config implements Iterator
      */
     public function __toString(): string
     {
-        return serialize($this->_currentConfig);
+        return serialize($this->currentConfig);
     }
 
     /**
@@ -205,6 +198,6 @@ class Typecho_Config implements Iterator
      */
     public function toArray(): array
     {
-        return $this->_currentConfig;
+        return $this->currentConfig;
     }
 }

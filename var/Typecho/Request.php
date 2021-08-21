@@ -15,7 +15,7 @@ class Request
      * @access private
      * @var Request
      */
-    private static $_instance;
+    private static $instance;
 
     /**
      * 支持的过滤器列表
@@ -23,7 +23,7 @@ class Request
      * @access private
      * @var string
      */
-    private static $_supportFilters = [
+    private static $supportFilters = [
         'int'     => 'intval',
         'integer' => 'intval',
         'search'  => ['Typecho_Common', 'filterSearchQuery'],
@@ -38,7 +38,7 @@ class Request
      * @access private
      * @var array
      */
-    private $_params = [];
+    private $params = [];
 
     /**
      * 路径信息
@@ -46,23 +46,23 @@ class Request
      * @access private
      * @var string
      */
-    private $_pathInfo = null;
+    private $pathInfo = null;
 
     /**
-     * _requestUri
+     * requestUri
      *
      * @var string
      * @access private
      */
-    private $_requestUri = null;
+    private $requestUri = null;
 
     /**
-     * _requestRoot
+     * requestRoot
      *
      * @var mixed
      * @access private
      */
-    private $_requestRoot = null;
+    private $requestRoot = null;
 
     /**
      * 获取baseurl
@@ -70,7 +70,7 @@ class Request
      * @var string
      * @access private
      */
-    private $_baseUrl = null;
+    private $baseUrl = null;
 
     /**
      * 客户端ip地址
@@ -78,30 +78,14 @@ class Request
      * @access private
      * @var string
      */
-    private $_ip = null;
-
-    /**
-     * 客户端字符串
-     *
-     * @access private
-     * @var string
-     */
-    private $_agent = null;
-
-    /**
-     * 来源页
-     *
-     * @access private
-     * @var string
-     */
-    private $_referer = null;
+    private $ip = null;
 
     /**
      * 域名前缀
      *
      * @var string
      */
-    private $_urlPrefix = null;
+    private $urlPrefix = null;
 
     /**
      * 当前过滤器
@@ -109,7 +93,7 @@ class Request
      * @access private
      * @var array
      */
-    private $_filter = [];
+    private $filter = [];
 
     /**
      * 初始化变量
@@ -126,11 +110,11 @@ class Request
      */
     public static function getInstance(): Request
     {
-        if (!isset(self::$_instance)) {
-            self::$_instance = new Request();
+        if (!isset(self::$instance)) {
+            self::$instance = new self();
         }
 
-        return self::$_instance;
+        return self::$instance;
     }
 
     /**
@@ -141,16 +125,16 @@ class Request
      */
     public function getUrlPrefix(): string
     {
-        if (empty($this->_urlPrefix)) {
+        if (empty($this->urlPrefix)) {
             if (defined('__TYPECHO_URL_PREFIX__')) {
-                $this->_urlPrefix = __TYPECHO_URL_PREFIX__;
+                $this->urlPrefix = __TYPECHO_URL_PREFIX__;
             } elseif (php_sapi_name() != 'cli') {
-                $this->_urlPrefix = ($this->isSecure() ? 'https' : 'http') . '://'
+                $this->urlPrefix = ($this->isSecure() ? 'https' : 'http') . '://'
                     . ($_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME']);
             }
         }
 
-        return $this->_urlPrefix;
+        return $this->urlPrefix;
     }
 
     /**
@@ -171,16 +155,14 @@ class Request
     /**
      * 设置过滤器
      *
-     * @access public
-     * @return Request
+     * @param string|callable ...$filters
+     * @return $this
      */
-    public function filter(): Request
+    public function filter(...$filters): Request
     {
-        $filters = func_get_args();
-
         foreach ($filters as $filter) {
-            $this->_filter[] = is_string($filter) && isset(self::$_supportFilters[$filter])
-                ? self::$_supportFilters[$filter] : $filter;
+            $this->filter[] = is_string($filter) && isset(self::$supportFilters[$filter])
+                ? self::$supportFilters[$filter] : $filter;
         }
 
         return $this;
@@ -213,7 +195,7 @@ class Request
     {
         return isset($_GET[$key])
             || isset($_POST[$key])
-            || isset($this->_params[$key]);
+            || isset($this->params[$key]);
     }
 
     /**
@@ -229,8 +211,8 @@ class Request
     public function get(string $key, $default = null)
     {
         switch (true) {
-            case isset($this->_params[$key]):
-                $value = $this->_params[$key];
+            case isset($this->params[$key]):
+                $value = $this->params[$key];
                 break;
             case isset($_GET[$key]):
                 $value = $_GET[$key];
@@ -244,7 +226,7 @@ class Request
         }
 
         $value = ((!is_array($value) && strlen($value) > 0) || is_array($default)) ? $value : $default;
-        return $this->_applyFilter($value);
+        return $this->applyFilter($value);
     }
 
     /**
@@ -295,7 +277,7 @@ class Request
      */
     public function setParam(string $name, $value)
     {
-        $this->_params[$name] = $value;
+        $this->params[$name] = $value;
     }
 
     /**
@@ -315,7 +297,7 @@ class Request
             $params = $out;
         }
 
-        $this->_params = array_merge($this->_params, $params);
+        $this->params = array_merge($this->params, $params);
     }
 
     /**
@@ -326,7 +308,7 @@ class Request
      */
     public function getRequestRoot(): string
     {
-        if (null === $this->_requestRoot) {
+        if (null === $this->requestRoot) {
             $root = rtrim($this->getUrlPrefix() . $this->getBaseUrl(), '/') . '/';
 
             $pos = strrpos($root, '.php/');
@@ -334,10 +316,10 @@ class Request
                 $root = dirname(substr($root, 0, $pos));
             }
 
-            $this->_requestRoot = rtrim($root, '/');
+            $this->requestRoot = rtrim($root, '/');
         }
 
-        return $this->_requestRoot;
+        return $this->requestRoot;
     }
 
     /**
@@ -359,8 +341,8 @@ class Request
      */
     public function getRequestUri(): ?string
     {
-        if (!empty($this->_requestUri)) {
-            return $this->_requestUri;
+        if (!empty($this->requestUri)) {
+            return $this->requestUri;
         }
 
         //处理requestUri
@@ -396,7 +378,7 @@ class Request
             }
         }
 
-        return $this->_requestUri = $requestUri;
+        return $this->requestUri = $requestUri;
     }
 
     /**
@@ -407,8 +389,8 @@ class Request
      */
     public function getBaseUrl(): ?string
     {
-        if (null !== $this->_baseUrl) {
-            return $this->_baseUrl;
+        if (null !== $this->baseUrl) {
+            return $this->baseUrl;
         }
 
         //处理baseUrl
@@ -460,7 +442,7 @@ class Request
             $baseUrl = substr($requestUri, 0, $pos + strlen($baseUrl));
         }
 
-        return ($this->_baseUrl = (null === $finalBaseUrl) ? rtrim($baseUrl, '/') : $finalBaseUrl);
+        return ($this->baseUrl = (null === $finalBaseUrl) ? rtrim($baseUrl, '/') : $finalBaseUrl);
     }
 
     /**
@@ -495,7 +477,7 @@ class Request
         $parts['query'] = http_build_query($args);
 
         /** 返回地址 */
-        return Typecho_Common::buildUrl($parts);
+        return Common::buildUrl($parts);
     }
 
     /**
@@ -511,8 +493,8 @@ class Request
     public function getPathInfo(string $inputEncoding = null, string $outputEncoding = null): ?string
     {
         /** 缓存信息 */
-        if (null !== $this->_pathInfo) {
-            return $this->_pathInfo;
+        if (null !== $this->pathInfo) {
+            return $this->pathInfo;
         }
 
         //参考Zend Framework对pahtinfo的处理, 更好的兼容性
@@ -527,8 +509,10 @@ class Request
             $requestUri = substr($requestUri, 0, $pos);
         }
 
-        if ((null !== $finalBaseUrl)
-            && (false === ($pathInfo = substr($requestUri, strlen($finalBaseUrl))))) {
+        if (
+            (null !== $finalBaseUrl)
+            && (false === ($pathInfo = substr($requestUri, strlen($finalBaseUrl))))
+        ) {
             // If substr() returns false then PATH_INFO is set to an empty string
             $pathInfo = '/';
         } elseif (null === $finalBaseUrl) {
@@ -538,9 +522,12 @@ class Request
         if (!empty($pathInfo)) {
             //针对iis的utf8编码做强制转换
             //参考http://docs.moodle.org/ja/%E5%A4%9A%E8%A8%80%E8%AA%9E%E5%AF%BE%E5%BF%9C%EF%BC%9A%E3%82%B5%E3%83%BC%E3%83%90%E3%81%AE%E8%A8%AD%E5%AE%9A
-            if (!empty($inputEncoding) && !empty($outputEncoding) &&
-                (stripos($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS') !== false
-                    || stripos($_SERVER['SERVER_SOFTWARE'], 'ExpressionDevServer') !== false)) {
+            if (
+                !empty($inputEncoding)
+                && !empty($outputEncoding)
+                && (stripos($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS') !== false
+                    || stripos($_SERVER['SERVER_SOFTWARE'], 'ExpressionDevServer') !== false)
+            ) {
                 if (function_exists('mb_convert_encoding')) {
                     $pathInfo = mb_convert_encoding($pathInfo, $outputEncoding, $inputEncoding);
                 } elseif (function_exists('iconv')) {
@@ -552,7 +539,7 @@ class Request
         }
 
         // fix issue 456
-        return ($this->_pathInfo = '/' . ltrim(urldecode($pathInfo), '/'));
+        return ($this->pathInfo = '/' . ltrim(urldecode($pathInfo), '/'));
     }
 
     /**
@@ -571,31 +558,6 @@ class Request
     }
 
     /**
-     * 设置ip地址
-     *
-     * @access public
-     *
-     * @param string|null $ip
-     */
-    public function setIp(string $ip = null)
-    {
-        if (!empty($ip)) {
-            $this->_ip = $ip;
-        } else {
-            $header = defined('__TYPECHO_IP_SOURCE__') ? __TYPECHO_IP_SOURCE__ : 'X-Forwarded-For' ;
-            $ips = $this->getHeader($header, $this->getServer('HTTP_CLIENT_IP', $this->getServer('REMOTE_ADDR')));
-
-            if (!empty($ips)) {
-                [$this->_ip] = array_map('trim', explode(',', $ips));
-            }
-        }
-
-        if (empty($this->_ip) || !self::_checkIp($this->_ip)) {
-            $this->_ip = 'unknown';
-        }
-    }
-
-    /**
      * 获取ip地址
      *
      * @access public
@@ -603,11 +565,23 @@ class Request
      */
     public function getIp(): string
     {
-        if (null === $this->_ip) {
-            $this->setIp();
+        if (null === $this->ip) {
+            $header = defined('__TYPECHO_IP_SOURCE__') ? __TYPECHO_IP_SOURCE__ : 'X-Forwarded-For' ;
+            $ip = $this->getHeader($header, $this->getHeader('Client-Ip', $this->getServer('REMOTE_ADDR')));
+
+            if (!empty($ip)) {
+                [$ip] = array_map('trim', explode(',', $ip));
+                $ip = filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6);
+            }
+
+            if (!empty($ip)) {
+                $this->ip = $ip;
+            } else {
+                $this->ip = 'unknown';
+            }
         }
 
-        return $this->_ip;
+        return $this->ip;
     }
 
     /**
@@ -625,21 +599,6 @@ class Request
     }
 
     /**
-     * 设置客户端
-     *
-     * @access public
-     *
-     * @param string|null $agent 客户端字符串
-     *
-     * @return void
-     */
-    public function setAgent(string $agent = null)
-    {
-        $agent = (null === $agent) ? $this->getServer('HTTP_USER_AGENT') : $agent;
-        $this->_agent = self::_checkAgent($agent) ? $agent : '';
-    }
-
-    /**
      * 获取客户端
      *
      * @access public
@@ -647,25 +606,7 @@ class Request
      */
     public function getAgent(): ?string
     {
-        if (null === $this->_agent) {
-            $this->setAgent();
-        }
-
-        return $this->_agent;
-    }
-
-    /**
-     * 设置来源页
-     *
-     * @access public
-     *
-     * @param string|null $referer 客户端字符串
-     *
-     * @return void
-     */
-    public function setReferer(string $referer = null)
-    {
-        $this->_referer = (null === $referer) ? $this->getServer('HTTP_REFERER') : $referer;
+        return $this->getHeader('User-Agent');
     }
 
     /**
@@ -676,11 +617,7 @@ class Request
      */
     public function getReferer(): ?string
     {
-        if (null === $this->_referer) {
-            $this->setReferer();
-        }
-
-        return $this->_referer;
+        return $this->getHeader('Referer');
     }
 
     /**
@@ -769,47 +706,17 @@ class Request
      *
      * @return mixed
      */
-    private function _applyFilter($value)
+    private function applyFilter($value)
     {
-        if ($this->_filter) {
-            foreach ($this->_filter as $filter) {
+        if ($this->filter) {
+            foreach ($this->filter as $filter) {
                 $value = is_array($value) ? array_map($filter, $value) :
                     call_user_func($filter, $value);
             }
 
-            $this->_filter = [];
+            $this->filter = [];
         }
 
         return $value;
-    }
-
-    /**
-     * 检查ip地址是否合法
-     *
-     * @param string $ip ip地址
-     *
-     * @return boolean
-     */
-    private function _checkIp(string $ip): bool
-    {
-        if (function_exists('filter_var')) {
-            return false !== (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)
-                    || filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6));
-        }
-
-        return preg_match("/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/", $ip)
-            || preg_match("/^[0-9a-f:]+$/i", $ip);
-    }
-
-    /**
-     * 检查ua是否合法
-     *
-     * @param string $agent ua字符串
-     *
-     * @return boolean
-     */
-    private function _checkAgent(string $agent): bool
-    {
-        return preg_match("/^[_a-z0-9- ,:;=#@\.\(\)\/\+\*\?]+$/i", $agent);
     }
 }
