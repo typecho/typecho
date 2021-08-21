@@ -34,7 +34,7 @@ class Typecho_Http_Client
      * @access public
      * @return ?Typecho_Http_Client_Adapter
      */
-    public static function get(): ?Typecho_Http_Client
+    public static function get(): ?Typecho_Http_Client_Adapter
     {
         $adapters = func_get_args();
 
