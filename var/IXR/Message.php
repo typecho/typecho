@@ -1,57 +1,79 @@
 <?php
-/*
-   IXR - The Inutio XML-RPC Library - (c) Incutio Ltd 2002
-   Version 1.61 - Simon Willison, 11th July 2003 (htmlentities -> htmlspecialchars)
-   Site:   http://scripts.incutio.com/xmlrpc/
-   Manual: http://scripts.incutio.com/xmlrpc/manual.php
-   Made available under the Artistic License: http://www.opensource.org/licenses/artistic-license.php
-*/
+
+namespace IXR;
 
 /**
  * IXR消息
  *
  * @package IXR
  */
-class IXR_Message {
-    var $message;
-    var $messageType;  // methodCall / methodResponse / fault
-    var $faultCode;
-    var $faultString;
-    var $methodName;
-    var $params;
+class Message
+{
+    /**
+     * @var string
+     */
+    public $message;
+
+    /**
+     * @var string
+     */
+    public $messageType;  // methodCall / methodResponse / fault
+
+    public $faultCode;
+
+    public $faultString;
+
+    /**
+     * @var string
+     */
+    public $methodName;
+
+    /**
+     * @var array
+     */
+    public $params = [];
+
     // Current variable stacks
-    var $_arraystructs = array();   // The stack used to keep track of the current array/struct
-    var $_arraystructstypes = array(); // Stack keeping track of if things are structs or array
-    var $_currentStructName = array();  // A stack as well
-    var $_param;
-    var $_value;
-    var $_currentTag;
-    var $_currentTagContents;
-    // The XML parser
-    var $_parser;
-    function __construct ($message) {
+    private $arrayStructs = [];   // The stack used to keep track of the current array/struct
+
+    private $arrayStructsTypes = []; // Stack keeping track of if things are structs or array
+
+    private $currentStructName = [];  // A stack as well
+
+    private $currentTagContents;
+
+    /**
+     * @param string $message
+     */
+    public function __construct(string $message)
+    {
         $this->message = $message;
     }
-    function parse() {
+
+    /**
+     * @return bool
+     */
+    public function parse(): bool
+    {
         // first remove the XML declaration
-        $this->message = preg_replace('/<\?xml(.*)?\?'.'>/', '', $this->message);
+        $this->message = preg_replace('/<\?xml(.*)?\?' . '>/', '', $this->message);
         if (trim($this->message) == '') {
             return false;
         }
-        $this->_parser = xml_parser_create();
+        $parser = xml_parser_create();
         // Set XML parser to take the case of tags in to account
-        xml_parser_set_option($this->_parser, XML_OPTION_CASE_FOLDING, false);
+        xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, false);
         // Set XML parser callback functions
-        xml_set_object($this->_parser, $this);
-        xml_set_element_handler($this->_parser, 'tag_open', 'tag_close');
-        xml_set_character_data_handler($this->_parser, 'cdata');
-        if (!xml_parse($this->_parser, $this->message)) {
+        xml_set_object($parser, $this);
+        xml_set_element_handler($parser, [$this, 'tagOpen'], [$this, 'tagClose']);
+        xml_set_character_data_handler($parser, [$this, 'cdata']);
+        if (!xml_parse($parser, $this->message)) {
             /* die(sprintf('XML error: %s at line %d',
-                xml_error_string(xml_get_error_code($this->_parser)),
-                xml_get_current_line_number($this->_parser))); */
+                xml_error_string(xml_get_error_code($this->parser)),
+                xml_get_current_line_number($this->parser))); */
             return false;
         }
-        xml_parser_free($this->_parser);
+        xml_parser_free($parser);
         // Grab the error messages, if any
         if ($this->messageType == 'fault') {
             $this->faultCode = $this->params[0]['faultCode'];
@@ -59,9 +81,15 @@ class IXR_Message {
         }
         return true;
     }
-    function tag_open($parser, $tag, $attr) {
-        $this->currentTag = $tag;
-        switch($tag) {
+
+    /**
+     * @param $parser
+     * @param $tag
+     * @param $attr
+     */
+    private function tagOpen($parser, string $tag, $attr)
+    {
+        switch ($tag) {
             case 'methodCall':
             case 'methodResponse':
             case 'fault':
@@ -69,94 +97,98 @@ class IXR_Message {
                 break;
             /* Deal with stacks of arrays and structs */
             case 'data':    // data is to all intents and puposes more interesting than array
-                $this->_arraystructstypes[] = 'array';
-                $this->_arraystructs[] = array();
+                $this->arrayStructsTypes[] = 'array';
+                $this->arrayStructs[] = [];
                 break;
             case 'struct':
-                $this->_arraystructstypes[] = 'struct';
-                $this->_arraystructs[] = array();
+                $this->arrayStructsTypes[] = 'struct';
+                $this->arrayStructs[] = [];
                 break;
         }
     }
-    function cdata($parser, $cdata) {
-        $this->_currentTagContents .= $cdata;
+
+    /**
+     * @param $parser
+     * @param string $cdata
+     */
+    private function cdata($parser, string $cdata)
+    {
+        $this->currentTagContents .= $cdata;
     }
-    function tag_close($parser, $tag) {
-        $valueFlag = false;
-        switch($tag) {
+
+    /**
+     * @param $parser
+     * @param string $tag
+     */
+    private function tagClose($parser, string $tag)
+    {
+        switch ($tag) {
             case 'int':
             case 'i4':
-                $value = (int)trim($this->_currentTagContents);
-                $this->_currentTagContents = '';
-                $valueFlag = true;
+                $value = (int) trim($this->currentTagContents);
+                $this->currentTagContents = '';
                 break;
             case 'double':
-                $value = (double)trim($this->_currentTagContents);
-                $this->_currentTagContents = '';
-                $valueFlag = true;
+                $value = (double) trim($this->currentTagContents);
+                $this->currentTagContents = '';
                 break;
             case 'string':
-                $value = (string)trim($this->_currentTagContents);
-                $this->_currentTagContents = '';
-                $valueFlag = true;
+                $value = (string)trim($this->currentTagContents);
+                $this->currentTagContents = '';
                 break;
             case 'dateTime.iso8601':
-                $value = new IXR_Date(trim($this->_currentTagContents));
+                $value = new Date(trim($this->currentTagContents));
                 // $value = $iso->getTimestamp();
-                $this->_currentTagContents = '';
-                $valueFlag = true;
+                $this->currentTagContents = '';
                 break;
             case 'value':
                 // "If no type is indicated, the type is string."
-                if (trim($this->_currentTagContents) != '') {
-                    $value = (string)$this->_currentTagContents;
-                    $this->_currentTagContents = '';
-                    $valueFlag = true;
+                if (trim($this->currentTagContents) != '') {
+                    $value = (string) $this->currentTagContents;
+                    $this->currentTagContents = '';
                 }
                 break;
             case 'boolean':
-                $value = (boolean)trim($this->_currentTagContents);
-                $this->_currentTagContents = '';
-                $valueFlag = true;
+                $value = (bool) trim($this->currentTagContents);
+                $this->currentTagContents = '';
                 break;
             case 'base64':
-                $value = base64_decode($this->_currentTagContents);
-                $this->_currentTagContents = '';
-                $valueFlag = true;
+                $value = base64_decode($this->currentTagContents);
+                $this->currentTagContents = '';
                 break;
             /* Deal with stacks of arrays and structs */
             case 'data':
             case 'struct':
-                $value = array_pop($this->_arraystructs);
-                array_pop($this->_arraystructstypes);
-                $valueFlag = true;
+                $value = array_pop($this->arrayStructs);
+                array_pop($this->arrayStructsTypes);
                 break;
             case 'member':
-                array_pop($this->_currentStructName);
+                array_pop($this->currentStructName);
                 break;
             case 'name':
-                $this->_currentStructName[] = trim($this->_currentTagContents);
-                $this->_currentTagContents = '';
+                $this->currentStructName[] = trim($this->currentTagContents);
+                $this->currentTagContents = '';
                 break;
             case 'methodName':
-                $this->methodName = trim($this->_currentTagContents);
-                $this->_currentTagContents = '';
+                $this->methodName = trim($this->currentTagContents);
+                $this->currentTagContents = '';
                 break;
         }
-        if ($valueFlag) {
+        if (isset($value)) {
             /*
             if (!is_array($value) && !is_object($value)) {
                 $value = trim($value);
             }
             */
-            if (count($this->_arraystructs) > 0) {
+            if (count($this->arrayStructs) > 0) {
                 // Add value to struct or array
-                if ($this->_arraystructstypes[count($this->_arraystructstypes)-1] == 'struct') {
+                if ($this->arrayStructsTypes[count($this->arrayStructsTypes) - 1] == 'struct') {
                     // Add to struct
-                    $this->_arraystructs[count($this->_arraystructs)-1][$this->_currentStructName[count($this->_currentStructName)-1]] = $value;
+                    $this->arrayStructs[count($this->arrayStructs) - 1]
+                        [$this->currentStructName[count($this->currentStructName) - 1]] = $value;
                 } else {
                     // Add to array
-                    $this->_arraystructs[count($this->_arraystructs)-1][] = $value;
+                    $this->arrayStructs[count($this->arrayStructs) - 1][] = $value;
                 }
             } else {
                 // Just add as a paramater

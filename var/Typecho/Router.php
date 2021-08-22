@@ -41,13 +41,13 @@ class Router
      *
      * @access public
      *
-     * @param string $pathInfo 全路径
+     * @param string|null $pathInfo 全路径
      * @param mixed $parameter 输入参数
      *
      * @return false|Widget
      * @throws \Exception
      */
-    public static function match(string $pathInfo, $parameter = null)
+    public static function match(?string $pathInfo, $parameter = null)
     {
         foreach (self::$routingTable as $key => $route) {
             if (preg_match($route['regx'], $pathInfo, $matches)) {

@@ -1,26 +1,23 @@
 <?php
-/**
- * Typecho Blog Platform
- *
- * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license    GNU General Public License 2.0
- * @version    $Id: I18n.php 106 2008-04-11 02:23:54Z magike.net $
- */
+
+namespace Typecho;
+
+use Typecho\I18n\GetTextMulti;
 
 /**
  * 国际化字符翻译
  *
  * @package I18n
  */
-class Typecho_I18n
+class I18n
 {
     /**
      * 是否已经载入的标志位
      *
      * @access private
-     * @var boolean|Typecho_I18n_GetTextMulti
+     * @var GetTextMulti
      */
-    private static $_loaded = false;
+    private static $loaded;
 
     /**
      * 语言文件
@@ -28,7 +25,7 @@ class Typecho_I18n
      * @access private
      * @var string
      */
-    private static $_lang = null;
+    private static $lang = null;
 
     /**
      * 翻译文字
@@ -42,7 +39,7 @@ class Typecho_I18n
     public static function translate(string $string): string
     {
         self::init();
-        return self::$_loaded ? self::$_loaded->translate($string) : $string;
+        return self::$loaded ? self::$loaded->translate($string) : $string;
     }
 
     /**
@@ -53,8 +50,8 @@ class Typecho_I18n
     private static function init()
     {
         /** GetText支持 */
-        if (false === self::$_loaded && self::$_lang && file_exists(self::$_lang)) {
-            self::$_loaded = new Typecho_I18n_GetTextMulti(self::$_lang);
+        if (!isset(self::$loaded) && self::$lang && file_exists(self::$lang)) {
+            self::$loaded = new GetTextMulti(self::$lang);
         }
     }
 
@@ -70,7 +67,7 @@ class Typecho_I18n
     public static function ngettext(string $single, string $plural, int $number): string
     {
         self::init();
-        return self::$_loaded ? self::$_loaded->ngettext($single, $plural, $number) : ($number > 1 ? $plural : $single);
+        return self::$loaded ? self::$loaded->ngettext($single, $plural, $number) : ($number > 1 ? $plural : $single);
     }
 
     /**
@@ -78,8 +75,8 @@ class Typecho_I18n
      *
      * @access public
      *
-     * @param string $from 起始时间
-     * @param string $now 终止时间
+     * @param int $from 起始时间
+     * @param int $now 终止时间
      *
      * @return string
      */
@@ -109,9 +106,12 @@ class Typecho_I18n
         }
 
         /** 如果是昨天 */
-        if ($between > 0 && $between < 172800
+        if (
+            $between > 0
+            && $between < 172800
             && (date('z', $from) + 1 == date('z', $now)                             // 在同一年的情况
-                || date('z', $from) + 1 == date('L') + 365 + date('z', $now))) {    // 跨年的情况
+                || date('z', $from) + 1 == date('L') + 365 + date('z', $now))
+        ) {    // 跨年的情况
             return _t('昨天 %s', date('H:i', $from));
         }
 
@@ -140,7 +140,7 @@ class Typecho_I18n
      */
     public static function addLang(string $lang)
     {
-        self::$_loaded->addFile($lang);
+        self::$loaded->addFile($lang);
     }
 
     /**
@@ -151,7 +151,7 @@ class Typecho_I18n
      */
     public static function getLang(): ?string
     {
-        return self::$_lang;
+        return self::$lang;
     }
 
     /**
@@ -165,6 +165,6 @@ class Typecho_I18n
      */
     public static function setLang(string $lang)
     {
-        self::$_lang = $lang;
+        self::$lang = $lang;
     }
 }

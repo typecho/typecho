@@ -1,13 +1,6 @@
 <?php
-/**
- * cookie支持
- *
- * @category typecho
- * @package Cookie
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
- * @version $Id$
- */
+
+namespace Typecho;
 
 /**
  * cookie支持
@@ -16,7 +9,7 @@
  * @category typecho
  * @package Cookie
  */
-class Typecho_Cookie
+class Cookie
 {
     /**
      * 前缀
@@ -24,7 +17,7 @@ class Typecho_Cookie
      * @var string
      * @access private
      */
-    private static $_prefix = '';
+    private static $prefix = '';
 
     /**
      * 路径
@@ -32,7 +25,7 @@ class Typecho_Cookie
      * @var string
      * @access private
      */
-    private static $_path = '/';
+    private static $path = '/';
 
     /**
      * 获取前缀
@@ -42,7 +35,7 @@ class Typecho_Cookie
      */
     public static function getPrefix(): string
     {
-        return self::$_prefix;
+        return self::$prefix;
     }
 
     /**
@@ -55,11 +48,11 @@ class Typecho_Cookie
      */
     public static function setPrefix(string $url)
     {
-        self::$_prefix = md5($url);
+        self::$prefix = md5($url);
         $parsed = parse_url($url);
 
         /** 在路径后面强制加上斜杠 */
-        self::$_path = empty($parsed['path']) ? '/' : Typecho_Common::url(null, $parsed['path']);
+        self::$path = empty($parsed['path']) ? '/' : Common::url(null, $parsed['path']);
     }
 
     /**
@@ -70,7 +63,7 @@ class Typecho_Cookie
      */
     public static function getPath(): string
     {
-        return self::$_path;
+        return self::$path;
     }
 
     /**
@@ -85,7 +78,7 @@ class Typecho_Cookie
      */
     public static function get(string $key, ?string $default = null)
     {
-        $key = self::$_prefix . $key;
+        $key = self::$prefix . $key;
         $value = $_COOKIE[$key] ?? $default;
         return is_array($value) ? $default : $value;
     }
@@ -103,8 +96,8 @@ class Typecho_Cookie
      */
     public static function set(string $key, $value, int $expire = 0)
     {
-        $key = self::$_prefix . $key;
-        setrawcookie($key, rawurlencode($value), $expire, self::$_path);
+        $key = self::$prefix . $key;
+        setrawcookie($key, rawurlencode($value), $expire, self::$path);
         $_COOKIE[$key] = $value;
     }
 
@@ -119,12 +112,12 @@ class Typecho_Cookie
      */
     public static function delete(string $key)
     {
-        $key = self::$_prefix . $key;
+        $key = self::$prefix . $key;
         if (!isset($_COOKIE[$key])) {
             return;
         }
 
-        setcookie($key, '', time() - 2592000, self::$_path);
+        setcookie($key, '', time() - 2592000, self::$path);
         unset($_COOKIE[$key]);
     }
 }

@@ -1,11 +1,9 @@
 <?php
-/*
-   IXR - The Inutio XML-RPC Library - (c) Incutio Ltd 2002
-   Version 1.61 - Simon Willison, 11th July 2003 (htmlentities -> htmlspecialchars)
-   Site:   http://scripts.incutio.com/xmlrpc/
-   Manual: http://scripts.incutio.com/xmlrpc/manual.php
-   Made available under the Artistic License: http://www.opensource.org/licenses/artistic-license.php
-*/
+
+namespace IXR;
+
+use Typecho\Common;
+use Typecho\Http\Client as HttpClient;
 
 /**
  * IXR客户端
@@ -13,10 +11,10 @@
  *
  * @package IXR
  */
-class IXR_Client
+class Client
 {
     /** 默认客户端 */
-    const DEFAULT_USERAGENT = 'The Incutio XML-RPC PHP Library(Reload By Typecho)';
+    private const DEFAULT_USERAGENT = 'Typecho XML-RPC PHP Library';
 
     /**
      * 服务端地址
@@ -59,20 +57,11 @@ class IXR_Client
     private $useragent;
 
     /**
-     * 回执结构体
-     *
-     * @access private
-     * @var string
-     */
-    private $response;
-
-    /**
      * 消息体
      *
-     * @access private
-     * @var string
+     * @var Message
      */
-    private $message = false;
+    private $message;
 
     /**
      * 调试开关
@@ -86,48 +75,53 @@ class IXR_Client
      * 请求前缀
      *
      * @access private
-     * @var string
+     * @var string|null
      */
-    private $prefix = NULL;
+    private $prefix = null;
 
-    // Storage place for an error message
-    private $error = false;
+    /**
+     * @var Error
+     */
+    private $error;
 
     /**
      * 客户端构造函数
      *
      * @access public
      * @param string $server 服务端地址
-     * @param string $path 路径名称
+     * @param string|null $path 路径名称
      * @param integer $port 端口名称
-     * @param string $useragent 客户端
+     * @param string|null $useragent 客户端
+     * @param string|null $prefix
      * @return void
      */
-    public function __construct($server, $path = false, $port = 80, $useragent = self::DEFAULT_USERAGENT, $prefix = NULL)
-    {
+    public function construct(
+        string $server,
+        ?string $path = null,
+        int $port = 80,
+        string $useragent = self::DEFAULT_USERAGENT,
+        ?string $prefix = null
+    ) {
         if (!$path) {
             $this->url = $server;
 
             // Assume we have been given a Url instead
             $bits = parse_url($server);
             $this->server = $bits['host'];
-            $this->port = isset($bits['port']) ? $bits['port'] : 80;
-            $this->path = isset($bits['path']) ? $bits['path'] : '/';
+            $this->port = $bits['port'] ?? 80;
+            $this->path = $bits['path'] ?? '/';
 
             // Make absolutely sure we have a path
             if (isset($bits['query'])) {
                 $this->path .= '?' . $bits['query'];
             }
         } else {
-            /** Typecho_Common */
-            require_once 'Typecho/Common.php';
-
-            $this->url = Typecho_Common::buildUrl(array(
-                'scheme'    =>  'http',
-                'host'      =>  $server,
-                'path'      =>  $path,
-                'port'      =>  $port
-            ));
+            $this->url = Common::buildUrl([
+                'scheme' => 'http',
+                'host'   => $server,
+                'path'   => $path,
+                'port'   => $port
+            ]);
 
             $this->server = $server;
             $this->path = $path;
@@ -144,7 +138,7 @@ class IXR_Client
      * @access public
      * @return void
      */
-    public function __setDebug()
+    public function setDebug()
     {
         $this->debug = true;
     }
@@ -152,44 +146,44 @@ class IXR_Client
     /**
      * 执行请求
      *
-     * @access public
-     * @return void
+     * @param string $method
+     * @param ...$args
+     * @return bool
+     * @throws HttpClient\Exception
      */
-    public function __rpcCall()
+    private function rpcCall(string $method, ...$args): bool
     {
-        $args = func_get_args();
-        $method = array_shift($args);
-        $request = new IXR_Request($method, $args);
+        $request = new Request($method, $args);
         $xml = $request->getXml();
 
-        $client = Typecho_Http_Client::get();
+        $client = HttpClient::get();
         if (!$client) {
-            $this->error = new IXR_Error(-32300, 'transport error - could not open socket');
+            $this->error = new Error(-32300, 'transport error - could not open socket');
             return false;
         }
 
         $client->setHeader('Content-Type', 'text/xml')
-        ->setHeader('User-Agent', $this->useragent)
-        ->setData($xml)
-        ->send($this->url);
+            ->setHeader('User-Agent', $this->useragent)
+            ->setData($xml)
+            ->send($this->url);
 
         $contents = $client->getResponseBody();
 
         if ($this->debug) {
-            echo '<pre>'.htmlspecialchars($contents)."\n</pre>\n\n";
+            echo '<pre>' . htmlspecialchars($contents) . "\n</pre>\n\n";
         }
 
         // Now parse what we've got back
-        $this->message = new IXR_Message($contents);
+        $this->message = new Message($contents);
         if (!$this->message->parse()) {
             // XML error
-            $this->error = new IXR_Error(-32700, 'parse error. not well formed');
+            $this->error = new Error(-32700, 'parse error. not well formed');
             return false;
         }
 
         // Is the message a fault?
         if ($this->message->messageType == 'fault') {
-            $this->error = new IXR_Error($this->message->faultCode, $this->message->faultString);
+            $this->error = new Error($this->message->faultCode, $this->message->faultString);
             return false;
         }
 
@@ -205,40 +199,38 @@ class IXR_Client
      *
      * @access public
      * @param string $prefix 前缀
-     * @return IXR_Client
+     * @return Client
      */
-    public function __get($prefix)
+    public function get(string $prefix): Client
     {
-        return new IXR_Client($this->server, $this->path, $this->port, $this->useragent, $this->prefix . $prefix . '.');
+        return new self($this->server, $this->path, $this->port, $this->useragent, $this->prefix . $prefix . '.');
     }
 
     /**
      * 增加魔术特性
      * by 70
      *
-     * @access public
      * @return mixed
+     * @throws Exception
      */
     public function __call($method, $args)
     {
         array_unshift($args, $this->prefix . $method);
-        $return = call_user_func_array(array($this, '__rpcCall'), $args);
+        $return = call_user_func_array([$this, 'rpcCall'], $args);
 
         if ($return) {
-            return $this->__getResponse();
+            return $this->getResponse();
         } else {
-            require_once 'IXR/Exception.php';
-            throw new IXR_Exception($this->__getErrorMessage(), $this->__getErrorCode());
+            throw new Exception($this->getErrorMessage(), $this->getErrorCode());
         }
     }
 
     /**
      * 获得返回值
      *
-     * @access public
-     * @return void
+     * @return mixed
      */
-    public function __getResponse()
+    public function getResponse()
     {
         // methodResponses can only have one param - return that
         return $this->message->params[0];
@@ -247,21 +239,19 @@ class IXR_Client
     /**
      * 是否为错误
      *
-     * @access public
-     * @return void
+     * @return bool
      */
-    public function __isError()
+    public function isError(): bool
     {
-        return (is_object($this->error));
+        return isset($this->error);
     }
 
     /**
      * 获取错误代码
      *
-     * @access public
-     * @return void
+     * @return int
      */
-    public function __getErrorCode()
+    private function getErrorCode(): int
     {
         return $this->error->code;
     }
@@ -269,10 +259,9 @@ class IXR_Client
     /**
      * 获取错误消息
      *
-     * @access public
-     * @return void
+     * @return string
      */
-    public function __getErrorMessage()
+    private function getErrorMessage(): string
     {
         return $this->error->message;
     }

@@ -1,5 +1,7 @@
 <?php
 
+namespace Typecho;
+
 /**
  * 日期处理
  *
@@ -7,7 +9,7 @@
  * @category typecho
  * @package Date
  */
-class Typecho_Date
+class Date
 {
     /**
      * 期望时区偏移
@@ -48,9 +50,10 @@ class Typecho_Date
      *
      * @param integer|null $time 时间戳
      */
-    public function __construct(?int $time = NULL)
+    public function __construct(?int $time = null)
     {
-        $this->timeStamp = (NULL === $time ? self::time() : $time) + (self::$timezoneOffset - self::$serverTimezoneOffset);
+        $this->timeStamp = (null === $time ? self::time() : $time)
+            + (self::$timezoneOffset - self::$serverTimezoneOffset);
     }
 
     /**
@@ -90,7 +93,7 @@ class Typecho_Date
      */
     public function word(): string
     {
-        return Typecho_I18n::dateWord($this->timeStamp, self::time() + (self::$timezoneOffset - self::$serverTimezoneOffset));
+        return I18n::dateWord($this->timeStamp, self::time() + (self::$timezoneOffset - self::$serverTimezoneOffset));
     }
 
     /**
