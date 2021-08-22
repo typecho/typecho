@@ -113,6 +113,11 @@ class Widget_Contents_Post_Admin extends Widget_Abstract_Contents
             }
         }
 
+        /** 按作者筛选*/
+        if (NULL != ($uid = $this->request->uid)) {
+            $select->where('table.contents.authorId = ?', $uid);
+        }
+
         /** 按状态查询 */
         if ('draft' == $this->request->status) {
             $select->where('table.contents.type = ?', 'post_draft');
