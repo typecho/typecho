@@ -44,13 +44,13 @@ class Typecho_Router
      *
      * @access public
      *
-     * @param string $pathInfo 全路径
+     * @param string|null $pathInfo 全路径
      * @param mixed $parameter 输入参数
      *
      * @return mixed
      * @throws Exception
      */
-    public static function match(string $pathInfo, $parameter = null)
+    public static function match(?string $pathInfo, $parameter = null)
     {
         foreach (self::$_routingTable as $key => $route) {
             if (preg_match($route['regx'], $pathInfo, $matches)) {
