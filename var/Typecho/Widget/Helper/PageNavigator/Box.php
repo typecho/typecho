@@ -1,12 +1,12 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-/**
- * Typecho Blog Platform
- *
- * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license    GNU General Public License 2.0
- * @version    $Id$
- */
+
+namespace Typecho\Widget\Helper\PageNavigator;
+
+use Typecho\Widget\Helper\PageNavigator;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * 盒状分页样式
@@ -17,7 +17,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Typecho_Widget_Helper_PageNavigator_Box extends Typecho_Widget_Helper_PageNavigator
+class Box extends PageNavigator
 {
     /**
      * 输出盒装样式分页栏
@@ -27,12 +27,17 @@ class Typecho_Widget_Helper_PageNavigator_Box extends Typecho_Widget_Helper_Page
      * @param string $nextWord 下一页文字
      * @param int $splitPage 分割范围
      * @param string $splitWord 分割字符
-     * @param string $currentClass 当前激活元素class
+     * @param array $template
      * @return void
      */
-    public function render($prevWord = 'PREV', $nextWord = 'NEXT', $splitPage = 3, $splitWord = '...', array $template = [])
-    {
-        if ($this->_total < 1) {
+    public function render(
+        string $prevWord = 'PREV',
+        string $nextWord = 'NEXT',
+        int $splitPage = 3,
+        string $splitWord = '...',
+        array $template = []
+    ) {
+        if ($this->total < 1) {
             return;
         }
 
@@ -70,19 +75,22 @@ class Typecho_Widget_Helper_PageNavigator_Box extends Typecho_Widget_Helper_Page
             : $linkBegin;
         $linkEnd = '</a>';
 
-        $from = max(1, $this->_currentPage - $splitPage);
-        $to = min($this->_totalPage, $this->_currentPage + $splitPage);
+        $from = max(1, $this->currentPage - $splitPage);
+        $to = min($this->totalPage, $this->currentPage + $splitPage);
 
         //输出上一页
-        if ($this->_currentPage > 1) {
-            echo $itemPrevBegin . sprintf($linkPrevBegin,
-                    str_replace($this->_pageHolder, $this->_currentPage - 1, $this->_pageTemplate) . $this->_anchor)
+        if ($this->currentPage > 1) {
+            echo $itemPrevBegin . sprintf(
+                $linkPrevBegin,
+                str_replace($this->pageHolder, $this->currentPage - 1, $this->pageTemplate) . $this->anchor
+            )
                 . $prevWord . $linkEnd . $itemEnd;
         }
 
         //输出第一页
         if ($from > 1) {
-            echo $itemBegin . sprintf($linkBegin, str_replace($this->_pageHolder, 1, $this->_pageTemplate) . $this->_anchor)
+            echo $itemBegin
+                . sprintf($linkBegin, str_replace($this->pageHolder, 1, $this->pageTemplate) . $this->anchor)
                 . '1' . $linkEnd . $itemEnd;
 
             if ($from > 2) {
@@ -92,28 +100,36 @@ class Typecho_Widget_Helper_PageNavigator_Box extends Typecho_Widget_Helper_Page
         }
 
         //输出中间页
-        for ($i = $from; $i <= $to; $i ++) {
-            $current = ($i == $this->_currentPage);
+        for ($i = $from; $i <= $to; $i++) {
+            $current = ($i == $this->currentPage);
 
-            echo ($current ? $itemCurrentBegin : $itemBegin) . sprintf(($current ? $linkCurrentBegin : $linkBegin),
-                    str_replace($this->_pageHolder, $i, $this->_pageTemplate) . $this->_anchor)
+            echo ($current ? $itemCurrentBegin : $itemBegin) . sprintf(
+                ($current ? $linkCurrentBegin : $linkBegin),
+                str_replace($this->pageHolder, $i, $this->pageTemplate) . $this->anchor
+            )
                 . $i . $linkEnd . $itemEnd;
         }
 
         //输出最后页
-        if ($to < $this->_totalPage) {
-            if ($to < $this->_totalPage - 1) {
+        if ($to < $this->totalPage) {
+            if ($to < $this->totalPage - 1) {
                 echo $itemBegin . $textBegin . $splitWord . $textEnd . $itemEnd;
             }
 
-            echo $itemBegin . sprintf($linkBegin, str_replace($this->_pageHolder, $this->_totalPage, $this->_pageTemplate) . $this->_anchor)
-                . $this->_totalPage . $linkEnd . $itemEnd;
+            echo $itemBegin
+                . sprintf(
+                    $linkBegin,
+                    str_replace($this->pageHolder, $this->totalPage, $this->pageTemplate) . $this->anchor
+                )
+                . $this->totalPage . $linkEnd . $itemEnd;
         }
 
         //输出下一页
-        if ($this->_currentPage < $this->_totalPage) {
-            echo $itemNextBegin . sprintf($linkNextBegin,
-                    str_replace($this->_pageHolder, $this->_currentPage + 1, $this->_pageTemplate) . $this->_anchor)
+        if ($this->currentPage < $this->totalPage) {
+            echo $itemNextBegin . sprintf(
+                $linkNextBegin,
+                str_replace($this->pageHolder, $this->currentPage + 1, $this->pageTemplate) . $this->anchor
+            )
                 . $nextWord . $linkEnd . $itemEnd;
         }
     }

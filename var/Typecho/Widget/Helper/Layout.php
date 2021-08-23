@@ -1,13 +1,6 @@
 <?php
-/**
- * HTML布局帮手
- *
- * @category typecho
- * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
- * @version $Id$
- */
+
+namespace Typecho\Widget\Helper;
 
 /**
  * HTML布局帮手类
@@ -17,7 +10,7 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Typecho_Widget_Helper_Layout
+class Layout
 {
     /**
      * 元素列表
@@ -25,7 +18,7 @@ class Typecho_Widget_Helper_Layout
      * @access private
      * @var array
      */
-    private $_items = [];
+    private $items = [];
 
     /**
      * 表单属性列表
@@ -33,7 +26,7 @@ class Typecho_Widget_Helper_Layout
      * @access private
      * @var array
      */
-    private $_attributes = [];
+    private $attributes = [];
 
     /**
      * 标签名称
@@ -41,7 +34,7 @@ class Typecho_Widget_Helper_Layout
      * @access private
      * @var string
      */
-    private $_tagName = 'div';
+    private $tagName = 'div';
 
     /**
      * 是否自闭合
@@ -49,7 +42,7 @@ class Typecho_Widget_Helper_Layout
      * @access private
      * @var boolean
      */
-    private $_close = false;
+    private $close = false;
 
     /**
      * 是否强制自闭合
@@ -57,7 +50,7 @@ class Typecho_Widget_Helper_Layout
      * @access private
      * @var boolean
      */
-    private $_forceClose = null;
+    private $forceClose = null;
 
     /**
      * 内部数据
@@ -65,31 +58,30 @@ class Typecho_Widget_Helper_Layout
      * @access private
      * @var string
      */
-    private $_html;
+    private $html;
 
     /**
      * 父节点
      *
      * @access private
-     * @var Typecho_Widget_Helper_Layout
+     * @var Layout
      */
-    private $_parent;
+    private $parent;
 
     /**
      * 构造函数,设置标签名称
      *
-     * @access public
      * @param string $tagName 标签名称
-     * @param array $attributes 属性列表
-     * @return void
+     * @param array|null $attributes 属性列表
+     *
      */
-    public function __construct($tagName = 'div', array $attributes = null)
+    public function __construct(string $tagName = 'div', ?array $attributes = null)
     {
         $this->setTagName($tagName);
 
         if (!empty($attributes)) {
             foreach ($attributes as $attributeName => $attributeValue) {
-                $this->setAttribute($attributeName, $attributeValue);
+                $this->setAttribute($attributeName, (string)$attributeValue);
             }
         }
     }
@@ -97,75 +89,68 @@ class Typecho_Widget_Helper_Layout
     /**
      * 设置表单属性
      *
-     * @access public
      * @param string $attributeName 属性名称
-     * @param string $attributeValue 属性值
-     * @return Typecho_Widget_Helper_Layout
+     * @param mixed $attributeValue 属性值
+     * @return $this
      */
-    public function setAttribute($attributeName, $attributeValue)
+    public function setAttribute(string $attributeName, $attributeValue): Layout
     {
-        $this->_attributes[$attributeName] = $attributeValue;
+        $this->attributes[$attributeName] = (string) $attributeValue;
         return $this;
     }
 
     /**
      * 删除元素
      *
-     * @access public
-     * @param Typecho_Widget_Helper_Layout $item 元素
-     * @return Typecho_Widget_Helper_Layout
+     * @param Layout $item 元素
+     * @return $this
      */
-    public function removeItem(Typecho_Widget_Helper_Layout $item)
+    public function removeItem(Layout $item): Layout
     {
-        unset($this->_items[array_search($item, $this->_items)]);
+        unset($this->items[array_search($item, $this->items)]);
         return $this;
     }
 
     /**
      * getItems
      *
-     * @access public
      * @return array
      */
-    public function getItems()
+    public function getItems(): array
     {
-        return $this->_items;
+        return $this->items;
     }
 
     /**
      * getTagName
      *
-     * @param mixed $tagName
-     * @access public
-     * @return void
+     * @return string
      */
-    public function getTagName($tagName)
+    public function getTagName(): string
     {
+        return $this->tagName;
     }
 
     /**
      * 设置标签名
      *
-     * @access public
      * @param string $tagName 标签名
-     * @return void
      */
-    public function setTagName($tagName)
+    public function setTagName(string $tagName)
     {
-        $this->_tagName = $tagName;
+        $this->tagName = $tagName;
     }
 
     /**
      * 移除某个属性
      *
-     * @access public
      * @param string $attributeName 属性名称
-     * @return Typecho_Widget_Helper_Layout
+     * @return $this
      */
-    public function removeAttribute($attributeName)
+    public function removeAttribute(string $attributeName): Layout
     {
-        if (isset($this->_attributes[$attributeName])) {
-            unset($this->_attributes[$attributeName]);
+        if (isset($this->attributes[$attributeName])) {
+            unset($this->attributes[$attributeName]);
         }
 
         return $this;
@@ -175,59 +160,56 @@ class Typecho_Widget_Helper_Layout
      * 获取属性
      *
      * @access public
+     *
      * @param string $attributeName 属性名
-     * @return string
+     * @return string|null
      */
-    public function getAttribute($attributeName)
+    public function getAttribute(string $attributeName): ?string
     {
-        return $this->_attributes[$attributeName] ?? null;
+        return $this->attributes[$attributeName] ?? null;
     }
 
     /**
      * 设置是否自闭合
      *
-     * @access public
      * @param boolean $close 是否自闭合
-     * @return Typecho_Widget_Helper_Layout
+     * @return $this
      */
-    public function setClose($close)
+    public function setClose(bool $close): Layout
     {
-        $this->_forceClose = $close;
+        $this->forceClose = $close;
         return $this;
     }
 
     /**
      * 获取父节点
      *
-     * @access public
-     * @return Typecho_Widget_Helper_Layout
+     * @return Layout
      */
-    public function getParent()
+    public function getParent(): Layout
     {
-        return $this->_parent;
+        return $this->parent;
     }
 
     /**
      * 设置父节点
      *
-     * @access public
-     * @param Typecho_Widget_Helper_Layout $parent 父节点
-     * @return Typecho_Widget_Helper_Layout
+     * @param Layout $parent 父节点
+     * @return $this
      */
-    public function setParent(Typecho_Widget_Helper_Layout $parent)
+    public function setParent(Layout $parent): Layout
     {
-        $this->_parent = $parent;
+        $this->parent = $parent;
         return $this;
     }
 
     /**
      * 增加到某布局元素集合中
      *
-     * @access public
-     * @param Typecho_Widget_Helper_Layout $parent 布局对象
-     * @return Typecho_Widget_Helper_Layout
+     * @param Layout $parent 布局对象
+     * @return $this
      */
-    public function appendTo(Typecho_Widget_Helper_Layout $parent)
+    public function appendTo(Layout $parent): Layout
     {
         $parent->addItem($this);
         return $this;
@@ -236,56 +218,49 @@ class Typecho_Widget_Helper_Layout
     /**
      * 增加元素
      *
-     * @access public
-     * @param Typecho_Widget_Helper_Layout $item 元素
-     * @return Typecho_Widget_Helper_Layout
+     * @param Layout $item 元素
+     * @return $this
      */
-    public function addItem(Typecho_Widget_Helper_Layout $item)
+    public function addItem(Layout $item): Layout
     {
         $item->setParent($this);
-        $this->_items[] = $item;
+        $this->items[] = $item;
         return $this;
     }
 
     /**
      * 获取属性
      *
-     * @access public
-     * @param string $attributeName 属性名称
-     * @return void
+     * @param string $name 属性名称
+     * @return string|null
      */
-    public function __get($name)
+    public function __get(string $name): ?string
     {
-        return $this->_attributes[$name] ?? null;
+        return $this->attributes[$name] ?? null;
     }
 
     /**
      * 设置属性
      *
-     * @access public
-     * @param string $attributeName 属性名称
-     * @param string $attributeValue 属性值
-     * @return void
+     * @param string $name 属性名称
+     * @param string $value 属性值
      */
-    public function __set($name, $value)
+    public function __set(string $name, string $value)
     {
-        $this->_attributes[$name] = $value;
+        $this->attributes[$name] = $value;
     }
 
     /**
      * 输出所有元素
-     *
-     * @access public
-     * @return void
      */
     public function render()
     {
-        if (empty($this->_items) && empty($this->_html)) {
-            $this->_close = true;
+        if (empty($this->items) && empty($this->html)) {
+            $this->close = true;
         }
 
-        if (null !== $this->_forceClose) {
-            $this->_close = $this->_forceClose;
+        if (null !== $this->forceClose) {
+            $this->close = $this->forceClose;
         }
 
         $this->start();
@@ -295,22 +270,19 @@ class Typecho_Widget_Helper_Layout
 
     /**
      * 开始标签
-     *
-     * @access public
-     * @return void
      */
     public function start()
     {
         /** 输出标签 */
-        echo $this->_tagName ? "<{$this->_tagName}" : null;
+        echo $this->tagName ? "<{$this->tagName}" : null;
 
         /** 输出属性 */
-        foreach ($this->_attributes as $attributeName => $attributeValue) {
+        foreach ($this->attributes as $attributeName => $attributeValue) {
             echo " {$attributeName}=\"{$attributeValue}\"";
         }
 
         /** 支持自闭合 */
-        if (!$this->_close && $this->_tagName) {
+        if (!$this->close && $this->tagName) {
             echo ">\n";
         }
     }
@@ -318,22 +290,21 @@ class Typecho_Widget_Helper_Layout
     /**
      * 设置内部数据
      *
-     * @access public
-     * @param mixed $html 内部数据
-     * @return unknown
+     * @param string|null $html 内部数据
+     * @return void|$this
      */
-    public function html($html = false)
+    public function html(?string $html = null)
     {
-        if (false === $html) {
-            if (empty($this->_html)) {
-                foreach ($this->_items as $item) {
+        if (null === $html) {
+            if (empty($this->html)) {
+                foreach ($this->items as $item) {
                     $item->render();
                 }
             } else {
-                echo $this->_html;
+                echo $this->html;
             }
         } else {
-            $this->_html = $html;
+            $this->html = $html;
             return $this;
         }
     }
@@ -341,13 +312,12 @@ class Typecho_Widget_Helper_Layout
     /**
      * 结束标签
      *
-     * @access public
      * @return void
      */
     public function end()
     {
-        if ($this->_tagName) {
-            echo $this->_close ? " />\n" : "</{$this->_tagName}>\n";
+        if ($this->tagName) {
+            echo $this->close ? " />\n" : "</{$this->tagName}>\n";
         }
     }
 }

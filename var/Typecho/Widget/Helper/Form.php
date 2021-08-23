@@ -1,14 +1,14 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-/**
- * 表单处理帮手
- *
- * @category typecho
- * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
- * @version $Id$
- */
+
+namespace Typecho\Widget\Helper;
+
+use Typecho\Cookie;
+use Typecho\Validate;
+use Typecho\Widget\Helper\Form\Element;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * 表单处理帮手
@@ -18,22 +18,22 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
+class Form extends Layout
 {
     /** 表单post方法 */
-    const POST_METHOD = 'post';
+    public const POST_METHOD = 'post';
 
     /** 表单get方法 */
-    const GET_METHOD = 'get';
+    public const GET_METHOD = 'get';
 
     /** 标准编码方法 */
-    const STANDARD_ENCODE = 'application/x-www-form-urlencoded';
+    public const STANDARD_ENCODE = 'application/x-www-form-urlencoded';
 
     /** 混合编码 */
-    const MULTIPART_ENCODE = 'multipart/form-data';
+    public const MULTIPART_ENCODE = 'multipart/form-data';
 
     /** 文本编码 */
-    const TEXT_ENCODE = 'text/plain';
+    public const TEXT_ENCODE = 'text/plain';
 
     /**
      * 输入元素列表
@@ -41,7 +41,7 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
      * @access private
      * @var array
      */
-    private $_inputs = [];
+    private $inputs = [];
 
     /**
      * 构造函数,设置基本属性
@@ -65,11 +65,10 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
     /**
      * 设置表单提交目的
      *
-     * @access public
-     * @param string $action 表单提交目的
-     * @return Typecho_Widget_Helper_Form
+     * @param string|null $action 表单提交目的
+     * @return $this
      */
-    public function setAction($action)
+    public function setAction(?string $action): Form
     {
         $this->setAttribute('action', $action);
         return $this;
@@ -78,11 +77,10 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
     /**
      * 设置表单提交方法
      *
-     * @access public
      * @param string $method 表单提交方法
-     * @return Typecho_Widget_Helper_Form
+     * @return $this
      */
-    public function setMethod($method)
+    public function setMethod(string $method): Form
     {
         $this->setAttribute('method', $method);
         return $this;
@@ -91,11 +89,10 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
     /**
      * 设置表单编码方案
      *
-     * @access public
      * @param string $enctype 编码方法
-     * @return Typecho_Widget_Helper_Form
+     * @return $this
      */
-    public function setEncodeType($enctype)
+    public function setEncodeType(string $enctype): Form
     {
         $this->setAttribute('enctype', $enctype);
         return $this;
@@ -105,12 +102,12 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
      * 增加输入元素
      *
      * @access public
-     * @param Typecho_Widget_Helper_Form_Element $input 输入元素
-     * @return Typecho_Widget_Helper_Form
+     * @param Element $input 输入元素
+     * @return $this
      */
-    public function addInput(Typecho_Widget_Helper_Form_Element $input)
+    public function addInput(Element $input): Form
     {
-        $this->_inputs[$input->name] = $input;
+        $this->inputs[$input->name] = $input;
         $this->addItem($input);
         return $this;
     }
@@ -118,27 +115,25 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
     /**
      * 获取输入项
      *
-     * @access public
      * @param string $name 输入项名称
      * @return mixed
      */
-    public function getInput($name)
+    public function getInput(string $name)
     {
-        return $this->_inputs[$name];
+        return $this->inputs[$name];
     }
 
     /**
      * 获取所有输入项的提交值
      *
-     * @access public
      * @return array
      */
-    public function getAllRequest()
+    public function getAllRequest(): array
     {
         $result = [];
         $source = (self::POST_METHOD == $this->getAttribute('method')) ? $_POST : $_GET;
 
-        foreach ($this->_inputs as $name => $input) {
+        foreach ($this->inputs as $name => $input) {
             $result[$name] = $source[$name] ?? null;
         }
         return $result;
@@ -147,14 +142,13 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
     /**
      * 获取此表单的所有输入项固有值
      *
-     * @access public
      * @return array
      */
-    public function getValues()
+    public function getValues(): array
     {
         $values = [];
 
-        foreach ($this->_inputs as $name => $input) {
+        foreach ($this->inputs as $name => $input) {
             $values[$name] = $input->value;
         }
         return $values;
@@ -163,30 +157,28 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
     /**
      * 获取此表单的所有输入项
      *
-     * @access public
      * @return array
      */
-    public function getInputs()
+    public function getInputs(): array
     {
-        return $this->_inputs;
+        return $this->inputs;
     }
 
     /**
      * 验证表单
      *
-     * @access public
-     * @return mixed
+     * @return array
      */
-    public function validate()
+    public function validate(): array
     {
-        $validator = new Typecho_Validate();
+        $validator = new Validate();
         $rules = [];
 
-        foreach ($this->_inputs as $name => $input) {
+        foreach ($this->inputs as $name => $input) {
             $rules[$name] = $input->rules;
         }
 
-        $id = md5(implode('"', array_keys($this->_inputs)));
+        $id = md5(implode('"', array_keys($this->inputs)));
 
         /** 表单值 */
         $formData = $this->getParams(array_keys($rules));
@@ -194,10 +186,10 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
 
         if ($error) {
             /** 利用session记录错误 */
-            Typecho_Cookie::set('__typecho_form_message_' . $id, Json::encode($error));
+            Cookie::set('__typecho_form_message_' . $id, Json::encode($error));
 
             /** 利用session记录表单值 */
-            Typecho_Cookie::set('__typecho_form_record_' . $id, Json::encode($formData));
+            Cookie::set('__typecho_form_record_' . $id, Json::encode($formData));
         }
 
         return $error;
@@ -206,11 +198,10 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
     /**
      * 获取提交数据源
      *
-     * @access public
      * @param array $params 数据参数集
      * @return array
      */
-    public function getParams(array $params)
+    public function getParams(array $params): array
     {
         $result = [];
         $source = (self::POST_METHOD == $this->getAttribute('method')) ? $_POST : $_GET;
@@ -225,20 +216,19 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
     /**
      * 显示表单
      *
-     * @access public
      * @return void
      */
     public function render()
     {
-        $id = md5(implode('"', array_keys($this->_inputs)));
-        $record = Typecho_Cookie::get('__typecho_form_record_' . $id);
-        $message = Typecho_Cookie::get('__typecho_form_message_' . $id);
+        $id = md5(implode('"', array_keys($this->inputs)));
+        $record = Cookie::get('__typecho_form_record_' . $id);
+        $message = Cookie::get('__typecho_form_message_' . $id);
 
         /** 恢复表单值 */
         if (!empty($record)) {
-            $record = Json::decode($record, true);
-            $message = Json::decode($message, true);
-            foreach ($this->_inputs as $name => $input) {
+            $record = \Json::decode($record, true);
+            $message = \Json::decode($message, true);
+            foreach ($this->inputs as $name => $input) {
                 $input->value($record[$name] ?? $input->value);
 
                 /** 显示错误消息 */
@@ -247,10 +237,10 @@ class Typecho_Widget_Helper_Form extends Typecho_Widget_Helper_Layout
                 }
             }
 
-            Typecho_Cookie::delete('__typecho_form_record_' . $id);
+            Cookie::delete('__typecho_form_record_' . $id);
         }
 
         parent::render();
-        Typecho_Cookie::delete('__typecho_form_message_' . $id);
+        Cookie::delete('__typecho_form_message_' . $id);
     }
 }

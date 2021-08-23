@@ -2,6 +2,7 @@
 
 namespace Typecho\Plugin;
 
+use Typecho\Widget\Helper\Form;
 
 /**
  * 插件接口
@@ -32,19 +33,14 @@ interface PluginInterface
     /**
      * 获取插件配置面板
      *
-     * @static
-     * @access public
-     * @param Typecho_Widget_Helper_Form $form 配置面板
-     * @return void
+     * @param Form $form 配置面板
      */
-    public static function config(Typecho_Widget_Helper_Form $form);
+    public static function config(Form $form);
 
     /**
      * 个人用户的配置面板
      *
-     * @access public
-     * @param Typecho_Widget_Helper_Form $form
-     * @return void
+     * @param Form $form
      */
-    public static function personalConfig(Typecho_Widget_Helper_Form $form);
+    public static function personalConfig(Form $form);
 }

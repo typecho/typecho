@@ -1,14 +1,13 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-/**
- * 下拉选择框帮手
- *
- * @category typecho
- * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
- * @version $Id$
- */
+
+namespace Typecho\Widget\Helper\Form\Element;
+
+use Typecho\Widget\Helper\Form\Element;
+use Typecho\Widget\Helper\Layout;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * 下拉选择框帮手类
@@ -18,35 +17,33 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Typecho_Widget_Helper_Form_Element_Select extends Typecho_Widget_Helper_Form_Element
+class Select extends Element
 {
     /**
      * 选择值
      *
-     * @access private
      * @var array
      */
-    private $_options = [];
+    private $options = [];
 
     /**
      * 初始化当前输入项
      *
-     * @access public
-     * @param string $name 表单元素名称
-     * @param array $options 选择项
-     * @return Typecho_Widget_Helper_Layout
+     * @param string|null $name 表单元素名称
+     * @param array|null $options 选择项
+     * @return Layout
      */
-    public function input($name = null, array $options = null)
+    public function input(?string $name = null, ?array $options = null): Layout
     {
-        $input = new Typecho_Widget_Helper_Layout('select');
+        $input = new Layout('select');
         $this->container($input->setAttribute('name', $name)
             ->setAttribute('id', $name . '-0-' . self::$uniqueId));
         $this->label->setAttribute('for', $name . '-0-' . self::$uniqueId);
         $this->inputs[] = $input;
 
         foreach ($options as $value => $label) {
-            $this->_options[$value] = new Typecho_Widget_Helper_Layout('option');
-            $input->addItem($this->_options[$value]->setAttribute('value', $value)->html($label));
+            $this->options[$value] = new Layout('option');
+            $input->addItem($this->options[$value]->setAttribute('value', $value)->html($label));
         }
 
         return $input;
@@ -55,18 +52,16 @@ class Typecho_Widget_Helper_Form_Element_Select extends Typecho_Widget_Helper_Fo
     /**
      * 设置表单元素值
      *
-     * @access protected
      * @param mixed $value 表单元素值
-     * @return void
      */
-    protected function _value($value)
+    protected function inputValue($value)
     {
-        foreach ($this->_options as $option) {
+        foreach ($this->options as $option) {
             $option->removeAttribute('selected');
         }
 
-        if (isset($this->_options[$value])) {
-            $this->_options[$value]->setAttribute('selected', 'true');
+        if (isset($this->options[$value])) {
+            $this->options[$value]->setAttribute('selected', 'true');
         }
     }
 }
