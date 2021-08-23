@@ -21,7 +21,7 @@ trait PgsqlTrait
     /**
      * @var string|null
      */
-    private $lastTable = null;
+    private $lastInsertTable = null;
 
     /**
      * 清空数据表
@@ -70,7 +70,6 @@ trait PgsqlTrait
     {
         if (Db::INSERT == $action && !empty($table)) {
             $this->compatibleInsert = false;
-            $this->lastTable = $table;
 
             if (!isset($this->pk[$table])) {
                 $resource = $this->query("SELECT               
@@ -96,10 +95,11 @@ WHERE
             // 使用兼容模式监听插入结果
             if (isset($this->pk[$table])) {
                 $this->compatibleInsert = true;
+                $this->lastInsertTable = $table;
                 $query .= ' RETURNING ' . $this->quoteColumn($this->pk[$table]);
             }
         } else {
-            $this->lastTable = null;
+            $this->lastInsertTable = null;
         }
     }
 
@@ -113,7 +113,7 @@ WHERE
      */
     public function lastInsertId($resource, $handle): int
     {
-        $lastTable = $this->lastTable;
+        $lastTable = $this->lastInsertTable;
 
         if ($this->compatibleInsert) {
             $result = $this->fetch($resource);

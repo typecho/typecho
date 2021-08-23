@@ -112,8 +112,7 @@ class Validate
     {
         return filter_var(
             $str,
-            FILTER_VALIDATE_URL,
-            FILTER_FLAG_SCHEME_REQUIRED | FILTER_FLAG_HOST_REQUIRED
+            FILTER_VALIDATE_URL
         ) !== false;
     }
 
@@ -269,12 +268,12 @@ class Validate
         $rules = empty($rules) ? $this->rules : $rules;
 
         // Cycle through the rules and test for errors
-        foreach ($rules as $key => $rules) {
+        foreach ($rules as $key => $rule) {
             $this->key = $key;
             $data[$key] = (is_array($data[$key]) ? 0 == count($data[$key])
                 : 0 == strlen($data[$key])) ? null : $data[$key];
 
-            foreach ($rules as $params) {
+            foreach ($rule as $params) {
                 $method = $params[0];
 
                 if ('required' != $method && 'confirm' != $method && 0 == strlen($data[$key])) {
