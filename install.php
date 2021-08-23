@@ -20,7 +20,7 @@ if (!file_exists(dirname(__FILE__) . '/config.inc.php')) {
     \Typecho\Common::init();
 } else {
     require_once dirname(__FILE__) . '/config.inc.php';
-    $installDb = Typecho_Db::get();
+    $installDb = \Typecho\Db::get();
 }
 
 /**
@@ -259,9 +259,9 @@ require_once __TYPECHO_ROOT_DIR__ . '/var/Typecho/Common.php';
 \Typecho\Common::init();
     
 // config db
-\$db = new Typecho_Db('{$adapter}', '{$dbPrefix}');
-\$db->addServer(" . (var_export($dbConfig, true)) . ", Typecho_Db::READ | Typecho_Db::WRITE);
-Typecho_Db::set(\$db);
+\$db = new \Typecho\Db('{$adapter}', '{$dbPrefix}');
+\$db->addServer(" . (var_export($dbConfig, true)) . ", \Typecho\Db::READ | \Typecho\Db::WRITE);
+\Typecho\Db::set(\$db);
 ";
 
     $configWritten = false;
@@ -551,7 +551,7 @@ function install_step_2()
     $type = install_get_db_type($adapter);
 
     if (!empty($installDb)) {
-        $config = $installDb->getConfig(Typecho_Db::WRITE)->toArray();
+        $config = $installDb->getConfig(\Typecho\Db::WRITE)->toArray();
         $config['prefix'] = $installDb->getPrefix();
         $config['adapter'] = $adapter;
     }
@@ -748,7 +748,7 @@ function install_step_2_perform()
     $dbConfig = [];
 
     foreach ($configMap[$type] as $key => $value) {
-        $config[$key] = $config[$key] === null ? (install_is_cli() ? $value : null) : $config[$key];
+        $config[$key] = !isset($config[$key]) ? (install_is_cli() ? $value : null) : $config[$key];
     }
 
     switch ($type) {
@@ -801,8 +801,8 @@ function install_step_2_perform()
     } elseif (empty($installDb)) {
         // detect db config
         try {
-            $installDb = new Typecho_Db($config['dbAdapter'], $config['dbPrefix']);
-            $installDb->addServer($dbConfig, Typecho_Db::READ | Typecho_Db::WRITE);
+            $installDb = new \Typecho\Db($config['dbAdapter'], $config['dbPrefix']);
+            $installDb->addServer($dbConfig, \Typecho\Db::READ | \Typecho\Db::WRITE);
             $installDb->query('SELECT 1=1');
         } catch (\Typecho\Db\Adapter_Exception $e) {
             install_raise_error(_t('对不起, 无法连接数据库, 请先检查数据库配置再继续进行安装'));
@@ -867,7 +867,7 @@ function install_step_2_perform()
         foreach ($scripts as $script) {
             $script = trim($script);
             if ($script) {
-                $installDb->query($script, Typecho_Db::WRITE);
+                $installDb->query($script, \Typecho\Db::WRITE);
             }
         }
     } catch (\Typecho\Db\Exception $e) {

@@ -812,7 +812,7 @@ EOF;
          */
         public static function hashValidate(?string $from, ?string $to): bool
         {
-            if ($from === null || $to === null) {
+            if (!isset($from) || !isset($to)) {
                 return false;
             }
 
@@ -836,7 +836,7 @@ EOF;
          */
         public static function hash(?string $string, ?string $salt = null): string
         {
-            if ($string === null) {
+            if (!isset($string)) {
                 return '';
             }
 
@@ -929,19 +929,19 @@ EOF;
         /**
          * 获取gravatar头像地址
          *
-         * @param string $mail
+         * @param string|null $mail
          * @param int $size
-         * @param string $rating
-         * @param string $default
+         * @param string|null $rating
+         * @param string|null $default
          * @param bool $isSecure
          *
          * @return string
          */
         public static function gravatarUrl(
-            string $mail,
+            ?string $mail,
             int $size,
-            string $rating,
-            string $default,
+            ?string $rating = null,
+            ?string $default = null,
             bool $isSecure = true
         ): string {
             if (defined('__TYPECHO_GRAVATAR_PREFIX__')) {
@@ -956,8 +956,14 @@ EOF;
             }
 
             $url .= '?s=' . $size;
-            $url .= '&amp;r=' . $rating;
-            $url .= '&amp;d=' . $default;
+
+            if (isset($rating)) {
+                $url .= '&amp;r=' . $rating;
+            }
+
+            if (isset($default)) {
+                $url .= '&amp;d=' . $default;
+            }
 
             return $url;
         }

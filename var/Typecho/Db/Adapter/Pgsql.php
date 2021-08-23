@@ -17,21 +17,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  */
 class Pgsql implements Adapter
 {
-    /**
-     * 最后一次操作的数据表
-     *
-     * @access protected
-     * @var string
-     */
-    protected $_lastTable;
-
-    /**
-     * 数据库连接字符串标示
-     *
-     * @access private
-     * @var resource
-     */
-    private $_dbLink;
+    use PgsqlTrait;
 
     /**
      * 判断适配器是否可用
@@ -54,17 +40,17 @@ class Pgsql implements Adapter
     public function connect(Config $config)
     {
         if (
-            $this->_dbLink = pg_connect("host={$config->host} port={$config->port}"
+            $dbLink = pg_connect("host={$config->host} port={$config->port}"
                 . " dbname={$config->database} user={$config->user} password={$config->password}")
         ) {
             if ($config->charset) {
-                pg_query($this->_dbLink, "SET NAMES '{$config->charset}'");
+                pg_query($dbLink, "SET NAMES '{$config->charset}'");
             }
-            return $this->_dbLink;
+            return $dbLink;
         }
 
         /** 数据库异常 */
-        throw new Exception(pg_last_error($this->_dbLink));
+        throw new Exception(pg_last_error($dbLink));
     }
 
     /**
@@ -80,18 +66,6 @@ class Pgsql implements Adapter
     }
 
     /**
-     * 清空数据表
-     *
-     * @param string $table
-     * @param resource $handle 连接对象
-     * @throws Exception
-     */
-    public function truncate(string $table, $handle)
-    {
-        $this->query('TRUNCATE TABLE ' . $this->quoteColumn($table) . ' RESTART IDENTITY', $handle);
-    }
-
-    /**
      * 执行数据库查询
      *
      * @param string $query 数据库查询SQL字符串
@@ -104,7 +78,7 @@ class Pgsql implements Adapter
      */
     public function query(string $query, $handle, int $op = Db::READ, ?string $action = null, ?string $table = null)
     {
-        $this->_lastTable = $table;
+        $this->prepareQuery($query, $handle, $action, $table);
         if ($resource = pg_query($handle, $query)) {
             return $resource;
         }
@@ -139,6 +113,15 @@ class Pgsql implements Adapter
     }
 
     /**
+     * @param resource $resource
+     * @return array|null
+     */
+    public function fetchAll($resource): array
+    {
+        return pg_fetch_all($resource, PGSQL_ASSOC);
+    }
+
+    /**
      * 取出最后一次查询影响的行数
      *
      * @param resource $resource 查询的资源数据
@@ -148,23 +131,6 @@ class Pgsql implements Adapter
     public function affectedRows($resource, $handle): int
     {
         return pg_affected_rows($resource);
-    }
-
-    /**
-     * 取出最后一次插入返回的主键值
-     *
-     * @param resource $resource 查询的资源数据
-     * @param resource $handle 连接对象
-     * @return integer
-     */
-    public function lastInsertId($resource, $handle)
-    {
-        /** 查看是否存在序列,可能需要更严格的检查 */
-        if (pg_fetch_assoc(pg_query($handle, 'SELECT oid FROM pg_class WHERE relname = ' . $this->quoteValue($this->_lastTable . '_seq')))) {
-            return pg_fetch_result(pg_query($handle, 'SELECT CURRVAL(' . $this->quoteValue($this->_lastTable . '_seq') . ')'), 0, 0);
-        }
-
-        return 0;
     }
 
     /**

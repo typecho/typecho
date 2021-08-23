@@ -4,6 +4,8 @@ namespace Typecho\Db\Adapter;
 
 trait MysqlTrait
 {
+    use QueryTrait;
+
     /**
      * 清空数据表
      *
@@ -25,17 +27,6 @@ trait MysqlTrait
      */
     public function parseSelect(array $sql): string
     {
-        if (!empty($sql['join'])) {
-            foreach ($sql['join'] as $val) {
-                [$table, $condition, $op] = $val;
-                $sql['table'] = "{$sql['table']} {$op} JOIN {$table} ON {$condition}";
-            }
-        }
-
-        $sql['limit'] = (0 == strlen($sql['limit'])) ? null : ' LIMIT ' . $sql['limit'];
-        $sql['offset'] = (0 == strlen($sql['offset'])) ? null : ' OFFSET ' . $sql['offset'];
-
-        return 'SELECT ' . $sql['fields'] . ' FROM ' . $sql['table'] .
-            $sql['where'] . $sql['group'] . $sql['having'] . $sql['order'] . $sql['limit'] . $sql['offset'];
+        return $this->buildQuery($sql);
     }
 }

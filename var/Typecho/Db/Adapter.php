@@ -71,7 +71,7 @@ interface Adapter
      * @param resource $resource 查询的资源数据
      * @return array
      */
-    public function fetchAll($resource): ?array;
+    public function fetchAll($resource): array;
 
     /**
      * 将数据查询的其中一行作为对象取出,其中字段名对应对象属性

@@ -7,6 +7,8 @@ namespace Typecho\Db\Adapter;
  */
 trait SQLiteTrait
 {
+    use QueryTrait;
+
     private $isSQLite2 = false;
 
     /**
@@ -89,21 +91,10 @@ trait SQLiteTrait
      */
     public function parseSelect(array $sql): string
     {
-        if (!empty($sql['join'])) {
-            foreach ($sql['join'] as $val) {
-                [$table, $condition, $op] = $val;
-                $sql['table'] = "{$sql['table']} {$op} JOIN {$table} ON {$condition}";
-            }
-        }
-
-        $sql['limit'] = (0 == strlen($sql['limit'])) ? null : ' LIMIT ' . $sql['limit'];
-        $sql['offset'] = (0 == strlen($sql['offset'])) ? null : ' OFFSET ' . $sql['offset'];
-
-        $query = $this->filterCountQuery('SELECT ' . $sql['fields'] . ' FROM ' . $sql['table'] .
-            $sql['where'] . $sql['group'] . $sql['having'] . $sql['order'] . $sql['limit'] . $sql['offset']);
+        $query = $this->filterCountQuery($this->buildQuery($sql));
 
         if ($this->isSQLite2) {
-            $query = $this->filterSQLite2CountQuery($query);
+            $query = $this->filterCountQuery($query);
         }
 
         return $query;
