@@ -1,5 +1,11 @@
 <?php
 
+namespace Typecho;
+
+use Typecho\Db\Adapter;
+use Typecho\Db\Query;
+use Typecho\Db\Exception as DbException;
+
 /**
  * 包含获取数据支持方法的类.
  * 必须定义__TYPECHO_DB_HOST__, __TYPECHO_DB_PORT__, __TYPECHO_DB_NAME__,
@@ -7,7 +13,7 @@
  *
  * @package Db
  */
-class Typecho_Db
+class Db
 {
     /** 读取数据库 */
     public const READ = 1;
@@ -47,7 +53,7 @@ class Typecho_Db
 
     /**
      * 数据库适配器
-     * @var Typecho_Db_Adapter
+     * @var Adapter
      */
     private $adapter;
 
@@ -84,7 +90,7 @@ class Typecho_Db
 
     /**
      * 实例化的数据库对象
-     * @var Typecho_Db
+     * @var Db
      */
     private static $instance;
 
@@ -94,7 +100,7 @@ class Typecho_Db
      * @param mixed $adapterName 适配器名称
      * @param string $prefix 前缀
      *
-     * @throws Typecho_Db_Exception
+     * @throws DbException
      */
     public function __construct($adapterName, string $prefix = 'typecho_')
     {
@@ -102,10 +108,10 @@ class Typecho_Db
         $this->adapterName = $adapterName;
 
         /** 数据库适配器 */
-        $adapterName = 'Typecho_Db_Adapter_' . $adapterName;
+        $adapterName = '\Typecho\Db\Adapter\\' . str_replace('_', '\\', $adapterName);
 
         if (!call_user_func([$adapterName, 'isAvailable'])) {
-            throw new Typecho_Db_Exception("Adapter {$adapterName} is not available");
+            throw new DbException("Adapter {$adapterName} is not available");
         }
 
         $this->prefix = $prefix;
@@ -145,10 +151,10 @@ class Typecho_Db
     }
 
     /**
-     * @param Typecho_Config $config
+     * @param Config $config
      * @param int $op
      */
-    public function addConfig(Typecho_Config $config, int $op)
+    public function addConfig(Config $config, int $op)
     {
         if ($op & self::READ) {
             $this->config[self::READ][] = $config;
@@ -164,14 +170,14 @@ class Typecho_Db
      *
      * @param int $op
      *
-     * @return Typecho_Config
-     * @throws Typecho_Db_Exception
+     * @return Config
+     * @throws DbException
      */
-    public function getConfig(int $op): Typecho_Config
+    public function getConfig(int $op): Config
     {
         if (empty($this->config[$op])) {
-            /** Typecho_Db_Exception */
-            throw new Typecho_Db_Exception('Missing Database Connection');
+            /** DbException */
+            throw new DbException('Missing Database Connection');
         }
 
         $key = array_rand($this->config[$op]);
@@ -194,7 +200,7 @@ class Typecho_Db
      * @param int $op
      *
      * @return mixed
-     * @throws Typecho_Db_Exception
+     * @throws DbException
      */
     public function selectDb(int $op)
     {
@@ -210,11 +216,11 @@ class Typecho_Db
     /**
      * 获取SQL词法构建器实例化对象
      *
-     * @return Typecho_Db_Query
+     * @return Query
      */
-    public function sql(): Typecho_Db_Query
+    public function sql(): Query
     {
-        return new Typecho_Db_Query($this->adapter, $this->prefix);
+        return new Query($this->adapter, $this->prefix);
     }
 
     /**
@@ -227,7 +233,7 @@ class Typecho_Db
      */
     public function addServer(array $config, int $op)
     {
-        $this->addConfig(Typecho_Config::factory($config), $op);
+        $this->addConfig(Config::factory($config), $op);
         $this->flushPool();
     }
 
@@ -237,7 +243,7 @@ class Typecho_Db
      * @param int $op
      *
      * @return string
-     * @throws Typecho_Db_Exception
+     * @throws DbException
      */
     public function getVersion(int $op = self::READ): string
     {
@@ -248,10 +254,10 @@ class Typecho_Db
      * 设置默认数据库对象
      *
      * @access public
-     * @param Typecho_Db $db 数据库对象
+     * @param Db $db 数据库对象
      * @return void
      */
-    public static function set(Typecho_Db $db)
+    public static function set(Db $db)
     {
         self::$instance = $db;
     }
@@ -260,14 +266,14 @@ class Typecho_Db
      * 获取数据库实例化对象
      * 用静态变量存储实例化的数据库对象,可以保证数据连接仅进行一次
      *
-     * @return Typecho_Db
-     * @throws Typecho_Db_Exception
+     * @return Db
+     * @throws DbException
      */
-    public static function get(): Typecho_Db
+    public static function get(): Db
     {
         if (empty(self::$instance)) {
-            /** Typecho_Db_Exception */
-            throw new Typecho_Db_Exception('Missing Database Object');
+            /** DbException */
+            throw new DbException('Missing Database Object');
         }
 
         return self::$instance;
@@ -278,10 +284,10 @@ class Typecho_Db
      *
      * @param ...$ags
      *
-     * @return Typecho_Db_Query
-     * @throws Typecho_Db_Exception
+     * @return Query
+     * @throws DbException
      */
-    public function select(...$ags): Typecho_Db_Query
+    public function select(...$ags): Query
     {
         $this->selectDb(self::READ);
 
@@ -294,10 +300,10 @@ class Typecho_Db
      *
      * @param string $table 需要更新记录的表
      *
-     * @return Typecho_Db_Query
-     * @throws Typecho_Db_Exception
+     * @return Query
+     * @throws DbException
      */
-    public function update(string $table): Typecho_Db_Query
+    public function update(string $table): Query
     {
         $this->selectDb(self::WRITE);
 
@@ -309,10 +315,10 @@ class Typecho_Db
      *
      * @param string $table 需要删除记录的表
      *
-     * @return Typecho_Db_Query
-     * @throws Typecho_Db_Exception
+     * @return Query
+     * @throws DbException
      */
-    public function delete(string $table): Typecho_Db_Query
+    public function delete(string $table): Query
     {
         $this->selectDb(self::WRITE);
 
@@ -324,10 +330,10 @@ class Typecho_Db
      *
      * @param string $table 需要插入记录的表
      *
-     * @return Typecho_Db_Query
-     * @throws Typecho_Db_Exception
+     * @return Query
+     * @throws DbException
      */
-    public function insert(string $table): Typecho_Db_Query
+    public function insert(string $table): Query
     {
         $this->selectDb(self::WRITE);
 
@@ -336,7 +342,7 @@ class Typecho_Db
 
     /**
      * @param $table
-     * @throws Typecho_Db_Exception
+     * @throws DbException
      */
     public function truncate($table)
     {
@@ -352,14 +358,14 @@ class Typecho_Db
      * @param string $action 操作动作
      *
      * @return mixed
-     * @throws Typecho_Db_Exception
+     * @throws DbException
      */
     public function query($query, int $op = self::READ, string $action = self::SELECT)
     {
         $table = null;
 
         /** 在适配器中执行查询 */
-        if ($query instanceof Typecho_Db_Query) {
+        if ($query instanceof Query) {
             $action = $query->getAttribute('action');
             $table = $query->getAttribute('table');
             $op = (self::UPDATE == $action || self::DELETE == $action
@@ -373,7 +379,7 @@ class Typecho_Db
         $handle = $this->selectDb($op);
 
         /** 提交查询 */
-        $resource = $this->adapter->query($query instanceof Typecho_Db_Query ?
+        $resource = $this->adapter->query($query instanceof Query ?
             $query->prepare($query) : $query, $handle, $op, $action, $table);
 
         if ($action) {
@@ -401,21 +407,15 @@ class Typecho_Db
      * @param callable|null $filter 行过滤器函数,将查询的每一行作为第一个参数传入指定的过滤器中
      *
      * @return array
-     * @throws Typecho_Db_Exception
+     * @throws DbException
      */
     public function fetchAll($query, ?callable $filter = null): array
     {
         //执行查询
         $resource = $this->query($query);
-        $result = [];
+        $result = $this->adapter->fetchAll($resource);
 
-        //取出每一行
-        while ($rows = $this->adapter->fetch($resource)) {
-            //判断是否有过滤器
-            $result[] = $filter ? call_user_func($filter, $rows) : $rows;
-        }
-
-        return $result;
+        return $filter ? array_map($filter, $result) : $result;
     }
 
     /**
@@ -425,7 +425,7 @@ class Typecho_Db
      * @param callable|null $filter 行过滤器函数,将查询的每一行作为第一个参数传入指定的过滤器中
      *
      * @return mixed
-     * @throws Typecho_Db_Exception
+     * @throws DbException
      */
     public function fetchRow($query, ?callable $filter = null)
     {
@@ -443,7 +443,7 @@ class Typecho_Db
      * @param array|null $filter 行过滤器函数,将查询的每一行作为第一个参数传入指定的过滤器中
      *
      * @return mixed
-     * @throws Typecho_Db_Exception
+     * @throws DbException
      */
     public function fetchObject($query, ?array $filter = null)
     {
@@ -456,6 +456,6 @@ class Typecho_Db
 
         return ($rows = $this->adapter->fetchObject($resource)) ?
             ($filter ? $object->$method($rows) : $rows) :
-            new stdClass();
+            new \stdClass();
     }
 }

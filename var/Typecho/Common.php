@@ -87,7 +87,10 @@ namespace Typecho
         }
 
         // hook old class loader
-        if (
+        if (strpos($className, '\\') !== false) {
+            $aliasClass = str_replace('\\', '_', ltrim($className, '\\'));
+            class_alias($className, $aliasClass);
+        } elseif (
             strpos($className, '_') !== false
             && !class_exists($className, false)
             && !interface_exists($className, false)
@@ -228,12 +231,12 @@ namespace Typecho
          *
          * @access public
          *
-         * @param string $path 路径
-         * @param string $prefix 前缀
+         * @param string|null $path 路径
+         * @param string|null $prefix 前缀
          *
          * @return string
          */
-        public static function url($path, $prefix)
+        public static function url(?string $path, ?string $prefix): string
         {
             $path = (0 === strpos($path, './')) ? substr($path, 2) : $path;
             return rtrim(
@@ -299,7 +302,7 @@ namespace Typecho
 
             /** 设置http code */
             if (is_numeric($code) && $code > 200) {
-                \Typecho_Response::setStatus($code);
+                Response::setStatus($code);
             }
 
             $message = nl2br($message);
@@ -419,17 +422,12 @@ EOF;
          * echo splitByCount(20, 10, 20, 30, 40, 50);
          * </code>
          *
-         * @access public
-         *
          * @param int $count
-         *
-         * @return string
+         * @param int ...$sizes
+         * @return int
          */
-        public static function splitByCount($count)
+        public static function splitByCount(int $count, int ...$sizes): int
         {
-            $sizes = func_get_args();
-            array_shift($sizes);
-
             foreach ($sizes as $size) {
                 if ($count < $size) {
                     return $size;
@@ -454,7 +452,7 @@ EOF;
          *
          * @return string
          */
-        public static function fixHtml($string)
+        public static function fixHtml(string $string): string
         {
             //关闭自闭合标签
             $startPos = strrpos($string, "<");
@@ -571,11 +569,11 @@ EOF;
          *
          * @access public
          *
-         * @param string $query 搜索字符串
+         * @param string|null $query 搜索字符串
          *
          * @return string
          */
-        public static function filterSearchQuery($query)
+        public static function filterSearchQuery(?string $query): string
         {
             return str_replace('-', ' ', self::slugName($query));
         }
@@ -585,13 +583,13 @@ EOF;
          *
          * @access public
          *
-         * @param string $str 需要生成缩略名的字符串
-         * @param string $default 默认的缩略名
+         * @param string|null $str 需要生成缩略名的字符串
+         * @param string|null $default 默认的缩略名
          * @param integer $maxLength 缩略名最大长度
          *
          * @return string
          */
-        public static function slugName($str, $default = null, $maxLength = 128)
+        public static function slugName(?string $str, ?string $default = null, int $maxLength = 128): ?string
         {
             $str = trim($str);
 
@@ -792,7 +790,7 @@ EOF;
          *
          * @return integer
          */
-        public static function strLen($str)
+        public static function strLen(string $str): int
         {
             if (__TYPECHO_MB_SUPPORTED__) {
                 return mb_strlen($str, self::$charset);
@@ -880,7 +878,7 @@ EOF;
          *
          * @return string
          */
-        public static function randString($length, $specialChars = false)
+        public static function randString(int $length, bool $specialChars = false): string
         {
             $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
             if ($specialChars) {
@@ -899,10 +897,9 @@ EOF;
          * 创建一个会过期的Token
          *
          * @param $secret
-         *
          * @return string
          */
-        public static function timeToken($secret)
+        public static function timeToken($secret): string
         {
             return sha1($secret . '&' . time());
         }
@@ -913,10 +910,9 @@ EOF;
          * @param $token
          * @param $secret
          * @param int $timeout
-         *
          * @return bool
          */
-        public static function timeTokenValidate($token, $secret, $timeout = 5)
+        public static function timeTokenValidate($token, $secret, int $timeout = 5): bool
         {
             $now = time();
             $from = $now - $timeout;
@@ -941,8 +937,13 @@ EOF;
          *
          * @return string
          */
-        public static function gravatarUrl($mail, $size, $rating, $default, $isSecure = false)
-        {
+        public static function gravatarUrl(
+            string $mail,
+            int $size,
+            string $rating,
+            string $default,
+            bool $isSecure = true
+        ): string {
             if (defined('__TYPECHO_GRAVATAR_PREFIX__')) {
                 $url = __TYPECHO_GRAVATAR_PREFIX__;
             } else {
@@ -968,7 +969,7 @@ EOF;
          *
          * @return string
          */
-        public static function shuffleScriptVar($value)
+        public static function shuffleScriptVar(string $value): string
         {
             $length = strlen($value);
             $max = 3;
@@ -1012,63 +1013,15 @@ EOF;
         }
 
         /**
-         * 过滤字段名
-         *
-         * @access private
-         *
-         * @param mixed $result
-         *
-         * @return array
-         */
-        public static function filterSQLite2ColumnName($result)
-        {
-            /** 如果结果为空,直接返回 */
-            if (empty($result)) {
-                return $result;
-            }
-
-            $tResult = [];
-
-            /** 遍历数组 */
-            foreach ($result as $key => $val) {
-                /** 按点分隔 */
-                if (false !== ($pos = strpos($key, '.'))) {
-                    $key = substr($key, $pos + 1);
-                }
-
-                $tResult[trim($key, '"')] = $val;
-            }
-
-            return $tResult;
-        }
-
-        /**
-         * 处理sqlite2的distinct count
-         *
-         * @param $sql
-         *
-         * @return string
-         */
-        public static function filterSQLite2CountQuery($sql)
-        {
-            if (preg_match("/SELECT\s+COUNT\(DISTINCT\s+([^\)]+)\)\s+(AS\s+[^\s]+)?\s*FROM\s+(.+)/is", $sql, $matches)) {
-                return 'SELECT COUNT(' . $matches[1] . ') ' . $matches[2] . ' FROM SELECT DISTINCT '
-                    . $matches[1] . ' FROM ' . $matches[3];
-            }
-
-            return $sql;
-        }
-
-        /**
          * 创建备份文件缓冲
          *
-         * @param $type
-         * @param $header
-         * @param $body
+         * @param string $type
+         * @param string $header
+         * @param string $body
          *
          * @return string
          */
-        public static function buildBackupBuffer($type, $header, $body)
+        public static function buildBackupBuffer(string $type, string $header, string $body): string
         {
             $buffer = '';
 
@@ -1082,13 +1035,13 @@ EOF;
         /**
          * 从备份文件中解压
          *
-         * @param $fp
-         * @param bool $offset
+         * @param resource $fp
+         * @param bool|null $offset
          * @param string $version
          *
          * @return array|bool
          */
-        public static function extractBackupBuffer($fp, &$offset, $version)
+        public static function extractBackupBuffer($fp, ?bool &$offset, string $version)
         {
             $realMetaLen = $version == 'FILE' ? 6 : 8;
 
@@ -1100,7 +1053,8 @@ EOF;
                 return false;
             }
 
-            [$type, $headerLen, $bodyLen] = array_values(unpack($version == 'FILE' ? 'v3' : 'v1type/v1headerLen/V1bodyLen', $meta));
+            [$type, $headerLen, $bodyLen]
+                = array_values(unpack($version == 'FILE' ? 'v3' : 'v1type/v1headerLen/V1bodyLen', $meta));
 
             $header = @fread($fp, $headerLen);
             $offset += $headerLen;
@@ -1135,11 +1089,10 @@ EOF;
         /**
          * 检查是否是一个安全的主机名
          *
-         * @param $host
-         *
+         * @param string $host
          * @return bool
          */
-        public static function checkSafeHost($host)
+        public static function checkSafeHost(string $host): bool
         {
             if ('localhost' == $host) {
                 return false;
@@ -1168,6 +1121,15 @@ EOF;
         }
 
         /**
+         * @deprecated after 1.2.0
+         * @return bool
+         */
+        public static function isAppEngine(): bool
+        {
+            return false;
+        }
+
+        /**
          * 获取图片
          *
          * @access public
@@ -1176,7 +1138,7 @@ EOF;
          *
          * @return string
          */
-        public static function mimeContentType($fileName)
+        public static function mimeContentType(string $fileName): string
         {
             //改为并列判断
             if (function_exists('mime_content_type')) {
@@ -1531,7 +1493,7 @@ EOF;
          *
          * @return string
          */
-        public static function mimeIconType($mime)
+        public static function mimeIconType(string $mime): string
         {
             $parts = explode('/', $mime);
 

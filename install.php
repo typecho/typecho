@@ -1,58 +1,49 @@
-<?php if (!file_exists(dirname(__FILE__) . '/config.inc.php')): ?>
 <?php
-/**
- * Typecho Blog Platform
- *
- * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license    GNU General Public License 2.0
- * @version    $Id$
- */
 
-// site root path
-define('__TYPECHO_ROOT_DIR__', dirname(__FILE__));
+if (!file_exists(dirname(__FILE__) . '/config.inc.php')) {
+    // site root path
+    define('__TYPECHO_ROOT_DIR__', dirname(__FILE__));
 
-// plugin directory (relative path)
-define('__TYPECHO_PLUGIN_DIR__', '/usr/plugins');
+    // plugin directory (relative path)
+    define('__TYPECHO_PLUGIN_DIR__', '/usr/plugins');
 
-// theme directory (relative path)
-define('__TYPECHO_THEME_DIR__', '/usr/themes');
+    // theme directory (relative path)
+    define('__TYPECHO_THEME_DIR__', '/usr/themes');
 
-// admin directory (relative path)
-define('__TYPECHO_ADMIN_DIR__', '/admin/');
+    // admin directory (relative path)
+    define('__TYPECHO_ADMIN_DIR__', '/admin/');
 
-// register autoload
-require_once __TYPECHO_ROOT_DIR__ . '/var/Typecho/Common.php';
+    // register autoload
+    require_once __TYPECHO_ROOT_DIR__ . '/var/Typecho/Common.php';
 
-// init
-Typecho_Common::init();
-
-else:
-
+    // init
+    \Typecho\Common::init();
+} else {
     require_once dirname(__FILE__) . '/config.inc.php';
     $installDb = Typecho_Db::get();
-
-endif;
+}
 
 /**
  * get lang
  *
  * @return string
  */
-function install_get_lang(): string {
-    $serverLang = Typecho_Request::getInstance()->getServer('TYPECHO_LANG');
+function install_get_lang(): string
+{
+    $serverLang = \Typecho\Request::getInstance()->getServer('TYPECHO_LANG');
 
     if (!empty($serverLang)) {
         return $serverLang;
     } else {
         $lang = 'zh_CN';
-        $request = Typecho_Request::getInstance();
+        $request = \Typecho\Request::getInstance();
 
         if ($request->is('lang')) {
             $lang = $request->get('lang');
-            Typecho_Cookie::set('lang', $lang);
+            \Typecho\Cookie::set('lang', $lang);
         }
 
-        return Typecho_Cookie::get('lang', $lang);
+        return \Typecho\Cookie::get('lang', $lang);
     }
 }
 
@@ -61,8 +52,9 @@ function install_get_lang(): string {
  *
  * @return string
  */
-function install_get_site_url(): string {
-    $serverSiteUrl = Typecho_Request::getInstance()->getServer(
+function install_get_site_url(): string
+{
+    $serverSiteUrl = \Typecho\Request::getInstance()->getServer(
         'TYPECHO_SITE_URL',
         install_is_cli() ? 'http://localhost' : null
     );
@@ -70,7 +62,7 @@ function install_get_site_url(): string {
     if (!empty($serverSiteUrl)) {
         return $serverSiteUrl;
     } else {
-        $request = Typecho_Request::getInstance();
+        $request = \Typecho\Request::getInstance();
         return $request->get('userUrl', $request->getRequestRoot());
     }
 }
@@ -80,7 +72,8 @@ function install_get_site_url(): string {
  *
  * @return bool
  */
-function install_is_cli(): bool {
+function install_is_cli(): bool
+{
     return php_sapi_name() == 'cli';
 }
 
@@ -89,7 +82,8 @@ function install_is_cli(): bool {
  *
  * @return array
  */
-function install_get_default_options(): array {
+function install_get_default_options(): array
+{
     static $options;
 
     if (empty($options)) {
@@ -101,7 +95,7 @@ function install_get_default_options(): array {
             'charset' => _t('UTF-8'),
             'contentType' => 'text/html',
             'gzip' => 0,
-            'generator' => 'Typecho ' . Typecho_Common::VERSION,
+            'generator' => 'Typecho ' . \Typecho\Common::VERSION,
             'title' => 'Hello World',
             'description' => 'Your description here.',
             'keywords' => 'typecho,php,blog',
@@ -152,7 +146,7 @@ function install_get_default_options(): array {
             'actionTable' => 'a:0:{}',
             'panelTable' => 'a:0:{}',
             'attachmentTypes' => '@image@',
-            'secret' => Typecho_Common::randString(32, true),
+            'secret' => \Typecho\Common::randString(32, true),
             'installed' => 0,
             'allowXmlRpc' => 2
         ];
@@ -167,7 +161,8 @@ function install_get_default_options(): array {
  * @param string $driver
  * @return string
  */
-function install_get_db_type(string $driver): string {
+function install_get_db_type(string $driver): string
+{
     $parts = explode('_', $driver);
     return $driver == 'Mysqli' ? 'Mysql' : array_pop($parts);
 }
@@ -177,30 +172,31 @@ function install_get_db_type(string $driver): string {
  *
  * @return array
  */
-function install_get_db_drivers(): array {
+function install_get_db_drivers(): array
+{
     $drivers = [];
 
-    if (Typecho_Db_Adapter_Pdo_Mysql::isAvailable()) {
+    if (\Typecho\Db\Adapter\Pdo\Mysql::isAvailable()) {
         $drivers['Pdo_Mysql'] = _t('Pdo 驱动 Mysql 适配器');
     }
 
-    if (Typecho_Db_Adapter_Pdo_SQLite::isAvailable()) {
-        $drivers['Pdo_SQLite'] = _t('Pdo 驱动 SQLite 适配器 (SQLite 3.x)');
+    if (\Typecho\Db\Adapter\Pdo\SQLite::isAvailable()) {
+        $drivers['Pdo_SQLite'] = _t('Pdo 驱动 SQLite 适配器');
     }
 
-    if (Typecho_Db_Adapter_Pdo_Pgsql::isAvailable()) {
+    if (\Typecho\Db\Adapter\Pdo\Pgsql::isAvailable()) {
         $drivers['Pdo_Pgsql'] = _t('Pdo 驱动 PostgreSql 适配器');
     }
 
-    if (Typecho_Db_Adapter_Mysqli::isAvailable()) {
+    if (\Typecho\Db\Adapter\Mysqli::isAvailable()) {
         $drivers['Mysqli'] = _t('Mysql 原生函数适配器');
     }
 
-    if (Typecho_Db_Adapter_SQLite::isAvailable()) {
-        $drivers['SQLite'] = _t('SQLite 原生函数适配器 (SQLite 2.x)');
+    if (\Typecho\Db\Adapter\SQLite::isAvailable()) {
+        $drivers['SQLite'] = _t('SQLite 原生函数适配器');
     }
 
-    if (Typecho_Db_Adapter_Pgsql::isAvailable()) {
+    if (\Typecho\Db\Adapter\Pgsql::isAvailable()) {
         $drivers['Pgsql'] = _t('Pgsql 原生函数适配器');
     }
 
@@ -212,11 +208,12 @@ function install_get_db_drivers(): array {
  *
  * @return string
  */
-function install_get_current_db_driver(): string {
+function install_get_current_db_driver(): string
+{
     global $installDb;
 
     if (empty($installDb)) {
-        $driver = Typecho_Request::getInstance()->get('driver');
+        $driver = \Typecho\Request::getInstance()->get('driver');
         $drivers = install_get_db_drivers();
 
         if (empty($driver) || !isset($drivers[$driver])) {
@@ -238,18 +235,35 @@ function install_get_current_db_driver(): string {
  * @param bool $return
  * @return string
  */
-function install_config_file(string $adapter, string $dbPrefix, array $dbConfig, bool $return = false): string {
+function install_config_file(string $adapter, string $dbPrefix, array $dbConfig, bool $return = false): string
+{
     global $configWritten;
 
-    $lines = array_slice(file(__FILE__), 1, 26);
-    $lines[] = "
-/** 定义数据库参数 */
+    $code = "<" . "?php
+// site root path
+define('__TYPECHO_ROOT_DIR__', dirname(__FILE__));
+
+// plugin directory (relative path)
+define('__TYPECHO_PLUGIN_DIR__', '/usr/plugins');
+
+// theme directory (relative path)
+define('__TYPECHO_THEME_DIR__', '/usr/themes');
+
+// admin directory (relative path)
+define('__TYPECHO_ADMIN_DIR__', '/admin/');
+
+// register autoload
+require_once __TYPECHO_ROOT_DIR__ . '/var/Typecho/Common.php';
+
+// init
+\Typecho\Common::init();
+    
+// config db
 \$db = new Typecho_Db('{$adapter}', '{$dbPrefix}');
 \$db->addServer(" . (var_export($dbConfig, true)) . ", Typecho_Db::READ | Typecho_Db::WRITE);
 Typecho_Db::set(\$db);
 ";
 
-    $code = implode('', $lines);
     $configWritten = false;
 
     if (!$return) {
@@ -262,7 +276,8 @@ Typecho_Db::set(\$db);
 /**
  * remove config file if written
  */
-function install_remove_config_file() {
+function install_remove_config_file()
+{
     global $configWritten;
 
     if ($configWritten) {
@@ -276,7 +291,8 @@ function install_remove_config_file() {
  * @param string $type
  * @return bool
  */
-function install_check(string $type): bool {
+function install_check(string $type): bool
+{
     switch ($type) {
         case 'config':
             return file_exists(__TYPECHO_ROOT_DIR__ . '/config.inc.php');
@@ -296,7 +312,7 @@ function install_check(string $type): bool {
                 if ($type == 'db_data' && empty($values)) {
                     return false;
                 }
-            } catch (Typecho_Db_Exception $e) {
+            } catch (\Typecho\Db\Exception $e) {
                 return false;
             }
 
@@ -312,7 +328,8 @@ function install_check(string $type): bool {
  * @param mixed $error
  * @param mixed $config
  */
-function install_raise_error($error, $config = null) {
+function install_raise_error($error, $config = null)
+{
     if (install_is_cli()) {
         if (is_array($error)) {
             foreach ($error as $key => $value) {
@@ -324,7 +341,7 @@ function install_raise_error($error, $config = null) {
 
         exit(1);
     } else {
-        Typecho_Response::getInstance()->throwJson([
+        \Typecho\Response::getInstance()->throwJson([
             'success' => 0,
             'message' => is_string($error) ? nl2br($error) : $error,
             'config' => $config
@@ -336,7 +353,8 @@ function install_raise_error($error, $config = null) {
  * @param $step
  * @param array|null $config
  */
-function install_success($step, ?array $config = null) {
+function install_success($step, ?array $config = null)
+{
     if (install_is_cli()) {
         if ($step > 0) {
             $method = 'install_step_' . $step . '_perform';
@@ -352,7 +370,7 @@ function install_success($step, ?array $config = null) {
 
         exit(0);
     } else {
-        Typecho_Response::getInstance()->throwJson([
+        \Typecho\Response::getInstance()->throwJson([
             'success' => 1,
             'message' => $step,
             'config'  => $config
@@ -363,10 +381,11 @@ function install_success($step, ?array $config = null) {
 /**
  * add common js support
  *
- * @throws Typecho_Exception
+ * @throws \Typecho\Exception
  */
-function install_js_support() {
-    $options = Typecho_Widget::widget('Widget_Options');
+function install_js_support()
+{
+    $options = \Typecho\Widget::widget('Widget_Options');
 
     ?>
     <div id="success" class="row typecho-page-main hidden">
@@ -471,13 +490,14 @@ function install_js_support() {
             });
         });
     </script>
-<?php
+    <?php
 }
 
-function install_step_1() {
+function install_step_1()
+{
     $langs = Widget_Options_General::getLangs();
     $lang = install_get_lang();
-?>
+    ?>
     <div class="row typecho-page-main">
         <div class="col-mb-12 col-tb-8 col-tb-offset-2">
             <div class="typecho-page-title">
@@ -502,10 +522,12 @@ function install_step_1() {
                         <button class="btn primary" type="submit"><?php _e('我准备好了, 开始下一步 &raquo;'); ?></button>
                         <input type="hidden" name="step" value="2">
 
-                        <?php if (count($langs) > 1): ?>
+                        <?php if (count($langs) > 1) : ?>
                             <select style="float: right" onchange="location.href='?lang=' + this.value">
-                                <?php foreach ($langs as $key => $val): ?>
-                                    <option value="<?php echo $key; ?>"<?php if ($lang == $key): ?> selected<?php endif; ?>><?php echo $val; ?></option>
+                                <?php foreach ($langs as $key => $val) : ?>
+                                    <option value="<?php echo $key; ?>"<?php if ($lang == $key) :
+                                        ?> selected<?php
+                                                   endif; ?>><?php echo $val; ?></option>
                                 <?php endforeach; ?>
                             </select>
                         <?php endif; ?>
@@ -514,13 +536,14 @@ function install_step_1() {
             </div>
         </div>
     </div>
-<?php
+    <?php
 }
 
 /**
  * display step 2
  */
-function install_step_2() {
+function install_step_2()
+{
     global $installDb;
 
     $drivers = install_get_db_drivers();
@@ -532,7 +555,7 @@ function install_step_2() {
         $config['prefix'] = $installDb->getPrefix();
         $config['adapter'] = $adapter;
     }
-?>
+    ?>
     <div class="row typecho-page-main">
         <div class="col-mb-12 col-tb-8 col-tb-offset-2">
             <div class="typecho-page-title">
@@ -543,8 +566,10 @@ function install_step_2() {
                     <li>
                         <label for="dbAdapter" class="typecho-label"><?php _e('数据库适配器'); ?></label>
                         <select name="dbAdapter" id="dbAdapter" onchange="location.href='?step=2&driver=' + this.value">
-                            <?php foreach ($drivers as $driver => $name): ?>
-                                <option value="<?php echo $driver; ?>"<?php if($driver == $adapter): ?> selected="selected"<?php endif; ?>><?php echo $name; ?></option>
+                            <?php foreach ($drivers as $driver => $name) : ?>
+                                <option value="<?php echo $driver; ?>"<?php if ($driver == $adapter) :
+                                    ?> selected="selected"<?php
+                                               endif; ?>><?php echo $name; ?></option>
                             <?php endforeach; ?>
                         </select>
                         <p class="description"><?php _e('请根据您的数据库类型选择合适的适配器'); ?></p>
@@ -619,7 +644,7 @@ function install_step_2() {
             $('#dbNext').val('none');
         });
 
-        <?php if (!empty($config)): ?>
+        <?php if (!empty($config)) : ?>
         function fillInput(config) {
             for (let k in config) {
                 let value = config[k],
@@ -635,17 +660,18 @@ function install_step_2() {
         fillInput(<?php echo Json::encode($config); ?>);
         <?php endif; ?>
     </script>
-<?php
+    <?php
     install_js_support();
 }
 
 /**
  * perform install step 2
  */
-function install_step_2_perform() {
+function install_step_2_perform()
+{
     global $installDb;
 
-    $request = Typecho_Request::getInstance();
+    $request = \Typecho\Request::getInstance();
     $drivers = install_get_db_drivers();
 
     $configMap = [
@@ -703,7 +729,7 @@ function install_step_2_perform() {
         ]);
     }
 
-    $error = (new Typecho_Validate())
+    $error = (new \Typecho\Validate())
         ->addRule('dbPrefix', 'required', _t('确认您的配置'))
         ->addRule('dbPrefix', 'minLength', _t('确认您的配置'), 1)
         ->addRule('dbPrefix', 'maxLength', _t('确认您的配置'), 16)
@@ -727,7 +753,7 @@ function install_step_2_perform() {
 
     switch ($type) {
         case 'Mysql':
-            $error = (new Typecho_Validate())
+            $error = (new \Typecho\Validate())
                 ->addRule('dbHost', 'required', _t('确认您的配置'))
                 ->addRule('dbPort', 'required', _t('确认您的配置'))
                 ->addRule('dbPort', 'isInteger', _t('确认您的配置'))
@@ -740,7 +766,7 @@ function install_step_2_perform() {
                 ->run($config);
             break;
         case 'Pgsql':
-            $error = (new Typecho_Validate())
+            $error = (new \Typecho\Validate())
                 ->addRule('dbHost', 'required', _t('确认您的配置'))
                 ->addRule('dbPort', 'required', _t('确认您的配置'))
                 ->addRule('dbPort', 'isInteger', _t('确认您的配置'))
@@ -751,7 +777,7 @@ function install_step_2_perform() {
                 ->run($config);
             break;
         case 'SQLite':
-            $error = (new Typecho_Validate())
+            $error = (new \Typecho\Validate())
                 ->addRule('dbFile', 'required', _t('确认您的配置'))
                 ->run($config);
             break;
@@ -778,9 +804,9 @@ function install_step_2_perform() {
             $installDb = new Typecho_Db($config['dbAdapter'], $config['dbPrefix']);
             $installDb->addServer($dbConfig, Typecho_Db::READ | Typecho_Db::WRITE);
             $installDb->query('SELECT 1=1');
-        } catch (Typecho_Db_Adapter_Exception $e) {
+        } catch (\Typecho\Db\Adapter_Exception $e) {
             install_raise_error(_t('对不起, 无法连接数据库, 请先检查数据库配置再继续进行安装'));
-        } catch (Typecho_Db_Exception $e) {
+        } catch (\Typecho\Db\Exception $e) {
             install_raise_error(_t('安装程序捕捉到以下错误: " %s ". 程序被终止, 请检查您的配置信息.', $e->getMessage()));
         }
 
@@ -789,15 +815,16 @@ function install_step_2_perform() {
         if (!install_check('config')) {
             install_raise_error(
                 _t('安装程序无法自动创建 <strong>config.inc.php</strong> 文件') . "\n" .
-                _t('您可以在网站根目录下手动创建 <strong>config.inc.php</strong> 文件, 并复制如下代码至其中')
-            , [
+                _t('您可以在网站根目录下手动创建 <strong>config.inc.php</strong> 文件, 并复制如下代码至其中'),
+                [
                 'code' => $code
-            ]);
+                ]
+            );
         }
     }
 
     // delete exists db
-    if($config['dbNext'] == 'delete') {
+    if ($config['dbNext'] == 'delete') {
         $tables = [
             $config['dbPrefix'] . 'comments',
             $config['dbPrefix'] . 'contents',
@@ -818,7 +845,7 @@ function install_step_2_perform() {
                     $installDb->query("DROP TABLE {$table}");
                 }
             }
-        } catch (Typecho_Db_Exception $e) {
+        } catch (\Typecho\Db\Exception $e) {
             install_raise_error(_t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.', $e->getMessage()));
         }
     }
@@ -843,13 +870,14 @@ function install_step_2_perform() {
                 $installDb->query($script, Typecho_Db::WRITE);
             }
         }
-    } catch (Typecho_Db_Exception $e) {
+    } catch (\Typecho\Db\Exception $e) {
         $code = $e->getCode();
 
-        if(('Mysql' == $type && (1050 == $code || '42S01' == $code)) ||
+        if (
+            ('Mysql' == $type && (1050 == $code || '42S01' == $code)) ||
             ('SQLite' == $type && ('HY000' == $code || 1 == $code)) ||
-            ('Pgsql' == $type && '42P07' == $code)) {
-
+            ('Pgsql' == $type && '42P07' == $code)
+        ) {
             if ($config['dbNext'] == 'keep') {
                 if (install_check('db_data')) {
                     install_success(0);
@@ -877,9 +905,10 @@ function install_step_2_perform() {
 /**
  * display step 3
  */
-function install_step_3() {
-    $options = Typecho_Widget::widget('Widget_Options');
-?>
+function install_step_3()
+{
+    $options = \Typecho\Widget::widget('Widget_Options');
+    ?>
     <div class="row typecho-page-main">
         <div class="col-mb-12 col-tb-8 col-tb-offset-2">
             <div class="typecho-page-title">
@@ -923,19 +952,20 @@ function install_step_3() {
             </form>
         </div>
     </div>
-<?php
+    <?php
     install_js_support();
 }
 
 /**
  * perform step 3
  */
-function install_step_3_perform() {
+function install_step_3_perform()
+{
     global $installDb;
 
-    $request = Typecho_Request::getInstance();
-    $defaultPassword = Typecho_Common::randString(8);
-    $options = Typecho_Widget::widget('Widget_Options');
+    $request = \Typecho\Request::getInstance();
+    $defaultPassword = \Typecho\Common::randString(8);
+    $options = \Typecho\Widget::widget('Widget_Options');
 
     if (install_is_cli()) {
         $config = [
@@ -953,10 +983,10 @@ function install_step_3_perform() {
         ]);
     }
 
-    $error = (new Typecho_Validate())
+    $error = (new \Typecho\Validate())
         ->addRule('userUrl', 'required', _t('请填写站点地址'))
         ->addRule('userUrl', 'url', _t('请填写一个合法的URL地址'))
-        ->addRule('userName', 'required',  _t('必须填写用户名称'))
+        ->addRule('userName', 'required', _t('必须填写用户名称'))
         ->addRule('userName', 'xssCheck', _t('请不要在用户名中使用特殊字符'))
         ->addRule('userName', 'maxLength', _t('用户名长度超过限制, 请不要超过 32 个字符'), 32)
         ->addRule('userMail', 'required', _t('必须填写电子邮箱'))
@@ -990,7 +1020,7 @@ function install_step_3_perform() {
                 'url' => $options->siteUrl,
                 'screenName' => $config['userName'],
                 'group' => 'administrator',
-                'created' => Typecho_Date::time()
+                'created' => \Typecho\Date::time()
             ])
         );
 
@@ -1012,8 +1042,8 @@ function install_step_3_perform() {
         $installDb->query(
             $installDb->insert('table.contents')->rows([
                 'title' => _t('欢迎使用 Typecho'),
-                'slug' => 'start', 'created' => Typecho_Date::time(),
-                'modified' => Typecho_Date::time(),
+                'slug' => 'start', 'created' => \Typecho\Date::time(),
+                'modified' => \Typecho\Date::time(),
                 'text' => '<!--markdown-->' . _t('如果您看到这篇文章,表示您的 blog 已经安装成功.'),
                 'authorId' => 1,
                 'type' => 'post',
@@ -1030,8 +1060,8 @@ function install_step_3_perform() {
             $installDb->insert('table.contents')->rows([
                 'title' => _t('关于'),
                 'slug' => 'start-page',
-                'created' => Typecho_Date::time(),
-                'modified' => Typecho_Date::time(),
+                'created' => \Typecho\Date::time(),
+                'modified' => \Typecho\Date::time(),
                 'text' => '<!--markdown-->' . _t('本页面由 Typecho 创建, 这只是个测试页面.'),
                 'authorId' => 1,
                 'order' => 0,
@@ -1048,7 +1078,7 @@ function install_step_3_perform() {
         // write comment
         $installDb->query(
             $installDb->insert('table.comments')->rows([
-                'cid' => 1, 'created' => Typecho_Date::time(),
+                'cid' => 1, 'created' => \Typecho\Date::time(),
                 'author' => 'Typecho',
                 'ownerId' => 1,
                 'url' => 'http://typecho.org',
@@ -1060,7 +1090,7 @@ function install_step_3_perform() {
                 'parent' => 0
             ])
         );
-    } catch (Typecho_Db_Exception $e) {
+    } catch (\Typecho\Db\Exception $e) {
         install_raise_error($e->getMessage());
     }
 
@@ -1070,12 +1100,12 @@ function install_step_3_perform() {
             'password' => $config['userPassword'],
             'referer' => $options->adminUrl
         ]);
-    $loginUrl = Typecho_Common::buildUrl($parts);
+    $loginUrl = \Typecho\Common::buildUrl($parts);
 
     install_success(0, [
         $config['userName'],
         $config['userPassword'],
-        Typecho_Widget::widget('Widget_Security')->getTokenUrl($loginUrl, $request->getReferer()),
+        \Typecho\Widget::widget('Widget_Security')->getTokenUrl($loginUrl, $request->getReferer()),
         $options->siteUrl
     ]);
 }
@@ -1083,9 +1113,10 @@ function install_step_3_perform() {
 /**
  * dispatch install action
  *
- * @throws Typecho_Exception
+ * @throws \Typecho\Exception
  */
-function install_dispatch() {
+function install_dispatch()
+{
     define('__TYPECHO_INSTALL__', true);
 
     // disable root url on cli mode
@@ -1094,8 +1125,8 @@ function install_dispatch() {
     }
 
     // init default options
-    $options = Typecho_Widget::widget('Widget_Options', install_get_default_options());
-    Typecho_Widget::widget('Widget_Init');
+    $options = \Typecho\Widget::widget('Widget_Options', install_get_default_options());
+    \Typecho\Widget::widget('Widget_Init');
 
     // install finished yet
     if (
@@ -1105,7 +1136,7 @@ function install_dispatch() {
     ) {
         // redirect to siteUrl if not cli
         if (!install_is_cli()) {
-            Typecho_Response::getInstance()->redirect($options->siteUrl);
+            \Typecho\Response::getInstance()->redirect($options->siteUrl);
         }
 
         exit(1);
@@ -1114,8 +1145,8 @@ function install_dispatch() {
     if (install_is_cli()) {
         install_step_2_perform();
     } else {
-        $request = Typecho_Request::getInstance();
-        $response = Typecho_Response::getInstance();
+        $request = \Typecho\Request::getInstance();
+        $response = \Typecho\Response::getInstance();
         $step = $request->get('step');
 
         $action = 1;
@@ -1146,7 +1177,7 @@ function install_dispatch() {
             $method();
             exit;
         }
-?>
+        ?>
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -1166,7 +1197,7 @@ function install_dispatch() {
     </div>
 </body>
 </html>
-<?php
+        <?php
     }
 }
 
