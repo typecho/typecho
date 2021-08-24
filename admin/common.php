@@ -23,8 +23,8 @@ Typecho_Widget::widget('Widget_Security')->to($security);
 Typecho_Widget::widget('Widget_Menu')->to($menu);
 
 /** 初始化上下文 */
-$request = Typecho_Request::getInstance();
-$response = Typecho_Response::getInstance();
+$request = $options->request;
+$response = $options->response;
 
 /** 检测是否是第一次登录 */
 $currentMenu = $menu->getCurrentMenu();

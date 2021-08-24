@@ -10,7 +10,7 @@ namespace Typecho;
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Config implements \Iterator
+class Config implements \Iterator, \ArrayAccess
 {
     /**
      * 当前配置
@@ -24,7 +24,7 @@ class Config implements \Iterator
      * 实例化一个当前配置
      *
      * @access public
-     * @param mixed $config 配置列表
+     * @param array|string|null $config 配置列表
      */
     public function __construct($config = [])
     {
@@ -37,7 +37,7 @@ class Config implements \Iterator
      *
      * @access public
      *
-     * @param array|string $config 配置列表
+     * @param array|string|null $config 配置列表
      *
      * @return Config
      */
@@ -141,7 +141,7 @@ class Config implements \Iterator
      */
     public function __get(string $name)
     {
-        return $this->currentConfig[$name] ?? null;
+        return $this->offsetGet($name);
     }
 
     /**
@@ -154,7 +154,7 @@ class Config implements \Iterator
      */
     public function __set(string $name, $value)
     {
-        $this->currentConfig[$name] = $value;
+        $this->offsetSet($name, $value);
     }
 
     /**
@@ -179,7 +179,7 @@ class Config implements \Iterator
      */
     public function __isSet(string $name): bool
     {
-        return isset($this->currentConfig[$name]);
+        return $this->offsetExists($name);
     }
 
     /**
@@ -199,5 +199,40 @@ class Config implements \Iterator
     public function toArray(): array
     {
         return $this->currentConfig;
+    }
+
+    /**
+     * @param mixed $offset
+     * @return bool
+     */
+    public function offsetExists($offset): bool
+    {
+        return isset($this->currentConfig[$offset]);
+    }
+
+    /**
+     * @param mixed $offset
+     * @return mixed
+     */
+    public function offsetGet($offset)
+    {
+        return $this->currentConfig[$offset] ?? null;
+    }
+
+    /**
+     * @param mixed $offset
+     * @param mixed $value
+     */
+    public function offsetSet($offset, $value)
+    {
+        $this->currentConfig[$offset] = $value;
+    }
+
+    /**
+     * @param mixed $offset
+     */
+    public function offsetUnset($offset)
+    {
+        unset($this->currentConfig[$offset]);
     }
 }

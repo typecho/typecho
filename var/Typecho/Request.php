@@ -18,27 +18,12 @@ class Request
     private static $instance;
 
     /**
-     * 支持的过滤器列表
-     *
-     * @access private
-     * @var string
-     */
-    private static $supportFilters = [
-        'int'     => 'intval',
-        'integer' => 'intval',
-        'search'  => ['Typecho_Common', 'filterSearchQuery'],
-        'xss'     => ['Typecho_Common', 'removeXSS'],
-        'url'     => ['Typecho_Common', 'safeUrl'],
-        'slug'    => ['Typecho_Common', 'slugName']
-    ];
-
-    /**
      * 内部参数
      *
      * @access private
-     * @var array
+     * @var Config|null
      */
-    private $params = [];
+    private $params;
 
     /**
      * 路径信息
@@ -88,21 +73,6 @@ class Request
     private $urlPrefix = null;
 
     /**
-     * 当前过滤器
-     *
-     * @access private
-     * @var array
-     */
-    private $filter = [];
-
-    /**
-     * 初始化变量
-     */
-    public function __construct()
-    {
-    }
-
-    /**
      * 获取单例句柄
      *
      * @access public
@@ -118,84 +88,14 @@ class Request
     }
 
     /**
-     * 获取url前缀
+     * 初始化变量
      *
-     * @access public
-     * @return string
-     */
-    public function getUrlPrefix(): string
-    {
-        if (empty($this->urlPrefix)) {
-            if (defined('__TYPECHO_URL_PREFIX__')) {
-                $this->urlPrefix = __TYPECHO_URL_PREFIX__;
-            } elseif (php_sapi_name() != 'cli') {
-                $this->urlPrefix = ($this->isSecure() ? 'https' : 'http') . '://'
-                    . ($_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME']);
-            }
-        }
-
-        return $this->urlPrefix;
-    }
-
-    /**
-     * 判断是否为https
-     *
-     * @access public
-     * @return boolean
-     */
-    public function isSecure(): bool
-    {
-        return (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && !strcasecmp('https', $_SERVER['HTTP_X_FORWARDED_PROTO']))
-            || (!empty($_SERVER['HTTP_X_FORWARDED_PORT']) && 443 == $_SERVER['HTTP_X_FORWARDED_PORT'])
-            || (!empty($_SERVER['HTTPS']) && 'off' != strtolower($_SERVER['HTTPS']))
-            || (!empty($_SERVER['SERVER_PORT']) && 443 == $_SERVER['SERVER_PORT'])
-            || (defined('__TYPECHO_SECURE__') && __TYPECHO_SECURE__);
-    }
-
-    /**
-     * 设置过滤器
-     *
-     * @param string|callable ...$filters
      * @return $this
      */
-    public function filter(...$filters): Request
+    public function proxy(Config $params): Request
     {
-        foreach ($filters as $filter) {
-            $this->filter[] = is_string($filter) && isset(self::$supportFilters[$filter])
-                ? self::$supportFilters[$filter] : $filter;
-        }
-
+        $this->params = $params;
         return $this;
-    }
-
-    /**
-     * 获取实际传递参数(magic)
-     *
-     * @access public
-     *
-     * @param string $key 指定参数
-     *
-     * @return mixed
-     */
-    public function __get(string $key)
-    {
-        return $this->get($key);
-    }
-
-    /**
-     * 判断参数是否存在
-     *
-     * @access public
-     *
-     * @param string $key 指定参数
-     *
-     * @return boolean
-     */
-    public function __isset(string $key)
-    {
-        return isset($_GET[$key])
-            || isset($_POST[$key])
-            || isset($this->params[$key]);
     }
 
     /**
@@ -205,13 +105,14 @@ class Request
      *
      * @param string $key 指定参数
      * @param mixed $default 默认参数 (default: NULL)
+     * @param bool|null $exists detect exists
      *
      * @return mixed
      */
-    public function get(string $key, $default = null)
+    public function get(string $key, $default = null, ?bool &$exists = true)
     {
         switch (true) {
-            case isset($this->params[$key]):
+            case isset($this->params) && isset($this->params[$key]):
                 $value = $this->params[$key];
                 break;
             case isset($_GET[$key]):
@@ -222,11 +123,16 @@ class Request
                 break;
             default:
                 $value = $default;
+                $exists = false;
                 break;
         }
 
-        $value = ((!is_array($value) && strlen($value) > 0) || is_array($default)) ? $value : $default;
-        return $this->applyFilter($value);
+        // reset params
+        if (isset($this->params)) {
+            $this->params = null;
+        }
+
+        return ((!is_array($value) && strlen($value) > 0) || is_array($default)) ? $value : $default;
     }
 
     /**
@@ -266,41 +172,6 @@ class Request
     }
 
     /**
-     * 设置http传递参数
-     *
-     * @access public
-     *
-     * @param string $name 指定的参数
-     * @param mixed $value 参数值
-     *
-     * @return void
-     */
-    public function setParam(string $name, $value)
-    {
-        $this->params[$name] = $value;
-    }
-
-    /**
-     * 设置多个参数
-     *
-     * @access public
-     *
-     * @param mixed $params 参数列表
-     *
-     * @return void
-     */
-    public function setParams($params)
-    {
-        //处理字符串
-        if (!is_array($params)) {
-            parse_str($params, $out);
-            $params = $out;
-        }
-
-        $this->params = array_merge($this->params, $params);
-    }
-
-    /**
      * getRequestRoot
      *
      * @access public
@@ -334,12 +205,292 @@ class Request
     }
 
     /**
+     * 根据当前uri构造指定参数的uri
+     *
+     * @param mixed $parameter 指定的参数
+     *
+     * @return string
+     */
+    public function makeUriByRequest($parameter = null): string
+    {
+        /** 初始化地址 */
+        $requestUri = $this->getRequestUrl();
+        $parts = parse_url($requestUri);
+
+        /** 初始化参数 */
+        if (is_string($parameter)) {
+            parse_str($parameter, $args);
+        } elseif (is_array($parameter)) {
+            $args = $parameter;
+        } else {
+            return $requestUri;
+        }
+
+        /** 构造query */
+        if (isset($parts['query'])) {
+            parse_str($parts['query'], $currentArgs);
+            $args = array_merge($currentArgs, $args);
+        }
+        $parts['query'] = http_build_query($args);
+
+        /** 返回地址 */
+        return Common::buildUrl($parts);
+    }
+
+    /**
+     * 获取当前pathinfo
+     *
+     * @return string
+     */
+    public function getPathInfo(): ?string
+    {
+        /** 缓存信息 */
+        if (null !== $this->pathInfo) {
+            return $this->pathInfo;
+        }
+
+        $inputEncoding = null;
+        $outputEncoding = null;
+
+        if (defined('__TYPECHO_PATHINFO_ENCODING__')) {
+            $inputEncoding = __TYPECHO_PATHINFO_ENCODING__;
+            $outputEncoding = Common::$charset;
+        }
+
+        //参考Zend Framework对pahtinfo的处理, 更好的兼容性
+        $pathInfo = null;
+
+        //处理requestUri
+        $requestUri = $this->getRequestUri();
+        $finalBaseUrl = $this->getBaseUrl();
+
+        // Remove the query string from REQUEST_URI
+        if ($pos = strpos($requestUri, '?')) {
+            $requestUri = substr($requestUri, 0, $pos);
+        }
+
+        if (
+            (null !== $finalBaseUrl)
+            && (false === ($pathInfo = substr($requestUri, strlen($finalBaseUrl))))
+        ) {
+            // If substr() returns false then PATH_INFO is set to an empty string
+            $pathInfo = '/';
+        } elseif (null === $finalBaseUrl) {
+            $pathInfo = $requestUri;
+        }
+
+        if (!empty($pathInfo)) {
+            //针对iis的utf8编码做强制转换
+            //参考http://docs.moodle.org/ja/%E5%A4%9A%E8%A8%80%E8%AA%9E%E5%AF%BE%E5%BF%9C%EF%BC%9A%E3%82%B5%E3%83%BC%E3%83%90%E3%81%AE%E8%A8%AD%E5%AE%9A
+            if (
+                !empty($inputEncoding)
+                && !empty($outputEncoding)
+                && (stripos($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS') !== false
+                    || stripos($_SERVER['SERVER_SOFTWARE'], 'ExpressionDevServer') !== false)
+            ) {
+                if (function_exists('mb_convert_encoding')) {
+                    $pathInfo = mb_convert_encoding($pathInfo, $outputEncoding, $inputEncoding);
+                } elseif (function_exists('iconv')) {
+                    $pathInfo = iconv($inputEncoding, $outputEncoding, $pathInfo);
+                }
+            }
+        } else {
+            $pathInfo = '/';
+        }
+
+        // fix issue 456
+        return ($this->pathInfo = '/' . ltrim(urldecode($pathInfo), '/'));
+    }
+
+    /**
+     * 获取环境变量
+     *
+     * @param string $name 获取环境变量名
+     * @param string|null $default
+     * @return string|null
+     */
+    public function getServer(string $name, string $default = null): ?string
+    {
+        return $_SERVER[$name] ?? $default;
+    }
+
+    /**
+     * 获取ip地址
+     *
+     * @access public
+     * @return string
+     */
+    public function getIp(): string
+    {
+        if (null === $this->ip) {
+            $header = defined('__TYPECHO_IP_SOURCE__') ? __TYPECHO_IP_SOURCE__ : 'X-Forwarded-For';
+            $ip = $this->getHeader($header, $this->getHeader('Client-Ip', $this->getServer('REMOTE_ADDR')));
+
+            if (!empty($ip)) {
+                [$ip] = array_map('trim', explode(',', $ip));
+                $ip = filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6);
+            }
+
+            if (!empty($ip)) {
+                $this->ip = $ip;
+            } else {
+                $this->ip = 'unknown';
+            }
+        }
+
+        return $this->ip;
+    }
+
+    /**
+     * get header value
+     *
+     * @param string $key
+     * @param string|null $default
+     *
+     * @return string|null
+     */
+    public function getHeader(string $key, ?string $default = null): ?string
+    {
+        $key = 'HTTP_' . strtoupper(str_replace('-', '_', $key));
+        return $this->getServer($key, $default);
+    }
+
+    /**
+     * 获取客户端
+     *
+     * @access public
+     * @return string
+     */
+    public function getAgent(): ?string
+    {
+        return $this->getHeader('User-Agent');
+    }
+
+    /**
+     * 获取客户端
+     *
+     * @access public
+     * @return string|null
+     */
+    public function getReferer(): ?string
+    {
+        return $this->getHeader('Referer');
+    }
+
+    /**
+     * 判断是否为https
+     *
+     * @return bool
+     */
+    public function isSecure(): bool
+    {
+        return (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && !strcasecmp('https', $_SERVER['HTTP_X_FORWARDED_PROTO']))
+            || (!empty($_SERVER['HTTP_X_FORWARDED_PORT']) && 443 == $_SERVER['HTTP_X_FORWARDED_PORT'])
+            || (!empty($_SERVER['HTTPS']) && 'off' != strtolower($_SERVER['HTTPS']))
+            || (!empty($_SERVER['SERVER_PORT']) && 443 == $_SERVER['SERVER_PORT'])
+            || (defined('__TYPECHO_SECURE__') && __TYPECHO_SECURE__);
+    }
+
+    /**
+     * 判断是否为get方法
+     *
+     * @return boolean
+     */
+    public function isGet(): bool
+    {
+        return 'GET' == $this->getServer('REQUEST_METHOD');
+    }
+
+    /**
+     * 判断是否为post方法
+     *
+     * @return boolean
+     */
+    public function isPost(): bool
+    {
+        return 'POST' == $this->getServer('REQUEST_METHOD');
+    }
+
+    /**
+     * 判断是否为put方法
+     *
+     * @return boolean
+     */
+    public function isPut(): bool
+    {
+        return 'PUT' == $this->getServer('REQUEST_METHOD');
+    }
+
+    /**
+     * 判断是否为ajax
+     *
+     * @return boolean
+     */
+    public function isAjax(): bool
+    {
+        return 'XMLHttpRequest' == $this->getServer('HTTP_X_REQUESTED_WITH');
+    }
+
+    /**
+     * 判断输入是否满足要求
+     *
+     * @param mixed $query 条件
+     * @return boolean
+     */
+    public function is($query): bool
+    {
+        $validated = false;
+
+        /** 解析串 */
+        if (is_string($query)) {
+            parse_str($query, $params);
+        } elseif (is_array($query)) {
+            $params = $query;
+        }
+
+        /** 验证串 */
+        if (!empty($params)) {
+            $validated = true;
+            foreach ($params as $key => $val) {
+                $param = $this->get($key, null, $exists);
+                $validated = empty($val) ? $exists : ($val == $param);
+
+                if (!$validated) {
+                    break;
+                }
+            }
+        }
+
+        return $validated;
+    }
+
+    /**
+     * 获取url前缀
+     *
+     * @access public
+     * @return string
+     */
+    private function getUrlPrefix(): string
+    {
+        if (empty($this->urlPrefix)) {
+            if (defined('__TYPECHO_URL_PREFIX__')) {
+                $this->urlPrefix = __TYPECHO_URL_PREFIX__;
+            } elseif (php_sapi_name() != 'cli') {
+                $this->urlPrefix = ($this->isSecure() ? 'https' : 'http') . '://'
+                    . ($_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME']);
+            }
+        }
+
+        return $this->urlPrefix;
+    }
+
+    /**
      * 获取请求地址
      *
      * @access public
      * @return string
      */
-    public function getRequestUri(): ?string
+    private function getRequestUri(): ?string
     {
         if (!empty($this->requestUri)) {
             return $this->requestUri;
@@ -387,7 +538,7 @@ class Request
      * @access public
      * @return string
      */
-    public function getBaseUrl(): ?string
+    private function getBaseUrl(): ?string
     {
         if (null !== $this->baseUrl) {
             return $this->baseUrl;
@@ -443,280 +594,5 @@ class Request
         }
 
         return ($this->baseUrl = (null === $finalBaseUrl) ? rtrim($baseUrl, '/') : $finalBaseUrl);
-    }
-
-    /**
-     * 根据当前uri构造指定参数的uri
-     *
-     * @access public
-     *
-     * @param mixed $parameter 指定的参数
-     *
-     * @return string
-     */
-    public function makeUriByRequest($parameter = null): string
-    {
-        /** 初始化地址 */
-        $requestUri = $this->getRequestUrl();
-        $parts = parse_url($requestUri);
-
-        /** 初始化参数 */
-        if (is_string($parameter)) {
-            parse_str($parameter, $args);
-        } elseif (is_array($parameter)) {
-            $args = $parameter;
-        } else {
-            return $requestUri;
-        }
-
-        /** 构造query */
-        if (isset($parts['query'])) {
-            parse_str($parts['query'], $currentArgs);
-            $args = array_merge($currentArgs, $args);
-        }
-        $parts['query'] = http_build_query($args);
-
-        /** 返回地址 */
-        return Common::buildUrl($parts);
-    }
-
-    /**
-     * 获取当前pathinfo
-     *
-     * @access public
-     *
-     * @param string|null $inputEncoding 输入编码
-     * @param string|null $outputEncoding 输出编码
-     *
-     * @return string
-     */
-    public function getPathInfo(string $inputEncoding = null, string $outputEncoding = null): ?string
-    {
-        /** 缓存信息 */
-        if (null !== $this->pathInfo) {
-            return $this->pathInfo;
-        }
-
-        //参考Zend Framework对pahtinfo的处理, 更好的兼容性
-        $pathInfo = null;
-
-        //处理requestUri
-        $requestUri = $this->getRequestUri();
-        $finalBaseUrl = $this->getBaseUrl();
-
-        // Remove the query string from REQUEST_URI
-        if ($pos = strpos($requestUri, '?')) {
-            $requestUri = substr($requestUri, 0, $pos);
-        }
-
-        if (
-            (null !== $finalBaseUrl)
-            && (false === ($pathInfo = substr($requestUri, strlen($finalBaseUrl))))
-        ) {
-            // If substr() returns false then PATH_INFO is set to an empty string
-            $pathInfo = '/';
-        } elseif (null === $finalBaseUrl) {
-            $pathInfo = $requestUri;
-        }
-
-        if (!empty($pathInfo)) {
-            //针对iis的utf8编码做强制转换
-            //参考http://docs.moodle.org/ja/%E5%A4%9A%E8%A8%80%E8%AA%9E%E5%AF%BE%E5%BF%9C%EF%BC%9A%E3%82%B5%E3%83%BC%E3%83%90%E3%81%AE%E8%A8%AD%E5%AE%9A
-            if (
-                !empty($inputEncoding)
-                && !empty($outputEncoding)
-                && (stripos($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS') !== false
-                    || stripos($_SERVER['SERVER_SOFTWARE'], 'ExpressionDevServer') !== false)
-            ) {
-                if (function_exists('mb_convert_encoding')) {
-                    $pathInfo = mb_convert_encoding($pathInfo, $outputEncoding, $inputEncoding);
-                } elseif (function_exists('iconv')) {
-                    $pathInfo = iconv($inputEncoding, $outputEncoding, $pathInfo);
-                }
-            }
-        } else {
-            $pathInfo = '/';
-        }
-
-        // fix issue 456
-        return ($this->pathInfo = '/' . ltrim(urldecode($pathInfo), '/'));
-    }
-
-    /**
-     * 获取环境变量
-     *
-     * @access public
-     *
-     * @param string $name 获取环境变量名
-     * @param string|null $default
-     *
-     * @return string|null
-     */
-    public function getServer(string $name, string $default = null): ?string
-    {
-        return $_SERVER[$name] ?? $default;
-    }
-
-    /**
-     * 获取ip地址
-     *
-     * @access public
-     * @return string
-     */
-    public function getIp(): string
-    {
-        if (null === $this->ip) {
-            $header = defined('__TYPECHO_IP_SOURCE__') ? __TYPECHO_IP_SOURCE__ : 'X-Forwarded-For' ;
-            $ip = $this->getHeader($header, $this->getHeader('Client-Ip', $this->getServer('REMOTE_ADDR')));
-
-            if (!empty($ip)) {
-                [$ip] = array_map('trim', explode(',', $ip));
-                $ip = filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6);
-            }
-
-            if (!empty($ip)) {
-                $this->ip = $ip;
-            } else {
-                $this->ip = 'unknown';
-            }
-        }
-
-        return $this->ip;
-    }
-
-    /**
-     * get header value
-     *
-     * @param string $key
-     * @param string|null $default
-     *
-     * @return string|null
-     */
-    public function getHeader(string $key, ?string $default = null): ?string
-    {
-        $key = 'HTTP_' . strtoupper(str_replace('-', '_', $key));
-        return $this->getServer($key, $default);
-    }
-
-    /**
-     * 获取客户端
-     *
-     * @access public
-     * @return string
-     */
-    public function getAgent(): ?string
-    {
-        return $this->getHeader('User-Agent');
-    }
-
-    /**
-     * 获取客户端
-     *
-     * @access public
-     * @return string|null
-     */
-    public function getReferer(): ?string
-    {
-        return $this->getHeader('Referer');
-    }
-
-    /**
-     * 判断是否为get方法
-     *
-     * @access public
-     * @return boolean
-     */
-    public function isGet(): bool
-    {
-        return 'GET' == $this->getServer('REQUEST_METHOD');
-    }
-
-    /**
-     * 判断是否为post方法
-     *
-     * @access public
-     * @return boolean
-     */
-    public function isPost(): bool
-    {
-        return 'POST' == $this->getServer('REQUEST_METHOD');
-    }
-
-    /**
-     * 判断是否为put方法
-     *
-     * @access public
-     * @return boolean
-     */
-    public function isPut(): bool
-    {
-        return 'PUT' == $this->getServer('REQUEST_METHOD');
-    }
-
-    /**
-     * 判断是否为ajax
-     *
-     * @access public
-     * @return boolean
-     */
-    public function isAjax(): bool
-    {
-        return 'XMLHttpRequest' == $this->getServer('HTTP_X_REQUESTED_WITH');
-    }
-
-    /**
-     * 判断输入是否满足要求
-     *
-     * @access public
-     *
-     * @param mixed $query 条件
-     *
-     * @return boolean
-     */
-    public function is($query): bool
-    {
-        $validated = false;
-
-        /** 解析串 */
-        if (is_string($query)) {
-            parse_str($query, $params);
-        } elseif (is_array($query)) {
-            $params = $query;
-        }
-
-        /** 验证串 */
-        if (!empty($params)) {
-            $validated = true;
-            foreach ($params as $key => $val) {
-                $validated = empty($val) ? $this->__isset($key) : ($val == $this->get($key));
-
-                if (!$validated) {
-                    break;
-                }
-            }
-        }
-
-        return $validated;
-    }
-
-    /**
-     * 应用过滤器
-     *
-     * @param mixed $value
-     *
-     * @return mixed
-     */
-    private function applyFilter($value)
-    {
-        if ($this->filter) {
-            foreach ($this->filter as $filter) {
-                $value = is_array($value) ? array_map($filter, $value) :
-                    call_user_func($filter, $value);
-            }
-
-            $this->filter = [];
-        }
-
-        return $value;
     }
 }

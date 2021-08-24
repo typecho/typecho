@@ -4,6 +4,7 @@ namespace Typecho;
 
 use Typecho\Widget\Exception as WidgetException;
 use Typecho\Widget\Helper\EmptyClass;
+use Typecho\Widget\Request as WidgetRequest;
 
 /**
  * Typecho组件基类
@@ -25,6 +26,20 @@ abstract class Widget
      * @var array
      */
     private static $widgetAlias = [];
+
+    /**
+     * request对象
+     *
+     * @var WidgetRequest
+     */
+    public $request;
+
+    /**
+     * response对象
+     *
+     * @var Response
+     */
+    public $response;
 
     /**
      * 数据堆栈
@@ -49,20 +64,6 @@ abstract class Widget
     protected $length = 0;
 
     /**
-     * request对象
-     *
-     * @var Request
-     */
-    protected $request;
-
-    /**
-     * response对象
-     *
-     * @var Response
-     */
-    protected $response;
-
-    /**
      * config对象
      *
      * @var Config
@@ -81,20 +82,16 @@ abstract class Widget
      *
      * @access public
      *
-     * @param mixed $request request对象
+     * @param WidgetRequest $request request对象
      * @param mixed $response response对象
      * @param mixed $params 参数列表
      */
-    public function __construct($request, $response, $params = null)
+    public function __construct(WidgetRequest $request, $response, $params = null)
     {
         //设置函数内部对象
         $this->request = $request;
         $this->response = $response;
-        $this->parameter = new Config();
-
-        if (!empty($params)) {
-            $this->parameter->setDefault($params);
-        }
+        $this->parameter = Config::factory($params);
     }
 
     /**
@@ -146,12 +143,7 @@ abstract class Widget
             }
 
             /** 初始化request */
-            if (!empty($request)) {
-                $requestObject = new Request();
-                $requestObject->setParams($request);
-            } else {
-                $requestObject = Request::getInstance();
-            }
+            $requestObject = new WidgetRequest(Request::getInstance(), Config::factory($request));
 
             /** 初始化response */
             $responseObject = $enableResponse ? Response::getInstance()
@@ -258,7 +250,7 @@ abstract class Widget
         if ($key !== null && isset($this->stack[$key])) {
             $this->row = current($this->stack);
             next($this->stack);
-            $this->sequence ++;
+            $this->sequence++;
         } else {
             reset($this->stack);
             $this->sequence = 0;
@@ -279,7 +271,7 @@ abstract class Widget
     {
         //将行数据按顺序置位
         $this->row = $value;
-        $this->length ++;
+        $this->length++;
 
         $this->stack[] = $value;
         return $value;
