@@ -101,10 +101,7 @@ class Request
     /**
      * 获取实际传递参数(magic)
      *
-     * @access public
-     *
      * @param string $key 指定参数
-     *
      * @return mixed
      */
     public function __get(string $key)
@@ -115,10 +112,7 @@ class Request
     /**
      * 判断参数是否存在
      *
-     * @access public
-     *
      * @param string $key 指定参数
-     *
      * @return boolean
      */
     public function __isset(string $key)

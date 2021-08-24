@@ -136,10 +136,10 @@ class Pgsql implements Adapter
     /**
      * 引号转义函数
      *
-     * @param string $string 需要转义的字符串
+     * @param mixed $string 需要转义的字符串
      * @return string
      */
-    public function quoteValue(string $string): string
+    public function quoteValue($string): string
     {
         return '\'' . pg_escape_string($string) . '\'';
     }

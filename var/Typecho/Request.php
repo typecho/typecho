@@ -111,6 +111,8 @@ class Request
      */
     public function get(string $key, $default = null, ?bool &$exists = true)
     {
+        $exists = true;
+
         switch (true) {
             case isset($this->params) && isset($this->params[$key]):
                 $value = $this->params[$key];
