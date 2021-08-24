@@ -10,7 +10,7 @@
 class AutoP
 {
     // 作为段落的标签
-    const BLOCK = 'p|pre|div|blockquote|form|ul|ol|dd|table|ins|h1|h2|h3|h4|h5|h6';
+    private const BLOCK = 'p|pre|div|blockquote|form|ul|ol|dd|table|ins|h1|h2|h3|h4|h5|h6';
 
     /**
      * 唯一id
@@ -18,7 +18,7 @@ class AutoP
      * @access private
      * @var integer
      */
-    private $_uniqueId = 0;
+    private $uniqueId = 0;
 
     /**
      * 存储的段落
@@ -26,7 +26,7 @@ class AutoP
      * @access private
      * @var array
      */
-    private $_blocks = [];
+    private $blocks = [];
 
     /**
      * 替换段落的回调函数
@@ -35,14 +35,17 @@ class AutoP
      * @param array $matches 匹配值
      * @return string
      */
-    public function replaceBlockCallback($matches)
+    public function replaceBlockCallback(array $matches): string
     {
         $tagMatch = '|' . $matches[1] . '|';
         $text = $matches[4];
 
         switch (true) {
             /** 用br处理换行 */
-            case false !== strpos('|li|dd|dt|td|p|a|span|cite|strong|sup|sub|small|del|u|i|b|ins|h1|h2|h3|h4|h5|h6|', $tagMatch):
+            case false !== strpos(
+                '|li|dd|dt|td|p|a|span|cite|strong|sup|sub|small|del|u|i|b|ins|h1|h2|h3|h4|h5|h6|',
+                $tagMatch
+            ):
                 $text = nl2br(trim($text));
                 break;
             /** 用段落处理换行 */
@@ -63,7 +66,7 @@ class AutoP
             $key = '<p' . $matches[2] . '/>';
         }
 
-        $this->_blocks[$key] = "<{$matches[1]}{$matches[3]}>{$text}</{$matches[1]}>";
+        $this->blocks[$key] = "<{$matches[1]}{$matches[3]}>{$text}</{$matches[1]}>";
         return $key;
     }
 
@@ -121,8 +124,8 @@ class AutoP
     public function parse($text)
     {
         /** 重置计数器 */
-        $this->_uniqueId = 0;
-        $this->_blocks = [];
+        $this->uniqueId = 0;
+        $this->blocks = [];
 
         /** 将已有的段落后面的换行处理掉 */
         $text = preg_replace(["/<\/p>\s+<p(\s*)/is", "/\s*<br\s*\/?>\s*/is"], ["</p><p\\1", "<br />"], trim($text));
@@ -173,7 +176,7 @@ class AutoP
         }
 
         $text = $this->cutByBlock($text);
-        $blocks = array_reverse($this->_blocks);
+        $blocks = array_reverse($this->blocks);
 
         foreach ($blocks as $blockKey => $blockValue) {
             $text = str_replace($blockKey, $blockValue, $text);
@@ -190,7 +193,7 @@ class AutoP
      */
     private function makeUniqueId()
     {
-        return ':' . str_pad($this->_uniqueId ++, 4, '0', STR_PAD_LEFT);
+        return ':' . str_pad($this->uniqueId ++, 4, '0', STR_PAD_LEFT);
     }
 }
 
