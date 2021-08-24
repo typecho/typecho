@@ -3,10 +3,10 @@ include 'common.php';
 include 'header.php';
 include 'menu.php';
 
-$stat = Typecho_Widget::widget('Widget_Stat');
+$stat = \Typecho\Widget::widget('Widget_Stat');
 ?>
 
-<?php Typecho_Widget::widget('Widget_Contents_Attachment_Admin')->to($attachments); ?>
+<?php \Typecho\Widget::widget('Widget_Contents_Attachment_Admin')->to($attachments); ?>
 <div class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
@@ -59,10 +59,10 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                         <tbody>
                         	<?php if($attachments->have()): ?>
                             <?php while($attachments->next()): ?>
-                            <?php $mime = Typecho_Common::mimeIconType($attachments->attachment->mime); ?>
+                            <?php $mime = \Typecho\Common::mimeIconType($attachments->attachment->mime); ?>
                             <tr id="<?php $attachments->theId(); ?>">
                                 <td class="kit-hidden-mb"><input type="checkbox" value="<?php $attachments->cid(); ?>" name="cid[]"/></td>
-                                <td class="kit-hidden-mb"><a href="<?php $options->adminUrl('manage-comments.php?cid=' . $attachments->cid); ?>" class="balloon-button size-<?php echo Typecho_Common::splitByCount($attachments->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $attachments->commentsNum(); ?></a></td>
+                                <td class="kit-hidden-mb"><a href="<?php $options->adminUrl('manage-comments.php?cid=' . $attachments->cid); ?>" class="balloon-button size-<?php echo \Typecho\Common::splitByCount($attachments->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $attachments->commentsNum(); ?></a></td>
                                 <td>
                                 <i class="mime-<?php echo $mime; ?>"></i>
                                 <a href="<?php $options->adminUrl('media.php?cid=' . $attachments->cid); ?>"><?php $attachments->title(); ?></a>

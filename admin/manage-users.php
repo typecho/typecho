@@ -51,11 +51,11 @@ include 'menu.php';
                             </tr>
                         </thead>
                         <tbody>
-                        	<?php Typecho_Widget::widget('Widget_Users_Admin')->to($users); ?>
+                        	<?php \Typecho\Widget::widget('Widget_Users_Admin')->to($users); ?>
                             <?php while($users->next()): ?>
                             <tr id="user-<?php $users->uid(); ?>">
                                 <td class="kit-hidden-mb"><input type="checkbox" value="<?php $users->uid(); ?>" name="uid[]"/></td>
-                                <td class="kit-hidden-mb"><a href="<?php $options->adminUrl('manage-posts.php?uid=' . $users->uid); ?>" class="balloon-button left size-<?php echo Typecho_Common::splitByCount($users->postsNum, 1, 10, 20, 50, 100); ?>"><?php $users->postsNum(); ?></a></td>
+                                <td class="kit-hidden-mb"><a href="<?php $options->adminUrl('manage-posts.php?uid=' . $users->uid); ?>" class="balloon-button left size-<?php echo \Typecho\Common::splitByCount($users->postsNum, 1, 10, 20, 50, 100); ?>"><?php $users->postsNum(); ?></a></td>
                                 <td><a href="<?php $options->adminUrl('user.php?uid=' . $users->uid); ?>"><?php $users->name(); ?></a>
                                 <a href="<?php $users->permalink(); ?>" title="<?php _e('浏览 %s', $users->screenName); ?>"><i class="i-exlink"></i></a>
                                 </td>

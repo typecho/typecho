@@ -4,10 +4,10 @@ include 'common.php';
 if ($user->hasLogin() || !$options->allowRegister) {
     $response->redirect($options->siteUrl);
 }
-$rememberName = htmlspecialchars(Typecho_Cookie::get('__typecho_remember_name'));
-$rememberMail = htmlspecialchars(Typecho_Cookie::get('__typecho_remember_mail'));
-Typecho_Cookie::delete('__typecho_remember_name');
-Typecho_Cookie::delete('__typecho_remember_mail');
+$rememberName = htmlspecialchars(\Typecho\Cookie::get('__typecho_remember_name'));
+$rememberMail = htmlspecialchars(\Typecho\Cookie::get('__typecho_remember_mail'));
+\Typecho\Cookie::delete('__typecho_remember_name');
+\Typecho\Cookie::delete('__typecho_remember_mail');
 
 $bodyClass = 'body-100';
 

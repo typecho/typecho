@@ -2,7 +2,7 @@
 include 'common.php';
 include 'header.php';
 include 'menu.php';
-Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
+\Typecho\Widget::widget('Widget_Contents_Post_Edit')->to($post);
 ?>
 <div class="main">
     <div class="body container">
@@ -12,7 +12,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                 <div class="col-mb-12 col-tb-9" role="main">
                     <?php if ($post->draft): ?>
                         <?php if ($post->draft['cid'] != $post->cid): ?>
-                            <?php $postModifyDate = new Typecho_Date($post->draft['modified']); ?>
+                            <?php $postModifyDate = new \Typecho\Date($post->draft['modified']); ?>
                             <cite class="edit-draft-notice"><?php _e('你正在编辑的是保存于 %s 的草稿, 你也可以 <a href="%s">删除它</a>', $postModifyDate->word(),
                                     $security->getIndex('/action/contents-post-edit?do=deleteDraft&cid=' . $post->cid)); ?></cite>
                         <?php else: ?>
@@ -25,7 +25,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         <label for="title" class="sr-only"><?php _e('标题'); ?></label>
                         <input type="text" id="title" name="title" autocomplete="off" value="<?php $post->title(); ?>" placeholder="<?php _e('标题'); ?>" class="w-100 text title" />
                     </p>
-                    <?php $permalink = Typecho_Common::url($options->routingTable['post']['url'], $options->index);
+                    <?php $permalink = \Typecho\Common::url($options->routingTable['post']['url'], $options->index);
                     list ($scheme, $permalink) = explode(':', $permalink, 2);
                     $permalink = ltrim($permalink, '/');
                     $permalink = preg_replace("/\[([_a-z0-9-]+)[^\]]*\]/i", "{\\1}", $permalink);
@@ -64,7 +64,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                         </span>
                     </p>
 
-                    <?php Typecho_Plugin::factory('admin/write-post.php')->content($post); ?>
+                    <?php \Typecho\Plugin::factory('admin/write-post.php')->content($post); ?>
                 </div>
 
                 <div id="edit-secondary" class="col-mb-12 col-tb-3" role="complementary">
@@ -82,7 +82,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
 
                         <section class="typecho-post-option category-option">
                             <label class="typecho-label"><?php _e('分类'); ?></label>
-                            <?php Typecho_Widget::widget('Widget_Metas_Category_List')->to($category); ?>
+                            <?php \Typecho\Widget::widget('Widget_Metas_Category_List')->to($category); ?>
                             <ul>
                                 <?php
                                 if ($post->have()) {
@@ -103,7 +103,7 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                             <p><input id="tags" name="tags" type="text" value="<?php $post->tags(',', false); ?>" class="w-100 text" /></p>
                         </section>
 
-                        <?php Typecho_Plugin::factory('admin/write-post.php')->option($post); ?>
+                        <?php \Typecho\Plugin::factory('admin/write-post.php')->option($post); ?>
 
                         <button type="button" id="advance-panel-btn" class="btn btn-xs"><?php _e('高级选项'); ?> <i class="i-caret-down"></i></button>
                         <div id="advance-panel">
@@ -146,16 +146,16 @@ Typecho_Widget::widget('Widget_Contents_Post_Edit')->to($post);
                                 <p class="description"><?php _e('每一行一个引用地址, 用回车隔开'); ?></p>
                             </section>
 
-                            <?php Typecho_Plugin::factory('admin/write-post.php')->advanceOption($post); ?>
+                            <?php \Typecho\Plugin::factory('admin/write-post.php')->advanceOption($post); ?>
                         </div><!-- end #advance-panel -->
 
                         <?php if($post->have()): ?>
-                        <?php $modified = new Typecho_Date($post->modified); ?>
+                        <?php $modified = new \Typecho\Date($post->modified); ?>
                         <section class="typecho-post-option">
                             <p class="description">
                                 <br>&mdash;<br>
                                 <?php _e('本文由 <a href="%s">%s</a> 撰写',
-                                Typecho_Common::url('manage-posts.php?uid=' . $post->author->uid, $options->adminUrl), $post->author->screenName); ?><br>
+                                \Typecho\Common::url('manage-posts.php?uid=' . $post->author->uid, $options->adminUrl), $post->author->screenName); ?><br>
                                 <?php _e('最后更新于 %s', $modified->word()); ?>
                             </p>
                         </section>
@@ -177,13 +177,13 @@ include 'common-js.php';
 include 'form-js.php';
 include 'write-js.php';
 
-Typecho_Plugin::factory('admin/write-post.php')->trigger($plugged)->richEditor($post);
+\Typecho\Plugin::factory('admin/write-post.php')->trigger($plugged)->richEditor($post);
 if (!$plugged) {
     include 'editor-js.php';
 }
 
 include 'file-upload-js.php';
 include 'custom-fields-js.php';
-Typecho_Plugin::factory('admin/write-post.php')->bottom($post);
+\Typecho\Plugin::factory('admin/write-post.php')->bottom($post);
 include 'footer.php';
 ?>

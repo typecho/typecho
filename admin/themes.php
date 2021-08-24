@@ -32,7 +32,7 @@ include 'menu.php';
                         </thead>
 
                         <tbody>
-                            <?php Typecho_Widget::widget('Widget_Themes_List')->to($themes); ?>
+                            <?php \Typecho\Widget::widget('Widget_Themes_List')->to($themes); ?>
                             <?php while($themes->next()): ?>
                             <tr id="theme-<?php $themes->name(); ?>" class="<?php if($themes->activated): ?>current<?php endif; ?>">
                                 <td valign="top"><img src="<?php $themes->screen(); ?>" alt="<?php $themes->name(); ?>" /></td>

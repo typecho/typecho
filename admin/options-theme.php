@@ -18,7 +18,7 @@ include 'menu.php';
                 </ul>
             </div>
             <div class="col-mb-12 col-tb-8 col-tb-offset-2" role="form">
-                <?php Typecho_Widget::widget('Widget_Themes_Config')->config()->render(); ?>
+                <?php \Typecho\Widget::widget('Widget_Themes_Config')->config()->render(); ?>
             </div>
         </div>
     </div>

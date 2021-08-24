@@ -3,9 +3,9 @@ include 'common.php';
 include 'header.php';
 include 'menu.php';
 
-$stat = Typecho_Widget::widget('Widget_Stat');
-$comments = Typecho_Widget::widget('Widget_Comments_Admin');
-$isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == Typecho_Cookie::get('__typecho_all_comments'));
+$stat = \Typecho\Widget::widget('Widget_Stat');
+$comments = \Typecho\Widget::widget('Widget_Comments_Admin');
+$isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == \Typecho\Cookie::get('__typecho_all_comments'));
 ?>
 <div class="main">
     <div class="body container">

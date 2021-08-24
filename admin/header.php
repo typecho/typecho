@@ -8,7 +8,7 @@ $header = '<link rel="stylesheet" href="' . $options->adminStaticUrl('css', 'nor
 <link rel="stylesheet" href="' . $options->adminStaticUrl('css', 'style.css', true) . '">';
 
 /** 注册一个初始化插件 */
-$header = Typecho_Plugin::factory('admin/header.php')->header($header);
+$header = \Typecho\Plugin::factory('admin/header.php')->header($header);
 
 ?><!DOCTYPE HTML>
 <html>

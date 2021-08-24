@@ -3,7 +3,7 @@ include 'common.php';
 include 'header.php';
 include 'menu.php';
 
-$stat = Typecho_Widget::widget('Widget_Stat');
+$stat = \Typecho\Widget::widget('Widget_Stat');
 ?>
 <div class="main">
     <div class="container typecho-dashboard">
@@ -48,7 +48,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
             <div class="col-mb-12 col-tb-4" role="complementary">
                 <section class="latest-link">
                     <h3><?php _e('最近发布的文章'); ?></h3>
-                    <?php Typecho_Widget::widget('Widget_Contents_Post_Recent', 'pageSize=10')->to($posts); ?>
+                    <?php \Typecho\Widget::widget('Widget_Contents_Post_Recent', 'pageSize=10')->to($posts); ?>
                     <ul>
                     <?php if($posts->have()): ?>
                     <?php while($posts->next()): ?>
@@ -68,7 +68,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                 <section class="latest-link">
                     <h3><?php _e('最近得到的回复'); ?></h3>
                     <ul>
-                        <?php Typecho_Widget::widget('Widget_Comments_Recent', 'pageSize=10')->to($comments); ?>
+                        <?php \Typecho\Widget::widget('Widget_Comments_Recent', 'pageSize=10')->to($comments); ?>
                         <?php if($comments->have()): ?>
                         <?php while($comments->next()): ?>
                         <li>

@@ -9,7 +9,7 @@ if (preg_match("/^([0-9]+)([a-z]{1,2})$/i", $phpMaxFilesize, $matches)) {
     $phpMaxFilesize = strtolower($matches[1] . $matches[2] . (1 == strlen($matches[2]) ? 'b' : ''));
 }
 
-Typecho_Widget::widget('Widget_Contents_Attachment_Edit')->to($attachment);
+\Typecho\Widget::widget('Widget_Contents_Attachment_Edit')->to($attachment);
 ?>
 
 <div class="main">
@@ -22,7 +22,7 @@ Typecho_Widget::widget('Widget_Contents_Attachment_Edit')->to($attachment);
                 <?php endif; ?>
                 
                 <p>
-                    <?php $mime = Typecho_Common::mimeIconType($attachment->attachment->mime); ?>
+                    <?php $mime = \Typecho\Common::mimeIconType($attachment->attachment->mime); ?>
                     <i class="mime-<?php echo $mime; ?>"></i>
                     <a href=""><strong><?php $attachment->attachment->name(); ?></strong></a>
                     <span><?php echo number_format(ceil($attachment->attachment->size / 1024)); ?> Kb</span>

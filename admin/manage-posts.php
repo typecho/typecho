@@ -3,9 +3,9 @@ include 'common.php';
 include 'header.php';
 include 'menu.php';
 
-$stat = Typecho_Widget::widget('Widget_Stat');
-$posts = Typecho_Widget::widget('Widget_Contents_Post_Admin');
-$isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == Typecho_Cookie::get('__typecho_all_posts'));
+$stat = \Typecho\Widget::widget('Widget_Stat');
+$posts = \Typecho\Widget::widget('Widget_Contents_Post_Admin');
+$isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\Cookie::get('__typecho_all_posts'));
 ?>
 <div class="main">
     <div class="body container">
@@ -72,7 +72,7 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == Typecho_C
                             <input type="text" class="text-s" placeholder="<?php _e('请输入关键字'); ?>" value="<?php echo htmlspecialchars($request->keywords); ?>" name="keywords" />
                             <select name="category">
                             	<option value=""><?php _e('所有分类'); ?></option>
-                            	<?php Typecho_Widget::widget('Widget_Metas_Category_List')->to($category); ?>
+                            	<?php \Typecho\Widget::widget('Widget_Metas_Category_List')->to($category); ?>
                             	<?php while($category->next()): ?>
                             	<option value="<?php $category->mid(); ?>"<?php if($request->get('category') == $category->mid): ?> selected="true"<?php endif; ?>><?php $category->name(); ?></option>
                             	<?php endwhile; ?>
@@ -114,7 +114,7 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == Typecho_C
                             <?php while($posts->next()): ?>
                             <tr id="<?php $posts->theId(); ?>">
                                 <td class="kit-hidden-mb"><input type="checkbox" value="<?php $posts->cid(); ?>" name="cid[]"/></td>
-                                <td class="kit-hidden-mb"><a href="<?php $options->adminUrl('manage-comments.php?cid=' . ($posts->parentId ? $posts->parentId : $posts->cid)); ?>" class="balloon-button size-<?php echo Typecho_Common::splitByCount($posts->commentsNum, 1, 10, 20, 50, 100); ?>" title="<?php $posts->commentsNum(); ?> <?php _e('评论'); ?>"><?php $posts->commentsNum(); ?></a></td>
+                                <td class="kit-hidden-mb"><a href="<?php $options->adminUrl('manage-comments.php?cid=' . ($posts->parentId ? $posts->parentId : $posts->cid)); ?>" class="balloon-button size-<?php echo \Typecho\Common::splitByCount($posts->commentsNum, 1, 10, 20, 50, 100); ?>" title="<?php $posts->commentsNum(); ?> <?php _e('评论'); ?>"><?php $posts->commentsNum(); ?></a></td>
                                 <td>
                                 <a href="<?php $options->adminUrl('write-post.php?cid=' . $posts->cid); ?>"><?php $posts->title(); ?></a>
                                 <?php 
@@ -150,7 +150,7 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == Typecho_C
                                 <td>
                                 <?php if ($posts->hasSaved): ?>
                                 <span class="description">
-                                <?php $modifyDate = new Typecho_Date($posts->modified); ?>
+                                <?php $modifyDate = new \Typecho\Date($posts->modified); ?>
                                 <?php _e('保存于 %s', $modifyDate->word()); ?>
                                 </span>
                                 <?php else: ?>

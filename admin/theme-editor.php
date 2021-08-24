@@ -3,7 +3,7 @@ include 'common.php';
 include 'header.php';
 include 'menu.php';
 
-Typecho_Widget::widget('Widget_Themes_Files')->to($files);
+\Typecho\Widget::widget('Widget_Themes_Files')->to($files);
 ?>
 
 <div class="main">
@@ -57,6 +57,6 @@ Typecho_Widget::widget('Widget_Themes_Files')->to($files);
 <?php
 include 'copyright.php';
 include 'common-js.php';
-Typecho_Plugin::factory('admin/theme-editor.php')->bottom($files);
+\Typecho\Plugin::factory('admin/theme-editor.php')->bottom($files);
 include 'footer.php';
 ?>

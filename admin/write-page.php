@@ -2,7 +2,7 @@
 include 'common.php';
 include 'header.php';
 include 'menu.php';
-Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
+\Typecho\Widget::widget('Widget_Contents_Page_Edit')->to($page);
 ?>
 <div class="main">
     <div class="body container">
@@ -12,7 +12,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                 <div class="col-mb-12 col-tb-9" role="main">
                     <?php if ($page->draft): ?>
                         <?php if ($page->draft['cid'] != $page->cid): ?>
-                            <?php $pageModifyDate = new Typecho_Date($page->draft['modified']); ?>
+                            <?php $pageModifyDate = new \Typecho\Date($page->draft['modified']); ?>
                             <cite class="edit-draft-notice"><?php _e('当前正在编辑的是保存于%s的草稿, 你可以<a href="%s">删除它</a>', $pageModifyDate->word(),
                                     $security->getIndex('/action/contents-page-edit?do=deleteDraft&cid=' . $page->cid)); ?></cite>
                         <?php else: ?>
@@ -25,7 +25,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                         <label for="title" class="sr-only"><?php _e('标题'); ?></label>
                         <input type="text" id="title" name="title" autocomplete="off" value="<?php $page->title(); ?>" placeholder="<?php _e('标题'); ?>" class="w-100 text title" />
                     </p>
-                    <?php $permalink = Typecho_Common::url($options->routingTable['page']['url'], $options->index);
+                    <?php $permalink = \Typecho\Common::url($options->routingTable['page']['url'], $options->index);
                     list ($scheme, $permalink) = explode(':', $permalink, 2);
                     $permalink = ltrim($permalink, '/');
                     $permalink = preg_replace("/\[([_a-z0-9-]+)[^\]]*\]/i", "{\\1}", $permalink);
@@ -59,7 +59,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                         </span>
                     </p>
                     
-                    <?php Typecho_Plugin::factory('admin/write-page.php')->content($page); ?>
+                    <?php \Typecho\Plugin::factory('admin/write-page.php')->content($page); ?>
                 </div>
                 <div id="edit-secondary" class="col-mb-12 col-tb-3" role="complementary">
                     <ul class="typecho-option-tabs clearfix">
@@ -92,7 +92,7 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                                 <p class="description"><?php _e('如果你为此页面选择了一个自定义模板, 系统将按照你选择的模板文件展现它'); ?></p>
                         </section>
 
-                        <?php Typecho_Plugin::factory('admin/write-page.php')->option($page); ?>
+                        <?php \Typecho\Plugin::factory('admin/write-page.php')->option($page); ?>
 
                         <button type="button" id="advance-panel-btn" class="btn btn-xs"><?php _e('高级选项'); ?> <i class="i-caret-down"></i></button>
                         <div id="advance-panel">
@@ -118,15 +118,15 @@ Typecho_Widget::widget('Widget_Contents_Page_Edit')->to($page);
                                 </ul>
                             </section>
                             
-                            <?php Typecho_Plugin::factory('admin/write-page.php')->advanceOption($page); ?>
+                            <?php \Typecho\Plugin::factory('admin/write-page.php')->advanceOption($page); ?>
                         </div>
                         <?php if($page->have()): ?>
-                        <?php $modified = new Typecho_Date($page->modified); ?>
+                        <?php $modified = new \Typecho\Date($page->modified); ?>
                         <section class="typecho-post-option">
                         <p class="description">
                             <br>&mdash;<br>
                             <?php _e('本页面由 <a href="%s">%s</a> 创建',
-                            Typecho_Common::url('manage-pages.php?uid=' . $page->author->uid, $options->adminUrl), $page->author->screenName); ?><br>
+                            \Typecho\Common::url('manage-pages.php?uid=' . $page->author->uid, $options->adminUrl), $page->author->screenName); ?><br>
                             <?php _e('最后更新于 %s', $modified->word()); ?>
                         </p>
                         </section>
@@ -148,13 +148,13 @@ include 'common-js.php';
 include 'form-js.php';
 include 'write-js.php';
 
-Typecho_Plugin::factory('admin/write-page.php')->trigger($plugged)->richEditor($page);
+\Typecho\Plugin::factory('admin/write-page.php')->trigger($plugged)->richEditor($page);
 if (!$plugged) {
     include 'editor-js.php';
 }
 
 include 'file-upload-js.php';
 include 'custom-fields-js.php';
-Typecho_Plugin::factory('admin/write-page.php')->bottom($page);
+\Typecho\Plugin::factory('admin/write-page.php')->bottom($page);
 include 'footer.php';
 ?>

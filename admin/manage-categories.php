@@ -3,7 +3,7 @@ include 'common.php';
 include 'header.php';
 include 'menu.php';
 
-Typecho_Widget::widget('Widget_Metas_Category_Admin')->to($categories);
+\Typecho\Widget::widget('Widget_Metas_Category_Admin')->to($categories);
 ?>
 
 <div class="main">
@@ -80,7 +80,7 @@ Typecho_Widget::widget('Widget_Metas_Category_Admin')->to($categories);
                                     <a class="hidden-by-mouse" href="<?php $security->index('/action/metas-category-edit?do=default&mid=' . $categories->mid); ?>" title="<?php _e('设为默认'); ?>"><?php _e('默认'); ?></a>
                                     <?php endif; ?>
                                     </td>
-                                    <td class="kit-hidden-mb"><a class="balloon-button left size-<?php echo Typecho_Common::splitByCount($categories->count, 1, 10, 20, 50, 100); ?>" href="<?php $options->adminUrl('manage-posts.php?category=' . $categories->mid); ?>"><?php $categories->count(); ?></a></td>
+                                    <td class="kit-hidden-mb"><a class="balloon-button left size-<?php echo \Typecho\Common::splitByCount($categories->count, 1, 10, 20, 50, 100); ?>" href="<?php $options->adminUrl('manage-posts.php?category=' . $categories->mid); ?>"><?php $categories->count(); ?></a></td>
                                 </tr>
                                 <?php endwhile; ?>
                                 <?php else: ?>

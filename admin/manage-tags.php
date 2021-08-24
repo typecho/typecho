@@ -3,7 +3,7 @@ include 'common.php';
 include 'header.php';
 include 'menu.php';
 
-Typecho_Widget::widget('Widget_Metas_Tag_Admin')->to($tags);
+\Typecho\Widget::widget('Widget_Metas_Tag_Admin')->to($tags);
 ?>
 
 <div class="main">
@@ -49,7 +49,7 @@ Typecho_Widget::widget('Widget_Metas_Tag_Admin')->to($tags);
                     
                 </div>
                 <div class="col-mb-12 col-tb-4" role="form">
-                    <?php Typecho_Widget::widget('Widget_Metas_Tag_Edit')->form()->render(); ?>
+                    <?php \Typecho\Widget::widget('Widget_Metas_Tag_Edit')->form()->render(); ?>
                 </div>
         </div>
     </div>

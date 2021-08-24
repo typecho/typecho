@@ -3,7 +3,7 @@ include 'common.php';
 include 'header.php';
 include 'menu.php';
 
-$stat = Typecho_Widget::widget('Widget_Stat');
+$stat = \Typecho\Widget::widget('Widget_Stat');
 ?>
 <div class="main">
     <div class="body container">
@@ -56,12 +56,12 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                             </tr>
                         </thead>
                         <tbody>
-                        	<?php Typecho_Widget::widget('Widget_Contents_Page_Admin')->to($pages); ?>
+                        	<?php \Typecho\Widget::widget('Widget_Contents_Page_Admin')->to($pages); ?>
                         	<?php if($pages->have()): ?>
                             <?php while($pages->next()): ?>
                             <tr id="<?php $pages->theId(); ?>">
                                 <td class="kit-hidden-mb"><input type="checkbox" value="<?php $pages->cid(); ?>" name="cid[]"/></td>
-                                <td class="kit-hidden-mb"><a href="<?php $options->adminUrl('manage-comments.php?cid=' . $pages->cid); ?>" class="balloon-button size-<?php echo Typecho_Common::splitByCount($pages->commentsNum, 1, 10, 20, 50, 100); ?>" title="<?php $pages->commentsNum(); ?> <?php _e('评论'); ?>"><?php $pages->commentsNum(); ?></a></td>
+                                <td class="kit-hidden-mb"><a href="<?php $options->adminUrl('manage-comments.php?cid=' . $pages->cid); ?>" class="balloon-button size-<?php echo \Typecho\Common::splitByCount($pages->commentsNum, 1, 10, 20, 50, 100); ?>" title="<?php $pages->commentsNum(); ?> <?php _e('评论'); ?>"><?php $pages->commentsNum(); ?></a></td>
                                 <td>
                                 <a href="<?php $options->adminUrl('write-page.php?cid=' . $pages->cid); ?>"><?php $pages->title(); ?></a>
                                 <?php 
@@ -83,7 +83,7 @@ $stat = Typecho_Widget::widget('Widget_Stat');
                                 <td>
                                 <?php if ($pages->hasSaved): ?>
                                 <span class="description">
-                                <?php $modifyDate = new Typecho_Date($pages->modified); ?>
+                                <?php $modifyDate = new \Typecho\Date($pages->modified); ?>
                                 <?php _e('保存于 %s', $modifyDate->word()); ?>
                                 </span>
                                 <?php else: ?>

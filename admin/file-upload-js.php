@@ -1,8 +1,8 @@
 <?php if(!defined('__TYPECHO_ADMIN__')) exit; ?>
 <?php
-if (isset($post) && $post instanceof Typecho_Widget && $post->have()) {
+if (isset($post) && $post instanceof \Typecho\Widget && $post->have()) {
     $fileParentContent = $post;
-} else if (isset($page) && $page instanceof Typecho_Widget && $page->have()) {
+} else if (isset($page) && $page instanceof \Typecho\Widget && $page->have()) {
     $fileParentContent = $page;
 }
 
