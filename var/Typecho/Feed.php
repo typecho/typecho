@@ -102,10 +102,12 @@ class Feed
     /**
      * 创建Feed对象
      *
-     * @access public
-     * @return void
+     * @param $version
+     * @param string $type
+     * @param string $charset
+     * @param string $lang
      */
-    public function __construct($version, $type = self::RSS2, $charset = 'UTF-8', $lang = 'en')
+    public function __construct($version, string $type = self::RSS2, string $charset = 'UTF-8', string $lang = 'en')
     {
         $this->version = $version;
         $this->type = $type;
@@ -116,11 +118,7 @@ class Feed
     /**
      * 设置标题
      *
-     * @access public
-     *
      * @param string $title 标题
-     *
-     * @return void
      */
     public function setTitle(string $title)
     {
@@ -130,11 +128,7 @@ class Feed
     /**
      * 设置副标题
      *
-     * @access public
-     *
      * @param string $subTitle 副标题
-     *
-     * @return void
      */
     public function setSubTitle(string $subTitle)
     {
@@ -144,11 +138,7 @@ class Feed
     /**
      * 设置聚合地址
      *
-     * @access public
-     *
      * @param string $feedUrl 聚合地址
-     *
-     * @return void
      */
     public function setFeedUrl(string $feedUrl)
     {
@@ -158,11 +148,7 @@ class Feed
     /**
      * 设置主页
      *
-     * @access public
-     *
      * @param string $baseUrl 主页地址
-     *
-     * @return void
      */
     public function setBaseUrl(string $baseUrl)
     {
@@ -185,8 +171,6 @@ class Feed
      * )
      * </code>
      *
-     * @access public
-     *
      * @param array $item
      */
     public function addItem(array $item)
@@ -197,7 +181,6 @@ class Feed
     /**
      * 输出字符串
      *
-     * @access public
      * @return string
      */
     public function __toString(): string
@@ -397,10 +380,7 @@ xml:base="' . $this->baseUrl . '"
     /**
      * 获取Feed时间格式
      *
-     * @access public
-     *
      * @param integer $stamp 时间戳
-     *
      * @return string
      */
     public function dateFormat(int $stamp): string

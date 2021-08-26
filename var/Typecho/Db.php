@@ -423,17 +423,16 @@ class Db
      *
      * @param mixed $query 查询对象
      * @param callable|null $filter 行过滤器函数,将查询的每一行作为第一个参数传入指定的过滤器中
-     *
-     * @return mixed
+     * @return array|null
      * @throws DbException
      */
-    public function fetchRow($query, ?callable $filter = null)
+    public function fetchRow($query, ?callable $filter = null): ?array
     {
         $resource = $this->query($query);
 
         return ($rows = $this->adapter->fetch($resource)) ?
             ($filter ? call_user_func($filter, $rows) : $rows) :
-            [];
+            null;
     }
 
     /**
@@ -441,21 +440,15 @@ class Db
      *
      * @param mixed $query 查询对象
      * @param array|null $filter 行过滤器函数,将查询的每一行作为第一个参数传入指定的过滤器中
-     *
-     * @return mixed
+     * @return object|null
      * @throws DbException
      */
-    public function fetchObject($query, ?array $filter = null)
+    public function fetchObject($query, ?array $filter = null): ?object
     {
         $resource = $this->query($query);
 
-        /** 取出过滤器 */
-        if ($filter) {
-            [$object, $method] = $filter;
-        }
-
         return ($rows = $this->adapter->fetchObject($resource)) ?
-            ($filter ? $object->$method($rows) : $rows) :
-            new \stdClass();
+            ($filter ? call_user_func($filter, $rows) : $rows) :
+            null;
     }
 }

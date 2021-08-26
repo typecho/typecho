@@ -1,14 +1,16 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-/**
- * 描述性数据
- *
- * @category typecho
- * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
- * @version $Id$
- */
+
+namespace Widget\Base;
+
+use Typecho\Common;
+use Typecho\Db\Exception;
+use Typecho\Db\Query;
+use Typecho\Router;
+use Widget\Base;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * 描述性数据组件
@@ -18,16 +20,16 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Abstract_Metas extends Widget_Abstract
+class Metas extends Base
 {
     /**
      * 获取记录总数
      *
-     * @access public
-     * @param Typecho_Db_Query $condition 计算条件
+     * @param Query $condition 计算条件
      * @return integer
+     * @throws Exception
      */
-    public function size(Typecho_Db_Query $condition)
+    public function size(Query $condition): int
     {
         return $this->db->fetchObject($condition->select(['COUNT(mid)' => 'num'])->from('table.metas'))->num;
     }
@@ -35,11 +37,10 @@ class Widget_Abstract_Metas extends Widget_Abstract
     /**
      * 将每行的值压入堆栈
      *
-     * @access public
      * @param array $value 每行的值
      * @return array
      */
-    public function push(array $value)
+    public function push(array $value): array
     {
         $value = $this->filter($value);
         return parent::push($value);
@@ -48,29 +49,28 @@ class Widget_Abstract_Metas extends Widget_Abstract
     /**
      * 通用过滤器
      *
-     * @access public
      * @param array $value 需要过滤的行数据
      * @return array
      */
-    public function filter(array $value)
+    public function filter(array $value): array
     {
         //生成静态链接
         $type = $value['type'];
-        $routeExists = (null != Typecho_Router::get($type));
+        $routeExists = (null != Router::get($type));
         $tmpSlug = $value['slug'];
         $value['slug'] = urlencode($value['slug']);
 
-        $value['permalink'] = $routeExists ? Typecho_Router::url($type, $value, $this->options->index) : '#';
+        $value['permalink'] = $routeExists ? Router::url($type, $value, $this->options->index) : '#';
 
         /** 生成聚合链接 */
         /** RSS 2.0 */
-        $value['feedUrl'] = $routeExists ? Typecho_Router::url($type, $value, $this->options->feedUrl) : '#';
+        $value['feedUrl'] = $routeExists ? Router::url($type, $value, $this->options->feedUrl) : '#';
 
         /** RSS 1.0 */
-        $value['feedRssUrl'] = $routeExists ? Typecho_Router::url($type, $value, $this->options->feedRssUrl) : '#';
+        $value['feedRssUrl'] = $routeExists ? Router::url($type, $value, $this->options->feedRssUrl) : '#';
 
         /** ATOM 1.0 */
-        $value['feedAtomUrl'] = $routeExists ? Typecho_Router::url($type, $value, $this->options->feedAtomUrl) : '#';
+        $value['feedAtomUrl'] = $routeExists ? Router::url($type, $value, $this->options->feedAtomUrl) : '#';
 
         $value['slug'] = $tmpSlug;
         $value = $this->pluginHandle(__CLASS__)->filter($value, $this);
@@ -82,10 +82,10 @@ class Widget_Abstract_Metas extends Widget_Abstract
      *
      * @param mixed $type
      * @param int $parent
-     * @access public
      * @return integer
+     * @throws Exception
      */
-    public function getMaxOrder($type, $parent = 0)
+    public function getMaxOrder($type, int $parent = 0): int
     {
         return $this->db->fetchObject($this->db->select(['MAX(order)' => 'maxOrder'])
             ->from('table.metas')
@@ -95,42 +95,41 @@ class Widget_Abstract_Metas extends Widget_Abstract
     /**
      * 对数据按照sort字段排序
      *
-     * @access public
      * @param array $metas
      * @param string $type
-     * @return void
      */
-    public function sort(array $metas, $type)
+    public function sort(array $metas, string $type)
     {
         foreach ($metas as $sort => $mid) {
-            $this->update(['order' => $sort + 1],
-                $this->db->sql()->where('mid = ?', $mid)->where('type = ?', $type));
+            $this->update(
+                ['order' => $sort + 1],
+                $this->db->sql()->where('mid = ?', $mid)->where('type = ?', $type)
+            );
         }
     }
 
     /**
      * 更新记录
      *
-     * @access public
-     * @param array $options 记录更新值
-     * @param Typecho_Db_Query $condition 更新条件
+     * @param array $rows 记录更新值
+     * @param Query $condition 更新条件
      * @return integer
+     * @throws Exception
      */
-    public function update(array $options, Typecho_Db_Query $condition)
+    public function update(array $rows, Query $condition): int
     {
-        return $this->db->query($condition->update('table.metas')->rows($options));
+        return $this->db->query($condition->update('table.metas')->rows($rows));
     }
 
     /**
      * 合并数据
      *
-     * @access public
      * @param integer $mid 数据主键
      * @param string $type 数据类型
      * @param array $metas 需要合并的数据集
-     * @return void
+     * @throws Exception
      */
-    public function merge($mid, $type, array $metas)
+    public function merge(int $mid, string $type, array $metas)
     {
         $contents = array_column($this->db->fetchAll($this->select('cid')
             ->from('table.relationships')
@@ -168,10 +167,10 @@ class Widget_Abstract_Metas extends Widget_Abstract
     /**
      * 获取原始查询对象
      *
-     * @access public
-     * @return Typecho_Db_Query
+     * @return Query
+     * @throws Exception
      */
-    public function select()
+    public function select(): Query
     {
         return $this->db->select()->from('table.metas');
     }
@@ -179,11 +178,11 @@ class Widget_Abstract_Metas extends Widget_Abstract
     /**
      * 删除记录
      *
-     * @access public
-     * @param Typecho_Db_Query $condition 删除条件
+     * @param Query $condition 删除条件
      * @return integer
+     * @throws Exception
      */
-    public function delete(Typecho_Db_Query $condition)
+    public function delete(Query $condition): int
     {
         return $this->db->query($condition->delete('table.metas'));
     }
@@ -191,11 +190,11 @@ class Widget_Abstract_Metas extends Widget_Abstract
     /**
      * 根据tag获取ID
      *
-     * @access public
      * @param mixed $inputTags 标签名
      * @return array
+     * @throws Exception
      */
-    public function scanTags($inputTags)
+    public function scanTags($inputTags): array
     {
         $tags = is_array($inputTags) ? $inputTags : [$inputTags];
         $result = [];
@@ -212,7 +211,7 @@ class Widget_Abstract_Metas extends Widget_Abstract
             if ($row) {
                 $result[] = $row['mid'];
             } else {
-                $slug = Typecho_Common::slugName($tag);
+                $slug = Common::slugName($tag);
 
                 if ($slug) {
                     $result[] = $this->insert([
@@ -232,20 +231,19 @@ class Widget_Abstract_Metas extends Widget_Abstract
     /**
      * 插入一条记录
      *
-     * @access public
-     * @param array $options 记录插入值
+     * @param array $rows 记录插入值
      * @return integer
+     * @throws Exception
      */
-    public function insert(array $options)
+    public function insert(array $rows): int
     {
-        return $this->db->query($this->db->insert('table.metas')->rows($options));
+        return $this->db->query($this->db->insert('table.metas')->rows($rows));
     }
 
     /**
      * 清理没有任何内容的标签
      *
-     * @access public
-     * @return void
+     * @throws Exception
      */
     public function clearTags()
     {
@@ -269,13 +267,12 @@ class Widget_Abstract_Metas extends Widget_Abstract
     /**
      * 根据内容的指定类别和状态更新相关meta的计数信息
      *
-     * @access public
      * @param int $mid meta id
      * @param string $type 类别
      * @param string $status 状态
-     * @return void
+     * @throws Exception
      */
-    public function refreshCountByTypeAndStatus($mid, $type, $status = 'publish')
+    public function refreshCountByTypeAndStatus(int $mid, string $type, string $status = 'publish')
     {
         $num = $this->db->fetchObject($this->db->select(['COUNT(table.contents.cid)' => 'num'])->from('table.contents')
             ->join('table.relationships', 'table.contents.cid = table.relationships.cid')
@@ -293,7 +290,7 @@ class Widget_Abstract_Metas extends Widget_Abstract
      * @access protected
      * @return string
      */
-    protected function ___theId()
+    protected function ___theId(): string
     {
         return $this->type . '-' . $this->mid;
     }

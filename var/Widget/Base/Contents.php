@@ -2,8 +2,15 @@
 
 namespace Widget\Base;
 
+use Typecho\Common;
+use Typecho\Config;
+use Typecho\Cookie;
+use Typecho\Date;
 use Typecho\Db\Exception;
 use Typecho\Db\Query;
+use Typecho\Plugin;
+use Typecho\Router;
+use Typecho\Widget;
 use Widget\Base;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
@@ -20,7 +27,6 @@ class Contents extends Base
     /**
      * 获取查询对象
      *
-     * @access public
      * @return Query
      * @throws Exception
      */
@@ -50,7 +56,6 @@ class Contents extends Base
     /**
      * 插入内容
      *
-     * @access public
      * @param array $rows 内容数组
      * @return integer
      * @throws Exception
@@ -95,20 +100,20 @@ class Contents extends Base
     /**
      * 为内容应用缩略名
      *
-     * @access public
      * @param string $slug 缩略名
      * @param mixed $cid 内容id
      * @return string
+     * @throws Exception
      */
-    public function applySlug($slug, $cid)
+    public function applySlug(string $slug, $cid): string
     {
-        if ($cid instanceof Typecho_Db_Query) {
+        if ($cid instanceof Query) {
             $cid = $this->db->fetchObject($cid->select('cid')
                 ->from('table.contents')->limit(1))->cid;
         }
 
         /** 生成一个非空的缩略名 */
-        $slug = Typecho_Common::slugName($slug, $cid);
+        $slug = Common::slugName($slug, $cid);
         $result = $slug;
 
         /** 对草稿的slug做特殊处理 */
@@ -139,12 +144,12 @@ class Contents extends Base
     /**
      * 更新内容
      *
-     * @access public
-     * @param array $content 内容数组
-     * @param Typecho_Db_Query $condition 更新条件
+     * @param array $rows 内容数组
+     * @param Query $condition 更新条件
      * @return integer
+     * @throws Exception
      */
-    public function update(array $content, Typecho_Db_Query $condition)
+    public function update(array $rows, Query $condition): int
     {
         /** 首先验证写入权限 */
         if (!$this->isWriteable(clone $condition)) {
@@ -153,29 +158,30 @@ class Contents extends Base
 
         /** 构建更新结构 */
         $preUpdateStruct = [
-            'title'        => !isset($content['title']) || strlen($content['title']) === 0 ? null : htmlspecialchars($content['title']),
-            'order'        => empty($content['order']) ? 0 : intval($content['order']),
-            'text'         => !isset($content['text']) || strlen($content['text']) === 0 ? null : $content['text'],
-            'template'     => empty($content['template']) ? null : $content['template'],
-            'type'         => empty($content['type']) ? 'post' : $content['type'],
-            'status'       => empty($content['status']) ? 'publish' : $content['status'],
-            'password'     => empty($content['password']) ? null : $content['password'],
-            'allowComment' => !empty($content['allowComment']) && 1 == $content['allowComment'] ? 1 : 0,
-            'allowPing'    => !empty($content['allowPing']) && 1 == $content['allowPing'] ? 1 : 0,
-            'allowFeed'    => !empty($content['allowFeed']) && 1 == $content['allowFeed'] ? 1 : 0,
-            'parent'       => empty($content['parent']) ? 0 : intval($content['parent'])
+            'title'        => !isset($rows['title']) || strlen($rows['title']) === 0
+                ? null : htmlspecialchars($rows['title']),
+            'order'        => empty($rows['order']) ? 0 : intval($rows['order']),
+            'text'         => !isset($rows['text']) || strlen($rows['text']) === 0 ? null : $rows['text'],
+            'template'     => empty($rows['template']) ? null : $rows['template'],
+            'type'         => empty($rows['type']) ? 'post' : $rows['type'],
+            'status'       => empty($rows['status']) ? 'publish' : $rows['status'],
+            'password'     => empty($rows['password']) ? null : $rows['password'],
+            'allowComment' => !empty($rows['allowComment']) && 1 == $rows['allowComment'] ? 1 : 0,
+            'allowPing'    => !empty($rows['allowPing']) && 1 == $rows['allowPing'] ? 1 : 0,
+            'allowFeed'    => !empty($rows['allowFeed']) && 1 == $rows['allowFeed'] ? 1 : 0,
+            'parent'       => empty($rows['parent']) ? 0 : intval($rows['parent'])
         ];
 
         $updateStruct = [];
-        foreach ($content as $key => $val) {
+        foreach ($rows as $key => $val) {
             if (array_key_exists($key, $preUpdateStruct)) {
                 $updateStruct[$key] = $preUpdateStruct[$key];
             }
         }
 
         /** 更新创建时间 */
-        if (isset($content['created'])) {
-            $updateStruct['created'] = $content['created'];
+        if (isset($rows['created'])) {
+            $updateStruct['created'] = $rows['created'];
         }
 
         $updateStruct['modified'] = $this->options->time;
@@ -185,8 +191,9 @@ class Contents extends Base
         $updateRows = $this->db->query($condition->update('table.contents')->rows($updateStruct));
 
         /** 更新缩略名 */
-        if ($updateRows > 0 && isset($content['slug'])) {
-            $this->applySlug(!isset($content['slug']) || strlen($content['slug']) === 0 ? null : $content['slug'], $updateCondition);
+        if ($updateRows > 0 && isset($rows['slug'])) {
+            $this->applySlug(!isset($rows['slug']) || strlen($rows['slug']) === 0
+                ? null : $rows['slug'], $updateCondition);
         }
 
         return $updateRows;
@@ -195,11 +202,11 @@ class Contents extends Base
     /**
      * 内容是否可以被修改
      *
-     * @access public
-     * @param Typecho_Db_Query $condition 条件
-     * @return mixed
+     * @param Query $condition 条件
+     * @return bool
+     * @throws Exception
      */
-    public function isWriteable(Typecho_Db_Query $condition)
+    public function isWriteable(Query $condition): bool
     {
         $post = $this->db->fetchRow($condition->select('authorId')->from('table.contents')->limit(1));
         return $post && ($this->user->pass('editor', true) || $post['authorId'] == $this->user->uid);
@@ -208,11 +215,11 @@ class Contents extends Base
     /**
      * 删除内容
      *
-     * @access public
-     * @param Typecho_Db_Query $condition 查询对象
+     * @param Query $condition 查询对象
      * @return integer
+     * @throws Exception
      */
-    public function delete(Typecho_Db_Query $condition)
+    public function delete(Query $condition): int
     {
         return $this->db->query($condition->delete('table.contents'));
     }
@@ -221,10 +228,10 @@ class Contents extends Base
      * 删除自定义字段
      *
      * @param integer $cid
-     * @access public
      * @return integer
+     * @throws Exception
      */
-    public function deleteFields($cid)
+    public function deleteFields(int $cid): int
     {
         return $this->db->query($this->db->delete('table.fields')
             ->where('cid = ?', $cid));
@@ -235,8 +242,8 @@ class Contents extends Base
      *
      * @param array $fields
      * @param mixed $cid
-     * @access public
      * @return void
+     * @throws Exception
      */
     public function applyFields(array $fields, $cid)
     {
@@ -279,10 +286,9 @@ class Contents extends Base
      * 检查字段名是否符合要求
      *
      * @param string $name
-     * @access public
      * @return boolean
      */
-    public function checkFieldName($name)
+    public function checkFieldName(string $name): bool
     {
         return preg_match("/^[_a-z][_a-z0-9]*$/i", $name);
     }
@@ -294,10 +300,10 @@ class Contents extends Base
      * @param string $type
      * @param string $value
      * @param integer $cid
-     * @access public
-     * @return integer
+     * @return integer|bool
+     * @throws Exception
      */
-    public function setField($name, $type, $value, $cid)
+    public function setField(string $name, string $type, string $value, int $cid)
     {
         if (
             empty($name) || !$this->checkFieldName($name)
@@ -337,10 +343,10 @@ class Contents extends Base
      * @param string $name
      * @param integer $value
      * @param integer $cid
-     * @access public
      * @return integer
+     * @throws Exception
      */
-    public function incrIntField($name, $value, $cid)
+    public function incrIntField(string $name, int $value, int $cid)
     {
         if (!$this->checkFieldName($name)) {
             return false;
@@ -380,11 +386,11 @@ class Contents extends Base
     /**
      * 按照条件计算内容数量
      *
-     * @access public
-     * @param Typecho_Db_Query $condition 查询对象
+     * @param Query $condition 查询对象
      * @return integer
+     * @throws Exception
      */
-    public function size(Typecho_Db_Query $condition)
+    public function size(Query $condition): int
     {
         return $this->db->fetchObject($condition
             ->select(['COUNT(DISTINCT table.contents.cid)' => 'num'])
@@ -395,16 +401,15 @@ class Contents extends Base
     /**
      * 获取当前所有自定义模板
      *
-     * @access public
      * @return array
      */
-    public function getTemplates()
+    public function getTemplates(): array
     {
         $files = glob($this->options->themeFile($this->options->theme, '*.php'));
         $result = [];
 
         foreach ($files as $file) {
-            $info = Typecho_Plugin::parseInfo($file);
+            $info = Plugin::parseInfo($file);
             $file = basename($file);
 
             if ('index.php' != $file && 'custom' == $info['title']) {
@@ -418,11 +423,10 @@ class Contents extends Base
     /**
      * 将每行的值压入堆栈
      *
-     * @access public
      * @param array $value 每行的值
      * @return array
      */
-    public function push(array $value)
+    public function push(array $value): array
     {
         $value = $this->filter($value);
         return parent::push($value);
@@ -431,12 +435,10 @@ class Contents extends Base
     /**
      * 通用过滤器
      *
-     * @access public
      * @param array $value 需要过滤的行数据
      * @return array
-     * @throws Typecho_Widget_Exception
      */
-    public function filter(array $value)
+    public function filter(array $value): array
     {
         /** 取出所有分类 */
         $value['categories'] = $this->db->fetchAll($this->db
@@ -462,11 +464,12 @@ class Contents extends Base
 
             $value['category'] = $value['categories'][0]['slug'];
 
-            $value['directory'] = $this->widget('Widget_Metas_Category_List')->getAllParentsSlug($value['categories'][0]['mid']);
+            $value['directory'] = $this->widget('Widget_Metas_Category_List')
+                ->getAllParentsSlug($value['categories'][0]['mid']);
             $value['directory'][] = $value['category'];
         }
 
-        $value['date'] = new Typecho_Date($value['created']);
+        $value['date'] = new Date($value['created']);
 
         /** 生成日期 */
         $value['year'] = $value['date']->year;
@@ -478,7 +481,7 @@ class Contents extends Base
 
         /** 获取路由类型并判断此类型在路由表中是否存在 */
         $type = $value['type'];
-        $routeExists = (null != Typecho_Router::get($type));
+        $routeExists = (null != Router::get($type));
 
         $tmpSlug = $value['slug'];
         $tmpCategory = $value['category'];
@@ -488,17 +491,17 @@ class Contents extends Base
         $value['directory'] = implode('/', array_map('urlencode', $value['directory']));
 
         /** 生成静态路径 */
-        $value['pathinfo'] = $routeExists ? Typecho_Router::url($type, $value) : '#';
+        $value['pathinfo'] = $routeExists ? Router::url($type, $value) : '#';
 
         /** 生成静态链接 */
-        $value['permalink'] = Typecho_Common::url($value['pathinfo'], $this->options->index);
+        $value['permalink'] = Common::url($value['pathinfo'], $this->options->index);
 
         /** 处理附件 */
         if ('attachment' == $type) {
             $content = @unserialize($value['text']);
 
             //增加数据信息
-            $value['attachment'] = new Typecho_Config($content);
+            $value['attachment'] = new Config($content);
             $value['attachment']->isImage = in_array($content['type'], ['jpg', 'jpeg', 'gif', 'png', 'tiff', 'bmp']);
             $value['attachment']->url = Widget_Upload::attachmentHandle($value);
 
@@ -521,13 +524,13 @@ class Contents extends Base
 
         /** 生成聚合链接 */
         /** RSS 2.0 */
-        $value['feedUrl'] = $routeExists ? Typecho_Router::url($type, $value, $this->options->feedUrl) : '#';
+        $value['feedUrl'] = $routeExists ? Router::url($type, $value, $this->options->feedUrl) : '#';
 
         /** RSS 1.0 */
-        $value['feedRssUrl'] = $routeExists ? Typecho_Router::url($type, $value, $this->options->feedRssUrl) : '#';
+        $value['feedRssUrl'] = $routeExists ? Router::url($type, $value, $this->options->feedRssUrl) : '#';
 
         /** ATOM 1.0 */
-        $value['feedAtomUrl'] = $routeExists ? Typecho_Router::url($type, $value, $this->options->feedAtomUrl) : '#';
+        $value['feedAtomUrl'] = $routeExists ? Router::url($type, $value, $this->options->feedAtomUrl) : '#';
 
         $value['slug'] = $tmpSlug;
         $value['category'] = $tmpCategory;
@@ -536,7 +539,7 @@ class Contents extends Base
         /** 处理密码保护流程 */
         if (
             strlen($value['password']) > 0 &&
-            $value['password'] !== Typecho_Cookie::get('protectPassword_' . $value['cid']) &&
+            $value['password'] !== Cookie::get('protectPassword_' . $value['cid']) &&
             $value['authorId'] != $this->user->uid &&
             !$this->user->pass('editor', true)
         ) {
@@ -566,10 +569,9 @@ class Contents extends Base
     /**
      * 输出文章发布日期
      *
-     * @access public
-     * @param string $format 日期格式
+     * @param string|null $format 日期格式
      */
-    public function date($format = null)
+    public function date(?string $format = null)
     {
         echo $this->date->format(empty($format) ? $this->options->postDateFormat : $format);
     }
@@ -577,39 +579,38 @@ class Contents extends Base
     /**
      * 输出文章内容
      *
-     * @access public
      * @param mixed $more 文章截取后缀
      */
     public function content($more = false)
     {
         echo false !== $more && false !== strpos($this->text, '<!--more-->') ?
-            $this->excerpt . "<p class=\"more\"><a href=\"{$this->permalink}\" title=\"{$this->title}\">{$more}</a></p>" : $this->content;
+            $this->excerpt
+                . "<p class=\"more\"><a href=\"{$this->permalink}\" title=\"{$this->title}\">{$more}</a></p>"
+            : $this->content;
     }
 
     /**
      * 输出文章摘要
      *
-     * @access public
      * @param integer $length 摘要截取长度
      * @param string $trim 摘要后缀
      */
-    public function excerpt($length = 100, $trim = '...')
+    public function excerpt(int $length = 100, string $trim = '...')
     {
-        echo Typecho_Common::subStr(strip_tags($this->excerpt), 0, $length, $trim);
+        echo Common::subStr(strip_tags($this->excerpt), 0, $length, $trim);
     }
 
     /**
      * 输出标题
      *
-     * @access public
      * @param integer $length 标题截取长度
      * @param string $trim 截取后缀
      */
-    public function title($length = 0, $trim = '...')
+    public function title(int $length = 0, string $trim = '...')
     {
         $title = $this->pluginHandle()->trigger($plugged)->title($this->title, $this);
         if (!$plugged) {
-            echo $length > 0 ? Typecho_Common::subStr($this->title, 0, $length, $trim) : $this->title;
+            echo $length > 0 ? Common::subStr($this->title, 0, $length, $trim) : $this->title;
         } else {
             echo $title;
         }
@@ -627,7 +628,6 @@ class Contents extends Base
         }
 
         $num = intval($this->commentsNum);
-
         echo sprintf($args[$num] ?? array_pop($args), $num);
     }
 
@@ -666,13 +666,11 @@ class Contents extends Base
     /**
      * 输出文章分类
      *
-     * @access public
      * @param string $split 多个分类之间分隔符
      * @param boolean $link 是否输出链接
-     * @param string $default 如果没有则输出
-     * @return void
+     * @param string|null $default 如果没有则输出
      */
-    public function category($split = ',', $link = true, $default = null)
+    public function category(string $split = ',', bool $link = true, ?string $default = null)
     {
         $categories = $this->categories;
         if ($categories) {
@@ -692,13 +690,12 @@ class Contents extends Base
     /**
      * 输出文章多级分类
      *
-     * @access public
      * @param string $split 多个分类之间分隔符
      * @param boolean $link 是否输出链接
-     * @param string $default 如果没有则输出
-     * @return void
+     * @param string|null $default 如果没有则输出
+     * @throws \Typecho\Widget\Exception
      */
-    public function directory($split = '/', $link = true, $default = null)
+    public function directory(string $split = '/', bool $link = true, ?string $default = null)
     {
         $category = $this->categories[0];
         $directory = $this->widget('Widget_Metas_Category_List')->getAllParents($category['mid']);
@@ -721,13 +718,11 @@ class Contents extends Base
     /**
      * 输出文章标签
      *
-     * @access public
      * @param string $split 多个标签之间分隔符
      * @param boolean $link 是否输出链接
-     * @param string $default 如果没有则输出
-     * @return void
+     * @param string|null $default 如果没有则输出
      */
-    public function tags($split = ',', $link = true, $default = null)
+    public function tags(string $split = ',', bool $link = true, ?string $default = null)
     {
         /** 取出tags */
         if ($this->tags) {
@@ -746,11 +741,9 @@ class Contents extends Base
     /**
      * 输出当前作者
      *
-     * @access public
      * @param string $item 需要输出的项目
-     * @return void
      */
-    public function author($item = 'screenName')
+    public function author(string $item = 'screenName')
     {
         echo $this->author->{$item};
     }
@@ -758,10 +751,10 @@ class Contents extends Base
     /**
      * 将tags取出
      *
-     * @access protected
      * @return array
+     * @throws Exception|Widget\Exception
      */
-    protected function ___tags()
+    protected function ___tags(): array
     {
         return $this->db->fetchAll($this->db
             ->select()->from('table.metas')
@@ -773,10 +766,10 @@ class Contents extends Base
     /**
      * 文章作者
      *
-     * @access protected
-     * @return Typecho_Config
+     * @return Widget
+     * @throws Widget\Exception
      */
-    protected function ___author()
+    protected function ___author(): Widget
     {
         return $this->widget('Widget_Users_Author@' . $this->cid, ['uid' => $this->authorId]);
     }
@@ -784,10 +777,9 @@ class Contents extends Base
     /**
      * 获取词义化日期
      *
-     * @access protected
      * @return string
      */
-    protected function ___dateWord()
+    protected function ___dateWord(): string
     {
         return $this->date->word();
     }
@@ -795,10 +787,9 @@ class Contents extends Base
     /**
      * 获取父id
      *
-     * @access protected
-     * @return string
+     * @return int|null
      */
-    protected function ___parentId()
+    protected function ___parentId(): ?int
     {
         return $this->row['parent'];
     }
@@ -806,23 +797,22 @@ class Contents extends Base
     /**
      * 对文章的简短纯文本描述
      *
-     * @access protected
      * @return string
      */
-    protected function ___description()
+    protected function ___description(): string
     {
         $plainTxt = str_replace("\n", '', trim(strip_tags($this->excerpt)));
         $plainTxt = $plainTxt ? $plainTxt : $this->title;
-        return Typecho_Common::subStr($plainTxt, 0, 100, '...');
+        return Common::subStr($plainTxt, 0, 100, '...');
     }
 
     /**
      * ___fields
      *
-     * @access protected
-     * @return Typecho_Config
+     * @return Config
+     * @throws Exception
      */
-    protected function ___fields()
+    protected function ___fields(): Config
     {
         $fields = [];
         $rows = $this->db->fetchAll($this->db->select()->from('table.fields')
@@ -832,16 +822,15 @@ class Contents extends Base
             $fields[$row['name']] = $row[$row['type'] . '_value'];
         }
 
-        return new Typecho_Config($fields);
+        return new Config($fields);
     }
 
     /**
      * 获取文章内容摘要
      *
-     * @access protected
      * @return string
      */
-    protected function ___excerpt()
+    protected function ___excerpt(): string
     {
         if ($this->hidden) {
             return $this->text;
@@ -856,22 +845,21 @@ class Contents extends Base
         $contents = explode('<!--more-->', $content);
         [$excerpt] = $contents;
 
-        return Typecho_Common::fixHtml($this->pluginHandle(__CLASS__)->excerptEx($excerpt, $this));
+        return Common::fixHtml($this->pluginHandle(__CLASS__)->excerptEx($excerpt, $this));
     }
 
     /**
      * markdown
      *
-     * @param mixed $text
-     * @access public
+     * @param string|null $text
      * @return string
      */
-    public function markdown($text)
+    public function markdown(?string $text): string
     {
         $html = $this->pluginHandle(__CLASS__)->trigger($parsed)->markdown($text);
 
         if (!$parsed) {
-            $html = Markdown::convert($text);
+            $html = \Markdown::convert($text);
         }
 
         return $html;
@@ -880,11 +868,10 @@ class Contents extends Base
     /**
      * autoP
      *
-     * @param mixed $text
-     * @access public
+     * @param string|null $text
      * @return string
      */
-    public function autoP($text)
+    public function autoP(?string $text): string
     {
         $html = $this->pluginHandle(__CLASS__)->trigger($parsed)->autoP($text);
 
@@ -892,7 +879,7 @@ class Contents extends Base
             static $parser;
 
             if (empty($parser)) {
-                $parser = new AutoP();
+                $parser = new \AutoP();
             }
 
             $html = $parser->parse($text);
@@ -904,10 +891,9 @@ class Contents extends Base
     /**
      * 获取文章内容
      *
-     * @access protected
      * @return string
      */
-    protected function ___content()
+    protected function ___content(): string
     {
         if ($this->hidden) {
             return $this->text;
@@ -928,7 +914,7 @@ class Contents extends Base
      *
      * @return string
      */
-    protected function ___summary()
+    protected function ___summary(): string
     {
         $content = $this->content;
         $parts = preg_split("/(<\/\s*(?:p|blockquote|q|pre|table)\s*>)/i", $content, 2, PREG_SPLIT_DELIM_CAPTURE);
@@ -942,10 +928,9 @@ class Contents extends Base
     /**
      * 锚点id
      *
-     * @access protected
      * @return string
      */
-    protected function ___theId()
+    protected function ___theId(): string
     {
         return $this->type . '-' . $this->cid;
     }
@@ -953,10 +938,9 @@ class Contents extends Base
     /**
      * 回复框id
      *
-     * @access protected
      * @return string
      */
-    protected function ___respondId()
+    protected function ___respondId(): string
     {
         return 'respond-' . $this->theId;
     }
@@ -964,14 +948,13 @@ class Contents extends Base
     /**
      * 评论地址
      *
-     * @access protected
      * @return string
      */
-    protected function ___commentUrl()
+    protected function ___commentUrl(): string
     {
         /** 生成反馈地址 */
         /** 评论 */
-        return Typecho_Router::url(
+        return Router::url(
             'feedback',
             ['type' => 'comment', 'permalink' => $this->pathinfo],
             $this->options->index
@@ -981,12 +964,11 @@ class Contents extends Base
     /**
      * trackback地址
      *
-     * @access protected
      * @return string
      */
-    protected function ___trackbackUrl()
+    protected function ___trackbackUrl(): string
     {
-        return Typecho_Router::url(
+        return Router::url(
             'feedback',
             ['type' => 'trackback', 'permalink' => $this->pathinfo],
             $this->options->index
@@ -996,10 +978,9 @@ class Contents extends Base
     /**
      * 回复地址
      *
-     * @access protected
      * @return string
      */
-    protected function ___responseUrl()
+    protected function ___responseUrl(): string
     {
         return $this->permalink . '#' . $this->respondId;
     }
@@ -1007,17 +988,23 @@ class Contents extends Base
     /**
      * 获取页面偏移
      *
-     * @access protected
      * @param string $column 字段名
      * @param integer $offset 偏移值
      * @param string $type 类型
-     * @param string $status 状态值
+     * @param string|null $status 状态值
      * @param integer $authorId 作者
      * @param integer $pageSize 分页值
      * @return integer
+     * @throws Exception
      */
-    protected function getPageOffset($column, $offset, $type, $status = null, $authorId = 0, $pageSize = 20)
-    {
+    protected function getPageOffset(
+        string $column,
+        int $offset,
+        string $type,
+        ?string $status = null,
+        int $authorId = 0,
+        int $pageSize = 20
+    ): int {
         $select = $this->db->select(['COUNT(table.contents.cid)' => 'num'])->from('table.contents')
             ->where("table.contents.{$column} > {$offset}")
             ->where(

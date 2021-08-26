@@ -42,6 +42,7 @@ class Init extends Widget
             'Widget_Abstract_Metas'       => '\Widget\Base\Metas',
             'Widget_Abstract_Options'     => '\Widget\Base\Options',
             'Widget_Abstract_Users'       => '\Widget\Base\Users',
+            'Widget_Metas_Category_List'  => '\Widget\Metas\Category\Rows'
         ]);
 
         /** 对变量赋值 */
