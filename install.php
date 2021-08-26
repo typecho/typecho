@@ -1229,7 +1229,7 @@ function install_dispatch()
     }
 
     if (install_is_cli()) {
-        install_step_2_perform();
+        install_step_1_perform();
     } else {
         $request = \Typecho\Request::getInstance();
         $step = $request->get('step');

@@ -32,34 +32,5 @@ class Markdown
 
         return str_replace('<p><!--more--></p>', '<!--more-->', $parser->makeHtml($text));
     }
-
-    /**
-     * transerCodeClass
-     *
-     * @param string $html
-     * @return string
-     */
-    public static function transerCodeClass($html)
-    {
-        return preg_replace("/<code class=\"([_a-z0-9-]+)\">/i", "<code class=\"lang-\\1\">", $html);
-    }
-
-    /**
-     * @param $html
-     * @return mixed
-     */
-    public static function transerComment($html)
-    {
-        return preg_replace_callback("/<!\-\-(.+?)\-\->/s", ['Markdown', 'transerCommentCallback'], $html);
-    }
-
-    /**
-     * @param $matches
-     * @return string
-     */
-    public static function transerCommentCallback($matches)
-    {
-        return self::$parser->makeHolder($matches[0]);
-    }
 }
 

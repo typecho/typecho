@@ -1,16 +1,6 @@
 <?php
-/**
- * API方法,Typecho命名空间
- *
- * @category typecho
- * @package Common
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
- * @version $Id$
- */
 
-namespace
-{
+namespace {
 
     use Typecho\I18n;
 
@@ -83,8 +73,7 @@ namespace
     }
 }
 
-namespace Typecho
-{
+namespace Typecho {
     // rewrite load
     const REWRITE_CLASS = [
         'Typecho_Plugin_Interface'    => '\Typecho\Plugin\PluginInterface',
@@ -141,118 +130,6 @@ namespace Typecho
         public const VERSION = '1.2.0';
 
         /**
-         * 默认编码
-         *
-         * @access public
-         * @var string
-         */
-        public static $charset = 'UTF-8';
-
-        /**
-         * 异常处理类
-         *
-         * @access public
-         * @var string
-         */
-        public static $exceptionHandle;
-
-        /**
-         * 将url中的非法xss去掉时的数组回调过滤函数
-         *
-         * @access private
-         *
-         * @param string $string 需要过滤的字符串
-         *
-         * @return string
-         */
-        public static function __removeUrlXss($string)
-        {
-            $string = str_replace(['%0d', '%0a'], '', strip_tags($string));
-            return preg_replace([
-                "/\(\s*(\"|')/i",           //函数开头
-                "/(\"|')\s*\)/i",           //函数结尾
-            ], '', $string);
-        }
-
-        /**
-         * 检查是否为安全路径
-         *
-         * @access public
-         *
-         * @param string $path 检查是否为安全路径
-         *
-         * @return boolean
-         */
-        public static function __safePath($path)
-        {
-            $safePath = rtrim(__TYPECHO_ROOT_DIR__, '/');
-            return 0 === strpos($path, $safePath);
-        }
-
-        /**
-         * 解析属性
-         *
-         * @access public
-         *
-         * @param string $attrs 属性字符串
-         *
-         * @return array
-         */
-        public static function __parseAttrs($attrs)
-        {
-            $attrs = trim($attrs);
-            $len = strlen($attrs);
-            $pos = -1;
-            $result = [];
-            $quote = '';
-            $key = '';
-            $value = '';
-
-            for ($i = 0; $i < $len; $i++) {
-                if ('=' != $attrs[$i] && !ctype_space($attrs[$i]) && -1 == $pos) {
-                    $key .= $attrs[$i];
-
-                    /** 最后一个 */
-                    if ($i == $len - 1) {
-                        if ('' != ($key = trim($key))) {
-                            $result[$key] = '';
-                            $key = '';
-                            $value = '';
-                        }
-                    }
-
-                } elseif (ctype_space($attrs[$i]) && -1 == $pos) {
-                    $pos = -2;
-                } elseif ('=' == $attrs[$i] && 0 > $pos) {
-                    $pos = 0;
-                } elseif (('"' == $attrs[$i] || "'" == $attrs[$i]) && 0 == $pos) {
-                    $quote = $attrs[$i];
-                    $value .= $attrs[$i];
-                    $pos = 1;
-                } elseif ($quote != $attrs[$i] && 1 == $pos) {
-                    $value .= $attrs[$i];
-                } elseif ($quote == $attrs[$i] && 1 == $pos) {
-                    $pos = -1;
-                    $value .= $attrs[$i];
-                    $result[trim($key)] = $value;
-                    $key = '';
-                    $value = '';
-                } elseif ('=' != $attrs[$i] && !ctype_space($attrs[$i]) && -2 == $pos) {
-                    if ('' != ($key = trim($key))) {
-                        $result[$key] = '';
-                    }
-
-                    $key = '';
-                    $value = '';
-                    $pos = -1;
-                    $key .= $attrs[$i];
-                }
-            }
-
-            return $result;
-        }
-
-        /**
          * 将路径转化为链接
          *
          * @access public
@@ -290,29 +167,11 @@ namespace Typecho
 
             /** 设置异常截获函数 */
             set_exception_handler(function (\Throwable $exception) {
-                if (defined('__TYPECHO_DEBUG__') && __TYPECHO_DEBUG__) {
-                    echo '<pre><code>';
-                    echo '<h1>' . htmlspecialchars($exception->getMessage()) . '</h1>';
-                    echo htmlspecialchars($exception->__toString());
-                    echo '</code></pre>';
-                } else {
-                    Response::getInstance()->clean();
-                    ob_end_clean();
-
-                    ob_start(function ($content) {
-                        Response::getInstance()->sendHeaders();
-                        return $content;
-                    });
-
-                    if (404 == $exception->getCode() && !empty(self::$exceptionHandle)) {
-                        $handleClass = self::$exceptionHandle;
-                        new $handleClass($exception);
-                    } else {
-                        self::error($exception);
-                    }
-                }
-
-                exit(1);
+                echo '<pre><code>';
+                echo '<h1>' . htmlspecialchars($exception->getMessage()) . '</h1>';
+                echo htmlspecialchars($exception->__toString());
+                echo '</code></pre>';
+                exit;
             });
         }
 
@@ -400,47 +259,13 @@ EOF;
         }
 
         /**
-         * 判断类是否能被加载
-         * 此函数会遍历所有的include目录, 所以会有一定的性能消耗, 但是不会很大
-         * 可是我们依然建议你在必须检测一个类能否被加载时使用它, 它通常表现为以下两种情况
-         * 1. 当需要被加载的类不存在时, 系统不会停止运行 (如果你不判断, 系统会因抛出严重错误而停止)
-         * 2. 你需要知道哪些类无法被加载, 以提示使用者
-         * 除了以上情况, 你无需关注那些类无法被加载, 因为当它们不存在时系统会自动停止并报错
-         *
-         * @access public
-         *
          * @param string $className 类名
-         * @param string $path 指定的路径名称
-         *
          * @return boolean
+         * @deprecated
          */
-        public static function isAvailableClass($className, $path = null)
+        public static function isAvailableClass(string $className): bool
         {
-            /** 获取所有include目录 */
-            //增加安全目录检测 fix issue 106
-            $dirs = array_map('realpath', array_filter(explode(PATH_SEPARATOR, get_include_path()),
-                ['Typecho_Common', '__safePath']));
-
-            $file = str_replace('_', '/', $className) . '.php';
-
-            if (!empty($path)) {
-                $path = realpath($path);
-                if (in_array($path, $dirs)) {
-                    $dirs = [$path];
-                } else {
-                    return false;
-                }
-            }
-
-            foreach ($dirs as $dir) {
-                if (!empty($dir)) {
-                    if (file_exists($dir . '/' . $file)) {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
+            return class_exists($className);
         }
 
         /**
@@ -570,7 +395,7 @@ EOF;
                 $attributes = array_map('trim', $tags[2]);
                 foreach ($attributes as $key => $val) {
                     $allowableAttributes[strtolower($tags[1][$key])] =
-                        array_map('strtolower', array_keys(self::__parseAttrs($val)));
+                        array_map('strtolower', array_keys(self::parseAttrs($val)));
                 }
             }
 
@@ -588,7 +413,7 @@ EOF;
                         return $matches[0];
                     }
 
-                    $attrs = self::__parseAttrs($str);
+                    $attrs = self::parseAttrs($str);
                     $parsedAttrs = [];
                     $tag = strtolower($matches[1]);
 
@@ -676,8 +501,14 @@ EOF;
                 }
             }
 
-            /** 过滤解析串 */
-            $params = array_map(['Typecho_Common', '__removeUrlXss'], $params);
+            $params = array_map(function ($string) {
+                $string = str_replace(['%0d', '%0a'], '', strip_tags($string));
+                return preg_replace([
+                    "/\(\s*(\"|')/i",           //函数开头
+                    "/(\"|')\s*\)/i",           //函数结尾
+                ], '', $string);
+            }, $params);
+
             return self::buildUrl($params);
         }
 
@@ -729,15 +560,28 @@ EOF;
                 // 0{0,7} matches any padded zeros, which are optional and go up to 8 chars
 
                 // &#x0040 @ search for the hex values
-                $val = preg_replace('/(&#[xX]0{0,8}' . dechex(ord($search[$i])) . ';?)/i', $search[$i], $val); // with a ;
+                $val = preg_replace('/(&#[xX]0{0,8}' . dechex(ord($search[$i])) . ';?)/i', $search[$i], $val);
                 // &#00064 @ 0{0,7} matches '0' zero to seven times
                 $val = preg_replace('/(&#0{0,8}' . ord($search[$i]) . ';?)/', $search[$i], $val); // with a ;
             }
 
             // now the only remaining whitespace attacks are \t, \n, and \r
-            $ra1 = ['javascript', 'vbscript', 'expression', 'applet', 'meta', 'xml', 'blink', 'link', 'style', 'script', 'embed', 'object', 'iframe', 'frame', 'frameset', 'ilayer', 'layer', 'bgsound', 'title', 'base'];
+            $ra1 = ['javascript', 'vbscript', 'expression', 'applet', 'meta', 'xml', 'blink', 'link', 'style', 'script',
+                    'embed', 'object', 'iframe', 'frame', 'frameset', 'ilayer', 'layer', 'bgsound', 'title', 'base'];
             $ra2 = [
-                'onabort', 'onactivate', 'onafterprint', 'onafterupdate', 'onbeforeactivate', 'onbeforecopy', 'onbeforecut', 'onbeforedeactivate', 'onbeforeeditfocus', 'onbeforepaste', 'onbeforeprint', 'onbeforeunload', 'onbeforeupdate', 'onblur', 'onbounce', 'oncellchange', 'onchange', 'onclick', 'oncontextmenu', 'oncontrolselect', 'oncopy', 'oncut', 'ondataavailable', 'ondatasetchanged', 'ondatasetcomplete', 'ondblclick', 'ondeactivate', 'ondrag', 'ondragend', 'ondragenter', 'ondragleave', 'ondragover', 'ondragstart', 'ondrop', 'onerror', 'onerrorupdate', 'onfilterchange', 'onfinish', 'onfocus', 'onfocusin', 'onfocusout', 'onhelp', 'onkeydown', 'onkeypress', 'onkeyup', 'onlayoutcomplete', 'onload', 'onlosecapture', 'onmousedown', 'onmouseenter', 'onmouseleave', 'onmousemove', 'onmouseout', 'onmouseover', 'onmouseup', 'onmousewheel', 'onmove', 'onmoveend', 'onmovestart', 'onpaste', 'onpropertychange', 'onreadystatechange', 'onreset', 'onresize', 'onresizeend', 'onresizestart', 'onrowenter', 'onrowexit', 'onrowsdelete', 'onrowsinserted', 'onscroll', 'onselect', 'onselectionchange', 'onselectstart', 'onstart', 'onstop', 'onsubmit', 'onunload'
+                'onabort', 'onactivate', 'onafterprint', 'onafterupdate', 'onbeforeactivate', 'onbeforecopy',
+                'onbeforecut', 'onbeforedeactivate', 'onbeforeeditfocus', 'onbeforepaste', 'onbeforeprint',
+                'onbeforeunload', 'onbeforeupdate', 'onblur', 'onbounce', 'oncellchange', 'onchange', 'onclick',
+                'oncontextmenu', 'oncontrolselect', 'oncopy', 'oncut', 'ondataavailable', 'ondatasetchanged',
+                'ondatasetcomplete', 'ondblclick', 'ondeactivate', 'ondrag', 'ondragend', 'ondragenter', 'ondragleave',
+                'ondragover', 'ondragstart', 'ondrop', 'onerror', 'onerrorupdate', 'onfilterchange', 'onfinish',
+                'onfocus', 'onfocusin', 'onfocusout', 'onhelp', 'onkeydown', 'onkeypress', 'onkeyup',
+                'onlayoutcomplete', 'onload', 'onlosecapture', 'onmousedown', 'onmouseenter',
+                'onmouseleave', 'onmousemove', 'onmouseout', 'onmouseover', 'onmouseup', 'onmousewheel',
+                'onmove', 'onmoveend', 'onmovestart', 'onpaste', 'onpropertychange', 'onreadystatechange',
+                'onreset', 'onresize', 'onresizeend', 'onresizestart', 'onrowenter', 'onrowexit', 'onrowsdelete',
+                'onrowsinserted', 'onscroll', 'onselect', 'onselectionchange', 'onselectstart', 'onstart', 'onstop',
+                'onsubmit', 'onunload'
             ];
             $ra = array_merge($ra1, $ra2);
 
@@ -1124,15 +968,15 @@ EOF;
             }
 
             return filter_var(
-                $address,
-                FILTER_VALIDATE_IP,
-                FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
-            ) !== false;
+                    $address,
+                    FILTER_VALIDATE_IP,
+                    FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
+                ) !== false;
         }
 
         /**
-         * @deprecated after 1.2.0
          * @return bool
+         * @deprecated after 1.2.0
          */
         public static function isAppEngine(): bool
         {
@@ -1534,6 +1378,66 @@ EOF;
             } else {
                 return 'unknown';
             }
+        }
+
+        /**
+         * 解析属性
+         *
+         * @param string $attrs 属性字符串
+         * @return array
+         */
+        private static function parseAttrs(string $attrs): array
+        {
+            $attrs = trim($attrs);
+            $len = strlen($attrs);
+            $pos = -1;
+            $result = [];
+            $quote = '';
+            $key = '';
+            $value = '';
+
+            for ($i = 0; $i < $len; $i++) {
+                if ('=' != $attrs[$i] && !ctype_space($attrs[$i]) && -1 == $pos) {
+                    $key .= $attrs[$i];
+
+                    /** 最后一个 */
+                    if ($i == $len - 1) {
+                        if ('' != ($key = trim($key))) {
+                            $result[$key] = '';
+                            $key = '';
+                            $value = '';
+                        }
+                    }
+
+                } elseif (ctype_space($attrs[$i]) && -1 == $pos) {
+                    $pos = -2;
+                } elseif ('=' == $attrs[$i] && 0 > $pos) {
+                    $pos = 0;
+                } elseif (('"' == $attrs[$i] || "'" == $attrs[$i]) && 0 == $pos) {
+                    $quote = $attrs[$i];
+                    $value .= $attrs[$i];
+                    $pos = 1;
+                } elseif ($quote != $attrs[$i] && 1 == $pos) {
+                    $value .= $attrs[$i];
+                } elseif ($quote == $attrs[$i] && 1 == $pos) {
+                    $pos = -1;
+                    $value .= $attrs[$i];
+                    $result[trim($key)] = $value;
+                    $key = '';
+                    $value = '';
+                } elseif ('=' != $attrs[$i] && !ctype_space($attrs[$i]) && -2 == $pos) {
+                    if ('' != ($key = trim($key))) {
+                        $result[$key] = '';
+                    }
+
+                    $key = '';
+                    $value = '';
+                    $pos = -1;
+                    $key .= $attrs[$i];
+                }
+            }
+
+            return $result;
         }
     }
 }

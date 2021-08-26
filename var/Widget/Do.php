@@ -53,21 +53,11 @@ class Widget_Do extends Typecho_Widget
         /** 验证路由地址 **/
         $action = $this->request->action;
 
-        //兼容老版本
-        if (empty($action)) {
-            $widget = trim($this->request->widget, '/');
-            $objectName = 'Widget_' . str_replace('/', '_', $widget);
+        /** 判断是否为plugin */
+        $actionTable = array_merge($this->map, unserialize($this->widget('Widget_Options')->actionTable));
 
-            if (preg_match("/^[_a-z0-9]$/i", $objectName) && Typecho_Common::isAvailableClass($objectName)) {
-                $widgetName = $objectName;
-            }
-        } else {
-            /** 判断是否为plugin */
-            $actionTable = array_merge($this->map, unserialize($this->widget('Widget_Options')->actionTable));
-
-            if (isset($actionTable[$action])) {
-                $widgetName = $actionTable[$action];
-            }
+        if (isset($actionTable[$action])) {
+            $widgetName = $actionTable[$action];
         }
 
         if (isset($widgetName) && class_exists($widgetName)) {

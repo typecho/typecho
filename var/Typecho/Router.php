@@ -29,14 +29,6 @@ class Router
     private static $routingTable = [];
 
     /**
-     * 全路径
-     *
-     * @access private
-     * @var string
-     */
-    private static $pathInfo = null;
-
-    /**
      * 解析路径
      *
      * @access public
@@ -86,7 +78,7 @@ class Router
     public static function dispatch()
     {
         /** 获取PATHINFO */
-        $pathInfo = self::getPathInfo();
+        $pathInfo = Request::getInstance()->getPathInfo();
 
         foreach (self::$routingTable as $key => $route) {
             if (preg_match($route['regx'], $pathInfo, $matches)) {
@@ -123,35 +115,6 @@ class Router
 
         /** 载入路由异常支持 */
         throw new RouterException("Path '{$pathInfo}' not found", 404);
-    }
-
-    /**
-     * 获取全路径
-     *
-     * @access public
-     * @return string
-     */
-    public static function getPathInfo(): ?string
-    {
-        if (null === self::$pathInfo) {
-            self::setPathInfo();
-        }
-
-        return self::$pathInfo;
-    }
-
-    /**
-     * 设置全路径
-     *
-     * @access public
-     *
-     * @param string $pathInfo
-     *
-     * @return void
-     */
-    public static function setPathInfo(string $pathInfo = '/')
-    {
-        self::$pathInfo = $pathInfo;
     }
 
     /**
