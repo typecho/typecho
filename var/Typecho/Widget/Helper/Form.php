@@ -186,10 +186,10 @@ class Form extends Layout
 
         if ($error) {
             /** 利用session记录错误 */
-            Cookie::set('__typecho_form_message_' . $id, Json::encode($error));
+            Cookie::set('__typecho_form_message_' . $id, json_encode($error));
 
             /** 利用session记录表单值 */
-            Cookie::set('__typecho_form_record_' . $id, Json::encode($formData));
+            Cookie::set('__typecho_form_record_' . $id, json_encode($formData));
         }
 
         return $error;
@@ -226,8 +226,8 @@ class Form extends Layout
 
         /** 恢复表单值 */
         if (!empty($record)) {
-            $record = \Json::decode($record, true);
-            $message = \Json::decode($message, true);
+            $record = json_decode($record, true);
+            $message = json_decode($message, true);
             foreach ($this->inputs as $name => $input) {
                 $input->value($record[$name] ?? $input->value);
 

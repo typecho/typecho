@@ -67,7 +67,7 @@ $(document).ready(function() {
                 'tags'  =>  $tags->name
             );
         }
-        echo Json::encode($data);
+        echo json_encode($data);
         ?>, {
             propertyToSearch:   'tags',
             tokenValue      :   'tags',

@@ -5,6 +5,7 @@ namespace Typecho;
 use Typecho\Widget\Exception as WidgetException;
 use Typecho\Widget\Helper\EmptyClass;
 use Typecho\Widget\Request as WidgetRequest;
+use Typecho\Widget\Response as WidgetResponse;
 
 /**
  * Typecho组件基类
@@ -146,8 +147,7 @@ abstract class Widget
             $requestObject = new WidgetRequest(Request::getInstance(), Config::factory($request));
 
             /** 初始化response */
-            $responseObject = $enableResponse ? Response::getInstance()
-                : EmptyClass::getInstance();
+            $responseObject = new WidgetResponse(Request::getInstance(), Response::getInstance());
 
             /** 初始化组件 */
             $widget = new $className($requestObject, $responseObject, $params);

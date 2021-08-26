@@ -251,14 +251,6 @@ class Request
             return $this->pathInfo;
         }
 
-        $inputEncoding = null;
-        $outputEncoding = null;
-
-        if (defined('__TYPECHO_PATHINFO_ENCODING__')) {
-            $inputEncoding = __TYPECHO_PATHINFO_ENCODING__;
-            $outputEncoding = Common::$charset;
-        }
-
         //参考Zend Framework对pahtinfo的处理, 更好的兼容性
         $pathInfo = null;
 
@@ -283,19 +275,8 @@ class Request
 
         if (!empty($pathInfo)) {
             //针对iis的utf8编码做强制转换
-            //参考http://docs.moodle.org/ja/%E5%A4%9A%E8%A8%80%E8%AA%9E%E5%AF%BE%E5%BF%9C%EF%BC%9A%E3%82%B5%E3%83%BC%E3%83%90%E3%81%AE%E8%A8%AD%E5%AE%9A
-            if (
-                !empty($inputEncoding)
-                && !empty($outputEncoding)
-                && (stripos($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS') !== false
-                    || stripos($_SERVER['SERVER_SOFTWARE'], 'ExpressionDevServer') !== false)
-            ) {
-                if (function_exists('mb_convert_encoding')) {
-                    $pathInfo = mb_convert_encoding($pathInfo, $outputEncoding, $inputEncoding);
-                } elseif (function_exists('iconv')) {
-                    $pathInfo = iconv($inputEncoding, $outputEncoding, $pathInfo);
-                }
-            }
+            $pathInfo = defined('__TYPECHO_PATHINFO_ENCODING__') ?
+                mb_convert_encoding($pathInfo, 'UTF-8', __TYPECHO_PATHINFO_ENCODING__) : $pathInfo;
         } else {
             $pathInfo = '/';
         }
@@ -391,6 +372,14 @@ class Request
             || (!empty($_SERVER['HTTPS']) && 'off' != strtolower($_SERVER['HTTPS']))
             || (!empty($_SERVER['SERVER_PORT']) && 443 == $_SERVER['SERVER_PORT'])
             || (defined('__TYPECHO_SECURE__') && __TYPECHO_SECURE__);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCli(): bool
+    {
+        return php_sapi_name() == 'cli';
     }
 
     /**

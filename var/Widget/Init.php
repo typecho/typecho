@@ -45,9 +45,6 @@ class Widget_Init extends Typecho_Widget
         /** cookie初始化 */
         Typecho_Cookie::setPrefix($options->rootUrl);
 
-        /** 初始化charset */
-        Typecho_Common::$charset = $options->charset;
-
         /** 初始化exception */
         Typecho_Common::$exceptionHandle = 'Widget_ExceptionHandle';
 
@@ -77,8 +74,5 @@ class Widget_Init extends Typecho_Widget
         if (!defined('__TYPECHO_INSTALL__') && $this->widget('Widget_User')->hasLogin()) {
             @session_start();
         }
-
-        /** 监听缓冲区 */
-        ob_start();
     }
 }

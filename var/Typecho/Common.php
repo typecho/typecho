@@ -11,7 +11,33 @@
 
 namespace
 {
-    define('__TYPECHO_MB_SUPPORTED__', function_exists('mb_get_info') && function_exists('mb_regex_encoding'));
+
+    use Typecho\I18n;
+
+    /**
+     * @deprecated use json_encode and json_decode directly
+     */
+    class Json
+    {
+        /**
+         * @param $value
+         * @return string
+         */
+        public static function encode($value): string
+        {
+            return json_encode($value);
+        }
+
+        /**
+         * @param string $string
+         * @param bool $assoc
+         * @return mixed
+         */
+        public static function decode(string $string, bool $assoc = false)
+        {
+            return json_decode($string, $assoc);
+        }
+    }
 
     /**
      * I18n function
@@ -24,9 +50,9 @@ namespace
     function _t(string $string, ...$args): string
     {
         if (empty($args)) {
-            return Typecho_I18n::translate($string);
+            return I18n::translate($string);
         } else {
-            return vsprintf(Typecho_I18n::translate($string), $args);
+            return vsprintf(I18n::translate($string), $args);
         }
     }
 
@@ -53,7 +79,7 @@ namespace
      */
     function _n(string $single, string $plural, int $number): string
     {
-        return str_replace('%d', $number, Typecho_I18n::ngettext($single, $plural, $number));
+        return str_replace('%d', $number, I18n::ngettext($single, $plural, $number));
     }
 }
 
@@ -254,6 +280,14 @@ namespace Typecho
          */
         public static function init()
         {
+            // init response
+            Response::getInstance()->enableAutoSendHeaders(false);
+
+            ob_start(function ($content) {
+                Response::getInstance()->sendHeaders();
+                return $content;
+            });
+
             /** 设置异常截获函数 */
             set_exception_handler(function (\Throwable $exception) {
                 if (defined('__TYPECHO_DEBUG__') && __TYPECHO_DEBUG__) {
@@ -262,7 +296,14 @@ namespace Typecho
                     echo htmlspecialchars($exception->__toString());
                     echo '</code></pre>';
                 } else {
-                    @ob_end_clean();
+                    Response::getInstance()->clean();
+                    ob_end_clean();
+
+                    ob_start(function ($content) {
+                        Response::getInstance()->sendHeaders();
+                        return $content;
+                    });
+
                     if (404 == $exception->getCode() && !empty(self::$exceptionHandle)) {
                         $handleClass = self::$exceptionHandle;
                         new $handleClass($exception);
@@ -284,25 +325,24 @@ namespace Typecho
         {
             $code = $exception->getCode() ?: 500;
             $message = $exception->getMessage();
-            $charset = self::$charset;
 
-            if ($exception instanceof \Typecho_Db_Exception) {
+            if ($exception instanceof \Typecho\Db\Exception) {
                 $code = 500;
 
                 //覆盖原始错误信息
                 $message = 'Database Server Error';
 
-                if ($exception instanceof \Typecho_Db_Adapter_Exception) {
+                if ($exception instanceof \Typecho\Db\Adapter\Exception) {
                     $code = 503;
                     $message = 'Error establishing a database connection';
-                } elseif ($exception instanceof \Typecho_Db_Query_Exception) {
+                } elseif ($exception instanceof \Typecho\Db\Query\Exception) {
                     $message = 'Database Query Error';
                 }
             }
 
             /** 设置http code */
             if (is_numeric($code) && $code > 200) {
-                Response::setStatus($code);
+                Response::getInstance()->setStatus($code);
             }
 
             $message = nl2br($message);
@@ -315,7 +355,7 @@ namespace Typecho
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="{$charset}">
+        <meta charset="UTF-8">
         <title>{$code}</title>
         <style>
             html {
@@ -597,36 +637,21 @@ EOF;
                 return $default;
             }
 
-            if (__TYPECHO_MB_SUPPORTED__) {
-                mb_regex_encoding(self::$charset);
-                mb_ereg_search_init($str, "[\w" . preg_quote('_-') . "]+");
-                $result = mb_ereg_search();
-                $return = '';
+            mb_regex_encoding('UTF-8');
+            mb_ereg_search_init($str, "[\w" . preg_quote('_-') . "]+");
+            $result = mb_ereg_search();
+            $return = '';
 
-                if ($result) {
-                    $regs = mb_ereg_search_getregs();
-                    $pos = 0;
-                    do {
-                        $return .= ($pos > 0 ? '-' : '') . $regs[0];
-                        $pos++;
-                    } while ($regs = mb_ereg_search_regs());
-                }
-
-                $str = $return;
-            } elseif ('UTF-8' == strtoupper(self::$charset)) {
-                if (preg_match_all("/[\w" . preg_quote('_-') . "]+/u", $str, $matches)) {
-                    $str = implode('-', $matches[0]);
-                }
-            } else {
-                $str = str_replace(["'", ":", "\\", "/", '"'], "", $str);
-                $str = str_replace(
-                    ["+", ",", ' ', '，', ' ', ".", "?", "=", "&", "!", "<", ">", "(", ")", "[", "]", "{", "}"],
-                    "-",
-                    $str
-                );
+            if ($result) {
+                $regs = mb_ereg_search_getregs();
+                $pos = 0;
+                do {
+                    $return .= ($pos > 0 ? '-' : '') . $regs[0];
+                    $pos++;
+                } while ($regs = mb_ereg_search_regs());
             }
 
-            $str = trim($str, '-_');
+            $str = trim($return, '-_');
             $str = !strlen($str) ? $default : $str;
             return substr($str, 0, $maxLength);
         }
@@ -748,8 +773,6 @@ EOF;
         /**
          * 宽字符串截字函数
          *
-         * @access public
-         *
          * @param string $str 需要截取的字符串
          * @param integer $start 开始截取的位置
          * @param integer $length 需要截取的长度
@@ -757,7 +780,7 @@ EOF;
          *
          * @return string
          */
-        public static function subStr($str, $start, $length, $trim = "...")
+        public static function subStr(string $str, int $start, int $length, string $trim = "..."): string
         {
             if (!strlen($str)) {
                 return '';
@@ -765,18 +788,7 @@ EOF;
 
             $iLength = self::strLen($str) - $start;
             $tLength = $length < $iLength ? ($length - self::strLen($trim)) : $length;
-
-            if (__TYPECHO_MB_SUPPORTED__) {
-                $str = mb_substr($str, $start, $tLength, self::$charset);
-            } else {
-                if ('UTF-8' == strtoupper(self::$charset)) {
-                    if (preg_match_all("/./u", $str, $matches)) {
-                        $str = implode('', array_slice($matches[0], $start, $tLength));
-                    }
-                } else {
-                    $str = substr($str, $start, $tLength);
-                }
-            }
+            $str = mb_substr($str, $start, $tLength, 'UTF-8');
 
             return $length < $iLength ? ($str . $trim) : $str;
         }
@@ -784,20 +796,12 @@ EOF;
         /**
          * 获取宽字符串长度函数
          *
-         * @access public
-         *
          * @param string $str 需要获取长度的字符串
-         *
          * @return integer
          */
         public static function strLen(string $str): int
         {
-            if (__TYPECHO_MB_SUPPORTED__) {
-                return mb_strlen($str, self::$charset);
-            } else {
-                return 'UTF-8' == strtoupper(self::$charset)
-                    ? strlen(utf8_decode($str)) : strlen($str);
-            }
+            return mb_strlen($str, 'UTF-8');
         }
 
         /**
@@ -1006,7 +1010,7 @@ EOF;
             $name = '_' . self::randString(rand(3, 7));
             $cutName = '_' . self::randString(rand(3, 7));
             $var = implode('+', $result);
-            $cutVar = \Json::encode($cut);
+            $cutVar = json_encode($cut);
             return "(function () {
     var {$name} = {$var}, {$cutName} = {$cutVar};
     

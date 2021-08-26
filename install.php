@@ -74,7 +74,7 @@ function install_get_site_url(): string
  */
 function install_is_cli(): bool
 {
-    return php_sapi_name() == 'cli';
+    return \Typecho\Request::getInstance()->isCli();
 }
 
 /**
@@ -92,7 +92,7 @@ function install_get_default_options(): array
             'theme:default' => 'a:2:{s:7:"logoUrl";N;s:12:"sidebarBlock";a:5:{i:0;s:15:"ShowRecentPosts";i:1;s:18:"ShowRecentComments";i:2;s:12:"ShowCategory";i:3;s:11:"ShowArchive";i:4;s:9:"ShowOther";}}',
             'timezone' => '28800',
             'lang' => install_get_lang(),
-            'charset' => _t('UTF-8'),
+            'charset' => 'UTF-8',
             'contentType' => 'text/html',
             'gzip' => 0,
             'generator' => 'Typecho ' . \Typecho\Common::VERSION,
@@ -341,7 +341,7 @@ function install_raise_error($error, $config = null)
 
         exit(1);
     } else {
-        \Typecho\Response::getInstance()->throwJson([
+        install_throw_json([
             'success' => 0,
             'message' => is_string($error) ? nl2br($error) : $error,
             'config' => $config
@@ -370,12 +370,34 @@ function install_success($step, ?array $config = null)
 
         exit(0);
     } else {
-        \Typecho\Response::getInstance()->throwJson([
+        install_throw_json([
             'success' => 1,
             'message' => $step,
             'config'  => $config
         ]);
     }
+}
+
+/**
+ * @param $data
+ */
+function install_throw_json($data)
+{
+    \Typecho\Response::getInstance()->setContentType('application/json')
+        ->addResponder(function () use ($data) {
+            echo json_encode($data);
+        })
+        ->respond();
+}
+
+/**
+ * @param string $url
+ */
+function install_redirect(string $url)
+{
+    \Typecho\Response::getInstance()->setStatus(302)
+        ->setHeader('Location', $url)
+        ->respond();
 }
 
 /**
@@ -493,6 +515,22 @@ function install_js_support()
     <?php
 }
 
+/**
+ * @param string[] $extensions
+ * @return string|null
+ */
+function install_check_extension(array $extensions): ?string
+{
+    foreach ($extensions as $extension) {
+        if (extension_loaded($extension)) {
+            return null;
+        }
+    }
+
+    return _n('缺少PHP扩展', '请在服务器上安装以下PHP扩展中的至少一个', count($extensions))
+        . ': ' . implode(', ', $extensions);
+}
+
 function install_step_1()
 {
     $langs = Widget_Options_General::getLangs();
@@ -504,7 +542,7 @@ function install_step_1()
                 <h2><?php _e('欢迎使用 Typecho'); ?></h2>
             </div>
             <div id="typecho-welcome">
-                <form autocomplete="off" method="get" action="install.php">
+                <form autocomplete="off" method="post" action="install.php">
                     <h3><?php _e('安装说明'); ?></h3>
                     <p class="warning">
                         <strong><?php _e('本安装程序将自动检测服务器环境是否符合最低配置需求. 如果不符合, 将在上方出现提示信息, 请按照提示信息检查您的主机配置. 如果服务器环境符合要求, 将在下方出现 "开始下一步" 的按钮, 点击此按钮即可一步完成安装.'); ?></strong>
@@ -520,7 +558,7 @@ function install_step_1()
 
                     <p class="submit">
                         <button class="btn primary" type="submit"><?php _e('我准备好了, 开始下一步 &raquo;'); ?></button>
-                        <input type="hidden" name="step" value="2">
+                        <input type="hidden" name="step" value="1">
 
                         <?php if (count($langs) > 1) : ?>
                             <select style="float: right" onchange="location.href='?lang=' + this.value">
@@ -537,6 +575,54 @@ function install_step_1()
         </div>
     </div>
     <?php
+    install_js_support();
+}
+
+/**
+ * check dependencies before install
+ */
+function install_step_1_perform()
+{
+    $errors = [];
+    $checks = [
+        'curl',
+        'mbstring',
+        'json',
+        ['mysqli', 'sqlite3', 'pgsql', 'pdo_mysql', 'pdo_sqlite', 'pdo_pgsql']
+    ];
+
+    foreach ($checks as $check) {
+        $error = install_check_extension(is_array($check) ? $check : [$check]);
+
+        if (!empty($error)) {
+            $errors[] = $error;
+        }
+    }
+
+    $uploadDir = '/usr/uploads';
+    $realUploadDir = \Typecho\Common::url($uploadDir, __TYPECHO_ROOT_DIR__);
+    $writeable = true;
+    if (is_dir($realUploadDir)) {
+        if (!is_writeable($realUploadDir)) {
+            if (!@chmod($realUploadDir, 0644)) {
+                $writeable = false;
+            }
+        }
+    } else {
+        if (!@mkdir($realUploadDir, 0644)) {
+            $writeable = false;
+        }
+    }
+
+    if (!$writeable) {
+        $errors[] = _t('上传目录无法写入, 请手动将安装目录下的 %s 目录的权限设置为可写然后继续升级', $uploadDir);
+    }
+
+    if (empty($errors)) {
+        install_success(2);
+    } else {
+        install_raise_error(implode("\n", $errors));
+    }
 }
 
 /**
@@ -657,7 +743,7 @@ function install_step_2()
             }
         }
 
-        fillInput(<?php echo Json::encode($config); ?>);
+        fillInput(<?php echo json_encode($config); ?>);
         <?php endif; ?>
     </script>
     <?php
@@ -1136,7 +1222,7 @@ function install_dispatch()
     ) {
         // redirect to siteUrl if not cli
         if (!install_is_cli()) {
-            \Typecho\Response::getInstance()->redirect($options->siteUrl);
+            install_redirect($options->siteUrl);
         }
 
         exit(1);
@@ -1146,7 +1232,6 @@ function install_dispatch()
         install_step_2_perform();
     } else {
         $request = \Typecho\Request::getInstance();
-        $response = \Typecho\Response::getInstance();
         $step = $request->get('step');
 
         $action = 1;
@@ -1156,14 +1241,14 @@ function install_dispatch()
                 if (!install_check('db_structure')) {
                     $action = 2;
                 } else {
-                    $response->redirect('install.php?step=3');
+                    install_redirect('install.php?step=3');
                 }
                 break;
             case $step == 3:
                 if (install_check('db_structure')) {
                     $action = 3;
                 } else {
-                    $response->redirect('install.php?step=2');
+                    install_redirect('install.php?step=2');
                 }
                 break;
             default:
@@ -1172,7 +1257,7 @@ function install_dispatch()
 
         $method = 'install_step_' . $action;
 
-        if ($request->isPost() && $action > 1) {
+        if ($request->isPost()) {
             $method .= '_perform';
             $method();
             exit;

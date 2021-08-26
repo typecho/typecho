@@ -69,11 +69,8 @@ class Cookie
     /**
      * 获取指定的COOKIE值
      *
-     * @access public
-     *
      * @param string $key 指定的参数
      * @param string|null $default 默认的参数
-     *
      * @return mixed
      */
     public static function get(string $key, ?string $default = null)
@@ -86,29 +83,21 @@ class Cookie
     /**
      * 设置指定的COOKIE值
      *
-     * @access public
-     *
      * @param string $key 指定的参数
      * @param mixed $value 设置的值
      * @param integer $expire 过期时间,默认为0,表示随会话时间结束
-     *
-     * @return void
      */
     public static function set(string $key, $value, int $expire = 0)
     {
         $key = self::$prefix . $key;
-        setrawcookie($key, rawurlencode($value), $expire, self::$path);
         $_COOKIE[$key] = $value;
+        Response::getInstance()->setCookie($key, $value, $expire, self::$path);
     }
 
     /**
      * 删除指定的COOKIE值
      *
-     * @access public
-     *
      * @param string $key 指定的参数
-     *
-     * @return void
      */
     public static function delete(string $key)
     {
@@ -117,7 +106,7 @@ class Cookie
             return;
         }
 
-        setcookie($key, '', time() - 2592000, self::$path);
+        Response::getInstance()->setCookie($key, '', -1, self::$path);
         unset($_COOKIE[$key]);
     }
 }

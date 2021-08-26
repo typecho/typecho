@@ -95,41 +95,34 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
      */
     private function export()
     {
+        $backupFile = tempnam(sys_get_temp_dir(), 'backup_');
+        $fp = fopen($backupFile, 'wb');
         $host = parse_url($this->options->siteUrl, PHP_URL_HOST);
         $this->response->setContentType('application/octet-stream');
         $this->response->setHeader('Content-Disposition', 'attachment; filename="'
             . date('Ymd') . '_' . $host . '_' . uniqid() . '.dat"');
 
         $header = str_replace('XXXX', self::HEADER_VERSION, self::HEADER);
-        $buffer = $header;
+        fwrite($fp, $header);
         $db = $this->db;
 
         foreach ($this->_types as $type => $val) {
             $page = 1;
             do {
                 $rows = $db->fetchAll($db->select()->from('table.' . $type)->page($page, 20));
-                $page ++;
+                $page++;
 
                 foreach ($rows as $row) {
-                    $buffer .= $this->buildBuffer($val, $this->applyFields($type, $row));
-
-                    if (strlen($buffer) >= 1024 * 1024) {
-                        echo $buffer;
-                        ob_flush();
-                        $buffer = '';
-                    }
+                    fwrite($fp, $this->buildBuffer($val, $this->applyFields($type, $row)));
                 }
             } while (count($rows) == 20);
         }
 
-        if (!empty($buffer)) {
-            echo $buffer;
-            ob_flush();
-        }
+        Typecho_Plugin::factory(__CLASS__)->export($fp);
+        fwrite($fp, $header);
+        fclose($fp);
 
-        Typecho_Plugin::factory(__CLASS__)->export();
-        echo $header;
-        ob_end_flush();
+        $this->response->throwFile($backupFile, 'application/octet-stream');
     }
 
     /**
@@ -147,7 +140,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
             $body .= $val;
         }
 
-        $header = Json::encode($schema);
+        $header = json_encode($schema);
         return Typecho_Common::buildBackupBuffer($type, $header, $body);
     }
 
@@ -309,7 +302,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
         $table = array_search($type, $this->_types);
 
         if (!empty($table)) {
-            $schema = Json::decode($header, true);
+            $schema = json_decode($header, true);
             $data = [];
             $offset = 0;
 

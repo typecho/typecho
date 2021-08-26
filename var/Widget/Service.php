@@ -218,7 +218,7 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
                             ->setTimeout(2)
                             ->setData([
                                 'do' => 'async',
-                                'requests' => Json::encode($self->asyncRequests),
+                                'requests' => json_encode($self->asyncRequests),
                                 'token' => Typecho_Common::timeToken($this->options->secret)
                             ])
                             ->setMethod(Typecho_Http_Client::METHOD_POST)
@@ -259,7 +259,7 @@ class Widget_Service extends Widget_Abstract_Options implements Widget_Interface
             set_time_limit(30);
         }
 
-        $requests = Json::decode($this->request->requests, true);
+        $requests = json_decode($this->request->requests, true);
         $plugin = Typecho_Plugin::factory(__CLASS__);
 
         if (!empty($requests)) {
