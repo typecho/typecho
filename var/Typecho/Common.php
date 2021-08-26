@@ -74,17 +74,12 @@ namespace {
 }
 
 namespace Typecho {
-    // rewrite load
-    const REWRITE_CLASS = [
-        'Typecho_Plugin_Interface'    => '\Typecho\Plugin\PluginInterface',
-        'Typecho_Widget_Helper_Empty' => '\Typecho\Widget\Helper\EmptyClass'
-    ];
-
     spl_autoload_register(function (string $className) {
         $path = str_replace(
             ['_', '\\'],
             '/',
-            REWRITE_CLASS[$className] ?? $className
+            (defined('__TYPECHO_REWRITE_CLASS__') && isset(__TYPECHO_REWRITE_CLASS__[$className]))
+                ?  __TYPECHO_REWRITE_CLASS__[$className] : $className
         ) . '.php';
 
         $defaultFile = __TYPECHO_ROOT_DIR__ . '/var/' . $path;
@@ -111,7 +106,8 @@ namespace Typecho {
             && !interface_exists($className, false)
             && !trait_exists($className, false)
         ) {
-            $aliasClass = REWRITE_CLASS[$className] ?? '\\' . str_replace('_', '\\', $className);
+            $aliasClass = (defined('__TYPECHO_REWRITE_CLASS__') && isset(__TYPECHO_REWRITE_CLASS__[$className]))
+                ? __TYPECHO_REWRITE_CLASS__[$className] : '\\' . str_replace('_', '\\', $className);
             class_alias($aliasClass, $className);
         }
     });

@@ -1,64 +1,84 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-/**
- * Typecho Blog Platform
- *
- * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license    GNU General Public License 2.0
- * @version    $Id$
- */
+
+namespace Widget\Base;
+
+use Typecho\Db\Exception;
+use Typecho\Db\Query;
+use Widget\Base;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * 内容基类
  *
  * @package Widget
  */
-class Widget_Abstract_Contents extends Widget_Abstract
+class Contents extends Base
 {
     /**
      * 获取查询对象
      *
      * @access public
-     * @return Typecho_Db_Query
+     * @return Query
+     * @throws Exception
      */
-    public function select()
+    public function select(): Query
     {
-        return $this->db->select('table.contents.cid', 'table.contents.title', 'table.contents.slug', 'table.contents.created', 'table.contents.authorId',
-            'table.contents.modified', 'table.contents.type', 'table.contents.status', 'table.contents.text', 'table.contents.commentsNum', 'table.contents.order',
-            'table.contents.template', 'table.contents.password', 'table.contents.allowComment', 'table.contents.allowPing', 'table.contents.allowFeed',
-            'table.contents.parent')->from('table.contents');
+        return $this->db->select(
+            'table.contents.cid',
+            'table.contents.title',
+            'table.contents.slug',
+            'table.contents.created',
+            'table.contents.authorId',
+            'table.contents.modified',
+            'table.contents.type',
+            'table.contents.status',
+            'table.contents.text',
+            'table.contents.commentsNum',
+            'table.contents.order',
+            'table.contents.template',
+            'table.contents.password',
+            'table.contents.allowComment',
+            'table.contents.allowPing',
+            'table.contents.allowFeed',
+            'table.contents.parent'
+        )->from('table.contents');
     }
 
     /**
      * 插入内容
      *
      * @access public
-     * @param array $content 内容数组
+     * @param array $rows 内容数组
      * @return integer
+     * @throws Exception
      */
-    public function insert(array $content)
+    public function insert(array $rows): int
     {
         /** 构建插入结构 */
         $insertStruct = [
-            'title'        => !isset($content['title']) || strlen($content['title']) === 0 ? null : htmlspecialchars($content['title']),
-            'created'      => !isset($content['created']) ? $this->options->time : $content['created'],
+            'title'        => !isset($rows['title']) || strlen($rows['title']) === 0
+                ? null : htmlspecialchars($rows['title']),
+            'created'      => !isset($rows['created']) ? $this->options->time : $rows['created'],
             'modified'     => $this->options->time,
-            'text'         => !isset($content['text']) || strlen($content['text']) === 0 ? null : $content['text'],
-            'order'        => empty($content['order']) ? 0 : intval($content['order']),
-            'authorId'     => isset($content['authorId']) ? $content['authorId'] : $this->user->uid,
-            'template'     => empty($content['template']) ? null : $content['template'],
-            'type'         => empty($content['type']) ? 'post' : $content['type'],
-            'status'       => empty($content['status']) ? 'publish' : $content['status'],
-            'password'     => !isset($content['password']) || strlen($content['password']) === 0 ? null : $content['password'],
-            'commentsNum'  => empty($content['commentsNum']) ? 0 : $content['commentsNum'],
-            'allowComment' => !empty($content['allowComment']) && 1 == $content['allowComment'] ? 1 : 0,
-            'allowPing'    => !empty($content['allowPing']) && 1 == $content['allowPing'] ? 1 : 0,
-            'allowFeed'    => !empty($content['allowFeed']) && 1 == $content['allowFeed'] ? 1 : 0,
-            'parent'       => empty($content['parent']) ? 0 : intval($content['parent'])
+            'text'         => !isset($rows['text']) || strlen($rows['text']) === 0 ? null : $rows['text'],
+            'order'        => empty($rows['order']) ? 0 : intval($rows['order']),
+            'authorId'     => $rows['authorId'] ?? $this->user->uid,
+            'template'     => empty($rows['template']) ? null : $rows['template'],
+            'type'         => empty($rows['type']) ? 'post' : $rows['type'],
+            'status'       => empty($rows['status']) ? 'publish' : $rows['status'],
+            'password'     => !isset($rows['password']) || strlen($rows['password']) === 0 ? null : $rows['password'],
+            'commentsNum'  => empty($rows['commentsNum']) ? 0 : $rows['commentsNum'],
+            'allowComment' => !empty($rows['allowComment']) && 1 == $rows['allowComment'] ? 1 : 0,
+            'allowPing'    => !empty($rows['allowPing']) && 1 == $rows['allowPing'] ? 1 : 0,
+            'allowFeed'    => !empty($rows['allowFeed']) && 1 == $rows['allowFeed'] ? 1 : 0,
+            'parent'       => empty($rows['parent']) ? 0 : intval($rows['parent'])
         ];
 
-        if (!empty($content['cid'])) {
-            $insertStruct['cid'] = $content['cid'];
+        if (!empty($rows['cid'])) {
+            $insertStruct['cid'] = $rows['cid'];
         }
 
         /** 首先插入部分数据 */
@@ -66,7 +86,7 @@ class Widget_Abstract_Contents extends Widget_Abstract
 
         /** 更新缩略名 */
         if ($insertId > 0) {
-            $this->applySlug(!isset($content['slug']) || strlen($content['slug']) === 0 ? null : $content['slug'], $insertId);
+            $this->applySlug(!isset($rows['slug']) || strlen($rows['slug']) === 0 ? null : $rows['slug'], $insertId);
         }
 
         return $insertId;
@@ -102,10 +122,12 @@ class Widget_Abstract_Contents extends Widget_Abstract
 
         /** 判断是否在数据库中已经存在 */
         $count = 1;
-        while ($this->db->fetchObject($this->db->select(['COUNT(cid)' => 'num'])
-                ->from('table.contents')->where('slug = ? AND cid <> ?', $result, $cid))->num > 0) {
+        while (
+            $this->db->fetchObject($this->db->select(['COUNT(cid)' => 'num'])
+                ->from('table.contents')->where('slug = ? AND cid <> ?', $result, $cid))->num > 0
+        ) {
             $result = $slug . '-' . $count;
-            $count ++;
+            $count++;
         }
 
         $this->db->query($this->db->update('table.contents')->rows(['slug' => $result])
@@ -277,8 +299,10 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     public function setField($name, $type, $value, $cid)
     {
-        if (empty($name) || !$this->checkFieldName($name)
-            || !in_array($type, ['str', 'int', 'float'])) {
+        if (
+            empty($name) || !$this->checkFieldName($name)
+            || !in_array($type, ['str', 'int', 'float'])
+        ) {
             return false;
         }
 
@@ -510,10 +534,12 @@ class Widget_Abstract_Contents extends Widget_Abstract
         $value['directory'] = $tmpDirectory;
 
         /** 处理密码保护流程 */
-        if (strlen($value['password']) > 0 &&
+        if (
+            strlen($value['password']) > 0 &&
             $value['password'] !== Typecho_Cookie::get('protectPassword_' . $value['cid']) &&
             $value['authorId'] != $this->user->uid &&
-            !$this->user->pass('editor', true)) {
+            !$this->user->pass('editor', true)
+        ) {
             $value['hidden'] = true;
         }
 
@@ -621,8 +647,10 @@ class Widget_Abstract_Contents extends Widget_Abstract
                 $allow &= ($this->user->pass('editor', true) || $this->authorId == $this->user->uid);
             } else {
                 /** 对自动关闭反馈功能的支持 */
-                if (('ping' == $permission || 'comment' == $permission) && $this->options->commentsPostTimeout > 0 &&
-                    $this->options->commentsAutoClose) {
+                if (
+                    ('ping' == $permission || 'comment' == $permission) && $this->options->commentsPostTimeout > 0 &&
+                    $this->options->commentsAutoClose
+                ) {
                     if ($this->options->time - $this->created > $this->options->commentsPostTimeout) {
                         return false;
                     }
@@ -943,8 +971,11 @@ class Widget_Abstract_Contents extends Widget_Abstract
     {
         /** 生成反馈地址 */
         /** 评论 */
-        return Typecho_Router::url('feedback',
-            ['type' => 'comment', 'permalink' => $this->pathinfo], $this->options->index);
+        return Typecho_Router::url(
+            'feedback',
+            ['type' => 'comment', 'permalink' => $this->pathinfo],
+            $this->options->index
+        );
     }
 
     /**
@@ -955,8 +986,11 @@ class Widget_Abstract_Contents extends Widget_Abstract
      */
     protected function ___trackbackUrl()
     {
-        return Typecho_Router::url('feedback',
-            ['type' => 'trackback', 'permalink' => $this->pathinfo], $this->options->index);
+        return Typecho_Router::url(
+            'feedback',
+            ['type' => 'trackback', 'permalink' => $this->pathinfo],
+            $this->options->index
+        );
     }
 
     /**
@@ -986,8 +1020,12 @@ class Widget_Abstract_Contents extends Widget_Abstract
     {
         $select = $this->db->select(['COUNT(table.contents.cid)' => 'num'])->from('table.contents')
             ->where("table.contents.{$column} > {$offset}")
-            ->where("table.contents.type = ? OR (table.contents.type = ? AND table.contents.parent = ?)",
-                $type, $type . '_draft', 0);
+            ->where(
+                "table.contents.type = ? OR (table.contents.type = ? AND table.contents.parent = ?)",
+                $type,
+                $type . '_draft',
+                0
+            );
 
         if (!empty($status)) {
             $select->where("table.contents.status = ?", $status);
@@ -1001,4 +1039,3 @@ class Widget_Abstract_Contents extends Widget_Abstract
         return ceil($count / $pageSize);
     }
 }
-

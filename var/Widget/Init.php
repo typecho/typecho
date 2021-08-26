@@ -32,6 +32,18 @@ class Init extends Widget
      */
     public function execute()
     {
+        // init class
+        define('__TYPECHO_REWRITE_CLASS__', [
+            'Typecho_Plugin_Interface'    => '\Typecho\Plugin\PluginInterface',
+            'Typecho_Widget_Helper_Empty' => '\Typecho\Widget\Helper\EmptyClass',
+            'Widget_Abstract'             => '\Widget\Base',
+            'Widget_Abstract_Contents'    => '\Widget\Base\Contents',
+            'Widget_Abstract_Comments'    => '\Widget\Base\Comments',
+            'Widget_Abstract_Metas'       => '\Widget\Base\Metas',
+            'Widget_Abstract_Options'     => '\Widget\Base\Options',
+            'Widget_Abstract_Users'       => '\Widget\Base\Users',
+        ]);
+
         /** 对变量赋值 */
         $options = $this->widget('Widget_Options');
 

@@ -1,14 +1,14 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-/**
- * 纯数据抽象组件
- *
- * @category typecho
- * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
- * @version $Id$
- */
+
+namespace Widget;
+
+use Typecho\Db;
+use Typecho\Db\Query;
+use Typecho\Widget;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * 纯数据抽象组件
@@ -18,7 +18,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-abstract class Widget_Abstract extends Typecho_Widget
+abstract class Base extends Widget
 {
     /**
      * 全局选项
@@ -46,8 +46,7 @@ abstract class Widget_Abstract extends Typecho_Widget
     /**
      * 数据库对象
      *
-     * @access protected
-     * @var Typecho_Db
+     * @var Db
      */
     protected $db;
 
@@ -58,13 +57,14 @@ abstract class Widget_Abstract extends Typecho_Widget
      * @param mixed $request request对象
      * @param mixed $response response对象
      * @param mixed $params 参数列表
+     * @throws Db\Exception|Widget\Exception
      */
     public function __construct($request, $response, $params = null)
     {
         parent::__construct($request, $response, $params);
 
         /** 初始化数据库 */
-        $this->db = Typecho_Db::get();
+        $this->db = Db::get();
 
         /** 初始化常用组件 */
         $this->options = $this->widget('Widget_Options');
@@ -75,19 +75,18 @@ abstract class Widget_Abstract extends Typecho_Widget
     /**
      * 查询方法
      *
-     * @access public
-     * @return Typecho_Db_Query
+     * @return Query
      */
-    abstract public function select();
+    abstract public function select(): Query;
 
     /**
      * 获得所有记录数
      *
      * @access public
-     * @param Typecho_Db_Query $condition 查询对象
+     * @param Query $condition 查询对象
      * @return integer
      */
-    abstract public function size(Typecho_Db_Query $condition);
+    abstract public function size(Query $condition): int;
 
     /**
      * 增加记录方法
@@ -96,24 +95,24 @@ abstract class Widget_Abstract extends Typecho_Widget
      * @param array $rows 字段对应值
      * @return integer
      */
-    abstract public function insert(array $rows);
+    abstract public function insert(array $rows): int;
 
     /**
      * 更新记录方法
      *
      * @access public
      * @param array $rows 字段对应值
-     * @param Typecho_Db_Query $condition 查询对象
+     * @param Query $condition 查询对象
      * @return integer
      */
-    abstract public function update(array $rows, Typecho_Db_Query $condition);
+    abstract public function update(array $rows, Query $condition): int;
 
     /**
      * 删除记录方法
      *
      * @access public
-     * @param Typecho_Db_Query $condition 查询对象
+     * @param Query $condition 查询对象
      * @return integer
      */
-    abstract public function delete(Typecho_Db_Query $condition);
+    abstract public function delete(Query $condition): int;
 }
