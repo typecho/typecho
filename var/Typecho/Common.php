@@ -164,7 +164,9 @@ class Typecho_Common
 
         foreach ($attrs as $key => $val) {
             if (in_array($key, self::$_allowableAttributes[$tag])) {
-                $parsedAttrs[] = " {$key}" . (empty($val) ? '' : "={$val}");
+                if ($key !== 'href' || Typecho_Validate::url(substr($val, 1, -1))) {
+                    $parsedAttrs[] = " {$key}" . (empty($val) ? '' : "={$val}");
+                }
             }
         }
 
