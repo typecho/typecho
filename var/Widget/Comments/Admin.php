@@ -1,12 +1,18 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-/**
- * Typecho Blog Platform
- *
- * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license    GNU General Public License 2.0
- * @version    $Id$
- */
+
+namespace Widget\Comments;
+
+use Typecho\Cookie;
+use Typecho\Db;
+use Typecho\Db\Query;
+use Typecho\Widget\Exception;
+use Typecho\Widget\Helper\PageNavigator\Box;
+use Widget\Base\Comments;
+use Widget\Base\Contents;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * 后台评论输出组件
@@ -17,15 +23,15 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Comments_Admin extends Widget_Abstract_Comments
+class Admin extends Comments
 {
     /**
      * 分页计算对象
      *
      * @access private
-     * @var Typecho_Db_Query
+     * @var Query
      */
-    private $_countSql;
+    private $countSql;
 
     /**
      * 当前页
@@ -33,7 +39,7 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
      * @access private
      * @var integer
      */
-    private $_currentPage;
+    private $currentPage;
 
     /**
      * 所有文章个数
@@ -41,15 +47,15 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
      * @access private
      * @var integer
      */
-    private $_total = false;
+    private $total = false;
 
     /**
      * 获取菜单标题
      *
      * @return string
-     * @throws Typecho_Widget_Exception
+     * @throws Exception
      */
-    public function getMenuTitle()
+    public function getMenuTitle(): string
     {
         $content = $this->parentContent;
 
@@ -57,20 +63,19 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
             return _t('%s的评论', $content['title']);
         }
 
-        throw new Typecho_Widget_Exception(_t('内容不存在'), 404);
+        throw new Exception(_t('内容不存在'), 404);
     }
 
     /**
      * 执行函数
      *
-     * @access public
-     * @return void
+     * @throws Db\Exception|Exception
      */
     public function execute()
     {
         $select = $this->select();
         $this->parameter->setDefault('pageSize=20');
-        $this->_currentPage = $this->request->get('page', 1);
+        $this->currentPage = $this->request->get('page', 1);
 
         /** 过滤标题 */
         if (null != ($keywords = $this->request->filter('search')->keywords)) {
@@ -81,14 +86,14 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
         if (!$this->user->pass('editor', true)) {
             $select->where('table.comments.ownerId = ?', $this->user->uid);
         } elseif (!isset($this->request->cid)) {
-            if ('on' == $this->request->__typecho_all_comments) {
-                Typecho_Cookie::set('__typecho_all_comments', 'on');
+            if ('on' == $this->request->_typecho_all_comments) {
+                Cookie::set('__typecho_all_comments', 'on');
             } else {
-                if ('off' == $this->request->__typecho_all_comments) {
-                    Typecho_Cookie::set('__typecho_all_comments', 'off');
+                if ('off' == $this->request->_typecho_all_comments) {
+                    Cookie::set('__typecho_all_comments', 'off');
                 }
 
-                if ('on' != Typecho_Cookie::get('__typecho_all_comments')) {
+                if ('on' != Cookie::get('__typecho_all_comments')) {
                     $select->where('table.comments.ownerId = ?', $this->user->uid);
                 }
             }
@@ -107,10 +112,10 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
             $select->where('table.comments.cid = ?', $this->request->filter('int')->cid);
         }
 
-        $this->_countSql = clone $select;
+        $this->countSql = clone $select;
 
-        $select->order('table.comments.coid', Typecho_Db::SORT_DESC)
-            ->page($this->_currentPage, $this->parameter->pageSize);
+        $select->order('table.comments.coid', Db::SORT_DESC)
+            ->page($this->currentPage, $this->parameter->pageSize);
 
         $this->db->fetchAll($select, [$this, 'push']);
     }
@@ -118,29 +123,33 @@ class Widget_Comments_Admin extends Widget_Abstract_Comments
     /**
      * 输出分页
      *
-     * @access public
-     * @return void
+     * @throws Exception|Db\Exception
      */
     public function pageNav()
     {
         $query = $this->request->makeUriByRequest('page={page}');
 
         /** 使用盒状分页 */
-        $nav = new Typecho_Widget_Helper_PageNavigator_Box(false === $this->_total ? $this->_total = $this->size($this->_countSql) : $this->_total,
-            $this->_currentPage, $this->parameter->pageSize, $query);
+        $nav = new Box(
+            false === $this->total ? $this->total = $this->size($this->countSql) : $this->total,
+            $this->currentPage,
+            $this->parameter->pageSize,
+            $query
+        );
         $nav->render(_t('&laquo;'), _t('&raquo;'));
     }
 
     /**
      * 获取当前内容结构
      *
-     * @return stdClass
+     * @return array|null
+     * @throws Db\Exception
      */
-    protected function ___parentContent()
+    protected function ___parentContent(): ?array
     {
         $cid = isset($this->request->cid) ? $this->request->filter('int')->cid : $this->cid;
-        return $this->db->fetchRow($this->widget('Widget_Abstract_Contents')->select()
+        return $this->db->fetchRow(self::widget(Contents::class)->select()
             ->where('table.contents.cid = ?', $cid)
-            ->limit(1), [$this->widget('Widget_Abstract_Contents'), 'filter']);
+            ->limit(1), [self::widget(Contents::class), 'filter']);
     }
 }

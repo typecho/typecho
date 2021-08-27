@@ -191,10 +191,10 @@ class Metas extends Base
      * 根据tag获取ID
      *
      * @param mixed $inputTags 标签名
-     * @return array
+     * @return array|int
      * @throws Exception
      */
-    public function scanTags($inputTags): array
+    public function scanTags($inputTags)
     {
         $tags = is_array($inputTags) ? $inputTags : [$inputTags];
         $result = [];

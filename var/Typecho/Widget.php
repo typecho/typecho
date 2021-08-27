@@ -2,7 +2,6 @@
 
 namespace Typecho;
 
-use Typecho\Widget\Exception as WidgetException;
 use Typecho\Widget\Helper\EmptyClass;
 use Typecho\Widget\Request as WidgetRequest;
 use Typecho\Widget\Response as WidgetResponse;
@@ -84,10 +83,10 @@ abstract class Widget
      * @access public
      *
      * @param WidgetRequest $request request对象
-     * @param mixed $response response对象
+     * @param WidgetResponse $response response对象
      * @param mixed $params 参数列表
      */
-    public function __construct(WidgetRequest $request, $response, $params = null)
+    public function __construct(WidgetRequest $request, WidgetResponse $response, $params = null)
     {
         //设置函数内部对象
         $this->request = $request;
@@ -113,15 +112,11 @@ abstract class Widget
     /**
      * 工厂方法,将类静态化放置到列表中
      *
-     * @access public
-     *
-     * @param string $alias 组件别名
+     * @param class-string $alias 组件别名
      * @param mixed $params 传递的参数
      * @param mixed $request 前端参数
      * @param boolean $enableResponse 是否允许http回执
-     *
      * @return Widget
-     * @throws WidgetException
      */
     public static function widget(
         string $alias,
@@ -129,34 +124,28 @@ abstract class Widget
         $request = null,
         bool $enableResponse = true
     ): Widget {
-        $parts = explode('@', $alias);
-        $className = $parts[0];
-        $alias = empty($parts[1]) ? $className : $parts[1];
+        [$className] = explode('@', $alias);
+        $key = Common::nativeClassName($alias);
 
         if (isset(self::$widgetAlias[$className])) {
             $className = self::$widgetAlias[$className];
         }
 
-        if (!isset(self::$widgetPool[$alias])) {
-            /** 如果类不存在 */
-            if (!class_exists($className)) {
-                throw new WidgetException($className);
-            }
-
+        if (!isset(self::$widgetPool[$key])) {
             /** 初始化request */
             $requestObject = new WidgetRequest(Request::getInstance(), Config::factory($request));
 
             /** 初始化response */
-            $responseObject = new WidgetResponse(Request::getInstance(), Response::getInstance());
+            $responseObject = new WidgetResponse(Request::getInstance(), Response::getInstance(), $enableResponse);
 
             /** 初始化组件 */
             $widget = new $className($requestObject, $responseObject, $params);
 
             $widget->execute();
-            self::$widgetPool[$alias] = $widget;
+            self::$widgetPool[$key] = $widget;
         }
 
-        return self::$widgetPool[$alias];
+        return self::$widgetPool[$key];
     }
 
     /**
@@ -264,7 +253,6 @@ abstract class Widget
      * 将每一行的值压入堆栈
      *
      * @param array $value 每一行的值
-     *
      * @return mixed
      */
     public function push(array $value)
@@ -331,7 +319,7 @@ abstract class Widget
      */
     public function pluginHandle(?string $handle = null): Plugin
     {
-        return Plugin::factory(empty($handle) ? get_class($this) : $handle);
+        return Plugin::factory(empty($handle) ? static::class : $handle);
     }
 
     /**

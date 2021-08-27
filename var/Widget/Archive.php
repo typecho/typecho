@@ -12,8 +12,13 @@ use Typecho\Widget\Exception as WidgetException;
 use Typecho\Widget\Helper\PageNavigator;
 use Typecho\Widget\Helper\PageNavigator\Classic;
 use Typecho\Widget\Helper\PageNavigator\Box;
-use Widget\Base\Comments;
 use Widget\Base\Contents;
+use Widget\Base\Metas;
+use Widget\Base\Users;
+use Widget\Comments\Ping;
+use Widget\Comments\Recent;
+use Widget\Contents\Attachment\Related;
+use Widget\Metas\Category\Rows;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -878,10 +883,9 @@ class Archive extends Contents
      * 获取评论归档对象
      *
      * @access public
-     * @return Comments
-     * @throws WidgetException
+     * @return \Widget\Comments\Archive
      */
-    public function comments(): Comments
+    public function comments(): \Widget\Comments\Archive
     {
         $parameter = [
             'parentId'      => $this->hidden ? 0 : $this->cid,
@@ -891,19 +895,17 @@ class Archive extends Contents
             'allowComment'  => $this->allow('comment')
         ];
 
-        return $this->widget('\Widget\Comments\Archive', $parameter);
+        return self::widget(\Widget\Comments\Archive::class, $parameter);
     }
 
     /**
      * 获取回响归档对象
      *
-     * @access public
-     * @return Comments
-     * @throws WidgetException
+     * @return Ping
      */
-    public function pings(): Comments
+    public function pings(): Ping
     {
-        return $this->widget('\Widget\Comments\Ping', [
+        return self::widget(Ping::class, [
             'parentId'      => $this->hidden ? 0 : $this->cid,
             'parentContent' => $this->row,
             'allowPing'     => $this->allow('ping')
@@ -913,14 +915,13 @@ class Archive extends Contents
     /**
      * 获取附件对象
      *
-     * @access public
      * @param integer $limit 最大个数
      * @param integer $offset 重新
-     * @return Widget_Contents_Attachment_Related
+     * @return Related
      */
-    public function attachments($limit = 0, $offset = 0)
+    public function attachments(int $limit = 0, int $offset = 0): Related
     {
-        return $this->widget('\Widget\Contents\Attachment\Related@' . $this->cid . '-' . uniqid(), [
+        return self::widget(Related::class . '@' . $this->cid . '-' . uniqid(), [
             'parentId' => $this->cid,
             'limit'    => $limit,
             'offset'   => $offset
@@ -930,13 +931,11 @@ class Archive extends Contents
     /**
      * 显示下一个内容的标题链接
      *
-     * @access public
      * @param string $format 格式
-     * @param string $default 如果没有下一篇,显示的默认文字
+     * @param string|null $default 如果没有下一篇,显示的默认文字
      * @param array $custom 定制化样式
-     * @return void
      */
-    public function theNext($format = '%s', $default = null, $custom = [])
+    public function theNext(string $format = '%s', ?string $default = null, array $custom = [])
     {
         $content = $this->db->fetchRow($this->select()->where(
             'table.contents.created > ? AND table.contents.created < ?',
@@ -960,7 +959,8 @@ class Archive extends Contents
 
             $linkText = empty($title) ? $content['title'] : $title;
             $linkClass = empty($tagClass) ? '' : 'class="' . $tagClass . '" ';
-            $link = '<a ' . $linkClass . 'href="' . $content['permalink'] . '" title="' . $content['title'] . '">' . $linkText . '</a>';
+            $link = '<a ' . $linkClass . 'href="' . $content['permalink']
+                . '" title="' . $content['title'] . '">' . $linkText . '</a>';
 
             printf($format, $link);
         } else {
@@ -1019,13 +1019,13 @@ class Archive extends Contents
         switch ($type) {
             case 'author':
                 /** 如果访问权限被设置为禁止,则tag会被置为空 */
-                return $this->widget(
+                return self::widget(
                     '\Widget\Contents\Related\Author',
                     ['cid' => $this->cid, 'type' => $this->type, 'author' => $this->author->uid, 'limit' => $limit]
                 );
             default:
                 /** 如果访问权限被设置为禁止,则tag会被置为空 */
-                return $this->widget(
+                return self::widget(
                     '\Widget\Contents\Related',
                     ['cid' => $this->cid, 'type' => $this->type, 'tags' => $this->tags, 'limit' => $limit]
                 );
@@ -1429,9 +1429,9 @@ class Archive extends Contents
             ));
 
             if ('comments' == $this->parameter->type) {
-                $comments = $this->widget('\Widget\Comments\Recent', 'pageSize=10');
+                $comments = self::widget(Recent::class, 'pageSize=10');
             } else {
-                $comments = $this->widget('\Widget\Comments\Recent', 'pageSize=10&parentId=' . $this->cid);
+                $comments = self::widget(Recent::class, 'pageSize=10&parentId=' . $this->cid);
             }
 
             while ($comments->next()) {
@@ -1811,7 +1811,7 @@ class Archive extends Contents
             $this->keywords = implode(',', array_column($this->tags, 'name'));
 
             /** 设置描述 */
-            $this->description = $this->row['description'];
+            $this->description = $this->___description();
         }
 
         /** 设置归档类型 */
@@ -1866,7 +1866,7 @@ class Archive extends Contents
             throw new WidgetException(_t('分类不存在'), 404);
         }
 
-        $categoryListWidget = $this->widget('\Widget\Metas\Category\List', 'current=' . $category['mid']);
+        $categoryListWidget = self::widget(Rows::class, 'current=' . $category['mid']);
         $category = $categoryListWidget->filter($category);
 
         if (isset($directory) && ($this->request->directory != implode('/', $category['directory']))) {
@@ -1942,7 +1942,7 @@ class Archive extends Contents
         /** 如果是标签 */
         $tag = $this->db->fetchRow(
             $tagSelect,
-            [$this->widget('\Widget\Abstract\Metas'), 'filter']
+            [self::widget(Metas::class), 'filter']
         );
 
         if (!$tag) {
@@ -2004,7 +2004,7 @@ class Archive extends Contents
         $author = $this->db->fetchRow(
             $this->db->select()->from('table.users')
             ->where('uid = ?', $uid),
-            [$this->widget('\Widget\Abstract\Users'), 'filter']
+            [self::widget(Users::class), 'filter']
         );
 
         if (!$author) {

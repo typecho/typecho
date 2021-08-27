@@ -28,7 +28,7 @@ class Init extends Widget
      *
      * @access public
      * @return void
-     * @throws Widget\Exception|Db\Exception
+     * @throws Db\Exception
      */
     public function execute()
     {
@@ -42,11 +42,13 @@ class Init extends Widget
             'Widget_Abstract_Metas'       => '\Widget\Base\Metas',
             'Widget_Abstract_Options'     => '\Widget\Base\Options',
             'Widget_Abstract_Users'       => '\Widget\Base\Users',
-            'Widget_Metas_Category_List'  => '\Widget\Metas\Category\Rows'
+            'Widget_Metas_Category_List'  => '\Widget\Metas\Category\Rows',
+            'Widget_Contents_Page_List'   => '\Widget\Contents\Page\Rows',
+            'Widget_Interface_Do'         => '\Widget\DoInterface'
         ]);
 
         /** 对变量赋值 */
-        $options = $this->widget('Widget_Options');
+        $options = self::widget(Options::class);
 
         /** 检查安装状态 */
         if (!defined('__TYPECHO_INSTALL__') && !$options->installed) {
@@ -102,7 +104,7 @@ class Init extends Widget
         Date::setTimezoneOffset($options->timezone);
 
         /** 开始会话, 减小负载只针对后台打开session支持 */
-        if (!defined('__TYPECHO_INSTALL__') && $this->widget('Widget_User')->hasLogin()) {
+        if (!defined('__TYPECHO_INSTALL__') && self::widget(User::class)->hasLogin()) {
             @session_start();
         }
     }

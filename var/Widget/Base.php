@@ -23,23 +23,21 @@ abstract class Base extends Widget
     /**
      * 全局选项
      *
-     * @access protected
-     * @var Widget_Options
+     * @var Options
      */
     protected $options;
 
     /**
      * 用户对象
      *
-     * @access protected
-     * @var Widget_User
+     * @var User
      */
     protected $user;
 
     /**
      * 安全模块
      *
-     * @var Widget_Security
+     * @var Security
      */
     protected $security;
 
@@ -57,7 +55,7 @@ abstract class Base extends Widget
      * @param mixed $request request对象
      * @param mixed $response response对象
      * @param mixed $params 参数列表
-     * @throws Db\Exception|Widget\Exception
+     * @throws Db\Exception
      */
     public function __construct($request, $response, $params = null)
     {
@@ -67,9 +65,9 @@ abstract class Base extends Widget
         $this->db = Db::get();
 
         /** 初始化常用组件 */
-        $this->options = $this->widget('Widget_Options');
-        $this->user = $this->widget('Widget_User');
-        $this->security = $this->widget('Widget_Security');
+        $this->options = self::widget('Widget_Options');
+        $this->user = self::widget('Widget_User');
+        $this->security = self::widget('Widget_Security');
     }
 
     /**

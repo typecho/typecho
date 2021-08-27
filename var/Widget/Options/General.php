@@ -119,7 +119,7 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
             $this->update(['value' => $value], $this->db->sql()->where('name = ?', $name));
         }
 
-        $this->widget('Widget_Notice')->set(_t("设置已经保存"), 'success');
+        self::widget('Widget_Notice')->set(_t("设置已经保存"), 'success');
         $this->response->goBack();
     }
 

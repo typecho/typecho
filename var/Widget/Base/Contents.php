@@ -12,6 +12,8 @@ use Typecho\Plugin;
 use Typecho\Router;
 use Typecho\Widget;
 use Widget\Base;
+use Widget\Metas\Category\Rows;
+use Widget\User\Author;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -445,7 +447,7 @@ class Contents extends Base
             ->select()->from('table.metas')
             ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
             ->where('table.relationships.cid = ?', $value['cid'])
-            ->where('table.metas.type = ?', 'category'), [$this->widget('Widget_Metas_Category_List'), 'filter']);
+            ->where('table.metas.type = ?', 'category'), [self::widget(Rows::class), 'filter']);
 
         $value['category'] = null;
         $value['directory'] = [];
@@ -464,7 +466,7 @@ class Contents extends Base
 
             $value['category'] = $value['categories'][0]['slug'];
 
-            $value['directory'] = $this->widget('Widget_Metas_Category_List')
+            $value['directory'] = self::widget(Rows::class)
                 ->getAllParentsSlug($value['categories'][0]['mid']);
             $value['directory'][] = $value['category'];
         }
@@ -698,7 +700,7 @@ class Contents extends Base
     public function directory(string $split = '/', bool $link = true, ?string $default = null)
     {
         $category = $this->categories[0];
-        $directory = $this->widget('Widget_Metas_Category_List')->getAllParents($category['mid']);
+        $directory = self::widget(Rows::class)->getAllParents($category['mid']);
         $directory[] = $category;
 
         if ($directory) {
@@ -752,7 +754,7 @@ class Contents extends Base
      * 将tags取出
      *
      * @return array
-     * @throws Exception|Widget\Exception
+     * @throws Exception
      */
     protected function ___tags(): array
     {
@@ -760,18 +762,17 @@ class Contents extends Base
             ->select()->from('table.metas')
             ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
             ->where('table.relationships.cid = ?', $this->cid)
-            ->where('table.metas.type = ?', 'tag'), [$this->widget('Widget_Abstract_Metas'), 'filter']);
+            ->where('table.metas.type = ?', 'tag'), [self::widget(Metas::class), 'filter']);
     }
 
     /**
      * 文章作者
      *
      * @return Widget
-     * @throws Widget\Exception
      */
     protected function ___author(): Widget
     {
-        return $this->widget('Widget_Users_Author@' . $this->cid, ['uid' => $this->authorId]);
+        return self::widget(Author::class . '@' . $this->cid, ['uid' => $this->authorId]);
     }
 
     /**

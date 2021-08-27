@@ -72,7 +72,7 @@ class Plugin
     public function __construct(string $handle)
     {
         /** 初始化变量 */
-        $this->handle = $handle;
+        $this->handle = Common::nativeClassName($handle);
     }
 
     /**
@@ -102,6 +102,7 @@ class Plugin
      */
     public static function factory(string $handle): Plugin
     {
+        $handle = Common::nativeClassName($handle);
         return self::$instances[$handle] ?? (self::$instances[$handle] = new self($handle));
     }
 
@@ -274,6 +275,7 @@ class Plugin
                         $string = strtolower($token[1]);
                         switch ($string) {
                             case 'typecho_plugin_interface':
+                            case 'plugininterface':
                                 $isInClass = $isClass;
                                 break;
                             case 'activate':

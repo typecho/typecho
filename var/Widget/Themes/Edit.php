@@ -63,8 +63,8 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
                 }
             }
 
-            $this->widget('Widget_Notice')->highlight('theme-' . $theme);
-            $this->widget('Widget_Notice')->set(_t("外观已经改变"), 'success');
+            self::widget('Widget_Notice')->highlight('theme-' . $theme);
+            self::widget('Widget_Notice')->set(_t("外观已经改变"), 'success');
             $this->response->goBack();
         } else {
             throw new Typecho_Widget_Exception(_t('您选择的风格不存在'));
@@ -107,9 +107,9 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
             $handle = fopen($path, 'wb');
             if ($handle && fwrite($handle, $this->request->content)) {
                 fclose($handle);
-                $this->widget('Widget_Notice')->set(_t("文件 %s 的更改已经保存", $file), 'success');
+                self::widget('Widget_Notice')->set(_t("文件 %s 的更改已经保存", $file), 'success');
             } else {
-                $this->widget('Widget_Notice')->set(_t("文件 %s 无法被写入", $file), 'error');
+                self::widget('Widget_Notice')->set(_t("文件 %s 无法被写入", $file), 'error');
             }
             $this->response->goBack();
         } else {
@@ -127,7 +127,7 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
     public function config($theme)
     {
         // 已经载入了外观函数
-        $form = $this->widget('Widget_Themes_Config')->config();
+        $form = self::widget('Widget_Themes_Config')->config();
 
         /** 验证表单 */
         if ($form->validate()) {
@@ -150,10 +150,10 @@ class Widget_Themes_Edit extends Widget_Abstract_Options implements Widget_Inter
         }
 
         /** 设置高亮 */
-        $this->widget('Widget_Notice')->highlight('theme-' . $theme);
+        self::widget('Widget_Notice')->highlight('theme-' . $theme);
 
         /** 提示信息 */
-        $this->widget('Widget_Notice')->set(_t("外观设置已经保存"), 'success');
+        self::widget('Widget_Notice')->set(_t("外观设置已经保存"), 'success');
 
         /** 转向原页 */
         $this->response->redirect(Typecho_Common::url('options-theme.php', $this->options->adminUrl));

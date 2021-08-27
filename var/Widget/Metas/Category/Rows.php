@@ -375,7 +375,7 @@ class Rows extends Metas
      */
     public function getCategory(int $mid)
     {
-        return isset($this->map[$mid]) ? $this->map[$mid] : null;
+        return $this->map[$mid] ?? null;
     }
 
     /**

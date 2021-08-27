@@ -93,10 +93,10 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         $user['uid'] = $this->insert($user);
 
         /** 设置高亮 */
-        $this->widget('Widget_Notice')->highlight('user-' . $user['uid']);
+        self::widget('Widget_Notice')->highlight('user-' . $user['uid']);
 
         /** 提示信息 */
-        $this->widget('Widget_Notice')->set(_t('用户 %s 已经被增加', $user['screenName']), 'success');
+        self::widget('Widget_Notice')->set(_t('用户 %s 已经被增加', $user['screenName']), 'success');
 
         /** 转向原页 */
         $this->response->redirect(Typecho_Common::url('manage-users.php', $this->options->adminUrl));
@@ -243,10 +243,10 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         $this->update($user, $this->db->sql()->where('uid = ?', $this->request->uid));
 
         /** 设置高亮 */
-        $this->widget('Widget_Notice')->highlight('user-' . $this->request->uid);
+        self::widget('Widget_Notice')->highlight('user-' . $this->request->uid);
 
         /** 提示信息 */
-        $this->widget('Widget_Notice')->set(_t('用户 %s 已经被更新', $user['screenName']), 'success');
+        self::widget('Widget_Notice')->set(_t('用户 %s 已经被更新', $user['screenName']), 'success');
 
         /** 转向原页 */
         $this->response->redirect(Typecho_Common::url('manage-users.php?' .
@@ -288,7 +288,7 @@ class Widget_Users_Edit extends Widget_Abstract_Users implements Widget_Interfac
         }
 
         /** 提示信息 */
-        $this->widget('Widget_Notice')->set($deleteCount > 0 ? _t('用户已经删除') : _t('没有用户被删除'),
+        self::widget('Widget_Notice')->set($deleteCount > 0 ? _t('用户已经删除') : _t('没有用户被删除'),
             $deleteCount > 0 ? 'success' : 'notice');
 
         /** 转向原页 */

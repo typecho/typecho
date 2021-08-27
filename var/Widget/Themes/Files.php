@@ -47,11 +47,11 @@ class Widget_Themes_Files extends Typecho_Widget
     public function execute()
     {
         /** 管理员权限 */
-        $this->widget('Widget_User')->pass('administrator');
-        $this->_currentTheme = $this->request->filter('slug')->get('theme', $this->widget('Widget_Options')->theme);
+        self::widget('Widget_User')->pass('administrator');
+        $this->_currentTheme = $this->request->filter('slug')->get('theme', self::widget('Widget_Options')->theme);
 
         if (preg_match("/^([_0-9a-z-\.\ ])+$/i", $this->_currentTheme)
-            && is_dir($dir = $this->widget('Widget_Options')->themeFile($this->_currentTheme))
+            && is_dir($dir = self::widget('Widget_Options')->themeFile($this->_currentTheme))
             && (!defined('__TYPECHO_THEME_WRITEABLE__') || __TYPECHO_THEME_WRITEABLE__)) {
 
             $files = array_filter(glob($dir . '/*'), function ($path) {
@@ -99,7 +99,7 @@ class Widget_Themes_Files extends Typecho_Widget
      */
     public function currentContent()
     {
-        return htmlspecialchars(file_get_contents($this->widget('Widget_Options')
+        return htmlspecialchars(file_get_contents(self::widget('Widget_Options')
             ->themeFile($this->_currentTheme, $this->_currentFile)));
     }
 
@@ -111,7 +111,7 @@ class Widget_Themes_Files extends Typecho_Widget
      */
     public function currentIsWriteable()
     {
-        return is_writeable($this->widget('Widget_Options')
+        return is_writeable(self::widget('Widget_Options')
                 ->themeFile($this->_currentTheme, $this->_currentFile))
             && (!defined('__TYPECHO_THEME_WRITEABLE__') || __TYPECHO_THEME_WRITEABLE__);
     }

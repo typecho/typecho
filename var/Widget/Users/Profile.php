@@ -104,7 +104,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
      */
     public function personalFormList()
     {
-        $this->widget('Widget_Plugins_List@personalPlugins', 'activated=1')->to($plugins);
+        self::widget('Widget_Plugins_List@personalPlugins', 'activated=1')->to($plugins);
         while ($plugins->next()) {
             if ($plugins->personalConfig) {
                 [$pluginFileName, $className] = Typecho_Plugin::portal($plugins->name,
@@ -181,10 +181,10 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         $this->update($user, $this->db->sql()->where('uid = ?', $this->user->uid));
 
         /** 设置高亮 */
-        $this->widget('Widget_Notice')->highlight('user-' . $this->user->uid);
+        self::widget('Widget_Notice')->highlight('user-' . $this->user->uid);
 
         /** 提示信息 */
-        $this->widget('Widget_Notice')->set(_t('您的档案已经更新'), 'success');
+        self::widget('Widget_Notice')->set(_t('您的档案已经更新'), 'success');
 
         /** 转向原页 */
         $this->response->goBack();
@@ -260,10 +260,10 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         foreach ($settings as $name => $value) {
             if ($this->db->fetchObject($this->db->select(['COUNT(*)' => 'num'])
                     ->from('table.options')->where('name = ? AND user = ?', $name, $this->user->uid))->num > 0) {
-                $this->widget('Widget_Abstract_Options')
+                self::widget('Widget_Abstract_Options')
                     ->update(['value' => $value], $this->db->sql()->where('name = ? AND user = ?', $name, $this->user->uid));
             } else {
-                $this->widget('Widget_Abstract_Options')->insert([
+                self::widget('Widget_Abstract_Options')->insert([
                     'name'  => $name,
                     'value' => $value,
                     'user'  => $this->user->uid
@@ -271,7 +271,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
             }
         }
 
-        $this->widget('Widget_Notice')->set(_t("设置已经保存"), 'success');
+        self::widget('Widget_Notice')->set(_t("设置已经保存"), 'success');
         $this->response->goBack();
     }
 
@@ -296,10 +296,10 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
             $this->db->sql()->where('uid = ?', $this->user->uid));
 
         /** 设置高亮 */
-        $this->widget('Widget_Notice')->highlight('user-' . $this->user->uid);
+        self::widget('Widget_Notice')->highlight('user-' . $this->user->uid);
 
         /** 提示信息 */
-        $this->widget('Widget_Notice')->set(_t('密码已经成功修改'), 'success');
+        self::widget('Widget_Notice')->set(_t('密码已经成功修改'), 'success');
 
         /** 转向原页 */
         $this->response->goBack();
@@ -383,10 +383,10 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         if (!$this->personalConfigHandle($className, $settings)) {
             if ($this->db->fetchObject($this->db->select(['COUNT(*)' => 'num'])
                     ->from('table.options')->where('name = ? AND user = ?', $name, $this->user->uid))->num > 0) {
-                $this->widget('Widget_Abstract_Options')
+                self::widget('Widget_Abstract_Options')
                     ->update(['value' => serialize($settings)], $this->db->sql()->where('name = ? AND user = ?', $name, $this->user->uid));
             } else {
-                $this->widget('Widget_Abstract_Options')->insert([
+                self::widget('Widget_Abstract_Options')->insert([
                     'name'  => $name,
                     'value' => serialize($settings),
                     'user'  => $this->user->uid
@@ -395,7 +395,7 @@ class Widget_Users_Profile extends Widget_Users_Edit implements Widget_Interface
         }
 
         /** 提示信息 */
-        $this->widget('Widget_Notice')->set(_t("%s 设置已经保存", $info['title']), 'success');
+        self::widget('Widget_Notice')->set(_t("%s 设置已经保存", $info['title']), 'success');
 
         /** 转向原页 */
         $this->response->redirect(Typecho_Common::url('profile.php', $this->options->adminUrl));

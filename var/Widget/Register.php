@@ -53,7 +53,7 @@ class Widget_Register extends Widget_Abstract_Users implements Widget_Interface_
             Typecho_Cookie::set('__typecho_remember_mail', $this->request->mail);
 
             /** 设置提示信息 */
-            $this->widget('Widget_Notice')->set($error);
+            self::widget('Widget_Notice')->set($error);
             $this->response->goBack();
         }
 
@@ -83,7 +83,7 @@ class Widget_Register extends Widget_Abstract_Users implements Widget_Interface_
         Typecho_Cookie::delete('__typecho_remember_name');
         Typecho_Cookie::delete('__typecho_remember_mail');
 
-        $this->widget('Widget_Notice')->set(_t('用户 <strong>%s</strong> 已经成功注册, 密码为 <strong>%s</strong>', $this->screenName, $generatedPassword), 'success');
+        self::widget('Widget_Notice')->set(_t('用户 <strong>%s</strong> 已经成功注册, 密码为 <strong>%s</strong>', $this->screenName, $generatedPassword), 'success');
         $this->response->redirect($this->options->adminUrl);
     }
 }

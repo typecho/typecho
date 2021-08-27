@@ -89,8 +89,8 @@ class Widget_Menu extends Typecho_Widget
         parent::__construct($request, $response, $params);
 
         /** 初始化常用组件 */
-        $this->options = $this->widget('Widget_Options');
-        $this->user = $this->widget('Widget_User');
+        $this->options = self::widget('Widget_Options');
+        $this->user = self::widget('Widget_User');
     }
 
     /**

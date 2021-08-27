@@ -402,12 +402,10 @@ function install_redirect(string $url)
 
 /**
  * add common js support
- *
- * @throws \Typecho\Exception
  */
 function install_js_support()
 {
-    $options = \Typecho\Widget::widget('Widget_Options');
+    $options = \Typecho\Widget::widget(\Widget\Options::class);
 
     ?>
     <div id="success" class="row typecho-page-main hidden">
@@ -993,7 +991,7 @@ function install_step_2_perform()
  */
 function install_step_3()
 {
-    $options = \Typecho\Widget::widget('Widget_Options');
+    $options = \Typecho\Widget::widget(\Widget\Options::class);
     ?>
     <div class="row typecho-page-main">
         <div class="col-mb-12 col-tb-8 col-tb-offset-2">
@@ -1051,7 +1049,7 @@ function install_step_3_perform()
 
     $request = \Typecho\Request::getInstance();
     $defaultPassword = \Typecho\Common::randString(8);
-    $options = \Typecho\Widget::widget('Widget_Options');
+    $options = \Typecho\Widget::widget(\Widget\Options::class);
 
     if (install_is_cli()) {
         $config = [
@@ -1191,7 +1189,7 @@ function install_step_3_perform()
     install_success(0, [
         $config['userName'],
         $config['userPassword'],
-        \Typecho\Widget::widget('Widget_Security')->getTokenUrl($loginUrl, $request->getReferer()),
+        \Typecho\Widget::widget(\Widget\Security::class)->getTokenUrl($loginUrl, $request->getReferer()),
         $options->siteUrl
     ]);
 }
@@ -1199,7 +1197,6 @@ function install_step_3_perform()
 /**
  * dispatch install action
  *
- * @throws \Typecho\Exception
  */
 function install_dispatch()
 {
@@ -1211,8 +1208,8 @@ function install_dispatch()
     }
 
     // init default options
-    $options = \Typecho\Widget::widget('Widget_Options', install_get_default_options());
-    \Typecho\Widget::widget('Widget_Init');
+    $options = \Typecho\Widget::widget(\Widget\Options::class, install_get_default_options());
+    \Typecho\Widget::widget(\Widget\Init::class);
 
     // install finished yet
     if (

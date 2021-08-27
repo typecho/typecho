@@ -22,13 +22,20 @@ class Response
     private $response;
 
     /**
+     * @var bool
+     */
+    private $enabled;
+
+    /**
      * @param HttpRequest $request
      * @param HttpResponse $response
+     * @param bool $enabled
      */
-    public function __construct(HttpRequest $request, HttpResponse $response)
+    public function __construct(HttpRequest $request, HttpResponse $response, bool $enabled = true)
     {
         $this->request = $request;
         $this->response = $response;
+        $this->enabled = $enabled;
     }
 
     /**
@@ -37,7 +44,9 @@ class Response
      */
     public function setStatus(int $code): Response
     {
-        $this->response->setStatus($code);
+        if ($this->enabled) {
+            $this->response->setStatus($code);
+        }
         return $this;
     }
 
@@ -48,7 +57,9 @@ class Response
      */
     public function setHeader(string $name, $value): Response
     {
-        $this->response->setHeader($name, (string) $value);
+        if ($this->enabled) {
+            $this->response->setHeader($name, (string)$value);
+        }
         return $this;
     }
 
@@ -60,7 +71,9 @@ class Response
      */
     public function setCharset(string $charset): Response
     {
-        $this->response->setCharset($charset);
+        if ($this->enabled) {
+            $this->response->setCharset($charset);
+        }
         return $this;
     }
 
@@ -70,7 +83,9 @@ class Response
      */
     public function setContentType(string $contentType = 'text/html'): Response
     {
-        $this->response->setContentType($contentType);
+        if ($this->enabled) {
+            $this->response->setContentType($contentType);
+        }
         return $this;
     }
 
@@ -80,6 +95,10 @@ class Response
      */
     public function throwContent(string $content, string $contentType = 'text/html')
     {
+        if (!$this->enabled) {
+            return;
+        }
+
         $this->response->setContentType($contentType)
             ->addResponder(function () use ($content) {
                 echo $content;
@@ -92,6 +111,10 @@ class Response
      */
     public function throwXml(string $message)
     {
+        if (!$this->enabled) {
+            return;
+        }
+
         $this->response->setContentType('text/xml')
             ->addResponder(function () use ($message) {
                 echo '<?xml version="1.0" encoding="' . $this->response->getCharset() . '"?>',
@@ -109,6 +132,10 @@ class Response
      */
     public function throwJson($message)
     {
+        if (!$this->enabled) {
+            return;
+        }
+
         /** 设置http头信息 */
         $this->response->setContentType('application/json')
             ->addResponder(function () use ($message) {
@@ -123,6 +150,10 @@ class Response
      */
     public function throwFile($file, ?string $contentType = null)
     {
+        if (!$this->enabled) {
+            return;
+        }
+
         if (!empty($contentType)) {
             $this->response->setContentType($contentType);
         }
@@ -142,6 +173,10 @@ class Response
      */
     public function redirect(string $location, bool $isPermanently = false)
     {
+        if (!$this->enabled) {
+            return;
+        }
+
         $location = Common::safeUrl($location);
 
         $this->response->setStatus($isPermanently ? 301 : 302)
@@ -157,6 +192,10 @@ class Response
      */
     public function goBack(string $suffix = null, string $default = null)
     {
+        if (!$this->enabled) {
+            return;
+        }
+
         //获取来源
         $referer = $this->request->getReferer();
 

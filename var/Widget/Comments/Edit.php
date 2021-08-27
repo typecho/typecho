@@ -1,12 +1,15 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-/**
- * Typecho Blog Platform
- *
- * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license    GNU General Public License 2.0
- * @version    $Id$
- */
+
+namespace Widget\Comments;
+
+use Typecho\Db\Exception;
+use Widget\Base\Comments;
+use Widget\DoInterface;
+use Widget\Notice;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * 评论编辑组件
@@ -17,13 +20,10 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_Interface_Do
+class Edit extends Comments implements DoInterface
 {
     /**
      * 标记为待审核
-     *
-     * @access public
-     * @return void
      */
     public function waitingComment()
     {
@@ -32,13 +32,16 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
 
         foreach ($comments as $comment) {
             if ($this->mark($comment, 'waiting')) {
-                $updateRows ++;
+                $updateRows++;
             }
         }
 
         /** 设置提示信息 */
-        $this->widget('Widget_Notice')->set($updateRows > 0 ? _t('评论已经被标记为待审核') : _t('没有评论被标记为待审核'),
-            $updateRows > 0 ? 'success' : 'notice');
+        self::widget(Notice::class)
+            ->set(
+                $updateRows > 0 ? _t('评论已经被标记为待审核') : _t('没有评论被标记为待审核'),
+                $updateRows > 0 ? 'success' : 'notice'
+            );
 
         /** 返回原网页 */
         $this->response->goBack();
@@ -47,10 +50,10 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
     /**
      * 标记评论状态
      *
-     * @access private
      * @param integer $coid 评论主键
      * @param string $status 状态
      * @return boolean
+     * @throws Exception
      */
     private function mark($coid, $status)
     {
@@ -73,7 +76,8 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
             /** 更新相关内容的评论数 */
             if ('approved' == $comment['status'] && 'approved' != $status) {
                 $this->db->query($this->db->update('table.contents')
-                    ->expression('commentsNum', 'commentsNum - 1')->where('cid = ? AND commentsNum > 0', $comment['cid']));
+                    ->expression('commentsNum', 'commentsNum - 1')
+                    ->where('cid = ? AND commentsNum > 0', $comment['cid']));
             } elseif ('approved' != $comment['status'] && 'approved' == $status) {
                 $this->db->query($this->db->update('table.contents')
                     ->expression('commentsNum', 'commentsNum + 1')->where('cid = ?', $comment['cid']));
@@ -88,8 +92,7 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
     /**
      * 标记为垃圾
      *
-     * @access public
-     * @return void
+     * @throws Exception
      */
     public function spamComment()
     {
@@ -98,13 +101,16 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
 
         foreach ($comments as $comment) {
             if ($this->mark($comment, 'spam')) {
-                $updateRows ++;
+                $updateRows++;
             }
         }
 
         /** 设置提示信息 */
-        $this->widget('Widget_Notice')->set($updateRows > 0 ? _t('评论已经被标记为垃圾') : _t('没有评论被标记为垃圾'),
-            $updateRows > 0 ? 'success' : 'notice');
+        self::widget(Notice::class)
+            ->set(
+                $updateRows > 0 ? _t('评论已经被标记为垃圾') : _t('没有评论被标记为垃圾'),
+                $updateRows > 0 ? 'success' : 'notice'
+            );
 
         /** 返回原网页 */
         $this->response->goBack();
@@ -113,8 +119,7 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
     /**
      * 标记为展现
      *
-     * @access public
-     * @return void
+     * @throws Exception
      */
     public function approvedComment()
     {
@@ -123,13 +128,16 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
 
         foreach ($comments as $comment) {
             if ($this->mark($comment, 'approved')) {
-                $updateRows ++;
+                $updateRows++;
             }
         }
 
         /** 设置提示信息 */
-        $this->widget('Widget_Notice')->set($updateRows > 0 ? _t('评论已经被通过') : _t('没有评论被通过'),
-            $updateRows > 0 ? 'success' : 'notice');
+        self::widget(Notice::class)
+            ->set(
+                $updateRows > 0 ? _t('评论已经被通过') : _t('没有评论被通过'),
+                $updateRows > 0 ? 'success' : 'notice'
+            );
 
         /** 返回原网页 */
         $this->response->goBack();
@@ -138,8 +146,7 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
     /**
      * 删除评论
      *
-     * @access public
-     * @return void
+     * @throws Exception
      */
     public function deleteComment()
     {
@@ -164,12 +171,11 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
 
                 $this->pluginHandle()->finishDelete($comment, $this);
 
-                $deleteRows ++;
+                $deleteRows++;
             }
         }
 
         if ($this->request->isAjax()) {
-
             if ($deleteRows > 0) {
                 $this->response->throwJson([
                     'success' => 1,
@@ -184,8 +190,11 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
 
         } else {
             /** 设置提示信息 */
-            $this->widget('Widget_Notice')->set($deleteRows > 0 ? _t('评论已经被删除') : _t('没有评论被删除'),
-                $deleteRows > 0 ? 'success' : 'notice');
+            self::widget(Notice::class)
+                ->set(
+                    $deleteRows > 0 ? _t('评论已经被删除') : _t('没有评论被删除'),
+                    $deleteRows > 0 ? 'success' : 'notice'
+                );
 
             /** 返回原网页 */
             $this->response->goBack();
@@ -195,8 +204,7 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
     /**
      * 删除所有垃圾评论
      *
-     * @access public
-     * @return string
+     * @throws Exception
      */
     public function deleteSpamComment()
     {
@@ -212,9 +220,10 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
         $deleteRows = $this->db->query($deleteQuery);
 
         /** 设置提示信息 */
-        $this->widget('Widget_Notice')->set($deleteRows > 0 ?
-            _t('所有垃圾评论已经被删除') : _t('没有垃圾评论被删除'),
-            $deleteRows > 0 ? 'success' : 'notice');
+        self::widget(Notice::class)->set(
+            $deleteRows > 0 ? _t('所有垃圾评论已经被删除') : _t('没有垃圾评论被删除'),
+            $deleteRows > 0 ? 'success' : 'notice'
+        );
 
         /** 返回原网页 */
         $this->response->goBack();
@@ -223,8 +232,7 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
     /**
      * 获取可编辑的评论
      *
-     * @access public
-     * @return void
+     * @throws Exception
      */
     public function getComment()
     {
@@ -233,27 +241,22 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
             ->where('coid = ?', $coid)->limit(1), [$this, 'push']);
 
         if ($comment && $this->commentIsWriteable()) {
-
             $this->response->throwJson([
                 'success' => 1,
                 'comment' => $comment
             ]);
-
         } else {
-
             $this->response->throwJson([
                 'success' => 0,
                 'message' => _t('获取评论失败')
             ]);
-
         }
     }
 
     /**
      * 编辑评论
      *
-     * @access public
-     * @return void
+     * @throws Exception
      */
     public function editComment()
     {
@@ -262,7 +265,6 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
             ->where('coid = ?', $coid)->limit(1), [$this, 'push']);
 
         if ($commentSelect && $this->commentIsWriteable()) {
-
             $comment['text'] = $this->request->text;
             $comment['author'] = $this->request->filter('strip_tags', 'trim', 'xss')->author;
             $comment['mail'] = $this->request->filter('strip_tags', 'trim', 'xss')->mail;
@@ -296,8 +298,7 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
     /**
      * 回复评论
      *
-     * @access public
-     * @return void
+     * @throws Exception
      */
     public function replyComment()
     {
@@ -306,7 +307,6 @@ class Widget_Comments_Edit extends Widget_Abstract_Comments implements Widget_In
             ->where('coid = ?', $coid)->limit(1), [$this, 'push']);
 
         if ($commentSelect && $this->commentIsWriteable()) {
-
             $comment = [
                 'cid'      => $commentSelect['cid'],
                 'created'  => $this->options->time,

@@ -32,7 +32,7 @@ class Widget_Themes_List extends Typecho_Widget
         $themes = $this->getThemes();
 
         if ($themes) {
-            $options = $this->widget('Widget_Options');
+            $options = self::widget('Widget_Options');
             $activated = 0;
             $result = [];
 

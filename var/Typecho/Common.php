@@ -278,6 +278,15 @@ EOF;
         }
 
         /**
+         * @param string $className
+         * @return string
+         */
+        public static function nativeClassName(string $className): string
+        {
+            return trim(str_replace('\\', '_', $className), '_');
+        }
+
+        /**
          * 根据count数目来输出字符
          * <code>
          * echo splitByCount(20, 10, 20, 30, 40, 50);

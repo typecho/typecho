@@ -95,7 +95,7 @@ class Client
      * @param string|null $prefix
      * @return void
      */
-    public function construct(
+    public function __construct(
         string $server,
         ?string $path = null,
         int $port = 80,
@@ -201,7 +201,7 @@ class Client
      * @param string $prefix 前缀
      * @return Client
      */
-    public function get(string $prefix): Client
+    public function __get(string $prefix): Client
     {
         return new self($this->server, $this->path, $this->port, $this->useragent, $this->prefix . $prefix . '.');
     }

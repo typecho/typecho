@@ -286,9 +286,9 @@ class Comments extends Base
      */
     protected function ___parentContent(): ?array
     {
-        return $this->db->fetchRow($this->widget('Widget_Abstract_Contents')->select()
+        return $this->db->fetchRow(self::widget(Contents::class)->select()
             ->where('table.contents.cid = ?', $this->cid)
-            ->limit(1), [$this->widget('Widget_Abstract_Contents'), 'filter']);
+            ->limit(1), [self::widget(Contents::class), 'filter']);
     }
 
     /**

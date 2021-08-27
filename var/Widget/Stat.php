@@ -53,7 +53,7 @@ class Widget_Stat extends Typecho_Widget
         $this->db = Typecho_Db::get();
 
         /** 初始化常用组件 */
-        $this->user = $this->widget('Widget_User');
+        $this->user = self::widget('Widget_User');
     }
 
     /**

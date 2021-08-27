@@ -174,9 +174,9 @@ RewriteRule . {$basePath}index.php [L]
         }
 
         if ($patternValid) {
-            $this->widget('Widget_Notice')->set(_t("设置已经保存"), 'success');
+            self::widget('Widget_Notice')->set(_t("设置已经保存"), 'success');
         } else {
-            $this->widget('Widget_Notice')->set(_t("自定义链接与现有规则存在冲突! 它可能影响解析效率, 建议你重新分配一个规则."), 'notice');
+            self::widget('Widget_Notice')->set(_t("自定义链接与现有规则存在冲突! 它可能影响解析效率, 建议你重新分配一个规则."), 'notice');
         }
         $this->response->goBack();
     }

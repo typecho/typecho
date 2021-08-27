@@ -59,7 +59,7 @@ class Widget_Upgrade extends Widget_Abstract_Options implements Widget_Interface
                 $version .= '/' . $minor;
             }
 
-            $options = $this->widget('Widget_Options@' . $package);
+            $options = self::widget('Widget_Options@' . $package);
 
             /** 执行升级脚本 */
             try {
@@ -68,7 +68,7 @@ class Widget_Upgrade extends Widget_Abstract_Options implements Widget_Interface
                     $message[] = $result;
                 }
             } catch (Typecho_Exception $e) {
-                $this->widget('Widget_Notice')->set($e->getMessage(), 'error');
+                self::widget('Widget_Notice')->set($e->getMessage(), 'error');
                 $this->response->goBack();
                 return;
             }
@@ -84,7 +84,7 @@ class Widget_Upgrade extends Widget_Abstract_Options implements Widget_Interface
         $this->update(['value' => 'Typecho ' . Typecho_Common::VERSION],
             $this->db->sql()->where('name = ?', 'generator'));
 
-        $this->widget('Widget_Notice')->set(empty($message) ? _t("升级已经完成") : $message,
+        self::widget('Widget_Notice')->set(empty($message) ? _t("升级已经完成") : $message,
             empty($message) ? 'success' : 'notice');
     }
 

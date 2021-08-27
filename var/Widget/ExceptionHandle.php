@@ -22,7 +22,7 @@ class ExceptionHandle extends Widget_Archive
      */
     public function __construct()
     {
-        $this->widget('Widget_Archive@404', 'type=404')->render();
+        self::widget('Widget_Archive@404', 'type=404')->render();
         exit;
     }
 }

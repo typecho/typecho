@@ -54,7 +54,7 @@ class Widget_Do extends Typecho_Widget
         $action = $this->request->action;
 
         /** 判断是否为plugin */
-        $actionTable = array_merge($this->map, unserialize($this->widget('Widget_Options')->actionTable));
+        $actionTable = array_merge($this->map, unserialize(self::widget('Widget_Options')->actionTable));
 
         if (isset($actionTable[$action])) {
             $widgetName = $actionTable[$action];
@@ -63,7 +63,7 @@ class Widget_Do extends Typecho_Widget
         if (isset($widgetName) && class_exists($widgetName)) {
             $reflectionWidget = new ReflectionClass($widgetName);
             if ($reflectionWidget->implementsInterface('Widget_Interface_Do')) {
-                $this->widget($widgetName)->action();
+                self::widget($widgetName)->action();
                 return;
             }
         }

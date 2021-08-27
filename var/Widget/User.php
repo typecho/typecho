@@ -1,5 +1,18 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
+
+namespace Widget;
+
+use Typecho\Common;
+use Typecho\Cookie;
+use Typecho\Db;
+use Typecho\Db\Exception as DbException;
+use Typecho\Widget;
+use Typecho\Widget\Request;
+use Typecho\Widget\Response;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * 当前登录用户
@@ -9,12 +22,11 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_User extends Typecho_Widget
+class User extends Widget
 {
     /**
      * 用户组
      *
-     * @access public
      * @var array
      */
     public $groups = [
@@ -28,106 +40,102 @@ class Widget_User extends Typecho_Widget
     /**
      * 全局选项
      *
-     * @access protected
-     * @var Widget_Options
+     * @var Options
      */
     protected $options;
 
     /**
      * 数据库对象
      *
-     * @access protected
-     * @var Typecho_Db
+     * @var Db
      */
     protected $db;
 
     /**
      * 用户
      *
-     * @access private
      * @var array
      */
-    private $_user;
+    private $user;
 
     /**
      * 是否已经登录
      *
-     * @access private
-     * @var boolean
+     * @var boolean|null
      */
-    private $_hasLogin = null;
+    private $hasLogin = null;
 
     /**
      * 构造函数,初始化组件
      *
-     * @access public
-     * @param mixed $request request对象
-     * @param mixed $response response对象
+     * @param Request $request request对象
+     * @param Response $response response对象
      * @param mixed $params 参数列表
+     * @throws DbException
      */
-    public function __construct($request, $response, $params = null)
+    public function __construct(Request $request, Response $response, $params = null)
     {
         parent::__construct($request, $response, $params);
 
         /** 初始化数据库 */
-        $this->db = Typecho_Db::get();
-        $this->options = $this->widget('Widget_Options');
+        $this->db = Db::get();
+        $this->options = self::widget(Options::class);
     }
+
 
     /**
      * 执行函数
      *
-     * @access public
-     * @return void
+     * @throws DbException
      */
     public function execute()
     {
         if ($this->hasLogin()) {
             $rows = $this->db->fetchAll($this->db->select()
-                ->from('table.options')->where('user = ?', $this->_user['uid']));
+                ->from('table.options')->where('user = ?', $this->user['uid']));
 
-            $this->push($this->_user);
+            $this->push($this->user);
 
             foreach ($rows as $row) {
-                $this->options->__set($row['name'], $row['value']);
+                $this->options->{$row['name']} = $row['value'];
             }
 
             //更新最后活动时间
             $this->db->query($this->db
                 ->update('table.users')
                 ->rows(['activated' => $this->options->time])
-                ->where('uid = ?', $this->_user['uid']));
+                ->where('uid = ?', $this->user['uid']));
         }
     }
 
     /**
      * 判断用户是否已经登录
      *
-     * @access public
      * @return boolean
+     * @throws DbException
      */
-    public function hasLogin()
+    public function hasLogin(): ?bool
     {
-        if (null !== $this->_hasLogin) {
-            return $this->_hasLogin;
+        if (null !== $this->hasLogin) {
+            return $this->hasLogin;
         } else {
-            $cookieUid = Typecho_Cookie::get('__typecho_uid');
+            $cookieUid = Cookie::get('__typecho_uid');
             if (null !== $cookieUid) {
                 /** 验证登陆 */
                 $user = $this->db->fetchRow($this->db->select()->from('table.users')
                     ->where('uid = ?', intval($cookieUid))
                     ->limit(1));
 
-                $cookieAuthCode = Typecho_Cookie::get('__typecho_authCode');
-                if ($user && Typecho_Common::hashValidate($user['authCode'], $cookieAuthCode)) {
-                    $this->_user = $user;
-                    return ($this->_hasLogin = true);
+                $cookieAuthCode = Cookie::get('__typecho_authCode');
+                if ($user && Common::hashValidate($user['authCode'], $cookieAuthCode)) {
+                    $this->user = $user;
+                    return ($this->hasLogin = true);
                 }
 
                 $this->logout();
             }
 
-            return ($this->_hasLogin = false);
+            return ($this->hasLogin = false);
         }
     }
 
@@ -144,8 +152,8 @@ class Widget_User extends Typecho_Widget
             return;
         }
 
-        Typecho_Cookie::delete('__typecho_uid');
-        Typecho_Cookie::delete('__typecho_authCode');
+        Cookie::delete('__typecho_uid');
+        Cookie::delete('__typecho_authCode');
     }
 
     /**
@@ -157,8 +165,9 @@ class Widget_User extends Typecho_Widget
      * @param boolean $temporarily 是否为临时登录
      * @param integer $expire 过期时间
      * @return boolean
+     * @throws DbException
      */
-    public function login($name, $password, $temporarily = false, $expire = 0)
+    public function login(string $name, string $password, bool $temporarily = false, int $expire = 0): bool
     {
         //插件接口
         $result = $this->pluginHandle()->trigger($loginPluggable)->login($name, $password, $temporarily, $expire);
@@ -179,23 +188,22 @@ class Widget_User extends Typecho_Widget
         $hashValidate = $this->pluginHandle()->trigger($hashPluggable)->hashValidate($password, $user['password']);
         if (!$hashPluggable) {
             if ('$P$' == substr($user['password'], 0, 3)) {
-                $hasher = new PasswordHash(8, true);
+                $hasher = new \PasswordHash(8, true);
                 $hashValidate = $hasher->CheckPassword($password, $user['password']);
             } else {
-                $hashValidate = Typecho_Common::hashValidate($password, $user['password']);
+                $hashValidate = Common::hashValidate($password, $user['password']);
             }
         }
 
         if ($user && $hashValidate) {
-
             if (!$temporarily) {
                 $this->commitLogin($user, $expire);
             }
 
             /** 压入数据 */
             $this->push($user);
-            $this->_user = $user;
-            $this->_hasLogin = true;
+            $this->user = $user;
+            $this->hasLogin = true;
             $this->pluginHandle()->loginSucceed($this, $name, $password, $temporarily, $expire);
 
             return true;
@@ -208,17 +216,16 @@ class Widget_User extends Typecho_Widget
     /**
      * @param $user
      * @param int $expire
-     *
-     * @throws Typecho_Db_Exception
+     * @throws DbException
      */
-    public function commitLogin(&$user, $expire = 0)
+    public function commitLogin(&$user, int $expire = 0)
     {
         $authCode = function_exists('openssl_random_pseudo_bytes') ?
-            bin2hex(openssl_random_pseudo_bytes(16)) : sha1(Typecho_Common::randString(20));
+            bin2hex(openssl_random_pseudo_bytes(16)) : sha1(Common::randString(20));
         $user['authCode'] = $authCode;
 
-        Typecho_Cookie::set('__typecho_uid', $user['uid'], $expire);
-        Typecho_Cookie::set('__typecho_authCode', Typecho_Common::hash($authCode), $expire);
+        Cookie::set('__typecho_uid', $user['uid'], $expire);
+        Cookie::set('__typecho_authCode', Common::hash($authCode), $expire);
 
         //更新最后登录时间以及验证码
         $this->db->query($this->db
@@ -231,13 +238,13 @@ class Widget_User extends Typecho_Widget
     /**
      * 只需要提供uid或者完整user数组即可登录的方法, 多用于插件等特殊场合
      *
-     * @access public
      * @param int | array $uid 用户id或者用户数据数组
      * @param boolean $temporarily 是否为临时登录，默认为临时登录以兼容以前的方法
      * @param integer $expire 过期时间
      * @return boolean
+     * @throws DbException
      */
-    public function simpleLogin($uid, $temporarily = true, $expire = 0)
+    public function simpleLogin($uid, bool $temporarily = true, int $expire = 0): bool
     {
         if (is_array($uid)) {
             $user = $uid;
@@ -258,8 +265,8 @@ class Widget_User extends Typecho_Widget
         }
 
         $this->push($user);
-        $this->_user = $user;
-        $this->_hasLogin = true;
+        $this->user = $user;
+        $this->hasLogin = true;
 
         $this->pluginHandle()->simpleLoginSucceed($this, $user);
         return true;
@@ -272,9 +279,9 @@ class Widget_User extends Typecho_Widget
      * @param string $group 用户组
      * @param boolean $return 是否为返回模式
      * @return boolean
-     * @throws Typecho_Widget_Exception
+     * @throws DbException|Widget\Exception
      */
-    public function pass($group, $return = false)
+    public function pass(string $group, bool $return = false): bool
     {
         if ($this->hasLogin()) {
             if (array_key_exists($group, $this->groups) && $this->groups[$this->group] <= $this->groups[$group]) {
@@ -294,7 +301,7 @@ class Widget_User extends Typecho_Widget
         if ($return) {
             return false;
         } else {
-            throw new Typecho_Widget_Exception(_t('禁止访问'), 403);
+            throw new Widget\Exception(_t('禁止访问'), 403);
         }
     }
 }

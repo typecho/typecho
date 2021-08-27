@@ -61,7 +61,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
                     $this->db->sql()->where('name = ?', 'plugins'));
             } catch (Typecho_Plugin_Exception $e) {
                 /** 截获异常 */
-                $this->widget('Widget_Notice')->set($e->getMessage(), 'error');
+                self::widget('Widget_Notice')->set($e->getMessage(), 'error');
                 $this->response->goBack();
             }
 
@@ -89,12 +89,12 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
         }
 
         /** 设置高亮 */
-        $this->widget('Widget_Notice')->highlight('plugin-' . $pluginName);
+        self::widget('Widget_Notice')->highlight('plugin-' . $pluginName);
 
         if (isset($result) && is_string($result)) {
-            $this->widget('Widget_Notice')->set($result, 'notice');
+            self::widget('Widget_Notice')->set($result, 'notice');
         } else {
-            $this->widget('Widget_Notice')->set(_t('插件已经被启用'), 'success');
+            self::widget('Widget_Notice')->set(_t('插件已经被启用'), 'success');
         }
         $this->response->goBack();
     }
@@ -117,7 +117,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
             $result = call_user_func([$className, 'configCheck'], $settings);
 
             if (!empty($result) && is_string($result)) {
-                $this->widget('Widget_Notice')->set($result, 'notice');
+                self::widget('Widget_Notice')->set($result, 'notice');
                 $this->_configNoticed = true;
             }
         }
@@ -237,12 +237,12 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
                 $result = call_user_func([$className, 'deactivate']);
             } catch (Typecho_Plugin_Exception $e) {
                 /** 截获异常 */
-                $this->widget('Widget_Notice')->set($e->getMessage(), 'error');
+                self::widget('Widget_Notice')->set($e->getMessage(), 'error');
                 $this->response->goBack();
             }
 
             /** 设置高亮 */
-            $this->widget('Widget_Notice')->highlight('plugin-' . $pluginName);
+            self::widget('Widget_Notice')->highlight('plugin-' . $pluginName);
         }
 
         Typecho_Plugin::deactivate($pluginName);
@@ -253,9 +253,9 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
         $this->delete($this->db->sql()->where('name = ?', '_plugin:' . $pluginName));
 
         if (isset($result) && is_string($result)) {
-            $this->widget('Widget_Notice')->set($result, 'notice');
+            self::widget('Widget_Notice')->set($result, 'notice');
         } else {
-            $this->widget('Widget_Notice')->set(_t('插件已经被禁用'), 'success');
+            self::widget('Widget_Notice')->set(_t('插件已经被禁用'), 'success');
         }
         $this->response->goBack();
     }
@@ -269,7 +269,7 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
      */
     public function config($pluginName)
     {
-        $form = $this->widget('Widget_Plugins_Config')->config();
+        $form = self::widget('Widget_Plugins_Config')->config();
 
         /** 验证表单 */
         if ($form->validate()) {
@@ -283,11 +283,11 @@ class Widget_Plugins_Edit extends Widget_Abstract_Options implements Widget_Inte
         }
 
         /** 设置高亮 */
-        $this->widget('Widget_Notice')->highlight('plugin-' . $pluginName);
+        self::widget('Widget_Notice')->highlight('plugin-' . $pluginName);
 
         if (!$this->_configNoticed) {
             /** 提示信息 */
-            $this->widget('Widget_Notice')->set(_t("插件设置已经保存"), 'success');
+            self::widget('Widget_Notice')->set(_t("插件设置已经保存"), 'success');
         }
 
         /** 转向原页 */

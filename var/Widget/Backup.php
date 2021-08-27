@@ -184,19 +184,19 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
             if (0 == $file['error'] && is_uploaded_file($file['tmp_name'])) {
                 $path = $file['tmp_name'];
             } else {
-                $this->widget('Widget_Notice')->set(_t('备份文件上传失败'), 'error');
+                self::widget('Widget_Notice')->set(_t('备份文件上传失败'), 'error');
                 $this->response->goBack();
             }
         } else {
             if (!$this->request->is('file')) {
-                $this->widget('Widget_Notice')->set(_t('没有选择任何备份文件'), 'error');
+                self::widget('Widget_Notice')->set(_t('没有选择任何备份文件'), 'error');
                 $this->response->goBack();
             }
 
             $path = __TYPECHO_BACKUP_DIR__ . '/' . $this->request->get('file');
 
             if (!file_exists($path)) {
-                $this->widget('Widget_Notice')->set(_t('备份文件不存在'), 'error');
+                self::widget('Widget_Notice')->set(_t('备份文件不存在'), 'error');
                 $this->response->goBack();
             }
         }
@@ -214,7 +214,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
         $fp = @fopen($file, 'rb');
 
         if (!$fp) {
-            $this->widget('Widget_Notice')->set(_t('无法读取备份文件'), 'error');
+            self::widget('Widget_Notice')->set(_t('无法读取备份文件'), 'error');
             $this->response->goBack();
         }
 
@@ -223,7 +223,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
 
         if ($fileSize < $headerSize) {
             @fclose($fp);
-            $this->widget('Widget_Notice')->set(_t('备份文件格式错误'), 'error');
+            self::widget('Widget_Notice')->set(_t('备份文件格式错误'), 'error');
             $this->response->goBack();
         }
 
@@ -231,7 +231,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
 
         if (!$this->parseHeader($fileHeader, $version)) {
             @fclose($fp);
-            $this->widget('Widget_Notice')->set(_t('备份文件格式错误'), 'error');
+            self::widget('Widget_Notice')->set(_t('备份文件格式错误'), 'error');
             $this->response->goBack();
         }
 
@@ -240,7 +240,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
 
         if (!$this->parseHeader($fileFooter, $version)) {
             @fclose($fp);
-            $this->widget('Widget_Notice')->set(_t('备份文件格式错误'), 'error');
+            self::widget('Widget_Notice')->set(_t('备份文件格式错误'), 'error');
             $this->response->goBack();
         }
 
@@ -252,7 +252,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
 
             if (!$data) {
                 @fclose($fp);
-                $this->widget('Widget_Notice')->set(_t('恢复数据出现错误'), 'error');
+                self::widget('Widget_Notice')->set(_t('恢复数据出现错误'), 'error');
                 $this->response->goBack();
             }
 
@@ -269,7 +269,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
         }
 
         @fclose($fp);
-        $this->widget('Widget_Notice')->set(_t('数据恢复完成'), 'success');
+        self::widget('Widget_Notice')->set(_t('数据恢复完成'), 'success');
         $this->response->goBack();
     }
 
@@ -342,7 +342,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
 
             $db->query($db->insert('table.' . $table)->rows($this->applyFields($table, $data)));
         } catch (Exception $e) {
-            $this->widget('Widget_Notice')->set(_t('恢复过程中遇到如下错误: %s', $e->getMessage()), 'error');
+            self::widget('Widget_Notice')->set(_t('恢复过程中遇到如下错误: %s', $e->getMessage()), 'error');
             $this->response->goBack();
         }
     }
