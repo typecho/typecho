@@ -1,5 +1,9 @@
 <?php
 
+namespace Widget;
+
+use Typecho\Widget;
+
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
 }
@@ -9,7 +13,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  *
  * @package Widget
  */
-class Widget_Do extends Typecho_Widget
+class Action extends Widget
 {
     /**
      * 路由映射
@@ -46,7 +50,7 @@ class Widget_Do extends Typecho_Widget
     /**
      * 入口函数,初始化路由器
      *
-     * @throws Typecho_Widget_Exception|Typecho_Exception
+     * @throws Widget\Exception
      */
     public function execute()
     {
@@ -61,13 +65,14 @@ class Widget_Do extends Typecho_Widget
         }
 
         if (isset($widgetName) && class_exists($widgetName)) {
-            $reflectionWidget = new ReflectionClass($widgetName);
-            if ($reflectionWidget->implementsInterface('Widget_Interface_Do')) {
-                self::widget($widgetName)->action();
+            $widget = self::widget($widgetName);
+
+            if ($widget instanceof ActionInterface) {
+                $widget->action();
                 return;
             }
         }
 
-        throw new Typecho_Widget_Exception(_t('请求的地址不存在'), 404);
+        throw new Widget\Exception(_t('请求的地址不存在'), 404);
     }
 }

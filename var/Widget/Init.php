@@ -44,7 +44,8 @@ class Init extends Widget
             'Widget_Abstract_Users'       => '\Widget\Base\Users',
             'Widget_Metas_Category_List'  => '\Widget\Metas\Category\Rows',
             'Widget_Contents_Page_List'   => '\Widget\Contents\Page\Rows',
-            'Widget_Interface_Do'         => '\Widget\DoInterface'
+            'Widget_Interface_Do'         => '\Widget\ActionInterface',
+            'Widget_Do'                   => '\Widget\Action',
         ]);
 
         /** 对变量赋值 */

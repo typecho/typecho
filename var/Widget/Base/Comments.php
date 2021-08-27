@@ -282,7 +282,7 @@ class Comments extends Base
      * 获取当前内容结构
      *
      * @return array|null
-     * @throws Exception|\Typecho\Widget\Exception
+     * @throws Exception
      */
     protected function ___parentContent(): ?array
     {

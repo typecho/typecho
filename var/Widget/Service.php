@@ -20,7 +20,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @category typecho
  * @package Widget
  */
-class Service extends BaseOptions implements DoInterface
+class Service extends BaseOptions implements ActionInterface
 {
     /**
      * 异步请求

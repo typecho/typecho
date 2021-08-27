@@ -13,7 +13,7 @@ use Typecho\Router;
 use Typecho\Widget;
 use Widget\Base;
 use Widget\Metas\Category\Rows;
-use Widget\User\Author;
+use Widget\Users\Author;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;

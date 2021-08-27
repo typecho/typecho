@@ -5,7 +5,7 @@ namespace Widget;
 /**
  * 可以被Widget_Do调用的接口
  */
-interface DoInterface
+interface ActionInterface
 {
     /**
      * 接口需要实现的入口函数

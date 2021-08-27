@@ -20,7 +20,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @category typecho
  * @package Widget
  */
-class Upload extends Contents implements DoInterface
+class Upload extends Contents implements ActionInterface
 {
     //上传文件目录
     public const UPLOAD_DIR = '/usr/uploads';

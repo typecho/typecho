@@ -1834,13 +1834,11 @@ class Archive extends Contents
     /**
      * 处理分类
      *
-     * @access private
      * @param Query $select 查询对象
      * @param boolean $hasPushed 是否已经压入队列
-     * @return void
-     * @throws WidgetException
+     * @throws WidgetException|Db\Exception
      */
-    private function categoryHandle(Query $select, &$hasPushed)
+    private function categoryHandle(Query $select, bool &$hasPushed)
     {
         /** 如果是分类 */
         $categorySelect = $this->db->select()
@@ -1920,13 +1918,11 @@ class Archive extends Contents
     /**
      * 处理标签
      *
-     * @access private
      * @param Query $select 查询对象
      * @param boolean $hasPushed 是否已经压入队列
-     * @return void
-     * @throws WidgetException
+     * @throws WidgetException|Db\Exception
      */
-    private function tagHandle(Query $select, &$hasPushed)
+    private function tagHandle(Query $select, bool &$hasPushed)
     {
         $tagSelect = $this->db->select()->from('table.metas')
             ->where('type = ?', 'tag')->limit(1);
@@ -1991,13 +1987,11 @@ class Archive extends Contents
     /**
      * 处理作者
      *
-     * @access private
      * @param Query $select 查询对象
      * @param boolean $hasPushed 是否已经压入队列
-     * @return void
-     * @throws WidgetException
+     * @throws WidgetException|Db\Exception
      */
-    private function authorHandle(Query $select, &$hasPushed)
+    private function authorHandle(Query $select, bool &$hasPushed)
     {
         $uid = $this->request->filter('int')->uid;
 

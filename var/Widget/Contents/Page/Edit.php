@@ -6,7 +6,7 @@ use Typecho\Common;
 use Typecho\Date;
 use Typecho\Widget\Exception;
 use Widget\Contents\Post\Edit as PostEdit;
-use Widget\DoInterface;
+use Widget\ActionInterface;
 use Widget\Notice;
 use Widget\Service;
 
@@ -23,7 +23,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Edit extends PostEdit implements DoInterface
+class Edit extends PostEdit implements ActionInterface
 {
     /**
      * 自定义字段的hook名称

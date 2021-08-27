@@ -107,7 +107,7 @@ class Response
     }
 
     /**
-     * @param string $message
+     * @param mixed $message
      */
     public function throwXml(string $message)
     {

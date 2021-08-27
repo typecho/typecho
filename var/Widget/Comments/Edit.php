@@ -4,7 +4,7 @@ namespace Widget\Comments;
 
 use Typecho\Db\Exception;
 use Widget\Base\Comments;
-use Widget\DoInterface;
+use Widget\ActionInterface;
 use Widget\Notice;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
@@ -20,7 +20,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Edit extends Comments implements DoInterface
+class Edit extends Comments implements ActionInterface
 {
     /**
      * 标记为待审核

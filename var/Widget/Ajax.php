@@ -17,7 +17,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @category typecho
  * @package Widget
  */
-class Ajax extends BaseOptions implements DoInterface
+class Ajax extends BaseOptions implements ActionInterface
 {
     /**
      * 针对rewrite验证的请求返回

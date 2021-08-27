@@ -10,7 +10,7 @@ use Typecho\Widget\Helper\Form\Element;
 use Typecho\Widget\Helper\Layout;
 use Widget\Base\Contents;
 use Widget\Base\Metas;
-use Widget\DoInterface;
+use Widget\ActionInterface;
 use Typecho\Db\Exception as DbException;
 use Typecho\Date as TypechoDate;
 use Widget\Notice;
@@ -29,7 +29,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Edit extends Contents implements DoInterface
+class Edit extends Contents implements ActionInterface
 {
     /**
      * 自定义字段的hook名称

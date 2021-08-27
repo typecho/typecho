@@ -1,6 +1,6 @@
 <?php
 
-namespace Widget\User;
+namespace Widget\Users;
 
 use Typecho\Db\Exception;
 use Widget\Base\Users;
