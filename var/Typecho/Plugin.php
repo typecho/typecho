@@ -389,6 +389,20 @@ class Typecho_Plugin
             $items[1] = '9999.9999.9999';
         }
 
+        // patch 针对旧版本号规则的补丁
+        $oldVersionMap = array(
+            "13.12.10" => "0.9",
+            "13.12.12" => "0.9",
+            "14.10.9" => "1.0",
+            "14.10.10" => "1.0",
+            "17.10.30" => "1.1"
+        );
+        for ($i = 0; $i < count($items); $i++) {
+            if (array_key_exists($items[$i], $oldVersionMap)) {
+                $items[$i] = $oldVersionMap[$items[$i]];
+            }
+        }
+        
         [$minVersion, $maxVersion] = $items;
 
         //对*和?的支持,4个9是最大版本
