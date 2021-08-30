@@ -1,19 +1,31 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-/**
- * Typecho Blog Platform
- *
- * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license    GNU General Public License 2.0
- * @version    $Id$
- */
+
+namespace Widget;
+
+use Typecho\Common;
+use Typecho\Widget;
+use Widget\Plugins\Config;
+use Widget\Themes\Files;
+use Widget\Users\Edit as UsersEdit;
+use Widget\Contents\Attachment\Edit as AttachmentEdit;
+use Widget\Contents\Post\Edit as PostEdit;
+use Widget\Contents\Page\Edit as PageEdit;
+use Widget\Contents\Post\Admin as PostAdmin;
+use Widget\Comments\Admin as CommentsAdmin;
+use Widget\Metas\Category\Admin as CategoryAdmin;
+use Widget\Metas\Category\Edit as CategoryEdit;
+use Widget\Metas\Tag\Admin as TagAdmin;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * 后台菜单显示
  *
  * @package Widget
  */
-class Widget_Menu extends Typecho_Widget
+class Menu extends Widget
 {
     /**
      * 当前菜单标题
@@ -30,50 +42,44 @@ class Widget_Menu extends Typecho_Widget
     /**
      * 全局选项
      *
-     * @access protected
-     * @var Widget_Options
+     * @var Options
      */
     protected $options;
 
     /**
      * 用户对象
      *
-     * @access protected
-     * @var Widget_User
+     * @var User
      */
     protected $user;
 
     /**
      * 父菜单列表
      *
-     * @access private
      * @var array
      */
-    private $_menu = [];
+    private $menu = [];
 
     /**
      * 当前父菜单
      *
-     * @access private
      * @var integer
      */
-    private $_currentParent = 1;
+    private $currentParent = 1;
 
     /**
      * 当前子菜单
      *
-     * @access private
      * @var integer
      */
-    private $_currentChild = 0;
+    private $currentChild = 0;
 
     /**
      * 当前页面
      *
-     * @access private
      * @var string
      */
-    private $_currentUrl;
+    private $currentUrl;
 
     /**
      * 构造函数,初始化组件
@@ -89,15 +95,12 @@ class Widget_Menu extends Typecho_Widget
         parent::__construct($request, $response, $params);
 
         /** 初始化常用组件 */
-        $this->options = self::widget('Widget_Options');
-        $this->user = self::widget('Widget_User');
+        $this->options = Options::alloc();
+        $this->user = User::alloc();
     }
 
     /**
      * 执行函数,初始化菜单
-     *
-     * @access public
-     * @return void
      */
     public function execute()
     {
@@ -112,9 +115,9 @@ class Widget_Menu extends Typecho_Widget
                 [_t('概要'), _t('网站概要'), 'index.php', 'subscriber'],
                 [_t('个人设置'), _t('个人设置'), 'profile.php', 'subscriber'],
                 [_t('插件'), _t('插件管理'), 'plugins.php', 'administrator'],
-                [['Widget_Plugins_Config', 'getMenuTitle'], ['Widget_Plugins_Config', 'getMenuTitle'], 'options-plugin.php?config=', 'administrator', true],
+                [[Config::class, 'getMenuTitle'], [Config::class, 'getMenuTitle'], 'options-plugin.php?config=', 'administrator', true],
                 [_t('外观'), _t('网站外观'), 'themes.php', 'administrator'],
-                [['Widget_Themes_Files', 'getMenuTitle'], ['Widget_Themes_Files', 'getMenuTitle'], 'theme-editor.php', 'administrator', true],
+                [[Files::class, 'getMenuTitle'], [Files::class, 'getMenuTitle'], 'theme-editor.php', 'administrator', true],
                 [_t('设置外观'), _t('设置外观'), 'options-theme.php', 'administrator', true],
                 [_t('备份'), _t('备份'), 'backup.php', 'administrator'],
                 [_t('升级'), _t('升级程序'), 'upgrade.php', 'administrator', true],
@@ -122,28 +125,28 @@ class Widget_Menu extends Typecho_Widget
             ],
             [
                 [_t('撰写文章'), _t('撰写新文章'), 'write-post.php', 'contributor'],
-                [['Widget_Contents_Post_Edit', 'getMenuTitle'], ['Widget_Contents_Post_Edit', 'getMenuTitle'], 'write-post.php?cid=', 'contributor', true],
+                [[PostEdit::class, 'getMenuTitle'], [PostEdit::class, 'getMenuTitle'], 'write-post.php?cid=', 'contributor', true],
                 [_t('创建页面'), _t('创建新页面'), 'write-page.php', 'editor'],
-                [['Widget_Contents_Page_Edit', 'getMenuTitle'], ['Widget_Contents_Page_Edit', 'getMenuTitle'], 'write-page.php?cid=', 'editor', true],
+                [[PageEdit::class, 'getMenuTitle'], [PageEdit::class, 'getMenuTitle'], 'write-page.php?cid=', 'editor', true],
             ],
             [
                 [_t('文章'), _t('管理文章'), 'manage-posts.php', 'contributor', false, 'write-post.php'],
-                [['Widget_Contents_Post_Admin', 'getMenuTitle'], ['Widget_Contents_Post_Admin', 'getMenuTitle'], 'manage-posts.php?uid=', 'contributor', true],
+                [[PostAdmin::class, 'getMenuTitle'], [PostAdmin::class, 'getMenuTitle'], 'manage-posts.php?uid=', 'contributor', true],
                 [_t('独立页面'), _t('管理独立页面'), 'manage-pages.php', 'editor', false, 'write-page.php'],
                 [_t('评论'), _t('管理评论'), 'manage-comments.php', 'contributor'],
-                [['Widget_Comments_Admin', 'getMenuTitle'], ['Widget_Comments_Admin', 'getMenuTitle'], 'manage-comments.php?cid=', 'contributor', true],
+                [[CommentsAdmin::class, 'getMenuTitle'], [CommentsAdmin::class, 'getMenuTitle'], 'manage-comments.php?cid=', 'contributor', true],
                 [_t('分类'), _t('管理分类'), 'manage-categories.php', 'editor', false, 'category.php'],
                 [_t('新增分类'), _t('新增分类'), 'category.php', 'editor', true],
-                [['Widget_Metas_Category_Admin', 'getMenuTitle'], ['Widget_Metas_Category_Admin', 'getMenuTitle'], 'manage-categories.php?parent=', 'editor', true, ['Widget_Metas_Category_Admin', 'getAddLink']],
-                [['Widget_Metas_Category_Edit', 'getMenuTitle'], ['Widget_Metas_Category_Edit', 'getMenuTitle'], 'category.php?mid=', 'editor', true],
-                [['Widget_Metas_Category_Edit', 'getMenuTitle'], ['Widget_Metas_Category_Edit', 'getMenuTitle'], 'category.php?parent=', 'editor', true],
+                [[CategoryAdmin::class, 'getMenuTitle'], [CategoryAdmin::class, 'getMenuTitle'], 'manage-categories.php?parent=', 'editor', true, ['Widget_Metas_Category_Admin', 'getAddLink']],
+                [[CategoryEdit::class, 'getMenuTitle'], [CategoryEdit::class, 'getMenuTitle'], 'category.php?mid=', 'editor', true],
+                [[CategoryEdit::class, 'getMenuTitle'], [CategoryEdit::class, 'getMenuTitle'], 'category.php?parent=', 'editor', true],
                 [_t('标签'), _t('管理标签'), 'manage-tags.php', 'editor'],
-                [['Widget_Metas_Tag_Admin', 'getMenuTitle'], ['Widget_Metas_Tag_Admin', 'getMenuTitle'], 'manage-tags.php?mid=', 'editor', true],
+                [[TagAdmin::class, 'getMenuTitle'], [TagAdmin::class, 'getMenuTitle'], 'manage-tags.php?mid=', 'editor', true],
                 [_t('文件'), _t('管理文件'), 'manage-medias.php', 'editor'],
-                [['Widget_Contents_Attachment_Edit', 'getMenuTitle'], ['Widget_Contents_Attachment_Edit', 'getMenuTitle'], 'media.php?cid=', 'contributor', true],
+                [[AttachmentEdit::class, 'getMenuTitle'], [AttachmentEdit::class, 'getMenuTitle'], 'media.php?cid=', 'contributor', true],
                 [_t('用户'), _t('管理用户'), 'manage-users.php', 'administrator', false, 'user.php'],
                 [_t('新增用户'), _t('新增用户'), 'user.php', 'administrator', true],
-                [['Widget_Users_Edit', 'getMenuTitle'], ['Widget_Users_Edit', 'getMenuTitle'], 'user.php?uid=', 'administrator', true],
+                [[UsersEdit::class, 'getMenuTitle'], [UsersEdit::class, 'getMenuTitle'], 'user.php?uid=', 'administrator', true],
             ],
             [
                 [_t('基本'), _t('基本设置'), 'options-general.php', 'administrator'],
@@ -198,7 +201,7 @@ class Widget_Menu extends Typecho_Widget
                 $orgHidden = $hidden;
 
                 // parse url
-                $url = Typecho_Common::url($url, $adminUrl);
+                $url = Common::url($url, $adminUrl);
 
                 // compare url
                 $urlParts = parse_url($url);
@@ -219,10 +222,12 @@ class Widget_Menu extends Typecho_Widget
                     }
                 }
 
-                if ($validate
+                if (
+                    $validate
                     && basename($urlParts['path']) == 'extending.php'
                     && !empty($currentUrlParams['panel']) && !empty($urlParams['panel'])
-                    && $urlParams['panel'] != $currentUrlParams['panel']) {
+                    && $urlParams['panel'] != $currentUrlParams['panel']
+                ) {
                     $validate = false;
                 }
 
@@ -235,7 +240,7 @@ class Widget_Menu extends Typecho_Widget
                 }
 
                 if (!$hidden) {
-                    $showedChildrenCount ++;
+                    $showedChildrenCount++;
 
                     if (empty($firstUrl)) {
                         $firstUrl = $url;
@@ -243,17 +248,17 @@ class Widget_Menu extends Typecho_Widget
 
                     if (is_array($name)) {
                         [$widget, $method] = $name;
-                        $name = Typecho_Widget::widget($widget)->$method();
+                        $name = self::widget($widget)->$method();
                     }
 
                     if (is_array($title)) {
                         [$widget, $method] = $title;
-                        $title = Typecho_Widget::widget($widget)->$method();
+                        $title = self::widget($widget)->$method();
                     }
 
                     if (is_array($addLink)) {
                         [$widget, $method] = $addLink;
-                        $addLink = Typecho_Widget::widget($widget)->$method();
+                        $addLink = self::widget($widget)->$method();
                     }
                 }
 
@@ -262,10 +267,10 @@ class Widget_Menu extends Typecho_Widget
                         $this->user->pass($access);
                     }
 
-                    $this->_currentParent = $key;
-                    $this->_currentChild = $inKey;
+                    $this->currentParent = $key;
+                    $this->currentChild = $inKey;
                     $this->title = $title;
-                    $this->addLink = $addLink ? Typecho_Common::url($addLink, $adminUrl) : null;
+                    $this->addLink = $addLink ? Common::url($addLink, $adminUrl) : null;
                 }
 
                 $children[$inKey] = [
@@ -282,35 +287,31 @@ class Widget_Menu extends Typecho_Widget
             $menu[$key] = [$parentNode, $showedChildrenCount > 0, $firstUrl, $children];
         }
 
-        $this->_menu = $menu;
-        $this->_currentUrl = $currentUrl;
+        $this->menu = $menu;
+        $this->currentUrl = $currentUrl;
     }
 
     /**
      * 获取当前菜单
      *
-     * @access public
      * @return array
      */
-    public function getCurrentMenu()
+    public function getCurrentMenu(): ?array
     {
-        return $this->_currentParent > 0 ? $this->_menu[$this->_currentParent][3][$this->_currentChild] : null;
+        return $this->currentParent > 0 ? $this->menu[$this->currentParent][3][$this->currentChild] : null;
     }
 
     /**
      * 输出父级菜单
-     *
-     * @access public
-     * @return string
      */
     public function output($class = 'focus', $childClass = 'focus')
     {
-        foreach ($this->_menu as $key => $node) {
+        foreach ($this->menu as $key => $node) {
             if (!$node[1] || !$key) {
                 continue;
             }
 
-            echo "<ul class=\"root" . ($key == $this->_currentParent ? ' ' . $class : null)
+            echo "<ul class=\"root" . ($key == $this->currentParent ? ' ' . $class : null)
                 . "\"><li class=\"parent\"><a href=\"{$node[2]}\">{$node[0]}</a>"
                 . "</li><ul class=\"child\">";
 
@@ -327,7 +328,7 @@ class Widget_Menu extends Typecho_Widget
                 }
 
                 $classes = [];
-                if ($key == $this->_currentParent && $inKey == $this->_currentChild) {
+                if ($key == $this->currentParent && $inKey == $this->currentChild) {
                     $classes[] = $childClass;
                 } elseif ($inNode[6]) {
                     continue;
@@ -337,8 +338,9 @@ class Widget_Menu extends Typecho_Widget
                     $classes[] = 'last';
                 }
 
-                echo "<li" . (!empty($classes) ? ' class="' . implode(' ', $classes) . '"' : null) .
-                    "><a href=\"" . ($key == $this->_currentParent && $inKey == $this->_currentChild ? $this->_currentUrl : $inNode[2]) . "\">{$inNode[0]}</a></li>";
+                echo "<li" . (!empty($classes) ? ' class="' . implode(' ', $classes) . '"' : null) . "><a href=\""
+                    . ($key == $this->currentParent && $inKey == $this->currentChild ? $this->currentUrl : $inNode[2])
+                    . "\">{$inNode[0]}</a></li>";
             }
 
             echo "</ul></ul>";

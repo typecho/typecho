@@ -135,10 +135,10 @@ class Edit extends Metas implements ActionInterface
         $this->push($tag);
 
         /** 设置高亮 */
-        self::widget(Notice::class)->highlight($this->theId);
+        Notice::alloc()->highlight($this->theId);
 
         /** 提示信息 */
-        self::widget(Notice::class)->set(
+        Notice::alloc()->set(
             _t('标签 <a href="%s">%s</a> 已经被增加', $this->permalink, $this->name),
             'success'
         );
@@ -257,10 +257,10 @@ class Edit extends Metas implements ActionInterface
         $this->push($tag);
 
         /** 设置高亮 */
-        self::widget(Notice::class)->highlight($this->theId);
+        Notice::alloc()->highlight($this->theId);
 
         /** 提示信息 */
-        self::widget(Notice::class)->set(
+        Notice::alloc()->set(
             _t('标签 <a href="%s">%s</a> 已经被更新', $this->permalink, $this->name),
             'success'
         );
@@ -289,7 +289,7 @@ class Edit extends Metas implements ActionInterface
         }
 
         /** 提示信息 */
-        self::widget(Notice::class)->set(
+        Notice::alloc()->set(
             $deleteCount > 0 ? _t('标签已经删除') : _t('没有标签被删除'),
             $deleteCount > 0 ? 'success' : 'notice'
         );
@@ -306,13 +306,13 @@ class Edit extends Metas implements ActionInterface
     public function mergeTag()
     {
         if (empty($this->request->merge)) {
-            self::widget(Notice::class)->set(_t('请填写需要合并到的标签'), 'notice');
+            Notice::alloc()->set(_t('请填写需要合并到的标签'), 'notice');
             $this->response->goBack();
         }
 
         $merge = $this->scanTags($this->request->merge);
         if (empty($merge)) {
-            self::widget(Notice::class)->set(_t('合并到的标签名不合法'), 'error');
+            Notice::alloc()->set(_t('合并到的标签名不合法'), 'error');
             $this->response->goBack();
         }
 
@@ -322,9 +322,9 @@ class Edit extends Metas implements ActionInterface
             $this->merge($merge, 'tag', $tags);
 
             /** 提示信息 */
-            self::widget(Notice::class)->set(_t('标签已经合并'), 'success');
+            Notice::alloc()->set(_t('标签已经合并'), 'success');
         } else {
-            self::widget(Notice::class)->set(_t('没有选择任何标签'), 'notice');
+            Notice::alloc()->set(_t('没有选择任何标签'), 'notice');
         }
 
         /** 转向原页 */
@@ -349,9 +349,9 @@ class Edit extends Metas implements ActionInterface
             // 自动清理标签
             $this->clearTags();
 
-            self::widget(Notice::class)->set(_t('标签刷新已经完成'), 'success');
+            Notice::alloc()->set(_t('标签刷新已经完成'), 'success');
         } else {
-            self::widget(Notice::class)->set(_t('没有选择任何标签'), 'notice');
+            Notice::alloc()->set(_t('没有选择任何标签'), 'notice');
         }
 
         /** 转向原页 */

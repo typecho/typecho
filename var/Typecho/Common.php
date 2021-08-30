@@ -78,8 +78,8 @@ namespace Typecho {
         $path = str_replace(
             ['_', '\\'],
             '/',
-            (defined('__TYPECHO_REWRITE_CLASS__') && isset(__TYPECHO_REWRITE_CLASS__[$className]))
-                ?  __TYPECHO_REWRITE_CLASS__[$className] : $className
+            (defined('__TYPECHO_CLASS_ALIASES__') && isset(__TYPECHO_CLASS_ALIASES__[$className]))
+                ?  __TYPECHO_CLASS_ALIASES__[$className] : $className
         ) . '.php';
 
         $defaultFile = __TYPECHO_ROOT_DIR__ . '/var/' . $path;
@@ -106,8 +106,8 @@ namespace Typecho {
             && !interface_exists($className, false)
             && !trait_exists($className, false)
         ) {
-            $aliasClass = (defined('__TYPECHO_REWRITE_CLASS__') && isset(__TYPECHO_REWRITE_CLASS__[$className]))
-                ? __TYPECHO_REWRITE_CLASS__[$className] : '\\' . str_replace('_', '\\', $className);
+            $aliasClass = (defined('__TYPECHO_CLASS_ALIASES__') && isset(__TYPECHO_CLASS_ALIASES__[$className]))
+                ? __TYPECHO_CLASS_ALIASES__[$className] : '\\' . str_replace('_', '\\', $className);
             class_alias($aliasClass, $className);
         }
     });

@@ -1,12 +1,15 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-/**
- * Typecho Blog Platform
- *
- * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license    GNU General Public License 2.0
- * @version    $Id$
- */
+
+namespace Widget\Plugins;
+
+use Typecho\Plugin;
+use Typecho\Widget\Exception;
+use Typecho\Widget\Helper\Form;
+use Widget\Base\Options;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * 插件配置组件
@@ -17,12 +20,11 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Plugins_Config extends Widget_Abstract_Options
+class Config extends Options
 {
     /**
      * 获取插件信息
      *
-     * @access public
      * @var array
      */
     public $info;
@@ -30,45 +32,42 @@ class Widget_Plugins_Config extends Widget_Abstract_Options
     /**
      * 插件文件路径
      *
-     * @access private
      * @var string
      */
-    private $_pluginFileName;
+    private $pluginFileName;
 
     /**
      * 插件类
      *
-     * @access private
      * @var string
      */
-    private $_className;
+    private $className;
 
     /**
      * 绑定动作
      *
-     * @access public
+     * @throws Plugin\Exception
+     * @throws Exception|\Typecho\Db\Exception
      */
     public function execute()
     {
         $this->user->pass('administrator');
         $config = $this->request->filter('slug')->config;
         if (empty($config)) {
-            throw new Typecho_Widget_Exception(_t('插件不存在'), 404);
+            throw new Exception(_t('插件不存在'), 404);
         }
 
         /** 获取插件入口 */
-        [$this->_pluginFileName, $this->_className] = Typecho_Plugin::portal($config,
-            $this->options->pluginDir($config));
-        $this->info = Typecho_Plugin::parseInfo($this->_pluginFileName);
+        [$this->pluginFileName, $this->className] = Plugin::portal($config, $this->options->pluginDir($config));
+        $this->info = Plugin::parseInfo($this->pluginFileName);
     }
 
     /**
      * 获取菜单标题
      *
-     * @access public
      * @return string
      */
-    public function getMenuTitle()
+    public function getMenuTitle(): string
     {
         return _t('设置插件 %s', $this->info['title']);
     }
@@ -76,9 +75,8 @@ class Widget_Plugins_Config extends Widget_Abstract_Options
     /**
      * 配置插件
      *
-     * @access public
-     * @return Typecho_Widget_Helper_Form
-     * @throws Typecho_Widget_Exception
+     * @return Form
+     * @throws Exception|Plugin\Exception
      */
     public function config()
     {
@@ -86,19 +84,18 @@ class Widget_Plugins_Config extends Widget_Abstract_Options
         $pluginName = $this->request->filter('slug')->config;
 
         /** 获取已启用插件 */
-        $plugins = Typecho_Plugin::export();
+        $plugins = Plugin::export();
         $activatedPlugins = $plugins['activated'];
 
         /** 判断实例化是否成功 */
         if (!$this->info['config'] || !isset($activatedPlugins[$pluginName])) {
-            throw new Typecho_Widget_Exception(_t('无法配置插件'), 500);
+            throw new Exception(_t('无法配置插件'), 500);
         }
 
         /** 载入插件 */
-        require_once $this->_pluginFileName;
-        $form = new Typecho_Widget_Helper_Form($this->security->getIndex('/action/plugins-edit?config=' . $pluginName),
-            Typecho_Widget_Helper_Form::POST_METHOD);
-        call_user_func([$this->_className, 'config'], $form);
+        require_once $this->pluginFileName;
+        $form = new Form($this->security->getIndex('/action/plugins-edit?config=' . $pluginName), Form::POST_METHOD);
+        call_user_func([$this->className, 'config'], $form);
 
         $options = $this->options->plugin($pluginName);
 
@@ -108,7 +105,7 @@ class Widget_Plugins_Config extends Widget_Abstract_Options
             }
         }
 
-        $submit = new Typecho_Widget_Helper_Form_Element_Submit(null, null, _t('保存设置'));
+        $submit = new Form\Element\Submit(null, null, _t('保存设置'));
         $submit->input->setAttribute('class', 'btn primary');
         $form->addItem($submit);
         return $form;

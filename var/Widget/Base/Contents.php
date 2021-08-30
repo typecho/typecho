@@ -447,7 +447,7 @@ class Contents extends Base
             ->select()->from('table.metas')
             ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
             ->where('table.relationships.cid = ?', $value['cid'])
-            ->where('table.metas.type = ?', 'category'), [self::widget(Rows::class), 'filter']);
+            ->where('table.metas.type = ?', 'category'), [Rows::alloc(), 'filter']);
 
         $value['category'] = null;
         $value['directory'] = [];
@@ -466,7 +466,7 @@ class Contents extends Base
 
             $value['category'] = $value['categories'][0]['slug'];
 
-            $value['directory'] = self::widget(Rows::class)
+            $value['directory'] = Rows::alloc()
                 ->getAllParentsSlug($value['categories'][0]['mid']);
             $value['directory'][] = $value['category'];
         }
@@ -700,7 +700,7 @@ class Contents extends Base
     public function directory(string $split = '/', bool $link = true, ?string $default = null)
     {
         $category = $this->categories[0];
-        $directory = self::widget(Rows::class)->getAllParents($category['mid']);
+        $directory = Rows::alloc()->getAllParents($category['mid']);
         $directory[] = $category;
 
         if ($directory) {
@@ -762,7 +762,7 @@ class Contents extends Base
             ->select()->from('table.metas')
             ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
             ->where('table.relationships.cid = ?', $this->cid)
-            ->where('table.metas.type = ?', 'tag'), [self::widget(Metas::class), 'filter']);
+            ->where('table.metas.type = ?', 'tag'), [Metas::alloc(), 'filter']);
     }
 
     /**
@@ -772,7 +772,7 @@ class Contents extends Base
      */
     protected function ___author(): Widget
     {
-        return self::widget(Author::class . '@' . $this->cid, ['uid' => $this->authorId]);
+        return Author::allocWithAlias($this->cid, ['uid' => $this->authorId]);
     }
 
     /**

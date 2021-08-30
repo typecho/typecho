@@ -54,7 +54,7 @@ class Upload extends Contents implements ActionInterface
             return $result;
         }
 
-        $options = self::widget(Options::class);
+        $options = Options::alloc();
         return Common::url(
             $content['attachment']->path,
             defined('__TYPECHO_UPLOAD_URL__') ? __TYPECHO_UPLOAD_URL__ : $options->siteUrl
@@ -431,7 +431,7 @@ class Upload extends Contents implements ActionInterface
      */
     public static function checkFileType($ext)
     {
-        $options = self::widget(Options::class);
+        $options = Options::alloc();
         return in_array($ext, $options->allowedAttachmentTypes);
     }
 }

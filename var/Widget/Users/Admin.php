@@ -1,12 +1,17 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-/**
- * Typecho Blog Platform
- *
- * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license    GNU General Public License 2.0
- * @version    $Id$
- */
+
+namespace Widget\Users;
+
+use Typecho\Common;
+use Typecho\Db;
+use Typecho\Db\Query;
+use Typecho\Widget\Exception;
+use Typecho\Widget\Helper\PageNavigator\Box;
+use Widget\Base\Users;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * 后台成员列表组件
@@ -17,55 +22,53 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Users_Admin extends Widget_Abstract_Users
+class Admin extends Users
 {
     /**
      * 分页计算对象
      *
-     * @access private
-     * @var Typecho_Db_Query
+     * @var Query
      */
-    private $_countSql;
+    private $countSql;
 
     /**
      * 所有文章个数
      *
-     * @access private
      * @var integer
      */
-    private $_total = false;
+    private $total;
 
     /**
      * 当前页
      *
-     * @access private
      * @var integer
      */
-    private $_currentPage;
+    private $currentPage;
 
     /**
      * 执行函数
      *
-     * @access public
-     * @return void
+     * @throws Db\Exception
      */
     public function execute()
     {
         $this->parameter->setDefault('pageSize=20');
         $select = $this->select();
-        $this->_currentPage = $this->request->get('page', 1);
+        $this->currentPage = $this->request->get('page', 1);
 
         /** 过滤标题 */
         if (null != ($keywords = $this->request->keywords)) {
-            $select->where('name LIKE ? OR screenName LIKE ?',
-                '%' . Typecho_Common::filterSearchQuery($keywords) . '%',
-                '%' . Typecho_Common::filterSearchQuery($keywords) . '%');
+            $select->where(
+                'name LIKE ? OR screenName LIKE ?',
+                '%' . Common::filterSearchQuery($keywords) . '%',
+                '%' . Common::filterSearchQuery($keywords) . '%'
+            );
         }
 
-        $this->_countSql = clone $select;
+        $this->countSql = clone $select;
 
-        $select->order('table.users.uid', Typecho_Db::SORT_ASC)
-            ->page($this->_currentPage, $this->parameter->pageSize);
+        $select->order('table.users.uid', Db::SORT_ASC)
+            ->page($this->currentPage, $this->parameter->pageSize);
 
         $this->db->fetchAll($select, [$this, 'push']);
     }
@@ -73,26 +76,28 @@ class Widget_Users_Admin extends Widget_Abstract_Users
     /**
      * 输出分页
      *
-     * @access public
-     * @return void
+     * @throws Exception|Db\Exception
      */
     public function pageNav()
     {
-        $query = $this->request->makeUriByRequest('page={page}');;
+        $query = $this->request->makeUriByRequest('page={page}');
 
         /** 使用盒状分页 */
-        $nav = new Typecho_Widget_Helper_PageNavigator_Box(false === $this->_total ? $this->_total = $this->size($this->_countSql) : $this->_total,
-            $this->_currentPage, $this->parameter->pageSize, $query);
+        $nav = new Box(
+            !isset($this->total) ? $this->total = $this->size($this->countSql) : $this->total,
+            $this->currentPage,
+            $this->parameter->pageSize,
+            $query
+        );
         $nav->render('&laquo;', '&raquo;');
     }
 
     /**
      * 仅仅输出域名和路径
      *
-     * @access protected
      * @return string
      */
-    protected function ___domainPath()
+    protected function ___domainPath(): string
     {
         $parts = parse_url($this->url);
         return $parts['host'] . ($parts['path'] ?? null);
@@ -101,10 +106,10 @@ class Widget_Users_Admin extends Widget_Abstract_Users
     /**
      * 发布文章数
      *
-     * @access protected
      * @return integer
+     * @throws Db\Exception
      */
-    protected function ___postsNum()
+    protected function ___postsNum(): int
     {
         return $this->db->fetchObject($this->db->select(['COUNT(cid)' => 'num'])
             ->from('table.contents')

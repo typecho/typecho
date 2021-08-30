@@ -1,14 +1,13 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-/**
- * 全局统计
- *
- * @link typecho
- * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
- * @version $Id$
- */
+
+namespace Widget;
+
+use Typecho\Db;
+use Typecho\Widget;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * 全局统计组件
@@ -18,42 +17,39 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Stat extends Typecho_Widget
+class Stat extends Widget
 {
     /**
      * 用户对象
      *
-     * @access protected
-     * @var Widget_User
+     * @var User
      */
     protected $user;
 
     /**
      * 数据库对象
      *
-     * @access protected
-     * @var Typecho_Db
+     * @var Db
      */
     protected $db;
 
     /**
      * 构造函数,初始化组件
      *
-     * @access public
      * @param mixed $request request对象
      * @param mixed $response response对象
      * @param mixed $params 参数列表
-     * @return void
+     * @throws Db\Exception
      */
     public function __construct($request, $response, $params = null)
     {
         parent::__construct($request, $response, $params);
 
         /** 初始化数据库 */
-        $this->db = Typecho_Db::get();
+        $this->db = Db::get();
 
         /** 初始化常用组件 */
-        $this->user = self::widget('Widget_User');
+        $this->user = User::alloc();
     }
 
     /**

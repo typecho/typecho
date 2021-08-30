@@ -455,7 +455,7 @@ class Options extends Widget
      */
     protected function ___loginAction(): string
     {
-        return self::widget(Security::class)->getTokenUrl(
+        return Security::alloc()->getTokenUrl(
             Router::url(
                 'do',
                 ['action' => 'login', 'widget' => 'Login'],
@@ -482,7 +482,7 @@ class Options extends Widget
      */
     protected function ___registerAction(): string
     {
-        return self::widget(Security::class)->getTokenUrl(
+        return Security::alloc()->getTokenUrl(
             Router::url('do', ['action' => 'register', 'widget' => 'Register'], $this->index)
         );
     }
@@ -504,7 +504,7 @@ class Options extends Widget
      */
     protected function ___logoutUrl(): string
     {
-        return self::widget(Security::class)->getTokenUrl(
+        return Security::alloc()->getTokenUrl(
             Common::url('/action/logout', $this->index)
         );
     }

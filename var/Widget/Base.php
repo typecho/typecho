@@ -65,9 +65,9 @@ abstract class Base extends Widget
         $this->db = Db::get();
 
         /** 初始化常用组件 */
-        $this->options = self::widget('Widget_Options');
-        $this->user = self::widget('Widget_User');
-        $this->security = self::widget('Widget_Security');
+        $this->options = Options::alloc();
+        $this->user = User::alloc();
+        $this->security = Security::alloc();
     }
 
     /**

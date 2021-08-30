@@ -137,10 +137,10 @@ class Edit extends Metas implements ActionInterface
         $this->push($category);
 
         /** 设置高亮 */
-        self::widget(Notice::class)->highlight($this->theId);
+        Notice::alloc()->highlight($this->theId);
 
         /** 提示信息 */
-        self::widget(Notice::class)->set(
+        Notice::alloc()->set(
             _t('分类 <a href="%s">%s</a> 已经被增加', $this->permalink, $this->name),
             'success'
         );
@@ -178,8 +178,8 @@ class Edit extends Metas implements ActionInterface
 
         /** 父级分类 */
         $options = [0 => _t('不选择')];
-        $parents = self::widget(
-            Rows::class . '@options',
+        $parents = Rows::allocWithAlias(
+            'options',
             (isset($this->request->mid) ? 'ignore=' . $this->request->mid : '')
         );
 
@@ -302,10 +302,10 @@ class Edit extends Metas implements ActionInterface
         $this->push($category);
 
         /** 设置高亮 */
-        self::widget(Notice::class)->highlight($this->theId);
+        Notice::alloc()->highlight($this->theId);
 
         /** 提示信息 */
-        self::widget(Notice::class)
+        Notice::alloc()
             ->set(_t('分类 <a href="%s">%s</a> 已经被更新', $this->permalink, $this->name), 'success');
 
         /** 转向原页 */
@@ -336,7 +336,7 @@ class Edit extends Metas implements ActionInterface
         }
 
         /** 提示信息 */
-        self::widget(Notice::class)
+        Notice::alloc()
             ->set($deleteCount > 0 ? _t('分类已经删除') : _t('没有分类被删除'), $deleteCount > 0 ? 'success' : 'notice');
 
         /** 转向原页 */
@@ -354,7 +354,7 @@ class Edit extends Metas implements ActionInterface
         $validator->addRule('merge', [$this, 'categoryExists'], _t('请选择需要合并的分类'));
 
         if ($error = $validator->run($this->request->from('merge'))) {
-            self::widget(Notice::class)->set($error, 'error');
+            Notice::alloc()->set($error, 'error');
             $this->response->goBack();
         }
 
@@ -365,9 +365,9 @@ class Edit extends Metas implements ActionInterface
             $this->merge($merge, 'category', $categories);
 
             /** 提示信息 */
-            self::widget(Notice::class)->set(_t('分类已经合并'), 'success');
+            Notice::alloc()->set(_t('分类已经合并'), 'success');
         } else {
-            self::widget(Notice::class)->set(_t('没有选择任何分类'), 'notice');
+            Notice::alloc()->set(_t('没有选择任何分类'), 'notice');
         }
 
         /** 转向原页 */
@@ -405,9 +405,9 @@ class Edit extends Metas implements ActionInterface
                 $this->refreshCountByTypeAndStatus($category, 'post', 'publish');
             }
 
-            self::widget(Notice::class)->set(_t('分类刷新已经完成'), 'success');
+            Notice::alloc()->set(_t('分类刷新已经完成'), 'success');
         } else {
-            self::widget(Notice::class)->set(_t('没有选择任何分类'), 'notice');
+            Notice::alloc()->set(_t('没有选择任何分类'), 'notice');
         }
 
         /** 转向原页 */
@@ -427,7 +427,7 @@ class Edit extends Metas implements ActionInterface
         $validator->addRule('mid', [$this, 'categoryExists'], _t('分类不存在'));
 
         if ($error = $validator->run($this->request->from('mid'))) {
-            self::widget(Notice::class)->set($error, 'error');
+            Notice::alloc()->set($error, 'error');
         } else {
             $this->db->query($this->db->update('table.options')
                 ->rows(['value' => $this->request->mid])
@@ -437,10 +437,10 @@ class Edit extends Metas implements ActionInterface
                 ->where('type = ?', 'category')->limit(1), [$this, 'push']);
 
             /** 设置高亮 */
-            self::widget(Notice::class)->highlight($this->theId);
+            Notice::alloc()->highlight($this->theId);
 
             /** 提示信息 */
-            self::widget(Notice::class)->set(
+            Notice::alloc()->set(
                 _t('<a href="%s">%s</a> 已经被设为默认分类', $this->permalink, $this->name),
                 'success'
             );

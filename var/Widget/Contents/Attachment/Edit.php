@@ -265,7 +265,7 @@ class Edit extends PostEdit implements ActionInterface
                 : ['code' => 500, 'message' => _t('没有文件被删除')]);
         } else {
             /** 设置提示信息 */
-            self::widget(Notice::class)
+            Notice::alloc()
                 ->set(
                     $deleteCount > 0 ? _t('文件已经被删除') : _t('没有文件被删除'),
                     $deleteCount > 0 ? 'success' : 'notice'

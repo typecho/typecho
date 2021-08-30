@@ -58,7 +58,7 @@ class Action extends Widget
         $action = $this->request->action;
 
         /** 判断是否为plugin */
-        $actionTable = array_merge($this->map, unserialize(self::widget('Widget_Options')->actionTable));
+        $actionTable = array_merge($this->map, unserialize(Options::alloc()->actionTable));
 
         if (isset($actionTable[$action])) {
             $widgetName = $actionTable[$action];

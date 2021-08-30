@@ -100,16 +100,16 @@ class Edit extends PostEdit implements ActionInterface
             $this->pluginHandle()->finishPublish($contents, $this);
 
             /** 发送ping */
-            self::widget(Service::class)->sendPing($this->cid);
+            Service::alloc()->sendPing($this->cid);
 
             /** 设置提示信息 */
-            self::widget(Notice::class)->set(
+            Notice::alloc()->set(
                 _t('页面 "<a href="%s">%s</a>" 已经发布', $this->permalink, $this->title),
                 'success'
             );
 
             /** 设置高亮 */
-            self::widget(Notice::class)->highlight($this->theId);
+            Notice::alloc()->highlight($this->theId);
 
             /** 页面跳转 */
             $this->response->redirect(Common::url('manage-pages.php?', $this->options->adminUrl));
@@ -122,7 +122,7 @@ class Edit extends PostEdit implements ActionInterface
             $this->pluginHandle()->finishSave($contents, $this);
 
             /** 设置高亮 */
-            self::widget(Notice::class)->highlight($this->cid);
+            Notice::alloc()->highlight($this->cid);
 
             if ($this->request->isAjax()) {
                 $created = new Date($this->options->time);
@@ -134,7 +134,7 @@ class Edit extends PostEdit implements ActionInterface
                 ]);
             } else {
                 /** 设置提示信息 */
-                self::widget(Notice::class)->set(_t('草稿 "%s" 已经被保存', $this->title), 'success');
+                Notice::alloc()->set(_t('草稿 "%s" 已经被保存', $this->title), 'success');
 
                 /** 返回原页面 */
                 $this->response->redirect(Common::url('write-page.php?cid=' . $this->cid, $this->options->adminUrl));
@@ -189,7 +189,7 @@ class Edit extends PostEdit implements ActionInterface
         }
 
         /** 设置提示信息 */
-        self::widget(Notice::class)
+        Notice::alloc()
             ->set(
                 $markCount > 0 ? _t('页面已经被标记为<strong>%s</strong>', $statusList[$status]) : _t('没有页面被标记'),
                 $markCount > 0 ? 'success' : 'notice'
@@ -250,7 +250,7 @@ class Edit extends PostEdit implements ActionInterface
         }
 
         /** 设置提示信息 */
-        self::widget(Notice::class)
+        Notice::alloc()
             ->set(
                 $deleteCount > 0 ? _t('页面已经被删除') : _t('没有页面被删除'),
                 $deleteCount > 0 ? 'success' : 'notice'
@@ -285,7 +285,7 @@ class Edit extends PostEdit implements ActionInterface
         }
 
         /** 设置提示信息 */
-        self::widget(Notice::class)
+        Notice::alloc()
             ->set(
                 $deleteCount > 0 ? _t('草稿已经被删除') : _t('没有草稿被删除'),
                 $deleteCount > 0 ? 'success' : 'notice'

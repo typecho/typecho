@@ -105,7 +105,7 @@ class Edit extends Contents implements ActionInterface
     public function filter(array $value): array
     {
         if ('post' == $value['type'] || 'page' == $value['type']) {
-            $draft = $this->db->fetchRow(self::widget(Contents::class)->select()
+            $draft = $this->db->fetchRow(Contents::alloc()->select()
                 ->where(
                     'table.contents.parent = ? AND table.contents.type = ?',
                     $value['cid'],
@@ -123,7 +123,7 @@ class Edit extends Contents implements ActionInterface
                     ->select()->from('table.metas')
                     ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
                     ->where('table.relationships.cid = ?', $draft['cid'])
-                    ->where('table.metas.type = ?', 'tag'), [self::widget(Metas::class), 'filter']);
+                    ->where('table.metas.type = ?', 'tag'), [Metas::alloc(), 'filter']);
                 $draft['cid'] = $value['cid'];
 
                 return $draft;
@@ -293,15 +293,15 @@ class Edit extends Contents implements ActionInterface
 
             /** 发送ping */
             $trackback = array_unique(preg_split("/(\r|\n|\r\n)/", trim($this->request->trackback)));
-            self::widget(Service::class)->sendPing($this->cid, $trackback);
+            Service::alloc()->sendPing($this->cid, $trackback);
 
             /** 设置提示信息 */
-            self::widget(Notice::class)->set('post' == $this->type ?
+            Notice::alloc()->set('post' == $this->type ?
                 _t('文章 "<a href="%s">%s</a>" 已经发布', $this->permalink, $this->title) :
                 _t('文章 "%s" 等待审核', $this->title), 'success');
 
             /** 设置高亮 */
-            self::widget(Notice::class)->highlight($this->theId);
+            Notice::alloc()->highlight($this->theId);
 
             /** 获取页面偏移 */
             $pageQuery = $this->getPageOffsetQuery($this->cid);
@@ -317,7 +317,7 @@ class Edit extends Contents implements ActionInterface
             $this->pluginHandle()->finishSave($contents, $this);
 
             /** 设置高亮 */
-            self::widget(Notice::class)->highlight($this->cid);
+            Notice::alloc()->highlight($this->cid);
 
             if ($this->request->isAjax()) {
                 $created = new TypechoDate();
@@ -329,7 +329,7 @@ class Edit extends Contents implements ActionInterface
                 ]);
             } else {
                 /** 设置提示信息 */
-                self::widget(Notice::class)->set(_t('草稿 "%s" 已经被保存', $this->title), 'success');
+                Notice::alloc()->set(_t('草稿 "%s" 已经被保存', $this->title), 'success');
 
                 /** 返回原页面 */
                 $this->response->redirect(Common::url('write-post.php?cid=' . $this->cid, $this->options->adminUrl));
@@ -595,7 +595,7 @@ class Edit extends Contents implements ActionInterface
         }
 
         /** 取出插入tag */
-        $insertTags = self::widget(Metas::class)->scanTags($tags);
+        $insertTags = Metas::alloc()->scanTags($tags);
 
         /** 插入tag */
         if ($insertTags) {
@@ -845,7 +845,7 @@ class Edit extends Contents implements ActionInterface
         }
 
         /** 设置提示信息 */
-        self::widget(Notice::class)
+        Notice::alloc()
             ->set(
                 $markCount > 0 ? _t('文章已经被标记为<strong>%s</strong>', $statusList[$status]) : _t('没有文章被标记'),
                 $markCount > 0 ? 'success' : 'notice'
@@ -915,11 +915,11 @@ class Edit extends Contents implements ActionInterface
 
         // 清理标签
         if ($deleteCount > 0) {
-            self::widget(Metas::class)->clearTags();
+            Metas::alloc()->clearTags();
         }
 
         /** 设置提示信息 */
-        self::widget(Notice::class)->set(
+        Notice::alloc()->set(
             $deleteCount > 0 ? _t('文章已经被删除') : _t('没有文章被删除'),
             $deleteCount > 0 ? 'success' : 'notice'
         );
@@ -965,7 +965,7 @@ class Edit extends Contents implements ActionInterface
         }
 
         /** 设置提示信息 */
-        self::widget(Notice::class)
+        Notice::alloc()
             ->set(
                 $deleteCount > 0 ? _t('草稿已经被删除') : _t('没有草稿被删除'),
                 $deleteCount > 0 ? 'success' : 'notice'
@@ -1002,7 +1002,7 @@ class Edit extends Contents implements ActionInterface
                 ->select()->from('table.metas')
                 ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
                 ->where('table.relationships.cid = ?', $this->cid)
-                ->where('table.metas.type = ?', 'tag'), [self::widget(Metas::class), 'filter']);
+                ->where('table.metas.type = ?', 'tag'), [Metas::alloc(), 'filter']);
         }
 
         return [];
@@ -1030,14 +1030,14 @@ class Edit extends Contents implements ActionInterface
             if ('post_draft' == $this->type) {
                 return $this->row;
             } else {
-                return $this->db->fetchRow(self::widget(Contents::class)->select()
+                return $this->db->fetchRow(Contents::alloc()->select()
                     ->where(
                         'table.contents.parent = ? AND (table.contents.type = ? OR table.contents.type = ?)',
                         $this->cid,
                         'post_draft',
                         'page_draft'
                     )
-                    ->limit(1), [self::widget(Contents::class), 'filter']);
+                    ->limit(1), [Contents::alloc(), 'filter']);
             }
         }
 

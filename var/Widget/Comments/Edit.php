@@ -37,7 +37,7 @@ class Edit extends Comments implements ActionInterface
         }
 
         /** 设置提示信息 */
-        self::widget(Notice::class)
+        Notice::alloc()
             ->set(
                 $updateRows > 0 ? _t('评论已经被标记为待审核') : _t('没有评论被标记为待审核'),
                 $updateRows > 0 ? 'success' : 'notice'
@@ -106,7 +106,7 @@ class Edit extends Comments implements ActionInterface
         }
 
         /** 设置提示信息 */
-        self::widget(Notice::class)
+        Notice::alloc()
             ->set(
                 $updateRows > 0 ? _t('评论已经被标记为垃圾') : _t('没有评论被标记为垃圾'),
                 $updateRows > 0 ? 'success' : 'notice'
@@ -133,7 +133,7 @@ class Edit extends Comments implements ActionInterface
         }
 
         /** 设置提示信息 */
-        self::widget(Notice::class)
+        Notice::alloc()
             ->set(
                 $updateRows > 0 ? _t('评论已经被通过') : _t('没有评论被通过'),
                 $updateRows > 0 ? 'success' : 'notice'
@@ -190,7 +190,7 @@ class Edit extends Comments implements ActionInterface
 
         } else {
             /** 设置提示信息 */
-            self::widget(Notice::class)
+            Notice::alloc()
                 ->set(
                     $deleteRows > 0 ? _t('评论已经被删除') : _t('没有评论被删除'),
                     $deleteRows > 0 ? 'success' : 'notice'
@@ -220,7 +220,7 @@ class Edit extends Comments implements ActionInterface
         $deleteRows = $this->db->query($deleteQuery);
 
         /** 设置提示信息 */
-        self::widget(Notice::class)->set(
+        Notice::alloc()->set(
             $deleteRows > 0 ? _t('所有垃圾评论已经被删除') : _t('没有垃圾评论被删除'),
             $deleteRows > 0 ? 'success' : 'notice'
         );

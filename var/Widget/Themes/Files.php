@@ -1,14 +1,13 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-/**
- * 风格文件列表
- *
- * @category typecho
- * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
- * @version $Id$
- */
+
+namespace Widget\Themes;
+
+use Typecho\Widget;
+use Widget\Options;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * 风格文件列表组件
@@ -19,7 +18,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Themes_Files extends Typecho_Widget
+class Files extends Widget
 {
     /**
      * 当前风格
@@ -27,7 +26,7 @@ class Widget_Themes_Files extends Typecho_Widget
      * @access private
      * @var string
      */
-    private $_currentTheme;
+    private $currentTheme;
 
     /**
      * 当前文件
@@ -35,40 +34,41 @@ class Widget_Themes_Files extends Typecho_Widget
      * @access private
      * @var string
      */
-    private $_currentFile;
+    private $currentFile;
 
     /**
      * 执行函数
      *
-     * @access public
-     * @return void
-     * @throws Typecho_Widget_Exception
+     * @throws Widget\Exception
      */
     public function execute()
     {
         /** 管理员权限 */
         self::widget('Widget_User')->pass('administrator');
-        $this->_currentTheme = $this->request->filter('slug')->get('theme', self::widget('Widget_Options')->theme);
+        $this->currentTheme = $this->request->filter('slug')->get('theme', Options::alloc()->theme);
 
-        if (preg_match("/^([_0-9a-z-\.\ ])+$/i", $this->_currentTheme)
-            && is_dir($dir = self::widget('Widget_Options')->themeFile($this->_currentTheme))
-            && (!defined('__TYPECHO_THEME_WRITEABLE__') || __TYPECHO_THEME_WRITEABLE__)) {
-
+        if (
+            preg_match("/^([_0-9a-z-\.\ ])+$/i", $this->currentTheme)
+            && is_dir($dir = Options::alloc()->themeFile($this->currentTheme))
+            && (!defined('__TYPECHO_THEME_WRITEABLE__') || __TYPECHO_THEME_WRITEABLE__)
+        ) {
             $files = array_filter(glob($dir . '/*'), function ($path) {
                 return preg_match("/\.(php|js|css|vbs)$/i", $path);
             });
 
-            $this->_currentFile = $this->request->get('file', 'index.php');
+            $this->currentFile = $this->request->get('file', 'index.php');
 
-            if (preg_match("/^([_0-9a-z-\.\ ])+$/i", $this->_currentFile)
-                && file_exists($dir . '/' . $this->_currentFile)) {
+            if (
+                preg_match("/^([_0-9a-z-\.\ ])+$/i", $this->currentFile)
+                && file_exists($dir . '/' . $this->currentFile)
+            ) {
                 foreach ($files as $file) {
                     if (file_exists($file)) {
                         $file = basename($file);
                         $this->push([
                             'file'    => $file,
-                            'theme'   => $this->_currentTheme,
-                            'current' => ($file == $this->_currentFile)
+                            'theme'   => $this->currentTheme,
+                            'current' => ($file == $this->currentFile)
                         ]);
                     }
                 }
@@ -77,64 +77,59 @@ class Widget_Themes_Files extends Typecho_Widget
             }
         }
 
-        throw new Typecho_Widget_Exception('风格文件不存在', 404);
+        throw new Widget\Exception('风格文件不存在', 404);
     }
 
     /**
      * 获取菜单标题
      *
-     * @access public
      * @return string
      */
-    public function getMenuTitle()
+    public function getMenuTitle(): string
     {
-        return _t('编辑文件 %s', $this->_currentFile);
+        return _t('编辑文件 %s', $this->currentFile);
     }
 
     /**
      * 获取文件内容
      *
-     * @access public
      * @return string
      */
-    public function currentContent()
+    public function currentContent(): string
     {
-        return htmlspecialchars(file_get_contents(self::widget('Widget_Options')
-            ->themeFile($this->_currentTheme, $this->_currentFile)));
+        return htmlspecialchars(file_get_contents(Options::alloc()
+            ->themeFile($this->currentTheme, $this->currentFile)));
     }
 
     /**
      * 获取文件是否可读
      *
-     * @access public
-     * @return string
+     * @return bool
      */
-    public function currentIsWriteable()
+    public function currentIsWriteable(): bool
     {
-        return is_writeable(self::widget('Widget_Options')
-                ->themeFile($this->_currentTheme, $this->_currentFile))
+        return is_writeable(Options::alloc()
+                ->themeFile($this->currentTheme, $this->currentFile))
             && (!defined('__TYPECHO_THEME_WRITEABLE__') || __TYPECHO_THEME_WRITEABLE__);
     }
 
     /**
      * 获取当前文件
      *
-     * @access public
      * @return string
      */
-    public function currentFile()
+    public function currentFile(): string
     {
-        return $this->_currentFile;
+        return $this->currentFile;
     }
 
     /**
      * 获取当前风格
      *
-     * @access public
      * @return string
      */
-    public function currentTheme()
+    public function currentTheme(): string
     {
-        return $this->_currentTheme;
+        return $this->currentTheme;
     }
 }

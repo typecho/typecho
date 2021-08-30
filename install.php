@@ -78,6 +78,167 @@ function install_is_cli(): bool
 }
 
 /**
+ * get default router
+ *
+ * @return string[][]
+ */
+function install_get_default_routers(): array
+{
+    return [
+        'index'              =>
+            [
+                'url'    => '/',
+                'widget' => '\Widget\Archive',
+                'action' => 'render',
+            ],
+        'archive'            =>
+            [
+                'url'    => '/blog/',
+                'widget' => '\Widget\Archive',
+                'action' => 'render',
+            ],
+        'do'                 =>
+            [
+                'url'    => '/action/[action:alpha]',
+                'widget' => '\Widget\Action',
+                'action' => 'action',
+            ],
+        'post'               =>
+            [
+                'url'    => '/archives/[cid:digital]/',
+                'widget' => '\Widget\Archive',
+                'action' => 'render',
+            ],
+        'attachment'         =>
+            [
+                'url'    => '/attachment/[cid:digital]/',
+                'widget' => '\Widget\Archive',
+                'action' => 'render',
+            ],
+        'category'           =>
+            [
+                'url'    => '/category/[slug]/',
+                'widget' => '\Widget\Archive',
+                'action' => 'render',
+            ],
+        'tag'                =>
+            [
+                'url'    => '/tag/[slug]/',
+                'widget' => '\Widget\Archive',
+                'action' => 'render',
+            ],
+        'author'             =>
+            [
+                'url'    => '/author/[uid:digital]/',
+                'widget' => '\Widget\Archive',
+                'action' => 'render',
+            ],
+        'search'             =>
+            [
+                'url'    => '/search/[keywords]/',
+                'widget' => '\Widget\Archive',
+                'action' => 'render',
+            ],
+        'index_page'         =>
+            [
+                'url'    => '/page/[page:digital]/',
+                'widget' => '\Widget\Archive',
+                'action' => 'render',
+            ],
+        'archive_page'       =>
+            [
+                'url'    => '/blog/page/[page:digital]/',
+                'widget' => '\Widget\Archive',
+                'action' => 'render',
+            ],
+        'category_page'      =>
+            [
+                'url'    => '/category/[slug]/[page:digital]/',
+                'widget' => '\Widget\Archive',
+                'action' => 'render',
+            ],
+        'tag_page'           =>
+            [
+                'url'    => '/tag/[slug]/[page:digital]/',
+                'widget' => '\Widget\Archive',
+                'action' => 'render',
+            ],
+        'author_page'        =>
+            [
+                'url'    => '/author/[uid:digital]/[page:digital]/',
+                'widget' => '\Widget\Archive',
+                'action' => 'render',
+            ],
+        'search_page'        =>
+            [
+                'url'    => '/search/[keywords]/[page:digital]/',
+                'widget' => '\Widget\Archive',
+                'action' => 'render',
+            ],
+        'archive_year'       =>
+            [
+                'url'    => '/[year:digital:4]/',
+                'widget' => '\Widget\Archive',
+                'action' => 'render',
+            ],
+        'archive_month'      =>
+            [
+                'url'    => '/[year:digital:4]/[month:digital:2]/',
+                'widget' => '\Widget\Archive',
+                'action' => 'render',
+            ],
+        'archive_day'        =>
+            [
+                'url'    => '/[year:digital:4]/[month:digital:2]/[day:digital:2]/',
+                'widget' => '\Widget\Archive',
+                'action' => 'render',
+            ],
+        'archive_year_page'  =>
+            [
+                'url'    => '/[year:digital:4]/page/[page:digital]/',
+                'widget' => '\Widget\Archive',
+                'action' => 'render',
+            ],
+        'archive_month_page' =>
+            [
+                'url'    => '/[year:digital:4]/[month:digital:2]/page/[page:digital]/',
+                'widget' => '\Widget\Archive',
+                'action' => 'render',
+            ],
+        'archive_day_page'   =>
+            [
+                'url'    => '/[year:digital:4]/[month:digital:2]/[day:digital:2]/page/[page:digital]/',
+                'widget' => '\Widget\Archive',
+                'action' => 'render',
+            ],
+        'comment_page'       =>
+            [
+                'url'    => '[permalink:string]/comment-page-[commentPage:digital]',
+                'widget' => '\Widget\Archive',
+                'action' => 'render',
+            ],
+        'feed'               =>
+            [
+                'url'    => '/feed[feed:string:0]',
+                'widget' => '\Widget\Archive',
+                'action' => 'feed',
+            ],
+        'feedback'           =>
+            [
+                'url'    => '[permalink:string]/[type:alpha]',
+                'widget' => '\Widget\Feedback',
+                'action' => 'action',
+            ],
+        'page'               =>
+            [
+                'url'    => '/[slug].html',
+                'widget' => '\Widget\Archive',
+                'action' => 'render',
+            ],
+    ];
+}
+
+/**
  * list all default options
  *
  * @return array
@@ -142,7 +303,7 @@ function install_get_default_options(): array
             'commentsAvatar' => 1,
             'commentsAvatarRating' => 'G',
             'commentsAntiSpam' => 1,
-            'routingTable' => 'a:25:{s:5:"index";a:3:{s:3:"url";s:1:"/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:7:"archive";a:3:{s:3:"url";s:6:"/blog/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:2:"do";a:3:{s:3:"url";s:22:"/action/[action:alpha]";s:6:"widget";s:9:"Widget_Do";s:6:"action";s:6:"action";}s:4:"post";a:3:{s:3:"url";s:24:"/archives/[cid:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:10:"attachment";a:3:{s:3:"url";s:26:"/attachment/[cid:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:8:"category";a:3:{s:3:"url";s:17:"/category/[slug]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:3:"tag";a:3:{s:3:"url";s:12:"/tag/[slug]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:6:"author";a:3:{s:3:"url";s:22:"/author/[uid:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:6:"search";a:3:{s:3:"url";s:19:"/search/[keywords]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:10:"index_page";a:3:{s:3:"url";s:21:"/page/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:12:"archive_page";a:3:{s:3:"url";s:26:"/blog/page/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:13:"category_page";a:3:{s:3:"url";s:32:"/category/[slug]/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:8:"tag_page";a:3:{s:3:"url";s:27:"/tag/[slug]/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:11:"author_page";a:3:{s:3:"url";s:37:"/author/[uid:digital]/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:11:"search_page";a:3:{s:3:"url";s:34:"/search/[keywords]/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:12:"archive_year";a:3:{s:3:"url";s:18:"/[year:digital:4]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:13:"archive_month";a:3:{s:3:"url";s:36:"/[year:digital:4]/[month:digital:2]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:11:"archive_day";a:3:{s:3:"url";s:52:"/[year:digital:4]/[month:digital:2]/[day:digital:2]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:17:"archive_year_page";a:3:{s:3:"url";s:38:"/[year:digital:4]/page/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:18:"archive_month_page";a:3:{s:3:"url";s:56:"/[year:digital:4]/[month:digital:2]/page/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:16:"archive_day_page";a:3:{s:3:"url";s:72:"/[year:digital:4]/[month:digital:2]/[day:digital:2]/page/[page:digital]/";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:12:"comment_page";a:3:{s:3:"url";s:53:"[permalink:string]/comment-page-[commentPage:digital]";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}s:4:"feed";a:3:{s:3:"url";s:20:"/feed[feed:string:0]";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:4:"feed";}s:8:"feedback";a:3:{s:3:"url";s:31:"[permalink:string]/[type:alpha]";s:6:"widget";s:15:"Widget_Feedback";s:6:"action";s:6:"action";}s:4:"page";a:3:{s:3:"url";s:12:"/[slug].html";s:6:"widget";s:14:"Widget_Archive";s:6:"action";s:6:"render";}}',
+            'routingTable' => serialize(install_get_default_routers()),
             'actionTable' => 'a:0:{}',
             'panelTable' => 'a:0:{}',
             'attachmentTypes' => '@image@',
@@ -405,7 +566,7 @@ function install_redirect(string $url)
  */
 function install_js_support()
 {
-    $options = \Typecho\Widget::widget(\Widget\Options::class);
+    $options = \Widget\Options::alloc();
 
     ?>
     <div id="success" class="row typecho-page-main hidden">
@@ -991,7 +1152,7 @@ function install_step_2_perform()
  */
 function install_step_3()
 {
-    $options = \Typecho\Widget::widget(\Widget\Options::class);
+    $options = \Widget\Options::alloc();
     ?>
     <div class="row typecho-page-main">
         <div class="col-mb-12 col-tb-8 col-tb-offset-2">
@@ -1049,7 +1210,7 @@ function install_step_3_perform()
 
     $request = \Typecho\Request::getInstance();
     $defaultPassword = \Typecho\Common::randString(8);
-    $options = \Typecho\Widget::widget(\Widget\Options::class);
+    $options = \Widget\Options::alloc();
 
     if (install_is_cli()) {
         $config = [
@@ -1189,7 +1350,7 @@ function install_step_3_perform()
     install_success(0, [
         $config['userName'],
         $config['userPassword'],
-        \Typecho\Widget::widget(\Widget\Security::class)->getTokenUrl($loginUrl, $request->getReferer()),
+        \Widget\Security::alloc()->getTokenUrl($loginUrl, $request->getReferer()),
         $options->siteUrl
     ]);
 }
@@ -1208,8 +1369,8 @@ function install_dispatch()
     }
 
     // init default options
-    $options = \Typecho\Widget::widget(\Widget\Options::class, install_get_default_options());
-    \Typecho\Widget::widget(\Widget\Init::class);
+    $options = \Widget\Options::alloc(install_get_default_options());
+    \Widget\Init::alloc();
 
     // install finished yet
     if (

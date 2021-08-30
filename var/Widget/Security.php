@@ -39,8 +39,8 @@ class Security extends Widget
      */
     public function execute()
     {
-        $this->options = self::widget(Options::class);
-        $user = self::widget(User::class);
+        $this->options = Options::alloc();
+        $user = User::alloc();
 
         $this->token = $this->options->secret;
         if ($user->hasLogin()) {

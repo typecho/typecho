@@ -1,5 +1,16 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
+
+namespace Widget;
+
+use Typecho\Common;
+use Typecho\Cookie;
+use Typecho\Db\Exception;
+use Typecho\Validate;
+use Widget\Base\Users;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * 注册组件
@@ -8,13 +19,12 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * @category typecho
  * @package Widget
  */
-class Widget_Register extends Widget_Abstract_Users implements Widget_Interface_Do
+class Register extends Users implements ActionInterface
 {
     /**
      * 初始化函数
      *
-     * @access public
-     * @return void
+     * @throws Exception
      */
     public function action()
     {
@@ -28,7 +38,7 @@ class Widget_Register extends Widget_Abstract_Users implements Widget_Interface_
         }
 
         /** 初始化验证类 */
-        $validator = new Typecho_Validate();
+        $validator = new Validate();
         $validator->addRule('name', 'required', _t('必须填写用户名称'));
         $validator->addRule('name', 'minLength', _t('用户名至少包含2个字符'), 2);
         $validator->addRule('name', 'maxLength', _t('用户名最多包含32个字符'), 32);
@@ -49,16 +59,16 @@ class Widget_Register extends Widget_Abstract_Users implements Widget_Interface_
 
         /** 截获验证异常 */
         if ($error = $validator->run($this->request->from('name', 'password', 'mail', 'confirm'))) {
-            Typecho_Cookie::set('__typecho_remember_name', $this->request->name);
-            Typecho_Cookie::set('__typecho_remember_mail', $this->request->mail);
+            Cookie::set('__typecho_remember_name', $this->request->name);
+            Cookie::set('__typecho_remember_mail', $this->request->mail);
 
             /** 设置提示信息 */
-            self::widget('Widget_Notice')->set($error);
+            Notice::alloc()->set($error);
             $this->response->goBack();
         }
 
-        $hasher = new PasswordHash(8, true);
-        $generatedPassword = Typecho_Common::randString(7);
+        $hasher = new \PasswordHash(8, true);
+        $generatedPassword = Common::randString(7);
 
         $dataStruct = [
             'name' => $this->request->name,
@@ -79,11 +89,18 @@ class Widget_Register extends Widget_Abstract_Users implements Widget_Interface_
 
         $this->user->login($this->request->name, $generatedPassword);
 
-        Typecho_Cookie::delete('__typecho_first_run');
-        Typecho_Cookie::delete('__typecho_remember_name');
-        Typecho_Cookie::delete('__typecho_remember_mail');
+        Cookie::delete('__typecho_first_run');
+        Cookie::delete('__typecho_remember_name');
+        Cookie::delete('__typecho_remember_mail');
 
-        self::widget('Widget_Notice')->set(_t('用户 <strong>%s</strong> 已经成功注册, 密码为 <strong>%s</strong>', $this->screenName, $generatedPassword), 'success');
+        Notice::alloc()->set(
+            _t(
+                '用户 <strong>%s</strong> 已经成功注册, 密码为 <strong>%s</strong>',
+                $this->screenName,
+                $generatedPassword
+            ),
+            'success'
+        );
         $this->response->redirect($this->options->adminUrl);
     }
 }

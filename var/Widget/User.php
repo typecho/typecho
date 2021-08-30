@@ -79,7 +79,7 @@ class User extends Widget
 
         /** 初始化数据库 */
         $this->db = Db::get();
-        $this->options = self::widget(Options::class);
+        $this->options = Options::alloc();
     }
 
 

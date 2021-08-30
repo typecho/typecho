@@ -53,7 +53,7 @@ class Service extends BaseOptions implements ActionInterface
         }
 
         /** 获取post */
-        $post = self::widget('Widget_Archive', "type=post", "cid={$this->request->cid}");
+        $post = Archive::alloc("type=post", "cid={$this->request->cid}", false);
 
         if ($post->have() && preg_match_all("|<a[^>]*href=[\"'](.*?)[\"'][^>]*>(.*?)</a>|", $post->text, $matches)) {
             $links = array_unique($matches[1]);

@@ -1,26 +1,31 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-/**
- * Typecho Blog Platform
- *
- * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license    GNU General Public License 2.0
- */
+
+namespace Widget;
+
+use Typecho\Common;
+use Typecho\Cookie;
+use Typecho\Exception;
+use Typecho\Plugin;
+use Widget\Base\Options as BaseOptions;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * 备份工具
  *
  * @package Widget
  */
-class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_Do
+class Backup extends BaseOptions implements ActionInterface
 {
-    const HEADER = '%TYPECHO_BACKUP_XXXX%';
-    const HEADER_VERSION = '0001';
+    public const HEADER = '%TYPECHO_BACKUP_XXXX%';
+    public const HEADER_VERSION = '0001';
 
     /**
      * @var array
      */
-    private $_types = [
+    private $types = [
         'contents'      => 1,
         'comments'      => 2,
         'metas'         => 3,
@@ -32,7 +37,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
     /**
      * @var array
      */
-    private $_fields = [
+    private $fields = [
         'contents'      => [
             'cid', 'title', 'slug', 'created', 'modified', 'text', 'order', 'authorId',
             'template', 'type', 'status', 'password', 'commentsNum', 'allowComment', 'allowPing', 'allowFeed', 'parent'
@@ -46,7 +51,8 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
         ],
         'relationships' => ['cid', 'mid'],
         'users'         => [
-            'uid', 'name', 'password', 'mail', 'url', 'screenName', 'created', 'activated', 'logged', 'group', 'authCode'
+            'uid', 'name', 'password', 'mail', 'url', 'screenName',
+            'created', 'activated', 'logged', 'group', 'authCode'
         ],
         'fields'        => [
             'cid', 'name', 'type', 'str_value', 'int_value', 'float_value'
@@ -56,24 +62,24 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
     /**
      * @var array
      */
-    private $_lastIds = [];
+    private $lastIds = [];
 
     /**
      * @var array
      */
-    private $_cleared = [];
+    private $cleared = [];
 
     /**
      * @var bool
      */
-    private $_login = false;
+    private $login = false;
 
     /**
      * 列出已有备份文件
      *
      * @return array
      */
-    public function listFiles()
+    public function listFiles(): array
     {
         return array_map('basename', glob(__TYPECHO_BACKUP_DIR__ . '/*.dat'));
     }
@@ -92,6 +98,8 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
 
     /**
      * 导出数据
+     *
+     * @throws \Typecho\Db\Exception
      */
     private function export()
     {
@@ -106,7 +114,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
         fwrite($fp, $header);
         $db = $this->db;
 
-        foreach ($this->_types as $type => $val) {
+        foreach ($this->types as $type => $val) {
             $page = 1;
             do {
                 $rows = $db->fetchAll($db->select()->from('table.' . $type)->page($page, 20));
@@ -118,7 +126,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
             } while (count($rows) == 20);
         }
 
-        Typecho_Plugin::factory(__CLASS__)->export($fp);
+        Plugin::factory(__CLASS__)->export($fp);
         fwrite($fp, $header);
         fclose($fp);
 
@@ -130,7 +138,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
      * @param $data
      * @return string
      */
-    private function buildBuffer($type, $data)
+    private function buildBuffer($type, $data): string
     {
         $body = '';
         $schema = [];
@@ -141,7 +149,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
         }
 
         $header = json_encode($schema);
-        return Typecho_Common::buildBackupBuffer($type, $header, $body);
+        return Common::buildBackupBuffer($type, $header, $body);
     }
 
     /**
@@ -151,19 +159,19 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
      * @param $data
      * @return array
      */
-    private function applyFields($table, $data)
+    private function applyFields($table, $data): array
     {
         $result = [];
 
         foreach ($data as $key => $val) {
-            $index = array_search($key, $this->_fields[$table]);
+            $index = array_search($key, $this->fields[$table]);
 
             if ($index !== false) {
                 $result[$key] = $val;
 
                 if ($index === 0 && !in_array($table, ['relationships', 'fields'])) {
-                    $this->_lastIds[$table] = isset($this->_lastIds[$table])
-                        ? max($this->_lastIds[$table], $val) : $val;
+                    $this->lastIds[$table] = isset($this->lastIds[$table])
+                        ? max($this->lastIds[$table], $val) : $val;
                 }
             }
         }
@@ -178,25 +186,25 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
     {
         $path = null;
 
-        if (!empty($_FILES)) {
-            $file = array_pop($_FILES);
+        if (!empty($FILES)) {
+            $file = array_pop($FILES);
 
             if (0 == $file['error'] && is_uploaded_file($file['tmp_name'])) {
                 $path = $file['tmp_name'];
             } else {
-                self::widget('Widget_Notice')->set(_t('备份文件上传失败'), 'error');
+                Notice::alloc()->set(_t('备份文件上传失败'), 'error');
                 $this->response->goBack();
             }
         } else {
             if (!$this->request->is('file')) {
-                self::widget('Widget_Notice')->set(_t('没有选择任何备份文件'), 'error');
+                Notice::alloc()->set(_t('没有选择任何备份文件'), 'error');
                 $this->response->goBack();
             }
 
             $path = __TYPECHO_BACKUP_DIR__ . '/' . $this->request->get('file');
 
             if (!file_exists($path)) {
-                self::widget('Widget_Notice')->set(_t('备份文件不存在'), 'error');
+                Notice::alloc()->set(_t('备份文件不存在'), 'error');
                 $this->response->goBack();
             }
         }
@@ -208,13 +216,14 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
      * 解析数据
      *
      * @param $file
+     * @throws \Typecho\Db\Exception
      */
     private function extractData($file)
     {
         $fp = @fopen($file, 'rb');
 
         if (!$fp) {
-            self::widget('Widget_Notice')->set(_t('无法读取备份文件'), 'error');
+            Notice::alloc()->set(_t('无法读取备份文件'), 'error');
             $this->response->goBack();
         }
 
@@ -223,7 +232,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
 
         if ($fileSize < $headerSize) {
             @fclose($fp);
-            self::widget('Widget_Notice')->set(_t('备份文件格式错误'), 'error');
+            Notice::alloc()->set(_t('备份文件格式错误'), 'error');
             $this->response->goBack();
         }
 
@@ -231,7 +240,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
 
         if (!$this->parseHeader($fileHeader, $version)) {
             @fclose($fp);
-            self::widget('Widget_Notice')->set(_t('备份文件格式错误'), 'error');
+            Notice::alloc()->set(_t('备份文件格式错误'), 'error');
             $this->response->goBack();
         }
 
@@ -240,7 +249,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
 
         if (!$this->parseHeader($fileFooter, $version)) {
             @fclose($fp);
-            self::widget('Widget_Notice')->set(_t('备份文件格式错误'), 'error');
+            Notice::alloc()->set(_t('备份文件格式错误'), 'error');
             $this->response->goBack();
         }
 
@@ -248,11 +257,11 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
         $offset = $headerSize;
 
         while (!feof($fp) && $offset + $headerSize < $fileSize) {
-            $data = Typecho_Common::extractBackupBuffer($fp, $offset, $version);
+            $data = Common::extractBackupBuffer($fp, $offset, $version);
 
             if (!$data) {
                 @fclose($fp);
-                self::widget('Widget_Notice')->set(_t('恢复数据出现错误'), 'error');
+                Notice::alloc()->set(_t('恢复数据出现错误'), 'error');
                 $this->response->goBack();
             }
 
@@ -262,14 +271,14 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
 
         // 针对PGSQL重置计数
         if (false !== strpos($this->db->getVersion(), 'pgsql')) {
-            foreach ($this->_lastIds as $table => $id) {
+            foreach ($this->lastIds as $table => $id) {
                 $seq = $this->db->getPrefix() . $table . '_seq';
                 $this->db->query('ALTER SEQUENCE ' . $seq . ' RESTART WITH ' . ($id + 1));
             }
         }
 
         @fclose($fp);
-        self::widget('Widget_Notice')->set(_t('数据恢复完成'), 'success');
+        Notice::alloc()->set(_t('数据恢复完成'), 'success');
         $this->response->goBack();
     }
 
@@ -278,7 +287,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
      * @param $version
      * @return bool
      */
-    private function parseHeader($str, &$version)
+    private function parseHeader($str, &$version): bool
     {
         if (!$str || strlen($str) != strlen(self::HEADER)) {
             return false;
@@ -299,7 +308,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
      */
     private function processData($type, $header, $body)
     {
-        $table = array_search($type, $this->_types);
+        $table = array_search($type, $this->types);
 
         if (!empty($table)) {
             $schema = json_decode($header, true);
@@ -313,7 +322,7 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
 
             $this->importData($table, $data);
         } else {
-            Typecho_Plugin::factory(__CLASS__)->import($type, $header, $body);
+            Plugin::factory(__CLASS__)->import($type, $header, $body);
         }
     }
 
@@ -322,27 +331,26 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
      *
      * @param $table
      * @param $data
-     * @throws Typecho_Exception
      */
     private function importData($table, $data)
     {
         $db = $this->db;
 
         try {
-            if (empty($this->_cleared[$table])) {
+            if (empty($this->cleared[$table])) {
                 // 清除数据
                 $db->truncate('table.' . $table);
-                $this->_cleared[$table] = true;
+                $this->cleared[$table] = true;
             }
 
-            if (!$this->_login && 'users' == $table && $data['group'] == 'administrator') {
+            if (!$this->login && 'users' == $table && $data['group'] == 'administrator') {
                 // 重新登录
                 $this->reLogin($data);
             }
 
             $db->query($db->insert('table.' . $table)->rows($this->applyFields($table, $data)));
         } catch (Exception $e) {
-            self::widget('Widget_Notice')->set(_t('恢复过程中遇到如下错误: %s', $e->getMessage()), 'error');
+            Notice::alloc()->set(_t('恢复过程中遇到如下错误: %s', $e->getMessage()), 'error');
             $this->response->goBack();
         }
     }
@@ -357,14 +365,14 @@ class Widget_Backup extends Widget_Abstract_Options implements Widget_Interface_
     {
         if (empty($user['authCode'])) {
             $user['authCode'] = function_exists('openssl_random_pseudo_bytes') ?
-                bin2hex(openssl_random_pseudo_bytes(16)) : sha1(Typecho_Common::randString(20));
+                bin2hex(openssl_random_pseudo_bytes(16)) : sha1(Common::randString(20));
         }
 
         $user['activated'] = $this->options->time;
         $user['logged'] = $user['activated'];
 
-        Typecho_Cookie::set('__typecho_uid', $user['uid']);
-        Typecho_Cookie::set('__typecho_authCode', Typecho_Common::hash($user['authCode']));
-        $this->_login = true;
+        Cookie::set('__typecho_uid', $user['uid']);
+        Cookie::set('__typecho_authCode', Common::hash($user['authCode']));
+        $this->login = true;
     }
 }

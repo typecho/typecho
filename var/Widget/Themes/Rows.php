@@ -1,14 +1,15 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-/**
- * 风格列表
- *
- * @category typecho
- * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
- * @version $Id$
- */
+
+namespace Widget\Themes;
+
+use Typecho\Common;
+use Typecho\Plugin;
+use Typecho\Widget;
+use Widget\Options;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * 风格列表组件
@@ -19,27 +20,24 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Themes_List extends Typecho_Widget
+class Rows extends Widget
 {
     /**
      * 执行函数
-     *
-     * @access public
-     * @return void
      */
     public function execute()
     {
         $themes = $this->getThemes();
 
         if ($themes) {
-            $options = self::widget('Widget_Options');
+            $options = Options::alloc();
             $activated = 0;
             $result = [];
 
             foreach ($themes as $key => $theme) {
                 $themeFile = $theme . '/index.php';
                 if (file_exists($themeFile)) {
-                    $info = Typecho_Plugin::parseInfo($themeFile);
+                    $info = Plugin::parseInfo($themeFile);
                     $info['name'] = $this->getTheme($theme, $key);
 
                     if ($info['activated'] = ($options->theme == $info['name'])) {
@@ -53,7 +51,7 @@ class Widget_Themes_List extends Typecho_Widget
                     if ($screen) {
                         $info['screen'] = $options->themeUrl(basename(current($screen)), $info['name']);
                     } else {
-                        $info['screen'] = Typecho_Common::url('noscreen.png', $options->adminStaticUrl('img'));
+                        $info['screen'] = Common::url('noscreen.png', $options->adminStaticUrl('img'));
                     }
 
                     $result[$key] = $info;
@@ -70,7 +68,7 @@ class Widget_Themes_List extends Typecho_Widget
     /**
      * @return array
      */
-    protected function getThemes()
+    protected function getThemes(): array
     {
         return glob(__TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . '/*', GLOB_ONLYDIR);
     }
@@ -82,7 +80,7 @@ class Widget_Themes_List extends Typecho_Widget
      * @param mixed $index
      * @return string
      */
-    protected function getTheme($theme, $index)
+    protected function getTheme(string $theme, $index): string
     {
         return basename($theme);
     }

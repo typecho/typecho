@@ -34,7 +34,7 @@ class Notice extends Widget
         Cookie::set(
             '__typecho_notice_highlight',
             $theId,
-            self::widget(Options::class)->time + self::widget(Options::class)->timezone + 86400
+            Options::alloc()->time + Options::alloc()->timezone + 86400
         );
     }
 
@@ -65,12 +65,12 @@ class Notice extends Widget
         Cookie::set(
             '__typecho_notice',
             json_encode($notice),
-            self::widget(Options::class)->time + self::widget(Options::class)->timezone + 86400
+            Options::alloc()->time + Options::alloc()->timezone + 86400
         );
         Cookie::set(
             '__typecho_notice_type',
             $type,
-            self::widget(Options::class)->time + self::widget(Options::class)->timezone + 86400
+            Options::alloc()->time + Options::alloc()->timezone + 86400
         );
     }
 }

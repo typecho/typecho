@@ -33,7 +33,7 @@ class Init extends Widget
     public function execute()
     {
         // init class
-        define('__TYPECHO_REWRITE_CLASS__', [
+        define('__TYPECHO_CLASS_ALIASES__', [
             'Typecho_Plugin_Interface'    => '\Typecho\Plugin\PluginInterface',
             'Typecho_Widget_Helper_Empty' => '\Typecho\Widget\Helper\EmptyClass',
             'Widget_Abstract'             => '\Widget\Base',
@@ -44,12 +44,14 @@ class Init extends Widget
             'Widget_Abstract_Users'       => '\Widget\Base\Users',
             'Widget_Metas_Category_List'  => '\Widget\Metas\Category\Rows',
             'Widget_Contents_Page_List'   => '\Widget\Contents\Page\Rows',
+            'Widget_Plugins_List'         => '\Widget\Plugins\Rows',
+            'Widget_Themes_List'          => '\Widget\Themes\Rows',
             'Widget_Interface_Do'         => '\Widget\ActionInterface',
             'Widget_Do'                   => '\Widget\Action',
         ]);
 
         /** 对变量赋值 */
-        $options = self::widget(Options::class);
+        $options = Options::alloc();
 
         /** 检查安装状态 */
         if (!defined('__TYPECHO_INSTALL__') && !$options->installed) {
@@ -105,7 +107,7 @@ class Init extends Widget
         Date::setTimezoneOffset($options->timezone);
 
         /** 开始会话, 减小负载只针对后台打开session支持 */
-        if (!defined('__TYPECHO_INSTALL__') && self::widget(User::class)->hasLogin()) {
+        if (!defined('__TYPECHO_INSTALL__') && User::alloc()->hasLogin()) {
             @session_start();
         }
     }

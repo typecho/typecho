@@ -18,6 +18,7 @@ use Widget\Base\Users;
 use Widget\Comments\Ping;
 use Widget\Comments\Recent;
 use Widget\Contents\Attachment\Related;
+use Widget\Contents\Related\Author;
 use Widget\Metas\Category\Rows;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
@@ -895,7 +896,7 @@ class Archive extends Contents
             'allowComment'  => $this->allow('comment')
         ];
 
-        return self::widget(\Widget\Comments\Archive::class, $parameter);
+        return \Widget\Comments\Archive::alloc($parameter);
     }
 
     /**
@@ -905,7 +906,7 @@ class Archive extends Contents
      */
     public function pings(): Ping
     {
-        return self::widget(Ping::class, [
+        return Ping::alloc([
             'parentId'      => $this->hidden ? 0 : $this->cid,
             'parentContent' => $this->row,
             'allowPing'     => $this->allow('ping')
@@ -921,7 +922,7 @@ class Archive extends Contents
      */
     public function attachments(int $limit = 0, int $offset = 0): Related
     {
-        return self::widget(Related::class . '@' . $this->cid . '-' . uniqid(), [
+        return Related::allocWithAlias($this->cid . '-' . uniqid(), [
             'parentId' => $this->cid,
             'limit'    => $limit,
             'offset'   => $offset
@@ -1019,14 +1020,12 @@ class Archive extends Contents
         switch ($type) {
             case 'author':
                 /** 如果访问权限被设置为禁止,则tag会被置为空 */
-                return self::widget(
-                    '\Widget\Contents\Related\Author',
+                return Author::alloc(
                     ['cid' => $this->cid, 'type' => $this->type, 'author' => $this->author->uid, 'limit' => $limit]
                 );
             default:
                 /** 如果访问权限被设置为禁止,则tag会被置为空 */
-                return self::widget(
-                    '\Widget\Contents\Related',
+                return \Widget\Contents\Related::alloc(
                     ['cid' => $this->cid, 'type' => $this->type, 'tags' => $this->tags, 'limit' => $limit]
                 );
         }
@@ -1429,9 +1428,9 @@ class Archive extends Contents
             ));
 
             if ('comments' == $this->parameter->type) {
-                $comments = self::widget(Recent::class, 'pageSize=10');
+                $comments = Recent::alloc('pageSize=10');
             } else {
-                $comments = self::widget(Recent::class, 'pageSize=10&parentId=' . $this->cid);
+                $comments = Recent::alloc('pageSize=10&parentId=' . $this->cid);
             }
 
             while ($comments->next()) {
@@ -1864,7 +1863,7 @@ class Archive extends Contents
             throw new WidgetException(_t('分类不存在'), 404);
         }
 
-        $categoryListWidget = self::widget(Rows::class, 'current=' . $category['mid']);
+        $categoryListWidget = Rows::alloc('current=' . $category['mid']);
         $category = $categoryListWidget->filter($category);
 
         if (isset($directory) && ($this->request->directory != implode('/', $category['directory']))) {
@@ -1938,7 +1937,7 @@ class Archive extends Contents
         /** 如果是标签 */
         $tag = $this->db->fetchRow(
             $tagSelect,
-            [self::widget(Metas::class), 'filter']
+            [Metas::alloc(), 'filter']
         );
 
         if (!$tag) {
@@ -1998,7 +1997,7 @@ class Archive extends Contents
         $author = $this->db->fetchRow(
             $this->db->select()->from('table.users')
             ->where('uid = ?', $uid),
-            [self::widget(Users::class), 'filter']
+            [User::alloc(), 'filter']
         );
 
         if (!$author) {

@@ -51,7 +51,7 @@ class Date extends Widget
         $this->db = Db::get();
 
         /** 初始化常用组件 */
-        $this->options = self::widget('\Widget\Options');
+        $this->options = Options::alloc();
     }
 
     /**

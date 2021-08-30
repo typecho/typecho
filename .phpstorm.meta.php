@@ -10,6 +10,7 @@ namespace PHPSTORM_META {
     exitPoint(\Typecho\Widget\Response::throwFile());
     exitPoint(\Typecho\Widget\Response::throwJson());
     exitPoint(\Typecho\Widget\Response::throwXml());
+    exitPoint(\Typecho\Widget\Response::goBack());
 
     override(\Widget\Options::__get(0), map([
         'feedUrl'               =>  string,

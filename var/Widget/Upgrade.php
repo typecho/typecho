@@ -1,14 +1,14 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-/**
- * 升级动作
- *
- * @category typecho
- * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
- * @version $Id$
- */
+
+namespace Widget;
+
+use Typecho\Common;
+use Typecho\Exception;
+use Widget\Base\Options as BaseOptions;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * 升级组件
@@ -17,14 +17,12 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * @category typecho
  * @package Widget
  */
-class Widget_Upgrade extends Widget_Abstract_Options implements Widget_Interface_Do
+class Upgrade extends BaseOptions implements ActionInterface
 {
     /**
      * 执行升级程序
      *
-     * @access public
-     * @return void
-     * @throws Typecho_Exception
+     * @throws \Typecho\Db\Exception
      */
     public function upgrade()
     {
@@ -51,15 +49,17 @@ class Widget_Upgrade extends Widget_Abstract_Options implements Widget_Interface
             if (isset($matches[2])) {
                 $minor = substr(str_replace('_', '.', $matches[2]), 1);
 
-                if (version_compare($currentVersion, $version, '=')
-                    && version_compare($currentMinor, $minor, '>=')) {
+                if (
+                    version_compare($currentVersion, $version, '=')
+                    && version_compare($currentMinor, $minor, '>=')
+                ) {
                     break;
                 }
 
                 $version .= '/' . $minor;
             }
 
-            $options = self::widget('Widget_Options@' . $package);
+            $options = Options::allocWithAlias($package);
 
             /** 执行升级脚本 */
             try {
@@ -67,32 +67,38 @@ class Widget_Upgrade extends Widget_Abstract_Options implements Widget_Interface
                 if (!empty($result)) {
                     $message[] = $result;
                 }
-            } catch (Typecho_Exception $e) {
-                self::widget('Widget_Notice')->set($e->getMessage(), 'error');
+            } catch (Exception $e) {
+                Notice::alloc()->set($e->getMessage(), 'error');
                 $this->response->goBack();
                 return;
             }
 
             /** 更新版本号 */
-            $this->update(['value' => 'Typecho ' . $version],
-                $this->db->sql()->where('name = ?', 'generator'));
+            $this->update(
+                ['value' => 'Typecho ' . $version],
+                $this->db->sql()->where('name = ?', 'generator')
+            );
 
-            $this->destroy('Widget_Options@' . $package);
+            Options::destroy($package);
         }
 
         /** 更新版本号 */
-        $this->update(['value' => 'Typecho ' . Typecho_Common::VERSION],
-            $this->db->sql()->where('name = ?', 'generator'));
+        $this->update(
+            ['value' => 'Typecho ' . Common::VERSION],
+            $this->db->sql()->where('name = ?', 'generator')
+        );
 
-        self::widget('Widget_Notice')->set(empty($message) ? _t("升级已经完成") : $message,
-            empty($message) ? 'success' : 'notice');
+        Notice::alloc()->set(
+            empty($message) ? _t("升级已经完成") : $message,
+            empty($message) ? 'success' : 'notice'
+        );
     }
 
     /**
      * 初始化函数
      *
-     * @access public
-     * @return void
+     * @throws \Typecho\Db\Exception
+     * @throws \Typecho\Widget\Exception
      */
     public function action()
     {

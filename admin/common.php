@@ -12,14 +12,14 @@ if (!defined('__TYPECHO_ROOT_DIR__') && !@include_once __DIR__ . '/../config.inc
 }
 
 /** 初始化组件 */
-\Typecho\Widget::widget('Widget_Init');
+\Widget\Init::alloc();
 
 /** 注册一个初始化插件 */
 \Typecho\Plugin::factory('admin/common.php')->begin();
 
-\Typecho\Widget::widget('Widget_Options')->to($options);
-\Typecho\Widget::widget('Widget_User')->to($user);
-\Typecho\Widget::widget('Widget_Security')->to($security);
+\Widget\Options::alloc()->to($options);
+\Widget\User::alloc()->to($user);
+\Widget\Security::alloc()->to($security);
 \Typecho\Widget::widget('Widget_Menu')->to($menu);
 
 /** 初始化上下文 */

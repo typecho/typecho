@@ -148,8 +148,8 @@ class Admin extends Comments
     protected function ___parentContent(): ?array
     {
         $cid = isset($this->request->cid) ? $this->request->filter('int')->cid : $this->cid;
-        return $this->db->fetchRow(self::widget(Contents::class)->select()
+        return $this->db->fetchRow(Contents::alloc()->select()
             ->where('table.contents.cid = ?', $cid)
-            ->limit(1), [self::widget(Contents::class), 'filter']);
+            ->limit(1), [Contents::alloc(), 'filter']);
     }
 }

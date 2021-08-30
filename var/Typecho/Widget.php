@@ -149,6 +149,37 @@ abstract class Widget
     }
 
     /**
+     * alloc widget instance
+     *
+     * @param mixed $params
+     * @param mixed $request
+     * @param bool $enableResponse
+     * @return $this
+     */
+    public static function alloc($params = null, $request = null, bool $enableResponse = true): Widget
+    {
+        return self::widget(static::class, $params, $request, $enableResponse);
+    }
+
+    /**
+     * alloc widget instance with alias
+     *
+     * @param string $alias
+     * @param mixed $params
+     * @param mixed $request
+     * @param bool $enableResponse
+     * @return $this
+     */
+    public static function allocWithAlias(
+        string $alias,
+        $params = null,
+        $request = null,
+        bool $enableResponse = true
+    ): Widget {
+        return self::widget(static::class . '@' . $alias, $params, $request, $enableResponse);
+    }
+
+    /**
      * 释放组件
      *
      * @param string $alias 组件名称
@@ -162,10 +193,16 @@ abstract class Widget
     /**
      * 释放组件
      *
-     * @param string $alias 组件名称
+     * @param string|null $alias 组件名称
      */
-    public static function destroy(string $alias)
+    public static function destroy(?string $alias = null)
     {
+        if (!isset($alias)) {
+            $alias = static::class;
+        } elseif (Common::nativeClassName(static::class) != 'Typecho_Widget') {
+            $alias = static::class . '@' . $alias;
+        }
+
         if (isset(self::$widgetPool[$alias])) {
             unset(self::$widgetPool[$alias]);
         }
