@@ -10,6 +10,10 @@ use Typecho\Router;
 use Typecho\Widget\Exception;
 use Widget\Base\Contents;
 use Widget\Contents\Page\Admin as PageAdmin;
+use Widget\Contents\Post\Admin as PostAdmin;
+use Widget\Contents\Post\Edit as PostEdit;
+use Widget\Contents\Page\Edit as PageEdit;
+use Widget\Metas\Category\Edit as CategoryEdit;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -145,7 +149,7 @@ class XmlRpc extends Contents implements ActionInterface
      * @param string $userName
      * @param string $password
      */
-    public function wpGetPage($blogId, $pageId, $userName, $password)
+    public function wpGetPage(int $blogId, int $pageId, string $userName, string $password)
     {
         /** 检查权限 */
         if (!$this->checkAccess($userName, $password)) {
@@ -157,7 +161,7 @@ class XmlRpc extends Contents implements ActionInterface
             /** 由于Widget_Contents_Page_Edit是从request中获取参数, 因此我们需要强行设置flush一下request */
             /** widget方法的第三个参数可以指定强行转换传入此widget的request参数 */
             /** 此组件会进行复杂的权限检测 */
-            $page = $this->singletonWidget('Widget_Contents_Page_Edit', null, "cid={$pageId}");
+            $page = PageEdit::alloc(null, ['cid' => $pageId]);
         } catch (Exception $e) {
             /** 截获可能会抛出的异常(参见 Widget_Contents_Page_Edit 的 execute 方法) */
             return new Error($e->getCode(), $e->getMessage());
@@ -166,7 +170,7 @@ class XmlRpc extends Contents implements ActionInterface
         /** 对文章内容做截取处理，以获得description和text_more*/
         [$excerpt, $more] = $this->getPostExtended($page);
 
-        $pageStruct = [
+        return [
             'dateCreated' => new Date($this->options->timezone + $page->created),
             'userid' => $page->authorId,
             'page_id' => $page->cid,
@@ -192,8 +196,6 @@ class XmlRpc extends Contents implements ActionInterface
             'custom_fields' => [],
             'wp_page_template' => $page->template
         ];
-
-        return $pageStruct;
     }
 
     /**
@@ -377,12 +379,11 @@ class XmlRpc extends Contents implements ActionInterface
      * @param int $blogId
      * @param string $userName
      * @param string $password
-     * @param struct $content
+     * @param array $content
      * @param bool $publish
-     * @access public
-     * @return void
+     * @return mixed
      */
-    public function wpNewPage($blogId, $userName, $password, $content, $publish)
+    public function wpNewPage(int $blogId, string $userName, string $password, array $content, bool $publish)
     {
         if (!$this->checkAccess($userName, $password, 'editor')) {
             return $this->error;
@@ -398,12 +399,11 @@ class XmlRpc extends Contents implements ActionInterface
      * @param int $blogId
      * @param string $userName
      * @param string $password
-     * @param mixed $content
+     * @param array $content
      * @param bool $publish
-     * @access public
-     * @return int
+     * @return mixed
      */
-    public function mwNewPost($blogId, $userName, $password, $content, $publish)
+    public function mwNewPost(int $blogId, string $userName, string $password, array $content, bool $publish)
     {
         /** 检查权限*/
         if (!$this->checkAccess($userName, $password)) {
@@ -483,7 +483,7 @@ class XmlRpc extends Contents implements ActionInterface
         /** 调整状态 */
         if (isset($content["{$type}_status"])) {
             $status = $this->wordpressToTypechoStatus($content["{$type}_status"], $type);
-            $input['visibility'] = isset($content["visibility"]) ? $content["visibility"] : $status;
+            $input['visibility'] = $content["visibility"] ?? $status;
             if ('publish' == $status || 'waiting' == $status || 'private' == $status) {
                 $input['do'] = 'publish';
 
@@ -515,12 +515,12 @@ class XmlRpc extends Contents implements ActionInterface
         try {
             /** 插入 */
             if ('page' == $type) {
-                $this->singletonWidget('Widget_Contents_Page_Edit', null, $input, false)->action();
+                PageEdit::alloc(null, $input, false)->action();
             } else {
-                $this->singletonWidget('Widget_Contents_Post_Edit', null, $input, false)->action();
+                PostEdit::alloc(null, $input, false)->action();
             }
 
-            return $this->singletonWidget('Widget_Notice')->getHighlightId();
+            return Notice::alloc()->getHighlightId();
         } catch (Exception $e) {
             return new Error($e->getCode(), $e->getMessage());
         }
@@ -535,7 +535,7 @@ class XmlRpc extends Contents implements ActionInterface
      * @param array $category
      * @return mixed
      */
-    public function wpNewCategory($blogId, $userName, $password, $category)
+    public function wpNewCategory(int $blogId, string $userName, string $password, array $category)
     {
         if (!$this->checkAccess($userName, $password)) {
             return ($this->error);
@@ -551,7 +551,7 @@ class XmlRpc extends Contents implements ActionInterface
         /** 调用已有组件 */
         try {
             /** 插入 */
-            $categoryWidget = $this->singletonWidget('Widget_Metas_Category_Edit', null, $input, false);
+            $categoryWidget = CategoryEdit::alloc(null, $input, false);
             $categoryWidget->action();
             return $categoryWidget->mid;
         } catch (Exception $e) {
@@ -620,7 +620,7 @@ class XmlRpc extends Contents implements ActionInterface
      * @param int $pageId
      * @return mixed
      */
-    public function wpDeletePage($blogId, $userName, $password, $pageId)
+    public function wpDeletePage(int $blogId, string $userName, string $password, int $pageId)
     {
         if (!$this->checkAccess($userName, $password, 'editor')) {
             return $this->error;
@@ -629,7 +629,7 @@ class XmlRpc extends Contents implements ActionInterface
         /** 删除页面 */
         try {
             /** 此组件会进行复杂的权限检测 */
-            $this->singletonWidget('Widget_Contents_Page_Edit', null, "cid={$pageId}", false)->deletePage();
+            PageEdit::alloc(null, ['cid' => $pageId], false)->deletePage();
         } catch (Exception $e) {
             /** 截获可能会抛出的异常(参见 Widget_Contents_Page_Edit 的 execute 方法) */
             return new Error($e->getCode(), $e->getMessage());
@@ -647,11 +647,16 @@ class XmlRpc extends Contents implements ActionInterface
      * @param string $password
      * @param array $content
      * @param bool $publish
-     * @access public
      * @return bool
      */
-    public function wpEditPage($blogId, $pageId, $userName, $password, $content, $publish)
-    {
+    public function wpEditPage(
+        int $blogId,
+        int $pageId,
+        string $userName,
+        string $password,
+        array $content,
+        bool $publish
+    ) {
         $content['post_type'] = 'page';
         $this->mwEditPost($pageId, $userName, $password, $content, $publish);
     }
@@ -664,10 +669,9 @@ class XmlRpc extends Contents implements ActionInterface
      * @param string $password
      * @param array $content
      * @param bool $publish
-     * @access public
      * @return int
      */
-    public function mwEditPost($postId, $userName, $password, $content, $publish = true)
+    public function mwEditPost(int $postId, string $userName, string $password, array $content, bool $publish = true)
     {
         $content['postId'] = $postId;
         return $this->mwNewPost(1, $userName, $password, $content, $publish);
@@ -681,13 +685,11 @@ class XmlRpc extends Contents implements ActionInterface
      * @param string $password
      * @param int $postId
      * @param array $content
-     * @access public
      * @return bool
      */
-    public function wpEditPost($blogId, $userName, $password, $postId, $content)
+    public function wpEditPost(int $blogId, string $userName, string $password, int $postId, array $content)
     {
-
-        $post = $this->singletonWidget('Widget_Archive', 'type=single', 'cid=' . $postId, false);
+        $post = Archive::alloc('type=single', ['cid' => $postId], false);
         if ($post->type == 'attachment') {
             $attachment['title'] = $content['post_title'];
             $attachment['slug'] = $content['post_excerpt'];
@@ -701,7 +703,7 @@ class XmlRpc extends Contents implements ActionInterface
             $updateRows = $this->update($attachment, $this->db->sql()->where('cid = ?', $postId));
             return true;
         }
-        return $this->mwEditPost($blogId, $postId, $userName, $password, $content);
+        return $this->mwEditPost($postId, $userName, $password, $content);
     }
 
     /**
@@ -2258,8 +2260,8 @@ EOF;
             $api = [
                 /** WordPress API */
                 'wp.getPage' => [$this, 'wpGetPage'],
-                'wp.getPages' => [$this, 'wpGetPages', ['int', 'string', 'string']],
-                'wp.newPage' => [$this, 'wpNewPage', ['int', 'string', 'string', 'struct', 'boolean']],
+                'wp.getPages' => [$this, 'wpGetPages'],
+                'wp.newPage' => [$this, 'wpNewPage'],
                 'wp.deletePage' => [$this, 'wpDeletePage'],
                 'wp.editPage' => [$this, 'wpEditPage'],
                 'wp.getPageList' => [$this, 'wpGetPageList'],

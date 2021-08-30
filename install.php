@@ -747,6 +747,7 @@ function install_step_1_perform()
         'curl',
         'mbstring',
         'json',
+        'Reflection',
         ['mysqli', 'sqlite3', 'pgsql', 'pdo_mysql', 'pdo_sqlite', 'pdo_pgsql']
     ];
 

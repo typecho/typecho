@@ -64,11 +64,10 @@ class Server
     /**
      * 一次处理多个请求
      *
-     * @access public
-     * @param void $methodcalls
+     * @param array $methodcalls
      * @return array
      */
-    public function multiCall($methodcalls)
+    public function multiCall(array $methodcalls)
     {
         // See http://www.xmlrpc.com/discuss/msgReader$1208
         $return = [];
@@ -107,6 +106,34 @@ class Server
         $method = $this->callbacks[$methodName];
 
         if (!is_callable($method)) {
+            return new Error(
+                -32601,
+                'server error. requested class method "' . $methodName . '" does not exist.'
+            );
+        }
+
+        [$object, $objectMethod] = $method;
+
+        try {
+            $ref = new \ReflectionMethod($object, $objectMethod);
+            $requiredArgs = $ref->getNumberOfRequiredParameters();
+            if (count($args) < $requiredArgs) {
+                return new Error(
+                    -32601,
+                    'server error. requested class method "' . $methodName . '" require ' . $requiredArgs . ' params.'
+                );
+            }
+
+            foreach ($ref->getParameters() as $key => $parameter) {
+                if ($parameter->hasType() && $parameter->getType()->getName() != gettype($args[$key])) {
+                    return new Error(
+                        -32601,
+                        'server error. requested class method "'
+                        . $methodName . '" ' . $key . ' param has wrong type.'
+                    );
+                }
+            }
+        } catch (\ReflectionException $e) {
             return new Error(
                 -32601,
                 'server error. requested class method "' . $methodName . '" does not exist.'
