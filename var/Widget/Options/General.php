@@ -1,14 +1,17 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-/**
- * 基本设置
- *
- * @category typecho
- * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
- * @version $Id$
- */
+
+namespace Widget\Options;
+
+use Typecho\Db\Exception;
+use Typecho\I18n\GetText;
+use Typecho\Widget\Helper\Form;
+use Widget\ActionInterface;
+use Widget\Base\Options;
+use Widget\Notice;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * 基本设置组件
@@ -19,16 +22,15 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Options_General extends Widget_Abstract_Options implements Widget_Interface_Do
+class General extends Options implements ActionInterface
 {
     /**
      * 检查是否在语言列表中
      *
-     * @param mixed $lang
-     * @access public
+     * @param string $lang
      * @return bool
      */
-    public function checkLang($lang)
+    public function checkLang(string $lang): bool
     {
         $langs = self::getLangs();
         return isset($langs[$lang]);
@@ -37,10 +39,9 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
     /**
      * 获取语言列表
      *
-     * @access private
      * @return array
      */
-    public static function getLangs()
+    public static function getLangs(): array
     {
         $dir = defined('__TYPECHO_LANG_DIR__') ? __TYPECHO_LANG_DIR__ : __TYPECHO_ROOT_DIR__ . '/usr/langs';
         $files = glob($dir . '/*.mo');
@@ -48,7 +49,7 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
 
         if (!empty($files)) {
             foreach ($files as $file) {
-                $getText = new Typecho_I18n_GetText($file, false);
+                $getText = new GetText($file, false);
                 [$name] = explode('.', basename($file));
                 $title = $getText->translate('lang', $count);
                 $langs[$name] = $count > - 1 ? $title : $name;
@@ -66,7 +67,7 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
      * @param string $ext
      * @return boolean
      */
-    public function removeShell($ext)
+    public function removeShell(string $ext): bool
     {
         return !preg_match("/^(php|php4|php5|sh|asp|jsp|rb|py|pl|dll|exe|bat)$/i", $ext);
     }
@@ -74,8 +75,7 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
     /**
      * 执行更新动作
      *
-     * @access public
-     * @return void
+     * @throws Exception
      */
     public function updateGeneralSettings()
     {
@@ -84,7 +84,15 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
             $this->response->goBack();
         }
 
-        $settings = $this->request->from('title', 'description', 'keywords', 'allowRegister', 'allowXmlRpc', 'lang', 'timezone');
+        $settings = $this->request->from(
+            'title',
+            'description',
+            'keywords',
+            'allowRegister',
+            'allowXmlRpc',
+            'lang',
+            'timezone'
+        );
         $settings['attachmentTypes'] = $this->request->getArray('attachmentTypes');
 
         if (!defined('__TYPECHO_SITE_URL__')) {
@@ -106,8 +114,10 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
 
         $attachmentTypesOther = $this->request->filter('trim', 'strtolower')->attachmentTypesOther;
         if ($this->isEnableByCheckbox($settings['attachmentTypes'], '@other@') && !empty($attachmentTypesOther)) {
-            $types = implode(',', array_filter(array_map('trim',
-                explode(',', $attachmentTypesOther)), [$this, 'removeShell']));
+            $types = implode(
+                ',',
+                array_filter(array_map('trim', explode(',', $attachmentTypesOther)), [$this, 'removeShell'])
+            );
 
             if (!empty($types)) {
                 $attachmentTypes[] = $types;
@@ -119,53 +129,79 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
             $this->update(['value' => $value], $this->db->sql()->where('name = ?', $name));
         }
 
-        self::widget('Widget_Notice')->set(_t("设置已经保存"), 'success');
+        Notice::alloc()->set(_t("设置已经保存"), 'success');
         $this->response->goBack();
     }
 
     /**
      * 输出表单结构
      *
-     * @access public
-     * @return Typecho_Widget_Helper_Form
+     * @return Form
      */
-    public function form()
+    public function form(): Form
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form($this->security->getIndex('/action/options-general'),
-            Typecho_Widget_Helper_Form::POST_METHOD);
+        $form = new Form($this->security->getIndex('/action/options-general'), Form::POST_METHOD);
 
         /** 站点名称 */
-        $title = new Typecho_Widget_Helper_Form_Element_Text('title', null, $this->options->title, _t('站点名称'), _t('站点的名称将显示在网页的标题处.'));
+        $title = new Form\Element\Text('title', null, $this->options->title, _t('站点名称'), _t('站点的名称将显示在网页的标题处.'));
         $title->input->setAttribute('class', 'w-100');
         $form->addInput($title->addRule('required', _t('请填写站点名称'))
             ->addRule('xssCheck', _t('请不要在站点名称中使用特殊字符')));
 
         /** 站点地址 */
         if (!defined('__TYPECHO_SITE_URL__')) {
-            $siteUrl = new Typecho_Widget_Helper_Form_Element_Text('siteUrl', null, $this->options->originalSiteUrl, _t('站点地址'), _t('站点地址主要用于生成内容的永久链接.') . ($this->options->originalSiteUrl == $this->options->rootUrl ?
-                    '' : '</p><p class="message notice mono">' . _t('当前地址 <strong>%s</strong> 与上述设定值不一致',
-                        $this->options->rootUrl)));
+            $siteUrl = new Form\Element\Text(
+                'siteUrl',
+                null,
+                $this->options->originalSiteUrl,
+                _t('站点地址'),
+                _t('站点地址主要用于生成内容的永久链接.') . ($this->options->originalSiteUrl == $this->options->rootUrl ?
+                    '' : '</p><p class="message notice mono">'
+                    . _t('当前地址 <strong>%s</strong> 与上述设定值不一致', $this->options->rootUrl))
+            );
             $siteUrl->input->setAttribute('class', 'w-100 mono');
             $form->addInput($siteUrl->addRule('required', _t('请填写站点地址'))
                 ->addRule('url', _t('请填写一个合法的URL地址')));
         }
 
         /** 站点描述 */
-        $description = new Typecho_Widget_Helper_Form_Element_Text('description', null, $this->options->description, _t('站点描述'), _t('站点描述将显示在网页代码的头部.'));
+        $description = new Form\Element\Text(
+            'description',
+            null,
+            $this->options->description,
+            _t('站点描述'),
+            _t('站点描述将显示在网页代码的头部.')
+        );
         $form->addInput($description->addRule('xssCheck', _t('请不要在站点描述中使用特殊字符')));
 
         /** 关键词 */
-        $keywords = new Typecho_Widget_Helper_Form_Element_Text('keywords', null, $this->options->keywords, _t('关键词'), _t('请以半角逗号 "," 分割多个关键字.'));
+        $keywords = new Form\Element\Text(
+            'keywords',
+            null,
+            $this->options->keywords,
+            _t('关键词'),
+            _t('请以半角逗号 "," 分割多个关键字.')
+        );
         $form->addInput($keywords->addRule('xssCheck', _t('请不要在关键词中使用特殊字符')));
 
         /** 注册 */
-        $allowRegister = new Typecho_Widget_Helper_Form_Element_Radio('allowRegister', ['0' => _t('不允许'), '1' => _t('允许')], $this->options->allowRegister, _t('是否允许注册'),
-            _t('允许访问者注册到你的网站, 默认的注册用户不享有任何写入权限.'));
+        $allowRegister = new Form\Element\Radio(
+            'allowRegister',
+            ['0' => _t('不允许'), '1' => _t('允许')],
+            $this->options->allowRegister,
+            _t('是否允许注册'),
+            _t('允许访问者注册到你的网站, 默认的注册用户不享有任何写入权限.')
+        );
         $form->addInput($allowRegister);
 
         /** XMLRPC */
-        $allowXmlRpc = new Typecho_Widget_Helper_Form_Element_Radio('allowXmlRpc', ['0' => _t('关闭'), '1' => _t('仅关闭 Pingback 接口'), '2' => _t('打开')], $this->options->allowXmlRpc, _t('XMLRPC 接口'));
+        $allowXmlRpc = new Form\Element\Radio(
+            'allowXmlRpc',
+            ['0' => _t('关闭'), '1' => _t('仅关闭 Pingback 接口'), '2' => _t('打开')],
+            $this->options->allowXmlRpc,
+            _t('XMLRPC 接口')
+        );
         $form->addInput($allowXmlRpc);
 
         /** 语言项 */
@@ -175,7 +211,7 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
         $langs = self::getLangs();
 
         if (count($langs) > 1) {
-            $lang = new Typecho_Widget_Helper_Form_Element_Select('lang', $langs, $this->options->lang, _t('语言'));
+            $lang = new Form\Element\Select('lang', $langs, $this->options->lang, _t('语言'));
             $form->addInput($lang->addRule([$this, 'checkLang'], _t('所选择的语言包不存在')));
         }
 
@@ -208,7 +244,7 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
             "-43200" => _t('艾尼威托克岛 (GMT -12)')
         ];
 
-        $timezone = new Typecho_Widget_Helper_Form_Element_Select('timezone', $timezoneList, $this->options->timezone, _t('时区'));
+        $timezone = new Form\Element\Select('timezone', $timezoneList, $this->options->timezone, _t('时区'));
         $form->addInput($timezone);
 
         /** 扩展名 */
@@ -239,15 +275,24 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
             '@image@' => _t('图片文件') . ' <code>(gif jpg jpeg png tiff bmp)</code>',
             '@media@' => _t('多媒体文件') . ' <code>(mp3 mp4 mov wmv wma rmvb rm avi flv ogg oga ogv)</code>',
             '@doc@'   => _t('常用档案文件') . ' <code>(txt doc docx xls xlsx ppt pptx zip rar pdf)</code>',
-            '@other@' => _t('其他格式 %s', ' <input type="text" class="w-50 text-s mono" name="attachmentTypesOther" value="' . htmlspecialchars($attachmentTypesOtherValue) . '" />'),
+            '@other@' => _t(
+                '其他格式 %s',
+                ' <input type="text" class="w-50 text-s mono" name="attachmentTypesOther" value="'
+                . htmlspecialchars($attachmentTypesOtherValue) . '" />'
+            ),
         ];
 
-        $attachmentTypes = new Typecho_Widget_Helper_Form_Element_Checkbox('attachmentTypes', $attachmentTypesOptions,
-            $attachmentTypesOptionsValue, _t('允许上传的文件类型'), _t('用逗号 "," 将后缀名隔开, 例如: %s', '<code>cpp, h, mak</code>'));
+        $attachmentTypes = new Form\Element\Checkbox(
+            'attachmentTypes',
+            $attachmentTypesOptions,
+            $attachmentTypesOptionsValue,
+            _t('允许上传的文件类型'),
+            _t('用逗号 "," 将后缀名隔开, 例如: %s', '<code>cpp, h, mak</code>')
+        );
         $form->addInput($attachmentTypes->multiMode());
 
         /** 提交按钮 */
-        $submit = new Typecho_Widget_Helper_Form_Element_Submit('submit', null, _t('保存设置'));
+        $submit = new Form\Element\Submit('submit', null, _t('保存设置'));
         $submit->input->setAttribute('class', 'btn primary');
         $form->addItem($submit);
 
@@ -256,9 +301,6 @@ class Widget_Options_General extends Widget_Abstract_Options implements Widget_I
 
     /**
      * 绑定动作
-     *
-     * @access public
-     * @return void
      */
     public function action()
     {
