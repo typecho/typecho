@@ -125,7 +125,7 @@ class Server
             }
 
             foreach ($ref->getParameters() as $key => $parameter) {
-                if ($parameter->hasType() && $parameter->getType()->getName() != gettype($args[$key])) {
+                if ($parameter->hasType() && !settype($args[$key], $parameter->getType()->getName())) {
                     return new Error(
                         -32601,
                         'server error. requested class method "'
