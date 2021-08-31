@@ -44,9 +44,22 @@ class Date
     public $timeStamp = 0;
 
     /**
+     * @var string
+     */
+    public $year;
+
+    /**
+     * @var string
+     */
+    public $month;
+
+    /**
+     * @var string
+     */
+    public $day;
+
+    /**
      * 初始化参数
-     *
-     * @access public
      *
      * @param integer|null $time 时间戳
      */
@@ -54,16 +67,16 @@ class Date
     {
         $this->timeStamp = (null === $time ? self::time() : $time)
             + (self::$timezoneOffset - self::$serverTimezoneOffset);
+
+        $this->year = date('Y', $this->timeStamp);
+        $this->month = date('m', $this->timeStamp);
+        $this->day = date('d', $this->timeStamp);
     }
 
     /**
      * 设置当前期望的时区偏移
      *
-     * @access public
-     *
      * @param integer $offset
-     *
-     * @return void
      */
     public static function setTimezoneOffset(int $offset)
     {
@@ -74,10 +87,7 @@ class Date
     /**
      * 获取格式化时间
      *
-     * @access public
-     *
      * @param string $format 时间格式
-     *
      * @return string
      */
     public function format(string $format): string
@@ -88,35 +98,11 @@ class Date
     /**
      * 获取国际化偏移时间
      *
-     * @access public
      * @return string
      */
     public function word(): string
     {
         return I18n::dateWord($this->timeStamp, self::time() + (self::$timezoneOffset - self::$serverTimezoneOffset));
-    }
-
-    /**
-     * 获取单项数据
-     *
-     * @access public
-     *
-     * @param string $name 名称
-     *
-     * @return integer
-     */
-    public function __get(string $name)
-    {
-        switch ($name) {
-            case 'year':
-                return date('Y', $this->timeStamp);
-            case 'month':
-                return date('m', $this->timeStamp);
-            case 'day':
-                return date('d', $this->timeStamp);
-            default:
-                return 0;
-        }
     }
 
     /**

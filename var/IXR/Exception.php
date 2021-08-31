@@ -2,10 +2,6 @@
 
 namespace IXR;
 
-if (!defined('__TYPECHO_ROOT_DIR__')) {
-    exit;
-}
-
 /**
  * IXR异常类
  *

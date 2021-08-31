@@ -28,10 +28,8 @@ class Error
     /**
      * 构造函数
      *
-     * @access public
      * @param integer $code 错误代码
      * @param string|null $message 错误消息
-     * @return void
      */
     public function __construct(int $code, ?string $message)
     {
@@ -42,10 +40,9 @@ class Error
     /**
      * 获取xml
      *
-     * @access public
      * @return string
      */
-    public function getXml()
+    public function getXml(): string
     {
         return <<<EOD
 <methodResponse>
