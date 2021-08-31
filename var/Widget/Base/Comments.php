@@ -89,7 +89,7 @@ class Comments extends Base
         if ($updateComment) {
             $cid = $updateComment->cid;
         } else {
-            return false;
+            return 0;
         }
 
         /** 构建插入结构 */
@@ -142,7 +142,7 @@ class Comments extends Base
         if ($deleteComment) {
             $cid = $deleteComment->cid;
         } else {
-            return false;
+            return 0;
         }
 
         /** 删除评论数据 */
@@ -326,6 +326,15 @@ class Comments extends Base
     protected function ___title(): string
     {
         return $this->parentContent['title'];
+    }
+
+    /**
+     * @return string
+     * @throws Exception
+     */
+    protected function ___url(): string
+    {
+        return $this->___permalink();
     }
 
     /**

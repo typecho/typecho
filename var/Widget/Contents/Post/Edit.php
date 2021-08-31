@@ -381,7 +381,7 @@ class Edit extends Contents implements ActionInterface
      * 发布内容
      *
      * @param array $contents 内容结构
-     * @throws DbException
+     * @throws DbException|Exception
      */
     protected function publish(array $contents)
     {

@@ -19,10 +19,14 @@ class Server
     /**
      * 默认参数
      *
-     * @access private
      * @var array
      */
     private $capabilities;
+
+    /**
+     * @var Hook
+     */
+    private $hook;
 
     /**
      * 构造函数
@@ -92,6 +96,14 @@ class Server
     }
 
     /**
+     * @param Hook $hook
+     */
+    public function setHook(Hook $hook)
+    {
+        $this->hook = $hook;
+    }
+
+    /**
      * 呼叫内部方法
      *
      * @param string $methodName 方法名
@@ -119,7 +131,7 @@ class Server
             $requiredArgs = $ref->getNumberOfRequiredParameters();
             if (count($args) < $requiredArgs) {
                 return new Error(
-                    -32601,
+                    -32602,
                     'server error. requested class method "' . $methodName . '" require ' . $requiredArgs . ' params.'
                 );
             }
@@ -127,20 +139,39 @@ class Server
             foreach ($ref->getParameters() as $key => $parameter) {
                 if ($parameter->hasType() && !settype($args[$key], $parameter->getType()->getName())) {
                     return new Error(
-                        -32601,
+                        -32602,
                         'server error. requested class method "'
                         . $methodName . '" ' . $key . ' param has wrong type.'
                     );
                 }
             }
+
+            if (isset($this->hook)) {
+                $result = $this->hook->beforeRpcCall($methodName, $ref, $args);
+
+                if (isset($result)) {
+                    return $result;
+                }
+            }
+
+            $result = call_user_func_array($method, $args);
+
+            if (isset($this->hook)) {
+                $this->hook->afterRpcCall($methodName, $result);
+            }
+
+            return $result;
         } catch (\ReflectionException $e) {
             return new Error(
                 -32601,
                 'server error. requested class method "' . $methodName . '" does not exist.'
             );
+        } catch (\Exception $e) {
+            return new Error(
+                -32001,
+                'server error. requested class method "' . $methodName . '" failed.'
+            );
         }
-
-        return call_user_func_array($method, $args);
     }
 
     /**

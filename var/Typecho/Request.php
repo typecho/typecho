@@ -148,8 +148,7 @@ class Request
     {
         $result = $this->get($key, []);
 
-        return is_array($result) ? $result
-            : (strlen($result) > 0 ? [$result] : []);
+        return is_array($result) ? $result : [$result];
     }
 
     /**

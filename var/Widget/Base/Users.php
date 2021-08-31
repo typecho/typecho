@@ -112,7 +112,7 @@ class Users extends Base
         //生成静态链接
         $routeExists = (null != Router::get('author'));
 
-        $value['permalink'] = $routeExists ? Router::url('author', $value, $this->options->index) : '#';
+        $value['url'] = $value['permalink'] = $routeExists ? Router::url('author', $value, $this->options->index) : '#';
 
         /** 生成聚合链接 */
         /** RSS 2.0 */

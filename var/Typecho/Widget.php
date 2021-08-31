@@ -58,7 +58,6 @@ abstract class Widget
     /**
      * 队列长度
      *
-     * @access public
      * @var integer
      */
     protected $length = 0;
@@ -80,8 +79,6 @@ abstract class Widget
     /**
      * 构造函数,初始化组件
      *
-     * @access public
-     *
      * @param WidgetRequest $request request对象
      * @param WidgetResponse $response response对象
      * @param mixed $params 参数列表
@@ -99,10 +96,6 @@ abstract class Widget
      *
      * @param string $widgetClass
      * @param string $aliasClass
-     *
-     * @static
-     * @access public
-     * @return void
      */
     public static function alias(string $widgetClass, string $aliasClass)
     {
@@ -201,6 +194,9 @@ abstract class Widget
             $alias = static::class;
         } elseif (Common::nativeClassName(static::class) != 'Typecho_Widget') {
             $alias = static::class . '@' . $alias;
+        } else {
+            self::$widgetPool = [];
+            return;
         }
 
         if (isset(self::$widgetPool[$alias])) {
@@ -210,9 +206,6 @@ abstract class Widget
 
     /**
      * execute function.
-     *
-     * @access public
-     * @return void
      */
     public function execute()
     {
@@ -238,7 +231,6 @@ abstract class Widget
      * 将类本身赋值
      *
      * @param mixed $variable 变量名
-     *
      * @return Widget
      */
     public function to(&$variable): Widget
@@ -250,15 +242,15 @@ abstract class Widget
      * 格式化解析堆栈内的所有数据
      *
      * @param string $format 数据格式
-     *
-     * @return void
      */
     public function parse(string $format)
     {
         while ($this->next()) {
             echo preg_replace_callback(
                 "/\{([_a-z0-9]+)\}/i",
-                [$this, '__parseCallback'],
+                function (array $matches) {
+                    return $this->{$matches[1]};
+                },
                 $format
             );
         }
@@ -306,7 +298,6 @@ abstract class Widget
      * 根据余数输出
      *
      * @param mixed ...$args
-     * @return void
      */
     public function alt(...$args)
     {
@@ -328,12 +319,8 @@ abstract class Widget
     /**
      * 魔术函数,用于挂接其它函数
      *
-     * @access public
-     *
      * @param string $name 函数名
      * @param array $args 函数参数
-     *
-     * @return void
      */
     public function __call(string $name, array $args)
     {
@@ -348,10 +335,7 @@ abstract class Widget
     /**
      * 获取对象插件句柄
      *
-     * @access public
-     *
      * @param string|null $handle 句柄
-     *
      * @return Plugin
      */
     public function pluginHandle(?string $handle = null): Plugin
@@ -362,10 +346,7 @@ abstract class Widget
     /**
      * 魔术函数,用于获取内部变量
      *
-     * @access public
-     *
      * @param string $name 变量名
-     *
      * @return mixed
      */
     public function __get(string $name)
@@ -393,8 +374,6 @@ abstract class Widget
      *
      * @param string $name 值对应的键值
      * @param mixed $value 相应的值
-     *
-     * @return void
      */
     public function __set(string $name, $value)
     {
@@ -404,10 +383,7 @@ abstract class Widget
     /**
      * 验证堆栈值是否存在
      *
-     * @access public
-     *
      * @param string $name
-     *
      * @return boolean
      */
     public function __isSet(string $name)
@@ -433,18 +409,5 @@ abstract class Widget
     public function ___length(): int
     {
         return $this->length;
-    }
-
-    /**
-     * 解析回调
-     *
-     * @param array $matches
-     *
-     * @access protected
-     * @return string
-     */
-    protected function __parseCallback(array $matches): string
-    {
-        return $this->{$matches[1]};
     }
 }

@@ -155,7 +155,7 @@ class Contents extends Base
     {
         /** 首先验证写入权限 */
         if (!$this->isWriteable(clone $condition)) {
-            return false;
+            return 0;
         }
 
         /** 构建更新结构 */
@@ -496,7 +496,7 @@ class Contents extends Base
         $value['pathinfo'] = $routeExists ? Router::url($type, $value) : '#';
 
         /** 生成静态链接 */
-        $value['permalink'] = Common::url($value['pathinfo'], $this->options->index);
+        $value['url'] = $value['permalink'] = Common::url($value['pathinfo'], $this->options->index);
 
         /** 处理附件 */
         if ('attachment' == $type) {

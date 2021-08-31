@@ -60,7 +60,7 @@ class Metas extends Base
         $tmpSlug = $value['slug'];
         $value['slug'] = urlencode($value['slug']);
 
-        $value['permalink'] = $routeExists ? Router::url($type, $value, $this->options->index) : '#';
+        $value['url'] = $value['permalink'] = $routeExists ? Router::url($type, $value, $this->options->index) : '#';
 
         /** 生成聚合链接 */
         /** RSS 2.0 */

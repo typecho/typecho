@@ -4,16 +4,27 @@ namespace Widget;
 
 use IXR\Date;
 use IXR\Error;
+use IXR\Hook;
 use IXR\Server;
+use ReflectionMethod;
 use Typecho\Common;
 use Typecho\Router;
+use Typecho\Widget;
 use Typecho\Widget\Exception;
+use Widget\Base\Comments;
 use Widget\Base\Contents;
+use Widget\Base\Metas;
 use Widget\Contents\Page\Admin as PageAdmin;
 use Widget\Contents\Post\Admin as PostAdmin;
+use Widget\Contents\Attachment\Admin as AttachmentAdmin;
 use Widget\Contents\Post\Edit as PostEdit;
 use Widget\Contents\Page\Edit as PageEdit;
+use Widget\Contents\Attachment\Edit as AttachmentEdit;
 use Widget\Metas\Category\Edit as CategoryEdit;
+use Widget\Metas\Category\Rows as CategoryRows;
+use Widget\Metas\Tag\Cloud;
+use Widget\Comments\Edit as CommentsEdit;
+use Widget\Comments\Admin as CommentsAdmin;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -28,7 +39,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class XmlRpc extends Contents implements ActionInterface
+class XmlRpc extends Contents implements ActionInterface, Hook
 {
     /**
      * 当前错误
@@ -148,6 +159,7 @@ class XmlRpc extends Contents implements ActionInterface
      * @param int $pageId
      * @param string $userName
      * @param string $password
+     * @return array|Error
      */
     public function wpGetPage(int $blogId, int $pageId, string $userName, string $password)
     {
@@ -209,7 +221,6 @@ class XmlRpc extends Contents implements ActionInterface
         if ($this->user->login($name, $password, true)) {
             /** 验证权限 */
             if ($this->user->pass($level, true)) {
-                $this->user->execute();
                 return true;
             } else {
                 $this->error = new Error(403, _t('权限不足'));
@@ -219,6 +230,61 @@ class XmlRpc extends Contents implements ActionInterface
             $this->error = new Error(403, _t('无法登陆, 密码错误'));
             return false;
         }
+    }
+
+    /**
+     * @param string $methodName
+     * @param ReflectionMethod $reflectionMethod
+     * @param array $parameters
+     * @return Error|void
+     */
+    public function beforeRpcCall(string $methodName, ReflectionMethod $reflectionMethod, array $parameters)
+    {
+        $valid = 2;
+        $auth = [];
+
+        $accesses = [
+            'wp.newPage'            =>  'editor',
+            'wp.deletePage'         =>  'editor',
+            'wp.getPageList'        =>  'editor',
+            'wp.getAuthors'         =>  'editor',
+            'wp.deleteCategory'     =>  'editor',
+            'wp.getPageStatusList'  =>  'editor',
+            'wp.getPageTemplates'   =>  'editor',
+            'wp.getOptions'         =>  'administrator',
+            'wp.setOptions'         =>  'administrator',
+            'mt.setPostCategories'  =>  'editor',
+        ];
+
+        foreach ($reflectionMethod->getParameters() as $key => $parameter) {
+            $name = $parameter->getName();
+            if ($name == 'userName' || $name == 'password') {
+                $auth[$name] = $parameters[$key];
+                $valid--;
+            }
+        }
+
+        if ($valid == 0) {
+            if ($this->user->login($auth['userName'], $auth['password'], true)) {
+                /** 验证权限 */
+                if ($this->user->pass($accesses[$methodName] ?? 'contributor', true)) {
+                    $this->user->execute();
+                } else {
+                    return new Error(403, _t('权限不足'));
+                }
+            } else {
+                return new Error(403, _t('无法登陆, 密码错误'));
+            }
+        }
+    }
+
+    /**
+     * @param string $methodName
+     * @param mixed $result
+     */
+    public function afterRpcCall(string $methodName, &$result): void
+    {
+        Widget::destroy();
     }
 
     /**
@@ -321,14 +387,10 @@ class XmlRpc extends Contents implements ActionInterface
      * @param int $blogId
      * @param string $userName
      * @param string $password
-     * @return array|Error
+     * @return array
      */
-    public function wpGetPages(int $blogId, string $userName, string $password)
+    public function wpGetPages(int $blogId, string $userName, string $password): array
     {
-        if (!$this->checkAccess($userName, $password)) {
-            return $this->error;
-        }
-
         /** 过滤type为page的contents */
         /** 同样需要flush一下, 需要取出所有status的页面 */
         $pages = PageAdmin::alloc(null, 'status=all');
@@ -385,11 +447,8 @@ class XmlRpc extends Contents implements ActionInterface
      */
     public function wpNewPage(int $blogId, string $userName, string $password, array $content, bool $publish)
     {
-        if (!$this->checkAccess($userName, $password, 'editor')) {
-            return $this->error;
-        }
         $content['post_type'] = 'page';
-        $this->mwNewPost($blogId, $userName, $password, $content, $publish);
+        return $this->mwNewPost($blogId, $userName, $password, $content, $publish);
     }
 
     /**
@@ -405,11 +464,6 @@ class XmlRpc extends Contents implements ActionInterface
      */
     public function mwNewPost(int $blogId, string $userName, string $password, array $content, bool $publish)
     {
-        /** 检查权限*/
-        if (!$this->checkAccess($userName, $password)) {
-            return $this->error;
-        }
-
         /** 取得content内容 */
         $input = [];
         $type = isset($content['post_type']) && 'page' == $content['post_type'] ? 'page' : 'post';
@@ -515,12 +569,14 @@ class XmlRpc extends Contents implements ActionInterface
         try {
             /** 插入 */
             if ('page' == $type) {
-                PageEdit::alloc(null, $input, false)->action();
+                $widget = PageEdit::alloc(null, $input, false);
+                $widget->writePage();
             } else {
-                PostEdit::alloc(null, $input, false)->action();
+                $widget = PostEdit::alloc(null, $input, false);
+                $widget->writePost();
             }
 
-            return Notice::alloc()->getHighlightId();
+            return $widget->cid;
         } catch (Exception $e) {
             return new Error($e->getCode(), $e->getMessage());
         }
@@ -534,31 +590,26 @@ class XmlRpc extends Contents implements ActionInterface
      * @param string $password
      * @param array $category
      * @return mixed
+     * @throws \Typecho\Db\Exception
      */
     public function wpNewCategory(int $blogId, string $userName, string $password, array $category)
     {
-        if (!$this->checkAccess($userName, $password)) {
-            return ($this->error);
-        }
 
         /** 开始接受数据 */
         $input['name'] = $category['name'];
         $input['slug'] = Common::slugName(empty($category['slug']) ? $category['name'] : $category['slug']);
         $input['parent'] = $category['parent_id'] ?? ($category['parent'] ?? 0);
         $input['description'] = $category['description'] ?? $category['name'];
-        $input['do'] = 'insert';
 
         /** 调用已有组件 */
         try {
             /** 插入 */
             $categoryWidget = CategoryEdit::alloc(null, $input, false);
-            $categoryWidget->action();
+            $categoryWidget->insertCategory();
             return $categoryWidget->mid;
         } catch (Exception $e) {
             return new Error($e->getCode(), $e->getMessage());
         }
-
-        return new Error(403, _t('无法添加分类'));
     }
 
     /**
@@ -569,7 +620,7 @@ class XmlRpc extends Contents implements ActionInterface
      * @param string $type 内容类型
      * @return string
      */
-    private function wordpressToTypechoStatus($status, $type = 'post'): string
+    private function wordpressToTypechoStatus(string $status, string $type = 'post'): string
     {
         if ('post' == $type) {
             /** 文章状态 */
@@ -618,14 +669,10 @@ class XmlRpc extends Contents implements ActionInterface
      * @param string $userName
      * @param string $password
      * @param int $pageId
-     * @return mixed
+     * @return bool|Error
      */
     public function wpDeletePage(int $blogId, string $userName, string $password, int $pageId)
     {
-        if (!$this->checkAccess($userName, $password, 'editor')) {
-            return $this->error;
-        }
-
         /** 删除页面 */
         try {
             /** 此组件会进行复杂的权限检测 */
@@ -701,9 +748,10 @@ class XmlRpc extends Contents implements ActionInterface
 
             /** 更新数据 */
             $updateRows = $this->update($attachment, $this->db->sql()->where('cid = ?', $postId));
-            return true;
+            return $updateRows > 0;
         }
-        return $this->mwEditPost($postId, $userName, $password, $content);
+
+        return $this->mwEditPost($postId, $userName, $password, $content) > 0;
     }
 
     /**
@@ -712,16 +760,11 @@ class XmlRpc extends Contents implements ActionInterface
      * @param int $blogId
      * @param string $userName
      * @param string $password
-     * @access public
      * @return array
      */
-    public function wpGetPageList($blogId, $userName, $password)
+    public function wpGetPageList(int $blogId, string $userName, string $password): array
     {
-        if (!$this->checkAccess($userName, $password, 'editor')) {
-            return ($this->error);
-        }
-        $pages = $this->singletonWidget('Widget_Contents_Page_Admin', null, 'status=all');
-        /**初始化*/
+        $pages = PageAdmin::alloc(null, 'status=all');
         $pageStructs = [];
 
         while ($pages->next()) {
@@ -743,17 +786,14 @@ class XmlRpc extends Contents implements ActionInterface
      * @param int $blogId
      * @param string $userName
      * @param string $password
-     * @access public
-     * @return struct
+     * @return array
+     * @throws \Typecho\Db\Exception
      */
-    public function wpGetAuthors($blogId, $userName, $password)
+    public function wpGetAuthors(int $blogId, string $userName, string $password): array
     {
-        if (!$this->checkAccess($userName, $password, 'editor')) {
-            return ($this->error);
-        }
-
         /** 构建查询*/
-        $select = $this->db->select('table.users.uid', 'table.users.name', 'table.users.screenName')->from('table.users');
+        $select = $this->db->select('table.users.uid', 'table.users.name', 'table.users.screenName')
+            ->from('table.users');
         $authors = $this->db->fetchAll($select);
 
         $authorStructs = [];
@@ -775,22 +815,30 @@ class XmlRpc extends Contents implements ActionInterface
      * @param string $userName
      * @param string $password
      * @param string $category
-     * @param int $max_results
-     * @access public
+     * @param int $maxResults
      * @return array
+     * @throws \Typecho\Db\Exception
      */
-    public function wpSuggestCategories($blogId, $userName, $password, $category, $max_results)
-    {
-        if (!$this->checkAccess($userName, $password)) {
-            return ($this->error);
-        }
-
-        $meta = $this->singletonWidget('Widget_Abstract_Metas');
-
+    public function wpSuggestCategories(
+        int $blogId,
+        string $userName,
+        string $password,
+        string $category,
+        int $maxResults = 0
+    ): array {
         /** 构造出查询语句并且查询*/
         $key = Common::filterSearchQuery($category);
         $key = '%' . $key . '%';
-        $select = $meta->select()->where('table.metas.type = ? AND (table.metas.name LIKE ? OR slug LIKE ?)', 'category', $key, $key);
+        $select = Metas::alloc()->select()->where(
+            'table.metas.type = ? AND (table.metas.name LIKE ? OR slug LIKE ?)',
+            'category',
+            $key,
+            $key
+        );
+
+        if ($maxResults > 0) {
+            $select->limit($maxResults);
+        }
 
         /** 不要category push到contents的容器中 */
         $categories = $this->db->fetchAll($select);
@@ -810,45 +858,32 @@ class XmlRpc extends Contents implements ActionInterface
     /**
      * 获取用户
      *
-     * @access public
      * @param string $userName 用户名
      * @param string $password 密码
      * @return array
      */
-    public function wpGetUsersBlogs($userName, $password)
+    public function wpGetUsersBlogs(string $userName, string $password): array
     {
-
-        if (!$this->checkAccess($userName, $password)) {
-            return $this->error;
-        }
-
-        $struct = [];
-        $struct[] = [
+        return [[
             'isAdmin' => $this->user->pass('administrator', true),
             'url' => $this->options->siteUrl,
             'blogid' => '1',
             'blogName' => $this->options->title,
             'xmlrpc' => $this->options->xmlRpcUrl
-        ];
-        return $struct;
+        ]];
     }
 
     /**
      * 获取用户
      *
-     * @access public
+     * @param int $blogId
      * @param string $userName 用户名
      * @param string $password 密码
      * @return array
      */
-    public function wpGetProfile($blogId, $userName, $password)
+    public function wpGetProfile(int $blogId, string $userName, string $password): array
     {
-
-        if (!$this->checkAccess($userName, $password)) {
-            return $this->error;
-        }
-
-        $struct = [
+        return [
             'user_id' => $this->user->uid,
             'username' => $this->user->name,
             'first_name' => '',
@@ -861,27 +896,20 @@ class XmlRpc extends Contents implements ActionInterface
             'display_name' => $this->user->screenName,
             'roles' => $this->user->group
         ];
-        return $struct;
     }
 
     /**
      * 获取标签列表
      *
-     * @access public
      * @param integer $blogId
      * @param string $userName
      * @param string $password
      * @return array
      */
-    public function wpGetTags($blogId, $userName, $password)
+    public function wpGetTags(int $blogId, string $userName, string $password): array
     {
-        /** 检查权限*/
-        if (!$this->checkAccess($userName, $password)) {
-            return $this->error;
-        }
-
         $struct = [];
-        $tags = $this->singletonWidget('Widget_Metas_Tag_Cloud');
+        $tags = Cloud::alloc();
 
         while ($tags->next()) {
             $struct[] = [
@@ -900,46 +928,32 @@ class XmlRpc extends Contents implements ActionInterface
     /**
      * 删除分类
      *
-     * @access public
      * @param integer $blogId
      * @param string $userName
      * @param string $password
      * @param integer $categoryId
-     * @return array
+     * @return bool
      */
-    public function wpDeleteCategory($blogId, $userName, $password, $categoryId)
+    public function wpDeleteCategory(int $blogId, string $userName, string $password, int $categoryId): bool
     {
-        /** 检查权限*/
-        if (!$this->checkAccess($userName, $password, 'editor')) {
-            return $this->error;
-        }
+        CategoryEdit::alloc(null, ['mid' => $categoryId], false)
+            ->deleteCategory();
 
-        try {
-            $this->singletonWidget('Widget_Metas_Category_Edit', null, 'do=delete&mid=' . intval($categoryId), false);
-            return true;
-        } catch (Typecho_Exception $e) {
-            return false;
-        }
+        return true;
     }
 
     /**
      * 获取评论数目
      *
-     * @access public
      * @param integer $blogId
      * @param string $userName
      * @param string $password
      * @param integer $postId
      * @return array
      */
-    public function wpGetCommentCount($blogId, $userName, $password, $postId)
+    public function wpGetCommentCount(int $blogId, string $userName, string $password, int $postId): array
     {
-        /** 检查权限*/
-        if (!$this->checkAccess($userName, $password)) {
-            return $this->error;
-        }
-
-        $stat = $this->singletonWidget('Widget_Stat', null, 'cid=' . intval($postId), false);
+        $stat = Stat::alloc(null, ['cid' => $postId], false);
 
         return [
             'approved' => $stat->currentPublishedCommentsNum,
@@ -952,19 +966,13 @@ class XmlRpc extends Contents implements ActionInterface
     /**
      * 获取文章类型列表
      *
-     * @access public
      * @param integer $blogId
      * @param string $userName
      * @param string $password
      * @return array
      */
-    public function wpGetPostFormats($blogId, $userName, $password)
+    public function wpGetPostFormats(int $blogId, string $userName, string $password): array
     {
-        /** 检查权限*/
-        if (!$this->checkAccess($userName, $password)) {
-            return $this->error;
-        }
-
         return [
             'standard' => _t('标准')
         ];
@@ -973,18 +981,13 @@ class XmlRpc extends Contents implements ActionInterface
     /**
      * 获取文章状态列表
      *
-     * @access public
      * @param integer $blogId
      * @param string $userName
      * @param string $password
      * @return array
      */
-    public function wpGetPostStatusList($blogId, $userName, $password)
+    public function wpGetPostStatusList(int $blogId, string $userName, string $password): array
     {
-        /** 检查权限*/
-        if (!$this->checkAccess($userName, $password)) {
-            return $this->error;
-        }
 
         return [
             'draft' => _t('草稿'),
@@ -996,19 +999,13 @@ class XmlRpc extends Contents implements ActionInterface
     /**
      * 获取页面状态列表
      *
-     * @access public
      * @param integer $blogId
      * @param string $userName
      * @param string $password
      * @return array
      */
-    public function wpGetPageStatusList($blogId, $userName, $password)
+    public function wpGetPageStatusList(int $blogId, string $userName, string $password): array
     {
-        /** 检查权限*/
-        if (!$this->checkAccess($userName, $password, 'editor')) {
-            return $this->error;
-        }
-
         return [
             'draft' => _t('草稿'),
             'publish' => _t('已发布')
@@ -1018,19 +1015,13 @@ class XmlRpc extends Contents implements ActionInterface
     /**
      * 获取评论状态列表
      *
-     * @access public
      * @param integer $blogId
      * @param string $userName
      * @param string $password
      * @return array
      */
-    public function wpGetCommentStatusList($blogId, $userName, $password)
+    public function wpGetCommentStatusList(int $blogId, string $userName, string $password): array
     {
-        /** 检查权限*/
-        if (!$this->checkAccess($userName, $password)) {
-            return $this->error;
-        }
-
         return [
             'hold' => _t('待审核'),
             'approve' => _t('显示'),
@@ -1041,19 +1032,13 @@ class XmlRpc extends Contents implements ActionInterface
     /**
      * 获取页面模板
      *
-     * @access public
      * @param integer $blogId
      * @param string $userName
      * @param string $password
      * @return array
      */
-    public function wpGetPageTemplates($blogId, $userName, $password)
+    public function wpGetPageTemplates(int $blogId, string $userName, string $password): array
     {
-        /** 检查权限*/
-        if (!$this->checkAccess($userName, $password, 'editor')) {
-            return $this->error;
-        }
-
         $templates = array_flip($this->getTemplates());
         $templates['Default'] = '';
 
@@ -1063,20 +1048,14 @@ class XmlRpc extends Contents implements ActionInterface
     /**
      * 获取系统选项
      *
-     * @access public
      * @param integer $blogId
      * @param string $userName
      * @param string $password
      * @param array $options
      * @return array
      */
-    public function wpGetOptions($blogId, $userName, $password, $options = [])
+    public function wpGetOptions(int $blogId, string $userName, string $password, array $options = []): array
     {
-        /** 检查权限*/
-        if (!$this->checkAccess($userName, $password, 'administrator')) {
-            return $this->error;
-        }
-
         $struct = [];
         if (empty($options)) {
             $options = array_keys($this->wpOptions);
@@ -1098,20 +1077,15 @@ class XmlRpc extends Contents implements ActionInterface
     /**
      * 设置系统选项
      *
-     * @access public
      * @param integer $blogId
      * @param string $userName
      * @param string $password
      * @param array $options
      * @return array
+     * @throws \Typecho\Db\Exception
      */
-    public function wpSetOptions($blogId, $userName, $password, $options = [])
+    public function wpSetOptions(int $blogId, string $userName, string $password, array $options = []): array
     {
-        /** 检查权限*/
-        if (!$this->checkAccess($userName, $password, 'administrator')) {
-            return $this->error;
-        }
-
         $struct = [];
         foreach ($options as $option => $value) {
             if (isset($this->wpOptions[$option])) {
@@ -1122,9 +1096,11 @@ class XmlRpc extends Contents implements ActionInterface
                 }
 
                 if (!$this->wpOptions[$option]['readonly'] && isset($this->wpOptions[$option]['option'])) {
-                    if ($this->db->query($this->db->update('table.options')
+                    if (
+                        $this->db->query($this->db->update('table.options')
                             ->rows(['value' => $value])
-                            ->where('name = ?', $this->wpOptions[$option]['option'])) > 0) {
+                            ->where('name = ?', $this->wpOptions[$option]['option'])) > 0
+                    ) {
                         $struct[$option]['value'] = $value;
                     }
                 }
@@ -1137,21 +1113,16 @@ class XmlRpc extends Contents implements ActionInterface
     /**
      * 获取评论
      *
-     * @access public
      * @param integer $blogId
      * @param string $userName
      * @param string $password
      * @param integer $commentId
-     * @return array
+     * @return array|Error
      */
-    public function wpGetComment($blogId, $userName, $password, $commentId)
+    public function wpGetComment(int $blogId, string $userName, string $password, int $commentId)
     {
-        /** 检查权限*/
-        if (!$this->checkAccess($userName, $password)) {
-            return $this->error;
-        }
-
-        $comment = $this->singletonWidget('Widget_Comments_Edit', null, 'do=get&coid=' . intval($commentId), false);
+        $comment = CommentsEdit::alloc(null, ['coid' => $commentId], false);
+        $comment->getComment();
 
         if (!$comment->have()) {
             return new Error(404, _t('评论不存在'));
@@ -1182,20 +1153,14 @@ class XmlRpc extends Contents implements ActionInterface
     /**
      * 获取评论列表
      *
-     * @access public
      * @param integer $blogId
      * @param string $userName
      * @param string $password
      * @param array $struct
      * @return array
      */
-    public function wpGetComments($blogId, $userName, $password, $struct)
+    public function wpGetComments(int $blogId, string $userName, string $password, array $struct): array
     {
-        /** 检查权限*/
-        if (!$this->checkAccess($userName, $password)) {
-            return $this->error;
-        }
-
         $input = [];
         if (!empty($struct['status'])) {
             $input['status'] = $this->wordpressToTypechoStatus($struct['status'], 'comment');
@@ -1217,7 +1182,7 @@ class XmlRpc extends Contents implements ActionInterface
             $input['page'] = ceil($offset / $pageSize);
         }
 
-        $comments = $this->singletonWidget('Widget_Comments_Admin', 'pageSize=' . $pageSize, $input, false);
+        $comments = CommentsAdmin::alloc('pageSize=' . $pageSize, $input, false);
         $commentsStruct = [];
 
         while ($comments->next()) {
@@ -1245,35 +1210,20 @@ class XmlRpc extends Contents implements ActionInterface
     /**
      * 获取评论
      *
-     * @access public
      * @param integer $blogId
      * @param string $userName
      * @param string $password
      * @param integer $commentId
      * @return boolean
      */
-    public function wpDeleteComment($blogId, $userName, $password, $commentId)
+    public function wpDeleteComment(int $blogId, string $userName, string $password, int $commentId): bool
     {
-        /** 检查权限*/
-        if (!$this->checkAccess($userName, $password)) {
-            return $this->error;
-        }
-
-        $commentId = abs(intval($commentId));
-        $commentWidget = $this->singletonWidget('Widget_Abstract_Comments');
-        $where = $this->db->sql()->where('coid = ?', $commentId);
-
-        if (!$commentWidget->commentIsWriteable($where)) {
-            return new Error(403, _t('无法编辑此评论'));
-        }
-
-        return intval($this->singletonWidget('Widget_Abstract_Comments')->delete($where)) > 0;
+        return CommentsEdit::alloc(null, ['coid' => $commentId], false)->deleteComment() > 0;
     }
 
     /**
      * 编辑评论
      *
-     * @access public
      * @param integer $blogId
      * @param string $userName
      * @param string $password
@@ -1281,25 +1231,13 @@ class XmlRpc extends Contents implements ActionInterface
      * @param array $struct
      * @return boolean
      */
-    public function wpEditComment($blogId, $userName, $password, $commentId, $struct)
+    public function wpEditComment(int $blogId, string $userName, string $password, int $commentId, array $struct)
     {
-        /** 检查权限*/
-        if (!$this->checkAccess($userName, $password)) {
-            return $this->error;
-        }
-
-        $commentId = abs(intval($commentId));
-        $commentWidget = $this->singletonWidget('Widget_Abstract_Comments');
-        $where = $this->db->sql()->where('coid = ?', $commentId);
-
-        if (!$commentWidget->commentIsWriteable($where)) {
-            return new Error(403, _t('无法编辑此评论'));
-        }
-
         $input = [];
 
-        if (isset($struct['date_created_gmt'])) {
-            $input['created'] = $struct['date_created_gmt']->getTimestamp() - $this->options->timezone + $this->options->serverTimezone;
+        if (isset($struct['date_created_gmt']) && $struct['date_created_gmt'] instanceof Date) {
+            $input['created'] = $struct['date_created_gmt']->getTimestamp()
+                - $this->options->timezone + $this->options->serverTimezone;
         }
 
         if (isset($struct['status'])) {
@@ -1322,49 +1260,36 @@ class XmlRpc extends Contents implements ActionInterface
             $input['mail'] = $struct['author_email'];
         }
 
-        $result = $commentWidget->update((array)$input, $where);
 
-        if (!$result) {
-            return new Error(404, _t('评论不存在'));
-        }
-
-        return true;
+        return CommentsEdit::alloc(null, $input, false)->editComment();
     }
 
     /**
      * 更新评论
      *
-     * @access public
      * @param integer $blogId
      * @param string $userName
      * @param string $password
      * @param mixed $path
      * @param array $struct
-     * @return int
+     * @return int|Error
      */
-    public function wpNewComment($blogId, $userName, $password, $path, $struct)
+    public function wpNewComment(int $blogId, string $userName, string $password, $path, array $struct)
     {
-        /** 检查权限*/
-        if (!$this->checkAccess($userName, $password)) {
-            return $this->error;
-        }
-
         if (is_numeric($path)) {
-            $post = $this->singletonWidget('Widget_Archive', 'type=single', 'cid=' . $path, false);
+            $post = Archive::alloc('type=single', ['cid' => $path], false);
+
+            if ($post->have()) {
+                $path = $post->permalink;
+            }
         } else {
-            /** 检查目标地址是否正确*/
-            $pathInfo = Common::url(substr($path, strlen($this->options->index)), '/');
-            $post = Typecho_Router::match($pathInfo);
+            $path = Common::url(substr($path, strlen($this->options->index)), '/');
         }
 
-        /** 这样可以得到cid或者slug*/
-        if (!isset($post) || !($post instanceof Widget_Archive) || !$post->have() || !$post->is('single')) {
-            return new Error(404, _t('这个目标地址不存在'));
-        }
-
-        $input = [];
-        $input['permalink'] = $post->pathinfo;
-        $input['type'] = 'comment';
+        $input = [
+            'permalink' =>  $path,
+            'type'      =>  'comment'
+        ];
 
         if (isset($struct['comment_author'])) {
             $input['author'] = $struct['author'];
@@ -1387,34 +1312,25 @@ class XmlRpc extends Contents implements ActionInterface
         }
 
         try {
-            $commentWidget = $this->singletonWidget('Widget_Feedback', 'checkReferer=false', $input, false);
-            $commentWidget->action();
-            return intval($commentWidget->coid);
-        } catch (Typecho_Exception $e) {
+            $comment = Feedback::alloc(['checkReferer' => false], $input, false);
+            $comment->action();
+            return $comment->coid;
+        } catch (\Typecho\Exception $e) {
             return new Error(500, $e->getMessage());
         }
-
-        return new Error(403, _t('无法添加评论'));
     }
 
     /**
      * 获取媒体文件
      *
-     * @access public
      * @param integer $blogId
      * @param string $userName
      * @param string $password
-     * @param struct $struct
-     * @return boolean
+     * @param array $struct
+     * @return array
      */
-    public function wpGetMediaLibrary($blogId, $userName, $password, $struct)
+    public function wpGetMediaLibrary(int $blogId, string $userName, string $password, array $struct): array
     {
-        /** 检查权限*/
-        if (!$this->checkAccess($userName, $password)) {
-            return $this->error;
-        }
-
-
         $input = [];
 
         if (!empty($struct['parent_id'])) {
@@ -1434,7 +1350,7 @@ class XmlRpc extends Contents implements ActionInterface
             $input['page'] = abs(intval($struct['offset'])) + 1;
         }
 
-        $attachments = $this->singletonWidget('Widget_Contents_Attachment_Admin', 'pageSize=' . $pageSize, $input, false);
+        $attachments = AttachmentAdmin::alloc('pageSize=' . $pageSize, $input, false);
         $attachmentsStruct = [];
 
         while ($attachments->next()) {
@@ -1451,7 +1367,6 @@ class XmlRpc extends Contents implements ActionInterface
                     'size' => $attachments->attachment->size,
                 ],
                 'thumbnail' => $attachments->attachment->url,
-
             ];
         }
         return $attachmentsStruct;
@@ -1460,23 +1375,17 @@ class XmlRpc extends Contents implements ActionInterface
     /**
      * 获取媒体文件
      *
-     * @access public
      * @param integer $blogId
      * @param string $userName
      * @param string $password
      * @param int $attachmentId
-     * @return boolean
+     * @return array
      */
-    public function wpGetMediaItem($blogId, $userName, $password, $attachmentId)
+    public function wpGetMediaItem(int $blogId, string $userName, string $password, int $attachmentId): array
     {
-        /** 检查权限*/
-        if (!$this->checkAccess($userName, $password)) {
-            return $this->error;
-        }
+        $attachment = AttachmentEdit::alloc(null, ['cid' => $attachmentId]);
 
-
-        $attachment = $this->singletonWidget('Widget_Contents_Attachment_Edit', null, "cid={$attachmentId}");
-        $struct = [
+        return [
             'attachment_id' => $attachment->cid,
             'date_created_gmt' => new Date($this->options->timezone + $attachment->created),
             'parent' => $attachment->parent,
@@ -1491,7 +1400,6 @@ class XmlRpc extends Contents implements ActionInterface
             'thumbnail' => $attachment->attachment->url,
 
         ];
-        return $struct;
     }
 
     /**
@@ -1500,20 +1408,11 @@ class XmlRpc extends Contents implements ActionInterface
      * @param int $postId
      * @param string $userName
      * @param string $password
-     * @access public
-     * @return void
+     * @return array
      */
-    public function mwGetPost($postId, $userName, $password)
+    public function mwGetPost(int $postId, string $userName, string $password): array
     {
-        if (!$this->checkAccess($userName, $password)) {
-            return $this->error;
-        }
-
-        try {
-            $post = $this->singletonWidget('Widget_Contents_Post_Edit', null, "cid={$postId}");
-        } catch (Exception $e) {
-            return new Error($e->getCode(), $e->getMessage());
-        }
+        $post = PostEdit::alloc(null, ['cid' => $postId], false);
 
         /** 对文章内容做截取处理，以获得description和text_more*/
         [$excerpt, $more] = $this->getPostExtended($post);
@@ -1521,7 +1420,7 @@ class XmlRpc extends Contents implements ActionInterface
         $categories = array_column($post->categories, 'name');
         $tags = array_column($post->tags, 'name');
 
-        $postStruct = [
+        return [
             'dateCreated' => new Date($this->options->timezone + $post->created),
             'userid' => $post->authorId,
             'postid' => $post->cid,
@@ -1545,8 +1444,6 @@ class XmlRpc extends Contents implements ActionInterface
             'custom_fields' => [],
             'sticky' => 0
         ];
-
-        return $postStruct;
     }
 
     /**
@@ -1556,16 +1453,11 @@ class XmlRpc extends Contents implements ActionInterface
      * @param string $userName
      * @param string $password
      * @param int $postsNum
-     * @access public
-     * @return postStructs
+     * @return array
      */
-    public function mwGetRecentPosts($blogId, $userName, $password, $postsNum)
+    public function mwGetRecentPosts(int $blogId, string $userName, string $password, int $postsNum): array
     {
-        if (!$this->checkAccess($userName, $password)) {
-            return $this->error;
-        }
-
-        $posts = $this->singletonWidget('Widget_Contents_Post_Admin', "pageSize={$postsNum}", 'status=all');
+        $posts = PostAdmin::alloc('pageSize=' . $postsNum, 'status=all');
 
         $postStructs = [];
         /** 如果这个post存在则输出，否则输出错误 */
@@ -1599,7 +1491,10 @@ class XmlRpc extends Contents implements ActionInterface
                 'wp_author_id' => $posts->authorId,
                 'wp_author_display_name' => $posts->author->screenName,
                 'date_created_gmt' => new Date($posts->created),
-                'post_status' => $this->typechoToWordpressStatus(($posts->hasSaved || 'post_draft' == $posts->type) ? 'draft' : $posts->status, 'post'),
+                'post_status' => $this->typechoToWordpressStatus(
+                    ($posts->hasSaved || 'post_draft' == $posts->type) ? 'draft' : $posts->status,
+                    'post'
+                ),
                 'custom_fields' => [],
                 'wp_post_format' => 'standard',
                 'date_modified' => new Date($this->options->timezone + $posts->modified),
@@ -1618,16 +1513,11 @@ class XmlRpc extends Contents implements ActionInterface
      * @param int $blogId
      * @param string $userName
      * @param string $password
-     * @access public
-     * @return categoryStructs
+     * @return array
      */
-    public function mwGetCategories($blogId, $userName, $password)
+    public function mwGetCategories(int $blogId, string $userName, string $password): array
     {
-        if (!$this->checkAccess($userName, $password)) {
-            return ($this->error);
-        }
-
-        $categories = $this->singletonWidget('Widget_Metas_Category_List');
+        $categories = CategoryRows::alloc();
 
         /** 初始化category数组*/
         $categoryStructs = [];
@@ -1653,21 +1543,14 @@ class XmlRpc extends Contents implements ActionInterface
      * @param string $userName
      * @param string $password
      * @param mixed $data
-     * @access public
-     * @return void
      */
-    public function mwNewMediaObject($blogId, $userName, $password, $data)
+    public function mwNewMediaObject(int $blogId, string $userName, string $password, $data)
     {
-        if (!$this->checkAccess($userName, $password)) {
-            return $this->error;
-        }
-
-        $result = Widget_Upload::uploadHandle($data);
+        $result = Upload::uploadHandle($data);
 
         if (false === $result) {
-            return new Error(500, _t('上传失败'));
+            return new Error(-32001, 'upload failed');
         } else {
-
             $insertId = $this->insert([
                 'title' => $result['name'],
                 'slug' => $result['name'],
@@ -1698,18 +1581,13 @@ class XmlRpc extends Contents implements ActionInterface
      * @param int $blogId
      * @param string $userName
      * @param string $password
-     * @param int $postNum
-     * @access public
-     * @return postTitleStructs
+     * @param int $postsNum
+     * @return array
      */
-    public function mtGetRecentPostTitles($blogId, $userName, $password, $postsNum)
+    public function mtGetRecentPostTitles(int $blogId, string $userName, string $password, int $postsNum): array
     {
-        if (!$this->checkAccess($userName, $password)) {
-            return ($this->error);
-        }
-
         /** 读取数据*/
-        $posts = $this->singletonWidget('Widget_Contents_Post_Admin', "pageSize=$postsNum", 'status=all');
+        $posts = PostAdmin::alloc('pageSize=' . $postsNum, 'status=all');
 
         /**初始化*/
         $postTitleStructs = [];
@@ -1732,16 +1610,11 @@ class XmlRpc extends Contents implements ActionInterface
      * @param int $blogId
      * @param string $userName
      * @param string $password
-     * @access public
-     * @return categories
+     * @return array
      */
-    public function mtGetCategoryList($blogId, $userName, $password)
+    public function mtGetCategoryList(int $blogId, string $userName, string $password): array
     {
-        if (!$this->checkAccess($userName, $password)) {
-            return ($this->error);
-        }
-
-        $categories = $this->singletonWidget('Widget_Metas_Category_List');
+        $categories = CategoryRows::alloc();
 
         /** 初始化categorise数组*/
         $categoryStructs = [];
@@ -1760,20 +1633,11 @@ class XmlRpc extends Contents implements ActionInterface
      * @param int $postId
      * @param string $userName
      * @param string $password
-     * @access public
-     * @return void
+     * @return array
      */
-    public function mtGetPostCategories($postId, $userName, $password)
+    public function mtGetPostCategories(int $postId, string $userName, string $password): array
     {
-        if (!$this->checkAccess($userName, $password)) {
-            return $this->error;
-        }
-
-        try {
-            $post = $this->singletonWidget('Widget_Contents_Post_Edit', null, "cid={$postId}");
-        } catch (Exception $e) {
-            return new Error($e->getCode(), $e->getMessage());
-        }
+        $post = PostEdit::alloc(null, ['cid' => $postId], false);
 
         /** 格式化categories*/
         $categories = [];
@@ -1784,6 +1648,7 @@ class XmlRpc extends Contents implements ActionInterface
                 'isPrimary' => true
             ];
         }
+
         return $categories;
     }
 
@@ -1793,24 +1658,14 @@ class XmlRpc extends Contents implements ActionInterface
      * @param int $postId
      * @param string $userName
      * @param string $password
-     * @param string $categories
-     * @access public
+     * @param array $categories
      * @return bool
      */
-    public function mtSetPostCategories($postId, $userName, $password, $categories)
+    public function mtSetPostCategories(int $postId, string $userName, string $password, array $categories): bool
     {
-        if (!$this->checkAccess($userName, $password, 'editor')) {
-            return $this->error;
-        }
+        $post = PostEdit::alloc(null, ['cid' => $postId], false);
+        $post->setCategories($postId, array_column($categories, 'categoryId'), 'publish' == $post->status);
 
-        try {
-            $post = $this->singletonWidget('Widget_Contents_Post_Edit', null, "cid={$postId}");
-        } catch (Exception $e) {
-            return new Error($e->getCode(), $e->getMessage());
-        }
-
-        $post->setCategories($postId, array_column($categories, 'categoryId'),
-            'publish' == $post->status);
         return true;
     }
 
@@ -1825,24 +1680,7 @@ class XmlRpc extends Contents implements ActionInterface
      */
     public function mtPublishPost($postId, $userName, $password)
     {
-        if (!$this->checkAccess($userName, $password, 'editor')) {
-            return $this->error;
-        }
-
-        /** 过滤id为$postId的post */
-        $select = $this->select()->where('table.contents.cid = ? AND table.contents.type = ?', $postId, 'post')->limit(1);
-
-        /** 提交查询 */
-        $post = $this->db->fetchRow($select, [$this, 'push']);
-        if ($this->authorId != $this->user->uid && !$this->checkAccess($userName, $password, 'administrator')) {
-            return new Error(403, '权限不足.');
-        }
-
-        /** 暂时只做成发布*/
-        $content = [];
-        $this->update($content, $this->db->sql()->where('table.contents.cid = ?', $postId));
-
-
+        $post = PostEdit::alloc(null, ['cid' => $postId], false);
     }
 
     /**
@@ -1851,25 +1689,17 @@ class XmlRpc extends Contents implements ActionInterface
      * @param int $blogId
      * @param string $userName
      * @param string $password
-     * @access public
-     * @return void
+     * @return array
      */
-    public function bloggerGetUsersBlogs($blogId, $userName, $password)
+    public function bloggerGetUsersBlogs(int $blogId, string $userName, string $password): array
     {
-        if (!$this->checkAccess($userName, $password)) {
-            return $this->error;
-        }
-
-        $struct = [];
-        $struct[] = [
+        return [[
             'isAdmin' => $this->user->pass('administrator', true),
             'url' => $this->options->siteUrl,
             'blogid' => '1',
             'blogName' => $this->options->title,
             'xmlrpc' => $this->options->xmlRpcUrl
-        ];
-
-        return $struct;
+        ]];
     }
 
     /**
@@ -1878,16 +1708,11 @@ class XmlRpc extends Contents implements ActionInterface
      * @param int $blogId
      * @param string $userName
      * @param string $password
-     * @access public
-     * @return void
+     * @return array
      */
-    public function bloggerGetUserInfo($blogId, $userName, $password)
+    public function bloggerGetUserInfo(int $blogId, string $userName, string $password): array
     {
-        if (!$this->checkAccess($userName, $password)) {
-            return $this->error;
-        }
-
-        $struct = [
+        return [
             'nickname' => $this->user->screenName,
             'userid' => $this->user->uid,
             'url' => $this->user->url,
@@ -1895,8 +1720,6 @@ class XmlRpc extends Contents implements ActionInterface
             'lastname' => '',
             'firstname' => ''
         ];
-
-        return $struct;
     }
 
     /**
@@ -1906,56 +1729,40 @@ class XmlRpc extends Contents implements ActionInterface
      * @param int $postId
      * @param string $userName
      * @param string $password
-     * @access public
-     * @return void
+     * @return array
      */
-    public function bloggerGetPost($blogId, $postId, $userName, $password)
+    public function bloggerGetPost(int $blogId, int $postId, string $userName, string $password): array
     {
-        if (!$this->checkAccess($userName, $password)) {
-            return $this->error;
-        }
-
-        try {
-            $post = $this->singletonWidget('Widget_Contents_Post_Edit', null, "cid={$postId}");
-        } catch (Exception $e) {
-            return new Error($e->getCode(), $e->getMessage());
-        }
-
+        $post = PostEdit::alloc(null, ['cid' => $postId]);
         $categories = array_column($post->categories, 'name');
 
         $content = '<title>' . $post->title . '</title>';
         $content .= '<category>' . implode(',', $categories) . '</category>';
         $content .= stripslashes($post->text);
 
-        $struct = [
+        return [
             'userid' => $post->authorId,
             'dateCreated' => new Date($this->options->timezone + $post->created),
             'content' => $content,
             'postid' => $post->cid
         ];
-        return $struct;
     }
 
     /**
      * bloggerDeletePost
      * 删除文章
-     * @param mixed $blogId
-     * @param mixed $userName
-     * @param mixed $password
+     *
+     * @param int $blogId
+     * @param int $postId
+     * @param string $userName
+     * @param string $password
      * @param mixed $publish
-     * @access public
      * @return bool
      */
-    public function bloggerDeletePost($blogId, $postId, $userName, $password, $publish)
+    public function bloggerDeletePost(int $blogId, int $postId, string $userName, string $password, $publish): bool
     {
-        if (!$this->checkAccess($userName, $password)) {
-            return $this->error;
-        }
-        try {
-            $this->singletonWidget('Widget_Contents_Post_Edit', null, "cid={$postId}", false)->deletePost();
-        } catch (Exception $e) {
-            return new Error($e->getCode(), $e->getMessage());
-        }
+        PostEdit::alloc(null, ['cid' => $postId], false)->deletePost();
+        return true;
     }
 
     /**
@@ -1965,16 +1772,11 @@ class XmlRpc extends Contents implements ActionInterface
      * @param string $userName
      * @param string $password
      * @param int $postsNum
-     * @access public
-     * @return void
+     * @return array
      */
-    public function bloggerGetRecentPosts($blogId, $userName, $password, $postsNum)
+    public function bloggerGetRecentPosts(int $blogId, string $userName, string $password, int $postsNum): array
     {
-        if (!$this->checkAccess($userName, $password)) {
-            return $this->error;
-        }
-        //todo:限制数量
-        $posts = $this->singletonWidget('Widget_Contents_Post_Admin', "pageSize=$postsNum", 'status=all');
+        $posts = PostAdmin::alloc('pageSize=' . $postsNum, 'status=all');
 
         $postStructs = [];
         while ($posts->next()) {
@@ -1992,9 +1794,7 @@ class XmlRpc extends Contents implements ActionInterface
             ];
             $postStructs[] = $struct;
         }
-        if (null == $postStructs) {
-            return new Error('404', '没有任何文章');
-        }
+
         return $postStructs;
     }
 
@@ -2008,7 +1808,7 @@ class XmlRpc extends Contents implements ActionInterface
      * @access public
      * @return void
      */
-    public function bloggerGetTemplate($blogId, $userName, $password, $template)
+    public function bloggerGetTemplate(int $blogId, string $userName, string $password, $template)
     {
         if (!$this->checkAccess($userName, $password)) {
             return $this->error;
@@ -2028,7 +1828,7 @@ class XmlRpc extends Contents implements ActionInterface
      * @access public
      * @return void
      */
-    public function bloggerSetTemplate($blogId, $userName, $password, $content, $template)
+    public function bloggerSetTemplate(int $blogId, string $userName, string $password, $content, $template)
     {
         if (!$this->checkAccess($userName, $password)) {
             return $this->error;

@@ -2,7 +2,6 @@
 
 namespace IXR;
 
-use Typecho\Common;
 use Typecho\Http\Client as HttpClient;
 
 /**
@@ -17,44 +16,11 @@ class Client
     private const DEFAULT_USERAGENT = 'Typecho XML-RPC PHP Library';
 
     /**
-     * 服务端地址
-     *
-     * @access private
-     * @var string
-     */
-    private $server;
-
-    /**
-     * 端口名称
-     *
-     * @access private
-     * @var integer
-     */
-    private $port;
-
-    /**
-     * 路径名称
-     *
-     * @access private
-     * @var string
-     */
-    private $path;
-
-    /**
      * 地址
      *
-     * @access private
      * @var string
      */
     private $url;
-
-    /**
-     * 客户端
-     *
-     * @access private
-     * @var string
-     */
-    private $useragent;
 
     /**
      * 消息体
@@ -66,7 +32,6 @@ class Client
     /**
      * 调试开关
      *
-     * @access private
      * @var boolean
      */
     private $debug = false;
@@ -74,10 +39,9 @@ class Client
     /**
      * 请求前缀
      *
-     * @access private
      * @var string|null
      */
-    private $prefix = null;
+    private $prefix;
 
     /**
      * @var Error
@@ -87,56 +51,21 @@ class Client
     /**
      * 客户端构造函数
      *
-     * @access public
-     * @param string $server 服务端地址
-     * @param string|null $path 路径名称
-     * @param integer $port 端口名称
-     * @param string|null $useragent 客户端
+     * @param string $url 服务端地址
      * @param string|null $prefix
      * @return void
      */
     public function __construct(
-        string $server,
-        ?string $path = null,
-        int $port = 80,
-        string $useragent = self::DEFAULT_USERAGENT,
+        string $url,
         ?string $prefix = null
     ) {
-        if (!$path) {
-            $this->url = $server;
-
-            // Assume we have been given a Url instead
-            $bits = parse_url($server);
-            $this->server = $bits['host'];
-            $this->port = $bits['port'] ?? 80;
-            $this->path = $bits['path'] ?? '/';
-
-            // Make absolutely sure we have a path
-            if (isset($bits['query'])) {
-                $this->path .= '?' . $bits['query'];
-            }
-        } else {
-            $this->url = Common::buildUrl([
-                'scheme' => 'http',
-                'host'   => $server,
-                'path'   => $path,
-                'port'   => $port
-            ]);
-
-            $this->server = $server;
-            $this->path = $path;
-            $this->port = $port;
-        }
-
+        $this->url = $url;
         $this->prefix = $prefix;
-        $this->useragent = $useragent;
     }
 
     /**
      * 设置调试模式
-     *
-     * @access public
-     * @return void
+     * @deprecated
      */
     public function setDebug()
     {
@@ -147,11 +76,10 @@ class Client
      * 执行请求
      *
      * @param string $method
-     * @param ...$args
+     * @param array $args
      * @return bool
-     * @throws HttpClient\Exception
      */
-    private function rpcCall(string $method, ...$args): bool
+    private function rpcCall(string $method, array $args): bool
     {
         $request = new Request($method, $args);
         $xml = $request->getXml();
@@ -162,10 +90,15 @@ class Client
             return false;
         }
 
-        $client->setHeader('Content-Type', 'text/xml')
-            ->setHeader('User-Agent', $this->useragent)
-            ->setData($xml)
-            ->send($this->url);
+        try {
+            $client->setHeader('Content-Type', 'text/xml')
+                ->setHeader('User-Agent', self::DEFAULT_USERAGENT)
+                ->setData($xml)
+                ->send($this->url);
+        } catch (HttpClient\Exception $e) {
+            $this->error = new Error(-32700, $e->getMessage());
+            return false;
+        }
 
         $contents = $client->getResponseBody();
 
@@ -197,13 +130,12 @@ class Client
      * $rpc->metaWeblog->newPost();
      * </code>
      *
-     * @access public
      * @param string $prefix 前缀
      * @return Client
      */
     public function __get(string $prefix): Client
     {
-        return new self($this->server, $this->path, $this->port, $this->useragent, $this->prefix . $prefix . '.');
+        return new self($this->url, $this->prefix . $prefix . '.');
     }
 
     /**
@@ -215,8 +147,7 @@ class Client
      */
     public function __call($method, $args)
     {
-        array_unshift($args, $this->prefix . $method);
-        $return = call_user_func_array([$this, 'rpcCall'], $args);
+        $return = $this->rpcCall($this->prefix . $method, $args);
 
         if ($return) {
             return $this->getResponse();

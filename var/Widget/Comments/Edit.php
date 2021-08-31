@@ -146,9 +146,10 @@ class Edit extends Comments implements ActionInterface
     /**
      * 删除评论
      *
+     * @return int
      * @throws Exception
      */
-    public function deleteComment()
+    public function deleteComment(): int
     {
         $comments = $this->request->filter('int')->getArray('coid');
         $deleteRows = 0;
@@ -199,6 +200,8 @@ class Edit extends Comments implements ActionInterface
             /** 返回原网页 */
             $this->response->goBack();
         }
+
+        return $deleteRows;
     }
 
     /**
@@ -256,9 +259,10 @@ class Edit extends Comments implements ActionInterface
     /**
      * 编辑评论
      *
+     * @return bool
      * @throws Exception
      */
-    public function editComment()
+    public function editComment(): bool
     {
         $coid = $this->request->filter('int')->coid;
         $commentSelect = $this->db->fetchRow($this->select()
@@ -269,6 +273,10 @@ class Edit extends Comments implements ActionInterface
             $comment['author'] = $this->request->filter('strip_tags', 'trim', 'xss')->author;
             $comment['mail'] = $this->request->filter('strip_tags', 'trim', 'xss')->mail;
             $comment['url'] = $this->request->filter('url')->url;
+
+            if ($this->request->is('created')) {
+                $comment['created'] = $this->request->filter('int')->created;
+            }
 
             /** 评论插件接口 */
             $this->pluginHandle()->edit($comment, $this);
@@ -287,12 +295,16 @@ class Edit extends Comments implements ActionInterface
                 'success' => 1,
                 'comment' => $updatedComment
             ]);
+
+            return true;
         }
 
         $this->response->throwJson([
             'success' => 0,
             'message' => _t('修评论失败')
         ]);
+
+        return false;
     }
 
     /**
