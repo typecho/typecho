@@ -656,25 +656,15 @@ class Typecho_Request
      */
     public function setIp(string $ip = null)
     {
-        if (!empty($ip)) {
-            $this->_ip = $ip;
-        } else {
+        if (empty($this->_ip = $ip)) {
             switch (true) {
-                case defined('__TYPECHO_IP_SOURCE__')
-                    && null !== $this->getServer(__TYPECHO_IP_SOURCE__):
-                    list($this->_ip) = array_map(
-                        'trim',
-                        explode(',',
-                            $this->getServer(__TYPECHO_IP_SOURCE__))
-                    );
+                case defined('__TYPECHO_IP_SOURCE__') &&
+                    null !== ($this->_ip = $this->getServer(__TYPECHO_IP_SOURCE__)):
+                    list($this->_ip) = explode(',', $this->_ip);
+                    $this->_ip = trim($this->_ip);
                     break;
-                case null !== $this->getServer('REMOTE_ADDR'):
-                    $this->_ip = $this->getServer('REMOTE_ADDR');
-                    break;
-                case null !== $this->getServer('HTTP_CLIENT_IP'):
-                    $this->_ip = $this->getServer('HTTP_CLIENT_IP');
-                    break;
-                default:
+                case null !== ($this->_ip = $this->getServer('REMOTE_ADDR')):
+                case null !== ($this->_ip = $this->getServer('HTTP_CLIENT_IP')):
                     break;
             }
         }
