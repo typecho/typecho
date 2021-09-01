@@ -554,12 +554,12 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      * @return bool
      */
     public function wpEditPage(
-        int    $blogId,
-        int    $pageId,
+        int $blogId,
+        int $pageId,
         string $userName,
         string $password,
-        array  $content,
-        bool   $publish
+        array $content,
+        bool $publish
     ) {
         $content['post_type'] = 'page';
         $this->mwEditPost($pageId, $userName, $password, $content, $publish);
@@ -677,11 +677,11 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      * @throws \Typecho\Db\Exception
      */
     public function wpSuggestCategories(
-        int    $blogId,
+        int $blogId,
         string $userName,
         string $password,
         string $category,
-        int    $maxResults = 0
+        int $maxResults = 0
     ): array {
         /** 构造出查询语句并且查询*/
         $key = Common::filterSearchQuery($category);
@@ -1743,16 +1743,16 @@ class XmlRpc extends Contents implements ActionInterface, Hook
 
                 if ($pingNum <= 0) {
                     try {
-                        $pingback = new Pingback($source, $target);
+                        $pingbackRequest = new Pingback($source, $target);
 
                         $pingback = [
                             'cid'     => $post->cid,
                             'created' => $this->options->time,
                             'agent'   => $this->request->getAgent(),
                             'ip'      => $this->request->getIp(),
-                            'author'  => $pingback->getTitle(),
+                            'author'  => $pingbackRequest->getTitle(),
                             'url'     => Common::safeUrl($source),
-                            'text'    => $pingback->getContent(),
+                            'text'    => $pingbackRequest->getContent(),
                             'ownerId' => $post->author->uid,
                             'type'    => 'pingback',
                             'status'  => $this->options->commentsRequireModeration ? 'waiting' : 'approved'
@@ -1770,6 +1770,8 @@ class XmlRpc extends Contents implements ActionInterface, Hook
                         return $insertId;
                     } catch (Exception $e) {
                         return new Error(16, _t('源地址服务器错误'));
+                    } catch (\IXR\Exception $e) {
+                        return new Error(50, _t('源地址不支持PingBack'));
                     }
                 } else {
                     return new Error(48, _t('PingBack已经存在'));

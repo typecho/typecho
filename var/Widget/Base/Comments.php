@@ -16,12 +16,29 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
 /**
  * 评论基类
  *
- * @category typecho
- * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
+ * @property int $coid
+ * @property int $cid
+ * @property int $created
+ * @property string author
+ * @property int $authorId
+ * @property int $ownerId
+ * @property string $mail
+ * @property string $url
+ * @property string $ip
+ * @property string $agent
+ * @property string $text
+ * @property string $type
+ * @property string status
+ * @property int $parent
+ * @property Date $date
+ * @property string $dateWord
+ * @property string $theId
+ * @property array $parentContent
+ * @property string $title
+ * @property string $permalink
+ * @property string $content
  */
-class Comments extends Base
+class Comments extends Base implements QueryInterface
 {
     /**
      * 增加评论
@@ -279,19 +296,6 @@ class Comments extends Base
     }
 
     /**
-     * 获取当前内容结构
-     *
-     * @return array|null
-     * @throws Exception
-     */
-    protected function ___parentContent(): ?array
-    {
-        return $this->db->fetchRow(Contents::alloc()->select()
-            ->where('table.contents.cid = ?', $this->cid)
-            ->limit(1), [Contents::alloc(), 'filter']);
-    }
-
-    /**
      * 获取查询对象
      *
      * @return Query
@@ -319,6 +323,59 @@ class Comments extends Base
     }
 
     /**
+     * markdown
+     *
+     * @param string|null $text
+     * @return string
+     */
+    public function markdown(?string $text): string
+    {
+        $html = $this->pluginHandle(__CLASS__)->trigger($parsed)->markdown($text);
+
+        if (!$parsed) {
+            $html = \Markdown::convert($text);
+        }
+
+        return $html;
+    }
+
+    /**
+     * autoP
+     *
+     * @param string|null $text
+     * @return string
+     */
+    public function autoP(?string $text): string
+    {
+        $html = $this->pluginHandle(__CLASS__)->trigger($parsed)->autoP($text);
+
+        if (!$parsed) {
+            static $parser;
+
+            if (empty($parser)) {
+                $parser = new \AutoP();
+            }
+
+            $html = $parser->parse($text);
+        }
+
+        return $html;
+    }
+
+    /**
+     * 获取当前内容结构
+     *
+     * @return array|null
+     * @throws Exception
+     */
+    protected function ___parentContent(): ?array
+    {
+        return $this->db->fetchRow(Contents::alloc()->select()
+            ->where('table.contents.cid = ?', $this->cid)
+            ->limit(1), [Contents::alloc(), 'filter']);
+    }
+
+    /**
      * 获取当前评论标题
      *
      * @return string
@@ -326,15 +383,6 @@ class Comments extends Base
     protected function ___title(): string
     {
         return $this->parentContent['title'];
-    }
-
-    /**
-     * @return string
-     * @throws Exception
-     */
-    protected function ___url(): string
-    {
-        return $this->___permalink();
     }
 
     /**
@@ -414,46 +462,6 @@ class Comments extends Base
 
         $text = $this->pluginHandle(__CLASS__)->contentEx($text, $this);
         return Common::stripTags($text, '<p><br>' . $this->options->commentsHTMLTagAllowed);
-    }
-
-    /**
-     * markdown
-     *
-     * @param string|null $text
-     * @return string
-     */
-    public function markdown(?string $text): string
-    {
-        $html = $this->pluginHandle(__CLASS__)->trigger($parsed)->markdown($text);
-
-        if (!$parsed) {
-            $html = \Markdown::convert($text);
-        }
-
-        return $html;
-    }
-
-    /**
-     * autoP
-     *
-     * @param string|null $text
-     * @return string
-     */
-    public function autoP(?string $text): string
-    {
-        $html = $this->pluginHandle(__CLASS__)->trigger($parsed)->autoP($text);
-
-        if (!$parsed) {
-            static $parser;
-
-            if (empty($parser)) {
-                $parser = new \AutoP();
-            }
-
-            $html = $parser->parse($text);
-        }
-
-        return $html;
     }
 
     /**

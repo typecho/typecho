@@ -78,6 +78,14 @@ class Config implements \Iterator, \ArrayAccess
     }
 
     /**
+     * @return bool
+     */
+    public function isEmpty(): bool
+    {
+        return empty($this->currentConfig);
+    }
+
+    /**
      * 重设指针
      *
      * @access public

@@ -15,12 +15,22 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
 /**
  * 描述性数据组件
  *
- * @category typecho
- * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
+ * @property int $mid
+ * @property string $name
+ * @property string $slug
+ * @property string $type
+ * @property string $description
+ * @property int $count
+ * @property int $order
+ * @property int $parent
+ * @property-read string $theId
+ * @property-read string $url
+ * @property-read string $permalink
+ * @property-read string $feedUrl
+ * @property-read string $feedRssUrl
+ * @property-read string $feedAtomUrl
  */
-class Metas extends Base
+class Metas extends Base implements QueryInterface
 {
     /**
      * 获取记录总数

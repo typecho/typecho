@@ -84,7 +84,7 @@ class Init extends Widget
                 });
 
                 if (404 == $exception->getCode()) {
-                    new ExceptionHandle($exception);
+                    ExceptionHandle::alloc();
                 } else {
                     Common::error($exception);
                 }

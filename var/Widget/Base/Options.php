@@ -18,7 +18,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Options extends Base
+class Options extends Base implements QueryInterface
 {
     /**
      * 获取原始查询对象

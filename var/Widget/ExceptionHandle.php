@@ -15,14 +15,13 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class ExceptionHandle extends Widget_Archive
+class ExceptionHandle extends Base
 {
     /**
      * 重载构造函数
      */
-    public function __construct()
+    public function execute()
     {
-        self::widget('Widget_Archive@404', 'type=404')->render();
-        exit;
+        Archive::allocWithAlias('404', 'type=404')->render();
     }
 }

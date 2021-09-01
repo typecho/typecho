@@ -16,12 +16,24 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
 /**
  * 用户抽象类
  *
- * @category typecho
- * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
+ * @property int $uid
+ * @property string $name
+ * @property string $password
+ * @property string $mail
+ * @property string $url
+ * @property string $screenName
+ * @property int $created
+ * @property int $activated
+ * @property int $logged
+ * @property string $group
+ * @property string $authCode
+ * @property-read Config $options
+ * @property-read string $permalink
+ * @property-read string $feedUrl
+ * @property-read string $feedRssUrl
+ * @property-read string $feedAtomUrl
  */
-class Users extends Base
+class Users extends Base implements QueryInterface
 {
     /**
      * 判断用户名称是否存在
@@ -112,7 +124,7 @@ class Users extends Base
         //生成静态链接
         $routeExists = (null != Router::get('author'));
 
-        $value['url'] = $value['permalink'] = $routeExists ? Router::url('author', $value, $this->options->index) : '#';
+        $value['permalink'] = $routeExists ? Router::url('author', $value, $this->options->index) : '#';
 
         /** 生成聚合链接 */
         /** RSS 2.0 */

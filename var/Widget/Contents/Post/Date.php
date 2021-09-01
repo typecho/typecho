@@ -95,7 +95,7 @@ class Date extends Widget
             $row['permalink'] = Router::url(
                 'archive_' . $this->parameter->type,
                 $row,
-                self::widget('Widget_Options')->index
+                $this->options->index
             );
             $this->push($row);
         }

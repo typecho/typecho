@@ -19,12 +19,46 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
 /**
  * 全局选项组件
  *
- * @link typecho
- * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
+ * @property-read string $feedUrl
+ * @property-read string $feedRssUrl
+ * @property-read string $feedAtomUrl
+ * @property-read string $commentsFeedUrl
+ * @property-read string $commentsFeedRssUrl
+ * @property-read string $commentsFeedAtomUrl
+ * @property-read string $themeUrl
+ * @property-read string $xmlRpcUrl
+ * @property-read string $index
+ * @property-read string $siteUrl
+ * @property-read array $routingTable
+ * @property-read string $rootUrl
+ * @property-read string $pluginUrl
+ * @property-read string $adminUrl
+ * @property-read string $loginUrl
+ * @property-read string $loginAction
+ * @property-read string $registerUrl
+ * @property-read string $registerAction
+ * @property-read string $profileUrl
+ * @property-read string $logoutUrl
+ * @property-read string $title
+ * @property-read string $description
+ * @property-read string $keywords
+ * @property-read string $lang
+ * @property-read string $theme
+ * @property-read int $pageSize
+ * @property-read int $serverTimezone
+ * @property-read int $timezone
+ * @property-read string $charset
+ * @property-read string $contentType
+ * @property-read string $software
+ * @property-read string $version
+ * @property-read bool $markdown
+ * @property-read bool $xmlrpcMarkdown
+ * @property-read array $allowedAttachmentTypes
+ * @property-read string $attachmentTypes
+ * @property-read int $time
+ * @property-read string $frontPage
  */
-class Options extends Widget
+class Options extends Base
 {
     /**
      * 数据库对象
@@ -53,21 +87,15 @@ class Options extends Widget
     /**
      * 构造函数,初始化组件
      *
-     * @param mixed $request request对象
-     * @param mixed $response response对象
-     * @param mixed $params 参数列表
      * @throws DbException
      */
-    public function __construct($request, $response, $params = null)
+    public function init()
     {
-        parent::__construct($request, $response);
-
-        if (!empty($params)) {
+        if (!$this->parameter->isEmpty()) {
             // 使用参数初始化而不使用数据库
-            $this->row = $params;
+            $this->row = $this->parameter->toArray();
         } else {
-            /** 初始化数据库 */
-            $this->db = Db::get();
+            $this->initWith('db');
         }
     }
 

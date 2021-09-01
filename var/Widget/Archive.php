@@ -221,16 +221,11 @@ class Archive extends Contents
     private $pageNav;
 
     /**
-     * 构造函数,初始化组件
-     *
-     * @param mixed $request
-     * @param mixed $response
-     * @param mixed $params
-     * @throws WidgetException|Db\Exception
+     * @throws \Exception
      */
-    public function __construct($request, $response, $params = null)
+    public function init()
     {
-        parent::__construct($request, $response, $params);
+        parent::init();
 
         $this->parameter->setDefault([
             'pageSize'       => $this->options->pageSize,

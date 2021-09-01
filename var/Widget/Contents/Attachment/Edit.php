@@ -114,7 +114,7 @@ class Edit extends PostEdit implements ActionInterface
         $attachment['title'] = $input['name'];
         $attachment['slug'] = $input['slug'];
 
-        $content = unserialize($this->attachment->__toString());
+        $content = $this->attachment->toArray();
         $content['description'] = $input['description'];
 
         $attachment['text'] = serialize($content);

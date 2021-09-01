@@ -89,6 +89,15 @@ abstract class Widget
         $this->request = $request;
         $this->response = $response;
         $this->parameter = Config::factory($params);
+
+        $this->init();
+    }
+
+    /**
+     * init method
+     */
+    protected function init()
+    {
     }
 
     /**

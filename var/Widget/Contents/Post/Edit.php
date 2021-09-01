@@ -23,11 +23,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
 /**
  * 编辑文章组件
  *
- * @author qining
- * @category typecho
- * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
+ * @property-read array|null $draft
  */
 class Edit extends Contents implements ActionInterface
 {
@@ -1021,10 +1017,10 @@ class Edit extends Contents implements ActionInterface
     /**
      * 当前文章的草稿
      *
-     * @return array
+     * @return array|null
      * @throws DbException
      */
-    protected function ___draft()
+    protected function ___draft(): ?array
     {
         if ($this->have()) {
             if ('post_draft' == $this->type) {
@@ -1044,4 +1040,3 @@ class Edit extends Contents implements ActionInterface
         return null;
     }
 }
-

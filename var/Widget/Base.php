@@ -3,7 +3,7 @@
 namespace Widget;
 
 use Typecho\Db;
-use Typecho\Db\Query;
+use Typecho\Plugin;
 use Typecho\Widget;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
@@ -49,68 +49,34 @@ abstract class Base extends Widget
     protected $db;
 
     /**
-     * 构造函数,初始化组件
-     *
-     * @access public
-     * @param mixed $request request对象
-     * @param mixed $response response对象
-     * @param mixed $params 参数列表
-     * @throws Db\Exception
+     * init method
      */
-    public function __construct($request, $response, $params = null)
+    protected function init()
     {
-        parent::__construct($request, $response, $params);
-
-        /** 初始化数据库 */
-        $this->db = Db::get();
-
-        /** 初始化常用组件 */
-        $this->options = Options::alloc();
-        $this->user = User::alloc();
-        $this->security = Security::alloc();
+        $this->initWith('db', 'options', 'user', 'security');
     }
 
     /**
-     * 查询方法
+     * init base component
      *
-     * @return Query
+     * @param string ...$components
      */
-    abstract public function select(): Query;
+    protected function initWith(string ...$components)
+    {
+        if (in_array('db', $components)) {
+            $this->db = Db::get();
+        }
 
-    /**
-     * 获得所有记录数
-     *
-     * @access public
-     * @param Query $condition 查询对象
-     * @return integer
-     */
-    abstract public function size(Query $condition): int;
+        if (in_array('options', $components)) {
+            $this->options = Options::alloc();
+        }
 
-    /**
-     * 增加记录方法
-     *
-     * @access public
-     * @param array $rows 字段对应值
-     * @return integer
-     */
-    abstract public function insert(array $rows): int;
+        if (in_array('user', $components)) {
+            $this->user = User::alloc();
+        }
 
-    /**
-     * 更新记录方法
-     *
-     * @access public
-     * @param array $rows 字段对应值
-     * @param Query $condition 查询对象
-     * @return integer
-     */
-    abstract public function update(array $rows, Query $condition): int;
-
-    /**
-     * 删除记录方法
-     *
-     * @access public
-     * @param Query $condition 查询对象
-     * @return integer
-     */
-    abstract public function delete(Query $condition): int;
+        if (in_array('security', $components)) {
+            $this->security = Security::alloc();
+        }
+    }
 }

@@ -22,7 +22,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class User extends Widget
+class User extends Base
 {
     /**
      * 用户组
@@ -56,7 +56,7 @@ class User extends Widget
      *
      * @var array
      */
-    private $user;
+    private $currentUser;
 
     /**
      * 是否已经登录
@@ -66,22 +66,12 @@ class User extends Widget
     private $hasLogin = null;
 
     /**
-     * 构造函数,初始化组件
-     *
-     * @param Request $request request对象
-     * @param Response $response response对象
-     * @param mixed $params 参数列表
-     * @throws DbException
+     * init method
      */
-    public function __construct(Request $request, Response $response, $params = null)
+    protected function init()
     {
-        parent::__construct($request, $response, $params);
-
-        /** 初始化数据库 */
-        $this->db = Db::get();
-        $this->options = Options::alloc();
+        $this->initWith('db', 'options');
     }
-
 
     /**
      * 执行函数
@@ -92,9 +82,9 @@ class User extends Widget
     {
         if ($this->hasLogin()) {
             $rows = $this->db->fetchAll($this->db->select()
-                ->from('table.options')->where('user = ?', $this->user['uid']));
+                ->from('table.options')->where('user = ?', $this->currentUser['uid']));
 
-            $this->push($this->user);
+            $this->push($this->currentUser);
 
             foreach ($rows as $row) {
                 $this->options->{$row['name']} = $row['value'];
@@ -104,7 +94,7 @@ class User extends Widget
             $this->db->query($this->db
                 ->update('table.users')
                 ->rows(['activated' => $this->options->time])
-                ->where('uid = ?', $this->user['uid']));
+                ->where('uid = ?', $this->currentUser['uid']));
         }
     }
 
@@ -128,7 +118,7 @@ class User extends Widget
 
                 $cookieAuthCode = Cookie::get('__typecho_authCode');
                 if ($user && Common::hashValidate($user['authCode'], $cookieAuthCode)) {
-                    $this->user = $user;
+                    $this->currentUser = $user;
                     return ($this->hasLogin = true);
                 }
 
@@ -202,7 +192,7 @@ class User extends Widget
 
             /** 压入数据 */
             $this->push($user);
-            $this->user = $user;
+            $this->currentUser = $user;
             $this->hasLogin = true;
             $this->pluginHandle()->loginSucceed($this, $name, $password, $temporarily, $expire);
 
@@ -265,7 +255,7 @@ class User extends Widget
         }
 
         $this->push($user);
-        $this->user = $user;
+        $this->currentUser = $user;
         $this->hasLogin = true;
 
         $this->pluginHandle()->simpleLoginSucceed($this, $user);

@@ -13,6 +13,7 @@ use Typecho\Router;
 use Typecho\Widget;
 use Widget\Base;
 use Widget\Metas\Category\Rows;
+use Widget\Upload;
 use Widget\Users\Author;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
@@ -22,9 +23,51 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
 /**
  * 内容基类
  *
- * @package Widget
+ * @property int $cid
+ * @property string $title
+ * @property string $slug
+ * @property int $created
+ * @property int $modified
+ * @property string $text
+ * @property int $order
+ * @property int $authorId
+ * @property string $template
+ * @property string $type
+ * @property string $status
+ * @property string|null $password
+ * @property int $commentsNum
+ * @property bool $allowComment
+ * @property bool $allowPing
+ * @property bool $allowFeed
+ * @property int $parent
+ * @property int $parentId
+ * @property-read Users $author
+ * @property-read string $permalink
+ * @property-read string $url
+ * @property-read string $feedUrl
+ * @property-read string $feedRssUrl
+ * @property-read string $feedAtomUrl
+ * @property-read bool $isMarkdown
+ * @property-read bool $hidden
+ * @property-read string $category
+ * @property-read Date $date
+ * @property-read string $dateWord
+ * @property-read string[] $directory
+ * @property-read array $tags
+ * @property-read array $categories
+ * @property-read string $description
+ * @property-read string $excerpt
+ * @property-read string $summary
+ * @property-read string $content
+ * @property-read Config $fields
+ * @property-read Config $attachment
+ * @property-read string $theId
+ * @property-read string $respondId
+ * @property-read string $commentUrl
+ * @property-read string $trackbackUrl
+ * @property-read string $responseUrl
  */
-class Contents extends Base
+class Contents extends Base implements QueryInterface
 {
     /**
      * 获取查询对象
@@ -505,7 +548,7 @@ class Contents extends Base
             //增加数据信息
             $value['attachment'] = new Config($content);
             $value['attachment']->isImage = in_array($content['type'], ['jpg', 'jpeg', 'gif', 'png', 'tiff', 'bmp']);
-            $value['attachment']->url = Widget_Upload::attachmentHandle($value);
+            $value['attachment']->url = Upload::attachmentHandle($value);
 
             if ($value['attachment']->isImage) {
                 $value['text'] = '<img src="' . $value['attachment']->url . '" alt="' .
