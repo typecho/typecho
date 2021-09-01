@@ -171,12 +171,8 @@ class XmlRpc extends Contents implements ActionInterface, Hook
 
         /** 获取页面 */
         try {
-            /** 由于Widget_Contents_Page_Edit是从request中获取参数, 因此我们需要强行设置flush一下request */
-            /** widget方法的第三个参数可以指定强行转换传入此widget的request参数 */
-            /** 此组件会进行复杂的权限检测 */
             $page = PageEdit::alloc(null, ['cid' => $pageId]);
         } catch (Exception $e) {
-            /** 截获可能会抛出的异常(参见 Widget_Contents_Page_Edit 的 execute 方法) */
             return new Error($e->getCode(), $e->getMessage());
         }
 
@@ -535,7 +531,6 @@ class XmlRpc extends Contents implements ActionInterface, Hook
             /** 此组件会进行复杂的权限检测 */
             PageEdit::alloc(null, ['cid' => $pageId], false)->deletePage();
         } catch (Exception $e) {
-            /** 截获可能会抛出的异常(参见 Widget_Contents_Page_Edit 的 execute 方法) */
             return new Error($e->getCode(), $e->getMessage());
         }
 

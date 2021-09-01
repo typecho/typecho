@@ -18,7 +18,7 @@ class Helper
      */
     public static function security()
     {
-        return \Typecho\Widget::widget('Widget_Security');
+        return \Widget\Security::alloc();
     }
 
     /**

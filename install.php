@@ -692,7 +692,7 @@ function install_check_extension(array $extensions): ?string
 
 function install_step_1()
 {
-    $langs = Widget_Options_General::getLangs();
+    $langs = \Widget\Options\General::getLangs();
     $lang = install_get_lang();
     ?>
     <div class="row typecho-page-main">

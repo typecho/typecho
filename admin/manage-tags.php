@@ -60,7 +60,7 @@ include 'menu.php';
 
             </div>
             <div class="col-mb-12 col-tb-4" role="form">
-                <?php \Typecho\Widget::widget('Widget_Metas_Tag_Edit')->form()->render(); ?>
+                <?php \Widget\Metas\Tag\Edit::alloc()->form()->render(); ?>
             </div>
         </div>
     </div>

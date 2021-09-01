@@ -29,14 +29,14 @@ $stat = \Widget\Stat::alloc();
             <div class="col-mb-12 col-tb-6 col-tb-offset-1 typecho-content-panel" role="form">
                 <section>
                     <h3><?php _e('个人资料'); ?></h3>
-                    <?php \Typecho\Widget::widget('Widget_Users_Profile')->profileForm()->render(); ?>
+                    <?php \Widget\Users\Profile::alloc()->profileForm()->render(); ?>
                 </section>
 
                 <?php if ($user->pass('contributor', true)): ?>
                     <br>
                     <section id="writing-option">
                         <h3><?php _e('撰写设置'); ?></h3>
-                        <?php \Typecho\Widget::widget('Widget_Users_Profile')->optionsForm()->render(); ?>
+                        <?php \Widget\Users\Profile::alloc()->optionsForm()->render(); ?>
                     </section>
                 <?php endif; ?>
 
@@ -44,10 +44,10 @@ $stat = \Widget\Stat::alloc();
 
                 <section id="change-password">
                     <h3><?php _e('密码修改'); ?></h3>
-                    <?php \Typecho\Widget::widget('Widget_Users_Profile')->passwordForm()->render(); ?>
+                    <?php \Widget\Users\Profile::alloc()->passwordForm()->render(); ?>
                 </section>
 
-                <?php \Typecho\Widget::widget('Widget_Users_Profile')->personalFormList(); ?>
+                <?php \Widget\Users\Profile::alloc()->personalFormList(); ?>
             </div>
         </div>
     </div>

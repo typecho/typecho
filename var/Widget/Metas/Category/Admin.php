@@ -11,12 +11,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
 }
 
 /**
- * Widget_Metas_Category_Admin
- *
- * @uses Widget_Metas_Category_List
- * @copyright Copyright (c) 2012 Typecho Team. (http://typecho.org)
- * @author Joyqi <magike.net@gmail.com>
- * @license GNU General Public License 2.0
+ * Category Admin
  */
 class Admin extends Rows
 {

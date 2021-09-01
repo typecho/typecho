@@ -94,7 +94,7 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                                    value="<?php echo htmlspecialchars($request->keywords); ?>" name="keywords"/>
                             <select name="category">
                                 <option value=""><?php _e('所有分类'); ?></option>
-                                <?php \Typecho\Widget::widget('Widget_Metas_Category_List')->to($category); ?>
+                                <?php \Widget\Metas\Category\Rows::alloc()->to($category); ?>
                                 <?php while ($category->next()): ?>
                                     <option
                                         value="<?php $category->mid(); ?>"<?php if ($request->get('category') == $category->mid): ?> selected="true"<?php endif; ?>><?php $category->name(); ?></option>

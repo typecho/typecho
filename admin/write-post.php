@@ -82,7 +82,7 @@ include 'menu.php';
 
                         <section class="typecho-post-option category-option">
                             <label class="typecho-label"><?php _e('分类'); ?></label>
-                            <?php \Typecho\Widget::widget('Widget_Metas_Category_List')->to($category); ?>
+                            <?php \Widget\Metas\Category\Rows::alloc()->to($category); ?>
                             <ul>
                                 <?php
                                 if ($post->have()) {

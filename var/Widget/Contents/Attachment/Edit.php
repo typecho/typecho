@@ -130,10 +130,10 @@ class Edit extends PostEdit implements ActionInterface
                 ->limit(1), [$this, 'push']);
 
             /** 设置高亮 */
-            self::widget('Widget_Notice')->highlight($this->theId);
+            Notice::alloc()->highlight($this->theId);
 
             /** 提示信息 */
-            self::widget('Widget_Notice')->set('publish' == $this->status ?
+            Notice::alloc()->set('publish' == $this->status ?
                 _t('文件 <a href="%s">%s</a> 已经被更新', $this->permalink, $this->title) :
                 _t('未归档文件 %s 已经被更新', $this->title), 'success');
 
@@ -326,7 +326,7 @@ class Edit extends PostEdit implements ActionInterface
         } while (count($posts) == 100);
 
         /** 设置提示信息 */
-        self::widget('Widget_Notice')->set(
+        Notice::alloc()->set(
             $deleteCount > 0 ? _t('未归档文件已经被清理') : _t('没有未归档文件被清理'),
             $deleteCount > 0 ? 'success' : 'notice'
         );

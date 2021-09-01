@@ -4,7 +4,7 @@
     <section class="widget">
 		<h3 class="widget-title"><?php _e('最新文章'); ?></h3>
         <ul class="widget-list">
-            <?php self::widget('Widget_Contents_Post_Recent')
+            <?php \Widget\Contents\Post\Recent::alloc()
             ->parse('<li><a href="{permalink}">{title}</a></li>'); ?>
         </ul>
     </section>
@@ -14,7 +14,7 @@
     <section class="widget">
 		<h3 class="widget-title"><?php _e('最近回复'); ?></h3>
         <ul class="widget-list">
-        <?php self::widget('Widget_Comments_Recent')->to($comments); ?>
+        <?php \Widget\Comments\Recent::alloc()->to($comments); ?>
         <?php while($comments->next()): ?>
             <li><a href="<?php $comments->permalink(); ?>"><?php $comments->author(false); ?></a>: <?php $comments->excerpt(35, '...'); ?></li>
         <?php endwhile; ?>
@@ -25,7 +25,7 @@
     <?php if (!empty($this->options->sidebarBlock) && in_array('ShowCategory', $this->options->sidebarBlock)): ?>
     <section class="widget">
 		<h3 class="widget-title"><?php _e('分类'); ?></h3>
-        <?php self::widget('Widget_Metas_Category_List')->listCategories('wrapClass=widget-list'); ?>
+        <?php \Widget\Metas\Category\Rows::alloc()->listCategories('wrapClass=widget-list'); ?>
 	</section>
     <?php endif; ?>
 
@@ -33,7 +33,7 @@
     <section class="widget">
 		<h3 class="widget-title"><?php _e('归档'); ?></h3>
         <ul class="widget-list">
-            <?php self::widget('Widget_Contents_Post_Date', 'type=month&format=F Y')
+            <?php \Widget\Contents\Post\Date::alloc('type=month&format=F Y')
             ->parse('<li><a href="{permalink}">{date}</a></li>'); ?>
         </ul>
 	</section>
