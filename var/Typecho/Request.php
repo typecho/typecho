@@ -182,8 +182,7 @@ class Typecho_Request
     private function _checkIp(string $ip): bool
     {
         if (__TYPECHO_FILTER_SUPPORTED__) {
-            return false !== (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)
-                    || filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6));
+            return false !== filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6);
         }
 
         return preg_match("/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/", $ip)
