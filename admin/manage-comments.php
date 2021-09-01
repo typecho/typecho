@@ -3,8 +3,8 @@ include 'common.php';
 include 'header.php';
 include 'menu.php';
 
-$stat = \Typecho\Widget::widget('Widget_Stat');
-$comments = \Typecho\Widget::widget('Widget_Comments_Admin');
+$stat = \Widget\Stat::alloc();
+$comments = \Widget\Comments\Admin::alloc();
 $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == \Typecho\Cookie::get('__typecho_all_comments'));
 ?>
 <div class="main">

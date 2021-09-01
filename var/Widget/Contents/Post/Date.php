@@ -2,10 +2,11 @@
 
 namespace Widget\Contents\Post;
 
+use Typecho\Config;
 use Typecho\Db;
 use Typecho\Router;
 use Typecho\Widget;
-use Widget\Options;
+use Widget\Base;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -18,40 +19,14 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @category typecho
  * @package Widget
  */
-class Date extends Widget
+class Date extends Base
 {
     /**
-     * 全局选项
-     *
-     * @var Options
+     * @param Config $parameter
      */
-    protected $options;
-
-    /**
-     * 数据库对象
-     *
-     * @var Db
-     */
-    protected $db;
-
-    /**
-     * 构造函数,初始化组件
-     *
-     * @param mixed $request request对象
-     * @param mixed $response response对象
-     * @param mixed $params 参数列表
-     * @throws Db\Exception
-     * @throws Widget\Exception
-     */
-    public function __construct($request, $response, $params = null)
+    protected function initParameter(Config $parameter)
     {
-        parent::__construct($request, $response, $params);
-
-        /** 初始化数据库 */
-        $this->db = Db::get();
-
-        /** 初始化常用组件 */
-        $this->options = Options::alloc();
+        $parameter->setDefault('format=Y-m&type=month&limit=0');
     }
 
     /**

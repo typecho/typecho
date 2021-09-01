@@ -7,7 +7,7 @@ $actionUrl = $security->getTokenUrl(
     \Typecho\Router::url('do', array('action' => 'backup', 'widget' => 'Backup'),
         \Typecho\Common::url('index.php', $options->rootUrl)));
 
-$backupFiles = \Typecho\Widget::widget('Widget_Backup')->listFiles();
+$backupFiles = \Widget\Backup::alloc()->listFiles();
 ?>
 
 <div class="main">

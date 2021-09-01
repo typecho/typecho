@@ -2,7 +2,7 @@
 include 'common.php';
 include 'header.php';
 include 'menu.php';
-\Typecho\Widget::widget('Widget_Contents_Page_Edit')->to($page);
+\Widget\Contents\Page\Edit::alloc()->to($page);
 ?>
 <div class="main">
     <div class="body container">

@@ -2,7 +2,7 @@
 <?php
 if (isset($post) && $post instanceof \Typecho\Widget && $post->have()) {
     $fileParentContent = $post;
-} else if (isset($page) && $page instanceof \Typecho\Widget && $page->have()) {
+} elseif (isset($page) && $page instanceof \Typecho\Widget && $page->have()) {
     $fileParentContent = $page;
 }
 

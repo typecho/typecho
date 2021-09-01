@@ -3,7 +3,6 @@
 namespace Widget;
 
 use Typecho\Common;
-use Typecho\Widget;
 use Widget\Plugins\Config;
 use Widget\Themes\Files;
 use Widget\Users\Edit as UsersEdit;
@@ -25,7 +24,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  *
  * @package Widget
  */
-class Menu extends Widget
+class Menu extends Base
 {
     /**
      * 当前菜单标题
@@ -38,20 +37,6 @@ class Menu extends Widget
      * @var string
      */
     public $addLink;
-
-    /**
-     * 全局选项
-     *
-     * @var Options
-     */
-    protected $options;
-
-    /**
-     * 用户对象
-     *
-     * @var User
-     */
-    protected $user;
 
     /**
      * 父菜单列表
@@ -80,24 +65,6 @@ class Menu extends Widget
      * @var string
      */
     private $currentUrl;
-
-    /**
-     * 构造函数,初始化组件
-     *
-     * @access public
-     * @param mixed $request request对象
-     * @param mixed $response response对象
-     * @param mixed $params 参数列表
-     * @return void
-     */
-    public function __construct($request, $response, $params = null)
-    {
-        parent::__construct($request, $response, $params);
-
-        /** 初始化常用组件 */
-        $this->options = Options::alloc();
-        $this->user = User::alloc();
-    }
 
     /**
      * 执行函数,初始化菜单
@@ -137,7 +104,7 @@ class Menu extends Widget
                 [[CommentsAdmin::class, 'getMenuTitle'], [CommentsAdmin::class, 'getMenuTitle'], 'manage-comments.php?cid=', 'contributor', true],
                 [_t('分类'), _t('管理分类'), 'manage-categories.php', 'editor', false, 'category.php'],
                 [_t('新增分类'), _t('新增分类'), 'category.php', 'editor', true],
-                [[CategoryAdmin::class, 'getMenuTitle'], [CategoryAdmin::class, 'getMenuTitle'], 'manage-categories.php?parent=', 'editor', true, ['Widget_Metas_Category_Admin', 'getAddLink']],
+                [[CategoryAdmin::class, 'getMenuTitle'], [CategoryAdmin::class, 'getMenuTitle'], 'manage-categories.php?parent=', 'editor', true, [CategoryAdmin::class, 'getAddLink']],
                 [[CategoryEdit::class, 'getMenuTitle'], [CategoryEdit::class, 'getMenuTitle'], 'category.php?mid=', 'editor', true],
                 [[CategoryEdit::class, 'getMenuTitle'], [CategoryEdit::class, 'getMenuTitle'], 'category.php?parent=', 'editor', true],
                 [_t('标签'), _t('管理标签'), 'manage-tags.php', 'editor'],

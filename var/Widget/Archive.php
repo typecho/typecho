@@ -3,6 +3,7 @@
 namespace Widget;
 
 use Typecho\Common;
+use Typecho\Config;
 use Typecho\Cookie;
 use Typecho\Db;
 use Typecho\Db\Query;
@@ -14,7 +15,6 @@ use Typecho\Widget\Helper\PageNavigator\Classic;
 use Typecho\Widget\Helper\PageNavigator\Box;
 use Widget\Base\Contents;
 use Widget\Base\Metas;
-use Widget\Base\Users;
 use Widget\Comments\Ping;
 use Widget\Comments\Recent;
 use Widget\Contents\Attachment\Related;
@@ -221,13 +221,12 @@ class Archive extends Contents
     private $pageNav;
 
     /**
+     * @param Config $parameter
      * @throws \Exception
      */
-    public function init()
+    protected function initParameter(Config $parameter)
     {
-        parent::init();
-
-        $this->parameter->setDefault([
+        $parameter->setDefault([
             'pageSize'       => $this->options->pageSize,
             'type'           => null,
             'checkPermalink' => true,
@@ -235,14 +234,14 @@ class Archive extends Contents
         ]);
 
         /** 用于判断是路由调用还是外部调用 */
-        if (null == $this->parameter->type) {
-            $this->parameter->type = Router::$current;
+        if (null == $parameter->type) {
+            $parameter->type = Router::$current;
         } else {
             $this->invokeFromOutside = true;
         }
 
         /** 用于判断是否为feed调用 */
-        if ($this->parameter->isFeed) {
+        if ($parameter->isFeed) {
             $this->invokeByFeed = true;
         }
 
@@ -250,7 +249,7 @@ class Archive extends Contents
         $this->themeDir = rtrim($this->options->themeFile($this->options->theme), '/') . '/';
 
         /** 处理feed模式 **/
-        if ('feed' == $this->parameter->type) {
+        if ('feed' == $parameter->type) {
             $this->currentFeedUrl = '';
 
             /** 判断聚合类型 */
@@ -277,12 +276,12 @@ class Archive extends Contents
             }
 
             $feedQuery = $this->request->feed;
-            //$this->parameter->type = Router::$current;
+            //$parameter->type = Router::$current;
             //$this->request->setParams($params);
 
             if ('/comments/' == $feedQuery || '/comments' == $feedQuery) {
                 /** 专为feed使用的hack */
-                $this->parameter->type = 'comments';
+                $parameter->type = 'comments';
             } else {
                 $matched = Router::match($this->request->feed, 'pageSize=10&isFeed=1');
                 if ($matched instanceof Archive) {
@@ -296,7 +295,7 @@ class Archive extends Contents
             $this->setFeed(new Feed(Common::VERSION, $this->feedType, $this->options->charset, _t('zh-CN')));
 
             /** 默认输出10则文章 **/
-            $this->parameter->pageSize = 10;
+            $parameter->pageSize = 10;
         }
     }
 

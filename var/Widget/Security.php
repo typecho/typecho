@@ -17,7 +17,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @copyright Copyright (c) 2014 Typecho team (http://typecho.org)
  * @license GNU General Public License 2.0
  */
-class Security extends Widget
+class Security extends Base
 {
     /**
      * @var string
@@ -25,26 +25,26 @@ class Security extends Widget
     private $token;
 
     /**
-     * @var Options
-     */
-    private $options;
-
-    /**
      * @var boolean
      */
     private $enabled = true;
+
+    /**
+     * @param int $components
+     */
+    public function initComponents(int &$components)
+    {
+        $components = self::INIT_OPTIONS | self::INIT_USER;
+    }
 
     /**
      * 初始化函数
      */
     public function execute()
     {
-        $this->options = Options::alloc();
-        $user = User::alloc();
-
         $this->token = $this->options->secret;
-        if ($user->hasLogin()) {
-            $this->token .= '&' . $user->authCode . '&' . $user->uid;
+        if ($this->user->hasLogin()) {
+            $this->token .= '&' . $this->user->authCode . '&' . $this->user->uid;
         }
     }
 

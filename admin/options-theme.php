@@ -14,11 +14,12 @@ include 'menu.php';
                     <?php if (!defined('__TYPECHO_THEME_WRITEABLE__') || __TYPECHO_THEME_WRITEABLE__): ?>
                         <li><a href="<?php $options->adminUrl('theme-editor.php'); ?>"><?php _e('编辑当前外观'); ?></a></li>
                     <?php endif; ?>
-                    <li class="current"><a href="<?php $options->adminUrl('options-theme.php'); ?>"><?php _e('设置外观'); ?></a></li>
+                    <li class="current"><a
+                            href="<?php $options->adminUrl('options-theme.php'); ?>"><?php _e('设置外观'); ?></a></li>
                 </ul>
             </div>
             <div class="col-mb-12 col-tb-8 col-tb-offset-2" role="form">
-                <?php \Typecho\Widget::widget('Widget_Themes_Config')->config()->render(); ?>
+                <?php \Widget\Themes\Config::alloc()->config()->render(); ?>
             </div>
         </div>
     </div>

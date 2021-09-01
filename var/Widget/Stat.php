@@ -2,9 +2,6 @@
 
 namespace Widget;
 
-use Typecho\Db;
-use Typecho\Widget;
-
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
 }
@@ -12,53 +9,46 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
 /**
  * 全局统计组件
  *
- * @link typecho
- * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
+ * @property-read int $publishedPostsNum
+ * @property-read int $waitingPostsNum
+ * @property-read int $draftPostsNum
+ * @property-read int $myPublishedPostsNum
+ * @property-read int $myWaitingPostsNum
+ * @property-read int $myDraftPostsNum
+ * @property-read int $currentPublishedPostsNum
+ * @property-read int $currentWaitingPostsNum
+ * @property-read int $currentDraftPostsNum
+ * @property-read int $publishedPagesNum
+ * @property-read int $draftPagesNum
+ * @property-read int $publishedCommentsNum
+ * @property-read int $waitingCommentsNum
+ * @property-read int $spamCommentsNum
+ * @property-read int $myPublishedCommentsNum
+ * @property-read int $myWaitingCommentsNum
+ * @property-read int $mySpamCommentsNum
+ * @property-read int $currentCommentsNum
+ * @property-read int $currentPublishedCommentsNum
+ * @property-read int $currentWaitingCommentsNum
+ * @property-read int $currentSpamCommentsNum
+ * @property-read int $categoriesNum
+ * @property-read int $tagsNum
  */
-class Stat extends Widget
+class Stat extends Base
 {
     /**
-     * 用户对象
-     *
-     * @var User
+     * @param int $components
      */
-    protected $user;
-
-    /**
-     * 数据库对象
-     *
-     * @var Db
-     */
-    protected $db;
-
-    /**
-     * 构造函数,初始化组件
-     *
-     * @param mixed $request request对象
-     * @param mixed $response response对象
-     * @param mixed $params 参数列表
-     * @throws Db\Exception
-     */
-    public function __construct($request, $response, $params = null)
+    protected function initComponents(int &$components)
     {
-        parent::__construct($request, $response, $params);
-
-        /** 初始化数据库 */
-        $this->db = Db::get();
-
-        /** 初始化常用组件 */
-        $this->user = User::alloc();
+        $components = self::INIT_USER;
     }
 
     /**
      * 获取已发布的文章数目
      *
-     * @access protected
      * @return integer
      */
-    protected function ___publishedPostsNum()
+    protected function ___publishedPostsNum(): int
     {
         return $this->db->fetchObject($this->db->select(['COUNT(cid)' => 'num'])
             ->from('table.contents')
@@ -69,10 +59,9 @@ class Stat extends Widget
     /**
      * 获取待审核的文章数目
      *
-     * @access protected
      * @return integer
      */
-    protected function ___waitingPostsNum()
+    protected function ___waitingPostsNum(): int
     {
         return $this->db->fetchObject($this->db->select(['COUNT(cid)' => 'num'])
             ->from('table.contents')
@@ -83,10 +72,9 @@ class Stat extends Widget
     /**
      * 获取草稿文章数目
      *
-     * @access protected
      * @return integer
      */
-    protected function ___draftPostsNum()
+    protected function ___draftPostsNum(): int
     {
         return $this->db->fetchObject($this->db->select(['COUNT(cid)' => 'num'])
             ->from('table.contents')
@@ -96,10 +84,9 @@ class Stat extends Widget
     /**
      * 获取当前用户已发布的文章数目
      *
-     * @access protected
      * @return integer
      */
-    protected function ___myPublishedPostsNum()
+    protected function ___myPublishedPostsNum(): int
     {
         return $this->db->fetchObject($this->db->select(['COUNT(cid)' => 'num'])
             ->from('table.contents')
@@ -111,10 +98,9 @@ class Stat extends Widget
     /**
      * 获取当前用户待审核文章数目
      *
-     * @access protected
      * @return integer
      */
-    protected function ___myWaitingPostsNum()
+    protected function ___myWaitingPostsNum(): int
     {
         return $this->db->fetchObject($this->db->select(['COUNT(cid)' => 'num'])
             ->from('table.contents')
@@ -126,10 +112,9 @@ class Stat extends Widget
     /**
      * 获取当前用户草稿文章数目
      *
-     * @access protected
      * @return integer
      */
-    protected function ___myDraftPostsNum()
+    protected function ___myDraftPostsNum(): int
     {
         return $this->db->fetchObject($this->db->select(['COUNT(cid)' => 'num'])
             ->from('table.contents')
@@ -140,10 +125,9 @@ class Stat extends Widget
     /**
      * 获取当前用户已发布的文章数目
      *
-     * @access protected
      * @return integer
      */
-    protected function ___currentPublishedPostsNum()
+    protected function ___currentPublishedPostsNum(): int
     {
         return $this->db->fetchObject($this->db->select(['COUNT(cid)' => 'num'])
             ->from('table.contents')
@@ -155,10 +139,9 @@ class Stat extends Widget
     /**
      * 获取当前用户待审核文章数目
      *
-     * @access protected
      * @return integer
      */
-    protected function ___currentWaitingPostsNum()
+    protected function ___currentWaitingPostsNum(): int
     {
         return $this->db->fetchObject($this->db->select(['COUNT(cid)' => 'num'])
             ->from('table.contents')
@@ -170,10 +153,9 @@ class Stat extends Widget
     /**
      * 获取当前用户草稿文章数目
      *
-     * @access protected
      * @return integer
      */
-    protected function ___currentDraftPostsNum()
+    protected function ___currentDraftPostsNum(): int
     {
         return $this->db->fetchObject($this->db->select(['COUNT(cid)' => 'num'])
             ->from('table.contents')
@@ -184,10 +166,9 @@ class Stat extends Widget
     /**
      * 获取已发布页面数目
      *
-     * @access protected
      * @return integer
      */
-    protected function ___publishedPagesNum()
+    protected function ___publishedPagesNum(): int
     {
         return $this->db->fetchObject($this->db->select(['COUNT(cid)' => 'num'])
             ->from('table.contents')
@@ -198,10 +179,9 @@ class Stat extends Widget
     /**
      * 获取草稿页面数目
      *
-     * @access protected
      * @return integer
      */
-    protected function ___draftPagesNum()
+    protected function ___draftPagesNum(): int
     {
         return $this->db->fetchObject($this->db->select(['COUNT(cid)' => 'num'])
             ->from('table.contents')
@@ -211,10 +191,9 @@ class Stat extends Widget
     /**
      * 获取当前显示的评论数目
      *
-     * @access protected
      * @return integer
      */
-    protected function ___publishedCommentsNum()
+    protected function ___publishedCommentsNum(): int
     {
         return $this->db->fetchObject($this->db->select(['COUNT(coid)' => 'num'])
             ->from('table.comments')
@@ -224,10 +203,9 @@ class Stat extends Widget
     /**
      * 获取当前待审核的评论数目
      *
-     * @access protected
      * @return integer
      */
-    protected function ___waitingCommentsNum()
+    protected function ___waitingCommentsNum(): int
     {
         return $this->db->fetchObject($this->db->select(['COUNT(coid)' => 'num'])
             ->from('table.comments')
@@ -237,10 +215,9 @@ class Stat extends Widget
     /**
      * 获取当前垃圾评论数目
      *
-     * @access protected
      * @return integer
      */
-    protected function ___spamCommentsNum()
+    protected function ___spamCommentsNum(): int
     {
         return $this->db->fetchObject($this->db->select(['COUNT(coid)' => 'num'])
             ->from('table.comments')
@@ -250,10 +227,9 @@ class Stat extends Widget
     /**
      * 获取当前用户显示的评论数目
      *
-     * @access protected
      * @return integer
      */
-    protected function ___myPublishedCommentsNum()
+    protected function ___myPublishedCommentsNum(): int
     {
         return $this->db->fetchObject($this->db->select(['COUNT(coid)' => 'num'])
             ->from('table.comments')
@@ -264,10 +240,9 @@ class Stat extends Widget
     /**
      * 获取当前用户显示的评论数目
      *
-     * @access protected
      * @return integer
      */
-    protected function ___myWaitingCommentsNum()
+    protected function ___myWaitingCommentsNum(): int
     {
         return $this->db->fetchObject($this->db->select(['COUNT(coid)' => 'num'])
             ->from('table.comments')
@@ -278,10 +253,9 @@ class Stat extends Widget
     /**
      * 获取当前用户显示的评论数目
      *
-     * @access protected
      * @return integer
      */
-    protected function ___mySpamCommentsNum()
+    protected function ___mySpamCommentsNum(): int
     {
         return $this->db->fetchObject($this->db->select(['COUNT(coid)' => 'num'])
             ->from('table.comments')
@@ -292,10 +266,9 @@ class Stat extends Widget
     /**
      * 获取当前文章的评论数目
      *
-     * @access protected
      * @return integer
      */
-    protected function ___currentCommentsNum()
+    protected function ___currentCommentsNum(): int
     {
         return $this->db->fetchObject($this->db->select(['COUNT(coid)' => 'num'])
             ->from('table.comments')
@@ -305,10 +278,9 @@ class Stat extends Widget
     /**
      * 获取当前文章显示的评论数目
      *
-     * @access protected
      * @return integer
      */
-    protected function ___currentPublishedCommentsNum()
+    protected function ___currentPublishedCommentsNum(): int
     {
         return $this->db->fetchObject($this->db->select(['COUNT(coid)' => 'num'])
             ->from('table.comments')
@@ -319,10 +291,9 @@ class Stat extends Widget
     /**
      * 获取当前文章显示的评论数目
      *
-     * @access protected
      * @return integer
      */
-    protected function ___currentWaitingCommentsNum()
+    protected function ___currentWaitingCommentsNum(): int
     {
         return $this->db->fetchObject($this->db->select(['COUNT(coid)' => 'num'])
             ->from('table.comments')
@@ -333,10 +304,9 @@ class Stat extends Widget
     /**
      * 获取当前文章显示的评论数目
      *
-     * @access protected
      * @return integer
      */
-    protected function ___currentSpamCommentsNum()
+    protected function ___currentSpamCommentsNum(): int
     {
         return $this->db->fetchObject($this->db->select(['COUNT(coid)' => 'num'])
             ->from('table.comments')
@@ -347,10 +317,9 @@ class Stat extends Widget
     /**
      * 获取分类数目
      *
-     * @access protected
      * @return integer
      */
-    protected function ___categoriesNum()
+    protected function ___categoriesNum(): int
     {
         return $this->db->fetchObject($this->db->select(['COUNT(mid)' => 'num'])
             ->from('table.metas')
@@ -360,10 +329,9 @@ class Stat extends Widget
     /**
      * 获取标签数目
      *
-     * @access protected
      * @return integer
      */
-    protected function ___tagsNum()
+    protected function ___tagsNum(): int
     {
         return $this->db->fetchObject($this->db->select(['COUNT(mid)' => 'num'])
             ->from('table.metas')

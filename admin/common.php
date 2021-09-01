@@ -20,7 +20,7 @@ if (!defined('__TYPECHO_ROOT_DIR__') && !@include_once __DIR__ . '/../config.inc
 \Widget\Options::alloc()->to($options);
 \Widget\User::alloc()->to($user);
 \Widget\Security::alloc()->to($security);
-\Typecho\Widget::widget('Widget_Menu')->to($menu);
+\Widget\Menu::alloc()->to($menu);
 
 /** 初始化上下文 */
 $request = $options->request;

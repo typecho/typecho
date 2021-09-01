@@ -9,7 +9,7 @@ include 'menu.php';
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main" role="form">
             <div class="col-mb-12 col-tb-8 col-tb-offset-2">
-                <?php \Typecho\Widget::widget('Widget_Options_Discussion')->form()->render(); ?>
+                <?php \Widget\Options\Discussion::alloc()->form()->render(); ?>
             </div>
         </div>
     </div>

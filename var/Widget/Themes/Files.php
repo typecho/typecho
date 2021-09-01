@@ -3,6 +3,7 @@
 namespace Widget\Themes;
 
 use Typecho\Widget;
+use Widget\Base;
 use Widget\Options;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
@@ -18,7 +19,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Files extends Widget
+class Files extends Base
 {
     /**
      * 当前风格
@@ -44,7 +45,7 @@ class Files extends Widget
     public function execute()
     {
         /** 管理员权限 */
-        self::widget('Widget_User')->pass('administrator');
+        $this->user->pass('administrator');
         $this->currentTheme = $this->request->filter('slug')->get('theme', Options::alloc()->theme);
 
         if (

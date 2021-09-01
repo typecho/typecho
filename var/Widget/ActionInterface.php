@@ -3,7 +3,7 @@
 namespace Widget;
 
 /**
- * 可以被Widget_Do调用的接口
+ * 可以被Widget\Action调用的接口
  */
 interface ActionInterface
 {

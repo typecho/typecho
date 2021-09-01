@@ -77,17 +77,11 @@ class Rows extends Metas
     private $parents = [];
 
     /**
-     * 构造函数,初始化组件
-     *
-     * @access public
-     * @param mixed $request request对象
-     * @param mixed $response response对象
-     * @param mixed $params 参数列表
+     * @param Config $parameter
      */
-    public function __construct($request, $response, $params = null)
+    protected function initParameter(Config $parameter)
     {
-        parent::__construct($request, $response, $params);
-        $this->parameter->setDefault('ignore=0&current=');
+        $parameter->setDefault('ignore=0&current=');
 
         $select = $this->select()->where('type = ?', 'category');
 

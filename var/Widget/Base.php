@@ -2,6 +2,7 @@
 
 namespace Widget;
 
+use Typecho\Config;
 use Typecho\Db;
 use Typecho\Plugin;
 use Typecho\Widget;
@@ -20,6 +21,31 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  */
 abstract class Base extends Widget
 {
+    /**
+     * init user widget
+     */
+    protected const INIT_USER = 0b001;
+
+    /**
+     * init security widget
+     */
+    protected const INIT_SECURITY = 0b010;
+
+    /**
+     * init options widget
+     */
+    protected const INIT_OPTIONS = 0b100;
+
+    /**
+     * init all widgets
+     */
+    protected const INIT_ALL = 0b111;
+
+    /**
+     * init none widget
+     */
+    protected const INIT_NONE = 0;
+
     /**
      * 全局选项
      *
@@ -53,30 +79,37 @@ abstract class Base extends Widget
      */
     protected function init()
     {
-        $this->initWith('db', 'options', 'user', 'security');
-    }
+        $this->db = Db::get();
+        $components = self::INIT_ALL;
 
-    /**
-     * init base component
-     *
-     * @param string ...$components
-     */
-    protected function initWith(string ...$components)
-    {
-        if (in_array('db', $components)) {
-            $this->db = Db::get();
-        }
+        $this->initComponents($components);
 
-        if (in_array('options', $components)) {
-            $this->options = Options::alloc();
-        }
-
-        if (in_array('user', $components)) {
+        if ($components & self::INIT_USER) {
             $this->user = User::alloc();
         }
 
-        if (in_array('security', $components)) {
+        if ($components & self::INIT_OPTIONS) {
+            $this->options = Options::alloc();
+        }
+
+        if ($components & self::INIT_SECURITY) {
             $this->security = Security::alloc();
         }
+
+        $this->initParameter($this->parameter);
+    }
+
+    /**
+     * @param int $components
+     */
+    protected function initComponents(int &$components)
+    {
+    }
+
+    /**
+     * @param Config $parameter
+     */
+    protected function initParameter(Config $parameter)
+    {
     }
 }

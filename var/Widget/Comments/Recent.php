@@ -2,10 +2,9 @@
 
 namespace Widget\Comments;
 
+use Typecho\Config;
 use Typecho\Db;
 use Typecho\Db\Exception;
-use Typecho\Widget\Request;
-use Typecho\Widget\Response;
 use Widget\Base\Comments;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
@@ -23,17 +22,11 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
 class Recent extends Comments
 {
     /**
-     * 构造函数,初始化组件
-     *
-     * @param Request $request request对象
-     * @param Response $response response对象
-     * @param mixed $params 参数列表
-     * @throws Exception
+     * @param Config $parameter
      */
-    public function __construct(Request $request, Response $response, $params = null)
+    protected function initParameter(Config $parameter)
     {
-        parent::__construct($request, $response, $params);
-        $this->parameter->setDefault(
+        $parameter->setDefault(
             ['pageSize' => $this->options->commentsListSize, 'parentId' => 0, 'ignoreAuthor' => false]
         );
     }

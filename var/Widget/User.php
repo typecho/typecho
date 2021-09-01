@@ -4,11 +4,9 @@ namespace Widget;
 
 use Typecho\Common;
 use Typecho\Cookie;
-use Typecho\Db;
 use Typecho\Db\Exception as DbException;
 use Typecho\Widget;
-use Typecho\Widget\Request;
-use Typecho\Widget\Response;
+use Widget\Base\Users;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -22,7 +20,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class User extends Base
+class User extends Users
 {
     /**
      * 用户组
@@ -36,20 +34,6 @@ class User extends Base
         'subscriber' => 3,
         'visitor' => 4
     ];
-
-    /**
-     * 全局选项
-     *
-     * @var Options
-     */
-    protected $options;
-
-    /**
-     * 数据库对象
-     *
-     * @var Db
-     */
-    protected $db;
 
     /**
      * 用户
@@ -66,11 +50,11 @@ class User extends Base
     private $hasLogin = null;
 
     /**
-     * init method
+     * @param int $components
      */
-    protected function init()
+    protected function initComponents(int &$components)
     {
-        $this->initWith('db', 'options');
+        $components = self::INIT_OPTIONS;
     }
 
     /**
@@ -81,14 +65,7 @@ class User extends Base
     public function execute()
     {
         if ($this->hasLogin()) {
-            $rows = $this->db->fetchAll($this->db->select()
-                ->from('table.options')->where('user = ?', $this->currentUser['uid']));
-
             $this->push($this->currentUser);
-
-            foreach ($rows as $row) {
-                $this->options->{$row['name']} = $row['value'];
-            }
 
             //更新最后活动时间
             $this->db->query($this->db

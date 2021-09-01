@@ -4,7 +4,6 @@ namespace Widget;
 
 use Typecho\Common;
 use Typecho\Config;
-use Typecho\Db;
 use Typecho\Router;
 use Typecho\Router\Parser;
 use Typecho\Widget;
@@ -57,17 +56,11 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property-read string $attachmentTypes
  * @property-read int $time
  * @property-read string $frontPage
+ * @property-read int $commentsListSize
+ * @property-read bool $commentsShowCommentOnly
  */
 class Options extends Base
 {
-    /**
-     * 数据库对象
-     *
-     * @access protected
-     * @var Db
-     */
-    protected $db;
-
     /**
      * 缓存的插件配置
      *
@@ -85,17 +78,26 @@ class Options extends Base
     private $personalPluginConfig = [];
 
     /**
-     * 构造函数,初始化组件
-     *
-     * @throws DbException
+     * @var bool options loaded
      */
-    public function init()
+    private $loaded = false;
+
+    /**
+     * @param int $components
+     */
+    protected function initComponents(int &$components)
     {
-        if (!$this->parameter->isEmpty()) {
-            // 使用参数初始化而不使用数据库
+        $components = self::INIT_NONE;
+    }
+
+    /**
+     * @param Config $parameter
+     */
+    protected function initParameter(Config $parameter)
+    {
+        if (!$parameter->isEmpty()) {
             $this->row = $this->parameter->toArray();
-        } else {
-            $this->initWith('db');
+            $this->loaded = true;
         }
     }
 
@@ -106,7 +108,7 @@ class Options extends Base
      */
     public function execute()
     {
-        if (!empty($this->db)) {
+        if (!$this->loaded) {
             $values = $this->db->fetchAll($this->db->select()->from('table.options')
                 ->where('user = 0'), [$this, 'push']);
 
@@ -159,7 +161,7 @@ class Options extends Base
 
         /** 自动初始化路由表 */
         $this->routingTable = unserialize($this->routingTable);
-        if (!empty($this->db) && !isset($this->routingTable[0])) {
+        if ($this->loaded && !isset($this->routingTable[0])) {
             /** 解析路由并缓存 */
             $parser = new Parser($this->routingTable);
             $parsedRoutingTable = $parser->parse();
