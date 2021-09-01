@@ -1,5 +1,7 @@
 <?php
 
+namespace Utils;
+
 /**
  * AutoP
  *
@@ -31,7 +33,6 @@ class AutoP
     /**
      * 替换段落的回调函数
      *
-     * @access public
      * @param array $matches 匹配值
      * @return string
      */
@@ -52,7 +53,7 @@ class AutoP
             case false !== strpos('|div|blockquote|form|', $tagMatch):
                 $text = $this->cutByBlock($text);
                 if (false !== strpos($text, '</p><p>')) {
-                    $text = $this->fixPragraph($text);
+                    $text = $this->fixParagraph($text);
                 }
                 break;
             default:
@@ -73,11 +74,10 @@ class AutoP
     /**
      * 用段落方法处理换行
      *
-     * @access private
      * @param string $text
      * @return string
      */
-    private function cutByBlock($text)
+    private function cutByBlock(string $text): string
     {
         $space = "( |　)";
         $text = str_replace("\r\n", "\n", trim($text));
@@ -95,11 +95,10 @@ class AutoP
     /**
      * 修复段落开头和结尾
      *
-     * @access private
      * @param string $text
      * @return string
      */
-    private function fixPragraph($text)
+    private function fixParagraph(string $text): string
     {
         $text = trim($text);
         if (!preg_match("/^<(" . self::BLOCK . ")(\s|>)/i", $text)) {
@@ -117,11 +116,9 @@ class AutoP
      * 自动分段
      *
      * @param string $text
-     * @static
-     * @access private
      * @return string
      */
-    public function parse($text)
+    public function parse(string $text): string
     {
         /** 重置计数器 */
         $this->uniqueId = 0;
@@ -164,15 +161,24 @@ class AutoP
                     $tagLength = strlen($tag);
 
                     $text = substr_replace($text, $uniqueId, $pos + 1 + $tagLength, 0);
-                    $text = substr_replace($text, $uniqueId, $match[1] + 7 + $foundTagCount * 10 + $tagLength, 0); // 7 = 5 + 2
-                    $foundTagCount ++;
+                    $text = substr_replace(
+                        $text,
+                        $uniqueId,
+                        $match[1] + 7 + $foundTagCount * 10 + $tagLength,
+                        0
+                    ); // 7 = 5 + 2
+                    $foundTagCount++;
                 }
             }
         }
 
         foreach ($uniqueIdList as $uniqueId => $tag) {
-            $text = preg_replace_callback("/<({$tag})({$uniqueId})([^>]*)>(.*)<\/\\1\\2>/is",
-                [$this, 'replaceBlockCallback'], $text, 1);
+            $text = preg_replace_callback(
+                "/<({$tag})({$uniqueId})([^>]*)>(.*)<\/\\1\\2>/is",
+                [$this, 'replaceBlockCallback'],
+                $text,
+                1
+            );
         }
 
         $text = $this->cutByBlock($text);
@@ -182,16 +188,15 @@ class AutoP
             $text = str_replace($blockKey, $blockValue, $text);
         }
 
-        return $this->fixPragraph($text);
+        return $this->fixParagraph($text);
     }
 
     /**
      * 生成唯一的id, 为了速度考虑最多支持1万个tag的处理
      *
-     * @access private
      * @return string
      */
-    private function makeUniqueId()
+    private function makeUniqueId(): string
     {
         return ':' . str_pad($this->uniqueId ++, 4, '0', STR_PAD_LEFT);
     }

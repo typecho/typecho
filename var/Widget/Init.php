@@ -48,6 +48,12 @@ class Init extends Widget
             'Widget_Themes_List'          => '\Widget\Themes\Rows',
             'Widget_Interface_Do'         => '\Widget\ActionInterface',
             'Widget_Do'                   => '\Widget\Action',
+            'AutoP'                       => '\Utils\AutoP',
+            'PasswordHash'                => '\Utils\PasswordHash',
+            'Markdown'                    => '\Utils\Markdown',
+            'HyperDown'                   => '\Utils\HyperDown',
+            'Helper'                      => '\Utils\Helper',
+            'Upgrade'                     => '\Utils\Upgrade'
         ]);
 
         /** 对变量赋值 */

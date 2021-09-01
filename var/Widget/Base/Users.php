@@ -136,7 +136,7 @@ class Users extends Base implements QueryInterface
         /** ATOM 1.0 */
         $value['feedAtomUrl'] = $routeExists ? Router::url('author', $value, $this->options->feedAtomUrl) : '#';
 
-        $value = $this->pluginHandle(__CLASS__)->filter($value, $this);
+        $value = $this->pluginHandle()->filter($value, $this);
         return $value;
     }
 

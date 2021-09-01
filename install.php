@@ -1257,11 +1257,11 @@ function install_step_3_perform()
         }
 
         // write user
-        $hasher = new PasswordHash(8, true);
+        $hasher = new \Utils\PasswordHash(8, true);
         $installDb->query(
             $installDb->insert('table.users')->rows([
                 'name' => $config['userName'],
-                'password' => $hasher->HashPassword($config['userPassword']),
+                'password' => $hasher->hashPassword($config['userPassword']),
                 'mail' => $config['userMail'],
                 'url' => $options->siteUrl,
                 'screenName' => $config['userName'],

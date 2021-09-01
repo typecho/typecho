@@ -172,7 +172,7 @@ class Upload extends Contents implements ActionInterface
             return false;
         }
 
-        $result = Plugin::factory('Widget_Upload')->trigger($hasModified)->modifyHandle($content, $file);
+        $result = self::pluginHandle()->trigger($hasModified)->modifyHandle($content, $file);
         if ($hasModified) {
             return $result;
         }
@@ -360,7 +360,7 @@ class Upload extends Contents implements ActionInterface
             return false;
         }
 
-        $result = Plugin::factory('Widget_Upload')->trigger($hasUploaded)->uploadHandle($file);
+        $result = self::pluginHandle()->trigger($hasUploaded)->uploadHandle($file);
         if ($hasUploaded) {
             return $result;
         }

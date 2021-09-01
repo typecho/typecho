@@ -83,7 +83,7 @@ class Metas extends Base implements QueryInterface
         $value['feedAtomUrl'] = $routeExists ? Router::url($type, $value, $this->options->feedAtomUrl) : '#';
 
         $value['slug'] = $tmpSlug;
-        $value = $this->pluginHandle(__CLASS__)->filter($value, $this);
+        $value = $this->pluginHandle()->filter($value, $this);
         return $value;
     }
 

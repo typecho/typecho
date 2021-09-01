@@ -6,6 +6,7 @@ use Typecho\Common;
 use Typecho\Db\Exception;
 use Typecho\Plugin;
 use Typecho\Widget\Helper\Form;
+use Utils\PasswordHash;
 use Widget\ActionInterface;
 use Widget\Base\Options;
 use Widget\Notice;
@@ -304,8 +305,8 @@ class Profile extends Edit implements ActionInterface
             $this->response->goBack();
         }
 
-        $hasher = new \PasswordHash(8, true);
-        $password = $hasher->HashPassword($this->request->password);
+        $hasher = new PasswordHash(8, true);
+        $password = $hasher->hashPassword($this->request->password);
 
         /** 更新数据 */
         $this->update(

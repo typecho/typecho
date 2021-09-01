@@ -4,9 +4,12 @@ namespace Widget\Base;
 
 use Typecho\Common;
 use Typecho\Date;
+use Typecho\Db;
 use Typecho\Db\Exception;
 use Typecho\Db\Query;
 use Typecho\Router;
+use Utils\AutoP;
+use Utils\Markdown;
 use Widget\Base;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
@@ -232,7 +235,7 @@ class Comments extends Base implements QueryInterface
     public function filter(array $value): array
     {
         $value['date'] = new Date($value['created']);
-        return $this->pluginHandle(__CLASS__)->filter($value, $this);
+        return $this->pluginHandle()->filter($value, $this);
     }
 
     /**
@@ -275,7 +278,7 @@ class Comments extends Base implements QueryInterface
         if ($this->options->commentsAvatar && 'comment' == $this->type) {
             $rating = $this->options->commentsAvatarRating;
 
-            $this->pluginHandle(__CLASS__)->trigger($plugged)->gravatar($size, $rating, $default, $this);
+            $this->pluginHandle()->trigger($plugged)->gravatar($size, $rating, $default, $this);
             if (!$plugged) {
                 $url = Common::gravatarUrl($this->mail, $size, $rating, $default, $this->request->isSecure());
                 echo '<img class="avatar" src="' . $url . '" alt="' .
@@ -330,10 +333,10 @@ class Comments extends Base implements QueryInterface
      */
     public function markdown(?string $text): string
     {
-        $html = $this->pluginHandle(__CLASS__)->trigger($parsed)->markdown($text);
+        $html = $this->pluginHandle()->trigger($parsed)->markdown($text);
 
         if (!$parsed) {
-            $html = \Markdown::convert($text);
+            $html = Markdown::convert($text);
         }
 
         return $html;
@@ -347,13 +350,13 @@ class Comments extends Base implements QueryInterface
      */
     public function autoP(?string $text): string
     {
-        $html = $this->pluginHandle(__CLASS__)->trigger($parsed)->autoP($text);
+        $html = $this->pluginHandle()->trigger($parsed)->autoP($text);
 
         if (!$parsed) {
             static $parser;
 
             if (empty($parser)) {
-                $parser = new \AutoP();
+                $parser = new AutoP();
             }
 
             $html = $parser->parse($text);
@@ -413,7 +416,7 @@ class Comments extends Base implements QueryInterface
             $select = $this->db->select('coid', 'parent')
                 ->from('table.comments')->where('cid = ? AND status = ?', $this->parentContent['cid'], 'approved')
                 ->where('coid ' . ('DESC' == $this->options->commentsOrder ? '>=' : '<=') . ' ?', $coid)
-                ->order('coid', Typecho_Db::SORT_ASC);
+                ->order('coid', Db::SORT_ASC);
 
             if ($this->options->commentsShowCommentOnly) {
                 $select->where('type = ?', 'comment');
@@ -454,13 +457,13 @@ class Comments extends Base implements QueryInterface
     {
         $text = $this->parentContent['hidden'] ? _t('内容被隐藏') : $this->text;
 
-        $text = $this->pluginHandle(__CLASS__)->trigger($plugged)->content($text, $this);
+        $text = $this->pluginHandle()->trigger($plugged)->content($text, $this);
         if (!$plugged) {
             $text = $this->options->commentsMarkdown ? $this->markdown($text)
                 : $this->autoP($text);
         }
 
-        $text = $this->pluginHandle(__CLASS__)->contentEx($text, $this);
+        $text = $this->pluginHandle()->contentEx($text, $this);
         return Common::stripTags($text, '<p><br>' . $this->options->commentsHTMLTagAllowed);
     }
 

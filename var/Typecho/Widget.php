@@ -344,12 +344,11 @@ abstract class Widget
     /**
      * 获取对象插件句柄
      *
-     * @param string|null $handle 句柄
      * @return Plugin
      */
-    public function pluginHandle(?string $handle = null): Plugin
+    public static function pluginHandle(): Plugin
     {
-        return Plugin::factory(empty($handle) ? static::class : $handle);
+        return Plugin::factory(static::class);
     }
 
     /**

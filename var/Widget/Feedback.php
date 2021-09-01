@@ -4,6 +4,7 @@ namespace Widget;
 
 use Typecho\Common;
 use Typecho\Cookie;
+use Typecho\Db;
 use Typecho\Router;
 use Typecho\Validate;
 use Typecho\Widget\Exception;
@@ -117,7 +118,7 @@ class Feedback extends Comments implements ActionInterface
                 ) {
                     $latestComment = $this->db->fetchRow($this->db->select('created')->from('table.comments')
                         ->where('cid = ? AND ip = ?', $this->content->cid, $this->request->getIp())
-                        ->order('created', Typecho_Db::SORT_DESC)
+                        ->order('created', Db::SORT_DESC)
                         ->limit(1));
 
                     if (

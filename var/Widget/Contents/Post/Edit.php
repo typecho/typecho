@@ -169,7 +169,7 @@ class Edit extends Contents implements ActionInterface
                 ->where('cid = ?', $this->cid));
 
             foreach ($rows as $row) {
-                $isFieldReadOnly = $this->pluginHandle('Widget_Abstract_Contents')
+                $isFieldReadOnly = Contents::pluginHandle()
                     ->trigger($plugged)->isFieldReadOnly($row['name']);
 
                 if ($plugged && $isFieldReadOnly) {
@@ -220,7 +220,7 @@ class Edit extends Contents implements ActionInterface
             if ($item instanceof Element) {
                 $name = $item->input->getAttribute('name');
 
-                $isFieldReadOnly = $this->pluginHandle('Widget_Abstract_Contents')
+                $isFieldReadOnly = Contents::pluginHandle()
                     ->trigger($plugged)->isFieldReadOnly($name);
                 if ($plugged && $isFieldReadOnly) {
                     continue;

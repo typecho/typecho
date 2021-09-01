@@ -11,6 +11,8 @@ use Typecho\Db\Query;
 use Typecho\Plugin;
 use Typecho\Router;
 use Typecho\Widget;
+use Utils\AutoP;
+use Utils\Markdown;
 use Widget\Base;
 use Widget\Metas\Category\Rows;
 use Widget\Upload;
@@ -309,7 +311,7 @@ class Contents extends Base implements QueryInterface
                 continue;
             }
 
-            $isFieldReadOnly = $this->pluginHandle(__CLASS__)->trigger($plugged)->isFieldReadOnly($name);
+            $isFieldReadOnly = $this->pluginHandle()->trigger($plugged)->isFieldReadOnly($name);
             if ($plugged && $isFieldReadOnly) {
                 continue;
             }
@@ -591,7 +593,7 @@ class Contents extends Base implements QueryInterface
             $value['hidden'] = true;
         }
 
-        $value = $this->pluginHandle(__CLASS__)->filter($value, $this);
+        $value = $this->pluginHandle()->filter($value, $this);
 
         /** 如果访问权限被禁止 */
         if ($value['hidden']) {
@@ -880,7 +882,7 @@ class Contents extends Base implements QueryInterface
             return $this->text;
         }
 
-        $content = $this->pluginHandle(__CLASS__)->trigger($plugged)->excerpt($this->text, $this);
+        $content = $this->pluginHandle()->trigger($plugged)->excerpt($this->text, $this);
         if (!$plugged) {
             $content = $this->isMarkdown ? $this->markdown($content)
                 : $this->autoP($content);
@@ -889,7 +891,7 @@ class Contents extends Base implements QueryInterface
         $contents = explode('<!--more-->', $content);
         [$excerpt] = $contents;
 
-        return Common::fixHtml($this->pluginHandle(__CLASS__)->excerptEx($excerpt, $this));
+        return Common::fixHtml($this->pluginHandle()->excerptEx($excerpt, $this));
     }
 
     /**
@@ -900,10 +902,10 @@ class Contents extends Base implements QueryInterface
      */
     public function markdown(?string $text): string
     {
-        $html = $this->pluginHandle(__CLASS__)->trigger($parsed)->markdown($text);
+        $html = $this->pluginHandle()->trigger($parsed)->markdown($text);
 
         if (!$parsed) {
-            $html = \Markdown::convert($text);
+            $html = Markdown::convert($text);
         }
 
         return $html;
@@ -917,13 +919,13 @@ class Contents extends Base implements QueryInterface
      */
     public function autoP(?string $text): string
     {
-        $html = $this->pluginHandle(__CLASS__)->trigger($parsed)->autoP($text);
+        $html = $this->pluginHandle()->trigger($parsed)->autoP($text);
 
         if (!$parsed) {
             static $parser;
 
             if (empty($parser)) {
-                $parser = new \AutoP();
+                $parser = new AutoP();
             }
 
             $html = $parser->parse($text);
@@ -943,14 +945,14 @@ class Contents extends Base implements QueryInterface
             return $this->text;
         }
 
-        $content = $this->pluginHandle(__CLASS__)->trigger($plugged)->content($this->text, $this);
+        $content = $this->pluginHandle()->trigger($plugged)->content($this->text, $this);
 
         if (!$plugged) {
             $content = $this->isMarkdown ? $this->markdown($content)
                 : $this->autoP($content);
         }
 
-        return $this->pluginHandle(__CLASS__)->contentEx($content, $this);
+        return $this->pluginHandle()->contentEx($content, $this);
     }
 
     /**

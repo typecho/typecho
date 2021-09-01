@@ -126,7 +126,7 @@ class Backup extends BaseOptions implements ActionInterface
             } while (count($rows) == 20);
         }
 
-        Plugin::factory(__CLASS__)->export($fp);
+        $this->pluginHandle()->export($fp);
         fwrite($fp, $header);
         fclose($fp);
 
@@ -322,7 +322,7 @@ class Backup extends BaseOptions implements ActionInterface
 
             $this->importData($table, $data);
         } else {
-            Plugin::factory(__CLASS__)->import($type, $header, $body);
+            $this->pluginHandle()->import($type, $header, $body);
         }
     }
 

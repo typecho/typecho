@@ -1,5 +1,6 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
+
+namespace Utils;
 
 /**
  * Markdown解析
@@ -16,7 +17,7 @@ class Markdown
      * @param string $text
      * @return string
      */
-    public static function convert($text)
+    public static function convert(string $text): string
     {
         static $parser;
 
