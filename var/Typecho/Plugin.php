@@ -348,10 +348,10 @@ class Plugin
     {
         switch (true) {
             case file_exists($pluginFileName = $path . '/' . $pluginName . '/Plugin.php'):
-                $className = $pluginName . '_Plugin';
+                $className = "\\{$pluginName}\Plugin";
                 break;
             case file_exists($pluginFileName = $path . '/' . $pluginName . '.php'):
-                $className = $pluginName;
+                $className = "\\{$pluginName}";
                 break;
             default:
                 throw new PluginException('Missing Plugin ' . $pluginName, 404);

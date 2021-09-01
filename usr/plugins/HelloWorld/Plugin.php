@@ -1,6 +1,6 @@
 <?php
 
-namespace HellWorld;
+namespace HelloWorld;
 
 use Typecho\Plugin\PluginInterface;
 use Typecho\Widget\Helper\Form;

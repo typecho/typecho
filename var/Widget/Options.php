@@ -256,7 +256,7 @@ class Options extends Base
      */
     public function pluginDir(?string $plugin = null): string
     {
-        return Common::url($plugin, __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
+        return __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__;
     }
 
     /**
