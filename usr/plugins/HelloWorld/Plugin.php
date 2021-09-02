@@ -7,7 +7,9 @@ use Typecho\Widget\Helper\Form;
 use Typecho\Widget\Helper\Form\Element\Text;
 use Widget\Options;
 
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * Hello World

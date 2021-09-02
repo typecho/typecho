@@ -17,7 +17,6 @@ class Plugin
     /**
      * 所有启用的插件
      *
-     * @access private
      * @var array
      */
     private static $plugin = [];
@@ -25,7 +24,6 @@ class Plugin
     /**
      * 实例化的插件对象
      *
-     * @access private
      * @var array
      */
     private static $instances;
@@ -33,7 +31,6 @@ class Plugin
     /**
      * 临时存储变量
      *
-     * @access private
      * @var array
      */
     private static $tmp = [];
@@ -41,7 +38,6 @@ class Plugin
     /**
      * 唯一句柄
      *
-     * @access private
      * @var string
      */
     private $handle;
@@ -49,7 +45,6 @@ class Plugin
     /**
      * 组件
      *
-     * @access private
      * @var string
      */
     private $component;
@@ -57,15 +52,12 @@ class Plugin
     /**
      * 是否触发插件的信号
      *
-     * @access private
      * @var boolean
      */
     private $signal;
 
     /**
      * 插件初始化
-     *
-     * @access public
      *
      * @param string $handle 插件
      */
@@ -78,11 +70,7 @@ class Plugin
     /**
      * 插件初始化
      *
-     * @access public
-     *
      * @param array $plugins 插件列表
-     *
-     * @return void
      */
     public static function init(array $plugins)
     {
@@ -97,7 +85,6 @@ class Plugin
      * 获取实例化插件对象
      *
      * @param string $handle 插件
-     *
      * @return Plugin
      */
     public static function factory(string $handle): Plugin
@@ -109,11 +96,7 @@ class Plugin
     /**
      * 启用插件
      *
-     * @access public
-     *
      * @param string $pluginName 插件名称
-     *
-     * @return void
      */
     public static function activate(string $pluginName)
     {
@@ -124,11 +107,7 @@ class Plugin
     /**
      * 禁用插件
      *
-     * @access public
-     *
      * @param string $pluginName 插件名称
-     *
-     * @return void
      */
     public static function deactivate(string $pluginName)
     {
@@ -155,11 +134,8 @@ class Plugin
     /**
      * 插件handle比对
      *
-     * @access private
-     *
      * @param array $pluginHandles
      * @param array $otherPluginHandles
-     *
      * @return array
      */
     private static function pluginHandlesDiff(array $pluginHandles, array $otherPluginHandles): array
@@ -176,7 +152,6 @@ class Plugin
     /**
      * 导出当前插件设置
      *
-     * @access public
      * @return array
      */
     public static function export(): array
@@ -187,10 +162,7 @@ class Plugin
     /**
      * 获取插件文件的头信息
      *
-     * @access public
-     *
      * @param string $pluginFile 插件文件路径
-     *
      * @return array
      */
     public static function parseInfo(string $pluginFile): array
@@ -211,7 +183,7 @@ class Plugin
             'author' => '',
             'homepage' => '',
             'version' => '',
-            'dependence' => '',
+            'since' => '',
             'activate' => false,
             'deactivate' => false,
             'config' => false,
@@ -222,7 +194,7 @@ class Plugin
             'package' => 'title',
             'author' => 'author',
             'link' => 'homepage',
-            'dependence' => 'dependence',
+            'since' => 'since',
             'version' => 'version'
         ];
 
@@ -336,11 +308,8 @@ class Plugin
      * 返回值为一个数组
      * 第一项为插件路径,第二项为类名
      *
-     * @access public
-     *
      * @param string $pluginName 插件名
      * @param string $path 插件目录
-     *
      * @return array
      * @throws PluginException
      */
@@ -363,45 +332,23 @@ class Plugin
     /**
      * 版本依赖性检测
      *
-     * @access public
-     *
-     * @param string $version 程序版本
-     * @param string $versionRange 依赖的版本规则
-     *
+     * @param string|null $version 插件版本
      * @return boolean
      */
-    public static function checkDependence(string $version, string $versionRange): bool
+    public static function checkDependence(?string $version): bool
     {
         //如果没有检测规则,直接掠过
-        if (empty($versionRange)) {
+        if (empty($version)) {
             return true;
         }
 
-        $items = array_map('trim', explode('-', $versionRange));
-        if (count($items) < 2) {
-            $items[1] = '9999.9999.9999';
-        }
-
-        [$minVersion, $maxVersion] = $items;
-
-        //对*和?的支持,4个9是最大版本
-        $minVersion = str_replace(['*', '?'], ['9999', '9'], $minVersion);
-        $maxVersion = str_replace(['*', '?'], ['9999', '9'], $maxVersion);
-
-        if (version_compare($version, $minVersion, '>=') && version_compare($version, $maxVersion, '<=')) {
-            return true;
-        }
-
-        return false;
+        return version_compare(Common::VERSION, $version, '>=');
     }
 
     /**
      * 判断插件是否存在
      *
-     * @access public
-     *
      * @param string $pluginName 插件名称
-     *
      * @return mixed
      */
     public static function exists(string $pluginName)
@@ -412,10 +359,7 @@ class Plugin
     /**
      * 插件调用后的触发器
      *
-     * @access public
-     *
      * @param boolean|null $signal 触发器
-     *
      * @return Plugin
      */
     public function trigger(?bool &$signal): Plugin
@@ -428,10 +372,7 @@ class Plugin
     /**
      * 通过魔术函数设置当前组件位置
      *
-     * @access public
-     *
      * @param string $component 当前组件
-     *
      * @return Plugin
      */
     public function __get(string $component)
@@ -443,12 +384,8 @@ class Plugin
     /**
      * 设置回调函数
      *
-     * @access public
-     *
      * @param string $component 当前组件
      * @param mixed $value 回调函数
-     *
-     * @return void
      */
     public function __set(string $component, $value)
     {
@@ -489,11 +426,8 @@ class Plugin
     /**
      * 回调处理函数
      *
-     * @access public
-     *
      * @param string $component 当前组件
      * @param array $args 参数
-     *
      * @return mixed
      */
     public function __call(string $component, array $args)

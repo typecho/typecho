@@ -44,7 +44,7 @@ class Edit extends Options implements ActionInterface
         $info = Plugin::parseInfo($pluginFileName);
 
         /** 检测依赖信息 */
-        if (Plugin::checkDependence(Common::VERSION, $info['dependence'])) {
+        if (Plugin::checkDependence($info['since'])) {
 
             /** 获取已启用插件 */
             $plugins = Plugin::export();

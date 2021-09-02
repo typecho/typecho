@@ -566,8 +566,6 @@ function install_redirect(string $url)
  */
 function install_js_support()
 {
-    $options = \Widget\Options::alloc();
-
     ?>
     <div id="success" class="row typecho-page-main hidden">
         <div class="col-mb-12 col-tb-8 col-tb-offset-2">

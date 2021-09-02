@@ -58,10 +58,7 @@ class Rows extends Widget
                     $info = Plugin::parseInfo($pluginFileName);
                     $info['name'] = $pluginName;
 
-                    $info['dependence'] = Plugin::checkDependence(
-                        Common::VERSION,
-                        $info['dependence']
-                    );
+                    $info['dependence'] = Plugin::checkDependence($info['since']);
 
                     /** 默认即插即用 */
                     $info['activated'] = true;
