@@ -32,18 +32,18 @@ class Pingback
         $this->target = $target;
 
         if (!isset($client)) {
-            throw new Exception('No available http client');
+            throw new Exception('No available http client', 50);
         }
 
         try {
             $client->setTimeout(5)
                 ->send($url);
         } catch (HttpException $e) {
-            throw new Exception('Pingback http error');
+            throw new Exception('Pingback http error', 50);
         }
 
         if ($client->getResponseStatus() != 200) {
-            throw new Exception('Pingback wrong http status');
+            throw new Exception('Pingback wrong http status', 50);
         }
 
         $response = $client->getResponseBody();
@@ -62,7 +62,7 @@ class Pingback
             !$client->getResponseHeader('X-Pingback') &&
             !preg_match_all("/<link[^>]*rel=[\"']pingback[\"'][^>]+href=[\"']([^\"']*)[\"'][^>]*>/i", $this->html)
         ) {
-            throw new Exception("Source server doesn't support pingback");
+            throw new Exception("Source server doesn't support pingback", 50);
         }
     }
 
@@ -112,7 +112,7 @@ class Pingback
         }
 
         if (!isset($finalText)) {
-            throw new Exception("Source page doesn't have target url");
+            throw new Exception("Source page doesn't have target url", 50);
         }
 
         return '[...]' . Common::subStr($finalText, 0, 200, '') . '[...]';

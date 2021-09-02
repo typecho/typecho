@@ -4,6 +4,7 @@ namespace Widget;
 
 use IXR\Date;
 use IXR\Error;
+use IXR\Exception;
 use IXR\Hook;
 use IXR\Pingback;
 use IXR\Server;
@@ -11,7 +12,7 @@ use ReflectionMethod;
 use Typecho\Common;
 use Typecho\Router;
 use Typecho\Widget;
-use Typecho\Widget\Exception;
+use Typecho\Widget\Exception as WidgetException;
 use Widget\Base\Comments;
 use Widget\Base\Contents;
 use Widget\Base\Metas;
@@ -160,21 +161,12 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      * @param int $pageId
      * @param string $userName
      * @param string $password
-     * @return array|Error
+     * @return array
      */
-    public function wpGetPage(int $blogId, int $pageId, string $userName, string $password)
+    public function wpGetPage(int $blogId, int $pageId, string $userName, string $password): array
     {
-        /** 检查权限 */
-        if (!$this->checkAccess($userName, $password)) {
-            return $this->error;
-        }
-
         /** 获取页面 */
-        try {
-            $page = PageEdit::alloc(null, ['cid' => $pageId]);
-        } catch (Exception $e) {
-            return new Error($e->getCode(), $e->getMessage());
-        }
+        $page = PageEdit::alloc(null, ['cid' => $pageId], false);
 
         /** 对文章内容做截取处理，以获得description和text_more*/
         [$excerpt, $more] = $this->getPostExtended($page);
@@ -208,32 +200,10 @@ class XmlRpc extends Contents implements ActionInterface, Hook
     }
 
     /**
-     * 检查权限
-     *
-     * @access public
-     * @return bool
-     */
-    public function checkAccess($name, $password, $level = 'contributor')
-    {
-        if ($this->user->login($name, $password, true)) {
-            /** 验证权限 */
-            if ($this->user->pass($level, true)) {
-                return true;
-            } else {
-                $this->error = new Error(403, _t('权限不足'));
-                return false;
-            }
-        } else {
-            $this->error = new Error(403, _t('无法登陆, 密码错误'));
-            return false;
-        }
-    }
-
-    /**
      * @param string $methodName
      * @param ReflectionMethod $reflectionMethod
      * @param array $parameters
-     * @return Error|void
+     * @throws Exception
      */
     public function beforeRpcCall(string $methodName, ReflectionMethod $reflectionMethod, array $parameters)
     {
@@ -267,10 +237,10 @@ class XmlRpc extends Contents implements ActionInterface, Hook
                 if ($this->user->pass($accesses[$methodName] ?? 'contributor', true)) {
                     $this->user->execute();
                 } else {
-                    return new Error(403, _t('权限不足'));
+                    throw new Exception(_t('权限不足'), 403);
                 }
             } else {
-                return new Error(403, _t('无法登陆, 密码错误'));
+                throw new Exception(_t('无法登陆, 密码错误'), 403);
             }
         }
     }
@@ -346,9 +316,10 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      * @param string $password
      * @param array $content
      * @param bool $publish
-     * @return mixed
+     * @return int
+     * @throws \Typecho\Db\Exception
      */
-    public function wpNewPage(int $blogId, string $userName, string $password, array $content, bool $publish)
+    public function wpNewPage(int $blogId, string $userName, string $password, array $content, bool $publish): int
     {
         $content['post_type'] = 'page';
         return $this->mwNewPost($blogId, $userName, $password, $content, $publish);
@@ -363,10 +334,10 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      * @param string $password
      * @param array $content
      * @param bool $publish
-     * @return mixed
+     * @return int
      * @throws \Typecho\Db\Exception
      */
-    public function mwNewPost(int $blogId, string $userName, string $password, array $content, bool $publish)
+    public function mwNewPost(int $blogId, string $userName, string $password, array $content, bool $publish): int
     {
         /** 取得content内容 */
         $input = [];
@@ -411,10 +382,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
                     !$this->db->fetchRow($this->db->select('mid')
                         ->from('table.metas')->where('type = ? AND name = ?', 'category', $category))
                 ) {
-                    $result = $this->wpNewCategory($blogId, $userName, $password, ['name' => $category]);
-                    if (true !== $result) {
-                        return $result;
-                    }
+                    $this->wpNewCategory($blogId, $userName, $password, ['name' => $category]);
                 }
 
                 $input['category'][] = $this->db->fetchObject($this->db->select('mid')
@@ -555,9 +523,15 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      * @param array $content
      * @param bool $publish
      * @return int
+     * @throws \Typecho\Db\Exception
      */
-    public function mwEditPost(int $postId, string $userName, string $password, array $content, bool $publish = true)
-    {
+    public function mwEditPost(
+        int $postId,
+        string $userName,
+        string $password,
+        array $content,
+        bool $publish = true
+    ): int {
         $content['postId'] = $postId;
         return $this->mwNewPost(1, $userName, $password, $content, $publish);
     }
@@ -571,8 +545,9 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      * @param int $postId
      * @param array $content
      * @return bool
+     * @throws \Typecho\Db\Exception
      */
-    public function wpEditPost(int $blogId, string $userName, string $password, int $postId, array $content)
+    public function wpEditPost(int $blogId, string $userName, string $password, int $postId, array $content): bool
     {
         $post = Archive::alloc('type=single', ['cid' => $postId], false);
         if ($post->type == 'attachment') {
@@ -1055,6 +1030,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      * @param string $password
      * @param integer $commentId
      * @return boolean
+     * @throws \Typecho\Db\Exception
      */
     public function wpDeleteComment(int $blogId, string $userName, string $password, int $commentId): bool
     {
@@ -1070,8 +1046,9 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      * @param integer $commentId
      * @param array $struct
      * @return boolean
+     * @throws \Typecho\Db\Exception
      */
-    public function wpEditComment(int $blogId, string $userName, string $password, int $commentId, array $struct)
+    public function wpEditComment(int $blogId, string $userName, string $password, int $commentId, array $struct): bool
     {
         $input = [];
 
@@ -1101,7 +1078,9 @@ class XmlRpc extends Contents implements ActionInterface, Hook
         }
 
 
-        return CommentsEdit::alloc(null, $input, false)->editComment();
+        $comment = CommentsEdit::alloc(null, $input, false);
+        $comment->editComment();
+        return $comment->have();
     }
 
     /**
@@ -1112,9 +1091,10 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      * @param string $password
      * @param mixed $path
      * @param array $struct
-     * @return int|Error
+     * @return int
+     * @throws \Exception
      */
-    public function wpNewComment(int $blogId, string $userName, string $password, $path, array $struct)
+    public function wpNewComment(int $blogId, string $userName, string $password, $path, array $struct): int
     {
         if (is_numeric($path)) {
             $post = Archive::alloc('type=single', ['cid' => $path], false);
@@ -1151,13 +1131,9 @@ class XmlRpc extends Contents implements ActionInterface, Hook
             $input['text'] = $struct['content'];
         }
 
-        try {
-            $comment = Feedback::alloc(['checkReferer' => false], $input, false);
-            $comment->action();
-            return $comment->coid;
-        } catch (\Typecho\Exception $e) {
-            return new Error(500, $e->getMessage());
-        }
+        $comment = Feedback::alloc(['checkReferer' => false], $input, false);
+        $comment->action();
+        return $comment->have() ? $comment->coid : 0;
     }
 
     /**
@@ -1238,7 +1214,6 @@ class XmlRpc extends Contents implements ActionInterface, Hook
                 'size' => $attachment->attachment->size,
             ],
             'thumbnail'        => $attachment->attachment->url,
-
         ];
     }
 
@@ -1382,14 +1357,17 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      * @param int $blogId
      * @param string $userName
      * @param string $password
-     * @param mixed $data
+     * @param array $data
+     * @return array
+     * @throws Exception
+     * @throws \Typecho\Db\Exception
      */
-    public function mwNewMediaObject(int $blogId, string $userName, string $password, $data)
+    public function mwNewMediaObject(int $blogId, string $userName, string $password, array $data): array
     {
         $result = Upload::uploadHandle($data);
 
         if (false === $result) {
-            return new Error(-32001, 'upload failed');
+            throw new Exception('upload failed', -32001);
         } else {
             $insertId = $this->insert([
                 'title'        => $result['name'],
@@ -1500,6 +1478,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      * @param string $password
      * @param array $categories
      * @return bool
+     * @throws \Typecho\Db\Exception
      */
     public function mtSetPostCategories(int $postId, string $userName, string $password, array $categories): bool
     {
@@ -1515,12 +1494,12 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      * @param int $postId
      * @param string $userName
      * @param string $password
-     * @access public
      * @return bool
      */
-    public function mtPublishPost($postId, $userName, $password)
+    public function mtPublishPost(int $postId, string $userName, string $password): bool
     {
-        $post = PostEdit::alloc(null, ['cid' => $postId], false);
+        $post = PostEdit::alloc(null, ['cid' => $postId, 'status' => 'publish'], false);
+        return true;
     }
 
     /**
@@ -1647,14 +1626,10 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      * @param string $userName
      * @param string $password
      * @param mixed $template
-     * @access public
-     * @return void
+     * @return bool
      */
-    public function bloggerGetTemplate(int $blogId, string $userName, string $password, $template)
+    public function bloggerGetTemplate(int $blogId, string $userName, string $password, $template): bool
     {
-        if (!$this->checkAccess($userName, $password)) {
-            return $this->error;
-        }
         /** todo:暂时先返回true*/
         return true;
     }
@@ -1667,14 +1642,10 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      * @param string $password
      * @param mixed $content
      * @param mixed $template
-     * @access public
-     * @return void
+     * @return bool
      */
-    public function bloggerSetTemplate(int $blogId, string $userName, string $password, $content, $template)
+    public function bloggerSetTemplate(int $blogId, string $userName, string $password, $content, $template): bool
     {
-        if (!$this->checkAccess($userName, $password)) {
-            return $this->error;
-        }
         /** todo:暂时先返回true*/
         return true;
     }
@@ -1684,10 +1655,10 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      *
      * @param string $source
      * @param string $target
-     * @return mixed
+     * @return int
      * @throws \Exception
      */
-    public function pingbackPing(string $source, string $target)
+    public function pingbackPing(string $source, string $target): int
     {
         /** 检查目标地址是否正确*/
         $pathInfo = Common::url(substr($target, strlen($this->options->index)), '/');
@@ -1696,16 +1667,16 @@ class XmlRpc extends Contents implements ActionInterface, Hook
         /** 检查源地址是否合法 */
         $params = parse_url($source);
         if (false === $params || !in_array($params['scheme'], ['http', 'https'])) {
-            return new Error(16, _t('源地址服务器错误'));
+            throw new Exception(_t('源地址服务器错误'), 16);
         }
 
         if (!Common::checkSafeHost($params['host'])) {
-            return new Error(16, _t('源地址服务器错误'));
+            throw new Exception(_t('源地址服务器错误'), 16);
         }
 
         /** 这样可以得到cid或者slug*/
         if (!($post instanceof Archive) || !$post->have() || !$post->is('single')) {
-            return new Error(33, _t('这个目标地址不存在'));
+            throw new Exception(_t('这个目标地址不存在'), 33);
         }
 
         if ($post) {
@@ -1749,27 +1720,24 @@ class XmlRpc extends Contents implements ActionInterface, Hook
                         $this->pluginHandle()->finishPingback($this);
 
                         return $insertId;
-                    } catch (Exception $e) {
-                        return new Error(16, _t('源地址服务器错误'));
-                    } catch (\IXR\Exception $e) {
-                        return new Error(50, _t('源地址不支持PingBack'));
+                    } catch (WidgetException $e) {
+                        throw new Exception(_t('源地址服务器错误'), 16);
                     }
                 } else {
-                    return new Error(48, _t('PingBack已经存在'));
+                    throw new Exception(_t('PingBack已经存在'), 48);
                 }
             } else {
-                return new Error(49, _t('目标地址禁止Ping'));
+                throw new Exception(_t('目标地址禁止Ping'), 49);
             }
         } else {
-            return new Error(33, _t('这个目标地址不存在'));
+            throw new Exception(_t('这个目标地址不存在'), 33);
         }
     }
 
     /**
      * 入口执行方法
      *
-     * @access public
-     * @return void
+     * @throws Exception
      */
     public function action()
     {

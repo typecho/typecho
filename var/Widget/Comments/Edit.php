@@ -295,16 +295,12 @@ class Edit extends Comments implements ActionInterface
                 'success' => 1,
                 'comment' => $updatedComment
             ]);
-
-            return true;
         }
 
         $this->response->throwJson([
             'success' => 0,
             'message' => _t('修评论失败')
         ]);
-
-        return false;
     }
 
     /**
