@@ -2,6 +2,8 @@
 
 namespace IXR;
 
+use Typecho\Widget\Exception as WidgetException;
+
 /**
  * IXR服务器
  *
@@ -71,7 +73,7 @@ class Server
      * @param array $methodcalls
      * @return array
      */
-    public function multiCall(array $methodcalls)
+    public function multiCall(array $methodcalls): array
     {
         // See http://www.xmlrpc.com/discuss/msgReader$1208
         $return = [];
@@ -93,6 +95,28 @@ class Server
             }
         }
         return $return;
+    }
+
+    /**
+     * @param string $methodName
+     * @return string|Error
+     */
+    public function methodHelp(string $methodName)
+    {
+        if (!$this->hasMethod($methodName)) {
+            return new Error(-32601, 'server error. requested method ' . $methodName . ' does not exist.');
+        }
+
+        [$object, $method] = $this->callbacks[$methodName];
+
+        try {
+            $ref = new \ReflectionMethod($object, $method);
+            $doc = $ref->getDocComment();
+
+            return $doc ?: '';
+        } catch (\ReflectionException $e) {
+            return '';
+        }
     }
 
     /**
@@ -165,6 +189,16 @@ class Server
             return new Error(
                 -32601,
                 'server error. requested class method "' . $methodName . '" does not exist.'
+            );
+        } catch (Exception $e) {
+            return new Error(
+                $e->getCode(),
+                $e->getMessage()
+            );
+        } catch (WidgetException $e) {
+            return new Error(
+                -32001,
+                $e->getMessage()
             );
         } catch (\Exception $e) {
             return new Error(
@@ -258,6 +292,7 @@ class Server
         $this->callbacks['system.getCapabilities'] = [$this, 'getCapabilities'];
         $this->callbacks['system.listMethods'] = [$this, 'listMethods'];
         $this->callbacks['system.multicall'] = [$this, 'multiCall'];
+        $this->callbacks['system.methodHelp'] = [$this, 'methodHelp'];
     }
 
     /**

@@ -364,6 +364,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      * @param array $content
      * @param bool $publish
      * @return mixed
+     * @throws \Typecho\Db\Exception
      */
     public function mwNewPost(int $blogId, string $userName, string $password, array $content, bool $publish)
     {
@@ -469,20 +470,15 @@ class XmlRpc extends Contents implements ActionInterface, Hook
         }
 
         /** 调用已有组件 */
-        try {
-            /** 插入 */
-            if ('page' == $type) {
-                $widget = PageEdit::alloc(null, $input, false);
-                $widget->writePage();
-            } else {
-                $widget = PostEdit::alloc(null, $input, false);
-                $widget->writePost();
-            }
-
-            return $widget->cid;
-        } catch (Exception $e) {
-            return new Error($e->getCode(), $e->getMessage());
+        if ('page' == $type) {
+            $widget = PageEdit::alloc(null, $input, false);
+            $widget->writePage();
+        } else {
+            $widget = PostEdit::alloc(null, $input, false);
+            $widget->writePost();
         }
+
+        return $widget->cid;
     }
 
     /**
@@ -492,10 +488,10 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      * @param string $userName
      * @param string $password
      * @param array $category
-     * @return mixed
+     * @return int
      * @throws \Typecho\Db\Exception
      */
-    public function wpNewCategory(int $blogId, string $userName, string $password, array $category)
+    public function wpNewCategory(int $blogId, string $userName, string $password, array $category): int
     {
 
         /** 开始接受数据 */
@@ -505,14 +501,9 @@ class XmlRpc extends Contents implements ActionInterface, Hook
         $input['description'] = $category['description'] ?? $category['name'];
 
         /** 调用已有组件 */
-        try {
-            /** 插入 */
-            $categoryWidget = CategoryEdit::alloc(null, $input, false);
-            $categoryWidget->insertCategory();
-            return $categoryWidget->mid;
-        } catch (Exception $e) {
-            return new Error($e->getCode(), $e->getMessage());
-        }
+        $categoryWidget = CategoryEdit::alloc(null, $input, false);
+        $categoryWidget->insertCategory();
+        return $categoryWidget->mid;
     }
 
     /**
@@ -522,18 +513,12 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      * @param string $userName
      * @param string $password
      * @param int $pageId
-     * @return bool|Error
+     * @return bool
+     * @throws \Typecho\Db\Exception
      */
-    public function wpDeletePage(int $blogId, string $userName, string $password, int $pageId)
+    public function wpDeletePage(int $blogId, string $userName, string $password, int $pageId): bool
     {
-        /** 删除页面 */
-        try {
-            /** 此组件会进行复杂的权限检测 */
-            PageEdit::alloc(null, ['cid' => $pageId], false)->deletePage();
-        } catch (Exception $e) {
-            return new Error($e->getCode(), $e->getMessage());
-        }
-
+        PageEdit::alloc(null, ['cid' => $pageId], false)->deletePage();
         return true;
     }
 
@@ -555,9 +540,10 @@ class XmlRpc extends Contents implements ActionInterface, Hook
         string $password,
         array $content,
         bool $publish
-    ) {
+    ): bool {
         $content['post_type'] = 'page';
         $this->mwEditPost($pageId, $userName, $password, $content, $publish);
+        return true;
     }
 
     /**
