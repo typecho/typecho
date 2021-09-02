@@ -429,7 +429,7 @@ class Upload extends Contents implements ActionInterface
      * @param string $ext 扩展名
      * @return boolean
      */
-    public static function checkFileType($ext)
+    public static function checkFileType(string $ext): bool
     {
         $options = Options::alloc();
         return in_array($ext, $options->allowedAttachmentTypes);

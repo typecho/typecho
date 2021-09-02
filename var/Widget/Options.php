@@ -33,6 +33,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property string $pluginUrl
  * @property string $adminUrl
  * @property string $loginUrl
+ * @property string $originalSiteUrl
  * @property string $loginAction
  * @property string $registerUrl
  * @property string $registerAction
@@ -48,6 +49,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property int $timezone
  * @property string $charset
  * @property string $contentType
+ * @property string $generator
  * @property string $software
  * @property string $version
  * @property bool $markdown
@@ -61,6 +63,33 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property string $actionTable
  * @property string $panelTable
  * @property bool $commentsThreaded
+ * @property bool $defaultAllowComment
+ * @property bool $defaultAllowPing
+ * @property bool $defaultAllowFeed
+ * @property string $commentDateFormat
+ * @property string $commentsAvatarRating
+ * @property string $commentsPageDisplay
+ * @property int $commentsPageSize
+ * @property string $commentsOrder
+ * @property bool $commentsMarkdown
+ * @property bool $commentsShowUrl
+ * @property bool $commentsUrlNofollow
+ * @property bool $commentsAvatar
+ * @property bool $commentsPageBreak
+ * @property bool $commentsRequireModeration
+ * @property bool $commentsWhitelist
+ * @property bool $commentsRequireMail
+ * @property bool $commentsRequireURL
+ * @property bool $commentsCheckReferer
+ * @property bool $commentsAntiSpam
+ * @property bool $commentsAutoClose
+ * @property bool $commentsPostIntervalEnable
+ * @property string $commentsHTMLTagAllowed
+ * @property bool $allowRegister
+ * @property bool $allowXmlRpc
+ * @property int $postsListSize
+ * @property bool $feedFullText
+ * @property int $defaultCategory
  */
 class Options extends Base
 {

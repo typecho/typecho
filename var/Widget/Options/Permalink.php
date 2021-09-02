@@ -245,7 +245,8 @@ RewriteRule . {$basePath}index.php [L]
         } elseif (!isset($patterns[$postPatternValue])) {
             $customPatternValue = $this->decodeRule($postPatternValue);
         }
-        $patterns['custom'] = _t('个性化定义') . ' <input type="text" class="w-50 text-s mono" name="customPattern" value="' . $customPatternValue . '" />';
+        $patterns['custom'] = _t('个性化定义') .
+            ' <input type="text" class="w-50 text-s mono" name="customPattern" value="' . $customPatternValue . '" />';
 
         $postPattern = new Form\Element\Radio(
             'postPattern',

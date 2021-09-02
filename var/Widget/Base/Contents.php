@@ -147,12 +147,12 @@ class Contents extends Base implements QueryInterface
     /**
      * 为内容应用缩略名
      *
-     * @param string $slug 缩略名
+     * @param string|null $slug 缩略名
      * @param mixed $cid 内容id
      * @return string
      * @throws Exception
      */
-    public function applySlug(string $slug, $cid): string
+    public function applySlug(?string $slug, $cid): string
     {
         if ($cid instanceof Query) {
             $cid = $this->db->fetchObject($cid->select('cid')

@@ -548,12 +548,12 @@ class Edit extends Contents implements ActionInterface
      * 设置内容标签
      *
      * @param integer $cid
-     * @param string $tags
+     * @param string|null $tags
      * @param boolean $beforeCount 是否参与计数
      * @param boolean $afterCount 是否参与计数
      * @throws DbException
      */
-    public function setTags(int $cid, string $tags, bool $beforeCount = true, bool $afterCount = true)
+    public function setTags(int $cid, ?string $tags, bool $beforeCount = true, bool $afterCount = true)
     {
         $tags = str_replace('，', ',', $tags);
         $tags = array_unique(array_map('trim', explode(',', $tags)));
@@ -1023,7 +1023,7 @@ class Edit extends Contents implements ActionInterface
     protected function ___draft(): ?array
     {
         if ($this->have()) {
-            if ('post_draft' == $this->type) {
+            if ('post_draft' == $this->type || 'page_draft' == $this->type) {
                 return $this->row;
             } else {
                 return $this->db->fetchRow(Contents::alloc()->select()
