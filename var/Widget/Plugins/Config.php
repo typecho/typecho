@@ -58,7 +58,7 @@ class Config extends Options
         }
 
         /** 获取插件入口 */
-        [$this->pluginFileName, $this->className] = Plugin::portal($config, $this->options->pluginDir($config));
+        [$this->pluginFileName, $this->className] = Plugin::portal($config, $this->options->pluginDir);
         $this->info = Plugin::parseInfo($this->pluginFileName);
     }
 

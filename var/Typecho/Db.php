@@ -105,7 +105,8 @@ class Db
     public function __construct($adapterName, string $prefix = 'typecho_')
     {
         /** 获取适配器名称 */
-        $this->adapterName = $adapterName == 'Mysql' ? 'Mysqli' : $adapterName;
+        $adapterName = $adapterName == 'Mysql' ? 'Mysqli' : $adapterName;
+        $this->adapterName = $adapterName;
 
         /** 数据库适配器 */
         $adapterName = '\Typecho\Db\Adapter\\' . str_replace('_', '\\', $adapterName);

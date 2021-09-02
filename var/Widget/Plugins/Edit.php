@@ -40,7 +40,7 @@ class Edit extends Options implements ActionInterface
     public function activate($pluginName)
     {
         /** 获取插件入口 */
-        [$pluginFileName, $className] = Plugin::portal($pluginName, $this->options->pluginDir($pluginName));
+        [$pluginFileName, $className] = Plugin::portal($pluginName, $this->options->pluginDir);
         $info = Plugin::parseInfo($pluginFileName);
 
         /** 检测依赖信息 */
@@ -118,7 +118,7 @@ class Edit extends Options implements ActionInterface
     public function configHandle(string $pluginName, array $settings, bool $isInit): bool
     {
         /** 获取插件入口 */
-        [$pluginFileName, $className] = Plugin::portal($pluginName, $this->options->pluginDir($pluginName));
+        [$pluginFileName, $className] = Plugin::portal($pluginName, $this->options->pluginDir);
 
         if (!$isInit && method_exists($className, 'configCheck')) {
             $result = call_user_func([$className, 'configCheck'], $settings);
@@ -215,7 +215,7 @@ class Edit extends Options implements ActionInterface
 
         try {
             /** 获取插件入口 */
-            [$pluginFileName, $className] = Plugin::portal($pluginName, $this->options->pluginDir($pluginName));
+            [$pluginFileName, $className] = Plugin::portal($pluginName, $this->options->pluginDir);
         } catch (Plugin\Exception $e) {
             $pluginFileExist = false;
 

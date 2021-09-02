@@ -1,4 +1,5 @@
 <?php
+
 include 'common.php';
 
 $panel = $request->get('panel');
@@ -10,4 +11,4 @@ if (!isset($panelTable['file']) || !in_array(urlencode($panel), $panelTable['fil
 
 [$pluginName, $file] = explode('/', trim($panel, '/'), 2);
 
-require_once $options->pluginDir($pluginName) . '/' . $panel;
+require_once $options->pluginDir($pluginName) . '/' . $file;

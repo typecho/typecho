@@ -31,6 +31,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property array $routingTable
  * @property string $rootUrl
  * @property string $pluginUrl
+ * @property string $pluginDir
  * @property string $adminUrl
  * @property string $loginUrl
  * @property string $originalSiteUrl
@@ -285,7 +286,7 @@ class Options extends Base
      */
     public function pluginDir(?string $plugin = null): string
     {
-        return __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__;
+        return Common::url($plugin, $this->pluginDir);
     }
 
     /**
@@ -487,6 +488,14 @@ class Options extends Base
     {
         return defined('__TYPECHO_PLUGIN_URL__') ? __TYPECHO_PLUGIN_URL__ :
             Common::url(__TYPECHO_PLUGIN_DIR__, $this->siteUrl);
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___pluginDir(): string
+    {
+        return Common::url(__TYPECHO_PLUGIN_DIR__, __TYPECHO_ROOT_DIR__);
     }
 
     /**

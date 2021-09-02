@@ -71,13 +71,6 @@ class Response
     private static $instance;
 
     /**
-     * 结束前回调函数
-     *
-     * @var array
-     */
-    private static $callback = [];
-
-    /**
      * 字符编码
      *
      * @var string
@@ -139,7 +132,7 @@ class Response
     /**
      * @param bool $enable
      */
-    public function enableAutoSendHeaders($enable = true)
+    public function enableAutoSendHeaders(bool $enable = true)
     {
         $this->enableAutoSendHeaders = $enable;
     }
@@ -196,16 +189,6 @@ class Response
         }
 
         exit;
-    }
-
-    /**
-     * 新增回调
-     *
-     * @param $callback
-     */
-    public static function addCallback($callback)
-    {
-        self::$callback[] = $callback;
     }
 
     /**
@@ -290,23 +273,6 @@ class Response
         $this->charset = $charset;
         $this->setHeader('Content-Type', $this->contentType . '; charset=' . $this->charset);
         return $this;
-    }
-
-    /**
-     * 结束前的统一回调函数
-     */
-    public static function callback()
-    {
-        static $called;
-
-        if ($called) {
-            return;
-        }
-
-        $called = true;
-        foreach (self::$callback as $callback) {
-            call_user_func($callback);
-        }
     }
 
     /**

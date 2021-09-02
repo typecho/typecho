@@ -36,6 +36,7 @@ class Init extends Widget
         define('__TYPECHO_CLASS_ALIASES__', [
             'Typecho_Plugin_Interface'    => '\Typecho\Plugin\PluginInterface',
             'Typecho_Widget_Helper_Empty' => '\Typecho\Widget\Helper\EmptyClass',
+            'Typecho_Db_Adapter_Mysql'    => '\Typecho\Db\Adapter\Mysqli',
             'Widget_Abstract'             => '\Widget\Base',
             'Widget_Abstract_Contents'    => '\Widget\Base\Contents',
             'Widget_Abstract_Comments'    => '\Widget\Base\Comments',

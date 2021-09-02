@@ -123,10 +123,7 @@ class Profile extends Edit implements ActionInterface
 
         while ($plugins->next()) {
             if ($plugins->personalConfig) {
-                [$pluginFileName, $className] = Plugin::portal(
-                    $plugins->name,
-                    $this->options->pluginDir($plugins->name)
-                );
+                [$pluginFileName, $className] = Plugin::portal($plugins->name, $this->options->pluginDir);
 
                 $form = $this->personalForm($plugins->name, $className, $pluginFileName, $group);
                 if ($this->user->pass($group, true)) {

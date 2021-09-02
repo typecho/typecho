@@ -99,7 +99,6 @@ class Router
                         $widget->{$route['action']}();
                     }
 
-                    Response::callback();
                     return;
 
                 } catch (\Exception $e) {

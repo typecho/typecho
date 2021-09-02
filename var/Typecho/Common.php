@@ -101,7 +101,7 @@ namespace Typecho {
             $aliasClass = str_replace('\\', '_', ltrim($className, '\\'));
             class_alias($className, $aliasClass);
         } elseif (
-            strpos($className, '_') !== false
+            (isset(__TYPECHO_CLASS_ALIASES__[$className]) || strpos($className, '_') !== false)
             && !class_exists($className, false)
             && !interface_exists($className, false)
             && !trait_exists($className, false)
