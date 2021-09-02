@@ -68,11 +68,18 @@ class User extends Users
         if ($this->hasLogin()) {
             $this->push($this->currentUser);
 
-            //更新最后活动时间
+            // update last activated time
             $this->db->query($this->db
                 ->update('table.users')
                 ->rows(['activated' => $this->options->time])
                 ->where('uid = ?', $this->currentUser['uid']));
+
+            // merge personal options
+            $options = $this->personalOptions->toArray();
+
+            foreach ($options as $key => $val) {
+                $this->options->{$key} = $val;
+            }
         }
     }
 

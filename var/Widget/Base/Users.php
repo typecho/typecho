@@ -27,7 +27,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property int $logged
  * @property string $group
  * @property string $authCode
- * @property-read Config $options
+ * @property-read Config $personalOptions
  * @property-read string $permalink
  * @property-read string $feedUrl
  * @property-read string $feedRssUrl
@@ -216,12 +216,12 @@ class Users extends Base implements QueryInterface
     }
 
     /**
-     * ___options
+     * personalOptions
      *
      * @return Config
      * @throws Exception
      */
-    protected function ___options(): Config
+    protected function ___personalOptions(): Config
     {
         $rows = $this->db->fetchAll($this->db->select()
             ->from('table.options')->where('user = ?', $this->uid));

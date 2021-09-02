@@ -63,14 +63,13 @@ class Upgrade extends BaseOptions implements ActionInterface
 
             /** 执行升级脚本 */
             try {
-                $result = call_user_func(['Upgrade', $package], $this->db, $options);
+                $result = call_user_func([\Utils\Upgrade::class, $package], $this->db, $options);
                 if (!empty($result)) {
                     $message[] = $result;
                 }
             } catch (Exception $e) {
                 Notice::alloc()->set($e->getMessage(), 'error');
                 $this->response->goBack();
-                return;
             }
 
             /** 更新版本号 */
