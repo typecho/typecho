@@ -3,7 +3,7 @@
 namespace Typecho;
 
 /**
- * Typecho_Feed
+ * Feed
  *
  * @package Feed
  */

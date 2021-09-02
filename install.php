@@ -744,7 +744,6 @@ function install_step_1_perform()
 {
     $errors = [];
     $checks = [
-        'curl',
         'mbstring',
         'json',
         'Reflection',

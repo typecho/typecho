@@ -312,7 +312,7 @@ EOF;
          * 使用方法:
          * <code>
          * $input = '这是一段被截断的html文本<a href="#"';
-         * echo Typecho_Common::fixHtml($input);
+         * echo Common::fixHtml($input);
          * //output: 这是一段被截断的html文本
          * </code>
          *
@@ -378,7 +378,7 @@ EOF;
          * 使用方法:
          * <code>
          * $input = '<a href="http://test/test.php" title="example">hello</a>';
-         * $output = Typecho_Common::stripTags($input, <a href="">);
+         * $output = Common::stripTags($input, <a href="">);
          * echo $output;
          * //display: '<a href="http://test/test.php">hello</a>'
          * </code>

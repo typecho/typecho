@@ -22,24 +22,18 @@ class Client
     /** 定义行结束符 */
     public const EOL = "\r\n";
 
-    private const ADAPTERS = ['Curl', 'Socket'];
+    private const ADAPTERS = [Adapter\Curl::class, Adapter\Socket::class];
 
     /**
      * 获取可用的连接
      *
-     * @param string ...$adapters
      * @return ?Adapter
      */
-    public static function get(string ...$adapters): ?Adapter
+    public static function get(): ?Adapter
     {
-        if (empty($adapters)) {
-            $adapters = self::ADAPTERS;
-        }
-
-        foreach ($adapters as $adapter) {
-            $adapterName = 'Typecho_Http_Client_Adapter_' . $adapter;
-            if (call_user_func([$adapterName, 'isAvailable'])) {
-                return new $adapterName();
+        foreach (self::ADAPTERS as $adapter) {
+            if (call_user_func([$adapter, 'isAvailable'])) {
+                return new $adapter();
             }
         }
 

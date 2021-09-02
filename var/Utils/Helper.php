@@ -195,7 +195,7 @@ class Helper
     }
 
     /**
-     * 获取Widget_Options对象
+     * 获取Options对象
      *
      * @return Options
      */
