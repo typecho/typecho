@@ -146,10 +146,9 @@ class Edit extends Comments implements ActionInterface
     /**
      * 删除评论
      *
-     * @return int
      * @throws Exception
      */
-    public function deleteComment(): int
+    public function deleteComment()
     {
         $comments = $this->request->filter('int')->getArray('coid');
         $deleteRows = 0;
@@ -200,8 +199,6 @@ class Edit extends Comments implements ActionInterface
             /** 返回原网页 */
             $this->response->goBack();
         }
-
-        return $deleteRows;
     }
 
     /**
