@@ -932,19 +932,20 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      * @param string $userName
      * @param string $password
      * @param integer $commentId
-     * @return array|Error
+     * @return array
+     * @throws Exception
      */
-    public function wpGetComment(int $blogId, string $userName, string $password, int $commentId)
+    public function wpGetComment(int $blogId, string $userName, string $password, int $commentId): array
     {
         $comment = CommentsEdit::alloc(null, ['coid' => $commentId], false);
         $comment->getComment();
 
         if (!$comment->have()) {
-            return new Error(404, _t('评论不存在'));
+            throw new Exception(_t('评论不存在'), 404);
         }
 
         if (!$comment->commentIsWriteable()) {
-            return new Error(403, _t('没有获取评论的权限'));
+            throw new Exception(_t('没有获取评论的权限'), 403);
         }
 
         return [
