@@ -5,7 +5,6 @@ namespace Utils;
 use Typecho\Common;
 use Typecho\Db;
 use Typecho\Exception;
-use Typecho\Widget\Sandbox;
 use Widget\Options;
 use Widget\Themes\Edit;
 use Widget\Upload;
@@ -963,10 +962,9 @@ Typecho_Date::setTimezoneOffset($options->timezone);
      */
     public static function v0_8r10_5_17($db, $options)
     {
-        Sandbox::factory('change=' . $options->theme)
-            ->run(function () {
-                Edit::alloc()->action();
-            });
+        Edit::alloc(null, 'change=' . $options->theme, function (Edit $edit) {
+            $edit->action();
+        });
     }
 
 

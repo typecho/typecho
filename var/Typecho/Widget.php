@@ -154,7 +154,7 @@ abstract class Widget
                     call_user_func($call, $widget);
                 }
             } catch (Terminal $e) {
-                $widget = null;
+                $widget = $widget ?? null;
             } finally {
                 if ($sandbox) {
                     Response::getInstance()->endSandbox();

@@ -756,8 +756,9 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      */
     public function wpDeleteCategory(int $blogId, string $userName, string $password, int $categoryId): bool
     {
-        CategoryEdit::alloc(null, ['mid' => $categoryId], false)
-            ->deleteCategory();
+        CategoryEdit::alloc(null, ['mid' => $categoryId], function (CategoryEdit $category) {
+            $category->deleteCategory();
+        });
 
         return true;
     }
@@ -773,7 +774,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      */
     public function wpGetCommentCount(int $blogId, string $userName, string $password, int $postId): array
     {
-        $stat = Stat::alloc(null, ['cid' => $postId], false);
+        $stat = Stat::alloc(null, ['cid' => $postId]);
 
         return [
             'approved'            => $stat->currentPublishedCommentsNum,
@@ -808,7 +809,6 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      */
     public function wpGetPostStatusList(int $blogId, string $userName, string $password): array
     {
-
         return [
             'draft'   => _t('草稿'),
             'pending' => _t('待审核'),
@@ -942,8 +942,9 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      */
     public function wpGetComment(int $blogId, string $userName, string $password, int $commentId): array
     {
-        $comment = CommentsEdit::alloc(null, ['coid' => $commentId], false);
-        $comment->getComment();
+        $comment = CommentsEdit::alloc(null, ['coid' => $commentId], function (CommentsEdit $comment) {
+            $comment->getComment();
+        });
 
         if (!$comment->have()) {
             throw new Exception(_t('评论不存在'), 404);
@@ -1040,7 +1041,10 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      */
     public function wpDeleteComment(int $blogId, string $userName, string $password, int $commentId): bool
     {
-        return CommentsEdit::alloc(null, ['coid' => $commentId], false)->deleteComment() > 0;
+        CommentsEdit::alloc(null, ['coid' => $commentId], function (CommentsEdit $comment) {
+            $comment->deleteComment();
+        });
+        return true;
     }
 
     /**
@@ -1084,8 +1088,9 @@ class XmlRpc extends Contents implements ActionInterface, Hook
         }
 
 
-        $comment = CommentsEdit::alloc(null, $input, false);
-        $comment->editComment();
+        $comment = CommentsEdit::alloc(null, $input, function (CommentsEdit $comment) {
+            $comment->editComment();
+        });
         return $comment->have();
     }
 
@@ -1137,8 +1142,9 @@ class XmlRpc extends Contents implements ActionInterface, Hook
             $input['text'] = $struct['content'];
         }
 
-        $comment = Feedback::alloc(['checkReferer' => false], $input, false);
-        $comment->action();
+        $comment = Feedback::alloc(['checkReferer' => false], $input, function (Feedback $comment) {
+            $comment->action();
+        });
         return $comment->have() ? $comment->coid : 0;
     }
 
@@ -1488,8 +1494,9 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      */
     public function mtSetPostCategories(int $postId, string $userName, string $password, array $categories): bool
     {
-        $post = PostEdit::alloc(null, ['cid' => $postId], false);
-        $post->setCategories($postId, array_column($categories, 'categoryId'), 'publish' == $post->status);
+        PostEdit::alloc(null, ['cid' => $postId], function (PostEdit $post) use ($postId, $categories) {
+            $post->setCategories($postId, array_column($categories, 'categoryId'), 'publish' == $post->status);
+        });
 
         return true;
     }
@@ -1504,7 +1511,10 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      */
     public function mtPublishPost(int $postId, string $userName, string $password): bool
     {
-        $post = PostEdit::alloc(null, ['cid' => $postId, 'status' => 'publish'], false);
+        PostEdit::alloc(null, ['cid' => $postId, 'status' => 'publish'], function (PostEdit $post) {
+            $post->markPost();
+        });
+
         return true;
     }
 
@@ -1588,7 +1598,9 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      */
     public function bloggerDeletePost(int $blogId, int $postId, string $userName, string $password, $publish): bool
     {
-        PostEdit::alloc(null, ['cid' => $postId], false)->deletePost();
+        PostEdit::alloc(null, ['cid' => $postId], function (PostEdit $post) {
+            $post->deletePost();
+        });
         return true;
     }
 
