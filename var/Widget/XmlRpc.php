@@ -439,11 +439,13 @@ class XmlRpc extends Contents implements ActionInterface, Hook
 
         /** 调用已有组件 */
         if ('page' == $type) {
-            $widget = PageEdit::alloc(null, $input, false);
-            $widget->writePage();
+            $widget = PageEdit::alloc(null, $input, function (PageEdit $page) {
+                $page->writePage();
+            });
         } else {
-            $widget = PostEdit::alloc(null, $input, false);
-            $widget->writePost();
+            $widget = PostEdit::alloc(null, $input, function (PostEdit $post) {
+                $post->writePost();
+            });
         }
 
         return $widget->cid;
@@ -469,8 +471,9 @@ class XmlRpc extends Contents implements ActionInterface, Hook
         $input['description'] = $category['description'] ?? $category['name'];
 
         /** 调用已有组件 */
-        $categoryWidget = CategoryEdit::alloc(null, $input, false);
-        $categoryWidget->insertCategory();
+        $categoryWidget = CategoryEdit::alloc(null, $input, function (CategoryEdit $category) {
+            $category->insertCategory();
+        });
         return $categoryWidget->mid;
     }
 
@@ -486,7 +489,9 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      */
     public function wpDeletePage(int $blogId, string $userName, string $password, int $pageId): bool
     {
-        PageEdit::alloc(null, ['cid' => $pageId], false)->deletePage();
+        PageEdit::alloc(null, ['cid' => $pageId], function (PageEdit $page) {
+            $page->deletePage();
+        });
         return true;
     }
 

@@ -2,6 +2,8 @@
 
 namespace Typecho;
 
+use Typecho\Widget\Terminal;
+
 /**
  * Typecho公用方法
  *
@@ -108,6 +110,11 @@ class Response
     private $enableAutoSendHeaders = true;
 
     /**
+     * @var bool
+     */
+    private $sandbox = false;
+
+    /**
      * init responder
      */
     public function __construct()
@@ -127,6 +134,24 @@ class Response
         }
 
         return self::$instance;
+    }
+
+    /**
+     * @return $this
+     */
+    public function beginSandbox(): Response
+    {
+        $this->sandbox = true;
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function endSandbox(): Response
+    {
+        $this->sandbox = false;
+        return $this;
     }
 
     /**
@@ -154,6 +179,10 @@ class Response
      */
     public function sendHeaders()
     {
+        if ($this->sandbox) {
+            return;
+        }
+
         header('HTTP/1.1 ' . $this->status . ' ' . self::HTTP_CODE[$this->status], true, $this->status);
 
         // set header
@@ -177,9 +206,14 @@ class Response
 
     /**
      * respond data
+     * @throws Terminal
      */
     public function respond()
     {
+        if ($this->sandbox) {
+            throw new Terminal();
+        }
+
         if ($this->enableAutoSendHeaders) {
             $this->sendHeaders();
         }
@@ -200,7 +234,10 @@ class Response
      */
     public function setStatus(int $code): Response
     {
-        $this->status = $code;
+        if (!$this->sandbox) {
+            $this->status = $code;
+        }
+
         return $this;
     }
 
@@ -213,8 +250,11 @@ class Response
      */
     public function setHeader(string $name, string $value): Response
     {
-        $name = str_replace(' ', '-', ucwords(str_replace('-', ' ', $name)));
-        $this->headers[$name] = $value;
+        if (!$this->sandbox) {
+            $name = str_replace(' ', '-', ucwords(str_replace('-', ' ', $name)));
+            $this->headers[$name] = $value;
+        }
+
         return $this;
     }
 
@@ -235,7 +275,10 @@ class Response
         string $path = '/',
         string $domain = null
     ): Response {
-        $this->cookies[] = [$key, $value, $timeout, $path, $domain];
+        if (!$this->sandbox) {
+            $this->cookies[] = [$key, $value, $timeout, $path, $domain];
+        }
+
         return $this;
     }
 
@@ -247,8 +290,11 @@ class Response
      */
     public function setContentType(string $contentType = 'text/html'): Response
     {
-        $this->contentType = $contentType;
-        $this->setHeader('Content-Type', $this->contentType . '; charset=' . $this->charset);
+        if (!$this->sandbox) {
+            $this->contentType = $contentType;
+            $this->setHeader('Content-Type', $this->contentType . '; charset=' . $this->charset);
+        }
+
         return $this;
     }
 
@@ -270,8 +316,11 @@ class Response
      */
     public function setCharset(string $charset): Response
     {
-        $this->charset = $charset;
-        $this->setHeader('Content-Type', $this->contentType . '; charset=' . $this->charset);
+        if (!$this->sandbox) {
+            $this->charset = $charset;
+            $this->setHeader('Content-Type', $this->contentType . '; charset=' . $this->charset);
+        }
+
         return $this;
     }
 
@@ -283,7 +332,10 @@ class Response
      */
     public function addResponder(callable $responder): Response
     {
-        $this->responders[] = $responder;
+        if (!$this->sandbox) {
+            $this->responders[] = $responder;
+        }
+
         return $this;
     }
 }

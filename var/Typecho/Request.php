@@ -18,7 +18,15 @@ class Request
     private static $instance;
 
     /**
-     * 内部参数
+     * 沙箱参数
+     *
+     * @access private
+     * @var Config|null
+     */
+    private $sandbox;
+
+    /**
+     * 用户参数
      *
      * @access private
      * @var Config|null
@@ -92,6 +100,25 @@ class Request
      *
      * @return $this
      */
+    public function beginSandbox(Config $sandbox): Request
+    {
+        $this->sandbox = $sandbox;
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function endSandbox(): Request
+    {
+        $this->sandbox = null;
+        return $this;
+    }
+
+    /**
+     * @param Config $params
+     * @return $this
+     */
     public function proxy(Config $params): Request
     {
         $this->params = $params;
@@ -116,6 +143,14 @@ class Request
         switch (true) {
             case isset($this->params) && isset($this->params[$key]):
                 $value = $this->params[$key];
+                break;
+            case isset($this->sandbox):
+                if (isset($this->sandbox[$key])) {
+                    $value = $this->sandbox[$key];
+                } else {
+                    $value = $default;
+                    $exists = false;
+                }
                 break;
             case isset($_GET[$key]):
                 $value = $_GET[$key];

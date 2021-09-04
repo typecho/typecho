@@ -5,6 +5,7 @@ namespace Typecho;
 use Typecho\Widget\Helper\EmptyClass;
 use Typecho\Widget\Request as WidgetRequest;
 use Typecho\Widget\Response as WidgetResponse;
+use Typecho\Widget\Terminal;
 
 /**
  * Typecho组件基类
@@ -117,14 +118,14 @@ abstract class Widget
      * @param class-string $alias 组件别名
      * @param mixed $params 传递的参数
      * @param mixed $request 前端参数
-     * @param boolean $enableResponse 是否允许http回执
+     * @param bool|callable $call 回调
      * @return Widget
      */
     public static function widget(
         string $alias,
         $params = null,
         $request = null,
-        bool $enableResponse = true
+        $call = true
     ): Widget {
         [$className] = explode('@', $alias);
         $key = Common::nativeClassName($alias);
@@ -133,17 +134,36 @@ abstract class Widget
             $className = self::$widgetAlias[$className];
         }
 
-        if (!isset(self::$widgetPool[$key])) {
-            /** 初始化request */
-            $requestObject = new WidgetRequest(Request::getInstance(), Config::factory($request));
+        $sandbox = false;
 
-            /** 初始化response */
-            $responseObject = new WidgetResponse(Request::getInstance(), Response::getInstance(), $enableResponse);
+        if (isset($request) || $call === true || is_callable($call)) {
+            $sandbox = true;
+            Request::getInstance()->beginSandbox(new Config($request));
+            Response::getInstance()->beginSandbox();
+        }
 
-            /** 初始化组件 */
-            $widget = new $className($requestObject, $responseObject, $params);
+        if ($sandbox || !isset(self::$widgetPool[$key])) {
+            $requestObject = new WidgetRequest(Request::getInstance());
+            $responseObject = new WidgetResponse(Request::getInstance(), Response::getInstance());
 
-            $widget->execute();
+            try {
+                $widget = new $className($requestObject, $responseObject, $params);
+                $widget->execute();
+
+                if ($sandbox && is_callable($call)) {
+                    call_user_func($call, $widget);
+                }
+            } catch (Terminal $e) {
+                $widget = null;
+            } finally {
+                if ($sandbox) {
+                    Response::getInstance()->endSandbox();
+                    Request::getInstance()->endSandbox();
+
+                    return $widget;
+                }
+            }
+
             self::$widgetPool[$key] = $widget;
         }
 
@@ -155,12 +175,12 @@ abstract class Widget
      *
      * @param mixed $params
      * @param mixed $request
-     * @param bool $enableResponse
+     * @param mixed $call
      * @return $this
      */
-    public static function alloc($params = null, $request = null, bool $enableResponse = true): Widget
+    public static function alloc($params = null, $request = null, $call = true): Widget
     {
-        return self::widget(static::class, $params, $request, $enableResponse);
+        return self::widget(static::class, $params, $request, $call);
     }
 
     /**
@@ -169,16 +189,16 @@ abstract class Widget
      * @param string $alias
      * @param mixed $params
      * @param mixed $request
-     * @param bool $enableResponse
+     * @param mixed $call
      * @return $this
      */
     public static function allocWithAlias(
         string $alias,
         $params = null,
         $request = null,
-        bool $enableResponse = true
+        $call = true
     ): Widget {
-        return self::widget(static::class . '@' . $alias, $params, $request, $enableResponse);
+        return self::widget(static::class . '@' . $alias, $params, $request, $call);
     }
 
     /**
@@ -240,7 +260,7 @@ abstract class Widget
      * 将类本身赋值
      *
      * @param mixed $variable 变量名
-     * @return Widget
+     * @return $this
      */
     public function to(&$variable): Widget
     {

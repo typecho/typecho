@@ -627,7 +627,8 @@ class Edit extends Contents implements ActionInterface
         if (!empty($attachments)) {
             foreach ($attachments as $key => $attachment) {
                 $this->db->query($this->db->update('table.contents')->rows([
-                    'parent' => $cid, 'status' => 'publish',
+                    'parent' => $cid,
+                    'status' => 'publish',
                     'order'  => $key + 1
                 ])->where('cid = ? AND type = ?', $attachment, 'attachment'));
             }

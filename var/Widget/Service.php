@@ -7,6 +7,7 @@ use Typecho\Http\Client;
 use Typecho\Plugin;
 use Typecho\Response;
 use Typecho\Widget\Exception;
+use Typecho\Widget\Sandbox;
 use Widget\Base\Options as BaseOptions;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
@@ -53,7 +54,10 @@ class Service extends BaseOptions implements ActionInterface
         }
 
         /** 获取post */
-        $post = Archive::alloc("type=post", "cid={$this->request->cid}", false);
+        $post = Sandbox::factory("cid={$this->request->cid}")
+            ->run(function () {
+                return Archive::alloc('type=post');
+            });
 
         if ($post->have() && preg_match_all("|<a[^>]*href=[\"'](.*?)[\"'][^>]*>(.*?)</a>|", $post->text, $matches)) {
             $links = array_unique($matches[1]);
