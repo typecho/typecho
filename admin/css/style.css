@@ -23,6 +23,8 @@ a.button:hover, a.balloon-button:hover { background-color: #A5CADC; color: #FFF;
 /** Forms */
 input[type=text], input[type=password], input[type=email], textarea { background: #FFF; border: 1px solid #D9D9D6; padding: 7px; border-radius: 2px; box-sizing: border-box; }
 
+input[type=text]:disabled, input[type=text]:read-only, input[type=password]:disabled, input[type=password]:read-only, input[type=email]:disabled, input[type=email]:read-only, textarea:disabled, textarea:read-only { background: #F3F3F3; }
+
 textarea { resize: vertical; line-height: 1.5; }
 
 input[type="radio"], input[type="checkbox"] { margin-right: 3px; }
@@ -202,9 +204,6 @@ select { border: 1px solid #CCC; height: 28px; }
 .typecho-foot .resource { color: #CCC; }
 
 .typecho-foot .resource a { margin: 0 3px; color: #999; }
-
-/* 低版本浏览器升级提示 */
-.browsehappy { border: none; text-align: center; }
 
 /** 顶部消息样式 by 70 */
 .popup { display: none; position: absolute; top: 0; left: 0; margin: 0; padding: 8px 0; border: none; width: 100%; z-index: 10; text-align: center; border-radius: 0; }

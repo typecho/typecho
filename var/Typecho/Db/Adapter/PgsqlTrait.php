@@ -28,7 +28,7 @@ trait PgsqlTrait
      *
      * @param string $table
      * @param resource $handle 连接对象
-     * @throws Exception
+     * @throws SQLException
      */
     public function truncate(string $table, $handle)
     {
@@ -64,7 +64,7 @@ trait PgsqlTrait
      * @param $handle
      * @param string|null $action
      * @param string|null $table
-     * @throws Exception
+     * @throws SQLException
      */
     protected function prepareQuery(string &$query, $handle, ?string $action = null, ?string $table = null)
     {
@@ -109,7 +109,7 @@ WHERE
      * @param resource $resource 查询的资源数据
      * @param resource $handle 连接对象
      * @return integer
-     * @throws Exception
+     * @throws SQLException
      */
     public function lastInsertId($resource, $handle): int
     {

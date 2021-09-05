@@ -11,6 +11,10 @@ textarea {
   border-radius: 2px;
 
   box-sizing: border-box;
+
+  &:disabled, &:read-only {
+    background: #F3F3F3;
+  }
 }
 
 textarea {

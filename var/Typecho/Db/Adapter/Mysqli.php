@@ -43,7 +43,7 @@ class Mysqli implements Adapter
      *
      * @param Config $config 数据库配置
      * @return \mysqli
-     * @throws Exception
+     * @throws ConnectionException
      */
     public function connect(Config $config): \mysqli
     {
@@ -64,7 +64,7 @@ class Mysqli implements Adapter
         }
 
         /** 数据库异常 */
-        throw new Exception(@$this->dbLink->error);
+        throw new ConnectionException(@$this->dbLink->error, @$this->dbLink->errno);
     }
 
     /**
@@ -87,7 +87,7 @@ class Mysqli implements Adapter
      * @param string|null $action 数据库动作
      * @param string|null $table 数据表
      * @return \mysqli_result
-     * @throws Exception
+     * @throws SQLException
      */
     public function query(
         string $query,
@@ -101,7 +101,7 @@ class Mysqli implements Adapter
         }
 
         /** 数据库异常 */
-        throw new Exception($this->dbLink->error, $this->dbLink->errno);
+        throw new SQLException($this->dbLink->error, $this->dbLink->errno);
     }
 
     /**

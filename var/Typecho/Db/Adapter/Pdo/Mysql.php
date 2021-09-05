@@ -3,7 +3,6 @@
 namespace Typecho\Db\Adapter\Pdo;
 
 use Typecho\Config;
-use Typecho\Db\Adapter\Exception;
 use Typecho\Db\Adapter\MysqlTrait;
 use Typecho\Db\Adapter\Pdo;
 

@@ -13,6 +13,6 @@ use Typecho\Db\Exception as DbException;
  *
  * @package Db
  */
-class Exception extends DbException
+class SQLException extends DbException
 {
 }

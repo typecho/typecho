@@ -35,7 +35,7 @@ class SQLite implements Adapter
      *
      * @param Config $config 数据库配置
      * @return \SQLite3
-     * @throws Exception
+     * @throws ConnectionException
      */
     public function connect(Config $config): \SQLite3
     {
@@ -43,7 +43,7 @@ class SQLite implements Adapter
             $dbHandle = new \SQLite3($config->file);
             $this->isSQLite2 = version_compare(\SQLite3::version()['versionString'], '3.0.0', '<');
         } catch (\Exception $e) {
-            throw new Exception($e->getMessage(), $e->getCode());
+            throw new ConnectionException($e->getMessage(), $e->getCode());
         }
 
         return $dbHandle;
@@ -69,7 +69,7 @@ class SQLite implements Adapter
      * @param string|null $action 数据库动作
      * @param string|null $table 数据表
      * @return \SQLite3Result
-     * @throws Exception
+     * @throws SQLException
      */
     public function query(
         string $query,
@@ -85,7 +85,7 @@ class SQLite implements Adapter
         }
 
         /** 数据库异常 */
-        throw new Exception($handle->lastErrorMsg(), $handle->lastErrorCode());
+        throw new SQLException($handle->lastErrorMsg(), $handle->lastErrorCode());
     }
 
     /**

@@ -11,7 +11,7 @@ trait MysqlTrait
      *
      * @param string $table
      * @param mixed $handle 连接对象
-     * @throws Exception
+     * @throws SQLException
      */
     public function truncate(string $table, $handle)
     {

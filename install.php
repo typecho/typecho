@@ -418,7 +418,7 @@ require_once __TYPECHO_ROOT_DIR__ . '/var/Typecho/Common.php';
 
 // init
 \Typecho\Common::init();
-    
+
 // config db
 \$db = new \Typecho\Db('{$adapter}', '{$dbPrefix}');
 \$db->addServer(" . (var_export($dbConfig, true)) . ", \Typecho\Db::READ | \Typecho\Db::WRITE);
@@ -473,7 +473,9 @@ function install_check(string $type): bool
                 if ($type == 'db_data' && empty($values)) {
                     return false;
                 }
-            } catch (\Typecho\Db\Exception $e) {
+            } catch (\Typecho\Db\Adapter\ConnectionException $e) {
+                return true;
+            } catch (\Typecho\Db\Adapter\SQLException $e) {
                 return false;
             }
 

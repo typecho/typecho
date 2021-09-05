@@ -136,7 +136,7 @@ abstract class Widget
 
         $sandbox = false;
 
-        if (isset($request) || $call === true || is_callable($call)) {
+        if (isset($request) || $call === false || is_callable($call)) {
             $sandbox = true;
             Request::getInstance()->beginSandbox(new Config($request));
             Response::getInstance()->beginSandbox();

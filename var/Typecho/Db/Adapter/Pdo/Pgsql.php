@@ -4,7 +4,7 @@ namespace Typecho\Db\Adapter\Pdo;
 
 use Typecho\Config;
 use Typecho\Db;
-use Typecho\Db\Adapter\Exception;
+use Typecho\Db\Adapter\SQLException;
 use Typecho\Db\Adapter\Pdo;
 use Typecho\Db\Adapter\PgsqlTrait;
 
@@ -41,7 +41,7 @@ class Pgsql extends Pdo
      * @param string|null $action 数据库动作
      * @param string|null $table 数据表
      * @return \PDOStatement
-     * @throws Exception
+     * @throws SQLException
      */
     public function query(
         string $query,

@@ -49,7 +49,7 @@ abstract class Pdo implements Adapter
      *
      * @param Config $config 数据库配置
      * @return \PDO
-     * @throws Exception
+     * @throws ConnectionException
      */
     public function connect(Config $config): \PDO
     {
@@ -59,7 +59,7 @@ abstract class Pdo implements Adapter
             return $this->object;
         } catch (\PDOException $e) {
             /** 数据库异常 */
-            throw new Exception($e->getMessage());
+            throw new ConnectionException($e->getMessage(), $e->getCode());
         }
     }
 
@@ -94,7 +94,7 @@ abstract class Pdo implements Adapter
      * @param string|null $action 数据库动作
      * @param string|null $table 数据表
      * @return \PDOStatement
-     * @throws Exception
+     * @throws SQLException
      */
     public function query(
         string $query,
@@ -109,7 +109,7 @@ abstract class Pdo implements Adapter
             $resource->execute();
         } catch (\PDOException $e) {
             /** 数据库异常 */
-            throw new Exception($e->getMessage(), $e->getCode());
+            throw new SQLException($e->getMessage(), $e->getCode());
         }
 
         return $resource;

@@ -35,7 +35,7 @@ class Pgsql implements Adapter
      *
      * @param Config $config 数据库配置
      * @return resource
-     * @throws Exception
+     * @throws ConnectionException
      */
     public function connect(Config $config)
     {
@@ -50,7 +50,7 @@ class Pgsql implements Adapter
         }
 
         /** 数据库异常 */
-        throw new Exception(pg_last_error($dbLink));
+        throw new ConnectionException(pg_last_error($dbLink));
     }
 
     /**
@@ -74,7 +74,7 @@ class Pgsql implements Adapter
      * @param string|null $action 数据库动作
      * @param string|null $table 数据表
      * @return resource
-     * @throws Exception
+     * @throws SQLException
      */
     public function query(string $query, $handle, int $op = Db::READ, ?string $action = null, ?string $table = null)
     {
@@ -84,7 +84,7 @@ class Pgsql implements Adapter
         }
 
         /** 数据库异常 */
-        throw new Exception(
+        throw new SQLException(
             @pg_last_error($handle),
             pg_result_error_field(pg_get_result($handle), PGSQL_DIAG_SQLSTATE)
         );
