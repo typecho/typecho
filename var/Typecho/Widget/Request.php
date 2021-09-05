@@ -45,11 +45,12 @@ class Request
 
     /**
      * @param HttpRequest $request
+     * @param Config|null $params
      */
-    public function __construct(HttpRequest $request)
+    public function __construct(HttpRequest $request, ?Config $params = null)
     {
         $this->request = $request;
-        $this->params = new Config();
+        $this->params = $params ?? new Config();
     }
 
     /**

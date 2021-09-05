@@ -118,14 +118,14 @@ abstract class Widget
      * @param class-string $alias 组件别名
      * @param mixed $params 传递的参数
      * @param mixed $request 前端参数
-     * @param bool|callable $call 回调
+     * @param bool|callable $disableSandboxOrCallback 回调
      * @return Widget
      */
     public static function widget(
         string $alias,
         $params = null,
         $request = null,
-        $call = true
+        $disableSandboxOrCallback = true
     ): Widget {
         [$className] = explode('@', $alias);
         $key = Common::nativeClassName($alias);
@@ -136,22 +136,22 @@ abstract class Widget
 
         $sandbox = false;
 
-        if (isset($request) || $call === false || is_callable($call)) {
+        if ($disableSandboxOrCallback === false || is_callable($disableSandboxOrCallback)) {
             $sandbox = true;
             Request::getInstance()->beginSandbox(new Config($request));
             Response::getInstance()->beginSandbox();
         }
 
         if ($sandbox || !isset(self::$widgetPool[$key])) {
-            $requestObject = new WidgetRequest(Request::getInstance());
+            $requestObject = new WidgetRequest(Request::getInstance(), isset($request) ? new Config($request) : null);
             $responseObject = new WidgetResponse(Request::getInstance(), Response::getInstance());
 
             try {
                 $widget = new $className($requestObject, $responseObject, $params);
                 $widget->execute();
 
-                if ($sandbox && is_callable($call)) {
-                    call_user_func($call, $widget);
+                if ($sandbox && is_callable($disableSandboxOrCallback)) {
+                    call_user_func($disableSandboxOrCallback, $widget);
                 }
             } catch (Terminal $e) {
                 $widget = $widget ?? null;
@@ -175,12 +175,12 @@ abstract class Widget
      *
      * @param mixed $params
      * @param mixed $request
-     * @param mixed $call
+     * @param bool|callable $disableSandboxOrCallback
      * @return $this
      */
-    public static function alloc($params = null, $request = null, $call = true): Widget
+    public static function alloc($params = null, $request = null, $disableSandboxOrCallback = true): Widget
     {
-        return self::widget(static::class, $params, $request, $call);
+        return self::widget(static::class, $params, $request, $disableSandboxOrCallback);
     }
 
     /**
@@ -189,16 +189,16 @@ abstract class Widget
      * @param string $alias
      * @param mixed $params
      * @param mixed $request
-     * @param mixed $call
+     * @param bool|callable $disableSandboxOrCallback
      * @return $this
      */
     public static function allocWithAlias(
         string $alias,
         $params = null,
         $request = null,
-        $call = true
+        $disableSandboxOrCallback = true
     ): Widget {
-        return self::widget(static::class . '@' . $alias, $params, $request, $call);
+        return self::widget(static::class . '@' . $alias, $params, $request, $disableSandboxOrCallback);
     }
 
     /**
