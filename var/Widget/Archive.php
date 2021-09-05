@@ -345,9 +345,9 @@ class Archive extends Contents
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getArchiveSlug(): string
+    public function getArchiveSlug(): ?string
     {
         return $this->archiveSlug;
     }
@@ -361,9 +361,9 @@ class Archive extends Contents
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getArchiveSingle(): string
+    public function getArchiveSingle(): ?string
     {
         return $this->archiveSingle;
     }
@@ -377,9 +377,9 @@ class Archive extends Contents
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getArchiveType(): string
+    public function getArchiveType(): ?string
     {
         return $this->archiveType;
     }
@@ -393,9 +393,9 @@ class Archive extends Contents
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getFeedType(): string
+    public function getFeedType(): ?string
     {
         return $this->feedType;
     }
@@ -409,9 +409,9 @@ class Archive extends Contents
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getDescription(): string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
@@ -425,9 +425,9 @@ class Archive extends Contents
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getKeywords(): string
+    public function getKeywords(): ?string
     {
         return $this->keywords;
     }
@@ -505,9 +505,9 @@ class Archive extends Contents
     }
 
     /**
-     * @return Query
+     * @return Query|null
      */
-    public function getCountSql(): Query
+    public function getCountSql(): ?Query
     {
         return $this->countSql;
     }
@@ -560,9 +560,9 @@ class Archive extends Contents
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getThemeFile(): string
+    public function getThemeFile(): ?string
     {
         return $this->themeFile;
     }
@@ -576,9 +576,9 @@ class Archive extends Contents
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getThemeDir(): string
+    public function getThemeDir(): ?string
     {
         return $this->themeDir;
     }
@@ -1546,14 +1546,14 @@ class Archive extends Contents
         $currentProperties = get_object_vars($this);
 
         foreach ($currentProperties as $name => $value) {
-            if (false !== strpos('|request|response|parameter|_feed|_feedType|_currentFeedUrl|', '|' . $name . '|')) {
+            if (false !== strpos('|request|response|parameter|feed|feedType|currentFeedUrl|', '|' . $name . '|')) {
                 continue;
             }
 
             if (isset($widget->{$name})) {
                 $this->{$name} = $widget->{$name};
             } else {
-                $method = ucfirst(trim($name, '_'));
+                $method = ucfirst($name);
                 $setMethod = 'set' . $method;
                 $getMethod = 'get' . $method;
 
@@ -1561,7 +1561,11 @@ class Archive extends Contents
                     method_exists($this, $setMethod)
                     && method_exists($widget, $getMethod)
                 ) {
-                    $this->{$setMethod}($widget->{$getMethod}());
+                    $value = $widget->{$getMethod}();
+
+                    if ($value !== null) {
+                        $this->{$setMethod}($widget->{$getMethod}());
+                    }
                 }
             }
         }
