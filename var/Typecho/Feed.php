@@ -128,9 +128,9 @@ class Feed
     /**
      * 设置副标题
      *
-     * @param string $subTitle 副标题
+     * @param string|null $subTitle 副标题
      */
-    public function setSubTitle(string $subTitle)
+    public function setSubTitle(?string $subTitle)
     {
         $this->subTitle = $subTitle;
     }
