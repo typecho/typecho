@@ -124,7 +124,7 @@ class Ping extends Comments
                     $singlePingOptions->beforeTitle();
                     $this->author(true);
                     $singlePingOptions->afterTitle();
-                    ?></cite>
+                ?></cite>
             </div>
             <div class="ping-meta">
                 <a href="<?php $this->permalink(); ?>"><?php $singlePingOptions->beforeDate();

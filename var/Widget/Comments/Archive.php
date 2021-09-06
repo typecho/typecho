@@ -93,7 +93,14 @@ class Archive extends Comments
         $commentsAuthor = Cookie::get('__typecho_remember_author');
         $commentsMail = Cookie::get('__typecho_remember_mail');
         $select = $this->select()->where('table.comments.cid = ?', $this->parameter->parentId)
-            ->where('table.comments.status = ? OR (table.comments.author = ? AND table.comments.mail = ? AND table.comments.status = ?)', 'approved', $commentsAuthor, $commentsMail, 'waiting');
+            ->where(
+                'table.comments.status = ? OR (table.comments.author = ?'
+                    . ' AND table.comments.mail = ? AND table.comments.status = ?)',
+                'approved',
+                $commentsAuthor,
+                $commentsMail,
+                'waiting'
+            );
         $threadedSelect = null;
 
         if ($this->options->commentsShowCommentOnly) {
@@ -312,7 +319,9 @@ class Archive extends Comments
         ?>">
             <div class="comment-author" itemprop="creator" itemscope itemtype="http://schema.org/Person">
                 <span
-                    itemprop="image"><?php $this->gravatar($singleCommentOptions->avatarSize, $singleCommentOptions->defaultAvatar); ?></span>
+                    itemprop="image">
+                    <?php $this->gravatar($singleCommentOptions->avatarSize, $singleCommentOptions->defaultAvatar); ?>
+                </span>
                 <cite class="fn" itemprop="name"><?php $singleCommentOptions->beforeAuthor();
                     $this->author();
                     $singleCommentOptions->afterAuthor(); ?></cite>
@@ -320,9 +329,11 @@ class Archive extends Comments
             <div class="comment-meta">
                 <a href="<?php $this->permalink(); ?>">
                     <time itemprop="commentTime"
-                          datetime="<?php $this->date('c'); ?>"><?php $singleCommentOptions->beforeDate();
-                        $this->date($singleCommentOptions->dateFormat);
-                        $singleCommentOptions->afterDate(); ?></time>
+                          datetime="<?php $this->date('c'); ?>"><?php
+                            $singleCommentOptions->beforeDate();
+                            $this->date($singleCommentOptions->dateFormat);
+                            $singleCommentOptions->afterDate();
+                            ?></time>
                 </a>
                 <?php if ('waiting' == $this->status) { ?>
                     <em class="comment-awaiting-moderation"><?php $singleCommentOptions->commentStatus(); ?></em>

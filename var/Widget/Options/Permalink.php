@@ -219,7 +219,8 @@ RewriteRule . {$basePath}index.php [L]
                         . _t('请调整你的目录权限, 或者手动创建一个.htaccess文件.') . '</strong>';
                 }
 
-                $errorStr .= '<br /><input type="checkbox" name="enableRewriteAnyway" id="enableRewriteAnyway" value="1" />'
+                $errorStr .=
+                    '<br /><input type="checkbox" name="enableRewriteAnyway" id="enableRewriteAnyway" value="1" />'
                     . ' <label for="enableRewriteAnyway">' . _t('如果你仍然想启用此功能, 请勾选这里') . '</label>';
                 $rewrite->addRule([$this, 'checkRewrite'], $errorStr);
             }
@@ -228,10 +229,14 @@ RewriteRule . {$basePath}index.php [L]
         }
 
         $patterns = [
-            '/archives/[cid:digital]/'                                        => _t('默认风格') . ' <code>/archives/{cid}/</code>',
-            '/archives/[slug].html'                                           => _t('wordpress风格') . ' <code>/archives/{slug}.html</code>',
-            '/[year:digital:4]/[month:digital:2]/[day:digital:2]/[slug].html' => _t('按日期归档') . ' <code>/{year}/{month}/{day}/{slug}.html</code>',
-            '/[category]/[slug].html'                                         => _t('按分类归档') . ' <code>/{category}/{slug}.html</code>'
+            '/archives/[cid:digital]/'                                        => _t('默认风格')
+                . ' <code>/archives/{cid}/</code>',
+            '/archives/[slug].html'                                           => _t('wordpress风格')
+                . ' <code>/archives/{slug}.html</code>',
+            '/[year:digital:4]/[month:digital:2]/[day:digital:2]/[slug].html' => _t('按日期归档')
+                . ' <code>/{year}/{month}/{day}/{slug}.html</code>',
+            '/[category]/[slug].html'                                         => _t('按分类归档')
+                . ' <code>/{category}/{slug}.html</code>'
         ];
 
         /** 自定义文章路径 */

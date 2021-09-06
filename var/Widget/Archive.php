@@ -1208,9 +1208,7 @@ class Archive extends Contents
             input = document.createElement('input');
         input.type = 'hidden';
         input.name = '_';
-        input.value = " . Common::shuffleScriptVar(
-                    $this->security->getToken($this->request->getRequestUrl())
-                    ) . "
+        input.value = " . Common::shuffleScriptVar($this->security->getToken($this->request->getRequestUrl())) . "
 
         if (null != r) {
             var forms = r.getElementsByTagName('form');

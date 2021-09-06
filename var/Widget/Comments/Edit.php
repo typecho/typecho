@@ -187,7 +187,6 @@ class Edit extends Comments implements ActionInterface
                     'message' => _t('删除评论失败')
                 ]);
             }
-
         } else {
             /** 设置提示信息 */
             Notice::alloc()

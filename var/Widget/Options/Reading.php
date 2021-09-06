@@ -122,9 +122,11 @@ class Reading extends Permalink
         $frontPattern = '</label></span><span class="multiline front-archive%class%">'
             . '<input type="checkbox" id="frontArchive" name="frontArchive" value="1"'
             . ($this->options->frontArchive && 'recent' != $frontPageType ? ' checked' : '') . ' />
-<label for="frontArchive">' . _t('同时将文章列表页路径更改为 %s',
+<label for="frontArchive">' . _t(
+                '同时将文章列表页路径更改为 %s',
                 '<input type="text" name="archivePattern" class="w-20 mono" value="'
-                . htmlspecialchars($this->decodeRule($this->options->routingTable['archive']['url'])) . '" />')
+                . htmlspecialchars($this->decodeRule($this->options->routingTable['archive']['url'])) . '" />'
+            )
             . '</label>';
 
         // 页面列表

@@ -136,7 +136,6 @@ class Edit extends PostEdit implements ActionInterface
             Notice::alloc()->set('publish' == $this->status ?
                 _t('文件 <a href="%s">%s</a> 已经被更新', $this->permalink, $this->title) :
                 _t('未归档文件 %s 已经被更新', $this->title), 'success');
-
         }
 
         /** 转向原页 */

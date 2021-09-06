@@ -91,6 +91,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property int $postsListSize
  * @property bool $feedFullText
  * @property int $defaultCategory
+ * @property bool $frontArchive
  */
 class Options extends Base
 {

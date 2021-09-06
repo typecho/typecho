@@ -424,7 +424,6 @@ class Edit extends Contents implements ActionInterface
             if ($this->update($contents, $this->db->sql()->where('cid = ?', $this->cid))) {
                 $realId = $this->cid;
             }
-
         } else {
             /** 发布一个新内容 */
             $realId = $this->insert($contents);
@@ -727,7 +726,6 @@ class Edit extends Contents implements ActionInterface
             if ($this->update($contents, $this->db->sql()->where('cid = ?', $this->draft['cid']))) {
                 $realId = $this->draft['cid'];
             }
-
         } else {
             if ($this->have()) {
                 $contents['parent'] = $this->cid;

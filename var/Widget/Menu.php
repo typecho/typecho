@@ -314,4 +314,3 @@ class Menu extends Base
         }
     }
 }
-
