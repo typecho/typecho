@@ -138,11 +138,7 @@ namespace Typecho {
         public static function url(?string $path, ?string $prefix): string
         {
             $path = (0 === strpos($path, './')) ? substr($path, 2) : $path;
-            return rtrim(
-                rtrim($prefix, '/') . '/'
-                . str_replace('//', '/', ltrim($path, '/')),
-                '/'
-            );
+            return rtrim($prefix, '/') . '/' . str_replace('//', '/', ltrim($path, '/'));
         }
 
         /**
