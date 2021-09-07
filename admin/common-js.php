@@ -7,13 +7,13 @@
         $(document).ready(function() {
             // 处理消息机制
             (function () {
-                var prefix = '<?php echo Typecho_Cookie::getPrefix(); ?>',
+                var prefix = '<?php echo \Typecho\Cookie::getPrefix(); ?>',
                     cookies = {
                         notice      :   $.cookie(prefix + '__typecho_notice'),
                         noticeType  :   $.cookie(prefix + '__typecho_notice_type'),
                         highlight   :   $.cookie(prefix + '__typecho_notice_highlight')
                     },
-                    path = '<?php echo Typecho_Cookie::getPath(); ?>';
+                    path = '<?php echo \Typecho\Cookie::getPath(); ?>';
 
                 if (!!cookies.notice && 'success|notice|error'.indexOf(cookies.noticeType) >= 0) {
                     var head = $('.typecho-head-nav'),
@@ -110,7 +110,7 @@
 
                     if ((href && href[0] == '#')
                         || /^<?php echo preg_quote($options->adminUrl, '/'); ?>.*$/.exec(href) 
-                            || /^<?php echo substr(preg_quote(Typecho_Common::url('s', $options->index), '/'), 0, -1); ?>action\/[_a-zA-Z0-9\/]+.*$/.exec(href)) {
+                            || /^<?php echo substr(preg_quote(\Typecho\Common::url('s', $options->index), '/'), 0, -1); ?>action\/[_a-zA-Z0-9\/]+.*$/.exec(href)) {
                         return;
                     }
 

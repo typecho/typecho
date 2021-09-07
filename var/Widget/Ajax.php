@@ -1,14 +1,14 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-/**
- * 异步调用组件
- *
- * @category typecho
- * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
- * @version $Id$
- */
+
+namespace Widget;
+
+use Typecho\Http\Client;
+use Typecho\Widget\Exception;
+use Widget\Base\Options as BaseOptions;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * 异步调用组件
@@ -17,7 +17,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * @category typecho
  * @package Widget
  */
-class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
+class Ajax extends BaseOptions implements ActionInterface
 {
     /**
      * 针对rewrite验证的请求返回
@@ -35,12 +35,12 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
     /**
      * 获取最新版本
      *
-     * @throws Typecho_Widget_Exception
+     * @throws Exception|\Typecho\Db\Exception
      */
     public function checkVersion()
     {
         $this->user->pass('editor');
-        $client = Typecho_Http_Client::get();
+        $client = Client::get();
         if ($client) {
             $client->setHeader('User-Agent', $this->options->generator)
                 ->setTimeout(10);
@@ -51,17 +51,19 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
 
                 /** 匹配内容体 */
                 $response = $client->getResponseBody();
-                $json = Json::decode($response, true);
+                $json = json_decode($response, true);
 
                 if (!empty($json)) {
                     [$soft, $version] = explode(' ', $this->options->generator);
                     $current = explode('/', $version);
 
-                    if (isset($json['release']) && isset($json['version'])
+                    if (
+                        isset($json['release']) && isset($json['version'])
                         && preg_match("/^[0-9\.]+$/", $json['release'])
                         && preg_match("/^[0-9\.]+$/", $json['version'])
                         && version_compare($json['release'], $current[0], '>=')
-                        && version_compare($json['version'], $current[1], '>')) {
+                        && version_compare($json['version'], $current[1], '>')
+                    ) {
                         $result = [
                             'available' => 1,
                             'latest'    => $json['release'] . '-' . $json['version'],
@@ -70,26 +72,26 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
                         ];
                     }
                 }
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 // do nothing
             }
 
             $this->response->throwJson($result);
-            return;
         }
 
-        throw new Typecho_Widget_Exception(_t('禁止访问'), 403);
+        throw new Exception(_t('禁止访问'), 403);
     }
 
     /**
      * 远程请求代理
      *
-     * @throws Typecho_Widget_Exception
+     * @throws Exception
+     * @throws Client\Exception|\Typecho\Db\Exception
      */
     public function feed()
     {
         $this->user->pass('subscriber');
-        $client = Typecho_Http_Client::get();
+        $client = Client::get();
         if ($client) {
             $client->setHeader('User-Agent', $this->options->generator)
                 ->setTimeout(10)
@@ -97,7 +99,11 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
 
             /** 匹配内容体 */
             $response = $client->getResponseBody();
-            preg_match_all("/<item>\s*<title>([^>]*)<\/title>\s*<link>([^>]*)<\/link>\s*<guid>[^>]*<\/guid>\s*<pubDate>([^>]*)<\/pubDate>/is", $response, $matches);
+            preg_match_all(
+                "/<item>\s*<title>([^>]*)<\/title>\s*<link>([^>]*)<\/link>\s*<guid>[^>]*<\/guid>\s*<pubDate>([^>]*)<\/pubDate>/is",
+                $response,
+                $matches
+            );
 
             $data = [];
 
@@ -116,27 +122,29 @@ class Widget_Ajax extends Widget_Abstract_Options implements Widget_Interface_Do
             }
 
             $this->response->throwJson($data);
-            return;
         }
 
-        throw new Typecho_Widget_Exception(_t('禁止访问'), 403);
+        throw new Exception(_t('禁止访问'), 403);
     }
 
     /**
      * 自定义编辑器大小
      *
-     * @access public
-     * @return void
+     * @throws \Typecho\Db\Exception|Exception
      */
     public function editorResize()
     {
         $this->user->pass('contributor');
-        if ($this->db->fetchObject($this->db->select(['COUNT(*)' => 'num'])
-                ->from('table.options')->where('name = ? AND user = ?', 'editorSize', $this->user->uid))->num > 0) {
-            $this->widget('Widget_Abstract_Options')
-                ->update(['value' => $this->request->size], $this->db->sql()->where('name = ? AND user = ?', 'editorSize', $this->user->uid));
+        if (
+            $this->db->fetchObject($this->db->select(['COUNT(*)' => 'num'])
+                ->from('table.options')->where('name = ? AND user = ?', 'editorSize', $this->user->uid))->num > 0
+        ) {
+            parent::update(
+                ['value' => $this->request->size],
+                $this->db->sql()->where('name = ? AND user = ?', 'editorSize', $this->user->uid)
+            );
         } else {
-            $this->widget('Widget_Abstract_Options')->insert([
+            parent::insert([
                 'name'  => 'editorSize',
                 'value' => $this->request->size,
                 'user'  => $this->user->uid

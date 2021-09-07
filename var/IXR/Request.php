@@ -1,43 +1,55 @@
 <?php
-/*
-   IXR - The Inutio XML-RPC Library - (c) Incutio Ltd 2002
-   Version 1.61 - Simon Willison, 11th July 2003 (htmlentities -> htmlspecialchars)
-   Site:   http://scripts.incutio.com/xmlrpc/
-   Manual: http://scripts.incutio.com/xmlrpc/manual.php
-   Made available under the Artistic License: http://www.opensource.org/licenses/artistic-license.php
-*/
+
+namespace IXR;
 
 /**
  * IXR请求体
  *
  * @package IXR
  */
-class IXR_Request {
-    var $method;
-    var $args;
-    var $xml;
-    function __construct($method, $args) {
-        $this->method = $method;
-        $this->args = $args;
+class Request
+{
+    /**
+     * @var string
+     */
+    private $xml;
+
+    /**
+     * @param string $method
+     * @param array $args
+     */
+    public function __construct(string $method, array $args)
+    {
         $this->xml = <<<EOD
 <?xml version="1.0"?>
 <methodCall>
-<methodName>{$this->method}</methodName>
+<methodName>{$method}</methodName>
 <params>
 
 EOD;
-        foreach ($this->args as $arg) {
+        foreach ($args as $arg) {
             $this->xml .= '<param><value>';
-            $v = new IXR_Value($arg);
+            $v = new Value($arg);
             $this->xml .= $v->getXml();
             $this->xml .= "</value></param>\n";
         }
+
         $this->xml .= '</params></methodCall>';
     }
-    function getLength() {
+
+    /**
+     * @return int
+     */
+    public function getLength(): int
+    {
         return strlen($this->xml);
     }
-    function getXml() {
+
+    /**
+     * @return string
+     */
+    public function getXml(): string
+    {
         return $this->xml;
     }
 }

@@ -1,12 +1,14 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-/**
- * Typecho Blog Platform
- *
- * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license    GNU General Public License 2.0
- * @version    $Id$
- */
+
+namespace Widget\Plugins;
+
+use Typecho\Common;
+use Typecho\Plugin;
+use Typecho\Widget;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * 插件列表组件
@@ -17,7 +19,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Plugins_List extends Typecho_Widget
+class Rows extends Widget
 {
     /**
      * 已启用插件
@@ -40,7 +42,7 @@ class Widget_Plugins_List extends Typecho_Widget
         $this->parameter->setDefault(['activated' => null]);
 
         /** 获取已启用插件 */
-        $plugins = Typecho_Plugin::export();
+        $plugins = Plugin::export();
         $this->activatedPlugins = $plugins['activated'];
 
         if (!empty($pluginDirs)) {
@@ -53,13 +55,10 @@ class Widget_Plugins_List extends Typecho_Widget
                 [$pluginName, $pluginFileName] = $parts;
 
                 if (file_exists($pluginFileName)) {
-                    $info = Typecho_Plugin::parseInfo($pluginFileName);
+                    $info = Plugin::parseInfo($pluginFileName);
                     $info['name'] = $pluginName;
 
-                    $info['dependence'] = Typecho_Plugin::checkDependence(
-                        Typecho_Common::VERSION,
-                        $info['dependence']
-                    );
+                    $info['dependence'] = Plugin::checkDependence($info['since']);
 
                     /** 默认即插即用 */
                     $info['activated'] = true;
@@ -83,7 +82,7 @@ class Widget_Plugins_List extends Typecho_Widget
     /**
      * @return array
      */
-    protected function getPlugins()
+    protected function getPlugins(): array
     {
         return glob(__TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__ . '/*');
     }
@@ -93,7 +92,7 @@ class Widget_Plugins_List extends Typecho_Widget
      * @param string $index
      * @return array|null
      */
-    protected function getPlugin($plugin, $index)
+    protected function getPlugin(string $plugin, string $index): ?array
     {
         if (is_dir($plugin)) {
             /** 获取插件名称 */

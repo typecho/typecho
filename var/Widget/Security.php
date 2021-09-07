@@ -1,5 +1,14 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
+
+namespace Widget;
+
+use Typecho\Common;
+use Typecho\Response;
+use Typecho\Widget;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * 安全选项组件
@@ -9,84 +18,51 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * @copyright Copyright (c) 2014 Typecho team (http://typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Security extends Typecho_Widget
+class Security extends Base
 {
     /**
      * @var string
      */
-    private $_token;
-
-    /**
-     * @var Widget_Options
-     */
-    private $_options;
+    private $token;
 
     /**
      * @var boolean
      */
-    private $_enabled = true;
+    private $enabled = true;
+
+    /**
+     * @param int $components
+     */
+    public function initComponents(int &$components)
+    {
+        $components = self::INIT_OPTIONS | self::INIT_USER;
+    }
 
     /**
      * 初始化函数
-     *
      */
     public function execute()
     {
-        $this->_options = $this->widget('Widget_Options');
-        $user = $this->widget('Widget_User');
-
-        $this->_token = $this->_options->secret;
-        if ($user->hasLogin()) {
-            $this->_token .= '&' . $user->authCode . '&' . $user->uid;
+        $this->token = $this->options->secret;
+        if ($this->user->hasLogin()) {
+            $this->token .= '&' . $this->user->authCode . '&' . $this->user->uid;
         }
     }
 
     /**
-     * 在系统升级的时候进行安全性检查
-     *
-     * @return array
+     * @param bool $enabled
      */
-    public function systemCheck()
+    public function enable(bool $enabled = true)
     {
-        $errors = [];
-
-        // 检查安装文件的安全性
-        $installFile = __TYPECHO_ROOT_DIR__ . '/install.php';
-        if (file_exists($installFile)) {
-            $installFileContents = file_get_contents($installFile);
-
-            if (0 !== strpos($installFileContents,
-                    '<?php if (!file_exists(dirname(__FILE__) . \'/config.inc.php\')): ?>') ||
-                false !== strpos($installFileContents,
-                    '!isset($_GET[\'finish\']) && file_exists(__TYPECHO_ROOT_DIR__ . \'/config.inc.php\') && empty($_SESSION[\'typecho\'])')) {
-                $errors[] = _t('您正在运行一个不安全的安装脚本 <strong>%s</strong>, 请用新版中的对应文件替代或者直接删除它', $installFile);
-            }
-        }
-
-        // 验证入口文件
-        $indexFile = __TYPECHO_ROOT_DIR__ . '/index.php';
-        if (md5_file($indexFile) != 'f4dae7ceb7002cf4f95d380f5ced906b') {
-            $errors[] = _t('当前网站的入口文件 <strong>%s</strong> 与最新版中的不一致, 请更新', $indexFile);
-        }
-
-        return $errors;
-    }
-
-    /**
-     * @param $enabled
-     */
-    public function enable($enabled = true)
-    {
-        $this->_enabled = $enabled;
+        $this->enabled = $enabled;
     }
 
     /**
      * 保护提交数据
-     *
      */
     public function protect()
     {
-        if ($this->_enabled && $this->request->get('_') != $this->getToken($this->request->getReferer())) {
+        if ($this->enabled && $this->request->get('_') != $this->getToken($this->request->getReferer())) {
             $this->response->goBack();
         }
     }
@@ -97,9 +73,9 @@ class Widget_Security extends Typecho_Widget
      * @param string $suffix 后缀
      * @return string
      */
-    public function getToken($suffix)
+    public function getToken(string $suffix): string
     {
-        return md5($this->_token . '&' . $suffix);
+        return md5($this->token . '&' . $suffix);
     }
 
     /**
@@ -108,9 +84,9 @@ class Widget_Security extends Typecho_Widget
      * @param $path
      * @return string
      */
-    public function getRootUrl($path)
+    public function getRootUrl($path): string
     {
-        return Typecho_Common::url($this->getTokenUrl($path), $this->_options->rootUrl);
+        return Common::url($this->getTokenUrl($path), $this->options->rootUrl);
     }
 
     /**
@@ -120,7 +96,7 @@ class Widget_Security extends Typecho_Widget
      * @param string|null $url
      * @return string
      */
-    public function getTokenUrl($path, ?string $url = null)
+    public function getTokenUrl($path, ?string $url = null): string
     {
         $parts = parse_url($path);
         $params = [];
@@ -132,7 +108,7 @@ class Widget_Security extends Typecho_Widget
         $params['_'] = $this->getToken($url ?: $this->request->getRequestUrl());
         $parts['query'] = http_build_query($params);
 
-        return Typecho_Common::buildUrl($parts);
+        return Common::buildUrl($parts);
     }
 
     /**
@@ -151,9 +127,9 @@ class Widget_Security extends Typecho_Widget
      * @param string $path
      * @return string
      */
-    public function getAdminUrl($path)
+    public function getAdminUrl(string $path): string
     {
-        return Typecho_Common::url($this->getTokenUrl($path), $this->_options->adminUrl);
+        return Common::url($this->getTokenUrl($path), $this->options->adminUrl);
     }
 
     /**
@@ -172,9 +148,9 @@ class Widget_Security extends Typecho_Widget
      * @param $path
      * @return string
      */
-    public function getIndex($path)
+    public function getIndex($path): string
     {
-        return Typecho_Common::url($this->getTokenUrl($path), $this->_options->index);
+        return Common::url($this->getTokenUrl($path), $this->options->index);
     }
 }
  

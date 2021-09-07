@@ -4,10 +4,10 @@ include 'header.php';
 include 'menu.php';
 
 $actionUrl = $security->getTokenUrl(
-    Typecho_Router::url('do', array('action' => 'backup', 'widget' => 'Backup'),
-        Typecho_Common::url('index.php', $options->rootUrl)));
+    \Typecho\Router::url('do', array('action' => 'backup', 'widget' => 'Backup'),
+        \Typecho\Common::url('index.php', $options->rootUrl)));
 
-$backupFiles = Typecho_Widget::widget('Widget_Backup')->listFiles();
+$backupFiles = \Widget\Backup::alloc()->listFiles();
 ?>
 
 <div class="main">

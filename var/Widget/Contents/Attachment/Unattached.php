@@ -1,5 +1,13 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
+
+namespace Widget\Contents\Attachment;
+
+use Typecho\Db;
+use Widget\Base\Contents;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 /**
  * 没有关联的文件
  *
@@ -18,13 +26,14 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Contents_Attachment_Unattached extends Widget_Abstract_Contents
+class Unattached extends Contents
 {
     /**
      * 执行函数
      *
      * @access public
      * @return void
+     * @throws Db\Exception
      */
     public function execute()
     {
@@ -36,7 +45,7 @@ class Widget_Contents_Attachment_Unattached extends Widget_Abstract_Contents
         $this->where('table.contents.authorId = ?', $this->user->uid);
 
         /** 提交查询 */
-        $select->order('table.contents.created', Typecho_Db::SORT_DESC);
+        $select->order('table.contents.created', Db::SORT_DESC);
 
         $this->db->fetchAll($select, [$this, 'push']);
     }

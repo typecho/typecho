@@ -1,38 +1,43 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-/**
- * 编辑文章
- *
- * @category typecho
- * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
- * @version $Id$
- */
+
+namespace Widget\Contents\Post;
+
+use Typecho\Common;
+use Typecho\Config;
+use Typecho\Validate;
+use Typecho\Widget\Exception;
+use Typecho\Widget\Helper\Form\Element;
+use Typecho\Widget\Helper\Layout;
+use Widget\Base\Contents;
+use Widget\Base\Metas;
+use Widget\ActionInterface;
+use Typecho\Db\Exception as DbException;
+use Typecho\Date as TypechoDate;
+use Widget\Notice;
+use Widget\Service;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * 编辑文章组件
  *
- * @author qining
- * @category typecho
- * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
+ * @property-read array|null $draft
  */
-class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widget_Interface_Do
+class Edit extends Contents implements ActionInterface
 {
     /**
      * 自定义字段的hook名称
      *
      * @var string
-     * @access protected
      */
     protected $themeCustomFieldsHook = 'themePostFields';
 
     /**
      * 执行函数
      *
-     * @throws Typecho_Widget_Exception
+     * @throws Exception|DbException
      */
     public function execute()
     {
@@ -47,13 +52,15 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                 ->limit(1), [$this, 'push']);
 
             if ('post_draft' == $this->type && $this->parent) {
-                $this->response->redirect(Typecho_Common::url('write-post.php?cid=' . $this->parent, $this->options->adminUrl));
+                $this->response->redirect(
+                    Common::url('write-post.php?cid=' . $this->parent, $this->options->adminUrl)
+                );
             }
 
             if (!$this->have()) {
-                throw new Typecho_Widget_Exception(_t('文章不存在'), 404);
-            } elseif ($this->have() && !$this->allow('edit')) {
-                throw new Typecho_Widget_Exception(_t('没有编辑权限'), 403);
+                throw new Exception(_t('文章不存在'), 404);
+            } elseif (!$this->allow('edit')) {
+                throw new Exception(_t('没有编辑权限'), 403);
             }
         }
     }
@@ -62,8 +69,8 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
      * 获取文章权限
      *
      * @param mixed ...$permissions
-     *
      * @return bool
+     * @throws Exception|DbException
      */
     public function allow(...$permissions): bool
     {
@@ -87,16 +94,19 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     /**
      * 过滤堆栈
      *
-     * @access public
      * @param array $value 每行的值
      * @return array
+     * @throws DbException
      */
-    public function filter(array $value)
+    public function filter(array $value): array
     {
         if ('post' == $value['type'] || 'page' == $value['type']) {
-            $draft = $this->db->fetchRow($this->widget('Widget_Abstract_Contents')->select()
-                ->where('table.contents.parent = ? AND table.contents.type = ?',
-                    $value['cid'], $value['type'] . '_draft')
+            $draft = $this->db->fetchRow(Contents::alloc()->select()
+                ->where(
+                    'table.contents.parent = ? AND table.contents.type = ?',
+                    $value['cid'],
+                    $value['type'] . '_draft'
+                )
                 ->limit(1));
 
             if (!empty($draft)) {
@@ -109,7 +119,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                     ->select()->from('table.metas')
                     ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
                     ->where('table.relationships.cid = ?', $draft['cid'])
-                    ->where('table.metas.type = ?', 'tag'), [$this->widget('Widget_Abstract_Metas'), 'filter']);
+                    ->where('table.metas.type = ?', 'tag'), [Metas::alloc(), 'filter']);
                 $draft['cid'] = $value['cid'];
 
                 return $draft;
@@ -122,7 +132,6 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     /**
      * 输出文章发布日期
      *
-     * @access public
      * @param string $format 日期格式
      * @return void
      */
@@ -138,10 +147,9 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     /**
      * 获取网页标题
      *
-     * @access public
      * @return string
      */
-    public function getMenuTitle()
+    public function getMenuTitle(): string
     {
         return _t('编辑 %s', $this->title);
     }
@@ -149,10 +157,9 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     /**
      * getFieldItems
      *
-     * @access public
-     * @return void
+     * @throws DbException
      */
-    public function getFieldItems()
+    public function getFieldItems(): array
     {
         $fields = [];
 
@@ -162,7 +169,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                 ->where('cid = ?', $this->cid));
 
             foreach ($rows as $row) {
-                $isFieldReadOnly = $this->pluginHandle('Widget_Abstract_Contents')
+                $isFieldReadOnly = Contents::pluginHandle()
                     ->trigger($plugged)->isFieldReadOnly($row['name']);
 
                 if ($plugged && $isFieldReadOnly) {
@@ -181,15 +188,14 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     /**
      * getDefaultFieldItems
      *
-     * @access public
      * @return array
      */
-    public function getDefaultFieldItems()
+    public function getDefaultFieldItems(): array
     {
         $defaultFields = [];
         $configFile = $this->options->themeFile($this->options->theme, 'functions.php');
-        $layout = new Typecho_Widget_Helper_Layout();
-        $fields = new Typecho_Config();
+        $layout = new Layout();
+        $fields = new Config();
 
         if ($this->have()) {
             $fields = $this->fields;
@@ -211,10 +217,10 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
 
         $items = $layout->getItems();
         foreach ($items as $item) {
-            if ($item instanceof Typecho_Widget_Helper_Form_Element) {
+            if ($item instanceof Element) {
                 $name = $item->input->getAttribute('name');
 
-                $isFieldReadOnly = $this->pluginHandle('Widget_Abstract_Contents')
+                $isFieldReadOnly = Contents::pluginHandle()
                     ->trigger($plugged)->isFieldReadOnly($name);
                 if ($plugged && $isFieldReadOnly) {
                     continue;
@@ -234,7 +240,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
 
                 $elements = $item->container->getItems();
                 array_shift($elements);
-                $div = new Typecho_Widget_Helper_Layout('div');
+                $div = new Layout('div');
 
                 foreach ($elements as $el) {
                     $div->addItem($el);
@@ -249,14 +255,19 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
 
     /**
      * 发布文章
-     *
-     * @access public
-     * @return void
      */
     public function writePost()
     {
-        $contents = $this->request->from('password', 'allowComment',
-            'allowPing', 'allowFeed', 'slug', 'tags', 'text', 'visibility');
+        $contents = $this->request->from(
+            'password',
+            'allowComment',
+            'allowPing',
+            'allowFeed',
+            'slug',
+            'tags',
+            'text',
+            'visibility'
+        );
 
         $contents['category'] = $this->request->getArray('category');
         $contents['title'] = $this->request->get('title', _t('未命名文档'));
@@ -278,21 +289,21 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
 
             /** 发送ping */
             $trackback = array_unique(preg_split("/(\r|\n|\r\n)/", trim($this->request->trackback)));
-            $this->widget('Widget_Service')->sendPing($this->cid, $trackback);
+            Service::alloc()->sendPing($this->cid, $trackback);
 
             /** 设置提示信息 */
-            $this->widget('Widget_Notice')->set('post' == $this->type ?
+            Notice::alloc()->set('post' == $this->type ?
                 _t('文章 "<a href="%s">%s</a>" 已经发布', $this->permalink, $this->title) :
                 _t('文章 "%s" 等待审核', $this->title), 'success');
 
             /** 设置高亮 */
-            $this->widget('Widget_Notice')->highlight($this->theId);
+            Notice::alloc()->highlight($this->theId);
 
             /** 获取页面偏移 */
             $pageQuery = $this->getPageOffsetQuery($this->cid);
 
             /** 页面跳转 */
-            $this->response->redirect(Typecho_Common::url('manage-posts.php?' . $pageQuery, $this->options->adminUrl));
+            $this->response->redirect(Common::url('manage-posts.php?' . $pageQuery, $this->options->adminUrl));
         } else {
             /** 保存文章 */
             $contents['type'] = 'post_draft';
@@ -302,10 +313,10 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             $this->pluginHandle()->finishSave($contents, $this);
 
             /** 设置高亮 */
-            $this->widget('Widget_Notice')->highlight($this->cid);
+            Notice::alloc()->highlight($this->cid);
 
             if ($this->request->isAjax()) {
-                $created = new Typecho_Date();
+                $created = new TypechoDate();
                 $this->response->throwJson([
                     'success' => 1,
                     'time'    => $created->format('H:i:s A'),
@@ -314,10 +325,10 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                 ]);
             } else {
                 /** 设置提示信息 */
-                $this->widget('Widget_Notice')->set(_t('草稿 "%s" 已经被保存', $this->title), 'success');
+                Notice::alloc()->set(_t('草稿 "%s" 已经被保存', $this->title), 'success');
 
                 /** 返回原页面 */
-                $this->response->redirect(Typecho_Common::url('write-post.php?cid=' . $this->cid, $this->options->adminUrl));
+                $this->response->redirect(Common::url('write-post.php?cid=' . $this->cid, $this->options->adminUrl));
             }
         }
     }
@@ -325,10 +336,9 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     /**
      * 根据提交值获取created字段值
      *
-     * @access protected
      * @return integer
      */
-    protected function getCreated()
+    protected function getCreated(): int
     {
         $created = $this->options->time;
         if (!empty($this->request->created)) {
@@ -350,7 +360,8 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             $month = intval($this->request->month);
             $day = intval($this->request->day);
 
-            $created = mktime($hour, $min, $second, $month, $day, $year) - $this->options->timezone + $this->options->serverTimezone;
+            $created = mktime($hour, $min, $second, $month, $day, $year)
+                - $this->options->timezone + $this->options->serverTimezone;
         } elseif ($this->have() && $this->created > 0) {
             //如果是修改文章
             $created = $this->created;
@@ -365,9 +376,8 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     /**
      * 发布内容
      *
-     * @access protected
      * @param array $contents 内容结构
-     * @return void
+     * @throws DbException|Exception
      */
     protected function publish(array $contents)
     {
@@ -375,7 +385,9 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         if ($this->user->pass('editor', true)) {
             if (empty($contents['visibility'])) {
                 $contents['status'] = 'publish';
-            } elseif ('password' == $contents['visibility'] || !in_array($contents['visibility'], ['private', 'waiting', 'publish', 'hidden'])) {
+            } elseif (
+                !in_array($contents['visibility'], ['private', 'waiting', 'publish', 'hidden'])
+            ) {
                 if (empty($contents['password']) || 'password' != $contents['visibility']) {
                     $contents['password'] = '';
                 }
@@ -412,7 +424,6 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             if ($this->update($contents, $this->db->sql()->where('cid = ?', $this->cid))) {
                 $realId = $this->cid;
             }
-
         } else {
             /** 发布一个新内容 */
             $realId = $this->insert($contents);
@@ -421,8 +432,13 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         if ($realId > 0) {
             /** 插入分类 */
             if (array_key_exists('category', $contents)) {
-                $this->setCategories($realId, !empty($contents['category']) && is_array($contents['category']) ?
-                    $contents['category'] : [$this->options->defaultCategory], !$isDraftToPublish && $isBeforePublish, $isAfterPublish);
+                $this->setCategories(
+                    $realId,
+                    !empty($contents['category']) && is_array($contents['category'])
+                        ? $contents['category'] : [$this->options->defaultCategory],
+                    !$isDraftToPublish && $isBeforePublish,
+                    $isAfterPublish
+                );
             }
 
             /** 插入标签 */
@@ -443,9 +459,8 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     /**
      * 删除草稿
      *
-     * @access protected
      * @param integer $cid 草稿id
-     * @return void
+     * @throws DbException
      */
     protected function deleteDraft($cid)
     {
@@ -461,24 +476,27 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     /**
      * 设置分类
      *
-     * @access public
      * @param integer $cid 内容id
      * @param array $categories 分类id的集合数组
      * @param boolean $beforeCount 是否参与计数
      * @param boolean $afterCount 是否参与计数
-     * @return integer
+     * @throws DbException
      */
-    public function setCategories($cid, array $categories, $beforeCount = true, $afterCount = true)
+    public function setCategories(int $cid, array $categories, bool $beforeCount = true, bool $afterCount = true)
     {
         $categories = array_unique(array_map('trim', $categories));
 
         /** 取出已有category */
-        $existCategories = Typecho_Common::arrayFlatten($this->db->fetchAll(
-            $this->db->select('table.metas.mid')
-                ->from('table.metas')
-                ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
-                ->where('table.relationships.cid = ?', $cid)
-                ->where('table.metas.type = ?', 'category')), 'mid');
+        $existCategories = array_column(
+            $this->db->fetchAll(
+                $this->db->select('table.metas.mid')
+                    ->from('table.metas')
+                    ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
+                    ->where('table.relationships.cid = ?', $cid)
+                    ->where('table.metas.type = ?', 'category')
+            ),
+            'mid'
+        );
 
         /** 删除已有category */
         if ($existCategories) {
@@ -499,10 +517,14 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         if ($categories) {
             foreach ($categories as $category) {
                 /** 如果分类不存在 */
-                if (!$this->db->fetchRow($this->db->select('mid')
-                    ->from('table.metas')
-                    ->where('mid = ?', $category)
-                    ->limit(1))) {
+                if (
+                    !$this->db->fetchRow(
+                        $this->db->select('mid')
+                        ->from('table.metas')
+                        ->where('mid = ?', $category)
+                        ->limit(1)
+                    )
+                ) {
                     continue;
                 }
 
@@ -524,26 +546,29 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     /**
      * 设置内容标签
      *
-     * @access public
      * @param integer $cid
-     * @param string $tags
+     * @param string|null $tags
      * @param boolean $beforeCount 是否参与计数
      * @param boolean $afterCount 是否参与计数
-     * @return string
+     * @throws DbException
      */
-    public function setTags($cid, $tags, $beforeCount = true, $afterCount = true)
+    public function setTags(int $cid, ?string $tags, bool $beforeCount = true, bool $afterCount = true)
     {
         $tags = str_replace('，', ',', $tags);
         $tags = array_unique(array_map('trim', explode(',', $tags)));
-        $tags = array_filter($tags, ['Typecho_Validate', 'xssCheck']);
+        $tags = array_filter($tags, [Validate::class, 'xssCheck']);
 
         /** 取出已有tag */
-        $existTags = Typecho_Common::arrayFlatten($this->db->fetchAll(
-            $this->db->select('table.metas.mid')
+        $existTags = array_column(
+            $this->db->fetchAll(
+                $this->db->select('table.metas.mid')
                 ->from('table.metas')
                 ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
                 ->where('table.relationships.cid = ?', $cid)
-                ->where('table.metas.type = ?', 'tag')), 'mid');
+                ->where('table.metas.type = ?', 'tag')
+            ),
+            'mid'
+        );
 
         /** 删除已有tag */
         if ($existTags) {
@@ -565,7 +590,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         }
 
         /** 取出插入tag */
-        $insertTags = $this->widget('Widget_Abstract_Metas')->scanTags($tags);
+        $insertTags = Metas::alloc()->scanTags($tags);
 
         /** 插入tag */
         if ($insertTags) {
@@ -592,17 +617,17 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     /**
      * 同步附件
      *
-     * @access protected
      * @param integer $cid 内容id
-     * @return void
+     * @throws DbException
      */
-    protected function attach($cid)
+    protected function attach(int $cid)
     {
         $attachments = $this->request->getArray('attachment');
         if (!empty($attachments)) {
             foreach ($attachments as $key => $attachment) {
                 $this->db->query($this->db->update('table.contents')->rows([
-                    'parent' => $cid, 'status' => 'publish',
+                    'parent' => $cid,
+                    'status' => 'publish',
                     'order'  => $key + 1
                 ])->where('cid = ? AND type = ?', $attachment, 'attachment'));
             }
@@ -612,10 +637,9 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     /**
      * getFields
      *
-     * @access protected
      * @return array
      */
-    protected function getFields()
+    protected function getFields(): array
     {
         $fields = [];
         $fieldNames = $this->request->getArray('fieldNames');
@@ -648,23 +672,27 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     /**
      * 获取页面偏移的URL Query
      *
-     * @access protected
      * @param integer $cid 文章id
-     * @param string $status 状态
+     * @param string|null $status 状态
      * @return string
+     * @throws DbException
      */
-    protected function getPageOffsetQuery($cid, $status = null)
+    protected function getPageOffsetQuery(int $cid, ?string $status = null): string
     {
-        return 'page=' . $this->getPageOffset('cid', $cid, 'post', $status,
-                'on' == $this->request->__typecho_all_posts ? 0 : $this->user->uid);
+        return 'page=' . $this->getPageOffset(
+            'cid',
+            $cid,
+            'post',
+            $status,
+            'on' == $this->request->__typecho_all_posts ? 0 : $this->user->uid
+        );
     }
 
     /**
      * 保存内容
      *
-     * @access protected
      * @param array $contents 内容结构
-     * @return void
+     * @throws DbException|Exception
      */
     protected function save(array $contents)
     {
@@ -672,7 +700,9 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
         if ($this->user->pass('editor', true)) {
             if (empty($contents['visibility'])) {
                 $contents['status'] = 'publish';
-            } elseif ('password' == $contents['visibility'] || !in_array($contents['visibility'], ['private', 'waiting', 'publish', 'hidden'])) {
+            } elseif (
+                !in_array($contents['visibility'], ['private', 'waiting', 'publish', 'hidden'])
+            ) {
                 if (empty($contents['password']) || 'password' != $contents['visibility']) {
                     $contents['password'] = '';
                 }
@@ -696,7 +726,6 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             if ($this->update($contents, $this->db->sql()->where('cid = ?', $this->draft['cid']))) {
                 $realId = $this->draft['cid'];
             }
-
         } else {
             if ($this->have()) {
                 $contents['parent'] = $this->cid;
@@ -706,13 +735,14 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             $realId = $this->insert($contents);
 
             if (!$this->have()) {
-                $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $realId)->limit(1), [$this, 'push']);
+                $this->db->fetchRow(
+                    $this->select()->where('table.contents.cid = ?', $realId)->limit(1),
+                    [$this, 'push']
+                );
             }
         }
 
         if ($realId > 0) {
-            //$this->db->fetchRow($this->select()->where('table.contents.cid = ?', $realId)->limit(1), array($this, 'push'));
-
             /** 插入分类 */
             if (array_key_exists('category', $contents)) {
                 $this->setCategories($realId, !empty($contents['category']) && is_array($contents['category']) ?
@@ -735,8 +765,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     /**
      * 标记文章
      *
-     * @access public
-     * @return void
+     * @throws DbException
      */
     public function markPost()
     {
@@ -763,8 +792,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             $postObject = $this->db->fetchObject($this->db->select('status', 'type')
                 ->from('table.contents')->where('cid = ? AND (type = ? OR type = ?)', $post, 'post', 'post_draft'));
 
-            if ($this->isWriteable(clone $condition) &&
-                count((array)$postObject)) {
+            if ($this->isWriteable(clone $condition) && count((array)$postObject)) {
 
                 /** 标记状态 */
                 $this->db->query($condition->update('table.contents')->rows(['status' => $status]));
@@ -780,7 +808,9 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                     }
 
                     if (!empty($op)) {
-                        $metas = $this->db->fetchAll($this->db->select()->from('table.relationships')->where('cid = ?', $post));
+                        $metas = $this->db->fetchAll(
+                            $this->db->select()->from('table.relationships')->where('cid = ?', $post)
+                        );
                         foreach ($metas as $meta) {
                             $this->db->query($this->db->update('table.metas')
                                 ->expression('count', 'count ' . $op . ' 1')
@@ -792,8 +822,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                 // 处理草稿
                 $draft = $this->db->fetchRow($this->db->select('cid')
                     ->from('table.contents')
-                    ->where('table.contents.parent = ? AND table.contents.type = ?',
-                        $post, 'post_draft')
+                    ->where('table.contents.parent = ? AND table.contents.type = ?', $post, 'post_draft')
                     ->limit(1));
 
                 if (!empty($draft)) {
@@ -804,15 +833,18 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                 // 完成标记插件接口
                 $this->pluginHandle()->finishMark($status, $post, $this);
 
-                $markCount ++;
+                $markCount++;
             }
 
             unset($condition);
         }
 
         /** 设置提示信息 */
-        $this->widget('Widget_Notice')->set($markCount > 0 ? _t('文章已经被标记为<strong>%s</strong>', $statusList[$status]) : _t('没有文章被标记'),
-            $markCount > 0 ? 'success' : 'notice');
+        Notice::alloc()
+            ->set(
+                $markCount > 0 ? _t('文章已经被标记为<strong>%s</strong>', $statusList[$status]) : _t('没有文章被标记'),
+                $markCount > 0 ? 'success' : 'notice'
+            );
 
         /** 返回原网页 */
         $this->response->goBack();
@@ -821,8 +853,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     /**
      * 删除文章
      *
-     * @access public
-     * @return void
+     * @throws DbException
      */
     public function deletePost()
     {
@@ -837,9 +868,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             $postObject = $this->db->fetchObject($this->db->select('status', 'type')
                 ->from('table.contents')->where('cid = ? AND (type = ? OR type = ?)', $post, 'post', 'post_draft'));
 
-            if ($this->isWriteable(clone $condition) &&
-                count((array)$postObject) &&
-                $this->delete($condition)) {
+            if ($this->isWriteable(clone $condition) && count((array)$postObject) && $this->delete($condition)) {
 
                 /** 删除分类 */
                 $this->setCategories($post, [], 'publish' == $postObject->status
@@ -859,8 +888,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                 /** 删除草稿 */
                 $draft = $this->db->fetchRow($this->db->select('cid')
                     ->from('table.contents')
-                    ->where('table.contents.parent = ? AND table.contents.type = ?',
-                        $post, 'post_draft')
+                    ->where('table.contents.parent = ? AND table.contents.type = ?', $post, 'post_draft')
                     ->limit(1));
 
                 /** 删除自定义字段 */
@@ -874,7 +902,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
                 // 完成删除插件接口
                 $this->pluginHandle()->finishDelete($post, $this);
 
-                $deleteCount ++;
+                $deleteCount++;
             }
 
             unset($condition);
@@ -882,12 +910,14 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
 
         // 清理标签
         if ($deleteCount > 0) {
-            $this->widget('Widget_Abstract_Metas')->clearTags();
+            Metas::alloc()->clearTags();
         }
 
         /** 设置提示信息 */
-        $this->widget('Widget_Notice')->set($deleteCount > 0 ? _t('文章已经被删除') : _t('没有文章被删除'),
-            $deleteCount > 0 ? 'success' : 'notice');
+        Notice::alloc()->set(
+            $deleteCount > 0 ? _t('文章已经被删除') : _t('没有文章被删除'),
+            $deleteCount > 0 ? 'success' : 'notice'
+        );
 
         /** 返回原网页 */
         $this->response->goBack();
@@ -896,9 +926,8 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     /**
      * 取消附件关联
      *
-     * @access protected
      * @param integer $cid 内容id
-     * @return void
+     * @throws DbException
      */
     protected function unAttach($cid)
     {
@@ -909,8 +938,7 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     /**
      * 删除文章所属草稿
      *
-     * @access public
-     * @return void
+     * @throws DbException
      */
     public function deletePostDraft()
     {
@@ -921,20 +949,22 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
             /** 删除草稿 */
             $draft = $this->db->fetchRow($this->db->select('cid')
                 ->from('table.contents')
-                ->where('table.contents.parent = ? AND table.contents.type = ?',
-                    $post, 'post_draft')
+                ->where('table.contents.parent = ? AND table.contents.type = ?', $post, 'post_draft')
                 ->limit(1));
 
             if ($draft) {
                 $this->deleteDraft($draft['cid']);
                 $this->deleteFields($draft['cid']);
-                $deleteCount ++;
+                $deleteCount++;
             }
         }
 
         /** 设置提示信息 */
-        $this->widget('Widget_Notice')->set($deleteCount > 0 ? _t('草稿已经被删除') : _t('没有草稿被删除'),
-            $deleteCount > 0 ? 'success' : 'notice');
+        Notice::alloc()
+            ->set(
+                $deleteCount > 0 ? _t('草稿已经被删除') : _t('没有草稿被删除'),
+                $deleteCount > 0 ? 'success' : 'notice'
+            );
 
         /** 返回原网页 */
         $this->response->goBack();
@@ -942,9 +972,6 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
 
     /**
      * 绑定动作
-     *
-     * @access public
-     * @return void
      */
     public function action()
     {
@@ -960,17 +987,17 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     /**
      * 将tags取出
      *
-     * @access protected
      * @return array
+     * @throws DbException
      */
-    protected function ___tags()
+    protected function ___tags(): array
     {
         if ($this->have()) {
             return $this->db->fetchAll($this->db
                 ->select()->from('table.metas')
                 ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
                 ->where('table.relationships.cid = ?', $this->cid)
-                ->where('table.metas.type = ?', 'tag'), [$this->widget('Widget_Abstract_Metas'), 'filter']);
+                ->where('table.metas.type = ?', 'tag'), [Metas::alloc(), 'filter']);
         }
 
         return [];
@@ -979,34 +1006,36 @@ class Widget_Contents_Post_Edit extends Widget_Abstract_Contents implements Widg
     /**
      * 获取当前时间
      *
-     * @access protected
-     * @return Typecho_Date
+     * @return TypechoDate
      */
-    protected function ___date()
+    protected function ___date(): TypechoDate
     {
-        return new Typecho_Date();
+        return new TypechoDate();
     }
 
     /**
      * 当前文章的草稿
      *
-     * @access protected
-     * @return array
+     * @return array|null
+     * @throws DbException
      */
-    protected function ___draft()
+    protected function ___draft(): ?array
     {
         if ($this->have()) {
-            if ('post_draft' == $this->type) {
+            if ('post_draft' == $this->type || 'page_draft' == $this->type) {
                 return $this->row;
             } else {
-                return $this->db->fetchRow($this->widget('Widget_Abstract_Contents')->select()
-                    ->where('table.contents.parent = ? AND (table.contents.type = ? OR table.contents.type = ?)',
-                        $this->cid, 'post_draft', 'page_draft')
-                    ->limit(1), [$this->widget('Widget_Abstract_Contents'), 'filter']);
+                return $this->db->fetchRow(Contents::alloc()->select()
+                    ->where(
+                        'table.contents.parent = ? AND (table.contents.type = ? OR table.contents.type = ?)',
+                        $this->cid,
+                        'post_draft',
+                        'page_draft'
+                    )
+                    ->limit(1), [Contents::alloc(), 'filter']);
             }
         }
 
         return null;
     }
 }
-

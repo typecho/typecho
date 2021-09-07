@@ -1,14 +1,17 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-/**
- * 上传动作
- *
- * @category typecho
- * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
- * @version $Id$
- */
+
+namespace Widget;
+
+use Typecho\Common;
+use Typecho\Date;
+use Typecho\Db\Exception;
+use Typecho\Plugin;
+use Typecho\Widget;
+use Widget\Base\Contents;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * 上传组件
@@ -17,21 +20,20 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * @category typecho
  * @package Widget
  */
-class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface_Do
+class Upload extends Contents implements ActionInterface
 {
     //上传文件目录
-    const UPLOAD_DIR = '/usr/uploads';
+    public const UPLOAD_DIR = '/usr/uploads';
 
     /**
      * 删除文件
      *
-     * @access public
      * @param array $content 文件相关信息
-     * @return string
+     * @return bool
      */
-    public static function deleteHandle(array $content)
+    public static function deleteHandle(array $content): bool
     {
-        $result = Typecho_Plugin::factory('Widget_Upload')->trigger($hasDeleted)->deleteHandle($content);
+        $result = Plugin::factory(Upload::class)->trigger($hasDeleted)->deleteHandle($content);
         if ($hasDeleted) {
             return $result;
         }
@@ -42,45 +44,46 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
     /**
      * 获取实际文件绝对访问路径
      *
-     * @access public
      * @param array $content 文件相关信息
      * @return string
      */
-    public static function attachmentHandle(array $content)
+    public static function attachmentHandle(array $content): string
     {
-        $result = Typecho_Plugin::factory('Widget_Upload')->trigger($hasPlugged)->attachmentHandle($content);
+        $result = Plugin::factory(Upload::class)->trigger($hasPlugged)->attachmentHandle($content);
         if ($hasPlugged) {
             return $result;
         }
 
-        $options = Typecho_Widget::widget('Widget_Options');
-        return Typecho_Common::url($content['attachment']->path,
-            defined('__TYPECHO_UPLOAD_URL__') ? __TYPECHO_UPLOAD_URL__ : $options->siteUrl);
+        $options = Options::alloc();
+        return Common::url(
+            $content['attachment']->path,
+            defined('__TYPECHO_UPLOAD_URL__') ? __TYPECHO_UPLOAD_URL__ : $options->siteUrl
+        );
     }
 
     /**
      * 获取实际文件数据
      *
-     * @access public
      * @param array $content
      * @return string
      */
-    public static function attachmentDataHandle(array $content)
+    public static function attachmentDataHandle(array $content): string
     {
-        $result = Typecho_Plugin::factory('Widget_Upload')->trigger($hasPlugged)->attachmentDataHandle($content);
+        $result = Plugin::factory(Upload::class)->trigger($hasPlugged)->attachmentDataHandle($content);
         if ($hasPlugged) {
             return $result;
         }
 
-        return file_get_contents(Typecho_Common::url($content['attachment']->path,
-            defined('__TYPECHO_UPLOAD_ROOT_DIR__') ? __TYPECHO_UPLOAD_ROOT_DIR__ : __TYPECHO_ROOT_DIR__));
+        return file_get_contents(
+            Common::url(
+                $content['attachment']->path,
+                defined('__TYPECHO_UPLOAD_ROOT_DIR__') ? __TYPECHO_UPLOAD_ROOT_DIR__ : __TYPECHO_ROOT_DIR__
+            )
+        );
     }
 
     /**
      * 初始化函数
-     *
-     * @access public
-     * @return void
      */
     public function action()
     {
@@ -99,8 +102,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
     /**
      * 执行升级程序
      *
-     * @access public
-     * @return void
+     * @throws Exception
      */
     public function modify()
     {
@@ -160,18 +162,17 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
     /**
      * 修改文件处理函数,如果需要实现自己的文件哈希或者特殊的文件系统,请在options表里把modifyHandle改成自己的函数
      *
-     * @access public
      * @param array $content 老文件
      * @param array $file 新上传的文件
      * @return mixed
      */
-    public static function modifyHandle($content, $file)
+    public static function modifyHandle(array $content, array $file)
     {
         if (empty($file['name'])) {
             return false;
         }
 
-        $result = Typecho_Plugin::factory('Widget_Upload')->trigger($hasModified)->modifyHandle($content, $file);
+        $result = self::pluginHandle()->trigger($hasModified)->modifyHandle($content, $file);
         if ($hasModified) {
             return $result;
         }
@@ -182,8 +183,10 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
             return false;
         }
 
-        $path = Typecho_Common::url($content['attachment']->path,
-            defined('__TYPECHO_UPLOAD_ROOT_DIR__') ? __TYPECHO_UPLOAD_ROOT_DIR__ : __TYPECHO_ROOT_DIR__);
+        $path = Common::url(
+            $content['attachment']->path,
+            defined('__TYPECHO_UPLOAD_ROOT_DIR__') ? __TYPECHO_UPLOAD_ROOT_DIR__ : __TYPECHO_ROOT_DIR__
+        );
         $dir = dirname($path);
 
         //创建上传目录
@@ -194,7 +197,6 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         }
 
         if (isset($file['tmp_name'])) {
-
             @unlink($path);
 
             //移动上传文件
@@ -202,7 +204,6 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                 return false;
             }
         } elseif (isset($file['bytes'])) {
-
             @unlink($path);
 
             //直接写入文件
@@ -210,7 +211,6 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                 return false;
             }
         } elseif (isset($file['bits'])) {
-
             @unlink($path);
 
             //直接写入文件
@@ -239,11 +239,9 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
      * 获取安全的文件名
      *
      * @param string $name
-     * @static
-     * @access private
      * @return string
      */
-    private static function getSafeName(&$name)
+    private static function getSafeName(string &$name): string
     {
         $name = str_replace(['"', '<', '>'], '', $name);
         $name = str_replace('\\', '/', $name);
@@ -257,11 +255,10 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
     /**
      * 创建上传路径
      *
-     * @access private
      * @param string $path 路径
      * @return boolean
      */
-    private static function makeUploadDir($path)
+    private static function makeUploadDir(string $path): bool
     {
         $path = preg_replace("/\\\+/", '/', $path);
         $current = rtrim($path, '/');
@@ -290,8 +287,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
     /**
      * 执行升级程序
      *
-     * @access public
-     * @return void
+     * @throws Exception
      */
     public function upload()
     {
@@ -355,17 +351,16 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
     /**
      * 上传文件处理函数,如果需要实现自己的文件哈希或者特殊的文件系统,请在options表里把uploadHandle改成自己的函数
      *
-     * @access public
      * @param array $file 上传的文件
      * @return mixed
      */
-    public static function uploadHandle($file)
+    public static function uploadHandle(array $file)
     {
         if (empty($file['name'])) {
             return false;
         }
 
-        $result = Typecho_Plugin::factory('Widget_Upload')->trigger($hasUploaded)->uploadHandle($file);
+        $result = self::pluginHandle()->trigger($hasUploaded)->uploadHandle($file);
         if ($hasUploaded) {
             return $result;
         }
@@ -376,10 +371,11 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
             return false;
         }
 
-        $date = new Typecho_Date();
-        $path = Typecho_Common::url(defined('__TYPECHO_UPLOAD_DIR__') ? __TYPECHO_UPLOAD_DIR__ : self::UPLOAD_DIR,
-                defined('__TYPECHO_UPLOAD_ROOT_DIR__') ? __TYPECHO_UPLOAD_ROOT_DIR__ : __TYPECHO_ROOT_DIR__)
-            . '/' . $date->year . '/' . $date->month;
+        $date = new Date();
+        $path = Common::url(
+            defined('__TYPECHO_UPLOAD_DIR__') ? __TYPECHO_UPLOAD_DIR__ : self::UPLOAD_DIR,
+            defined('__TYPECHO_UPLOAD_ROOT_DIR__') ? __TYPECHO_UPLOAD_ROOT_DIR__ : __TYPECHO_ROOT_DIR__
+        ) . '/' . $date->year . '/' . $date->month;
 
         //创建上传目录
         if (!is_dir($path)) {
@@ -393,19 +389,16 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
         $path = $path . '/' . $fileName;
 
         if (isset($file['tmp_name'])) {
-
             //移动上传文件
             if (!@move_uploaded_file($file['tmp_name'], $path)) {
                 return false;
             }
         } elseif (isset($file['bytes'])) {
-
             //直接写入文件
             if (!file_put_contents($path, $file['bytes'])) {
                 return false;
             }
         } elseif (isset($file['bits'])) {
-
             //直接写入文件
             if (!file_put_contents($path, $file['bits'])) {
                 return false;
@@ -425,7 +418,7 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
                 . '/' . $date->year . '/' . $date->month . '/' . $fileName,
             'size' => $file['size'],
             'type' => $ext,
-            'mime' => Typecho_Common::mimeContentType($path)
+            'mime' => Common::mimeContentType($path)
         ];
     }
 
@@ -436,9 +429,9 @@ class Widget_Upload extends Widget_Abstract_Contents implements Widget_Interface
      * @param string $ext 扩展名
      * @return boolean
      */
-    public static function checkFileType($ext)
+    public static function checkFileType(string $ext): bool
     {
-        $options = Typecho_Widget::widget('Widget_Options');
+        $options = Options::alloc();
         return in_array($ext, $options->allowedAttachmentTypes);
     }
 }

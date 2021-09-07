@@ -4,10 +4,11 @@ $langs = [];
 
 /**
  * output lang
- * 
+ *
  * @param string $str
  */
-function output_lang($str) {
+function output_lang(string $str)
+{
     global $langs;
 
     $key = md5($str);
@@ -19,19 +20,20 @@ function output_lang($str) {
 
 /**
  * get all files
- * 
+ *
  * @param string $dir
  * @param string $pattern
  * @return array
  */
-function all_files($dir, $pattern = '*') {
-    $result = array();
+function all_files(string $dir, string $pattern = '*'): array
+{
+    $result = [];
 
     $items = glob($dir . '/' . $pattern, GLOB_BRACE);
     foreach ($items as $item) {
         if (is_file($item)) {
             $result[] = $item;
-        } 
+        }
     }
 
     $items = glob($dir . '/*', GLOB_ONLYDIR);
@@ -46,11 +48,12 @@ function all_files($dir, $pattern = '*') {
 
 /**
  * get msgid
- * 
+ *
  * @param string $value
  * @return string
  */
-function get_msgid($value) {
+function get_msgid(string $value): string
+{
     if ($value[0] == '"') {
         return $value;
     } else {
@@ -61,22 +64,22 @@ function get_msgid($value) {
 
 /**
  * get pot from file
- * 
+ *
  * @param string $file
- * @return string
  */
-function get_pot($file) {
+function get_pot(string $file)
+{
     $source = file_get_contents($file);
     $matched = null;
     $plural = [];
 
     foreach (token_get_all($source) as $token) {
         if (is_array($token)) {
-            list ($type, $value) = $token;
+            [$type, $value] = $token;
 
             if ($type == T_STRING && in_array($value, ['_t', '_e', '_n'])) {
                 $matched = $value;
-            } else if ($type == T_CONSTANT_ENCAPSED_STRING && $matched) {
+            } elseif ($type == T_CONSTANT_ENCAPSED_STRING && $matched) {
                 $key = md5($value);
 
                 if ($matched == '_n') {
@@ -85,7 +88,7 @@ function get_pot($file) {
                     output_lang('msgid ' . get_msgid($value) . "\nmsgstr \"\"\n\n");
                     $matched = null;
                 }
-            } else if ($type != T_WHITESPACE) {
+            } elseif ($type != T_WHITESPACE) {
                 $matched = null;
 
                 if (!empty($plural)) {
@@ -102,15 +105,12 @@ function get_pot($file) {
                     $plural = [];
                 }
             }
-        } else if ($token != ',' && $token != '(') {
+        } elseif ($token != ',' && $token != '(') {
             $matched = null;
             $plural = [];
         }
     }
 }
-
-require_once __DIR__ . '/../var/Typecho/Common.php';
-
 
 echo <<<EOF
 # Copyright (C) Typecho

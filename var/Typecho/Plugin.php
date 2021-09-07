@@ -1,11 +1,8 @@
 <?php
-/**
- * Typecho Blog Platform
- *
- * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license    GNU General Public License 2.0
- * @version    $Id$
- */
+
+namespace Typecho;
+
+use Typecho\Plugin\Exception as PluginException;
 
 /**
  * 插件处理类
@@ -15,85 +12,65 @@
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Typecho_Plugin
+class Plugin
 {
     /**
      * 所有启用的插件
      *
-     * @access private
      * @var array
      */
-    private static $_plugins = [];
-
-    /**
-     * 已经加载的文件
-     *
-     * @access private
-     * @var array
-     */
-    private static $_required = [];
+    private static $plugin = [];
 
     /**
      * 实例化的插件对象
      *
-     * @access private
      * @var array
      */
-    private static $_instances;
+    private static $instances;
 
     /**
      * 临时存储变量
      *
-     * @access private
      * @var array
      */
-    private static $_tmp = [];
+    private static $tmp = [];
 
     /**
      * 唯一句柄
      *
-     * @access private
      * @var string
      */
-    private $_handle;
+    private $handle;
 
     /**
      * 组件
      *
-     * @access private
      * @var string
      */
-    private $_component;
+    private $component;
 
     /**
      * 是否触发插件的信号
      *
-     * @access private
      * @var boolean
      */
-    private $_signal;
+    private $signal;
 
     /**
      * 插件初始化
-     *
-     * @access public
      *
      * @param string $handle 插件
      */
     public function __construct(string $handle)
     {
         /** 初始化变量 */
-        $this->_handle = $handle;
+        $this->handle = Common::nativeClassName($handle);
     }
 
     /**
      * 插件初始化
      *
-     * @access public
-     *
      * @param array $plugins 插件列表
-     *
-     * @return void
      */
     public static function init(array $plugins)
     {
@@ -101,73 +78,64 @@ class Typecho_Plugin
         $plugins['handles'] = array_key_exists('handles', $plugins) ? $plugins['handles'] : [];
 
         /** 初始化变量 */
-        self::$_plugins = $plugins;
+        self::$plugin = $plugins;
     }
 
     /**
      * 获取实例化插件对象
      *
-     * @access public
-     *
      * @param string $handle 插件
-     *
-     * @return Typecho_Plugin
+     * @return Plugin
      */
-    public static function factory(string $handle): Typecho_Plugin
+    public static function factory(string $handle): Plugin
     {
-        return self::$_instances[$handle] ?? (self::$_instances[$handle] = new Typecho_Plugin($handle));
+        $handle = Common::nativeClassName($handle);
+        return self::$instances[$handle] ?? (self::$instances[$handle] = new self($handle));
     }
 
     /**
      * 启用插件
      *
-     * @access public
-     *
      * @param string $pluginName 插件名称
-     *
-     * @return void
      */
     public static function activate(string $pluginName)
     {
-        self::$_plugins['activated'][$pluginName] = self::$_tmp;
-        self::$_tmp = [];
+        self::$plugin['activated'][$pluginName] = self::$tmp;
+        self::$tmp = [];
     }
 
     /**
      * 禁用插件
      *
-     * @access public
-     *
      * @param string $pluginName 插件名称
-     *
-     * @return void
      */
     public static function deactivate(string $pluginName)
     {
         /** 去掉所有相关回调函数 */
-        if (isset(self::$_plugins['activated'][$pluginName]['handles']) && is_array(self::$_plugins['activated'][$pluginName]['handles'])) {
-            foreach (self::$_plugins['activated'][$pluginName]['handles'] as $handle => $handles) {
-                self::$_plugins['handles'][$handle] = self::pluginHandlesDiff(
-                    empty(self::$_plugins['handles'][$handle]) ? [] : self::$_plugins['handles'][$handle],
-                    empty($handles) ? [] : $handles);
-                if (empty(self::$_plugins['handles'][$handle])) {
-                    unset(self::$_plugins['handles'][$handle]);
+        if (
+            isset(self::$plugin['activated'][$pluginName]['handles'])
+            && is_array(self::$plugin['activated'][$pluginName]['handles'])
+        ) {
+            foreach (self::$plugin['activated'][$pluginName]['handles'] as $handle => $handles) {
+                self::$plugin['handles'][$handle] = self::pluginHandlesDiff(
+                    empty(self::$plugin['handles'][$handle]) ? [] : self::$plugin['handles'][$handle],
+                    empty($handles) ? [] : $handles
+                );
+                if (empty(self::$plugin['handles'][$handle])) {
+                    unset(self::$plugin['handles'][$handle]);
                 }
             }
         }
 
         /** 禁用当前插件 */
-        unset(self::$_plugins['activated'][$pluginName]);
+        unset(self::$plugin['activated'][$pluginName]);
     }
 
     /**
      * 插件handle比对
      *
-     * @access private
-     *
      * @param array $pluginHandles
      * @param array $otherPluginHandles
-     *
      * @return array
      */
     private static function pluginHandlesDiff(array $pluginHandles, array $otherPluginHandles): array
@@ -184,21 +152,17 @@ class Typecho_Plugin
     /**
      * 导出当前插件设置
      *
-     * @access public
      * @return array
      */
     public static function export(): array
     {
-        return self::$_plugins;
+        return self::$plugin;
     }
 
     /**
      * 获取插件文件的头信息
      *
-     * @access public
-     *
      * @param string $pluginFile 插件文件路径
-     *
      * @return array
      */
     public static function parseInfo(string $pluginFile): array
@@ -219,7 +183,7 @@ class Typecho_Plugin
             'author' => '',
             'homepage' => '',
             'version' => '',
-            'dependence' => '',
+            'since' => '',
             'activate' => false,
             'deactivate' => false,
             'config' => false,
@@ -230,7 +194,7 @@ class Typecho_Plugin
             'package' => 'title',
             'author' => 'author',
             'link' => 'homepage',
-            'dependence' => 'dependence',
+            'since' => 'since',
             'version' => 'version'
         ];
 
@@ -251,7 +215,7 @@ class Typecho_Plugin
 
                         if (!$described && !empty($line)) {
                             $info['description'] .= $line . "\n";
-                        } else if ($described && !empty($line) && '@' == $line[0]) {
+                        } elseif ($described && !empty($line) && '@' == $line[0]) {
                             $info['description'] = trim($info['description']);
                             $line = trim(substr($line, 1));
                             $args = explode(' ', $line);
@@ -283,6 +247,7 @@ class Typecho_Plugin
                         $string = strtolower($token[1]);
                         switch ($string) {
                             case 'typecho_plugin_interface':
+                            case 'plugininterface':
                                 $isInClass = $isClass;
                                 break;
                             case 'activate':
@@ -343,25 +308,22 @@ class Typecho_Plugin
      * 返回值为一个数组
      * 第一项为插件路径,第二项为类名
      *
-     * @access public
-     *
      * @param string $pluginName 插件名
      * @param string $path 插件目录
-     *
      * @return array
-     * @throws Typecho_Plugin_Exception
+     * @throws PluginException
      */
     public static function portal(string $pluginName, string $path): array
     {
         switch (true) {
             case file_exists($pluginFileName = $path . '/' . $pluginName . '/Plugin.php'):
-                $className = $pluginName . '_Plugin';
+                $className = "{$pluginName}_Plugin";
                 break;
             case file_exists($pluginFileName = $path . '/' . $pluginName . '.php'):
                 $className = $pluginName;
                 break;
             default:
-                throw new Typecho_Plugin_Exception('Missing Plugin ' . $pluginName, 404);
+                throw new PluginException('Missing Plugin ' . $pluginName, 404);
         }
 
         return [$pluginFileName, $className];
@@ -370,92 +332,60 @@ class Typecho_Plugin
     /**
      * 版本依赖性检测
      *
-     * @access public
-     *
-     * @param string $version 程序版本
-     * @param string $versionRange 依赖的版本规则
-     *
+     * @param string|null $version 插件版本
      * @return boolean
      */
-    public static function checkDependence(string $version, string $versionRange): bool
+    public static function checkDependence(?string $version): bool
     {
         //如果没有检测规则,直接掠过
-        if (empty($versionRange)) {
+        if (empty($version)) {
             return true;
         }
 
-        $items = array_map('trim', explode('-', $versionRange));
-        if (count($items) < 2) {
-            $items[1] = '9999.9999.9999';
-        }
-
-        [$minVersion, $maxVersion] = $items;
-
-        //对*和?的支持,4个9是最大版本
-        $minVersion = str_replace(['*', '?'], ['9999', '9'], $minVersion);
-        $maxVersion = str_replace(['*', '?'], ['9999', '9'], $maxVersion);
-
-        if (version_compare($version, $minVersion, '>=') && version_compare($version, $maxVersion, '<=')) {
-            return true;
-        }
-
-        return false;
+        return version_compare(Common::VERSION, $version, '>=');
     }
 
     /**
      * 判断插件是否存在
      *
-     * @access public
-     *
      * @param string $pluginName 插件名称
-     *
      * @return mixed
      */
     public static function exists(string $pluginName)
     {
-        return array_key_exists($pluginName, self::$_plugins['activated']);
+        return array_key_exists($pluginName, self::$plugin['activated']);
     }
 
     /**
      * 插件调用后的触发器
      *
-     * @access public
-     *
      * @param boolean|null $signal 触发器
-     *
-     * @return Typecho_Plugin
+     * @return Plugin
      */
-    public function trigger(?bool &$signal): Typecho_Plugin
+    public function trigger(?bool &$signal): Plugin
     {
         $signal = false;
-        $this->_signal = &$signal;
+        $this->signal = &$signal;
         return $this;
     }
 
     /**
      * 通过魔术函数设置当前组件位置
      *
-     * @access public
-     *
      * @param string $component 当前组件
-     *
-     * @return Typecho_Plugin
+     * @return Plugin
      */
     public function __get(string $component)
     {
-        $this->_component = $component;
+        $this->component = $component;
         return $this;
     }
 
     /**
      * 设置回调函数
      *
-     * @access public
-     *
      * @param string $component 当前组件
      * @param mixed $value 回调函数
-     *
-     * @return void
      */
     public function __set(string $component, $value)
     {
@@ -467,52 +397,49 @@ class Typecho_Plugin
             $weight = intval($weight) - 10;
         }
 
-        $component = $this->_handle . ':' . $component;
+        $component = $this->handle . ':' . $component;
 
-        if (!isset(self::$_plugins['handles'][$component])) {
-            self::$_plugins['handles'][$component] = [];
+        if (!isset(self::$plugin['handles'][$component])) {
+            self::$plugin['handles'][$component] = [];
         }
 
-        if (!isset(self::$_tmp['handles'][$component])) {
-            self::$_tmp['handles'][$component] = [];
+        if (!isset(self::$tmp['handles'][$component])) {
+            self::$tmp['handles'][$component] = [];
         }
 
-        foreach (self::$_plugins['handles'][$component] as $key => $val) {
+        foreach (self::$plugin['handles'][$component] as $key => $val) {
             $key = floatval($key);
 
             if ($weight > $key) {
                 break;
-            } else if ($weight == $key) {
+            } elseif ($weight == $key) {
                 $weight += 0.001;
             }
         }
 
-        self::$_plugins['handles'][$component][strval($weight)] = $value;
-        self::$_tmp['handles'][$component][] = $value;
+        self::$plugin['handles'][$component][strval($weight)] = $value;
+        self::$tmp['handles'][$component][] = $value;
 
-        ksort(self::$_plugins['handles'][$component], SORT_NUMERIC);
+        ksort(self::$plugin['handles'][$component], SORT_NUMERIC);
     }
 
     /**
      * 回调处理函数
      *
-     * @access public
-     *
      * @param string $component 当前组件
      * @param array $args 参数
-     *
      * @return mixed
      */
     public function __call(string $component, array $args)
     {
-        $component = $this->_handle . ':' . $component;
+        $component = $this->handle . ':' . $component;
         $last = count($args);
         $args[$last] = $last > 0 ? $args[0] : false;
 
-        if (isset(self::$_plugins['handles'][$component])) {
+        if (isset(self::$plugin['handles'][$component])) {
             $args[$last] = null;
-            $this->_signal = true;
-            foreach (self::$_plugins['handles'][$component] as $callback) {
+            $this->signal = true;
+            foreach (self::$plugin['handles'][$component] as $callback) {
                 $args[$last] = call_user_func_array($callback, $args);
             }
         }

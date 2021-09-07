@@ -1,5 +1,18 @@
 <?php
 
+namespace Utils;
+
+use Typecho\Common;
+use Typecho\Db;
+use Typecho\I18n;
+use Typecho\Plugin;
+use Typecho\Widget;
+use Widget\Base\Options as BaseOptions;
+use Widget\Options;
+use Widget\Plugins\Edit;
+use Widget\Security;
+use Widget\Service;
+
 /**
  * 插件帮手将默认出现在所有的typecho发行版中.
  * 因此你可以放心使用它的功能, 以方便你的插件安装在用户的系统里.
@@ -12,22 +25,23 @@
 class Helper
 {
     /**
-     * 获取Widget_Security对象
+     * 获取Security对象
      *
-     * @return Widget_Security
+     * @return Security
      */
-    public static function security()
+    public static function security(): Security
     {
-        return Typecho_Widget::widget('Widget_Security');
+        return Security::alloc();
     }
 
     /**
      * 根据ID获取单个Widget对象
      *
      * @param string $table 表名, 支持 contents, comments, metas, users
-     * @return Widget_Abstract
+     * @param int $pkId
+     * @return Widget|null
      */
-    public static function widgetById($table, $pkId)
+    public static function widgetById(string $table, int $pkId): ?Widget
     {
         $table = ucfirst($table);
         if (!in_array($table, ['Contents', 'Comments', 'Metas', 'Users'])) {
@@ -37,18 +51,20 @@ class Helper
         $keys = [
             'Contents' => 'cid',
             'Comments' => 'coid',
-            'Metas' => 'mid',
-            'Users' => 'uid'
+            'Metas'    => 'mid',
+            'Users'    => 'uid'
         ];
 
-        $className = "Widget_Abstract_{$table}";
+        $className = '\Widget\Base\\' . $table;
+
         $key = $keys[$table];
-        $db = Typecho_Db::get();
-        $widget = new $className(Typecho_Request::getInstance(), Typecho_Widget_Helper_Empty::getInstance());
+        $db = Db::get();
+        $widget = Widget::widget($className);
 
         $db->fetchRow(
             $widget->select()->where("{$key} = ?", $pkId)->limit(1),
-            [$widget, 'push']);
+            [$widget, 'push']
+        );
 
         return $widget;
     }
@@ -61,49 +77,51 @@ class Helper
      */
     public static function requestService($method, $params)
     {
-        Typecho_Widget::widget('Widget_Service')->requestService($method, $params);
+        Service::alloc()->requestService($method, $params);
     }
 
     /**
      * 强行删除某个插件
      *
-     * @access public
      * @param string $pluginName 插件名称
-     * @return void
      */
-    public static function removePlugin($pluginName)
+    public static function removePlugin(string $pluginName)
     {
         try {
             /** 获取插件入口 */
-            [$pluginFileName, $className] = Typecho_Plugin::portal($pluginName, __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__);
+            [$pluginFileName, $className] = Plugin::portal(
+                $pluginName,
+                __TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_PLUGIN_DIR__
+            );
 
             /** 获取已启用插件 */
-            $plugins = Typecho_Plugin::export();
+            $plugins = Plugin::export();
             $activatedPlugins = $plugins['activated'];
 
             /** 载入插件 */
             require_once $pluginFileName;
 
             /** 判断实例化是否成功 */
-            if (!isset($activatedPlugins[$pluginName]) || !class_exists($className)
-                || !method_exists($className, 'deactivate')) {
-                throw new Typecho_Widget_Exception(_t('无法禁用插件'), 500);
+            if (
+                !isset($activatedPlugins[$pluginName]) || !class_exists($className)
+                || !method_exists($className, 'deactivate')
+            ) {
+                throw new Widget\Exception(_t('无法禁用插件'), 500);
             }
 
-            $result = call_user_func([$className, 'deactivate']);
-
-        } catch (Exception $e) {
+            call_user_func([$className, 'deactivate']);
+        } catch (\Exception $e) {
             //nothing to do
         }
 
-        $db = Typecho_Db::get();
+        $db = Db::get();
 
         try {
-            Typecho_Plugin::deactivate($pluginName);
+            Plugin::deactivate($pluginName);
             $db->query($db->update('table.options')
-                ->rows(['value' => serialize(Typecho_Plugin::export())])
+                ->rows(['value' => serialize(Plugin::export())])
                 ->where('name = ?', 'plugins'));
-        } catch (Typecho_Plugin_Exception $e) {
+        } catch (Plugin\Exception $e) {
             //nothing to do
         }
 
@@ -113,18 +131,16 @@ class Helper
     /**
      * 导入语言项
      *
-     * @access public
      * @param string $domain
-     * @return void
      */
-    public static function lang($domain)
+    public static function lang(string $domain)
     {
-        $currentLang = Typecho_I18n::getLang();
+        $currentLang = I18n::getLang();
         if ($currentLang) {
             $currentLang = basename($currentLang);
             $fileName = dirname(__FILE__) . '/' . $domain . '/lang/' . $currentLang;
             if (file_exists($fileName)) {
-                Typecho_I18n::addLang($fileName);
+                I18n::addLang($fileName);
             }
         }
     }
@@ -132,16 +148,20 @@ class Helper
     /**
      * 增加路由
      *
-     * @access public
      * @param string $name 路由名称
      * @param string $url 路由路径
      * @param string $widget 组件名称
-     * @param string $action 组件动作
-     * @param string $after 在某个路由后面
+     * @param string|null $action 组件动作
+     * @param string|null $after 在某个路由后面
      * @return integer
      */
-    public static function addRoute($name, $url, $widget, $action = null, $after = null)
-    {
+    public static function addRoute(
+        string $name,
+        string $url,
+        string $widget,
+        ?string $action = null,
+        ?string $after = null
+    ): int {
         $routingTable = self::options()->routingTable;
         if (isset($routingTable[0])) {
             unset($routingTable[0]);
@@ -149,7 +169,7 @@ class Helper
 
         $pos = 0;
         foreach ($routingTable as $key => $val) {
-            $pos ++;
+            $pos++;
 
             if ($key == $after) {
                 break;
@@ -159,37 +179,38 @@ class Helper
         $pre = array_slice($routingTable, 0, $pos);
         $next = array_slice($routingTable, $pos);
 
-        $routingTable = array_merge($pre, [$name => [
-            'url' => $url,
-            'widget' => $widget,
-            'action' => $action
-        ]], $next);
+        $routingTable = array_merge($pre, [
+            $name => [
+                'url'    => $url,
+                'widget' => $widget,
+                'action' => $action
+            ]
+        ], $next);
         self::options()->routingTable = $routingTable;
 
-        $db = Typecho_Db::get();
-        return Typecho_Widget::widget('Widget_Abstract_Options')->update(['value' => serialize($routingTable)]
-            , $db->sql()->where('name = ?', 'routingTable'));
+        return BaseOptions::alloc()->update(
+            ['value' => serialize($routingTable)],
+            Db::get()->sql()->where('name = ?', 'routingTable')
+        );
     }
 
     /**
-     * 获取Widget_Options对象
+     * 获取Options对象
      *
-     * @access public
-     * @return Widget_Options
+     * @return Options
      */
-    public static function options()
+    public static function options(): Options
     {
-        return Typecho_Widget::widget('Widget_Options');
+        return Options::alloc();
     }
 
     /**
      * 移除路由
      *
-     * @access public
      * @param string $name 路由名称
      * @return integer
      */
-    public static function removeRoute($name)
+    public static function removeRoute(string $name): int
     {
         $routingTable = self::options()->routingTable;
         if (isset($routingTable[0])) {
@@ -199,38 +220,39 @@ class Helper
         unset($routingTable[$name]);
         self::options()->routingTable = $routingTable;
 
-        $db = Typecho_Db::get();
-        return Typecho_Widget::widget('Widget_Abstract_Options')->update(['value' => serialize($routingTable)]
-            , $db->sql()->where('name = ?', 'routingTable'));
+        $db = Db::get();
+        return BaseOptions::alloc()->update(
+            ['value' => serialize($routingTable)],
+            $db->sql()->where('name = ?', 'routingTable')
+        );
     }
 
     /**
      * 增加action扩展
      *
-     * @access public
      * @param string $actionName 需要扩展的action名称
      * @param string $widgetName 需要扩展的widget名称
      * @return integer
      */
-    public static function addAction($actionName, $widgetName)
+    public static function addAction(string $actionName, string $widgetName): int
     {
         $actionTable = unserialize(self::options()->actionTable);
         $actionTable = empty($actionTable) ? [] : $actionTable;
         $actionTable[$actionName] = $widgetName;
 
-        $db = Typecho_Db::get();
-        return Typecho_Widget::widget('Widget_Abstract_Options')->update(['value' => (self::options()->actionTable = serialize($actionTable))]
-            , $db->sql()->where('name = ?', 'actionTable'));
+        return BaseOptions::alloc()->update(
+            ['value' => (self::options()->actionTable = serialize($actionTable))],
+            Db::get()->sql()->where('name = ?', 'actionTable')
+        );
     }
 
     /**
      * 删除action扩展
      *
-     * @access public
      * @param string $actionName
-     * @return Typecho_Widget
+     * @return int
      */
-    public static function removeAction($actionName)
+    public static function removeAction(string $actionName): int
     {
         $actionTable = unserialize(self::options()->actionTable);
         $actionTable = empty($actionTable) ? [] : $actionTable;
@@ -240,27 +262,28 @@ class Helper
             reset($actionTable);
         }
 
-        $db = Typecho_Db::get();
-        return Typecho_Widget::widget('Widget_Abstract_Options')->update(['value' => (self::options()->actionTable = serialize($actionTable))]
-            , $db->sql()->where('name = ?', 'actionTable'));
+        return BaseOptions::alloc()->update(
+            ['value' => (self::options()->actionTable = serialize($actionTable))],
+            Db::get()->sql()->where('name = ?', 'actionTable')
+        );
     }
 
     /**
      * 增加一个菜单
      *
-     * @access public
      * @param string $menuName 菜单名
      * @return integer
      */
-    public static function addMenu($menuName)
+    public static function addMenu(string $menuName): int
     {
         $panelTable = unserialize(self::options()->panelTable);
         $panelTable['parent'] = empty($panelTable['parent']) ? [] : $panelTable['parent'];
         $panelTable['parent'][] = $menuName;
 
-        $db = Typecho_Db::get();
-        Typecho_Widget::widget('Widget_Abstract_Options')->update(['value' => (self::options()->panelTable = serialize($panelTable))]
-            , $db->sql()->where('name = ?', 'panelTable'));
+        BaseOptions::alloc()->update(
+            ['value' => (self::options()->panelTable = serialize($panelTable))],
+            Db::get()->sql()->where('name = ?', 'panelTable')
+        );
 
         end($panelTable['parent']);
         return key($panelTable['parent']) + 10;
@@ -269,11 +292,10 @@ class Helper
     /**
      * 移除一个菜单
      *
-     * @access public
      * @param string $menuName 菜单名
      * @return integer
      */
-    public static function removeMenu($menuName)
+    public static function removeMenu(string $menuName): int
     {
         $panelTable = unserialize(self::options()->panelTable);
         $panelTable['parent'] = empty($panelTable['parent']) ? [] : $panelTable['parent'];
@@ -282,9 +304,10 @@ class Helper
             unset($panelTable['parent'][$index]);
         }
 
-        $db = Typecho_Db::get();
-        Typecho_Widget::widget('Widget_Abstract_Options')->update(['value' => (self::options()->panelTable = serialize($panelTable))]
-            , $db->sql()->where('name = ?', 'panelTable'));
+        BaseOptions::alloc()->update(
+            ['value' => (self::options()->panelTable = serialize($panelTable))],
+            Db::get()->sql()->where('name = ?', 'panelTable')
+        );
 
         return $index + 10;
     }
@@ -292,7 +315,6 @@ class Helper
     /**
      * 增加一个面板
      *
-     * @access public
      * @param integer $index 菜单索引
      * @param string $fileName 文件名称
      * @param string $title 面板标题
@@ -302,21 +324,30 @@ class Helper
      * @param string $addLink 新增项目链接, 会显示在页面标题之后
      * @return integer
      */
-    public static function addPanel($index, $fileName, $title, $subTitle, $level, $hidden = false, $addLink = '')
-    {
+    public static function addPanel(
+        int $index,
+        string $fileName,
+        string $title,
+        string $subTitle,
+        string $level,
+        bool $hidden = false,
+        string $addLink = ''
+    ): int {
         $panelTable = unserialize(self::options()->panelTable);
         $panelTable['child'] = empty($panelTable['child']) ? [] : $panelTable['child'];
         $panelTable['child'][$index] = empty($panelTable['child'][$index]) ? [] : $panelTable['child'][$index];
         $fileName = urlencode(trim($fileName, '/'));
-        $panelTable['child'][$index][] = [$title, $subTitle, 'extending.php?panel=' . $fileName, $level, $hidden, $addLink];
+        $panelTable['child'][$index][]
+            = [$title, $subTitle, 'extending.php?panel=' . $fileName, $level, $hidden, $addLink];
 
         $panelTable['file'] = empty($panelTable['file']) ? [] : $panelTable['file'];
         $panelTable['file'][] = $fileName;
         $panelTable['file'] = array_unique($panelTable['file']);
 
-        $db = Typecho_Db::get();
-        Typecho_Widget::widget('Widget_Abstract_Options')->update(['value' => (self::options()->panelTable = serialize($panelTable))]
-            , $db->sql()->where('name = ?', 'panelTable'));
+        BaseOptions::alloc()->update(
+            ['value' => (self::options()->panelTable = serialize($panelTable))],
+            Db::get()->sql()->where('name = ?', 'panelTable')
+        );
 
         end($panelTable['child'][$index]);
         return key($panelTable['child'][$index]);
@@ -325,12 +356,11 @@ class Helper
     /**
      * 移除一个面板
      *
-     * @access public
      * @param integer $index 菜单索引
      * @param string $fileName 文件名称
      * @return integer
      */
-    public static function removePanel($index, $fileName)
+    public static function removePanel(int $index, string $fileName): int
     {
         $panelTable = unserialize(self::options()->panelTable);
         $panelTable['child'] = empty($panelTable['child']) ? [] : $panelTable['child'];
@@ -350,41 +380,38 @@ class Helper
             }
         }
 
-        $db = Typecho_Db::get();
-        Typecho_Widget::widget('Widget_Abstract_Options')->update(['value' => (self::options()->panelTable = serialize($panelTable))]
-            , $db->sql()->where('name = ?', 'panelTable'));
+        BaseOptions::alloc()->update(
+            ['value' => (self::options()->panelTable = serialize($panelTable))],
+            Db::get()->sql()->where('name = ?', 'panelTable')
+        );
         return $return;
     }
 
     /**
      * 获取面板url
      *
-     * @access public
      * @param string $fileName
      * @return string
      */
-    public static function url($fileName)
+    public static function url(string $fileName): string
     {
-        return Typecho_Common::url('extending.php?panel=' . (trim($fileName, '/')), self::options()->adminUrl);
+        return Common::url('extending.php?panel=' . (trim($fileName, '/')), self::options()->adminUrl);
     }
 
     /**
      * 手动配置插件变量
      *
-     * @access public
-     * @static
      * @param mixed $pluginName 插件名称
      * @param array $settings 变量键值对
      * @param bool $isPersonal . (default: false) 是否为私人变量
-     * @return void
      */
-    public static function configPlugin($pluginName, array $settings, $isPersonal = false)
+    public static function configPlugin($pluginName, array $settings, bool $isPersonal = false)
     {
         if (empty($settings)) {
             return;
         }
 
-        Widget_Plugins_Edit::configPlugin($pluginName, $settings, $isPersonal);
+        Edit::configPlugin($pluginName, $settings, $isPersonal);
     }
 
     /**
@@ -398,8 +425,13 @@ class Helper
      * @param integer $style 样式类型
      * @return void
      */
-    public static function replyLink($theId, $coid, $word = 'Reply', $formId = 'respond', $style = 2)
-    {
+    public static function replyLink(
+        string $theId,
+        int $coid,
+        string $word = 'Reply',
+        string $formId = 'respond',
+        int $style = 2
+    ) {
         if (self::options()->commentsThreaded) {
             echo '<a href="#' . $formId . '" rel="nofollow" onclick="return typechoAddCommentReply(\'' .
                 $theId . '\', ' . $coid . ', \'' . $formId . '\', ' . $style . ');">' . $word . '</a>';
@@ -409,12 +441,10 @@ class Helper
     /**
      * 评论取消按钮
      *
-     * @access public
      * @param string $word 按钮文字
      * @param string $formId 表单id
-     * @return void
      */
-    public static function cancelCommentReplyLink($word = 'Cancel', $formId = 'respond')
+    public static function cancelCommentReplyLink(string $word = 'Cancel', string $formId = 'respond')
     {
         if (self::options()->commentsThreaded) {
             echo '<a href="#' . $formId . '" rel="nofollow" onclick="return typechoCancelCommentReply(\'' .
@@ -424,9 +454,6 @@ class Helper
 
     /**
      * 评论回复js脚本
-     *
-     * @access public
-     * @return void
      */
     public static function threadedCommentsScript()
     {

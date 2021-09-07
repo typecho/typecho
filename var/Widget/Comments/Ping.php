@@ -1,14 +1,14 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-/**
- * 回响归档
- *
- * @category typecho
- * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
- * @version $Id$
- */
+
+namespace Widget\Comments;
+
+use Typecho\Config;
+use Typecho\Db\Exception;
+use Widget\Base\Comments;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * 回响归档组件
@@ -18,7 +18,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Comments_Ping extends Widget_Abstract_Comments
+class Ping extends Comments
 {
     /**
      * _customSinglePingCallback
@@ -26,32 +26,25 @@ class Widget_Comments_Ping extends Widget_Abstract_Comments
      * @var boolean
      * @access private
      */
-    private $_customSinglePingCallback = false;
+    private $customSinglePingCallback = false;
 
     /**
-     * 构造函数,初始化组件
-     *
-     * @access public
-     * @param mixed $request request对象
-     * @param mixed $response response对象
-     * @param mixed $params 参数列表
-     * @return void
+     * @param Config $parameter
      */
-    public function __construct($request, $response, $params = null)
+    protected function initParameter(Config $parameter)
     {
-        parent::__construct($request, $response, $params);
-        $this->parameter->setDefault('parentId=0');
+        $parameter->setDefault('parentId=0');
 
         /** 初始化回调函数 */
         if (function_exists('singlePing')) {
-            $this->_customSinglePingCallback = true;
+            $this->customSinglePingCallback = true;
         }
     }
 
     /**
      * 输出文章回响数
      *
-     * @param ...$args 评论数格式化数据
+     * @param mixed ...$args 评论数格式化数据
      */
     public function num(...$args)
     {
@@ -67,6 +60,7 @@ class Widget_Comments_Ping extends Widget_Abstract_Comments
      *
      * @access public
      * @return void
+     * @throws Exception
      */
     public function execute()
     {
@@ -85,15 +79,13 @@ class Widget_Comments_Ping extends Widget_Abstract_Comments
     /**
      * 列出回响
      *
-     * @access private
      * @param mixed $singlePingOptions 单个回响自定义选项
-     * @return void
      */
     public function listPings($singlePingOptions = null)
     {
         if ($this->have()) {
             //初始化一些变量
-            $parsedSinglePingOptions = Typecho_Config::factory($singlePingOptions);
+            $parsedSinglePingOptions = Config::factory($singlePingOptions);
             $parsedSinglePingOptions->setDefault([
                 'before'      => '<ol class="ping-list">',
                 'after'       => '</ol>',
@@ -117,13 +109,11 @@ class Widget_Comments_Ping extends Widget_Abstract_Comments
     /**
      * 回响回调函数
      *
-     * @access private
      * @param string $singlePingOptions 单个回响自定义选项
-     * @return void
      */
-    private function singlePingCallback($singlePingOptions)
+    private function singlePingCallback(string $singlePingOptions)
     {
-        if ($this->_customSinglePingCallback) {
+        if ($this->customSinglePingCallback) {
             return singlePing($this, $singlePingOptions);
         }
 
@@ -134,7 +124,7 @@ class Widget_Comments_Ping extends Widget_Abstract_Comments
                     $singlePingOptions->beforeTitle();
                     $this->author(true);
                     $singlePingOptions->afterTitle();
-                    ?></cite>
+                ?></cite>
             </div>
             <div class="ping-meta">
                 <a href="<?php $this->permalink(); ?>"><?php $singlePingOptions->beforeDate();
@@ -149,10 +139,9 @@ class Widget_Comments_Ping extends Widget_Abstract_Comments
     /**
      * 重载内容获取
      *
-     * @access protected
-     * @return void
+     * @return array|null
      */
-    protected function ___parentContent()
+    protected function ___parentContent(): ?array
     {
         return $this->parameter->parentContent;
     }

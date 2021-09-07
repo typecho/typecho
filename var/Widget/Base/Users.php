@@ -1,33 +1,48 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-/**
- * 用户抽象组件
- *
- * @category typecho
- * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
- * @version $Id$
- */
+
+namespace Widget\Base;
+
+use Typecho\Common;
+use Typecho\Config;
+use Typecho\Db\Exception;
+use Typecho\Db\Query;
+use Typecho\Router;
+use Widget\Base;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * 用户抽象类
  *
- * @category typecho
- * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
+ * @property int $uid
+ * @property string $name
+ * @property string $password
+ * @property string $mail
+ * @property string $url
+ * @property string $screenName
+ * @property int $created
+ * @property int $activated
+ * @property int $logged
+ * @property string $group
+ * @property string $authCode
+ * @property-read Config $personalOptions
+ * @property-read string $permalink
+ * @property-read string $feedUrl
+ * @property-read string $feedRssUrl
+ * @property-read string $feedAtomUrl
  */
-class Widget_Abstract_Users extends Widget_Abstract
+class Users extends Base implements QueryInterface
 {
     /**
      * 判断用户名称是否存在
      *
-     * @access public
      * @param string $name 用户名称
      * @return boolean
+     * @throws Exception
      */
-    public function nameExists($name)
+    public function nameExists(string $name): bool
     {
         $select = $this->db->select()
             ->from('table.users')
@@ -39,17 +54,17 @@ class Widget_Abstract_Users extends Widget_Abstract
         }
 
         $user = $this->db->fetchRow($select);
-        return $user ? false : true;
+        return !$user;
     }
 
     /**
      * 判断电子邮件是否存在
      *
-     * @access public
      * @param string $mail 电子邮件
      * @return boolean
+     * @throws Exception
      */
-    public function mailExists($mail)
+    public function mailExists(string $mail): bool
     {
         $select = $this->db->select()
             ->from('table.users')
@@ -61,17 +76,17 @@ class Widget_Abstract_Users extends Widget_Abstract
         }
 
         $user = $this->db->fetchRow($select);
-        return $user ? false : true;
+        return !$user;
     }
 
     /**
      * 判断用户昵称是否存在
      *
-     * @access public
      * @param string $screenName 昵称
      * @return boolean
+     * @throws Exception
      */
-    public function screenNameExists($screenName)
+    public function screenNameExists(string $screenName): bool
     {
         $select = $this->db->select()
             ->from('table.users')
@@ -83,17 +98,16 @@ class Widget_Abstract_Users extends Widget_Abstract
         }
 
         $user = $this->db->fetchRow($select);
-        return $user ? false : true;
+        return !$user;
     }
 
     /**
      * 将每行的值压入堆栈
      *
-     * @access public
      * @param array $value 每行的值
      * @return array
      */
-    public function push(array $value)
+    public function push(array $value): array
     {
         $value = $this->filter($value);
         return parent::push($value);
@@ -102,38 +116,37 @@ class Widget_Abstract_Users extends Widget_Abstract
     /**
      * 通用过滤器
      *
-     * @access public
      * @param array $value 需要过滤的行数据
      * @return array
      */
-    public function filter(array $value)
+    public function filter(array $value): array
     {
         //生成静态链接
-        $routeExists = (null != Typecho_Router::get('author'));
+        $routeExists = (null != Router::get('author'));
 
-        $value['permalink'] = $routeExists ? Typecho_Router::url('author', $value, $this->options->index) : '#';
+        $value['permalink'] = $routeExists ? Router::url('author', $value, $this->options->index) : '#';
 
         /** 生成聚合链接 */
         /** RSS 2.0 */
-        $value['feedUrl'] = $routeExists ? Typecho_Router::url('author', $value, $this->options->feedUrl) : '#';
+        $value['feedUrl'] = $routeExists ? Router::url('author', $value, $this->options->feedUrl) : '#';
 
         /** RSS 1.0 */
-        $value['feedRssUrl'] = $routeExists ? Typecho_Router::url('author', $value, $this->options->feedRssUrl) : '#';
+        $value['feedRssUrl'] = $routeExists ? Router::url('author', $value, $this->options->feedRssUrl) : '#';
 
         /** ATOM 1.0 */
-        $value['feedAtomUrl'] = $routeExists ? Typecho_Router::url('author', $value, $this->options->feedAtomUrl) : '#';
+        $value['feedAtomUrl'] = $routeExists ? Router::url('author', $value, $this->options->feedAtomUrl) : '#';
 
-        $value = $this->pluginHandle(__CLASS__)->filter($value, $this);
+        $value = $this->pluginHandle()->filter($value, $this);
         return $value;
     }
 
     /**
      * 查询方法
      *
-     * @access public
-     * @return Typecho_Db_Query
+     * @return Query
+     * @throws Exception
      */
-    public function select()
+    public function select(): Query
     {
         return $this->db->select()->from('table.users');
     }
@@ -141,11 +154,11 @@ class Widget_Abstract_Users extends Widget_Abstract
     /**
      * 获得所有记录数
      *
-     * @access public
-     * @param Typecho_Db_Query $condition 查询对象
+     * @param Query $condition 查询对象
      * @return integer
+     * @throws Exception
      */
-    public function size(Typecho_Db_Query $condition)
+    public function size(Query $condition): int
     {
         return $this->db->fetchObject($condition->select(['COUNT(uid)' => 'num'])->from('table.users'))->num;
     }
@@ -153,11 +166,11 @@ class Widget_Abstract_Users extends Widget_Abstract
     /**
      * 增加记录方法
      *
-     * @access public
      * @param array $rows 字段对应值
      * @return integer
+     * @throws Exception
      */
-    public function insert(array $rows)
+    public function insert(array $rows): int
     {
         return $this->db->query($this->db->insert('table.users')->rows($rows));
     }
@@ -165,12 +178,12 @@ class Widget_Abstract_Users extends Widget_Abstract
     /**
      * 更新记录方法
      *
-     * @access public
      * @param array $rows 字段对应值
-     * @param Typecho_Db_Query $condition 查询对象
+     * @param Query $condition 查询对象
      * @return integer
+     * @throws Exception
      */
-    public function update(array $rows, Typecho_Db_Query $condition)
+    public function update(array $rows, Query $condition): int
     {
         return $this->db->query($condition->update('table.users')->rows($rows));
     }
@@ -178,11 +191,11 @@ class Widget_Abstract_Users extends Widget_Abstract
     /**
      * 删除记录方法
      *
-     * @access public
-     * @param Typecho_Db_Query $condition 查询对象
+     * @param Query $condition 查询对象
      * @return integer
+     * @throws Exception
      */
-    public function delete(Typecho_Db_Query $condition)
+    public function delete(Query $condition): int
     {
         return $this->db->query($condition->delete('table.users'));
     }
@@ -190,27 +203,25 @@ class Widget_Abstract_Users extends Widget_Abstract
     /**
      * 调用gravatar输出用户头像
      *
-     * @access public
      * @param integer $size 头像尺寸
      * @param string $rating 头像评级
-     * @param string $default 默认输出头像
-     * @param string $class 默认css class
-     * @return void
+     * @param string|null $default 默认输出头像
+     * @param string|null $class 默认css class
      */
-    public function gravatar($size = 40, $rating = 'X', $default = null, $class = null)
+    public function gravatar(int $size = 40, string $rating = 'X', ?string $default = null, ?string $class = null)
     {
-        $url = Typecho_Common::gravatarUrl($this->mail, $size, $rating, $default, $this->request->isSecure());
+        $url = Common::gravatarUrl($this->mail, $size, $rating, $default, $this->request->isSecure());
         echo '<img' . (empty($class) ? '' : ' class="' . $class . '"') . ' src="' . $url . '" alt="' .
             $this->screenName . '" width="' . $size . '" height="' . $size . '" />';
     }
 
     /**
-     * ___options
+     * personalOptions
      *
-     * @access protected
-     * @return Typecho_Config
+     * @return Config
+     * @throws Exception
      */
-    protected function ___options()
+    protected function ___personalOptions(): Config
     {
         $rows = $this->db->fetchAll($this->db->select()
             ->from('table.options')->where('user = ?', $this->uid));
@@ -219,20 +230,20 @@ class Widget_Abstract_Users extends Widget_Abstract
             $options[$row['name']] = $row['value'];
         }
 
-        return new Typecho_Config($options);
+        return new Config($options);
     }
 
     /**
      * 获取页面偏移
      *
-     * @access protected
      * @param string $column 字段名
      * @param integer $offset 偏移值
-     * @param string $group 用户组
+     * @param string|null $group 用户组
      * @param integer $pageSize 分页值
      * @return integer
+     * @throws Exception
      */
-    protected function getPageOffset($column, $offset, $group = null, $pageSize = 20)
+    protected function getPageOffset(string $column, int $offset, ?string $group = null, int $pageSize = 20): int
     {
         $select = $this->db->select(['COUNT(uid)' => 'num'])->from('table.users')
             ->where("table.users.{$column} > {$offset}");

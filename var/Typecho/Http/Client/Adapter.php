@@ -1,14 +1,9 @@
 <?php
-/**
- * 客户端适配器
- *
- * @author qining
- * @category typecho
- * @package Http
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
- * @version $Id$
- */
+
+namespace Typecho\Http\Client;
+
+use Typecho\Common;
+use Typecho\Http\Client;
 
 /**
  * 客户端适配器
@@ -17,7 +12,7 @@
  * @category typecho
  * @package Http
  */
-abstract class Typecho_Http_Client_Adapter
+abstract class Adapter
 {
     /**
      * 方法名
@@ -25,7 +20,7 @@ abstract class Typecho_Http_Client_Adapter
      * @access protected
      * @var string
      */
-    protected $method = Typecho_Http_Client::METHOD_GET;
+    protected $method = Client::METHOD_GET;
 
     /**
      * 传递参数
@@ -47,7 +42,7 @@ abstract class Typecho_Http_Client_Adapter
      * 需要在body中传递的值
      *
      * @access protected
-     * @var array
+     * @var array|string
      */
     protected $data = [];
 
@@ -161,10 +156,7 @@ abstract class Typecho_Http_Client_Adapter
      * @access public
      * @return boolean
      */
-    public static function isAvailable()
-    {
-        return true;
-    }
+    abstract public static function isAvailable(): bool;
 
     /**
      * 设置指定的COOKIE值
@@ -172,9 +164,9 @@ abstract class Typecho_Http_Client_Adapter
      * @access public
      * @param string $key 指定的参数
      * @param mixed $value 设置的值
-     * @return Typecho_Http_Client_Adapter
+     * @return $this
      */
-    public function setCookie($key, $value)
+    public function setCookie(string $key, $value): Adapter
     {
         $this->cookies[$key] = $value;
         return $this;
@@ -185,9 +177,9 @@ abstract class Typecho_Http_Client_Adapter
      *
      * @access public
      * @param mixed $query 传递参数
-     * @return Typecho_Http_Client_Adapter
+     * @return $this
      */
-    public function setQuery($query)
+    public function setQuery($query): Adapter
     {
         $query = is_array($query) ? http_build_query($query) : $query;
         $this->query = empty($this->query) ? $query : $this->query . '&' . $query;
@@ -198,13 +190,13 @@ abstract class Typecho_Http_Client_Adapter
      * 设置需要POST的数据
      *
      * @access public
-     * @param array $data 需要POST的数据
-     * @return Typecho_Http_Client_Adapter
+     * @param array|string $data 需要POST的数据
+     * @return $this
      */
-    public function setData($data)
+    public function setData($data): Adapter
     {
         $this->data = $data;
-        $this->setMethod(Typecho_Http_Client::METHOD_POST);
+        $this->setMethod(Client::METHOD_POST);
         return $this;
     }
 
@@ -213,9 +205,9 @@ abstract class Typecho_Http_Client_Adapter
      *
      * @access public
      * @param string $method
-     * @return Typecho_Http_Client_Adapter
+     * @return $this
      */
-    public function setMethod($method)
+    public function setMethod(string $method): Adapter
     {
         $this->method = $method;
         return $this;
@@ -226,12 +218,12 @@ abstract class Typecho_Http_Client_Adapter
      *
      * @access public
      * @param array $files 需要POST的文件
-     * @return Typecho_Http_Client_Adapter
+     * @return $this
      */
-    public function setFiles(array $files)
+    public function setFiles(array $files): Adapter
     {
         $this->files = empty($this->files) ? $files : array_merge($this->files, $files);
-        $this->setMethod(Typecho_Http_Client::METHOD_POST);
+        $this->setMethod(Client::METHOD_POST);
         return $this;
     }
 
@@ -240,9 +232,9 @@ abstract class Typecho_Http_Client_Adapter
      *
      * @access public
      * @param integer $timeout 超时时间
-     * @return Typecho_Http_Client_Adapter
+     * @return $this
      */
-    public function setTimeout($timeout)
+    public function setTimeout(int $timeout): Adapter
     {
         $this->timeout = $timeout;
         return $this;
@@ -253,9 +245,9 @@ abstract class Typecho_Http_Client_Adapter
      *
      * @access public
      * @param string $rfc http协议
-     * @return Typecho_Http_Client_Adapter
+     * @return $this
      */
-    public function setRfc($rfc)
+    public function setRfc(string $rfc): Adapter
     {
         $this->rfc = $rfc;
         return $this;
@@ -266,9 +258,9 @@ abstract class Typecho_Http_Client_Adapter
      *
      * @access public
      * @param string $ip ip地址
-     * @return Typecho_Http_Client_Adapter
+     * @return $this
      */
-    public function setIp($ip)
+    public function setIp(string $ip): Adapter
     {
         $this->ip = $ip;
         return $this;
@@ -279,21 +271,21 @@ abstract class Typecho_Http_Client_Adapter
      *
      * @access public
      * @param string $url 请求地址
-     * @return string
-     * @throws Typecho_Http_Client_Exception
+     * @return string|null
+     * @throws Exception
      */
-    public function send($url)
+    public function send(string $url): ?string
     {
         $params = parse_url($url);
 
         if (!empty($params['host'])) {
             $this->host = $params['host'];
         } else {
-            throw new Typecho_Http_Client_Exception('Unknown Host', 500);
+            throw new Exception('Unknown Host', 500);
         }
 
         if (!in_array($params['scheme'], ['http', 'https'])) {
-            throw new Typecho_Http_Client_Exception('Unknown Scheme', 500);
+            throw new Exception('Unknown Scheme', 500);
         }
 
         if (!empty($params['path'])) {
@@ -313,7 +305,7 @@ abstract class Typecho_Http_Client_Adapter
 
         $this->scheme = $params['scheme'];
         $this->port = ('https' == $params['scheme']) ? 443 : 80;
-        $url = Typecho_Common::buildUrl($params);
+        $url = Common::buildUrl($params);
 
         if (!empty($params['port'])) {
             $this->port = $params['port'];
@@ -327,7 +319,7 @@ abstract class Typecho_Http_Client_Adapter
         $response = $this->httpSend($url);
 
         if (!$response) {
-            return;
+            return null;
         }
 
         str_replace("\r", '', $response);
@@ -374,9 +366,9 @@ abstract class Typecho_Http_Client_Adapter
      * @access public
      * @param string $key 参数名称
      * @param string $value 参数值
-     * @return Typecho_Http_Client_Adapter
+     * @return $this
      */
-    public function setHeader($key, $value)
+    public function setHeader(string $key, string $value): Adapter
     {
         $key = str_replace(' ', '-', ucwords(str_replace('-', ' ', $key)));
         $this->headers[$key] = $value;
@@ -390,7 +382,7 @@ abstract class Typecho_Http_Client_Adapter
      * @param string $url 请求地址
      * @return string
      */
-    abstract protected function httpSend($url);
+    abstract protected function httpSend(string $url): string;
 
     /**
      * 获取回执的头部信息
@@ -399,7 +391,7 @@ abstract class Typecho_Http_Client_Adapter
      * @param string $key 头信息名称
      * @return string
      */
-    public function getResponseHeader($key)
+    public function getResponseHeader(string $key): ?string
     {
         $key = strtolower($key);
         return $this->responseHeader[$key] ?? null;
@@ -411,7 +403,7 @@ abstract class Typecho_Http_Client_Adapter
      * @access public
      * @return integer
      */
-    public function getResponseStatus()
+    public function getResponseStatus(): int
     {
         return $this->responseStatus;
     }
@@ -422,7 +414,7 @@ abstract class Typecho_Http_Client_Adapter
      * @access public
      * @return string
      */
-    public function getResponseBody()
+    public function getResponseBody(): string
     {
         return $this->responseBody;
     }

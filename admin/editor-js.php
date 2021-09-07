@@ -109,7 +109,7 @@ $(document).ready(function () {
         }
     });
 
-    <?php Typecho_Plugin::factory('admin/editor-js.php')->markdownEditor($content); ?>
+    <?php \Typecho\Plugin::factory('admin/editor-js.php')->markdownEditor($content); ?>
 
     var th = textarea.height(), ph = preview.height(),
         uploadBtn = $('<button type="button" id="btn-fullscreen-upload" class="btn btn-link">'

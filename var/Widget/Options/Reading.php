@@ -1,14 +1,15 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-/**
- * 文章阅读设置
- *
- * @category typecho
- * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
- * @version $Id$
- */
+
+namespace Widget\Options;
+
+use Typecho\Db\Exception;
+use Typecho\Plugin;
+use Typecho\Widget\Helper\Form;
+use Widget\Notice;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * 文章阅读设置组件
@@ -19,13 +20,12 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Options_Reading extends Widget_Options_Permalink
+class Reading extends Permalink
 {
     /**
      * 执行更新动作
      *
-     * @access public
-     * @return void
+     * @throws Exception
      */
     public function updateReadingSettings()
     {
@@ -34,22 +34,29 @@ class Widget_Options_Reading extends Widget_Options_Permalink
             $this->response->goBack();
         }
 
-        $settings = $this->request->from('postDateFormat', 'frontPage', 'frontArchive', 'pageSize', 'postsListSize', 'feedFullText');
+        $settings = $this->request->from(
+            'postDateFormat',
+            'frontPage',
+            'frontArchive',
+            'pageSize',
+            'postsListSize',
+            'feedFullText'
+        );
 
-        if ('page' == $settings['frontPage'] && isset($this->request->frontPagePage) &&
+        if (
+            'page' == $settings['frontPage'] && isset($this->request->frontPagePage) &&
             $this->db->fetchRow($this->db->select('cid')
                 ->from('table.contents')->where('type = ?', 'page')
                 ->where('status = ?', 'publish')->where('created < ?', $this->options->time)
-                ->where('cid = ?', $pageId = intval($this->request->frontPagePage)))) {
-
+                ->where('cid = ?', $pageId = intval($this->request->frontPagePage)))
+        ) {
             $settings['frontPage'] = 'page:' . $pageId;
-
-        } elseif ('file' == $settings['frontPage'] && isset($this->request->frontPageFile) &&
+        } elseif (
+            'file' == $settings['frontPage'] && isset($this->request->frontPageFile) &&
             file_exists(__TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/' .
-                ($file = trim($this->request->frontPageFile, " ./\\")))) {
-
+                ($file = trim($this->request->frontPageFile, " ./\\")))
+        ) {
             $settings['frontPage'] = 'file:' . $file;
-
         } else {
             $settings['frontPage'] = 'recent';
         }
@@ -59,7 +66,8 @@ class Widget_Options_Reading extends Widget_Options_Permalink
             if ($settings['frontArchive']) {
                 $routingTable = $this->options->routingTable;
                 $routingTable['archive']['url'] = '/' . ltrim($this->encodeRule($this->request->archivePattern), '/');
-                $routingTable['archive_page']['url'] = rtrim($routingTable['archive']['url'], '/') . '/page/[page:digital]/';
+                $routingTable['archive_page']['url'] = rtrim($routingTable['archive']['url'], '/')
+                    . '/page/[page:digital]/';
 
                 if (isset($routingTable[0])) {
                     unset($routingTable[0]);
@@ -75,27 +83,30 @@ class Widget_Options_Reading extends Widget_Options_Permalink
             $this->update(['value' => $value], $this->db->sql()->where('name = ?', $name));
         }
 
-        $this->widget('Widget_Notice')->set(_t("设置已经保存"), 'success');
+        Notice::alloc()->set(_t("设置已经保存"), 'success');
         $this->response->goBack();
     }
 
     /**
      * 输出表单结构
      *
-     * @access public
-     * @return Typecho_Widget_Helper_Form
+     * @return Form
      */
-    public function form()
+    public function form(): Form
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form($this->security->getIndex('/action/options-reading'),
-            Typecho_Widget_Helper_Form::POST_METHOD);
+        $form = new Form($this->security->getIndex('/action/options-reading'), Form::POST_METHOD);
 
         /** 文章日期格式 */
-        $postDateFormat = new Typecho_Widget_Helper_Form_Element_Text('postDateFormat', null, $this->options->postDateFormat,
-            _t('文章日期格式'), _t('此格式用于指定显示在文章归档中的日期默认显示格式.') . '<br />'
+        $postDateFormat = new Form\Element\Text(
+            'postDateFormat',
+            null,
+            $this->options->postDateFormat,
+            _t('文章日期格式'),
+            _t('此格式用于指定显示在文章归档中的日期默认显示格式.') . '<br />'
             . _t('在某些主题中这个格式可能不会生效, 因为主题作者可以自定义日期格式.') . '<br />'
-            . _t('请参考 <a href="http://www.php.net/manual/zh/function.date.php">PHP 日期格式写法</a>.'));
+            . _t('请参考 <a href="http://www.php.net/manual/zh/function.date.php">PHP 日期格式写法</a>.')
+        );
         $postDateFormat->input->setAttribute('class', 'w-40 mono');
         $form->addInput($postDateFormat->addRule('xssCheck', _t('请不要在日期格式中使用特殊字符')));
 
@@ -111,9 +122,11 @@ class Widget_Options_Reading extends Widget_Options_Permalink
         $frontPattern = '</label></span><span class="multiline front-archive%class%">'
             . '<input type="checkbox" id="frontArchive" name="frontArchive" value="1"'
             . ($this->options->frontArchive && 'recent' != $frontPageType ? ' checked' : '') . ' />
-<label for="frontArchive">' . _t('同时将文章列表页路径更改为 %s',
+<label for="frontArchive">' . _t(
+                '同时将文章列表页路径更改为 %s',
                 '<input type="text" name="archivePattern" class="w-20 mono" value="'
-                . htmlspecialchars($this->decodeRule($this->options->routingTable['archive']['url'])) . '" />')
+                . htmlspecialchars($this->decodeRule($this->options->routingTable['archive']['url'])) . '" />'
+            )
             . '</label>';
 
         // 页面列表
@@ -133,7 +146,10 @@ class Widget_Options_Reading extends Widget_Options_Permalink
                     . '>' . $page['title'] . '</option>';
             }
             $pagesSelect .= '</select>';
-            $frontPageOptions['page'] = _t('使用 %s 页面作为首页', '</label>' . $pagesSelect . '<label for="frontPage-frontPagePage">');
+            $frontPageOptions['page'] = _t(
+                '使用 %s 页面作为首页',
+                '</label>' . $pagesSelect . '<label for="frontPage-frontPagePage">'
+            );
             $selectedFrontPageType = 'page';
         }
 
@@ -142,7 +158,7 @@ class Widget_Options_Reading extends Widget_Options_Permalink
         $filesSelect = '';
 
         foreach ($files as $file) {
-            $info = Typecho_Plugin::parseInfo($file);
+            $info = Plugin::parseInfo($file);
             $file = basename($file);
 
             if ('index.php' != $file && 'index' == $info['title']) {
@@ -157,9 +173,11 @@ class Widget_Options_Reading extends Widget_Options_Permalink
         }
 
         if (!empty($filesSelect)) {
-            $frontPageOptions['file'] = _t('直接调用 %s 模板文件',
+            $frontPageOptions['file'] = _t(
+                '直接调用 %s 模板文件',
                 '</label><select name="frontPageFile" id="frontPage-frontPageFile">'
-                . $filesSelect . '</select><label for="frontPage-frontPageFile">');
+                . $filesSelect . '</select><label for="frontPage-frontPageFile">'
+            );
             $selectedFrontPageType = 'file';
         }
 
@@ -173,30 +191,44 @@ class Widget_Options_Reading extends Widget_Options_Permalink
             $frontPageOptions[$selectedFrontPageType] .= $frontPattern;
         }
 
-        $frontPage = new Typecho_Widget_Helper_Form_Element_Radio('frontPage', $frontPageOptions,
-            $frontPageType, _t('站点首页'));
+        $frontPage = new Form\Element\Radio('frontPage', $frontPageOptions, $frontPageType, _t('站点首页'));
         $form->addInput($frontPage->multiMode());
 
         /** 文章列表数目 */
-        $postsListSize = new Typecho_Widget_Helper_Form_Element_Text('postsListSize', null, $this->options->postsListSize,
-            _t('文章列表数目'), _t('此数目用于指定显示在侧边栏中的文章列表数目.'));
+        $postsListSize = new Form\Element\Text(
+            'postsListSize',
+            null,
+            $this->options->postsListSize,
+            _t('文章列表数目'),
+            _t('此数目用于指定显示在侧边栏中的文章列表数目.')
+        );
         $postsListSize->input->setAttribute('class', 'w-20');
         $form->addInput($postsListSize->addRule('isInteger', _t('请填入一个数字')));
 
         /** 每页文章数目 */
-        $pageSize = new Typecho_Widget_Helper_Form_Element_Text('pageSize', null, $this->options->pageSize,
-            _t('每页文章数目'), _t('此数目用于指定文章归档输出时每页显示的文章数目.'));
+        $pageSize = new Form\Element\Text(
+            'pageSize',
+            null,
+            $this->options->pageSize,
+            _t('每页文章数目'),
+            _t('此数目用于指定文章归档输出时每页显示的文章数目.')
+        );
         $pageSize->input->setAttribute('class', 'w-20');
         $form->addInput($pageSize->addRule('isInteger', _t('请填入一个数字')));
 
         /** FEED全文输出 */
-        $feedFullText = new Typecho_Widget_Helper_Form_Element_Radio('feedFullText', ['0' => _t('仅输出摘要'), '1' => _t('全文输出')],
-            $this->options->feedFullText, _t('聚合全文输出'), _t('如果你不希望在聚合中输出文章全文,请使用仅输出摘要选项.') . '<br />'
-            . _t('摘要的文字取决于你在文章中使用分隔符的位置.'));
+        $feedFullText = new Form\Element\Radio(
+            'feedFullText',
+            ['0' => _t('仅输出摘要'), '1' => _t('全文输出')],
+            $this->options->feedFullText,
+            _t('聚合全文输出'),
+            _t('如果你不希望在聚合中输出文章全文,请使用仅输出摘要选项.') . '<br />'
+            . _t('摘要的文字取决于你在文章中使用分隔符的位置.')
+        );
         $form->addInput($feedFullText);
 
         /** 提交按钮 */
-        $submit = new Typecho_Widget_Helper_Form_Element_Submit('submit', null, _t('保存设置'));
+        $submit = new Form\Element\Submit('submit', null, _t('保存设置'));
         $submit->input->setAttribute('class', 'btn primary');
         $form->addItem($submit);
 

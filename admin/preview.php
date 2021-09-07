@@ -3,7 +3,7 @@
 include 'common.php';
 
 /** 获取内容 Widget */
-Typecho_Widget::widget('Widget_Archive', 'type=single&checkPermalink=0&preview=1')->to($content);
+\Widget\Archive::alloc('type=single&checkPermalink=0&preview=1')->to($content);
 
 /** 检测是否存在 */
 if (!$content->have()) {

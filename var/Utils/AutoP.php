@@ -1,5 +1,7 @@
 <?php
 
+namespace Utils;
+
 /**
  * AutoP
  *
@@ -10,7 +12,7 @@
 class AutoP
 {
     // 作为段落的标签
-    const BLOCK = 'p|pre|div|blockquote|form|ul|ol|dd|table|ins|h1|h2|h3|h4|h5|h6';
+    private const BLOCK = 'p|pre|div|blockquote|form|ul|ol|dd|table|ins|h1|h2|h3|h4|h5|h6';
 
     /**
      * 唯一id
@@ -18,7 +20,7 @@ class AutoP
      * @access private
      * @var integer
      */
-    private $_uniqueId = 0;
+    private $uniqueId = 0;
 
     /**
      * 存储的段落
@@ -26,30 +28,32 @@ class AutoP
      * @access private
      * @var array
      */
-    private $_blocks = [];
+    private $blocks = [];
 
     /**
      * 替换段落的回调函数
      *
-     * @access public
      * @param array $matches 匹配值
      * @return string
      */
-    public function replaceBlockCallback($matches)
+    public function replaceBlockCallback(array $matches): string
     {
         $tagMatch = '|' . $matches[1] . '|';
         $text = $matches[4];
 
         switch (true) {
             /** 用br处理换行 */
-            case false !== strpos('|li|dd|dt|td|p|a|span|cite|strong|sup|sub|small|del|u|i|b|ins|h1|h2|h3|h4|h5|h6|', $tagMatch):
+            case false !== strpos(
+                '|li|dd|dt|td|p|a|span|cite|strong|sup|sub|small|del|u|i|b|ins|h1|h2|h3|h4|h5|h6|',
+                $tagMatch
+            ):
                 $text = nl2br(trim($text));
                 break;
             /** 用段落处理换行 */
             case false !== strpos('|div|blockquote|form|', $tagMatch):
                 $text = $this->cutByBlock($text);
                 if (false !== strpos($text, '</p><p>')) {
-                    $text = $this->fixPragraph($text);
+                    $text = $this->fixParagraph($text);
                 }
                 break;
             default:
@@ -63,18 +67,17 @@ class AutoP
             $key = '<p' . $matches[2] . '/>';
         }
 
-        $this->_blocks[$key] = "<{$matches[1]}{$matches[3]}>{$text}</{$matches[1]}>";
+        $this->blocks[$key] = "<{$matches[1]}{$matches[3]}>{$text}</{$matches[1]}>";
         return $key;
     }
 
     /**
      * 用段落方法处理换行
      *
-     * @access private
      * @param string $text
      * @return string
      */
-    private function cutByBlock($text)
+    private function cutByBlock(string $text): string
     {
         $space = "( |　)";
         $text = str_replace("\r\n", "\n", trim($text));
@@ -92,11 +95,10 @@ class AutoP
     /**
      * 修复段落开头和结尾
      *
-     * @access private
      * @param string $text
      * @return string
      */
-    private function fixPragraph($text)
+    private function fixParagraph(string $text): string
     {
         $text = trim($text);
         if (!preg_match("/^<(" . self::BLOCK . ")(\s|>)/i", $text)) {
@@ -114,15 +116,13 @@ class AutoP
      * 自动分段
      *
      * @param string $text
-     * @static
-     * @access private
      * @return string
      */
-    public function parse($text)
+    public function parse(string $text): string
     {
         /** 重置计数器 */
-        $this->_uniqueId = 0;
-        $this->_blocks = [];
+        $this->uniqueId = 0;
+        $this->blocks = [];
 
         /** 将已有的段落后面的换行处理掉 */
         $text = preg_replace(["/<\/p>\s+<p(\s*)/is", "/\s*<br\s*\/?>\s*/is"], ["</p><p\\1", "<br />"], trim($text));
@@ -161,36 +161,44 @@ class AutoP
                     $tagLength = strlen($tag);
 
                     $text = substr_replace($text, $uniqueId, $pos + 1 + $tagLength, 0);
-                    $text = substr_replace($text, $uniqueId, $match[1] + 7 + $foundTagCount * 10 + $tagLength, 0); // 7 = 5 + 2
-                    $foundTagCount ++;
+                    $text = substr_replace(
+                        $text,
+                        $uniqueId,
+                        $match[1] + 7 + $foundTagCount * 10 + $tagLength,
+                        0
+                    ); // 7 = 5 + 2
+                    $foundTagCount++;
                 }
             }
         }
 
         foreach ($uniqueIdList as $uniqueId => $tag) {
-            $text = preg_replace_callback("/<({$tag})({$uniqueId})([^>]*)>(.*)<\/\\1\\2>/is",
-                [$this, 'replaceBlockCallback'], $text, 1);
+            $text = preg_replace_callback(
+                "/<({$tag})({$uniqueId})([^>]*)>(.*)<\/\\1\\2>/is",
+                [$this, 'replaceBlockCallback'],
+                $text,
+                1
+            );
         }
 
         $text = $this->cutByBlock($text);
-        $blocks = array_reverse($this->_blocks);
+        $blocks = array_reverse($this->blocks);
 
         foreach ($blocks as $blockKey => $blockValue) {
             $text = str_replace($blockKey, $blockValue, $text);
         }
 
-        return $this->fixPragraph($text);
+        return $this->fixParagraph($text);
     }
 
     /**
      * 生成唯一的id, 为了速度考虑最多支持1万个tag的处理
      *
-     * @access private
      * @return string
      */
-    private function makeUniqueId()
+    private function makeUniqueId(): string
     {
-        return ':' . str_pad($this->_uniqueId ++, 4, '0', STR_PAD_LEFT);
+        return ':' . str_pad($this->uniqueId ++, 4, '0', STR_PAD_LEFT);
     }
 }
 

@@ -1,14 +1,16 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-/**
- * 评论设置
- *
- * @category typecho
- * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
- * @version $Id$
- */
+
+namespace Widget\Options;
+
+use Typecho\Db\Exception;
+use Typecho\Widget\Helper\Form;
+use Widget\ActionInterface;
+use Widget\Base\Options;
+use Widget\Notice;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * 评论设置组件
@@ -19,13 +21,12 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Options_Discussion extends Widget_Abstract_Options implements Widget_Interface_Do
+class Discussion extends Options implements ActionInterface
 {
     /**
      * 执行更新动作
      *
-     * @access public
-     * @return void
+     * @throws Exception
      */
     public function updateDiscussionSettings()
     {
@@ -34,13 +35,35 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
             $this->response->goBack();
         }
 
-        $settings = $this->request->from('commentDateFormat', 'commentsListSize', 'commentsPageSize', 'commentsPageDisplay', 'commentsAvatar',
-            'commentsOrder', 'commentsMaxNestingLevels', 'commentsUrlNofollow', 'commentsPostTimeout', 'commentsUniqueIpInterval', 'commentsWhitelist', 'commentsRequireMail', 'commentsAvatarRating',
-            'commentsPostTimeout', 'commentsPostInterval', 'commentsRequireModeration', 'commentsRequireURL', 'commentsHTMLTagAllowed', 'commentsStopWords', 'commentsIpBlackList');
+        $settings = $this->request->from(
+            'commentDateFormat',
+            'commentsListSize',
+            'commentsPageSize',
+            'commentsPageDisplay',
+            'commentsAvatar',
+            'commentsOrder',
+            'commentsMaxNestingLevels',
+            'commentsUrlNofollow',
+            'commentsPostTimeout',
+            'commentsUniqueIpInterval',
+            'commentsWhitelist',
+            'commentsRequireMail',
+            'commentsAvatarRating',
+            'commentsPostTimeout',
+            'commentsPostInterval',
+            'commentsRequireModeration',
+            'commentsRequireURL',
+            'commentsHTMLTagAllowed',
+            'commentsStopWords',
+            'commentsIpBlackList'
+        );
         $settings['commentsShow'] = $this->request->getArray('commentsShow');
         $settings['commentsPost'] = $this->request->getArray('commentsPost');
 
-        $settings['commentsShowCommentOnly'] = $this->isEnableByCheckbox($settings['commentsShow'], 'commentsShowCommentOnly');
+        $settings['commentsShowCommentOnly'] = $this->isEnableByCheckbox(
+            $settings['commentsShow'],
+            'commentsShowCommentOnly'
+        );
         $settings['commentsMarkdown'] = $this->isEnableByCheckbox($settings['commentsShow'], 'commentsMarkdown');
         $settings['commentsShowUrl'] = $this->isEnableByCheckbox($settings['commentsShow'], 'commentsShowUrl');
         $settings['commentsUrlNofollow'] = $this->isEnableByCheckbox($settings['commentsShow'], 'commentsUrlNofollow');
@@ -55,14 +78,23 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
         $settings['commentsAvatarRating'] = in_array($settings['commentsAvatarRating'], ['G', 'PG', 'R', 'X'])
             ? $settings['commentsAvatarRating'] : 'G';
 
-        $settings['commentsRequireModeration'] = $this->isEnableByCheckbox($settings['commentsPost'], 'commentsRequireModeration');
+        $settings['commentsRequireModeration'] = $this->isEnableByCheckbox(
+            $settings['commentsPost'],
+            'commentsRequireModeration'
+        );
         $settings['commentsWhitelist'] = $this->isEnableByCheckbox($settings['commentsPost'], 'commentsWhitelist');
         $settings['commentsRequireMail'] = $this->isEnableByCheckbox($settings['commentsPost'], 'commentsRequireMail');
         $settings['commentsRequireURL'] = $this->isEnableByCheckbox($settings['commentsPost'], 'commentsRequireURL');
-        $settings['commentsCheckReferer'] = $this->isEnableByCheckbox($settings['commentsPost'], 'commentsCheckReferer');
+        $settings['commentsCheckReferer'] = $this->isEnableByCheckbox(
+            $settings['commentsPost'],
+            'commentsCheckReferer'
+        );
         $settings['commentsAntiSpam'] = $this->isEnableByCheckbox($settings['commentsPost'], 'commentsAntiSpam');
         $settings['commentsAutoClose'] = $this->isEnableByCheckbox($settings['commentsPost'], 'commentsAutoClose');
-        $settings['commentsPostIntervalEnable'] = $this->isEnableByCheckbox($settings['commentsPost'], 'commentsPostIntervalEnable');
+        $settings['commentsPostIntervalEnable'] = $this->isEnableByCheckbox(
+            $settings['commentsPost'],
+            'commentsPostIntervalEnable'
+        );
 
         $settings['commentsPostTimeout'] = intval($settings['commentsPostTimeout']) * 24 * 3600;
         $settings['commentsPostInterval'] = round($settings['commentsPostInterval'], 1) * 60;
@@ -74,32 +106,40 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
             $this->update(['value' => $value], $this->db->sql()->where('name = ?', $name));
         }
 
-        $this->widget('Widget_Notice')->set(_t("设置已经保存"), 'success');
+        Notice::alloc()->set(_t("设置已经保存"), 'success');
         $this->response->goBack();
     }
 
     /**
      * 输出表单结构
      *
-     * @access public
-     * @return Typecho_Widget_Helper_Form
+     * @return Form
      */
-    public function form()
+    public function form(): Form
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form($this->security->getIndex('/action/options-discussion'),
-            Typecho_Widget_Helper_Form::POST_METHOD);
+        $form = new Form($this->security->getIndex('/action/options-discussion'), Form::POST_METHOD);
 
         /** 评论日期格式 */
-        $commentDateFormat = new Typecho_Widget_Helper_Form_Element_Text('commentDateFormat', null, $this->options->commentDateFormat,
-            _t('评论日期格式'), _t('这是一个默认的格式,当你在模板中调用显示评论日期方法时, 如果没有指定日期格式, 将按照此格式输出.') . '<br />'
-            . _t('具体写法请参考 <a href="http://www.php.net/manual/zh/function.date.php">PHP 日期格式写法</a>.'));
+        $commentDateFormat = new Form\Element\Text(
+            'commentDateFormat',
+            null,
+            $this->options->commentDateFormat,
+            _t('评论日期格式'),
+            _t('这是一个默认的格式,当你在模板中调用显示评论日期方法时, 如果没有指定日期格式, 将按照此格式输出.') . '<br />'
+            . _t('具体写法请参考 <a href="http://www.php.net/manual/zh/function.date.php">PHP 日期格式写法</a>.')
+        );
         $commentDateFormat->input->setAttribute('class', 'w-40 mono');
         $form->addInput($commentDateFormat);
 
         /** 评论列表数目 */
-        $commentsListSize = new Typecho_Widget_Helper_Form_Element_Text('commentsListSize', null, $this->options->commentsListSize,
-            _t('评论列表数目'), _t('此数目用于指定显示在侧边栏中的评论列表数目.'));
+        $commentsListSize = new Form\Element\Text(
+            'commentsListSize',
+            null,
+            $this->options->commentsListSize,
+            _t('评论列表数目'),
+            _t('此数目用于指定显示在侧边栏中的评论列表数目.')
+        );
         $commentsListSize->input->setAttribute('class', 'w-20');
         $form->addInput($commentsListSize->addRule('isInteger', _t('请填入一个数字')));
 
@@ -159,8 +199,12 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
             $commentsShowOptionsValue[] = 'commentsThreaded';
         }
 
-        $commentsShow = new Typecho_Widget_Helper_Form_Element_Checkbox('commentsShow', $commentsShowOptions,
-            $commentsShowOptionsValue, _t('评论显示'));
+        $commentsShow = new Form\Element\Checkbox(
+            'commentsShow',
+            $commentsShowOptions,
+            $commentsShowOptionsValue,
+            _t('评论显示')
+        );
         $form->addInput($commentsShow->multiMode());
 
         /** 评论提交 */
@@ -212,20 +256,28 @@ class Widget_Options_Discussion extends Widget_Abstract_Options implements Widge
             $commentsPostOptionsValue[] = 'commentsPostIntervalEnable';
         }
 
-        $commentsPost = new Typecho_Widget_Helper_Form_Element_Checkbox('commentsPost', $commentsPostOptions,
-            $commentsPostOptionsValue, _t('评论提交'));
+        $commentsPost = new Form\Element\Checkbox(
+            'commentsPost',
+            $commentsPostOptions,
+            $commentsPostOptionsValue,
+            _t('评论提交')
+        );
         $form->addInput($commentsPost->multiMode());
 
         /** 允许使用的HTML标签和属性 */
-        $commentsHTMLTagAllowed = new Typecho_Widget_Helper_Form_Element_Textarea('commentsHTMLTagAllowed', null,
+        $commentsHTMLTagAllowed = new Form\Element\Textarea(
+            'commentsHTMLTagAllowed',
+            null,
             $this->options->commentsHTMLTagAllowed,
-            _t('允许使用的HTML标签和属性'), _t('默认的用户评论不允许填写任何的HTML标签, 你可以在这里填写允许使用的HTML标签.') . '<br />'
-            . _t('比如: %s', '<code>&lt;a href=&quot;&quot;&gt; &lt;img src=&quot;&quot;&gt; &lt;blockquote&gt;</code>'));
+            _t('允许使用的HTML标签和属性'),
+            _t('默认的用户评论不允许填写任何的HTML标签, 你可以在这里填写允许使用的HTML标签.') . '<br />'
+            . _t('比如: %s', '<code>&lt;a href=&quot;&quot;&gt; &lt;img src=&quot;&quot;&gt; &lt;blockquote&gt;</code>')
+        );
         $commentsHTMLTagAllowed->input->setAttribute('class', 'mono');
         $form->addInput($commentsHTMLTagAllowed);
 
         /** 提交按钮 */
-        $submit = new Typecho_Widget_Helper_Form_Element_Submit('submit', null, _t('保存设置'));
+        $submit = new Form\Element\Submit('submit', null, _t('保存设置'));
         $submit->input->setAttribute('class', 'btn primary');
         $form->addItem($submit);
 

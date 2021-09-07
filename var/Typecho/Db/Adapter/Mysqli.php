@@ -1,27 +1,31 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-/**
- * Typecho Blog Platform
- *
- * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license    GNU General Public License 2.0
- * @version    $Id: Mysqli.php 103 2008-04-09 16:22:43Z magike.net $
- */
+
+namespace Typecho\Db\Adapter;
+
+use Typecho\Config;
+use Typecho\Db;
+use Typecho\Db\Adapter;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * 数据库Mysqli适配器
  *
  * @package Db
  */
-class Typecho_Db_Adapter_Mysqli implements Typecho_Db_Adapter
+class Mysqli implements Adapter
 {
+    use MysqlTrait;
+
     /**
      * 数据库连接字符串标示
      *
      * @access private
-     * @var mysqli
+     * @var \mysqli
      */
-    private $_dbLink;
+    private $dbLink;
 
     /**
      * 判断适配器是否可用
@@ -29,36 +33,38 @@ class Typecho_Db_Adapter_Mysqli implements Typecho_Db_Adapter
      * @access public
      * @return boolean
      */
-    public static function isAvailable()
+    public static function isAvailable(): bool
     {
-        return class_exists('MySQLi');
+        return extension_loaded('mysqli');
     }
 
     /**
      * 数据库连接函数
      *
-     * @param Typecho_Config $config 数据库配置
-     * @return mixed
-     * @throws Typecho_Db_Exception
+     * @param Config $config 数据库配置
+     * @return \mysqli
+     * @throws ConnectionException
      */
-    public function connect(Typecho_Config $config)
+    public function connect(Config $config): \mysqli
     {
 
-        if ($this->_dbLink = @mysqli_connect(
-            $config->host,
-            $config->user,
-            $config->password,
-            $config->database,
-            (empty($config->port) ? null : $config->port))
+        if (
+            $this->dbLink = @mysqli_connect(
+                $config->host,
+                $config->user,
+                $config->password,
+                $config->database,
+                (empty($config->port) ? null : $config->port)
+            )
         ) {
             if ($config->charset) {
-                $this->_dbLink->query("SET NAMES '{$config->charset}'");
+                $this->dbLink->query("SET NAMES '{$config->charset}'");
             }
-            return $this->_dbLink;
+            return $this->dbLink;
         }
 
         /** 数据库异常 */
-        throw new Typecho_Db_Adapter_Exception(@$this->_dbLink->error);
+        throw new ConnectionException(@$this->dbLink->error, @$this->dbLink->errno);
     }
 
     /**
@@ -67,22 +73,9 @@ class Typecho_Db_Adapter_Mysqli implements Typecho_Db_Adapter
      * @param mixed $handle
      * @return string
      */
-    public function getVersion($handle)
+    public function getVersion($handle): string
     {
-        return 'mysqli:mysql ' . $this->_dbLink->server_version;
-    }
-
-    /**
-     * 清空数据表
-     *
-     * @param string $table
-     * @param mixed $handle 连接对象
-     * @return mixed|void
-     * @throws Typecho_Db_Exception
-     */
-    public function truncate($table, $handle)
-    {
-        $this->query('TRUNCATE TABLE ' . $this->quoteColumn($table), $handle);
+        return 'mysqli:mysql ' . $this->dbLink->server_version;
     }
 
     /**
@@ -91,19 +84,24 @@ class Typecho_Db_Adapter_Mysqli implements Typecho_Db_Adapter
      * @param string $query 数据库查询SQL字符串
      * @param mixed $handle 连接对象
      * @param integer $op 数据库读写状态
-     * @param string $action 数据库动作
-     * @param string $table 数据表
-     * @return resource
-     * @throws Typecho_Db_Exception
+     * @param string|null $action 数据库动作
+     * @param string|null $table 数据表
+     * @return \mysqli_result
+     * @throws SQLException
      */
-    public function query($query, $handle, $op = Typecho_Db::READ, $action = null, $table = null)
-    {
-        if ($resource = @$this->_dbLink->query($query)) {
+    public function query(
+        string $query,
+        $handle,
+        int $op = Db::READ,
+        ?string $action = null,
+        ?string $table = null
+    ): \mysqli_result {
+        if ($resource = @$this->dbLink->query($query)) {
             return $resource;
         }
 
         /** 数据库异常 */
-        throw new Typecho_Db_Query_Exception($this->_dbLink->error, $this->_dbLink->errno);
+        throw new SQLException($this->dbLink->error, $this->dbLink->errno);
     }
 
     /**
@@ -113,29 +111,40 @@ class Typecho_Db_Adapter_Mysqli implements Typecho_Db_Adapter
      * @param string $string
      * @return string
      */
-    public function quoteColumn($string)
+    public function quoteColumn(string $string): string
     {
-        return $this->_dbLink->real_escape_string($string);
+        return $this->dbLink->real_escape_string($string);
     }
 
     /**
      * 将数据查询的其中一行作为数组取出,其中字段名对应数组键值
      *
-     * @param resource $resource 查询返回资源标识
-     * @return array
+     * @param \mysqli_result $resource 查询返回资源标识
+     * @return array|null
      */
-    public function fetch($resource)
+    public function fetch($resource): ?array
     {
         return $resource->fetch_assoc();
     }
 
     /**
+     * 将数据查询的结果作为数组全部取出,其中字段名对应数组键值
+     *
+     * @param \mysqli_result $resource 查询返回资源标识
+     * @return array
+     */
+    public function fetchAll($resource): array
+    {
+        return $resource->fetch_all(MYSQLI_ASSOC);
+    }
+
+    /**
      * 将数据查询的其中一行作为对象取出,其中字段名对应对象属性
      *
-     * @param resource $resource 查询的资源数据
-     * @return object
+     * @param \mysqli_result $resource 查询的资源数据
+     * @return object|null
      */
-    public function fetchObject($resource)
+    public function fetchObject($resource): ?object
     {
         return $resource->fetch_object();
     }
@@ -143,58 +152,35 @@ class Typecho_Db_Adapter_Mysqli implements Typecho_Db_Adapter
     /**
      * 引号转义函数
      *
-     * @param string $string 需要转义的字符串
+     * @param mixed $string 需要转义的字符串
      * @return string
      */
-    public function quoteValue($string)
+    public function quoteValue($string): string
     {
         return '\'' . str_replace(['\'', '\\'], ['\'\'', '\\\\'], $string) . '\'';
     }
 
     /**
-     * 合成查询语句
+     * 取出最后一次查询影响的行数
      *
-     * @access public
-     * @param array $sql 查询对象词法数组
-     * @return string
+     * @param \mysqli_result $resource 查询的资源数据
+     * @param \mysqli $handle 连接对象
+     * @return integer
      */
-    public function parseSelect(array $sql)
+    public function affectedRows($resource, $handle): int
     {
-        if (!empty($sql['join'])) {
-            foreach ($sql['join'] as $val) {
-                [$table, $condition, $op] = $val;
-                $sql['table'] = "{$sql['table']} {$op} JOIN {$table} ON {$condition}";
-            }
-        }
-
-        $sql['limit'] = (0 == strlen($sql['limit'])) ? null : ' LIMIT ' . $sql['limit'];
-        $sql['offset'] = (0 == strlen($sql['offset'])) ? null : ' OFFSET ' . $sql['offset'];
-
-        return 'SELECT ' . $sql['fields'] . ' FROM ' . $sql['table'] .
-            $sql['where'] . $sql['group'] . $sql['having'] . $sql['order'] . $sql['limit'] . $sql['offset'];
+        return $handle->affected_rows;
     }
 
     /**
-     * 取出最后一次查询影响的行数
-     *
-     * @param resource $resource 查询的资源数据
-     * @param mixed $handle 连接对象
-     * @return integer
-     */
-    public function affectedRows($resource, $handle)
-    {
-        return $this->_dbLink->affected_rows;
-    }
-
-    /*y
      * 取出最后一次插入返回的主键值
      *
-     * @param resource $resource 查询的资源数据
-     * @param mixed $handle 连接对象
+     * @param \mysqli_result $resource 查询的资源数据
+     * @param \mysqli $handle 连接对象
      * @return integer
      */
-    public function lastInsertId($resource, $handle)
+    public function lastInsertId($resource, $handle): int
     {
-        return $this->_dbLink->insert_id;
+        return $handle->insert_id;
     }
 }

@@ -5,9 +5,9 @@ if (isset($post) || isset($page)) {
     $cid = isset($post) ? $post->cid : $page->cid;
     
     if ($cid) {
-        Typecho_Widget::widget('Widget_Contents_Attachment_Related', 'parentId=' . $cid)->to($attachment);
+        \Widget\Contents\Related::alloc(['parentId' => $cid])->to($attachment);
     } else {
-        Typecho_Widget::widget('Widget_Contents_Attachment_Unattached')->to($attachment);
+        \Widget\Contents\Attachment\Unattached::alloc()->to($attachment);
     }
 }
 ?>

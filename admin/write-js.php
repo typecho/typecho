@@ -1,6 +1,6 @@
 <?php if(!defined('__TYPECHO_ADMIN__')) exit; ?>
-<?php Typecho_Plugin::factory('admin/write-js.php')->write(); ?>
-<?php Typecho_Widget::widget('Widget_Metas_Tag_Cloud', 'sort=count&desc=1&limit=200')->to($tags); ?>
+<?php \Typecho\Plugin::factory('admin/write-js.php')->write(); ?>
+<?php \Widget\Metas\Tag\Cloud::alloc('sort=count&desc=1&limit=200')->to($tags); ?>
 
 <script src="<?php $options->adminStaticUrl('js', 'timepicker.js'); ?>"></script>
 <script src="<?php $options->adminStaticUrl('js', 'tokeninput.js'); ?>"></script>
@@ -67,7 +67,7 @@ $(document).ready(function() {
                 'tags'  =>  $tags->name
             );
         }
-        echo Json::encode($data);
+        echo json_encode($data);
         ?>, {
             propertyToSearch:   'tags',
             tokenValue      :   'tags',

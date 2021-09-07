@@ -1,14 +1,18 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-/**
- * 编辑分类
- *
- * @category typecho
- * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
- * @version $Id$
- */
+
+namespace Widget\Metas\Category;
+
+use Typecho\Common;
+use Typecho\Db\Exception;
+use Typecho\Validate;
+use Typecho\Widget\Helper\Form;
+use Widget\Base\Metas;
+use Widget\ActionInterface;
+use Widget\Notice;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * 编辑分类组件
@@ -18,13 +22,10 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget_Interface_Do
+class Edit extends Metas implements ActionInterface
 {
     /**
      * 入口函数
-     *
-     * @access public
-     * @return void
      */
     public function execute()
     {
@@ -35,28 +36,28 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
     /**
      * 判断分类是否存在
      *
-     * @access public
      * @param integer $mid 分类主键
      * @return boolean
+     * @throws Exception
      */
-    public function categoryExists($mid)
+    public function categoryExists(int $mid): bool
     {
         $category = $this->db->fetchRow($this->db->select()
             ->from('table.metas')
             ->where('type = ?', 'category')
             ->where('mid = ?', $mid)->limit(1));
 
-        return $category ? true : false;
+        return (bool)$category;
     }
 
     /**
      * 判断分类名称是否存在
      *
-     * @access public
      * @param string $name 分类名称
      * @return boolean
+     * @throws Exception
      */
-    public function nameExists($name)
+    public function nameExists(string $name): bool
     {
         $select = $this->db->select()
             ->from('table.metas')
@@ -69,20 +70,19 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         }
 
         $category = $this->db->fetchRow($select);
-        return $category ? false : true;
+        return !$category;
     }
 
     /**
      * 判断分类名转换到缩略名后是否合法
      *
-     * @access public
      * @param string $name 分类名
      * @return boolean
      */
-    public function nameToSlug($name)
+    public function nameToSlug(string $name): bool
     {
         if (empty($this->request->slug)) {
-            $slug = Typecho_Common::slugName($name);
+            $slug = Common::slugName($name);
             if (empty($slug) || !$this->slugExists($name)) {
                 return false;
             }
@@ -94,16 +94,16 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
     /**
      * 判断分类缩略名是否存在
      *
-     * @access public
      * @param string $slug 缩略名
      * @return boolean
+     * @throws Exception
      */
-    public function slugExists($slug)
+    public function slugExists(string $slug): bool
     {
         $select = $this->db->select()
             ->from('table.metas')
             ->where('type = ?', 'category')
-            ->where('slug = ?', Typecho_Common::slugName($slug))
+            ->where('slug = ?', Common::slugName($slug))
             ->limit(1);
 
         if ($this->request->mid) {
@@ -111,14 +111,13 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         }
 
         $category = $this->db->fetchRow($select);
-        return $category ? false : true;
+        return !$category;
     }
 
     /**
      * 增加分类
      *
-     * @access public
-     * @return void
+     * @throws Exception
      */
     public function insertCategory()
     {
@@ -129,7 +128,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         /** 取出数据 */
         $category = $this->request->from('name', 'slug', 'description', 'parent');
 
-        $category['slug'] = Typecho_Common::slugName(empty($category['slug']) ? $category['name'] : $category['slug']);
+        $category['slug'] = Common::slugName(empty($category['slug']) ? $category['name'] : $category['slug']);
         $category['type'] = 'category';
         $category['order'] = $this->getMaxOrder('category', $category['parent']) + 1;
 
@@ -138,67 +137,85 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $this->push($category);
 
         /** 设置高亮 */
-        $this->widget('Widget_Notice')->highlight($this->theId);
+        Notice::alloc()->highlight($this->theId);
 
         /** 提示信息 */
-        $this->widget('Widget_Notice')->set(_t('分类 <a href="%s">%s</a> 已经被增加',
-            $this->permalink, $this->name), 'success');
+        Notice::alloc()->set(
+            _t('分类 <a href="%s">%s</a> 已经被增加', $this->permalink, $this->name),
+            'success'
+        );
 
         /** 转向原页 */
-        $this->response->redirect(Typecho_Common::url('manage-categories.php'
+        $this->response->redirect(Common::url('manage-categories.php'
             . ($category['parent'] ? '?parent=' . $category['parent'] : ''), $this->options->adminUrl));
     }
 
     /**
      * 生成表单
      *
-     * @access public
-     * @param string $action 表单动作
-     * @return Typecho_Widget_Helper_Form_Element
+     * @param string|null $action 表单动作
+     * @return Form
+     * @throws Exception
      */
-    public function form($action = null)
+    public function form(?string $action = null): Form
     {
         /** 构建表格 */
-        $form = new Typecho_Widget_Helper_Form($this->security->getIndex('/action/metas-category-edit'),
-            Typecho_Widget_Helper_Form::POST_METHOD);
+        $form = new Form($this->security->getIndex('/action/metas-category-edit'), Form::POST_METHOD);
 
         /** 分类名称 */
-        $name = new Typecho_Widget_Helper_Form_Element_Text('name', null, null, _t('分类名称') . ' *');
+        $name = new Form\Element\Text('name', null, null, _t('分类名称') . ' *');
         $form->addInput($name);
 
         /** 分类缩略名 */
-        $slug = new Typecho_Widget_Helper_Form_Element_Text('slug', null, null, _t('分类缩略名'),
-            _t('分类缩略名用于创建友好的链接形式, 建议使用字母, 数字, 下划线和横杠.'));
+        $slug = new Form\Element\Text(
+            'slug',
+            null,
+            null,
+            _t('分类缩略名'),
+            _t('分类缩略名用于创建友好的链接形式, 建议使用字母, 数字, 下划线和横杠.')
+        );
         $form->addInput($slug);
 
         /** 父级分类 */
         $options = [0 => _t('不选择')];
-        $parents = $this->widget('Widget_Metas_Category_List@options',
-            (isset($this->request->mid) ? 'ignore=' . $this->request->mid : ''));
+        $parents = Rows::allocWithAlias(
+            'options',
+            (isset($this->request->mid) ? 'ignore=' . $this->request->mid : '')
+        );
 
         while ($parents->next()) {
             $options[$parents->mid] = str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;', $parents->levels) . $parents->name;
         }
 
-        $parent = new Typecho_Widget_Helper_Form_Element_Select('parent', $options, $this->request->parent, _t('父级分类'),
-            _t('此分类将归档在您选择的父级分类下.'));
+        $parent = new Form\Element\Select(
+            'parent',
+            $options,
+            $this->request->parent,
+            _t('父级分类'),
+            _t('此分类将归档在您选择的父级分类下.')
+        );
         $form->addInput($parent);
 
         /** 分类描述 */
-        $description = new Typecho_Widget_Helper_Form_Element_Textarea('description', null, null,
-            _t('分类描述'), _t('此文字用于描述分类, 在有的主题中它会被显示.'));
+        $description = new Form\Element\Textarea(
+            'description',
+            null,
+            null,
+            _t('分类描述'),
+            _t('此文字用于描述分类, 在有的主题中它会被显示.')
+        );
         $form->addInput($description);
 
         /** 分类动作 */
-        $do = new Typecho_Widget_Helper_Form_Element_Hidden('do');
+        $do = new Form\Element\Hidden('do');
         $form->addInput($do);
 
         /** 分类主键 */
-        $mid = new Typecho_Widget_Helper_Form_Element_Hidden('mid');
+        $mid = new Form\Element\Hidden('mid');
         $form->addInput($mid);
 
         /** 提交按钮 */
-        $submit = new Typecho_Widget_Helper_Form_Element_Submit();
+        $submit = new Form\Element\Submit();
         $submit->input->setAttribute('class', 'btn primary');
         $form->addItem($submit);
 
@@ -209,7 +226,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
                 ->where('type = ?', 'category')->limit(1));
 
             if (!$meta) {
-                $this->response->redirect(Typecho_Common::url('manage-categories.php', $this->options->adminUrl));
+                $this->response->redirect(Common::url('manage-categories.php', $this->options->adminUrl));
             }
 
             $name->value($meta['name']);
@@ -251,8 +268,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
     /**
      * 更新分类
      *
-     * @access public
-     * @return void
+     * @throws Exception
      */
     public function updateCategory()
     {
@@ -263,7 +279,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         /** 取出数据 */
         $category = $this->request->from('name', 'slug', 'description', 'parent');
         $category['mid'] = $this->request->mid;
-        $category['slug'] = Typecho_Common::slugName(empty($category['slug']) ? $category['name'] : $category['slug']);
+        $category['slug'] = Common::slugName(empty($category['slug']) ? $category['name'] : $category['slug']);
         $category['type'] = 'category';
         $current = $this->db->fetchRow($this->select()->where('mid = ?', $category['mid']));
 
@@ -286,14 +302,14 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
         $this->push($category);
 
         /** 设置高亮 */
-        $this->widget('Widget_Notice')->highlight($this->theId);
+        Notice::alloc()->highlight($this->theId);
 
         /** 提示信息 */
-        $this->widget('Widget_Notice')->set(_t('分类 <a href="%s">%s</a> 已经被更新',
-            $this->permalink, $this->name), 'success');
+        Notice::alloc()
+            ->set(_t('分类 <a href="%s">%s</a> 已经被更新', $this->permalink, $this->name), 'success');
 
         /** 转向原页 */
-        $this->response->redirect(Typecho_Common::url('manage-categories.php'
+        $this->response->redirect(Common::url('manage-categories.php'
             . ($category['parent'] ? '?parent=' . $category['parent'] : ''), $this->options->adminUrl));
     }
 
@@ -302,6 +318,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
      *
      * @access public
      * @return void
+     * @throws Exception
      */
     public function deleteCategory()
     {
@@ -314,13 +331,13 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
             if ($this->delete($this->db->sql()->where('mid = ?', $category))) {
                 $this->db->query($this->db->delete('table.relationships')->where('mid = ?', $category));
                 $this->update(['parent' => $parent], $this->db->sql()->where('parent = ?', $category));
-                $deleteCount ++;
+                $deleteCount++;
             }
         }
 
         /** 提示信息 */
-        $this->widget('Widget_Notice')->set($deleteCount > 0 ? _t('分类已经删除') : _t('没有分类被删除'),
-            $deleteCount > 0 ? 'success' : 'notice');
+        Notice::alloc()
+            ->set($deleteCount > 0 ? _t('分类已经删除') : _t('没有分类被删除'), $deleteCount > 0 ? 'success' : 'notice');
 
         /** 转向原页 */
         $this->response->goBack();
@@ -328,19 +345,16 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
 
     /**
      * 合并分类
-     *
-     * @access public
-     * @return void
      */
     public function mergeCategory()
     {
         /** 验证数据 */
-        $validator = new Typecho_Validate();
+        $validator = new Validate();
         $validator->addRule('merge', 'required', _t('分类主键不存在'));
         $validator->addRule('merge', [$this, 'categoryExists'], _t('请选择需要合并的分类'));
 
         if ($error = $validator->run($this->request->from('merge'))) {
-            $this->widget('Widget_Notice')->set($error, 'error');
+            Notice::alloc()->set($error, 'error');
             $this->response->goBack();
         }
 
@@ -351,9 +365,9 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
             $this->merge($merge, 'category', $categories);
 
             /** 提示信息 */
-            $this->widget('Widget_Notice')->set(_t('分类已经合并'), 'success');
+            Notice::alloc()->set(_t('分类已经合并'), 'success');
         } else {
-            $this->widget('Widget_Notice')->set(_t('没有选择任何分类'), 'notice');
+            Notice::alloc()->set(_t('没有选择任何分类'), 'notice');
         }
 
         /** 转向原页 */
@@ -362,9 +376,6 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
 
     /**
      * 分类排序
-     *
-     * @access public
-     * @return void
      */
     public function sortCategory()
     {
@@ -375,7 +386,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
 
         if (!$this->request->isAjax()) {
             /** 转向原页 */
-            $this->response->redirect(Typecho_Common::url('manage-categories.php', $this->options->adminUrl));
+            $this->response->redirect(Common::url('manage-categories.php', $this->options->adminUrl));
         } else {
             $this->response->throwJson(['success' => 1, 'message' => _t('分类排序已经完成')]);
         }
@@ -384,8 +395,7 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
     /**
      * 刷新分类
      *
-     * @access public
-     * @return void
+     * @throws Exception
      */
     public function refreshCategory()
     {
@@ -395,9 +405,9 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
                 $this->refreshCountByTypeAndStatus($category, 'post', 'publish');
             }
 
-            $this->widget('Widget_Notice')->set(_t('分类刷新已经完成'), 'success');
+            Notice::alloc()->set(_t('分类刷新已经完成'), 'success');
         } else {
-            $this->widget('Widget_Notice')->set(_t('没有选择任何分类'), 'notice');
+            Notice::alloc()->set(_t('没有选择任何分类'), 'notice');
         }
 
         /** 转向原页 */
@@ -407,20 +417,18 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
     /**
      * 设置默认分类
      *
-     * @access public
-     * @return void
+     * @throws Exception
      */
     public function defaultCategory()
     {
         /** 验证数据 */
-        $validator = new Typecho_Validate();
+        $validator = new Validate();
         $validator->addRule('mid', 'required', _t('分类主键不存在'));
         $validator->addRule('mid', [$this, 'categoryExists'], _t('分类不存在'));
 
         if ($error = $validator->run($this->request->from('mid'))) {
-            $this->widget('Widget_Notice')->set($error, 'error');
+            Notice::alloc()->set($error, 'error');
         } else {
-
             $this->db->query($this->db->update('table.options')
                 ->rows(['value' => $this->request->mid])
                 ->where('name = ?', 'defaultCategory'));
@@ -429,24 +437,26 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
                 ->where('type = ?', 'category')->limit(1), [$this, 'push']);
 
             /** 设置高亮 */
-            $this->widget('Widget_Notice')->highlight($this->theId);
+            Notice::alloc()->highlight($this->theId);
 
             /** 提示信息 */
-            $this->widget('Widget_Notice')->set(_t('<a href="%s">%s</a> 已经被设为默认分类',
-                $this->permalink, $this->name), 'success');
+            Notice::alloc()->set(
+                _t('<a href="%s">%s</a> 已经被设为默认分类', $this->permalink, $this->name),
+                'success'
+            );
         }
 
         /** 转向原页 */
-        $this->response->redirect(Typecho_Common::url('manage-categories.php', $this->options->adminUrl));
+        $this->response->redirect(Common::url('manage-categories.php', $this->options->adminUrl));
     }
 
     /**
      * 获取菜单标题
      *
-     * @return string
-     * @throws Typecho_Widget_Exception
+     * @return string|null
+     * @throws \Typecho\Widget\Exception|Exception
      */
-    public function getMenuTitle()
+    public function getMenuTitle(): ?string
     {
         if (isset($this->request->mid)) {
             $category = $this->db->fetchRow($this->select()
@@ -466,10 +476,10 @@ class Widget_Metas_Category_Edit extends Widget_Abstract_Metas implements Widget
             }
 
         } else {
-            return;
+            return null;
         }
 
-        throw new Typecho_Widget_Exception(_t('分类不存在'), 404);
+        throw new \Typecho\Widget\Exception(_t('分类不存在'), 404);
     }
 
     /**

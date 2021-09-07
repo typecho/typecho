@@ -1,12 +1,16 @@
 <?php
-if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-/**
- * Typecho Blog Platform
- *
- * @copyright  Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license    GNU General Public License 2.0
- * @version    $Id$
- */
+
+namespace Widget\Themes;
+
+use Typecho\Widget\Exception;
+use Typecho\Widget\Helper\Form;
+use Typecho\Widget\Helper\Form\Element\Submit;
+use Widget\Base\Options as BaseOptions;
+use Widget\Options;
+
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
+}
 
 /**
  * 皮肤配置组件
@@ -17,33 +21,30 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Widget_Themes_Config extends Widget_Abstract_Options
+class Config extends BaseOptions
 {
     /**
      * 绑定动作
      *
-     * @access public
-     * @return void
-     * @throws Typecho_Widget_Exception
+     * @throws Exception|\Typecho\Db\Exception
      */
     public function execute()
     {
         $this->user->pass('administrator');
 
         if (!self::isExists()) {
-            throw new Typecho_Widget_Exception(_t('外观配置功能不存在'), 404);
+            throw new Exception(_t('外观配置功能不存在'), 404);
         }
     }
 
     /**
      * 配置功能是否存在
      *
-     * @access public
      * @return boolean
      */
-    public static function isExists()
+    public static function isExists(): bool
     {
-        $options = Typecho_Widget::widget('Widget_Options');
+        $options = Options::alloc();
         $configFile = $options->themeFile($options->theme, 'functions.php');
 
         if (file_exists($configFile)) {
@@ -60,13 +61,11 @@ class Widget_Themes_Config extends Widget_Abstract_Options
     /**
      * 配置外观
      *
-     * @access public
-     * @return Typecho_Widget_Helper_Form
+     * @return Form
      */
-    public function config()
+    public function config(): Form
     {
-        $form = new Typecho_Widget_Helper_Form($this->security->getIndex('/action/themes-edit?config'),
-            Typecho_Widget_Helper_Form::POST_METHOD);
+        $form = new Form($this->security->getIndex('/action/themes-edit?config'), Form::POST_METHOD);
         themeConfig($form);
         $inputs = $form->getInputs();
 
@@ -76,7 +75,7 @@ class Widget_Themes_Config extends Widget_Abstract_Options
             }
         }
 
-        $submit = new Typecho_Widget_Helper_Form_Element_Submit(null, null, _t('保存设置'));
+        $submit = new Submit(null, null, _t('保存设置'));
         $submit->input->setAttribute('class', 'btn primary');
         $form->addItem($submit);
         return $form;
