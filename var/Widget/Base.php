@@ -22,24 +22,29 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
 abstract class Base extends Widget
 {
     /**
+     * init db
+     */
+    protected const INIT_DB = 0b0001;
+
+    /**
      * init user widget
      */
-    protected const INIT_USER = 0b001;
+    protected const INIT_USER = 0b0010;
 
     /**
      * init security widget
      */
-    protected const INIT_SECURITY = 0b010;
+    protected const INIT_SECURITY = 0b0100;
 
     /**
      * init options widget
      */
-    protected const INIT_OPTIONS = 0b100;
+    protected const INIT_OPTIONS = 0b1000;
 
     /**
      * init all widgets
      */
-    protected const INIT_ALL = 0b111;
+    protected const INIT_ALL = 0b1111;
 
     /**
      * init none widget
@@ -79,10 +84,13 @@ abstract class Base extends Widget
      */
     protected function init()
     {
-        $this->db = Db::get();
         $components = self::INIT_ALL;
 
         $this->initComponents($components);
+
+        if ($components != self::INIT_NONE) {
+            $this->db = Db::get();
+        }
 
         if ($components & self::INIT_USER) {
             $this->user = User::alloc();

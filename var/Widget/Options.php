@@ -4,6 +4,7 @@ namespace Widget;
 
 use Typecho\Common;
 use Typecho\Config;
+use Typecho\Db;
 use Typecho\Router;
 use Typecho\Router\Parser;
 use Typecho\Widget;
@@ -112,11 +113,6 @@ class Options extends Base
     private $personalPluginConfig = [];
 
     /**
-     * @var bool options loaded
-     */
-    private $loaded = false;
-
-    /**
      * @param int $components
      */
     protected function initComponents(int &$components)
@@ -131,7 +127,8 @@ class Options extends Base
     {
         if (!$parameter->isEmpty()) {
             $this->row = $this->parameter->toArray();
-            $this->loaded = true;
+        } else {
+            $this->db = Db::get();
         }
     }
 
@@ -142,7 +139,7 @@ class Options extends Base
      */
     public function execute()
     {
-        if (!$this->loaded) {
+        if (isset($this->db)) {
             $values = $this->db->fetchAll($this->db->select()->from('table.options')
                 ->where('user = 0'), [$this, 'push']);
 
@@ -195,7 +192,7 @@ class Options extends Base
 
         /** 自动初始化路由表 */
         $this->routingTable = unserialize($this->routingTable);
-        if ($this->loaded && !isset($this->routingTable[0])) {
+        if (isset($this->db) && !isset($this->routingTable[0])) {
             /** 解析路由并缓存 */
             $parser = new Parser($this->routingTable);
             $parsedRoutingTable = $parser->parse();
