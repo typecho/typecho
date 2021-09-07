@@ -219,16 +219,14 @@ abstract class Widget
      */
     public static function destroy(?string $alias = null)
     {
-        if (!isset($alias)) {
-            $alias = static::class;
-        } elseif (Common::nativeClassName(static::class) != 'Typecho_Widget') {
-            $alias = static::class . '@' . $alias;
+        if (Common::nativeClassName(static::class) == 'Typecho_Widget') {
+            if (isset($alias)) {
+                unset(self::$widgetPool[$alias]);
+            } else {
+                self::$widgetPool = [];
+            }
         } else {
-            self::$widgetPool = [];
-            return;
-        }
-
-        if (isset(self::$widgetPool[$alias])) {
+            $alias = static::class . (isset($alias) ? '@' . $alias : '');
             unset(self::$widgetPool[$alias]);
         }
     }
