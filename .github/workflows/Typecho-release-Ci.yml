@@ -16,7 +16,7 @@ jobs:
         mkdir build/usr/uploads/
         chmod 777 build/usr/uploads/
         rm -rf build/admin/src
-        zip -q -r typecho.zip ./build
+        cd build && zip -q -r typecho.zip * && mv typecho.zip ../ && cd -
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
