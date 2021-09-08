@@ -169,6 +169,16 @@ class Request
     }
 
     /**
+     * 获取请求资源地址
+     *
+     * @return string
+     */
+    public function getRequestUri(): string
+    {
+        return $this->request->getRequestUri();
+    }
+
+    /**
      * 获取当前pathinfo
      *
      * @return string
