@@ -93,6 +93,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property bool $feedFullText
  * @property int $defaultCategory
  * @property bool $frontArchive
+ * @property array $plugins
  */
 class Options extends Base
 {
