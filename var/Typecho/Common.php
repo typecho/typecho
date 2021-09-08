@@ -75,11 +75,11 @@ namespace {
 
 namespace Typecho {
     spl_autoload_register(function (string $className) {
+        $isAlias = defined('__TYPECHO_CLASS_ALIASES__') && isset(__TYPECHO_CLASS_ALIASES__[$className]);
         $path = str_replace(
             ['_', '\\'],
             '/',
-            (defined('__TYPECHO_CLASS_ALIASES__') && isset(__TYPECHO_CLASS_ALIASES__[$className]))
-                ?  __TYPECHO_CLASS_ALIASES__[$className] : $className
+            $isAlias ?  __TYPECHO_CLASS_ALIASES__[$className] : $className
         ) . '.php';
 
         $defaultFile = __TYPECHO_ROOT_DIR__ . '/var/' . $path;
@@ -101,7 +101,7 @@ namespace Typecho {
             $aliasClass = str_replace('\\', '_', ltrim($className, '\\'));
             class_alias($className, $aliasClass);
         } elseif (
-            (isset(__TYPECHO_CLASS_ALIASES__[$className]) || strpos($className, '_') !== false)
+            ($isAlias || strpos($className, '_') !== false)
             && !class_exists($className, false)
             && !interface_exists($className, false)
             && !trait_exists($className, false)
