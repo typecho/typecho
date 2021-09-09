@@ -75,13 +75,48 @@ namespace {
 
 namespace Typecho {
     spl_autoload_register(function (string $className) {
-        $isAlias = defined('__TYPECHO_CLASS_ALIASES__') && isset(__TYPECHO_CLASS_ALIASES__[$className]);
-        $path = str_replace(
-            ['_', '\\'],
-            '/',
-            $isAlias ?  __TYPECHO_CLASS_ALIASES__[$className] : $className
-        ) . '.php';
+        $isDefinedAlias = defined('__TYPECHO_CLASS_ALIASES__');
+        $isNamespace = strpos($className, '\\') !== false;
+        $isAlias = $isDefinedAlias && isset(__TYPECHO_CLASS_ALIASES__[$className]);
 
+        // detect if class is predefined
+        if (strpos($className, '\\') !== false) {
+            if ($isDefinedAlias) {
+                $nativeClass = array_search('\\' . ltrim($className, '\\'), __TYPECHO_CLASS_ALIASES__);
+            }
+
+            $nativeClass = empty($nativeClass) ? Common::nativeClassName($className) : $nativeClass;
+
+            if (
+                class_exists($nativeClass, false)
+                || interface_exists($nativeClass, false)
+                || trait_exists($nativeClass, false)
+            ) {
+                class_alias($nativeClass, $className, false);
+                return;
+            }
+
+            $path = str_replace('\\', '/', $className);
+        } elseif (strpos($className, '_') !== false || $isAlias) {
+            $namespaceClass = $isAlias ? __TYPECHO_CLASS_ALIASES__[$className]
+                : '\\' . str_replace('_', '\\', $className);
+
+            if (
+                class_exists($namespaceClass, false)
+                || interface_exists($namespaceClass, false)
+                || trait_exists($namespaceClass, false)
+            ) {
+                class_alias($namespaceClass, $className, false);
+                return;
+            }
+
+            $path = str_replace('\\', '/', $namespaceClass);
+        } else {
+            $path = $className;
+        }
+
+        // load class file
+        $path .= '.php';
         $defaultFile = __TYPECHO_ROOT_DIR__ . '/var/' . $path;
 
         if (file_exists($defaultFile)) {
@@ -96,19 +131,26 @@ namespace Typecho {
             }
         }
 
-        // hook old class loader
-        if (strpos($className, '\\') !== false) {
-            $aliasClass = str_replace('\\', '_', ltrim($className, '\\'));
-            class_alias($className, $aliasClass);
-        } elseif (
-            ($isAlias || strpos($className, '_') !== false)
-            && !class_exists($className, false)
-            && !interface_exists($className, false)
-            && !trait_exists($className, false)
-        ) {
-            $aliasClass = (defined('__TYPECHO_CLASS_ALIASES__') && isset(__TYPECHO_CLASS_ALIASES__[$className]))
-                ? __TYPECHO_CLASS_ALIASES__[$className] : '\\' . str_replace('_', '\\', $className);
-            class_alias($aliasClass, $className);
+        if (isset($nativeClass)) {
+            $alias = $nativeClass;
+        } elseif (isset($namespaceClass)) {
+            $alias = $namespaceClass;
+        }
+
+        if (isset($alias)) {
+            $classLoaded = class_exists($className, false)
+                || interface_exists($className, false)
+                || trait_exists($className, false);
+
+            $aliasLoaded = class_exists($alias, false)
+                || interface_exists($alias, false)
+                || trait_exists($alias, false);
+
+            if ($classLoaded && !$aliasLoaded) {
+                class_alias($className, $alias);
+            } elseif ($aliasLoaded && !$classLoaded) {
+                class_alias($alias, $className);
+            }
         }
     });
 
