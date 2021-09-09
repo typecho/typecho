@@ -70,10 +70,10 @@ class Security extends Base
     /**
      * 获取token
      *
-     * @param string $suffix 后缀
+     * @param string|null $suffix 后缀
      * @return string
      */
-    public function getToken(string $suffix): string
+    public function getToken(?string $suffix): string
     {
         return md5($this->token . '&' . $suffix);
     }
@@ -81,10 +81,10 @@ class Security extends Base
     /**
      * 获取绝对路由路径
      *
-     * @param $path
+     * @param string|null $path
      * @return string
      */
-    public function getRootUrl($path): string
+    public function getRootUrl(?string $path): string
     {
         return Common::url($this->getTokenUrl($path), $this->options->rootUrl);
     }
