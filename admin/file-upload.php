@@ -3,9 +3,9 @@
 <?php
 if (isset($post) || isset($page)) {
     $cid = isset($post) ? $post->cid : $page->cid;
-    
+
     if ($cid) {
-        \Widget\Contents\Related::alloc(['parentId' => $cid])->to($attachment);
+        \Widget\Contents\Attachment\Related::alloc(['parentId' => $cid])->to($attachment);
     } else {
         \Widget\Contents\Attachment\Unattached::alloc()->to($attachment);
     }
