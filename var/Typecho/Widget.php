@@ -450,11 +450,11 @@ abstract class Widget
     }
 
     /**
-     * @return WidgetRequest
+     * @return WidgetResponse
      */
-    public function ___response(): WidgetRequest
+    public function ___response(): WidgetResponse
     {
-        return $this->request;
+        return $this->response;
     }
 
     /**
