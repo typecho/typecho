@@ -63,7 +63,11 @@ class Plugin
      */
     public function __construct(string $handle)
     {
-        /** 初始化变量 */
+        if (defined('__TYPECHO_CLASS_ALIASES__')) {
+            $alias = array_search($handle, __TYPECHO_CLASS_ALIASES__);
+            $handle = $alias ?: $handle;
+        }
+
         $this->handle = Common::nativeClassName($handle);
     }
 
@@ -89,7 +93,6 @@ class Plugin
      */
     public static function factory(string $handle): Plugin
     {
-        $handle = Common::nativeClassName($handle);
         return self::$instances[$handle] ?? (self::$instances[$handle] = new self($handle));
     }
 
