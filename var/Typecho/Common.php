@@ -82,37 +82,28 @@ namespace Typecho {
         // detect if class is predefined
         if (strpos($className, '\\') !== false) {
             if ($isDefinedAlias) {
-                $nativeClass = array_search('\\' . ltrim($className, '\\'), __TYPECHO_CLASS_ALIASES__);
+                $alias = array_search('\\' . ltrim($className, '\\'), __TYPECHO_CLASS_ALIASES__);
             }
 
-            $nativeClass = empty($nativeClass) ? Common::nativeClassName($className) : $nativeClass;
-
-            if (
-                class_exists($nativeClass, false)
-                || interface_exists($nativeClass, false)
-                || trait_exists($nativeClass, false)
-            ) {
-                class_alias($nativeClass, $className, false);
-                return;
-            }
+            $alias = empty($alias) ? Common::nativeClassName($className) : $alias;
 
             $path = str_replace('\\', '/', $className);
         } elseif (strpos($className, '_') !== false || $isAlias) {
-            $namespaceClass = $isAlias ? __TYPECHO_CLASS_ALIASES__[$className]
+            $alias = $isAlias ? __TYPECHO_CLASS_ALIASES__[$className]
                 : '\\' . str_replace('_', '\\', $className);
 
-            if (
-                class_exists($namespaceClass, false)
-                || interface_exists($namespaceClass, false)
-                || trait_exists($namespaceClass, false)
-            ) {
-                class_alias($namespaceClass, $className, false);
-                return;
-            }
-
-            $path = str_replace('\\', '/', $namespaceClass);
+            $path = str_replace('\\', '/', $alias);
         } else {
             $path = $className;
+        }
+
+        if (
+            isset($alias)
+            && (class_exists($alias, false)
+                || interface_exists($alias, false)
+                || trait_exists($alias, false))
+        ) {
+            class_alias($alias, $className, false);
         }
 
         // load class file
@@ -129,12 +120,6 @@ namespace Typecho {
             } else {
                 return;
             }
-        }
-
-        if (isset($nativeClass)) {
-            $alias = $nativeClass;
-        } elseif (isset($namespaceClass)) {
-            $alias = $namespaceClass;
         }
 
         if (isset($alias)) {
