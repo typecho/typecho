@@ -527,7 +527,7 @@ class Request
      *
      * @return string
      */
-    private function getUrlPrefix(): string
+    public function getUrlPrefix(): string
     {
         if (empty($this->urlPrefix)) {
             if (defined('__TYPECHO_URL_PREFIX__')) {

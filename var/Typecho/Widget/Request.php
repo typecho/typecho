@@ -189,6 +189,16 @@ class Request
     }
 
     /**
+     * 获取url前缀
+     *
+     * @return string
+     */
+    public function getUrlPrefix(): string
+    {
+        return $this->request->getUrlPrefix();
+    }
+
+    /**
      * 根据当前uri构造指定参数的uri
      *
      * @param mixed $parameter 指定的参数
