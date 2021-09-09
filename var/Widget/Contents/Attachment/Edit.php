@@ -234,7 +234,7 @@ class Edit extends PostEdit implements ActionInterface
 
         foreach ($posts as $post) {
             // 删除插件接口
-            $this->pluginHandle()->delete($post, $this);
+            self::pluginHandle()->delete($post, $this);
 
             $condition = $this->db->sql()->where('cid = ?', $post);
             $row = $this->db->fetchRow($this->select()
@@ -251,7 +251,7 @@ class Edit extends PostEdit implements ActionInterface
                     ->where('cid = ?', $post));
 
                 // 完成删除插件接口
-                $this->pluginHandle()->finishDelete($post, $this);
+                self::pluginHandle()->finishDelete($post, $this);
 
                 $deleteCount++;
             }
@@ -296,7 +296,7 @@ class Edit extends PostEdit implements ActionInterface
 
             foreach ($posts as $post) {
                 // 删除插件接口
-                $this->pluginHandle()->delete($post, $this);
+                self::pluginHandle()->delete($post, $this);
 
                 $condition = $this->db->sql()->where('cid = ?', $post);
                 $row = $this->db->fetchRow($this->select()
@@ -315,7 +315,7 @@ class Edit extends PostEdit implements ActionInterface
                     $status = $this->status;
 
                     // 完成删除插件接口
-                    $this->pluginHandle()->finishDelete($post, $this);
+                    self::pluginHandle()->finishDelete($post, $this);
 
                     $deleteCount++;
                 }

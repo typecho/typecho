@@ -122,7 +122,7 @@ class User extends Users
      */
     public function logout()
     {
-        $this->pluginHandle()->trigger($logoutPluggable)->logout();
+        self::pluginHandle()->trigger($logoutPluggable)->logout();
         if ($logoutPluggable) {
             return;
         }
@@ -145,7 +145,7 @@ class User extends Users
     public function login(string $name, string $password, bool $temporarily = false, int $expire = 0): bool
     {
         //插件接口
-        $result = $this->pluginHandle()->trigger($loginPluggable)->login($name, $password, $temporarily, $expire);
+        $result = self::pluginHandle()->trigger($loginPluggable)->login($name, $password, $temporarily, $expire);
         if ($loginPluggable) {
             return $result;
         }
@@ -160,7 +160,7 @@ class User extends Users
             return false;
         }
 
-        $hashValidate = $this->pluginHandle()->trigger($hashPluggable)->hashValidate($password, $user['password']);
+        $hashValidate = self::pluginHandle()->trigger($hashPluggable)->hashValidate($password, $user['password']);
         if (!$hashPluggable) {
             if ('$P$' == substr($user['password'], 0, 3)) {
                 $hasher = new PasswordHash(8, true);
@@ -179,12 +179,12 @@ class User extends Users
             $this->push($user);
             $this->currentUser = $user;
             $this->hasLogin = true;
-            $this->pluginHandle()->loginSucceed($this, $name, $password, $temporarily, $expire);
+            self::pluginHandle()->loginSucceed($this, $name, $password, $temporarily, $expire);
 
             return true;
         }
 
-        $this->pluginHandle()->loginFail($this, $name, $password, $temporarily, $expire);
+        self::pluginHandle()->loginFail($this, $name, $password, $temporarily, $expire);
         return false;
     }
 
@@ -231,7 +231,7 @@ class User extends Users
         }
 
         if (empty($user)) {
-            $this->pluginHandle()->simpleLoginFail($this);
+            self::pluginHandle()->simpleLoginFail($this);
             return false;
         }
 
@@ -243,7 +243,7 @@ class User extends Users
         $this->currentUser = $user;
         $this->hasLogin = true;
 
-        $this->pluginHandle()->simpleLoginSucceed($this, $user);
+        self::pluginHandle()->simpleLoginSucceed($this, $user);
         return true;
     }
 

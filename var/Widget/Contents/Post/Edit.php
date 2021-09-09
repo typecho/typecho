@@ -201,7 +201,7 @@ class Edit extends Contents implements ActionInterface
             $fields = $this->fields;
         }
 
-        $this->pluginHandle()->getDefaultFieldItems($layout);
+        self::pluginHandle()->getDefaultFieldItems($layout);
 
         if (file_exists($configFile)) {
             require_once $configFile;
@@ -277,7 +277,7 @@ class Edit extends Contents implements ActionInterface
             $contents['text'] = '<!--markdown-->' . $contents['text'];
         }
 
-        $contents = $this->pluginHandle()->write($contents, $this);
+        $contents = self::pluginHandle()->write($contents, $this);
 
         if ($this->request->is('do=publish')) {
             /** 重新发布已经存在的文章 */
@@ -285,7 +285,7 @@ class Edit extends Contents implements ActionInterface
             $this->publish($contents);
 
             // 完成发布插件接口
-            $this->pluginHandle()->finishPublish($contents, $this);
+            self::pluginHandle()->finishPublish($contents, $this);
 
             /** 发送ping */
             $trackback = array_unique(preg_split("/(\r|\n|\r\n)/", trim($this->request->trackback)));
@@ -310,7 +310,7 @@ class Edit extends Contents implements ActionInterface
             $this->save($contents);
 
             // 完成保存插件接口
-            $this->pluginHandle()->finishSave($contents, $this);
+            self::pluginHandle()->finishSave($contents, $this);
 
             /** 设置高亮 */
             Notice::alloc()->highlight($this->cid);
@@ -786,7 +786,7 @@ class Edit extends Contents implements ActionInterface
 
         foreach ($posts as $post) {
             // 标记插件接口
-            $this->pluginHandle()->mark($status, $post, $this);
+            self::pluginHandle()->mark($status, $post, $this);
 
             $condition = $this->db->sql()->where('cid = ?', $post);
             $postObject = $this->db->fetchObject($this->db->select('status', 'type')
@@ -831,7 +831,7 @@ class Edit extends Contents implements ActionInterface
                 }
 
                 // 完成标记插件接口
-                $this->pluginHandle()->finishMark($status, $post, $this);
+                self::pluginHandle()->finishMark($status, $post, $this);
 
                 $markCount++;
             }
@@ -862,7 +862,7 @@ class Edit extends Contents implements ActionInterface
 
         foreach ($posts as $post) {
             // 删除插件接口
-            $this->pluginHandle()->delete($post, $this);
+            self::pluginHandle()->delete($post, $this);
 
             $condition = $this->db->sql()->where('cid = ?', $post);
             $postObject = $this->db->fetchObject($this->db->select('status', 'type')
@@ -900,7 +900,7 @@ class Edit extends Contents implements ActionInterface
                 }
 
                 // 完成删除插件接口
-                $this->pluginHandle()->finishDelete($post, $this);
+                self::pluginHandle()->finishDelete($post, $this);
 
                 $deleteCount++;
             }

@@ -5,6 +5,7 @@ namespace Widget\Base;
 use Typecho\Common;
 use Typecho\Db\Exception;
 use Typecho\Db\Query;
+use Typecho\Plugin;
 use Typecho\Router;
 use Widget\Base;
 
@@ -83,7 +84,7 @@ class Metas extends Base implements QueryInterface
         $value['feedAtomUrl'] = $routeExists ? Router::url($type, $value, $this->options->feedAtomUrl) : '#';
 
         $value['slug'] = $tmpSlug;
-        $value = $this->pluginHandle()->filter($value, $this);
+        $value = Metas::pluginHandle()->filter($value, $this);
         return $value;
     }
 

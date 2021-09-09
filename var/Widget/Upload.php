@@ -130,7 +130,7 @@ class Upload extends Contents implements ActionInterface
                 $result = self::modifyHandle($this->row, $file);
 
                 if (false !== $result) {
-                    $this->pluginHandle()->beforeModify($result);
+                    self::pluginHandle()->beforeModify($result);
 
                     $this->update([
                         'text' => serialize($result)
@@ -140,7 +140,7 @@ class Upload extends Contents implements ActionInterface
                         ->where('table.contents.type = ?', 'attachment'), [$this, 'push']);
 
                     /** 增加插件接口 */
-                    $this->pluginHandle()->modify($this);
+                    self::pluginHandle()->modify($this);
 
                     $this->response->throwJson([$this->attachment->url, [
                         'cid' => $this->cid,
@@ -301,7 +301,7 @@ class Upload extends Contents implements ActionInterface
                 $result = self::uploadHandle($file);
 
                 if (false !== $result) {
-                    $this->pluginHandle()->beforeUpload($result);
+                    self::pluginHandle()->beforeUpload($result);
 
                     $struct = [
                         'title' => $result['name'],
@@ -328,7 +328,7 @@ class Upload extends Contents implements ActionInterface
                         ->where('table.contents.type = ?', 'attachment'), [$this, 'push']);
 
                     /** 增加插件接口 */
-                    $this->pluginHandle()->upload($this);
+                    self::pluginHandle()->upload($this);
 
                     $this->response->throwJson([$this->attachment->url, [
                         'cid' => $insertId,

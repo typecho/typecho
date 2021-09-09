@@ -89,7 +89,7 @@ class Edit extends PostEdit implements ActionInterface
             $contents['text'] = '<!--markdown-->' . $contents['text'];
         }
 
-        $contents = $this->pluginHandle()->write($contents, $this);
+        $contents = self::pluginHandle()->write($contents, $this);
 
         if ($this->request->is('do=publish')) {
             /** 重新发布已经存在的文章 */
@@ -97,7 +97,7 @@ class Edit extends PostEdit implements ActionInterface
             $this->publish($contents);
 
             // 完成发布插件接口
-            $this->pluginHandle()->finishPublish($contents, $this);
+            self::pluginHandle()->finishPublish($contents, $this);
 
             /** 发送ping */
             Service::alloc()->sendPing($this->cid);
@@ -119,7 +119,7 @@ class Edit extends PostEdit implements ActionInterface
             $this->save($contents);
 
             // 完成发布插件接口
-            $this->pluginHandle()->finishSave($contents, $this);
+            self::pluginHandle()->finishSave($contents, $this);
 
             /** 设置高亮 */
             Notice::alloc()->highlight($this->cid);
@@ -164,7 +164,7 @@ class Edit extends PostEdit implements ActionInterface
 
         foreach ($pages as $page) {
             // 标记插件接口
-            $this->pluginHandle()->mark($status, $page, $this);
+            self::pluginHandle()->mark($status, $page, $this);
             $condition = $this->db->sql()->where('cid = ?', $page);
 
             if ($this->db->query($condition->update('table.contents')->rows(['status' => $status]))) {
@@ -180,7 +180,7 @@ class Edit extends PostEdit implements ActionInterface
                 }
 
                 // 完成标记插件接口
-                $this->pluginHandle()->finishMark($status, $page, $this);
+                self::pluginHandle()->finishMark($status, $page, $this);
 
                 $markCount++;
             }
@@ -211,7 +211,7 @@ class Edit extends PostEdit implements ActionInterface
 
         foreach ($pages as $page) {
             // 删除插件接口
-            $this->pluginHandle()->delete($page, $this);
+            self::pluginHandle()->delete($page, $this);
 
             if ($this->delete($this->db->sql()->where('cid = ?', $page))) {
                 /** 删除评论 */
@@ -243,7 +243,7 @@ class Edit extends PostEdit implements ActionInterface
                 }
 
                 // 完成删除插件接口
-                $this->pluginHandle()->finishDelete($page, $this);
+                self::pluginHandle()->finishDelete($page, $this);
 
                 $deleteCount++;
             }

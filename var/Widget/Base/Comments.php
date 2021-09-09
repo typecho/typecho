@@ -235,7 +235,7 @@ class Comments extends Base implements QueryInterface
     public function filter(array $value): array
     {
         $value['date'] = new Date($value['created']);
-        return $this->pluginHandle()->filter($value, $this);
+        return Comments::pluginHandle()->filter($value, $this);
     }
 
     /**
@@ -278,7 +278,7 @@ class Comments extends Base implements QueryInterface
         if ($this->options->commentsAvatar && 'comment' == $this->type) {
             $rating = $this->options->commentsAvatarRating;
 
-            $this->pluginHandle()->trigger($plugged)->gravatar($size, $rating, $default, $this);
+            Comments::pluginHandle()->trigger($plugged)->gravatar($size, $rating, $default, $this);
             if (!$plugged) {
                 $url = Common::gravatarUrl($this->mail, $size, $rating, $default, $this->request->isSecure());
                 echo '<img class="avatar" src="' . $url . '" alt="' .
@@ -333,7 +333,7 @@ class Comments extends Base implements QueryInterface
      */
     public function markdown(?string $text): string
     {
-        $html = $this->pluginHandle()->trigger($parsed)->markdown($text);
+        $html = Comments::pluginHandle()->trigger($parsed)->markdown($text);
 
         if (!$parsed) {
             $html = Markdown::convert($text);
@@ -350,7 +350,7 @@ class Comments extends Base implements QueryInterface
      */
     public function autoP(?string $text): string
     {
-        $html = $this->pluginHandle()->trigger($parsed)->autoP($text);
+        $html = Comments::pluginHandle()->trigger($parsed)->autoP($text);
 
         if (!$parsed) {
             static $parser;
@@ -457,13 +457,13 @@ class Comments extends Base implements QueryInterface
     {
         $text = $this->parentContent['hidden'] ? _t('内容被隐藏') : $this->text;
 
-        $text = $this->pluginHandle()->trigger($plugged)->content($text, $this);
+        $text = Comments::pluginHandle()->trigger($plugged)->content($text, $this);
         if (!$plugged) {
             $text = $this->options->commentsMarkdown ? $this->markdown($text)
                 : $this->autoP($text);
         }
 
-        $text = $this->pluginHandle()->contentEx($text, $this);
+        $text = Comments::pluginHandle()->contentEx($text, $this);
         return Common::stripTags($text, '<p><br>' . $this->options->commentsHTMLTagAllowed);
     }
 

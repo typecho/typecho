@@ -62,7 +62,7 @@ class Edit extends Comments implements ActionInterface
 
         if ($comment && $this->commentIsWriteable()) {
             /** 增加评论编辑插件接口 */
-            $this->pluginHandle()->mark($comment, $this, $status);
+            self::pluginHandle()->mark($comment, $this, $status);
 
             /** 不必更新的情况 */
             if ($status == $comment['status']) {
@@ -158,7 +158,7 @@ class Edit extends Comments implements ActionInterface
                 ->where('coid = ?', $coid)->limit(1), [$this, 'push']);
 
             if ($comment && $this->commentIsWriteable()) {
-                $this->pluginHandle()->delete($comment, $this);
+                self::pluginHandle()->delete($comment, $this);
 
                 /** 删除评论 */
                 $this->db->query($this->db->delete('table.comments')->where('coid = ?', $coid));
@@ -169,7 +169,7 @@ class Edit extends Comments implements ActionInterface
                         ->expression('commentsNum', 'commentsNum - 1')->where('cid = ?', $comment['cid']));
                 }
 
-                $this->pluginHandle()->finishDelete($comment, $this);
+                self::pluginHandle()->finishDelete($comment, $this);
 
                 $deleteRows++;
             }
@@ -275,7 +275,7 @@ class Edit extends Comments implements ActionInterface
             }
 
             /** 评论插件接口 */
-            $this->pluginHandle()->edit($comment, $this);
+            self::pluginHandle()->edit($comment, $this);
 
             /** 更新评论 */
             $this->update($comment, $this->db->sql()->where('coid = ?', $coid));
@@ -285,7 +285,7 @@ class Edit extends Comments implements ActionInterface
             $updatedComment['content'] = $this->content;
 
             /** 评论插件接口 */
-            $this->pluginHandle()->finishEdit($this);
+            self::pluginHandle()->finishEdit($this);
 
             $this->response->throwJson([
                 'success' => 1,
@@ -328,7 +328,7 @@ class Edit extends Comments implements ActionInterface
             ];
 
             /** 评论插件接口 */
-            $this->pluginHandle()->comment($comment, $this);
+            self::pluginHandle()->comment($comment, $this);
 
             /** 回复评论 */
             $commentId = $this->insert($comment);
@@ -338,7 +338,7 @@ class Edit extends Comments implements ActionInterface
             $insertComment['content'] = $this->content;
 
             /** 评论完成接口 */
-            $this->pluginHandle()->finishComment($this);
+            self::pluginHandle()->finishComment($this);
 
             $this->response->throwJson([
                 'success' => 1,

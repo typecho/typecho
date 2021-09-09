@@ -311,7 +311,7 @@ class Contents extends Base implements QueryInterface
                 continue;
             }
 
-            $isFieldReadOnly = $this->pluginHandle()->trigger($plugged)->isFieldReadOnly($name);
+            $isFieldReadOnly = Contents::pluginHandle()->trigger($plugged)->isFieldReadOnly($name);
             if ($plugged && $isFieldReadOnly) {
                 continue;
             }
@@ -593,7 +593,7 @@ class Contents extends Base implements QueryInterface
             $value['hidden'] = true;
         }
 
-        $value = $this->pluginHandle()->filter($value, $this);
+        $value = Contents::pluginHandle()->filter($value, $this);
 
         /** 如果访问权限被禁止 */
         if ($value['hidden']) {
@@ -655,7 +655,7 @@ class Contents extends Base implements QueryInterface
      */
     public function title(int $length = 0, string $trim = '...')
     {
-        $title = $this->pluginHandle()->trigger($plugged)->title($this->title, $this);
+        $title = Contents::pluginHandle()->trigger($plugged)->title($this->title, $this);
         if (!$plugged) {
             echo $length > 0 ? Common::subStr($this->title, 0, $length, $trim) : $this->title;
         } else {
@@ -882,7 +882,7 @@ class Contents extends Base implements QueryInterface
             return $this->text;
         }
 
-        $content = $this->pluginHandle()->trigger($plugged)->excerpt($this->text, $this);
+        $content = Contents::pluginHandle()->trigger($plugged)->excerpt($this->text, $this);
         if (!$plugged) {
             $content = $this->isMarkdown ? $this->markdown($content)
                 : $this->autoP($content);
@@ -891,7 +891,7 @@ class Contents extends Base implements QueryInterface
         $contents = explode('<!--more-->', $content);
         [$excerpt] = $contents;
 
-        return Common::fixHtml($this->pluginHandle()->excerptEx($excerpt, $this));
+        return Common::fixHtml(Contents::pluginHandle()->excerptEx($excerpt, $this));
     }
 
     /**
@@ -902,7 +902,7 @@ class Contents extends Base implements QueryInterface
      */
     public function markdown(?string $text): string
     {
-        $html = $this->pluginHandle()->trigger($parsed)->markdown($text);
+        $html = Contents::pluginHandle()->trigger($parsed)->markdown($text);
 
         if (!$parsed) {
             $html = Markdown::convert($text);
@@ -919,7 +919,7 @@ class Contents extends Base implements QueryInterface
      */
     public function autoP(?string $text): string
     {
-        $html = $this->pluginHandle()->trigger($parsed)->autoP($text);
+        $html = Contents::pluginHandle()->trigger($parsed)->autoP($text);
 
         if (!$parsed) {
             static $parser;
@@ -945,14 +945,14 @@ class Contents extends Base implements QueryInterface
             return $this->text;
         }
 
-        $content = $this->pluginHandle()->trigger($plugged)->content($this->text, $this);
+        $content = Contents::pluginHandle()->trigger($plugged)->content($this->text, $this);
 
         if (!$plugged) {
             $content = $this->isMarkdown ? $this->markdown($content)
                 : $this->autoP($content);
         }
 
-        return $this->pluginHandle()->contentEx($content, $this);
+        return Contents::pluginHandle()->contentEx($content, $this);
     }
 
     /**

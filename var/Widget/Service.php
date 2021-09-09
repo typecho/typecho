@@ -259,7 +259,7 @@ class Service extends BaseOptions implements ActionInterface
         }
 
         $requests = json_decode($this->request->requests, true);
-        $plugin = $this->pluginHandle();
+        $plugin = self::pluginHandle();
 
         if (!empty($requests)) {
             foreach ($requests as $request) {

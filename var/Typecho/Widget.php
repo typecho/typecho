@@ -356,7 +356,7 @@ abstract class Widget
     public function __call(string $name, array $args)
     {
         $method = 'call' . ucfirst($name);
-        $this->pluginHandle()->trigger($plugged)->{$method}($this, $args);
+        self::pluginHandle()->trigger($plugged)->{$method}($this, $args);
 
         if (!$plugged) {
             echo $this->{$name};
@@ -389,7 +389,7 @@ abstract class Widget
             if (method_exists($this, $method)) {
                 return $this->$method();
             } else {
-                $return = $this->pluginHandle()->trigger($plugged)->{$method}($this);
+                $return = self::pluginHandle()->trigger($plugged)->{$method}($this);
                 if ($plugged) {
                     return $return;
                 }

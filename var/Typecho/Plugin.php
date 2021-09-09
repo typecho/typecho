@@ -64,7 +64,7 @@ class Plugin
     public function __construct(string $handle)
     {
         if (defined('__TYPECHO_CLASS_ALIASES__')) {
-            $alias = array_search($handle, __TYPECHO_CLASS_ALIASES__);
+            $alias = array_search('\\' . ltrim($handle, '\\'), __TYPECHO_CLASS_ALIASES__);
             $handle = $alias ?: $handle;
         }
 

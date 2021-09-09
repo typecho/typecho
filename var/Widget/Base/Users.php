@@ -6,6 +6,7 @@ use Typecho\Common;
 use Typecho\Config;
 use Typecho\Db\Exception;
 use Typecho\Db\Query;
+use Typecho\Plugin;
 use Typecho\Router;
 use Widget\Base;
 
@@ -136,7 +137,7 @@ class Users extends Base implements QueryInterface
         /** ATOM 1.0 */
         $value['feedAtomUrl'] = $routeExists ? Router::url('author', $value, $this->options->feedAtomUrl) : '#';
 
-        $value = $this->pluginHandle()->filter($value, $this);
+        $value = Users::pluginHandle()->filter($value, $this);
         return $value;
     }
 

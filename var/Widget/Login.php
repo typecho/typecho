@@ -64,7 +64,7 @@ class Login extends Users implements ActionInterface
             /** 防止穷举,休眠3秒 */
             sleep(3);
 
-            $this->pluginHandle()->loginFail(
+            self::pluginHandle()->loginFail(
                 $this->user,
                 $this->request->name,
                 $this->request->password,
@@ -76,7 +76,7 @@ class Login extends Users implements ActionInterface
             $this->response->goBack('?referer=' . urlencode($this->request->referer));
         }
 
-        $this->pluginHandle()->loginSucceed(
+        self::pluginHandle()->loginSucceed(
             $this->user,
             $this->request->name,
             $this->request->password,

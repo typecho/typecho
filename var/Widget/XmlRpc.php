@@ -354,7 +354,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
 
         $input['text'] = !empty($content['mt_text_more']) ? $content['description']
             . "\n<!--more-->\n" . $content['mt_text_more'] : $content['description'];
-        $input['text'] = $this->pluginHandle()->textFilter($input['text'], $this);
+        $input['text'] = self::pluginHandle()->textFilter($input['text'], $this);
 
         $input['password'] = $content["wp_password"] ?? null;
         $input['order'] = $content["wp_page_order"] ?? null;
@@ -1396,7 +1396,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
                 ->where('table.contents.type = ?', 'attachment'), [$this, 'push']);
 
             /** 增加插件接口 */
-            $this->pluginHandle()->upload($this);
+            self::pluginHandle()->upload($this);
 
             return [
                 'file' => $this->attachment->name,
@@ -1729,13 +1729,13 @@ class XmlRpc extends Contents implements ActionInterface, Hook
                         ];
 
                         /** 加入plugin */
-                        $pingback = $this->pluginHandle()->pingback($pingback, $post);
+                        $pingback = self::pluginHandle()->pingback($pingback, $post);
 
                         /** 执行插入*/
                         $insertId = Comments::alloc()->insert($pingback);
 
                         /** 评论完成接口 */
-                        $this->pluginHandle()->finishPingback($this);
+                        self::pluginHandle()->finishPingback($this);
 
                         return $insertId;
                     } catch (WidgetException $e) {

@@ -173,7 +173,7 @@ class Rows extends Metas
         ]);
 
         // 插件插件接口
-        $this->pluginHandle()->trigger($plugged)->listCategories($this->categoryOptions, $this);
+        self::pluginHandle()->trigger($plugged)->listCategories($this->categoryOptions, $this);
 
         if (!$plugged) {
             $this->stack = $this->getCategories($this->top);

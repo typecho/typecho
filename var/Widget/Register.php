@@ -80,13 +80,13 @@ class Register extends Users implements ActionInterface
             'group' => 'subscriber'
         ];
 
-        $dataStruct = $this->pluginHandle()->register($dataStruct);
+        $dataStruct = self::pluginHandle()->register($dataStruct);
 
         $insertId = $this->insert($dataStruct);
         $this->db->fetchRow($this->select()->where('uid = ?', $insertId)
             ->limit(1), [$this, 'push']);
 
-        $this->pluginHandle()->finishRegister($this);
+        self::pluginHandle()->finishRegister($this);
 
         $this->user->login($this->request->name, $generatedPassword);
 

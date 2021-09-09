@@ -273,7 +273,7 @@ class Archive extends Comments
             'avatarSize'    => 32,
             'defaultAvatar' => null
         ]);
-        $this->pluginHandle()->trigger($plugged)->listComments($this->singleCommentOptions, $this);
+        self::pluginHandle()->trigger($plugged)->listComments($this->singleCommentOptions, $this);
 
         if (!$plugged) {
             if ($this->have()) {
@@ -390,7 +390,7 @@ class Archive extends Comments
     {
         if ($this->options->commentsThreaded && !$this->isTopLevel && $this->parameter->allowComment) {
             $word = empty($word) ? _t('回复') : $word;
-            $this->pluginHandle()->trigger($plugged)->reply($word, $this);
+            self::pluginHandle()->trigger($plugged)->reply($word, $this);
 
             if (!$plugged) {
                 echo '<a href="' . substr($this->permalink, 0, - strlen($this->theId) - 1) . '?replyTo=' . $this->coid .
@@ -436,7 +436,7 @@ class Archive extends Comments
     {
         if ($this->options->commentsThreaded) {
             $word = empty($word) ? _t('取消回复') : $word;
-            $this->pluginHandle()->trigger($plugged)->cancelReply($word, $this);
+            self::pluginHandle()->trigger($plugged)->cancelReply($word, $this);
 
             if (!$plugged) {
                 $replyId = $this->request->filter('int')->replyTo;

@@ -255,7 +255,7 @@ class Feedback extends Comments implements ActionInterface
 
         /** 生成过滤器 */
         try {
-            $comment = $this->pluginHandle()->comment($comment, $this->content);
+            $comment = self::pluginHandle()->comment($comment, $this->content);
         } catch (\Typecho\Exception $e) {
             Cookie::set('__typecho_remember_text', $comment['text']);
             throw $e;
@@ -268,7 +268,7 @@ class Feedback extends Comments implements ActionInterface
             ->limit(1), [$this, 'push']);
 
         /** 评论完成接口 */
-        $this->pluginHandle()->finishComment($this);
+        self::pluginHandle()->finishComment($this);
 
         $this->response->goBack('#' . $this->theId);
     }
@@ -337,13 +337,13 @@ class Feedback extends Comments implements ActionInterface
         }
 
         /** 生成过滤器 */
-        $trackback = $this->pluginHandle()->trackback($trackback, $this->content);
+        $trackback = self::pluginHandle()->trackback($trackback, $this->content);
 
         /** 添加引用 */
         $this->insert($trackback);
 
         /** 评论完成接口 */
-        $this->pluginHandle()->finishTrackback($this);
+        self::pluginHandle()->finishTrackback($this);
 
         /** 返回正确 */
         $this->response->throwXml(['success' => 0, 'message' => 'Trackback has registered.']);
