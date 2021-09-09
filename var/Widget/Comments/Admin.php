@@ -86,10 +86,10 @@ class Admin extends Comments
         if (!$this->user->pass('editor', true)) {
             $select->where('table.comments.ownerId = ?', $this->user->uid);
         } elseif (!isset($this->request->cid)) {
-            if ('on' == $this->request->_typecho_all_comments) {
+            if ('on' == $this->request->__typecho_all_comments) {
                 Cookie::set('__typecho_all_comments', 'on');
             } else {
-                if ('off' == $this->request->_typecho_all_comments) {
+                if ('off' == $this->request->__typecho_all_comments) {
                     Cookie::set('__typecho_all_comments', 'off');
                 }
 

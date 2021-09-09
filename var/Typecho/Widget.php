@@ -10,7 +10,11 @@ use Typecho\Widget\Terminal;
 /**
  * Typecho组件基类
  *
- * @package Widget
+ * @property $sequence
+ * @property $length
+ * @property-read $request
+ * @property-read $response
+ * @property-read $parameter
  */
 abstract class Widget
 {
@@ -33,14 +37,14 @@ abstract class Widget
      *
      * @var WidgetRequest
      */
-    public $request;
+    protected $request;
 
     /**
      * response对象
      *
-     * @var Response
+     * @var WidgetResponse
      */
-    public $response;
+    protected $response;
 
     /**
      * 数据堆栈
@@ -435,5 +439,29 @@ abstract class Widget
     public function ___length(): int
     {
         return $this->length;
+    }
+
+    /**
+     * @return WidgetRequest
+     */
+    public function ___request(): WidgetRequest
+    {
+        return $this->request;
+    }
+
+    /**
+     * @return WidgetRequest
+     */
+    public function ___response(): WidgetRequest
+    {
+        return $this->request;
+    }
+
+    /**
+     * @return Config
+     */
+    public function ___parameter(): Config
+    {
+        return $this->parameter;
     }
 }

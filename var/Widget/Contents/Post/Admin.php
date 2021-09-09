@@ -100,10 +100,10 @@ class Admin extends Contents
         if (!$this->user->pass('editor', true)) {
             $select->where('table.contents.authorId = ?', $this->user->uid);
         } else {
-            if ('on' == $this->request->_typecho_all_posts) {
+            if ('on' == $this->request->__typecho_all_posts) {
                 Cookie::set('__typecho_all_posts', 'on');
             } else {
-                if ('off' == $this->request->_typecho_all_posts) {
+                if ('off' == $this->request->__typecho_all_posts) {
                     Cookie::set('__typecho_all_posts', 'off');
                 }
 
