@@ -66,7 +66,7 @@ class Rows extends Metas
      * @var array
      * @access private
      */
-    private $children = [];
+    private $childNodes = [];
 
     /**
      * 所有父节点列表
@@ -116,11 +116,11 @@ class Rows extends Metas
     private function levelWalkCallback(array $categories, array $parents = [])
     {
         foreach ($parents as $parent) {
-            if (!isset($this->children[$parent])) {
-                $this->children[$parent] = [];
+            if (!isset($this->childNodes[$parent])) {
+                $this->childNodes[$parent] = [];
             }
 
-            $this->children[$parent] = array_merge($this->children[$parent], $categories);
+            $this->childNodes[$parent] = array_merge($this->childNodes[$parent], $categories);
         }
 
         foreach ($categories as $mid) {
@@ -223,7 +223,7 @@ class Rows extends Metas
         if ($this->mid == $this->parameter->current) {
             echo ' category-active';
         } elseif (
-            isset($this->children[$this->mid]) && in_array($this->parameter->current, $this->children[$this->mid])
+            isset($this->childNodes[$this->mid]) && in_array($this->parameter->current, $this->childNodes[$this->mid])
         ) {
             echo ' category-parent-active';
         }
@@ -269,7 +269,7 @@ class Rows extends Metas
         if ($children) {
             //缓存变量便于还原
             $tmp = $this->row;
-            $this->sequence ++;
+            $this->sequence++;
 
             //在子评论之前输出
             echo '<' . $this->categoryOptions->wrapTag . (empty($this->categoryOptions->wrapClass)
@@ -284,7 +284,7 @@ class Rows extends Metas
             //在子评论之后输出
             echo '</' . $this->categoryOptions->wrapTag . '>';
 
-            $this->sequence --;
+            $this->sequence--;
         }
     }
 
@@ -338,7 +338,7 @@ class Rows extends Metas
      */
     public function getAllChildren($mid): array
     {
-        return $this->children[$mid] ?? [];
+        return $this->childNodes[$mid] ?? [];
     }
 
     /**

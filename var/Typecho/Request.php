@@ -128,12 +128,9 @@ class Request
     /**
      * 获取实际传递参数
      *
-     * @access public
-     *
      * @param string $key 指定参数
      * @param mixed $default 默认参数 (default: NULL)
      * @param bool|null $exists detect exists
-     *
      * @return mixed
      */
     public function get(string $key, $default = null, ?bool &$exists = true)
@@ -176,7 +173,6 @@ class Request
      * 获取一个数组
      *
      * @param $key
-     *
      * @return array
      */
     public function getArray($key): array
@@ -189,10 +185,7 @@ class Request
     /**
      * 从参数列表指定的值中获取http传递参数
      *
-     * @access public
-     *
      * @param mixed $params 指定的参数
-     *
      * @return array
      */
     public function from($params): array
@@ -210,7 +203,6 @@ class Request
     /**
      * getRequestRoot
      *
-     * @access public
      * @return string
      */
     public function getRequestRoot(): string
@@ -232,7 +224,6 @@ class Request
     /**
      * 获取当前请求url
      *
-     * @access public
      * @return string
      */
     public function getRequestUrl(): string
@@ -244,7 +235,6 @@ class Request
      * 根据当前uri构造指定参数的uri
      *
      * @param mixed $parameter 指定的参数
-     *
      * @return string
      */
     public function makeUriByRequest($parameter = null): string
@@ -334,7 +324,6 @@ class Request
     /**
      * 获取ip地址
      *
-     * @access public
      * @return string
      */
     public function getIp(): string
@@ -363,7 +352,6 @@ class Request
      *
      * @param string $key
      * @param string|null $default
-     *
      * @return string|null
      */
     public function getHeader(string $key, ?string $default = null): ?string
@@ -375,7 +363,6 @@ class Request
     /**
      * 获取客户端
      *
-     * @access public
      * @return string
      */
     public function getAgent(): ?string
@@ -386,7 +373,6 @@ class Request
     /**
      * 获取客户端
      *
-     * @access public
      * @return string|null
      */
     public function getReferer(): ?string
@@ -490,32 +476,11 @@ class Request
     }
 
     /**
-     * 获取url前缀
+     * 获取请求资源地址
      *
-     * @access public
      * @return string
      */
-    private function getUrlPrefix(): string
-    {
-        if (empty($this->urlPrefix)) {
-            if (defined('__TYPECHO_URL_PREFIX__')) {
-                $this->urlPrefix = __TYPECHO_URL_PREFIX__;
-            } elseif (php_sapi_name() != 'cli') {
-                $this->urlPrefix = ($this->isSecure() ? 'https' : 'http') . '://'
-                    . ($_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME']);
-            }
-        }
-
-        return $this->urlPrefix;
-    }
-
-    /**
-     * 获取请求地址
-     *
-     * @access public
-     * @return string
-     */
-    private function getRequestUri(): ?string
+    public function getRequestUri(): ?string
     {
         if (!empty($this->requestUri)) {
             return $this->requestUri;
@@ -558,9 +523,27 @@ class Request
     }
 
     /**
+     * 获取url前缀
+     *
+     * @return string
+     */
+    private function getUrlPrefix(): string
+    {
+        if (empty($this->urlPrefix)) {
+            if (defined('__TYPECHO_URL_PREFIX__')) {
+                $this->urlPrefix = __TYPECHO_URL_PREFIX__;
+            } elseif (php_sapi_name() != 'cli') {
+                $this->urlPrefix = ($this->isSecure() ? 'https' : 'http') . '://'
+                    . ($_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME']);
+            }
+        }
+
+        return $this->urlPrefix;
+    }
+
+    /**
      * getBaseUrl
      *
-     * @access public
      * @return string
      */
     private function getBaseUrl(): ?string

@@ -91,7 +91,7 @@ trait SQLiteTrait
      */
     public function parseSelect(array $sql): string
     {
-        $query = $this->filterCountQuery($this->buildQuery($sql));
+        $query = $this->buildQuery($sql);
 
         if ($this->isSQLite2) {
             $query = $this->filterCountQuery($query);

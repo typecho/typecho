@@ -186,8 +186,8 @@ class Backup extends BaseOptions implements ActionInterface
     {
         $path = null;
 
-        if (!empty($FILES)) {
-            $file = array_pop($FILES);
+        if (!empty($_FILES)) {
+            $file = array_pop($_FILES);
 
             if (0 == $file['error'] && is_uploaded_file($file['tmp_name'])) {
                 $path = $file['tmp_name'];
