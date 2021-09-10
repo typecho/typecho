@@ -478,7 +478,7 @@ class Request
     /**
      * 获取请求资源地址
      *
-     * @return string
+     * @return string|null
      */
     public function getRequestUri(): ?string
     {
@@ -525,9 +525,9 @@ class Request
     /**
      * 获取url前缀
      *
-     * @return string
+     * @return string|null
      */
-    public function getUrlPrefix(): string
+    public function getUrlPrefix(): ?string
     {
         if (empty($this->urlPrefix)) {
             if (defined('__TYPECHO_URL_PREFIX__')) {

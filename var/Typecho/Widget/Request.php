@@ -171,9 +171,9 @@ class Request
     /**
      * 获取请求资源地址
      *
-     * @return string
+     * @return string|null
      */
-    public function getRequestUri(): string
+    public function getRequestUri(): ?string
     {
         return $this->request->getRequestUri();
     }
@@ -181,9 +181,9 @@ class Request
     /**
      * 获取当前pathinfo
      *
-     * @return string
+     * @return string|null
      */
-    public function getPathInfo(): string
+    public function getPathInfo(): ?string
     {
         return $this->request->getPathInfo();
     }
@@ -191,9 +191,9 @@ class Request
     /**
      * 获取url前缀
      *
-     * @return string
+     * @return string|null
      */
-    public function getUrlPrefix(): string
+    public function getUrlPrefix(): ?string
     {
         return $this->request->getUrlPrefix();
     }
