@@ -908,12 +908,11 @@ EOF;
          * 从备份文件中解压
          *
          * @param resource $fp
-         * @param bool|null $offset
+         * @param int|null $offset
          * @param string $version
-         *
          * @return array|bool
          */
-        public static function extractBackupBuffer($fp, ?bool &$offset, string $version)
+        public static function extractBackupBuffer($fp, ?int &$offset, string $version)
         {
             $realMetaLen = $version == 'FILE' ? 6 : 8;
 
