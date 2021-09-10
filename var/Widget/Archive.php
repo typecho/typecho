@@ -783,7 +783,7 @@ class Archive extends Contents
      * @param string $next 下一页文字
      * @param int $splitPage 分割范围
      * @param string $splitWord 分割字符
-     * @param string $template 展现配置信息
+     * @param string|array $template 展现配置信息
      * @throws Db\Exception|WidgetException
      */
     public function pageNav(
@@ -791,7 +791,7 @@ class Archive extends Contents
         string $next = '&raquo;',
         int $splitPage = 3,
         string $splitWord = '...',
-        string $template = ''
+        $template = ''
     ) {
         if ($this->have()) {
             $hasNav = false;
@@ -803,12 +803,18 @@ class Archive extends Contents
             if (is_string($template)) {
                 parse_str($template, $config);
             } else {
-                $config = $template;
+                $config = $template ?: [];
             }
 
             $template = array_merge($default, $config);
-
             $total = $this->getTotal();
+            $query = Router::url(
+                $this->parameter->type .
+                (false === strpos($this->parameter->type, '_page') ? '_page' : null),
+                $this->pageRow,
+                $this->options->index
+            );
+
             self::pluginHandle()->trigger($hasNav)->pageNav(
                 $this->currentPage,
                 $total,
@@ -816,17 +822,12 @@ class Archive extends Contents
                 $prev,
                 $next,
                 $splitPage,
-                $splitWord
+                $splitWord,
+                $template,
+                $query
             );
 
             if (!$hasNav && $total > $this->parameter->pageSize) {
-                $query = Router::url(
-                    $this->parameter->type .
-                    (false === strpos($this->parameter->type, '_page') ? '_page' : null),
-                    $this->pageRow,
-                    $this->options->index
-                );
-
                 /** 使用盒状分页 */
                 $nav = new Box(
                     $total,
