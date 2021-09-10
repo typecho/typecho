@@ -329,9 +329,9 @@ class Comments extends Base implements QueryInterface
      * markdown
      *
      * @param string|null $text
-     * @return string
+     * @return string|null
      */
-    public function markdown(?string $text): string
+    public function markdown(?string $text): ?string
     {
         $html = Comments::pluginHandle()->trigger($parsed)->markdown($text);
 
@@ -346,9 +346,9 @@ class Comments extends Base implements QueryInterface
      * autoP
      *
      * @param string|null $text
-     * @return string
+     * @return string|null
      */
-    public function autoP(?string $text): string
+    public function autoP(?string $text): ?string
     {
         $html = Comments::pluginHandle()->trigger($parsed)->autoP($text);
 
@@ -381,9 +381,9 @@ class Comments extends Base implements QueryInterface
     /**
      * 获取当前评论标题
      *
-     * @return string
+     * @return string|null
      */
-    protected function ___title(): string
+    protected function ___title(): ?string
     {
         return $this->parentContent['title'];
     }
@@ -451,9 +451,9 @@ class Comments extends Base implements QueryInterface
     /**
      * 获取当前评论内容
      *
-     * @return string
+     * @return string|null
      */
-    protected function ___content(): string
+    protected function ___content(): ?string
     {
         $text = $this->parentContent['hidden'] ? _t('内容被隐藏') : $this->text;
 

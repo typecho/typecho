@@ -843,9 +843,9 @@ class Contents extends Base implements QueryInterface
     /**
      * 对文章的简短纯文本描述
      *
-     * @return string
+     * @return string|null
      */
-    protected function ___description(): string
+    protected function ___description(): ?string
     {
         $plainTxt = str_replace("\n", '', trim(strip_tags($this->excerpt)));
         $plainTxt = $plainTxt ? $plainTxt : $this->title;
@@ -874,9 +874,9 @@ class Contents extends Base implements QueryInterface
     /**
      * 获取文章内容摘要
      *
-     * @return string
+     * @return string|null
      */
-    protected function ___excerpt(): string
+    protected function ___excerpt(): ?string
     {
         if ($this->hidden) {
             return $this->text;
@@ -898,9 +898,9 @@ class Contents extends Base implements QueryInterface
      * markdown
      *
      * @param string|null $text
-     * @return string
+     * @return string|null
      */
-    public function markdown(?string $text): string
+    public function markdown(?string $text): ?string
     {
         $html = Contents::pluginHandle()->trigger($parsed)->markdown($text);
 
@@ -915,9 +915,9 @@ class Contents extends Base implements QueryInterface
      * autoP
      *
      * @param string|null $text
-     * @return string
+     * @return string|null
      */
-    public function autoP(?string $text): string
+    public function autoP(?string $text): ?string
     {
         $html = Contents::pluginHandle()->trigger($parsed)->autoP($text);
 
@@ -937,9 +937,9 @@ class Contents extends Base implements QueryInterface
     /**
      * 获取文章内容
      *
-     * @return string
+     * @return string|null
      */
-    protected function ___content(): string
+    protected function ___content(): ?string
     {
         if ($this->hidden) {
             return $this->text;
@@ -958,9 +958,9 @@ class Contents extends Base implements QueryInterface
     /**
      * 输出文章的第一行作为摘要
      *
-     * @return string
+     * @return string|null
      */
-    protected function ___summary(): string
+    protected function ___summary(): ?string
     {
         $content = $this->content;
         $parts = preg_split("/(<\/\s*(?:p|blockquote|q|pre|table)\s*>)/i", $content, 2, PREG_SPLIT_DELIM_CAPTURE);
