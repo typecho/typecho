@@ -339,13 +339,10 @@ EOF;
          * //output: 这是一段被截断的html文本
          * </code>
          *
-         * @access public
-         *
-         * @param string $string 需要修复处理的字符串
-         *
-         * @return string
+         * @param string|null $string 需要修复处理的字符串
+         * @return string|null
          */
-        public static function fixHtml(string $string): string
+        public static function fixHtml(?string $string): ?string
         {
             //关闭自闭合标签
             $startPos = strrpos($string, "<");
@@ -406,14 +403,11 @@ EOF;
          * //display: '<a href="http://test/test.php">hello</a>'
          * </code>
          *
-         * @access public
-         *
-         * @param string $html 需要处理的字符串
+         * @param string|null $html 需要处理的字符串
          * @param string|null $allowableTags 需要忽略的html标签
-         *
          * @return string
          */
-        public static function stripTags(string $html, ?string $allowableTags = null): string
+        public static function stripTags(?string $html, ?string $allowableTags = null): string
         {
             $normalizeTags = '';
             $allowableAttributes = [];
@@ -562,14 +556,10 @@ EOF;
         /**
          * 处理XSS跨站攻击的过滤函数
          *
-         * @param string $val 需要处理的字符串
-         *
+         * @param string|null $val 需要处理的字符串
          * @return string
-         * @author kallahar@kallahar.com
-         * @link http://kallahar.com/smallprojects/php_xss_filter_function.php
-         * @access public
          */
-        public static function removeXSS($val)
+        public static function removeXSS(?string $val): string
         {
             // remove all non-printable characters. CR(0a) and LF(0b) and TAB(9) are allowed
             // this prevents some character re-spacing such as <java\0script>
@@ -996,10 +986,10 @@ EOF;
             }
 
             return filter_var(
-                    $address,
-                    FILTER_VALIDATE_IP,
-                    FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
-                ) !== false;
+                $address,
+                FILTER_VALIDATE_IP,
+                FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
+            ) !== false;
         }
 
         /**

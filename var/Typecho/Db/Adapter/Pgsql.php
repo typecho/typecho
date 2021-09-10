@@ -39,18 +39,19 @@ class Pgsql implements Adapter
      */
     public function connect(Config $config)
     {
-        if (
-            $dbLink = pg_connect("host={$config->host} port={$config->port}"
-                . " dbname={$config->database} user={$config->user} password={$config->password}")
-        ) {
-            if ($config->charset) {
-                pg_query($dbLink, "SET NAMES '{$config->charset}'");
-            }
+        $dsn = "host={$config->host} port={$config->port}"
+            . " dbname={$config->database} user={$config->user} password={$config->password}";
+
+        if ($config->charset) {
+            $dsn .= " options='--client_encoding={$config->charset}'";
+        }
+
+        if ($dbLink = @pg_connect($dsn)) {
             return $dbLink;
         }
 
         /** 数据库异常 */
-        throw new ConnectionException(pg_last_error($dbLink));
+        throw new ConnectionException("Couldn't connect to database.");
     }
 
     /**
@@ -118,7 +119,7 @@ class Pgsql implements Adapter
      */
     public function fetchAll($resource): array
     {
-        return pg_fetch_all($resource, PGSQL_ASSOC);
+        return pg_fetch_all($resource, PGSQL_ASSOC) ?: [];
     }
 
     /**
