@@ -183,11 +183,19 @@ class Response
             return;
         }
 
+        $sentHeaders = [];
+        foreach (headers_list() as $header) {
+            [$key] = explode(':', $header, 2);
+            $sentHeaders[] = strtolower(trim($key));
+        }
+
         header('HTTP/1.1 ' . $this->status . ' ' . self::HTTP_CODE[$this->status], true, $this->status);
 
         // set header
         foreach ($this->headers as $name => $value) {
-            header($name . ': ' . $value, true);
+            if (!in_array(strtolower($name), $sentHeaders)) {
+                header($name . ': ' . $value, true);
+            }
         }
 
         // set cookie
