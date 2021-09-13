@@ -24,9 +24,9 @@ class Submit extends Element
      *
      * @param string|null $name 表单元素名称
      * @param array|null $options 选择项
-     * @return Layout
+     * @return Layout|null
      */
-    public function input(?string $name = null, ?array $options = null): Layout
+    public function input(?string $name = null, ?array $options = null): ?Layout
     {
         $this->setAttribute('class', 'typecho-option typecho-option-submit');
         $input = new Layout('button', ['type' => 'submit']);

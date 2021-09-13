@@ -204,9 +204,9 @@ abstract class Element extends Layout
      *
      * @param string|null $name 表单元素名称
      * @param array|null $options 选择项
-     * @return Layout
+     * @return Layout|null
      */
-    abstract public function input(?string $name = null, ?array $options = null): Layout;
+    abstract public function input(?string $name = null, ?array $options = null): ?Layout;
 
     /**
      * 设置表单元素值

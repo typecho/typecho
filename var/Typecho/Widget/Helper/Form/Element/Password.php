@@ -24,9 +24,9 @@ class Password extends Element
      *
      * @param string|null $name 表单元素名称
      * @param array|null $options 选择项
-     * @return Layout
+     * @return Layout|null
      */
-    public function input(?string $name = null, ?array $options = null): Layout
+    public function input(?string $name = null, ?array $options = null): ?Layout
     {
         $input = new Layout('input', ['id' => $name . '-0-' . self::$uniqueId,
             'name' => $name, 'type' => 'password', 'class' => 'password']);
