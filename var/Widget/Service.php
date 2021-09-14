@@ -37,6 +37,7 @@ class Service extends BaseOptions implements ActionInterface
     {
         /** 验证权限 */
         $token = $this->request->token;
+        $response = ['trackbacks' => [], 'pingbacks' => []];
 
         if (!Common::timeTokenValidate($token, $this->options->secret, 3)) {
             throw new Exception(_t('禁止访问'), 403);
@@ -54,7 +55,7 @@ class Service extends BaseOptions implements ActionInterface
         /** 获取post */
         $post = Archive::alloc('type=post', "cid={$this->request->cid}");
 
-        if ($post->have() && preg_match_all("|<a[^>]*href=[\"'](.*?)[\"'][^>]*>(.*?)</a>|", $post->text, $matches)) {
+        if ($post->have() && preg_match_all("|<a[^>]*href=[\"'](.*?)[\"'][^>]*>(.*?)</a>|", $post->content, $matches)) {
             $links = array_unique($matches[1]);
             $permalinkPart = parse_url($post->permalink);
 
@@ -94,11 +95,13 @@ class Service extends BaseOptions implements ActionInterface
                     }
 
                     if (!empty($xmlrpcUrl)) {
+                        $response['pingbacks'][] = $url;
+
                         try {
                             $xmlrpc = new \IXR\Client($xmlrpcUrl);
                             $xmlrpc->pingback->ping($post->permalink, $url);
                             unset($xmlrpc);
-                        } catch (Exception $e) {
+                        } catch (\IXR\Exception $e) {
                             continue;
                         }
                     }
@@ -114,6 +117,7 @@ class Service extends BaseOptions implements ActionInterface
 
             foreach ($links as $url) {
                 $client = Client::get();
+                $response['trackbacks'][] = $url;
 
                 if ($client) {
                     try {
@@ -130,9 +134,10 @@ class Service extends BaseOptions implements ActionInterface
                         continue;
                     }
                 }
-
             }
         }
+
+        $this->response->throwJson($response);
     }
 
     /**
