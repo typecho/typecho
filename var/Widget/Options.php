@@ -94,6 +94,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property int $defaultCategory
  * @property bool $frontArchive
  * @property array $plugins
+ * @property string $secret
  */
 class Options extends Base
 {

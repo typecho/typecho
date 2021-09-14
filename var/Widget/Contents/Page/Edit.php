@@ -100,7 +100,7 @@ class Edit extends PostEdit implements ActionInterface
             self::pluginHandle()->finishPublish($contents, $this);
 
             /** 发送ping */
-            Service::alloc()->sendPing($this->cid);
+            Service::alloc()->sendPing($this);
 
             /** 设置提示信息 */
             Notice::alloc()->set(

@@ -6,6 +6,7 @@ use Typecho\Common;
 use Typecho\Http\Client;
 use Typecho\Response;
 use Typecho\Widget\Exception;
+use Widget\Base\Contents;
 use Widget\Base\Options as BaseOptions;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
@@ -36,10 +37,14 @@ class Service extends BaseOptions implements ActionInterface
     public function sendPingHandle()
     {
         /** 验证权限 */
-        $token = $this->request->token;
-        $response = ['trackbacks' => [], 'pingbacks' => []];
+        $token = $this->request->get('token');
+        $permalink = $this->request->get('permalink');
+        $title = $this->request->get('title');
+        $excerpt = $this->request->get('excerpt');
 
-        if (!Common::timeTokenValidate($token, $this->options->secret, 3)) {
+        $response = ['trackback' => [], 'pingback' => []];
+
+        if (!Common::timeTokenValidate($token, $this->options->secret, 3) || empty($permalink)) {
             throw new Exception(_t('禁止访问'), 403);
         }
 
@@ -52,12 +57,9 @@ class Service extends BaseOptions implements ActionInterface
             set_time_limit(30);
         }
 
-        /** 获取post */
-        $post = Archive::alloc('type=post', "cid={$this->request->cid}");
-
-        if ($post->have() && preg_match_all("|<a[^>]*href=[\"'](.*?)[\"'][^>]*>(.*?)</a>|", $post->content, $matches)) {
-            $links = array_unique($matches[1]);
-            $permalinkPart = parse_url($post->permalink);
+        if (!empty($this->request->pingback)) {
+            $links = $this->request->getArray('pingback');
+            $permalinkPart = parse_url($permalink);
 
             /** 发送pingback */
             foreach ($links as $url) {
@@ -95,11 +97,11 @@ class Service extends BaseOptions implements ActionInterface
                     }
 
                     if (!empty($xmlrpcUrl)) {
-                        $response['pingbacks'][] = $url;
+                        $response['pingback'][] = $url;
 
                         try {
                             $xmlrpc = new \IXR\Client($xmlrpcUrl);
-                            $xmlrpc->pingback->ping($post->permalink, $url);
+                            $xmlrpc->pingback->ping($permalink, $url);
                             unset($xmlrpc);
                         } catch (\IXR\Exception $e) {
                             continue;
@@ -112,20 +114,20 @@ class Service extends BaseOptions implements ActionInterface
         }
 
         /** 发送trackback */
-        if ($post->have() && !empty($this->request->trackback)) {
-            $links = array_filter(array_map('trim', explode("\n", $this->request->trackback)));
+        if (!empty($this->request->trackback)) {
+            $links = $this->request->getArray('trackback');
 
             foreach ($links as $url) {
                 $client = Client::get();
-                $response['trackbacks'][] = $url;
+                $response['trackback'][] = $url;
 
                 if ($client) {
                     try {
                         $client->setTimeout(5)
                             ->setData([
-                                'blog_name' => $this->options->title . ' &raquo ' . $post->title,
-                                'url' => $post->permalink,
-                                'excerpt' => $post->excerpt
+                                'blog_name' => $this->options->title . ' &raquo ' . $title,
+                                'url' => $permalink,
+                                'excerpt' => $excerpt
                             ])
                             ->send($url);
 
@@ -143,13 +145,13 @@ class Service extends BaseOptions implements ActionInterface
     /**
      * 发送pingback
      * <code>
-     * $this->sendPingbacks(365);
+     * $this->sendPing($post);
      * </code>
      *
-     * @param integer $cid 内容id
-     * @param array|null $trackback trackback的url
+     * @param Contents $content 内容url
+     * @param array|null $trackback
      */
-    public function sendPing($cid, ?array $trackback = null)
+    public function sendPing(Contents $content, ?array $trackback = null)
     {
         $this->user->pass('contributor');
 
@@ -157,9 +159,19 @@ class Service extends BaseOptions implements ActionInterface
             try {
                 $input = [
                     'do' => 'ping',
-                    'cid' => $cid,
+                    'permalink' => $content->permalink,
+                    'excerpt' => $content->excerpt,
+                    'title' => $content->title,
                     'token' => Common::timeToken($this->options->secret)
                 ];
+
+                if (preg_match_all("|<a[^>]*href=[\"'](.*?)[\"'][^>]*>(.*?)</a>|", $content->content, $matches)) {
+                    $pingback = array_unique($matches[1]);
+
+                    if (!empty($pingback)) {
+                        $input['pingback'] = $pingback;
+                    }
+                }
 
                 if (!empty($trackback)) {
                     $input['trackback'] = $trackback;

@@ -136,6 +136,7 @@ class Request
     public function get(string $key, $default = null, ?bool &$exists = true)
     {
         $exists = true;
+        $value = null;
 
         switch (true) {
             case isset($this->params) && isset($this->params[$key]):
@@ -145,7 +146,6 @@ class Request
                 if (isset($this->sandbox[$key])) {
                     $value = $this->sandbox[$key];
                 } else {
-                    $value = $default;
                     $exists = false;
                 }
                 break;
@@ -156,7 +156,6 @@ class Request
                 $value = $_POST[$key];
                 break;
             default:
-                $value = $default;
                 $exists = false;
                 break;
         }
@@ -166,7 +165,7 @@ class Request
             $this->params = null;
         }
 
-        return ((!is_array($value) && strlen($value) > 0) || is_array($default)) ? $value : $default;
+        return $value ?? $default;
     }
 
     /**
