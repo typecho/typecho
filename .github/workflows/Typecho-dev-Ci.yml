@@ -45,12 +45,12 @@ jobs:
         mkdir build/usr/uploads/
         chmod 777 build/usr/uploads/
         rm -rf build/admin/src
-        tree -d build
+        cd build && tar -cvf typecho.tar * && mv typecho.tar ../ && cd -
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2
       with:
         name: typecho
-        path: ./build/
+        path: typecho.tar
     - name: Trigger build
       run: |
         curl -XPOST -H "Authorization: token ${{ secrets.WORKFLOW_TOKEN }}" \
