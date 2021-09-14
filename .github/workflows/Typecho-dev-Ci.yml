@@ -36,21 +36,19 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-    - name: Install tree
-      run: sudo apt-get -y install tree
     - name: Build
       run: |
         mkdir build
         cp -r LICENSE.txt index.php install.php admin install usr var build/
         mkdir build/usr/uploads/
         chmod 777 build/usr/uploads/
+        touch build/usr/uploads/empty
         rm -rf build/admin/src
-        cd build && tar -cvf typecho.tar * && mv typecho.tar ../ && cd -
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2
       with:
         name: typecho
-        path: typecho.tar
+        path: ./build/
     - name: Trigger build
       run: |
         curl -XPOST -H "Authorization: token ${{ secrets.WORKFLOW_TOKEN }}" \
