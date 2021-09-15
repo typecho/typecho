@@ -29,6 +29,8 @@ textarea { resize: vertical; line-height: 1.5; }
 
 input[type="radio"], input[type="checkbox"] { margin-right: 3px; }
 
+input[type="radio"], input[type="checkbox"], input[type="radio"] + label, input[type="checkbox"] + label { vertical-align: middle; }
+
 input.text-s, textarea.text-s { padding: 5px; }
 
 input.text-l, textarea.text-l { padding: 10px; font-size: 1.14286em; }

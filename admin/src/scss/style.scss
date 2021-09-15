@@ -128,36 +128,38 @@ a.button:hover, a.balloon-button:hover {
   list-style: none;
   margin: 1em 0;
   padding: 0;
-}
 
-.typecho-option li {
-}
+  &-submit li {
+    border-bottom: none;
+  }
 
-.typecho-option-submit li {
-  border-bottom: none;
-}
+  label {
+    &.typecho-label {
+      display: block;
+      margin-bottom: .5em;
+      font-weight: bold;
+    }
 
-.typecho-option label.typecho-label {
-  display: block;
-  margin-bottom: .5em;
-  font-weight: bold;
-}
-.typecho-option label.required:after {
-  content: " *";
-  color: #B94A48;
-}
-.typecho-option label.typecho-label+input {
-}
-.typecho-option span { margin-right: 15px; }
-.typecho-option .description {
-  margin: .5em 0 0;
-  color: #999;
-  font-size: .92857em;
-}
+    &.required:after {
+      content: " *";
+      color: #B94A48;
+    }
+  }
 
-.typecho-option input.file {
-  width: 100%;
-  margin: .7em 0;
+  span {
+    margin-right: 15px;
+  }
+
+  .description {
+    margin: .5em 0 0;
+    color: #999;
+    font-size: .92857em;
+  }
+
+  input.file {
+    width: 100%;
+    margin: .7em 0;
+  }
 }
 
 .front-archive {
