@@ -752,13 +752,13 @@ function install_step_1_perform()
     $realUploadDir = \Typecho\Common::url($uploadDir, __TYPECHO_ROOT_DIR__);
     $writeable = true;
     if (is_dir($realUploadDir)) {
-        if (!is_writeable($realUploadDir)) {
-            if (!@chmod($realUploadDir, 0644)) {
+        if (!is_writeable($realUploadDir) || !is_readable($realUploadDir)) {
+            if (!@chmod($realUploadDir, 0755)) {
                 $writeable = false;
             }
         }
     } else {
-        if (!@mkdir($realUploadDir, 0644)) {
+        if (!@mkdir($realUploadDir, 0755)) {
             $writeable = false;
         }
     }

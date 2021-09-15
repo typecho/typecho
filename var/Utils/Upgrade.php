@@ -352,12 +352,12 @@ Typecho_Date::setTimezoneOffset($options->timezone);
         $uploadDir = Common::url(Upload::UPLOAD_DIR, __TYPECHO_ROOT_DIR__);
         if (is_dir($uploadDir)) {
             if (!is_writeable($uploadDir)) {
-                if (!@chmod($uploadDir, 0644)) {
+                if (!@chmod($uploadDir, 0755)) {
                     throw new \Typecho\Widget\Exception(_t('上传目录无法写入, 请手动将安装目录下的 %s 目录的权限设置为可写然后继续升级', Upload::UPLOAD_DIR));
                 }
             }
         } else {
-            if (!@mkdir($uploadDir, 0644)) {
+            if (!@mkdir($uploadDir, 0755)) {
                 throw new \Typecho\Widget\Exception(_t('上传目录无法创建, 请手动创建安装目录下的 %s 目录, 并将它的权限设置为可写然后继续升级', Upload::UPLOAD_DIR));
             }
         }

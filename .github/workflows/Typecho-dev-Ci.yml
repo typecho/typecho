@@ -41,7 +41,7 @@ jobs:
         mkdir build
         cp -r LICENSE.txt index.php install.php admin install usr var build/
         mkdir build/usr/uploads/
-        chmod 777 build/usr/uploads/
+        chmod 755 build/usr/uploads/
         rm -rf build/admin/src
         cd build && zip -q -r typecho.zip * && mv typecho.zip ../ && cd -
     - name: Upload a Build Artifact

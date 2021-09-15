@@ -273,13 +273,9 @@ class Upload extends Contents implements ActionInterface
             return true;
         }
 
-        if (!@mkdir($last)) {
+        if (!@mkdir($last, 0755)) {
             return false;
         }
-
-        $stat = @stat($last);
-        $perms = $stat['mode'] & 0007777;
-        @chmod($last, $perms);
 
         return self::makeUploadDir($path);
     }
