@@ -54,17 +54,7 @@ function install_get_lang(): string
  */
 function install_get_site_url(): string
 {
-    $serverSiteUrl = \Typecho\Request::getInstance()->getServer(
-        'TYPECHO_SITE_URL',
-        install_is_cli() ? 'http://localhost' : null
-    );
-
-    if (!empty($serverSiteUrl)) {
-        return $serverSiteUrl;
-    } else {
-        $request = \Typecho\Request::getInstance();
-        return $request->get('userUrl', $request->getRequestRoot());
-    }
+    return install_is_cli() ? 'http://localhost' : \Typecho\Request::getInstance()->getRequestRoot();
 }
 
 /**
@@ -1163,7 +1153,7 @@ function install_step_3()
                 <ul class="typecho-option">
                     <li>
                         <label class="typecho-label" for="userUrl"><?php _e('网站地址'); ?></label>
-                        <input autocomplete="new-password" type="text" name="userUrl" id="userUrl" class="text" value="<?php $options->siteUrl(); ?>" />
+                        <input autocomplete="new-password" type="text" name="userUrl" id="userUrl" class="text" value="<?php $options->rootUrl(); ?>" />
                         <p class="description"><?php _e('这是程序自动匹配的网站路径, 如果不正确请修改它'); ?></p>
                     </li>
                 </ul>
@@ -1262,7 +1252,7 @@ function install_step_3_perform()
                 'name' => $config['userName'],
                 'password' => $hasher->hashPassword($config['userPassword']),
                 'mail' => $config['userMail'],
-                'url' => $options->siteUrl,
+                'url' => $config['userUrl'],
                 'screenName' => $config['userName'],
                 'group' => 'administrator',
                 'created' => \Typecho\Date::time()
@@ -1351,7 +1341,7 @@ function install_step_3_perform()
         $config['userName'],
         $config['userPassword'],
         \Widget\Security::alloc()->getTokenUrl($loginUrl, $request->getReferer()),
-        $options->siteUrl
+        $config['userUrl']
     ]);
 }
 
