@@ -229,13 +229,13 @@ class Service extends BaseOptions implements ActionInterface
 
         if (!$called) {
             Response::getInstance()->addResponder(function () {
-                if (!empty($self->asyncRequests) && $client = Client::get()) {
+                if (!empty($this->asyncRequests) && $client = Client::get()) {
                     try {
                         $client->setHeader('User-Agent', $this->options->generator)
                             ->setTimeout(2)
                             ->setData([
                                 'do' => 'async',
-                                'requests' => json_encode($self->asyncRequests),
+                                'requests' => json_encode($this->asyncRequests),
                                 'token' => Common::timeToken($this->options->secret)
                             ])
                             ->setMethod(Client::METHOD_POST)
