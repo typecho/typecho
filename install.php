@@ -1029,6 +1029,11 @@ function install_step_2_perform()
         $dbConfig[strtolower(substr($key, 2))] = $config[$key];
     }
 
+    // intval port number
+    if (isset($dbConfig['port'])) {
+        $dbConfig['port'] = intval($dbConfig['port']);
+    }
+
     // check config file
     if ($config['dbNext'] == 'config' && !install_check('config')) {
         $code = install_config_file($config['dbAdapter'], $config['dbPrefix'], $dbConfig, true);
