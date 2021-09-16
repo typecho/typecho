@@ -320,10 +320,10 @@ class Plugin
     {
         switch (true) {
             case file_exists($pluginFileName = $path . '/' . $pluginName . '/Plugin.php'):
-                $className = "{$pluginName}_Plugin";
+                $className = "\\" . PLUGIN_NAMESPACE . "\\{$pluginName}\\Plugin";
                 break;
             case file_exists($pluginFileName = $path . '/' . $pluginName . '.php'):
-                $className = $pluginName;
+                $className = "\\" . PLUGIN_NAMESPACE . "\\" . $pluginName;
                 break;
             default:
                 throw new PluginException('Missing Plugin ' . $pluginName, 404);
@@ -388,9 +388,9 @@ class Plugin
      * 设置回调函数
      *
      * @param string $component 当前组件
-     * @param mixed $value 回调函数
+     * @param callable $value 回调函数
      */
-    public function __set(string $component, $value)
+    public function __set(string $component, callable $value)
     {
         $weight = 0;
 

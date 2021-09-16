@@ -74,25 +74,42 @@ namespace {
 }
 
 namespace Typecho {
+    const PLUGIN_NAMESPACE = 'TypechoPlugin';
+
     spl_autoload_register(function (string $className) {
         $isDefinedAlias = defined('__TYPECHO_CLASS_ALIASES__');
         $isNamespace = strpos($className, '\\') !== false;
         $isAlias = $isDefinedAlias && isset(__TYPECHO_CLASS_ALIASES__[$className]);
+        $isPlugin = false;
 
         // detect if class is predefined
         if (strpos($className, '\\') !== false) {
-            if ($isDefinedAlias) {
-                $alias = array_search('\\' . ltrim($className, '\\'), __TYPECHO_CLASS_ALIASES__);
+            $isPlugin = strpos(ltrim($className, '\\'), PLUGIN_NAMESPACE . '\\') !== false;
+
+            if ($isPlugin) {
+                $realClassName = substr($className, strlen(PLUGIN_NAMESPACE) + 1);
+                $alias = Common::nativeClassName($realClassName);
+                $path = str_replace('\\', '/', $realClassName);
+            } else {
+                if ($isDefinedAlias) {
+                    $alias = array_search('\\' . ltrim($className, '\\'), __TYPECHO_CLASS_ALIASES__);
+                }
+
+                $alias = empty($alias) ? Common::nativeClassName($className) : $alias;
+                $path = str_replace('\\', '/', $className);
             }
-
-            $alias = empty($alias) ? Common::nativeClassName($className) : $alias;
-
-            $path = str_replace('\\', '/', $className);
         } elseif (strpos($className, '_') !== false || $isAlias) {
-            $alias = $isAlias ? __TYPECHO_CLASS_ALIASES__[$className]
-                : '\\' . str_replace('_', '\\', $className);
+            $isPlugin = !$isAlias && !preg_match("/^(Typecho|Widget|IXR)_/", $className);
 
-            $path = str_replace('\\', '/', $alias);
+            if ($isPlugin) {
+                $alias = '\\TypechoPlugin\\' . str_replace('_', '\\', $className);
+                $path = str_replace('_', '/', $className);
+            } else {
+                $alias = $isAlias ? __TYPECHO_CLASS_ALIASES__[$className]
+                    : '\\' . str_replace('_', '\\', $className);
+
+                $path = str_replace('\\', '/', $alias);
+            }
         } else {
             $path = $className;
         }
@@ -104,13 +121,14 @@ namespace Typecho {
                 || trait_exists($alias, false))
         ) {
             class_alias($alias, $className, false);
+            return;
         }
 
         // load class file
         $path .= '.php';
         $defaultFile = __TYPECHO_ROOT_DIR__ . '/var/' . $path;
 
-        if (file_exists($defaultFile)) {
+        if (file_exists($defaultFile) && !$isPlugin) {
             include_once $defaultFile;
         } else {
             $pluginFile = __TYPECHO_ROOT_DIR__ . __TYPECHO_PLUGIN_DIR__ . '/' . $path;

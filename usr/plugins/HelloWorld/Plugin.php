@@ -1,6 +1,6 @@
 <?php
 
-namespace HelloWorld;
+namespace TypechoPlugin\HelloWorld;
 
 use Typecho\Plugin\PluginInterface;
 use Typecho\Widget\Helper\Form;
@@ -26,7 +26,7 @@ class Plugin implements PluginInterface
      */
     public static function activate()
     {
-        \Typecho\Plugin::factory('admin/menu.php')->navBar = ['HelloWorld_Plugin', 'render'];
+        \Typecho\Plugin::factory('admin/menu.php')->navBar = __CLASS__ . '::render';
     }
 
     /**
