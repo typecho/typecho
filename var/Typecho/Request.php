@@ -169,6 +169,29 @@ class Request
     }
 
     /**
+     * 获取实际传递参数(magic)
+     *
+     * @param string $key 指定参数
+     * @return mixed
+     */
+    public function __get(string $key)
+    {
+        return $this->get($key);
+    }
+
+    /**
+     * 判断参数是否存在
+     *
+     * @param string $key 指定参数
+     * @return boolean
+     */
+    public function __isset(string $key)
+    {
+        $this->get($key, null, $exists);
+        return $exists;
+    }
+
+    /**
      * 获取一个数组
      *
      * @param $key
