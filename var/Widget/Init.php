@@ -32,6 +32,27 @@ class Init extends Widget
      */
     public function execute()
     {
+        /** 初始化exception */
+        if (!defined('__TYPECHO_DEBUG__') || !__TYPECHO_DEBUG__) {
+            set_exception_handler(function (\Throwable $exception) {
+                Response::getInstance()->clean();
+                ob_end_clean();
+
+                ob_start(function ($content) {
+                    Response::getInstance()->sendHeaders();
+                    return $content;
+                });
+
+                if (404 == $exception->getCode()) {
+                    ExceptionHandle::alloc();
+                } else {
+                    Common::error($exception);
+                }
+
+                exit;
+            });
+        }
+
         // init class
         define('__TYPECHO_CLASS_ALIASES__', [
             'Typecho_Plugin_Interface'    => '\Typecho\Plugin\PluginInterface',
@@ -60,11 +81,6 @@ class Init extends Widget
         /** 对变量赋值 */
         $options = Options::alloc();
 
-        /** 检查安装状态 */
-        if (!defined('__TYPECHO_INSTALL__') && !$options->installed) {
-            $options->update(['value' => 1], Db::get()->sql()->where('name = ?', 'installed'));
-        }
-
         /** 语言包初始化 */
         if ($options->lang && $options->lang != 'zh_CN') {
             $dir = defined('__TYPECHO_LANG_DIR__') ? __TYPECHO_LANG_DIR__ : __TYPECHO_ROOT_DIR__ . '/usr/langs';
@@ -77,28 +93,7 @@ class Init extends Widget
         }
 
         /** cookie初始化 */
-        Cookie::setPrefix($options->rootUrl);
-
-        /** 初始化exception */
-        if (!defined('__TYPECHO_DEBUG__') || !__TYPECHO_DEBUG__) {
-            set_exception_handler(function (\Throwable $exception) {
-                Response::getInstance()->clean();
-                ob_end_clean();
-
-                ob_start(function ($content) {
-                    Response::getInstance()->sendHeaders();
-                    return $content;
-                });
-
-                if (404 == $exception->getCode()) {
-                    ExceptionHandle::alloc();
-                } else {
-                    Common::error($exception);
-                }
-
-                exit;
-            });
-        }
+        Cookie::setPrefix($options->rootUrl); 
 
         /** 初始化路由器 */
         Router::setRoutes($options->routingTable);
@@ -114,7 +109,7 @@ class Init extends Widget
         Date::setTimezoneOffset($options->timezone);
 
         /** 开始会话, 减小负载只针对后台打开session支持 */
-        if (!defined('__TYPECHO_INSTALL__') && User::alloc()->hasLogin()) {
+        if ($options->installed && User::alloc()->hasLogin()) {
             @session_start();
         }
     }

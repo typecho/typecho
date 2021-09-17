@@ -457,10 +457,10 @@ function install_check(string $type): bool
 
             try {
                 // check if table exists
-                $values = $installDb->fetchAll($installDb->select()->from('table.options')
-                    ->where('user = 0'));
+                $installed = $installDb->fetchRow($installDb->select()->from('table.options')
+                    ->where('user = 0 AND name = ?', 'installed'));
 
-                if ($type == 'db_data' && empty($values)) {
+                if ($type == 'db_data' && empty($installed['value'])) {
                     return false;
                 }
             } catch (\Typecho\Db\Adapter\ConnectionException $e) {
@@ -1243,13 +1243,6 @@ function install_step_3_perform()
     }
 
     try {
-        // write options
-        foreach (install_get_default_options() as $key => $value) {
-            $installDb->query(
-                $installDb->insert('table.options')->rows(['name' => $key, 'user' => 0, 'value' => $value])
-            );
-        }
-
         // write user
         $hasher = new \Utils\PasswordHash(8, true);
         $installDb->query(
@@ -1330,6 +1323,18 @@ function install_step_3_perform()
                 'parent' => 0
             ])
         );
+
+        // write options
+        foreach (install_get_default_options() as $key => $value) {
+            // mark installing finished
+            if ($key == 'installed') {
+                $value = 1;
+            }
+
+            $installDb->query(
+                $installDb->insert('table.options')->rows(['name' => $key, 'user' => 0, 'value' => $value])
+            );
+        }
     } catch (\Typecho\Db\Exception $e) {
         install_raise_error($e->getMessage());
     }
@@ -1356,8 +1361,6 @@ function install_step_3_perform()
  */
 function install_dispatch()
 {
-    define('__TYPECHO_INSTALL__', true);
-
     // disable root url on cli mode
     if (install_is_cli()) {
         define('__TYPECHO_ROOT_URL__', 'http://localhost');
