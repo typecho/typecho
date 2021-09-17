@@ -1370,6 +1370,12 @@ function install_dispatch()
     $options = \Widget\Options::alloc(install_get_default_options());
     \Widget\Init::alloc();
 
+    // display version
+    if (install_is_cli()) {
+        echo $options->generator . "\n";
+        echo 'PHP ' . PHP_VERSION . "\n";
+    }
+
     // install finished yet
     if (
         install_check('config')
