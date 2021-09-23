@@ -91,16 +91,16 @@ class Metas extends Base implements QueryInterface
     /**
      * 获取最大排序
      *
-     * @param mixed $type
+     * @param string $type
      * @param int $parent
      * @return integer
      * @throws Exception
      */
-    public function getMaxOrder($type, int $parent = 0): int
+    public function getMaxOrder(string $type, int $parent = 0): int
     {
         return $this->db->fetchObject($this->db->select(['MAX(order)' => 'maxOrder'])
             ->from('table.metas')
-            ->where('type = ? AND parent = ?', 'category', $parent))->maxOrder;
+            ->where('type = ? AND parent = ?', $type, $parent))->maxOrder ?? 0;
     }
 
     /**
