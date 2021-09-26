@@ -52,10 +52,10 @@ class Notice extends Widget
      * 设定堆栈每一行的值
      *
      * @param string|array $value 值对应的键值
-     * @param string $type 提示类型
+     * @param string|null $type 提示类型
      * @param string $typeFix 兼容老插件
      */
-    public function set($value, string $type = 'notice', string $typeFix = 'notice')
+    public function set($value, ?string $type = 'notice', string $typeFix = 'notice')
     {
         $notice = is_array($value) ? array_values($value) : [$value];
         if (empty($type) && $typeFix) {
