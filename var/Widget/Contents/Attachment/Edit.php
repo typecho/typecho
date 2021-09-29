@@ -39,7 +39,7 @@ class Edit extends PostEdit implements ActionInterface
         /** 获取文章内容 */
         if (
             (isset($this->request->cid) && 'delete' != $this->request->do
-                && 'insert' != $this->request->do) || 'update' == $this->request->do
+                && 'clear' != $this->request->do) || 'update' == $this->request->do
         ) {
             $this->db->fetchRow($this->select()
                 ->where('table.contents.type = ?', 'attachment')
