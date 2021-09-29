@@ -1453,10 +1453,10 @@ class HyperDown
         foreach ($lines as $key => $line) {
             if (preg_match("/^(\s{" . $space . "})((?:[0-9]+\.?)|\-|\+|\*)(\s+)(.*)$/i", $line, $matches)) {
                 if ($type == 'ol' && $key == 0) {
-                    $start = intval($matches[2]);
+                    $olStart = intval($matches[2]);
 
-                    if ($start != 1) {
-                        $suffix = ' start="' . $start . '"';
+                    if ($olStart != 1) {
+                        $suffix = ' start="' . $olStart . '"';
                     }
                 }
 
