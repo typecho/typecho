@@ -37,7 +37,6 @@ class Archive extends Contents
     /**
      * 调用的风格文件
      *
-     * @access private
      * @var string
      */
     private $themeFile;
@@ -45,7 +44,6 @@ class Archive extends Contents
     /**
      * 风格目录
      *
-     * @access private
      * @var string
      */
     private $themeDir;
@@ -53,7 +51,6 @@ class Archive extends Contents
     /**
      * 分页计算对象
      *
-     * @access private
      * @var Query
      */
     private $countSql;
@@ -61,7 +58,6 @@ class Archive extends Contents
     /**
      * 所有文章个数
      *
-     * @access private
      * @var integer
      */
     private $total = false;
@@ -69,7 +65,6 @@ class Archive extends Contents
     /**
      * 标记是否为从外部调用
      *
-     * @access private
      * @var boolean
      */
     private $invokeFromOutside = false;
@@ -77,7 +72,6 @@ class Archive extends Contents
     /**
      * 是否由聚合调用
      *
-     * @access private
      * @var boolean
      */
     private $invokeByFeed = false;
@@ -85,7 +79,6 @@ class Archive extends Contents
     /**
      * 当前页
      *
-     * @access private
      * @var integer
      */
     private $currentPage;
@@ -93,7 +86,6 @@ class Archive extends Contents
     /**
      * 生成分页的内容
      *
-     * @access private
      * @var array
      */
     private $pageRow = [];
@@ -101,7 +93,6 @@ class Archive extends Contents
     /**
      * 聚合器对象
      *
-     * @access private
      * @var Feed
      */
     private $feed;
@@ -109,7 +100,6 @@ class Archive extends Contents
     /**
      * RSS 2.0聚合地址
      *
-     * @access private
      * @var string
      */
     private $feedUrl;
@@ -117,7 +107,6 @@ class Archive extends Contents
     /**
      * RSS 1.0聚合地址
      *
-     * @access private
      * @var string
      */
     private $feedRssUrl;
@@ -125,7 +114,6 @@ class Archive extends Contents
     /**
      * ATOM 聚合地址
      *
-     * @access private
      * @var string
      */
     private $feedAtomUrl;
@@ -133,7 +121,6 @@ class Archive extends Contents
     /**
      * 本页关键字
      *
-     * @access private
      * @var string
      */
     private $keywords;
@@ -141,7 +128,6 @@ class Archive extends Contents
     /**
      * 本页描述
      *
-     * @access private
      * @var string
      */
     private $description;
@@ -149,7 +135,6 @@ class Archive extends Contents
     /**
      * 聚合类型
      *
-     * @access private
      * @var string
      */
     private $feedType;
@@ -157,7 +142,6 @@ class Archive extends Contents
     /**
      * 聚合类型
      *
-     * @access private
      * @var string
      */
     private $feedContentType;
@@ -165,7 +149,6 @@ class Archive extends Contents
     /**
      * 当前feed地址
      *
-     * @access private
      * @var string
      */
     private $currentFeedUrl;
@@ -173,15 +156,20 @@ class Archive extends Contents
     /**
      * 归档标题
      *
-     * @access private
      * @var string
      */
     private $archiveTitle = null;
 
     /**
+     * 归档地址
+     *
+     * @var string|null
+     */
+    private $archiveUrl = null;
+
+    /**
      * 归档类型
      *
-     * @access private
      * @var string
      */
     private $archiveType = 'index';
@@ -189,7 +177,6 @@ class Archive extends Contents
     /**
      * 是否为单一归档
      *
-     * @access private
      * @var string
      */
     private $archiveSingle = false;
@@ -390,6 +377,22 @@ class Archive extends Contents
     public function setArchiveType(string $archiveType)
     {
         $this->archiveType = $archiveType;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getArchiveUrl(): ?string
+    {
+        return $this->archiveUrl;
+    }
+
+    /**
+     * @param string|null $archiveUrl
+     */
+    public function setArchiveUrl(?string $archiveUrl): void
+    {
+        $this->archiveUrl = $archiveUrl;
     }
 
     /**
@@ -716,6 +719,7 @@ class Archive extends Contents
         $this->feedAtomUrl = $this->options->feedAtomUrl;
         $this->keywords = $this->options->keywords;
         $this->description = $this->options->description;
+        $this->archiveUrl = $this->options->siteUrl;
 
         if (isset($handles[$this->parameter->type])) {
             $handle = $handles[$this->parameter->type];
@@ -1406,13 +1410,19 @@ class Archive extends Contents
      */
     public function feed()
     {
-        $this->feed->setSubTitle($this->description);
-        $this->feed->setFeedUrl($this->currentFeedUrl);
+        if ($this->feedType == Feed::RSS1) {
+            $feedUrl = $this->feedRssUrl;
+        } elseif ($this->feedType == Feed::ATOM1) {
+            $feedUrl = $this->feedAtomUrl;
+        } else {
+            $feedUrl = $this->feedUrl;
+        }
 
-        $this->feed->setBaseUrl(('/' == $this->request->feed || 0 == strlen($this->request->feed)
-            || '/comments' == $this->request->feed || '/comments/' == $this->request->feed) ?
-            $this->options->siteUrl : Common::url($this->request->feed, $this->options->index));
-        $this->feed->setFeedUrl($this->request->makeUriByRequest());
+        $this->checkPermalink($feedUrl);
+
+        $this->feed->setSubTitle($this->description);
+        $this->feed->setFeedUrl($feedUrl);
+        $this->feed->setBaseUrl($this->archiveUrl);
 
         if ($this->is('single') || 'comments' == $this->parameter->type) {
             $this->feed->setTitle(_t(
@@ -1572,28 +1582,32 @@ class Archive extends Contents
 
     /**
      * 检查链接是否正确
+     *
+     * @param string|null $permalink
      */
-    private function checkPermalink()
+    private function checkPermalink(?string $permalink = null)
     {
-        $type = $this->parameter->type;
+        if (!isset($permalink)) {
+            $type = $this->parameter->type;
 
-        if (
-            in_array($type, ['index', 'comment_page', 404])
-            || $this->makeSinglePageAsFrontPage    // 自定义首页不处理
-            || !$this->parameter->checkPermalink
-        ) { // 强制关闭
-            return;
-        }
+            if (
+                in_array($type, ['index', 'comment_page', 404])
+                || $this->makeSinglePageAsFrontPage    // 自定义首页不处理
+                || !$this->parameter->checkPermalink
+            ) { // 强制关闭
+                return;
+            }
 
-        if ($this->archiveSingle) {
-            $permalink = $this->permalink;
-        } else {
-            $value = array_merge($this->pageRow, [
-                'page' => $this->currentPage
-            ]);
+            if ($this->archiveSingle) {
+                $permalink = $this->permalink;
+            } else {
+                $value = array_merge($this->pageRow, [
+                    'page' => $this->currentPage
+                ]);
 
-            $path = Router::url($type, $value);
-            $permalink = Common::url($path, $this->options->index);
+                $path = Router::url($type, $value);
+                $permalink = Common::url($path, $this->options->index);
+            }
         }
 
         $requestUrl = $this->request->getRequestUrl();
@@ -1816,6 +1830,9 @@ class Archive extends Contents
         /** 设置归档缩略名 */
         $this->archiveSlug = ('post' == $this->type || 'attachment' == $this->type) ? $this->cid : $this->slug;
 
+        /** 设置归档地址 */
+        $this->archiveUrl = $this->permalink;
+
         /** 设置403头 */
         if ($this->hidden) {
             $this->response->setStatus(403);
@@ -1907,6 +1924,9 @@ class Archive extends Contents
         /** 设置归档缩略名 */
         $this->archiveSlug = $category['slug'];
 
+        /** 设置归档地址 */
+        $this->archiveUrl = $category['permalink'];
+
         /** 插件接口 */
         self::pluginHandle()->categoryHandle($this, $select);
     }
@@ -1976,6 +1996,9 @@ class Archive extends Contents
         /** 设置归档缩略名 */
         $this->archiveSlug = $tag['slug'];
 
+        /** 设置归档地址 */
+        $this->archiveUrl = $tag['permalink'];
+
         /** 插件接口 */
         self::pluginHandle()->tagHandle($this, $select);
     }
@@ -2031,6 +2054,9 @@ class Archive extends Contents
 
         /** 设置归档缩略名 */
         $this->archiveSlug = $author['uid'];
+
+        /** 设置归档地址 */
+        $this->archiveUrl = $author['permalink'];
 
         /** 插件接口 */
         self::pluginHandle()->authorHandle($this, $select);
@@ -2115,6 +2141,9 @@ class Archive extends Contents
         /** ATOM 1.0 */
         $this->feedAtomUrl = Router::url($currentRoute, $value, $this->options->feedAtomUrl);
 
+        /** 设置归档地址 */
+        $this->archiveUrl = Router::url($currentRoute, $value, $this->options->index);
+
         /** 插件接口 */
         self::pluginHandle()->dateHandle($this, $select);
     }
@@ -2174,6 +2203,9 @@ class Archive extends Contents
 
         /** 设置归档缩略名 */
         $this->archiveSlug = $keywords;
+
+        /** 设置归档地址 */
+        $this->archiveUrl = Router::url('search', ['keywords' => $keywords], $this->options->index);
 
         /** 插件接口 */
         self::pluginHandle()->searchHandle($this, $select);
