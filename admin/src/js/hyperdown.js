@@ -819,7 +819,7 @@
       }
 
       parseList(lines, value, start) {
-        var html, j, key, l, last, len, len1, line, matches, row, rows, space, suffix, tab, type;
+        var html, j, key, l, last, len, len1, line, matches, olStart, row, rows, space, suffix, tab, type;
         html = '';
         [space, type, tab] = value;
         rows = [];
@@ -829,9 +829,9 @@
           line = lines[key];
           if (matches = line.match(new RegExp(`^(\\s{${space}})((?:[0-9]+\\.?)|\\-|\\+|\\*)(\\s+)(.*)$`))) {
             if (type === 'ol' && key === 0) {
-              start = parseInt(matches[2]);
-              if (start !== 1) {
-                suffix = ' start="' + start + '"';
+              olStart = parseInt(matches[2]);
+              if (olStart !== 1) {
+                suffix = ' start="' + olStart + '"';
               }
             }
             rows.push([matches[4]]);
