@@ -54,7 +54,8 @@ function install_get_lang(): string
  */
 function install_get_site_url(): string
 {
-    return install_is_cli() ? 'http://localhost' : \Typecho\Request::getInstance()->getRequestRoot();
+    $request = \Typecho\Request::getInstance();
+    return install_is_cli() ? $request->getServer('TYPECHO_SITE_URL', 'http://localhost') : $request->getRequestRoot();
 }
 
 /**
@@ -1314,7 +1315,7 @@ function install_step_3_perform()
                 'cid' => 1, 'created' => \Typecho\Date::time(),
                 'author' => 'Typecho',
                 'ownerId' => 1,
-                'url' => 'http://typecho.org',
+                'url' => 'https://typecho.org',
                 'ip' => '127.0.0.1',
                 'agent' => $options->generator,
                 'text' => '欢迎加入 Typecho 大家族',
