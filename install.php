@@ -509,7 +509,13 @@ function install_raise_error($error, $config = null)
  */
 function install_success($step, ?array $config = null)
 {
+    global $installDb;
+
     if (install_is_cli()) {
+        if ($step == 3) {
+            \Typecho\Db::set($installDb);
+        }
+
         if ($step > 0) {
             $method = 'install_step_' . $step . '_perform';
             $method();
