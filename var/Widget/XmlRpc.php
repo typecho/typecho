@@ -1532,7 +1532,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
             [
                 'isAdmin'  => $this->user->pass('administrator', true),
                 'url'      => $this->options->siteUrl,
-                'blogid'   => '1',
+                'blogid'   => 1,
                 'blogName' => $this->options->title,
                 'xmlrpc'   => $this->options->xmlRpcUrl
             ]
@@ -1897,7 +1897,9 @@ EOF;
             }
 
             /** 直接把初始化放到这里 */
-            new Server($api);
+            $server = new Server($api);
+            $server->setHook($this);
+            $server->serve();
         }
     }
 

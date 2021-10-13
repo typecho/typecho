@@ -40,7 +40,6 @@ class Server
         $this->setCapabilities();
         $this->callbacks = $callbacks;
         $this->setCallbacks();
-        $this->serve();
     }
 
     /**
@@ -298,7 +297,7 @@ class Server
     /**
      * 服务入口
      */
-    private function serve()
+    public function serve()
     {
         $message = new Message(file_get_contents('php://input') ?: '');
 
