@@ -61,7 +61,6 @@ class I18n
      * @param string $single 单数形式的翻译
      * @param string $plural 复数形式的翻译
      * @param integer $number 数字
-     *
      * @return string
      */
     public static function ngettext(string $single, string $plural, int $number): string
