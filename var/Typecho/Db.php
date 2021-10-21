@@ -130,6 +130,14 @@ class Db
     }
 
     /**
+     * @return Adapter
+     */
+    public function getAdapter(): Adapter
+    {
+        return $this->adapter;
+    }
+
+    /**
      * 获取适配器名称
      *
      * @access public

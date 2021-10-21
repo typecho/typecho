@@ -57,7 +57,7 @@ class SQLite implements Adapter
      */
     public function getVersion($handle): string
     {
-        return 'sqlite:sqlite ' . \SQLite3::version()['versionString'];
+        return \SQLite3::version()['versionString'];
     }
 
     /**

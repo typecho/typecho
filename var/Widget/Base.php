@@ -4,7 +4,6 @@ namespace Widget;
 
 use Typecho\Config;
 use Typecho\Db;
-use Typecho\Plugin;
 use Typecho\Widget;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {

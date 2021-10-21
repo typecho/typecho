@@ -2175,7 +2175,9 @@ class Archive extends Contents
                 $select->where("table.contents.password IS NULL OR table.contents.password = ''");
             }
 
-            $select->where('table.contents.title LIKE ? OR table.contents.text LIKE ?', $searchQuery, $searchQuery)
+            $op = $this->db->getAdapter()->getDriver() == 'pgsql' ? 'ILIKE' : 'LIKE';
+
+            $select->where("table.contents.title {$op} ? OR table.contents.text {$op} ?", $searchQuery, $searchQuery)
                 ->where('table.contents.type = ?', 'post');
         }
 

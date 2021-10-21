@@ -63,7 +63,7 @@ class Pgsql implements Adapter
     public function getVersion($handle): string
     {
         $version = pg_version($handle);
-        return 'pgsql:pgsql ' . $version['server'];
+        return $version['server'];
     }
 
     /**
