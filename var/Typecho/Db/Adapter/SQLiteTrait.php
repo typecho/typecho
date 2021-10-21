@@ -99,4 +99,12 @@ trait SQLiteTrait
 
         return $query;
     }
+
+    /**
+     * @return string
+     */
+    public function getDriver(): string
+    {
+        return 'sqlite';
+    }
 }

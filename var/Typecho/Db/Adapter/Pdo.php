@@ -81,8 +81,7 @@ abstract class Pdo implements Adapter
      */
     public function getVersion($handle): string
     {
-        return 'pdo:' . $handle->getAttribute(\PDO::ATTR_DRIVER_NAME)
-            . ' ' . $handle->getAttribute(\PDO::ATTR_SERVER_VERSION);
+        return $handle->getAttribute(\PDO::ATTR_SERVER_VERSION);
     }
 
     /**

@@ -29,4 +29,12 @@ trait MysqlTrait
     {
         return $this->buildQuery($sql);
     }
+
+    /**
+     * @return string
+     */
+    public function getDriver(): string
+    {
+        return 'mysql';
+    }
 }

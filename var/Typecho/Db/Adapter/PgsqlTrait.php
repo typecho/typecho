@@ -153,6 +153,14 @@ WHERE
         return 0;
     }
 
+    /**
+     * @return string
+     */
+    public function getDriver(): string
+    {
+        return 'pgsql';
+    }
+
     abstract public function query(
         string $query,
         $handle,

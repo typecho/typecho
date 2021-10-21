@@ -38,6 +38,13 @@ interface Adapter
     public function getVersion($handle): string;
 
     /**
+     * 获取数据库类型
+     *
+     * @return string
+     */
+    public function getDriver(): string;
+
+    /**
      * 清空数据表
      *
      * @param string $table 数据表名

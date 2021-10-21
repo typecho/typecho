@@ -167,7 +167,7 @@ class GetText
             } else {
                 $result = $this->cache_translations[$key];
                 $list = explode(chr(0), $result);
-                return $list[$select];
+                return $list[$select] ?? '';
             }
         } else {
             $num = $this->findString($key);
@@ -176,7 +176,7 @@ class GetText
             } else {
                 $result = $this->getTranslationString($num);
                 $list = explode(chr(0), $result);
-                return $list[$select];
+                return $list[$select] ?? '';
             }
         }
     }
