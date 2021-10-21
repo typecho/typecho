@@ -33,8 +33,7 @@ class Notice extends Widget
         $this->highlight = $theId;
         Cookie::set(
             '__typecho_notice_highlight',
-            $theId,
-            Options::alloc()->time + Options::alloc()->timezone + 86400
+            $theId
         );
     }
 
@@ -64,13 +63,11 @@ class Notice extends Widget
 
         Cookie::set(
             '__typecho_notice',
-            json_encode($notice),
-            Options::alloc()->time + Options::alloc()->timezone + 86400
+            json_encode($notice)
         );
         Cookie::set(
             '__typecho_notice_type',
-            $type,
-            Options::alloc()->time + Options::alloc()->timezone + 86400
+            $type
         );
     }
 }

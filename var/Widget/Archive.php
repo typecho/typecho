@@ -1749,8 +1749,7 @@ class Archive extends Contents
             $this->security->protect();
             Cookie::set(
                 'protectPassword_' . $this->request->filter('int')->protectCID,
-                $this->request->protectPassword,
-                0
+                $this->request->protectPassword
             );
 
             $isPasswordPosted = true;

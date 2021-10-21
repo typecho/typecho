@@ -203,7 +203,8 @@ class Response
             [$key, $value, $timeout, $path, $domain] = $cookie;
 
             if ($timeout > 0) {
-                $timeout += time();
+                $now = time();
+                $timeout += $timeout > $now - 86400 ? 0 : $now;
             } elseif ($timeout < 0) {
                 $timeout = 1;
             }

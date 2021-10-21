@@ -216,7 +216,7 @@ class Feedback extends Comments implements ActionInterface
                 }
             }
 
-            $expire = $this->options->time + $this->options->timezone + 30 * 24 * 3600;
+            $expire = 30 * 24 * 3600;
             Cookie::set('__typecho_remember_author', $comment['author'], $expire);
             Cookie::set('__typecho_remember_mail', $comment['mail'], $expire);
             Cookie::set('__typecho_remember_url', $comment['url'], $expire);

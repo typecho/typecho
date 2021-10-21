@@ -41,6 +41,14 @@ class Login extends Users implements ActionInterface
         $validator = new Validate();
         $validator->addRule('name', 'required', _t('请输入用户名'));
         $validator->addRule('password', 'required', _t('请输入密码'));
+        $expire = 30 * 24 * 3600;
+
+        /** 记住密码状态 */
+        if ($this->request->remember) {
+            Cookie::set('__typecho_remember_remember', 1, $expire);
+        } elseif (Cookie::get('__typecho_remember_remember')) {
+            Cookie::delete('__typecho_remember_remember');
+        }
 
         /** 截获验证异常 */
         if ($error = $validator->run($this->request->from('name', 'password'))) {
@@ -56,7 +64,7 @@ class Login extends Users implements ActionInterface
             $this->request->name,
             $this->request->password,
             false,
-            1 == $this->request->remember ? $this->options->time + $this->options->timezone + 30 * 24 * 3600 : 0
+            1 == $this->request->remember ? $expire : 0
         );
 
         /** 比对密码 */
