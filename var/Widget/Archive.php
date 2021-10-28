@@ -532,6 +532,16 @@ class Archive extends Contents
     }
 
     /**
+     * _currentPage
+     *
+     * @return int
+     */
+    public function ____currentPage(): int
+    {
+        return $this->getCurrentPage();
+    }
+
+    /**
      * 获取页数
      *
      * @return integer
@@ -666,7 +676,7 @@ class Archive extends Contents
         }
 
         /** 初始化分页变量 */
-        $this->currentPage = $this->request->page ?? 1;
+        $this->currentPage = $this->request->filter('int')->page ?? 1;
         $hasPushed = false;
 
         /** select初始化 */
@@ -751,6 +761,11 @@ class Archive extends Contents
         $select->order('table.contents.created', Db::SORT_DESC)
             ->page($this->currentPage, $this->parameter->pageSize);
         $this->query($select);
+
+        /** 处理超出分页的情况 */
+        if ($this->currentPage > 1 && !$this->have()) {
+            throw new WidgetException(_t('请求的地址不存在'), 404);
+        }
     }
 
     /**

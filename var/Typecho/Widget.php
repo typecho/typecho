@@ -6,6 +6,7 @@ use Typecho\Widget\Helper\EmptyClass;
 use Typecho\Widget\Request as WidgetRequest;
 use Typecho\Widget\Response as WidgetResponse;
 use Typecho\Widget\Terminal;
+use Typecho\Widget\Exception as WidgetException;
 
 /**
  * Typecho组件基类
@@ -394,6 +395,11 @@ abstract class Widget
                     return $return;
                 }
             }
+        }
+
+        if (!$this->have()) {
+            throw new WidgetException('Property ' . static::class
+                . ':$' . $name . ' is not exists');
         }
 
         return null;
