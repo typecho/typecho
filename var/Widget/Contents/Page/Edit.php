@@ -47,7 +47,7 @@ class Edit extends PostEdit implements ActionInterface
         $this->user->pass('editor');
 
         /** 获取文章内容 */
-        if (!empty($this->request->cid) && 'delete' != $this->request->do && 'sort' != $this->request->do) {
+        if (!empty($this->request->cid) && in_array($this->request->do, ['save', 'publish'])) {
             $this->db->fetchRow($this->select()
                 ->where('table.contents.type = ? OR table.contents.type = ?', 'page', 'page_draft')
                 ->where('table.contents.cid = ?', $this->request->filter('int')->cid)
