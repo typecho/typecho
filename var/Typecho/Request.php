@@ -165,7 +165,11 @@ class Request
             $this->params = null;
         }
 
-        return $value ?? $default;
+        if (isset($value)) {
+            return is_array($default) == is_array($value) ? $value : $default;
+        } else {
+            return $default;
+        }
     }
 
     /**
@@ -199,9 +203,13 @@ class Request
      */
     public function getArray($key): array
     {
-        $result = $this->get($key, []);
+        $result = $this->get($key, [], $exists);
 
-        return is_array($result) ? $result : [$result];
+        if (!empty($result) || !$exists) {
+            return $result;
+        }
+
+        return [$this->get($key)];
     }
 
     /**

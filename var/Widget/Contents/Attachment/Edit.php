@@ -37,10 +37,7 @@ class Edit extends PostEdit implements ActionInterface
         $this->user->pass('contributor');
 
         /** 获取文章内容 */
-        if (
-            (isset($this->request->cid) && 'delete' != $this->request->do
-                && 'clear' != $this->request->do) || 'update' == $this->request->do
-        ) {
+        if (!empty($this->request->cid)) {
             $this->db->fetchRow($this->select()
                 ->where('table.contents.type = ?', 'attachment')
                 ->where('table.contents.cid = ?', $this->request->filter('int')->cid)
@@ -344,7 +341,7 @@ class Edit extends PostEdit implements ActionInterface
     {
         $this->security->protect();
         $this->on($this->request->is('do=delete'))->deleteAttachment();
-        $this->on($this->request->is('do=update'))->updateAttachment();
+        $this->on($this->have() && $this->request->is('do=update'))->updateAttachment();
         $this->on($this->request->is('do=clear'))->clearAttachment();
         $this->response->redirect($this->options->adminUrl);
     }
