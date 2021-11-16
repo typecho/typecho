@@ -469,7 +469,7 @@ class Request
      */
     public function isAjax(): bool
     {
-        return 'XMLHttpRequest' == $this->getServer('HTTP_X_REQUESTED_WITH');
+        return 'XMLHttpRequest' == $this->getHeader('X-Requested-With');
     }
 
     /**

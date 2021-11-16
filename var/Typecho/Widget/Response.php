@@ -186,8 +186,8 @@ class Response
             }
 
             $this->redirect($referer);
-        } elseif (!empty($default)) {
-            $this->redirect($default);
+        } else {
+            $this->redirect($default ?: '/');
         }
     }
 
