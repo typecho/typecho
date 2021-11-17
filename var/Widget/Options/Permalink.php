@@ -113,6 +113,7 @@ RewriteRule . {$basePath}index.php [L]
                         /** 发送一个rewrite地址请求 */
                         $client->setData(['do' => 'remoteCallback'])
                             ->setHeader('User-Agent', $this->options->generator)
+                            ->setHeader('X-Requested-With', 'XMLHttpRequest')
                             ->send(Common::url('/action/ajax', $this->options->siteUrl));
 
                         if (200 == $client->getResponseStatus() && 'OK' == $client->getResponseBody()) {
