@@ -64,7 +64,7 @@ class Mysqli implements Adapter
         }
 
         /** 数据库异常 */
-        throw new ConnectionException(@$this->dbLink->error, @$this->dbLink->errno);
+        throw new ConnectionException("Couldn't connect to database.");
     }
 
     /**
@@ -86,7 +86,6 @@ class Mysqli implements Adapter
      * @param integer $op 数据库读写状态
      * @param string|null $action 数据库动作
      * @param string|null $table 数据表
-     * @return \mysqli_result
      * @throws SQLException
      */
     public function query(
@@ -95,7 +94,7 @@ class Mysqli implements Adapter
         int $op = Db::READ,
         ?string $action = null,
         ?string $table = null
-    ): \mysqli_result {
+    ) {
         if ($resource = @$this->dbLink->query($query)) {
             return $resource;
         }
@@ -113,7 +112,7 @@ class Mysqli implements Adapter
      */
     public function quoteColumn(string $string): string
     {
-        return $this->dbLink->real_escape_string($string);
+        return '`' . $string . '`';
     }
 
     /**
@@ -157,13 +156,13 @@ class Mysqli implements Adapter
      */
     public function quoteValue($string): string
     {
-        return '\'' . str_replace(['\'', '\\'], ['\'\'', '\\\\'], $string) . '\'';
+        return "'" . $this->dbLink->real_escape_string($string) . "'";
     }
 
     /**
      * 取出最后一次查询影响的行数
      *
-     * @param \mysqli_result $resource 查询的资源数据
+     * @param mixed $resource 查询的资源数据
      * @param \mysqli $handle 连接对象
      * @return integer
      */
@@ -175,7 +174,7 @@ class Mysqli implements Adapter
     /**
      * 取出最后一次插入返回的主键值
      *
-     * @param \mysqli_result $resource 查询的资源数据
+     * @param mixed $resource 查询的资源数据
      * @param \mysqli $handle 连接对象
      * @return integer
      */
