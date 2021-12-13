@@ -20,8 +20,8 @@ trait QueryTrait
             }
         }
 
-        $sql['limit'] = (0 == strlen($sql['limit'])) ? null : ' LIMIT ' . $sql['limit'];
-        $sql['offset'] = (0 == strlen($sql['offset'])) ? null : ' OFFSET ' . $sql['offset'];
+        $sql['limit'] = isset($sql['limit']) ? ' LIMIT ' . $sql['limit'] : '';
+        $sql['offset'] = isset($sql['offset']) ? ' OFFSET ' . $sql['offset'] : '';
 
         return 'SELECT ' . $sql['fields'] . ' FROM ' . $sql['table'] .
             $sql['where'] . $sql['group'] . $sql['having'] . $sql['order'] . $sql['limit'] . $sql['offset'];

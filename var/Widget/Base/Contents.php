@@ -585,7 +585,7 @@ class Contents extends Base implements QueryInterface
 
         /** 处理密码保护流程 */
         if (
-            strlen($value['password']) > 0 &&
+            strlen($value['password'] ?? '') > 0 &&
             $value['password'] !== Cookie::get('protectPassword_' . $value['cid']) &&
             $value['authorId'] != $this->user->uid &&
             !$this->user->pass('editor', true)
