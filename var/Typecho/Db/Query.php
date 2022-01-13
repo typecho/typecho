@@ -21,7 +21,7 @@ use Typecho\Db;
 class Query
 {
     /** 数据库关键字 */
-    private const KEYWORDS = '*PRIMARY|AND|OR|LIKE|BINARY|BY|DISTINCT|AS|IN|IS|NULL';
+    private const KEYWORDS = '*PRIMARY|AND|OR|LIKE|ILIKE|BINARY|BY|DISTINCT|AS|IN|IS|NULL';
 
     /**
      * 默认字段
