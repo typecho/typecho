@@ -5,7 +5,8 @@ $this->need('header.php'); ?>
     <div class="blog-container">
 
       <article id="archives" class="archive" itemscope="" itemtype="http://schema.org/BlogPosting">
-        <h1 class="blog-post-title" itemprop="name headline">此地无银三百两。</h1>
+        <h1 class="blog-post-title" itemprop="name headline">此地无银三百两</h1>
+        <img src="./img/tuna_missing.jpg" alt="来自清华大学开源软件镜像站 (https://mirror.tuna.tsinghua.edu.cn/) 404 页面的 TUNA" title="来自清华大学开源软件镜像站 404 页面的 TUNA">
         <p><strong>「你似乎来到了没有知识存在的荒原。」</strong>检查访问的链接是否正确，或者说，如果你认为这一定是出了什么问题，请在「关于」页面中查找我的联系方式并发起新会话。</p>
         <div id="poemsfetch">
         <p>如果问题仍然没有解决，不妨坐下来读诗吧：</p>
