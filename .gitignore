@@ -31,5 +31,6 @@ config.rb
 !/usr/plugins/HelloWorld
 /usr/themes/
 !/usr/themes/default
+usr/.fuse_hidde*
 node_modules/
 /tools/tmp/

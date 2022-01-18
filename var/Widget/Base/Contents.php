@@ -534,7 +534,7 @@ class Contents extends Base implements QueryInterface
         $tmpCategory = $value['category'];
         $tmpDirectory = $value['directory'];
         $value['slug'] = urlencode($value['slug']);
-        $value['category'] = urlencode($value['category']);
+        $value['category'] = is_null($value['category']) ? '' : urlencode($value['category']);
         $value['directory'] = implode('/', array_map('urlencode', $value['directory']));
 
         /** 生成静态路径 */

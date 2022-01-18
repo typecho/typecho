@@ -155,6 +155,9 @@ abstract class Pdo implements Adapter
      */
     public function quoteValue($string): string
     {
+        if (is_null($string)) {
+            $string = '';
+        }
         return $this->object->quote($string);
     }
 
