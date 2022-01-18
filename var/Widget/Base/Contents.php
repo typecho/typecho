@@ -851,6 +851,9 @@ class Contents extends Base implements QueryInterface
     {
         $plainTxt = str_replace("\n", '', trim(strip_tags($this->excerpt)));
         $plainTxt = $plainTxt ? $plainTxt : $this->title;
+        if (is_null($plainTxt)) {
+            return '';
+        }
         return Common::subStr($plainTxt, 0, 100, '...');
     }
 
