@@ -44,6 +44,6 @@ class Text extends Element
      */
     protected function inputValue($value)
     {
-        $this->input->setAttribute('value', htmlspecialchars($value));
+        $this->input->setAttribute('value', htmlspecialchars($value ?? ''));
     }
 }

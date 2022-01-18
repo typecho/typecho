@@ -498,9 +498,7 @@ EOF;
          */
         public static function slugName(?string $str, ?string $default = null, int $maxLength = 128): ?string
         {
-            if (is_null($str)) {
-                $str = '';
-            }
+            $str = trim($str ?? '');
 
             if (!strlen($str)) {
                 return $default;
