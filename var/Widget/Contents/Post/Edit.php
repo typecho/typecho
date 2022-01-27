@@ -288,8 +288,9 @@ class Edit extends Contents implements ActionInterface
             self::pluginHandle()->finishPublish($contents, $this);
 
             /** 发送ping */
-            $trackback = array_unique(preg_split("/(\r|\n|\r\n)/", trim($this->request->trackback)));
-            Service::alloc()->sendPing($this, $trackback);
+            //删除send ping，速度非常慢。如果需要被搜索引擎快速收录，请自动添加sitemap
+            //$trackback = array_unique(preg_split("/(\r|\n|\r\n)/", trim($this->request->trackback)));
+            //Service::alloc()->sendPing($this, $trackback);
 
             /** 设置提示信息 */
             Notice::alloc()->set('post' == $this->type ?
