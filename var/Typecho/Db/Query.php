@@ -512,7 +512,7 @@ class Query
 
         return preg_replace_callback("/#param:([0-9]+)#/", function ($matches) use ($params, $adapter) {
             if (array_key_exists($matches[1], $params)) {
-                return $adapter->quoteValue($params[$matches[1]]);
+                return is_null($params[$matches[1]]) ? 'NULL' : $adapter->quoteValue($params[$matches[1]]);
             } else {
                 return $matches[0];
             }
