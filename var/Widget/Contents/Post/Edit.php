@@ -1038,20 +1038,4 @@ class Edit extends Contents implements ActionInterface
 
         return null;
     }
-
-    /**
-     * 当 $this->row['slug'] 为 null 时，默认值为空字符串
-     */
-    protected function ___slug(): string
-    {
-        return '';
-    }
-
-    /**
-     * 当 $this->row['text'] 为 null 时，默认值为空字符串
-     */
-    protected function ___text(): string
-    {
-        return '';
-    }
 }
