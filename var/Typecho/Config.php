@@ -102,7 +102,7 @@ class Config implements \Iterator, \ArrayAccess
      * @access public
      * @return mixed
      */
-    public function current(): mixed
+    public function current()
     {
         return current($this->currentConfig);
     }
@@ -124,7 +124,7 @@ class Config implements \Iterator, \ArrayAccess
      * @access public
      * @return mixed
      */
-    public function key(): mixed
+    public function key()
     {
         return key($this->currentConfig);
     }
@@ -222,7 +222,7 @@ class Config implements \Iterator, \ArrayAccess
      * @param mixed $offset
      * @return mixed
      */
-    public function offsetGet($offset): mixed
+    public function offsetGet($offset)
     {
         return $this->currentConfig[$offset] ?? null;
     }
