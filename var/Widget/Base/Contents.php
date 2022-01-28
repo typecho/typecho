@@ -487,6 +487,11 @@ class Contents extends Base implements QueryInterface
      */
     public function filter(array $value): array
     {
+        /** 处理默认空值 */
+        $value['title'] = $value['title'] ?? '';
+        $value['text'] = $value['text'] ?? '';
+        $value['slug'] = $value['slug'] ?? '';
+
         /** 取出所有分类 */
         $value['categories'] = $this->db->fetchAll($this->db
             ->select()->from('table.metas')
@@ -494,7 +499,7 @@ class Contents extends Base implements QueryInterface
             ->where('table.relationships.cid = ?', $value['cid'])
             ->where('table.metas.type = ?', 'category'), [Rows::alloc(), 'filter']);
 
-        $value['category'] = null;
+        $value['category'] = '';
         $value['directory'] = [];
 
         /** 取出第一个分类作为slug条件 */
@@ -534,7 +539,7 @@ class Contents extends Base implements QueryInterface
         $tmpCategory = $value['category'];
         $tmpDirectory = $value['directory'];
         $value['slug'] = urlencode($value['slug']);
-        $value['category'] = urlencode($value['category'] ?? '');
+        $value['category'] = urlencode($value['category']);
         $value['directory'] = implode('/', array_map('urlencode', $value['directory']));
 
         /** 生成静态路径 */
@@ -851,9 +856,6 @@ class Contents extends Base implements QueryInterface
     {
         $plainTxt = str_replace("\n", '', trim(strip_tags($this->excerpt)));
         $plainTxt = $plainTxt ? $plainTxt : $this->title;
-        if (is_null($plainTxt)) {
-            return '';
-        }
         return Common::subStr($plainTxt, 0, 100, '...');
     }
 
