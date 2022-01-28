@@ -482,7 +482,7 @@ EOF;
          */
         public static function filterSearchQuery(?string $query): string
         {
-            return str_replace('-', ' ', self::slugName($query));
+            return isset($query) ? str_replace('-', ' ', self::slugName($query)) : '';
         }
 
         /**
@@ -498,7 +498,7 @@ EOF;
          */
         public static function slugName(?string $str, ?string $default = null, int $maxLength = 128): ?string
         {
-            $str = trim($str);
+            $str = trim($str ?? '');
 
             if (!strlen($str)) {
                 return $default;
