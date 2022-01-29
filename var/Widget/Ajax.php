@@ -54,20 +54,17 @@ class Ajax extends BaseOptions implements ActionInterface
                 $json = json_decode($response, true);
 
                 if (!empty($json)) {
-                    [$soft, $version] = explode(' ', $this->options->generator);
-                    $current = explode('/', $version);
+                    $version = $this->options->version;
 
                     if (
-                        isset($json['release']) && isset($json['version'])
+                        isset($json['release'])
                         && preg_match("/^[0-9\.]+$/", $json['release'])
-                        && preg_match("/^[0-9\.]+$/", $json['version'])
-                        && version_compare($json['release'], $current[0], '>=')
-                        && version_compare($json['version'], $current[1], '>')
+                        && version_compare($json['release'], $version, '>=')
                     ) {
                         $result = [
                             'available' => 1,
-                            'latest'    => $json['release'] . '-' . $json['version'],
-                            'current'   => $current[0] . '-' . $current[1],
+                            'latest'    => $json['release'],
+                            'current'   => $version,
                             'link'      => 'http://typecho.org/download'
                         ];
                     }
