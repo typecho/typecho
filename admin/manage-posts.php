@@ -91,7 +91,7 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                                         (isset($request->uid) ? '?uid=' . htmlspecialchars($request->get('uid')) : '') : '')); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
                             <?php endif; ?>
                             <input type="text" class="text-s" placeholder="<?php _e('请输入关键字'); ?>"
-                                   value="<?php echo htmlspecialchars($request->keywords); ?>" name="keywords"/>
+                                   value="<?php echo htmlspecialchars($request->keywords ?? ''); ?>" name="keywords"/>
                             <select name="category">
                                 <option value=""><?php _e('所有分类'); ?></option>
                                 <?php \Widget\Metas\Category\Rows::alloc()->to($category); ?>

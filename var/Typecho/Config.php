@@ -91,7 +91,7 @@ class Config implements \Iterator, \ArrayAccess
      * @access public
      * @return void
      */
-    public function rewind()
+    public function rewind(): void
     {
         reset($this->currentConfig);
     }
@@ -113,7 +113,7 @@ class Config implements \Iterator, \ArrayAccess
      * @access public
      * @return void
      */
-    public function next()
+    public function next(): void
     {
         next($this->currentConfig);
     }
@@ -231,7 +231,7 @@ class Config implements \Iterator, \ArrayAccess
      * @param mixed $offset
      * @param mixed $value
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->currentConfig[$offset] = $value;
     }
@@ -239,7 +239,7 @@ class Config implements \Iterator, \ArrayAccess
     /**
      * @param mixed $offset
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->currentConfig[$offset]);
     }

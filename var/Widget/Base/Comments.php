@@ -234,6 +234,14 @@ class Comments extends Base implements QueryInterface
      */
     public function filter(array $value): array
     {
+        /** 处理默认空值 */
+        $value['author'] = $value['author'] ?? '';
+        $value['mail'] = $value['mail'] ?? '';
+        $value['url'] = $value['url'] ?? '';
+        $value['ip'] = $value['ip'] ?? '';
+        $value['agent'] = $value['agent'] ?? '';
+        $value['text'] = $value['text'] ?? '';
+
         $value['date'] = new Date($value['created']);
         return Comments::pluginHandle()->filter($value, $this);
     }
