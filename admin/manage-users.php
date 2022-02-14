@@ -31,7 +31,7 @@ $users = \Widget\Users\Admin::alloc();
                                 <a href="<?php $options->adminUrl('manage-users.php'); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
                             <?php endif; ?>
                             <input type="text" class="text-s" placeholder="<?php _e('请输入关键字'); ?>"
-                                   value="<?php echo htmlspecialchars($request->keywords); ?>" name="keywords"/>
+                                   value="<?php echo htmlspecialchars($request->keywords ?? ''); ?>" name="keywords"/>
                             <button type="submit" class="btn btn-s"><?php _e('筛选'); ?></button>
                         </div>
                     </form>
