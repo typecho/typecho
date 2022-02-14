@@ -268,7 +268,7 @@ class User extends Users
             } else {
                 //防止循环重定向
                 $this->response->redirect(defined('__TYPECHO_ADMIN__') ? $this->options->loginUrl .
-                    (0 === strpos($this->request->getReferer(), $this->options->loginUrl) ? '' :
+                    (0 === strpos($this->request->getReferer() ?? '', $this->options->loginUrl) ? '' :
                         '?referer=' . urlencode($this->request->makeUriByRequest())) : $this->options->siteUrl, false);
             }
         }

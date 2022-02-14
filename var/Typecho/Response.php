@@ -209,7 +209,7 @@ class Response
                 $timeout = 1;
             }
 
-            setrawcookie($key, rawurlencode($value), $timeout, $path, $domain);
+            setrawcookie($key, rawurlencode($value), $timeout, $path, $domain ?? '');
         }
     }
 

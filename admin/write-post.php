@@ -134,7 +134,7 @@ include 'menu.php';
                                                 <option
                                                     value="hidden"<?php if ($post->status == 'hidden'): ?> selected<?php endif; ?>><?php _e('隐藏'); ?></option>
                                                 <option
-                                                    value="password"<?php if (strlen($post->password) > 0): ?> selected<?php endif; ?>><?php _e('密码保护'); ?></option>
+                                                    value="password"<?php if (strlen($post->password ?? '') > 0): ?> selected<?php endif; ?>><?php _e('密码保护'); ?></option>
                                                 <option
                                                     value="private"<?php if ($post->status == 'private'): ?> selected<?php endif; ?>><?php _e('私密'); ?></option>
                                             <?php endif; ?>
@@ -142,7 +142,7 @@ include 'menu.php';
                                                 value="waiting"<?php if (!$user->pass('editor', true) || $post->status == 'waiting'): ?> selected<?php endif; ?>><?php _e('待审核'); ?></option>
                                         </select>
                                     </p>
-                                    <p id="post-password"<?php if (strlen($post->password) == 0): ?> class="hidden"<?php endif; ?>>
+                                    <p id="post-password"<?php if (strlen($post->password ?? '') == 0): ?> class="hidden"<?php endif; ?>>
                                         <label for="protect-pwd" class="sr-only">内容密码</label>
                                         <input type="text" name="password" id="protect-pwd" class="text-s"
                                                value="<?php $post->password(); ?>" size="16"
