@@ -34,7 +34,7 @@ include 'menu.php';
                     if ($page->have()) {
                         $permalink = str_replace('{cid}', $page->cid, $permalink);
                     }
-                    $input = '<input type="text" id="slug" name="slug" autocomplete="off" value="' . htmlspecialchars($page->slug) . '" class="mono" />';
+                    $input = '<input type="text" id="slug" name="slug" autocomplete="off" value="' . htmlspecialchars($page->slug ?? '') . '" class="mono" />';
                     ?>
                     <p class="mono url-slug">
                         <label for="slug" class="sr-only"><?php _e('网址缩略名'); ?></label>
@@ -43,7 +43,7 @@ include 'menu.php';
                     <p>
                         <label for="text" class="sr-only"><?php _e('页面内容'); ?></label>
                         <textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text"
-                                  name="text" class="w-100 mono"><?php echo htmlspecialchars($page->text); ?></textarea>
+                                  name="text" class="w-100 mono"><?php echo htmlspecialchars($page->text ?? ''); ?></textarea>
                     </p>
 
                     <?php include 'custom-fields.php'; ?>
