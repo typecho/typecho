@@ -1289,7 +1289,7 @@ class Archive extends Contents
         if ($return) {
             return $value;
         } else {
-            echo htmlspecialchars($value);
+            echo htmlspecialchars($value ?? '');
         }
     }
 
