@@ -38,7 +38,7 @@ include 'menu.php';
                             $post->cid, $post->category, $post->year, $post->month, $post->day
                         ], $permalink);
                     }
-                    $input = '<input type="text" id="slug" name="slug" autocomplete="off" value="' . htmlspecialchars($post->slug) . '" class="mono" />';
+                    $input = '<input type="text" id="slug" name="slug" autocomplete="off" value="' . htmlspecialchars($post->slug ?? '') . '" class="mono" />';
                     ?>
                     <p class="mono url-slug">
                         <label for="slug" class="sr-only"><?php _e('网址缩略名'); ?></label>
@@ -47,7 +47,7 @@ include 'menu.php';
                     <p>
                         <label for="text" class="sr-only"><?php _e('文章内容'); ?></label>
                         <textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text"
-                                  name="text" class="w-100 mono"><?php echo htmlspecialchars($post->text); ?></textarea>
+                                  name="text" class="w-100 mono"><?php echo htmlspecialchars($post->text ?? ''); ?></textarea>
                     </p>
 
                     <?php include 'custom-fields.php'; ?>
@@ -134,7 +134,7 @@ include 'menu.php';
                                                 <option
                                                     value="hidden"<?php if ($post->status == 'hidden'): ?> selected<?php endif; ?>><?php _e('隐藏'); ?></option>
                                                 <option
-                                                    value="password"<?php if (strlen($post->password) > 0): ?> selected<?php endif; ?>><?php _e('密码保护'); ?></option>
+                                                    value="password"<?php if (strlen($post->password ?? '') > 0): ?> selected<?php endif; ?>><?php _e('密码保护'); ?></option>
                                                 <option
                                                     value="private"<?php if ($post->status == 'private'): ?> selected<?php endif; ?>><?php _e('私密'); ?></option>
                                             <?php endif; ?>
@@ -142,7 +142,7 @@ include 'menu.php';
                                                 value="waiting"<?php if (!$user->pass('editor', true) || $post->status == 'waiting'): ?> selected<?php endif; ?>><?php _e('待审核'); ?></option>
                                         </select>
                                     </p>
-                                    <p id="post-password"<?php if (strlen($post->password) == 0): ?> class="hidden"<?php endif; ?>>
+                                    <p id="post-password"<?php if (strlen($post->password ?? '') == 0): ?> class="hidden"<?php endif; ?>>
                                         <label for="protect-pwd" class="sr-only">内容密码</label>
                                         <input type="text" name="password" id="protect-pwd" class="text-s"
                                                value="<?php $post->password(); ?>" size="16"
