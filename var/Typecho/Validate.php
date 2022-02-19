@@ -271,12 +271,12 @@ class Validate
         foreach ($rules as $key => $rule) {
             $this->key = $key;
             $data[$key] = (is_array($data[$key]) ? 0 == count($data[$key])
-                : 0 == strlen($data[$key])) ? null : $data[$key];
+                : 0 == strlen($data[$key] ?? '')) ? null : $data[$key];
 
             foreach ($rule as $params) {
                 $method = $params[0];
 
-                if ('required' != $method && 'confirm' != $method && 0 == strlen($data[$key])) {
+                if ('required' != $method && 'confirm' != $method && 0 == strlen($data[$key] ?? '')) {
                     continue;
                 }
 
@@ -319,11 +319,9 @@ class Validate
      *
      * @access public
      *
-     * @param string|null $str 待处理的字符串
-     *
      * @return boolean
      */
-    public function required(?string $str): bool
+    public function required(): bool
     {
         return !empty($this->data[$this->key]);
     }
