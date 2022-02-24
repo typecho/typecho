@@ -190,19 +190,24 @@ abstract class Widget
     /**
      * alloc widget instance with alias
      *
-     * @param string $alias
+     * @param string|null $alias
      * @param mixed $params
      * @param mixed $request
      * @param bool|callable $disableSandboxOrCallback
      * @return $this
      */
     public static function allocWithAlias(
-        string $alias,
+        ?string $alias,
         $params = null,
         $request = null,
         $disableSandboxOrCallback = true
     ): Widget {
-        return self::widget(static::class . '@' . $alias, $params, $request, $disableSandboxOrCallback);
+        return self::widget(
+            static::class . (isset($alias) ? '@' . $alias : ''),
+            $params,
+            $request,
+            $disableSandboxOrCallback
+        );
     }
 
     /**
