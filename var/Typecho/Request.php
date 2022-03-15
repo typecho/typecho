@@ -305,7 +305,7 @@ class Request
             return $this->pathInfo;
         }
 
-        //参考Zend Framework对pahtinfo的处理, 更好的兼容性
+        //参考Zend Framework对pathinfo的处理, 更好的兼容性
         $pathInfo = null;
 
         //处理requestUri

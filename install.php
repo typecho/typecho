@@ -1051,7 +1051,7 @@ function install_step_2_perform()
             $installDb = new \Typecho\Db($config['dbAdapter'], $config['dbPrefix']);
             $installDb->addServer($dbConfig, \Typecho\Db::READ | \Typecho\Db::WRITE);
             $installDb->query('SELECT 1=1');
-        } catch (\Typecho\Db\Adapter_Exception $e) {
+        } catch (\Typecho\Db\Adapter\ConnectionException $e) {
             install_raise_error(_t('对不起, 无法连接数据库, 请先检查数据库配置再继续进行安装'));
         } catch (\Typecho\Db\Exception $e) {
             install_raise_error(_t('安装程序捕捉到以下错误: " %s ". 程序被终止, 请检查您的配置信息.', $e->getMessage()));
