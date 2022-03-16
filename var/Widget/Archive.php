@@ -1498,7 +1498,7 @@ class Archive extends Contents
                     'date'            => $this->created,
                     'link'            => $this->permalink,
                     'author'          => $this->author,
-                    'excerpt'         => $this->description,
+                    'excerpt'         => parent::___description(),
                     'comments'        => $this->commentsNum,
                     'commentsFeedUrl' => $feedUrl,
                     'suffix'          => $suffix
