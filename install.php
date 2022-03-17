@@ -1053,8 +1053,6 @@ function install_step_2_perform()
             $installDb->query('SELECT 1=1');
         } catch (\Typecho\Db\Exception $e) {
             install_raise_error(_t('安装程序捕捉到以下错误: " %s ". 程序被终止, 请检查您的配置信息.', $e->getMessage()));
-        } catch (\Throwable $e) {
-            install_raise_error(_t('对不起, 无法连接数据库, 请先检查数据库配置再继续进行安装'));
         }
 
         $code = install_config_file($config['dbAdapter'], $config['dbPrefix'], $dbConfig);
