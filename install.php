@@ -1021,6 +1021,9 @@ function install_step_2_perform()
         case 'SQLite':
             $error = (new \Typecho\Validate())
                 ->addRule('dbFile', 'required', _t('确认您的配置'))
+                ->addRule('dbFile', function (string $path) {
+                    return !!preg_match("/^(\/[_a-z0-9-]+)*[a-z0-9]+\.[a-z0-9]{2,}$/i", $path);
+                }, _t('确认您的配置'))
                 ->run($config);
             break;
         default:
@@ -1039,6 +1042,10 @@ function install_step_2_perform()
     // intval port number
     if (isset($dbConfig['port'])) {
         $dbConfig['port'] = intval($dbConfig['port']);
+    }
+
+    if (isset($dbConfig['file']) && preg_match("/^[a-z0-9]+\.[a-z0-9]{2,}$/i", $dbConfig['file'])) {
+        $dbConfig['file'] = __DIR__ . '/usr/' . $dbConfig['file'];
     }
 
     // check config file

@@ -221,7 +221,7 @@ class Validate
      * @access public
      *
      * @param string $key 数值键值
-     * @param string|array $rule 规则名称
+     * @param string|callable $rule 规则名称
      * @param string $message 错误字符串
      *
      * @return $this
@@ -284,7 +284,7 @@ class Validate
                 $params[1] = $data[$key];
                 $params = array_slice($params, 1);
 
-                if (!call_user_func_array(is_array($method) ? $method : [$this, $method], $params)) {
+                if (!call_user_func_array(is_callable($method) ? $method : [$this, $method], $params)) {
                     $result[$key] = $message;
                     break;
                 }
