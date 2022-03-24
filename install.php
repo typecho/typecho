@@ -1061,7 +1061,7 @@ function install_step_2_perform()
         } catch (\Typecho\Db\Adapter\ConnectionException $e) {
             install_raise_error(_t('对不起, 无法连接数据库, 请先检查数据库配置再继续进行安装'));
         } catch (\Typecho\Db\Exception $e) {
-            install_raise_error(_t('安装程序捕捉到以下错误: " %s ". 程序被终止, 请检查您的配置信息.', $e->getMessage()));
+            install_raise_error(_t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.', $e->getMessage()));
         }
 
         $code = install_config_file($config['dbAdapter'], $config['dbPrefix'], $dbConfig);
@@ -1091,12 +1091,14 @@ function install_step_2_perform()
 
         try {
             foreach ($tables as $table) {
-                if ($type == 'Mysql') {
-                    $installDb->query("DROP TABLE IF EXISTS `{$table}`");
-                } elseif ($type == 'Pgsql') {
-                    $installDb->query("DROP TABLE {$table}");
-                } elseif ($type == 'SQLite') {
-                    $installDb->query("DROP TABLE {$table}");
+                switch ($type) {
+                    case 'Mysql':
+                        $installDb->query("DROP TABLE IF EXISTS `{$table}`");
+                        break;
+                    case 'Pgsql':
+                    case 'SQLite':
+                        $installDb->query("DROP TABLE {$table}");
+                        break;
                 }
             }
         } catch (\Typecho\Db\Exception $e) {
