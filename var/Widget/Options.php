@@ -186,7 +186,13 @@ class Options extends Base
         $this->plugins = unserialize($this->plugins);
 
         /** 动态判断皮肤目录 */
-        $this->theme = is_dir($this->themeFile($this->theme)) ? $this->theme : 'default';
+        if (!is_dir($this->themeFile($this->theme))) {
+            if (isset($this->db)) {
+                $this->db->query($this->db->update('table.options')->rows(['value' => 'default'])->where('name = ?', 'theme'));
+                $this->db->query($this->db->delete('table.options')->where('name = ?', 'theme:' . $this->theme));
+            }
+            $this->theme = 'default';
+        }
 
         /** 增加对SSL连接的支持 */
         if ($this->request->isSecure() && 0 === strpos($this->siteUrl, 'http://')) {
