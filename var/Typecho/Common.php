@@ -230,10 +230,10 @@ namespace Typecho {
                 //覆盖原始错误信息
                 $message = 'Database Server Error';
 
-                if ($exception instanceof \Typecho\Db\Adapter\SQLException) {
+                if ($exception instanceof \Typecho\Db\Adapter\ConnectionException) {
                     $code = 503;
                     $message = 'Error establishing a database connection';
-                } elseif ($exception instanceof \Typecho\Db\Query\Exception) {
+                } elseif ($exception instanceof \Typecho\Db\Adapter\SQLException) {
                     $message = 'Database Query Error';
                 }
             }
