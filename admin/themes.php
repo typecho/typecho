@@ -89,7 +89,7 @@ include 'common-js.php';
 ?>
 <script>
     $('#typecho-welcome form').submit(function (e) {
-        if (!confirm('<?php _e('使用默认主题将移除之前的外观设置，是否继续?'); ?>')) {
+        if (!confirm('<?php _e('使用默认外观将移除之前的外观设置，是否继续?'); ?>')) {
             return false;
         }
     });
