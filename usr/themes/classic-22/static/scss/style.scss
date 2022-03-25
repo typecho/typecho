@@ -125,7 +125,7 @@ h5 { --font-size: 1.25rem; }
   background-color: var(--primary);
 
   a {
-    color: rgba(255, 255, 255);
+    color: rgba(255, 255, 255, 1.0);
     &:hover { text-decoration: underline; }
   }
 
@@ -180,7 +180,7 @@ h5 { --font-size: 1.25rem; }
 .nav-toggler-btn {
   margin: calc(var(--spacing) * -1) calc(var(--spacing) * -0.5);
   padding: var(--spacing) calc(var(--spacing) * 0.5);
-  color: rgba(255, 255, 255);
+  color: rgba(255, 255, 255, 1.0);
   cursor: pointer;
 }
 
