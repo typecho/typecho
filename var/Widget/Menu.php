@@ -88,8 +88,7 @@ class Menu extends Base
                 [_t('设置外观'), _t('设置外观'), 'options-theme.php', 'administrator', true],
                 [_t('备份'), _t('备份'), 'backup.php', 'administrator'],
                 [_t('升级'), _t('升级程序'), 'upgrade.php', 'administrator', true],
-                [_t('欢迎'), _t('欢迎使用'), 'welcome.php', 'subscriber', true],
-                [_t('重置外观'), _t('外观文件不存在'), 'theme-missing.php', 'administrator', true]
+                [_t('欢迎'), _t('欢迎使用'), 'welcome.php', 'subscriber', true]
             ],
             [
                 [_t('撰写文章'), _t('撰写新文章'), 'write-post.php', 'contributor'],
