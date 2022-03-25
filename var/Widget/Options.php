@@ -185,9 +185,6 @@ class Options extends Base
         $this->siteUrl = Common::url(null, $this->siteUrl);
         $this->plugins = unserialize($this->plugins);
 
-        /** 动态判断皮肤目录 */
-        $this->theme = is_dir($this->themeFile($this->theme)) ? $this->theme : 'default';
-
         /** 增加对SSL连接的支持 */
         if ($this->request->isSecure() && 0 === strpos($this->siteUrl, 'http://')) {
             $this->siteUrl = substr_replace($this->siteUrl, 'https', 0, 4);

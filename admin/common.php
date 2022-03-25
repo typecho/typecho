@@ -42,6 +42,13 @@ if (!empty($currentMenu)) {
     } elseif ($user->pass('administrator', true)) {
         /** 检测版本是否升级 */
         $mustUpgrade = version_compare(\Typecho\Common::VERSION, $options->version, '>');
+        $existTheme = is_dir($options->themeFile($options->theme));
+
+        if (!$existTheme && 'theme-missing.php' != $adminFile) {
+            $response->redirect(\Typecho\Common::url('theme-missing.php', $options->adminUrl));
+        } elseif ($existTheme && 'theme-missing.php' == $adminFile) {
+            $response->redirect($options->adminUrl);
+        }
 
         if ($mustUpgrade && 'upgrade.php' != $adminFile && 'backup.php' != $adminFile) {
             $response->redirect(\Typecho\Common::url('upgrade.php', $options->adminUrl));
