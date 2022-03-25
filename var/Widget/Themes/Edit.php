@@ -56,11 +56,19 @@ class Edit extends Options implements ActionInterface
                     $options = $form->getValues();
 
                     if ($options && !$this->configHandle($options, true)) {
-                        $this->insert([
-                            'name'  => 'theme:' . $theme,
-                            'value' => serialize($options),
-                            'user'  => 0
-                        ]);
+                        $themeName = 'theme:' . $theme;
+                        if ($this->options->__get($themeName)) {
+                            $this->update(
+                                ['value' => serialize($options)],
+                                $this->db->sql()->where('name = ?', $themeName)
+                            );
+                        } else {
+                            $this->insert([
+                                'name'  => $themeName,
+                                'value' => serialize($options),
+                                'user'  => 0
+                            ]);
+                        }
                     }
                 }
             }

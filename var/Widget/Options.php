@@ -189,7 +189,6 @@ class Options extends Base
         if (!is_dir($this->themeFile($this->theme))) {
             if (isset($this->db)) {
                 $this->db->query($this->db->update('table.options')->rows(['value' => 'default'])->where('name = ?', 'theme'));
-                $this->db->query($this->db->delete('table.options')->where('name = ?', 'theme:' . $this->theme));
             }
             $this->theme = 'default';
         }
