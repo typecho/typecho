@@ -15,11 +15,11 @@ $actionUrl = $security->getTokenUrl($security->getIndex("/action/themes-edit?cha
                     <form action="<?php echo $actionUrl; ?>" method="post">
                         <h3><?php _e('检测到您之前使用的 "%s" 外观文件不存在: ', $options->theme); ?></h3>
                         <ul>
-                            <li><?php _e('您可以切换为<strong>默认皮肤</strong>，或者<strong>重新上传</strong>之前的外观文件后<strong>刷新</strong>本页面'); ?></li>
-                            <li><strong class="warning"><?php _e('切换为默认皮肤后，您之前的外观设置将被移除'); ?></strong></li>
+                            <li><?php _e('您可以切换为<strong>默认外观</strong>，或者<strong>重新上传</strong>之前的外观文件后<strong>刷新</strong>本页面'); ?></li>
+                            <li><strong class="warning"><?php _e('切换为默认外观后，您之前的外观设置将被移除'); ?></strong></li>
                         </ul>
                         <p>
-                            <button type="submit" class="btn btn-warn"><?php _e('使用默认主题'); ?></button>
+                            <button type="submit" class="btn btn-warn"><?php _e('使用默认外观'); ?></button>
                             <button type="button" class="btn primary" onclick="window.location.reload();"><?php _e('刷新'); ?></button>
                         </p>
                     </form>
