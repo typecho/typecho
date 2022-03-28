@@ -687,6 +687,20 @@ function install_check_extension(array $extensions): ?string
         . ': ' . implode(', ', $extensions);
 }
 
+/**
+ * @param string $adapter
+ * @param string $prefix
+ * @param array $config
+ * @return \Typecho\Db
+ * @throws \Typecho\Db\Exception
+ */
+function create_install_db(string $adapter, string $prefix, array $config)
+{
+    $installDb = new \Typecho\Db($adapter, $prefix);
+    $installDb->addServer($config, \Typecho\Db::READ | \Typecho\Db::WRITE);
+    return $installDb;
+}
+
 function install_step_1()
 {
     $langs = \Widget\Options\General::getLangs();
@@ -979,7 +993,7 @@ function install_step_2_perform()
         ->addRule('dbAdapter', 'required', _t('确认您的配置'))
         ->addRule('dbAdapter', 'enum', _t('确认您的配置'), array_keys($drivers))
         ->addRule('dbNext', 'required', _t('确认您的配置'))
-        ->addRule('dbNext', 'enum', _t('确认您的配置'), ['none', 'delete', 'keep', 'config'])
+        ->addRule('dbNext', 'enum', _t('确认您的配置'), ['none', 'delete', 'keep', 'config', 'database'])
         ->run($config);
 
     if (!empty($error)) {
@@ -1055,11 +1069,37 @@ function install_step_2_perform()
     } elseif (empty($installDb)) {
         // detect db config
         try {
-            $installDb = new \Typecho\Db($config['dbAdapter'], $config['dbPrefix']);
-            $installDb->addServer($dbConfig, \Typecho\Db::READ | \Typecho\Db::WRITE);
+            $installDb = create_install_db($config['dbAdapter'], $config['dbPrefix'], $dbConfig);
             $installDb->query('SELECT 1=1');
         } catch (\Typecho\Db\Adapter\ConnectionException $e) {
-            install_raise_error(_t('对不起, 无法连接数据库, 请先检查数据库配置再继续进行安装'));
+            $code = $e->getCode();
+
+            if (
+                ('Mysql' == $type && 1049 == $code) ||
+                ('Pgsql' == $type && 7 == $code)
+            ) {
+                if ($config['dbNext'] == 'database') {
+                    $dbConfig['database'] = '';
+                    $installDb = create_install_db($config['dbAdapter'], $config['dbPrefix'], $dbConfig);
+                    switch ($type) {
+                        case 'Mysql':
+                            $installDb->query("CREATE DATABASE IF NOT EXISTS `{$config['dbDatabase']}` DEFAULT CHARACTER SET `{$config['dbCharset']}`");
+                            break;
+                        case 'Pgsql':
+                            $installDb->query("CREATE DATABASE {$config['dbDatabase']}");
+                            break;
+                    }
+                    $dbConfig['database'] = $config['dbDatabase'];
+                    $installDb = create_install_db($config['dbAdapter'], $config['dbPrefix'], $dbConfig);
+                } elseif ($config['dbNext'] == 'none') {
+                    install_raise_error(_t('安装程序检查到数据表不存在.'), [
+                        'database' => _t('自动创建'),
+                        'none' => _t('已经手动创建')
+                    ]);
+                }
+            } else {
+                install_raise_error(_t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.', $e->getMessage()));
+            }
         } catch (\Typecho\Db\Exception $e) {
             install_raise_error(_t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.', $e->getMessage()));
         }

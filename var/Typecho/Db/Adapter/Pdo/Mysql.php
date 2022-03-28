@@ -51,9 +51,16 @@ class Mysql extends Pdo
      */
     public function init(Config $config): \PDO
     {
+        if (!empty($config->dsn)) {
+            $dsn = $config->dsn;
+        } else {
+            $dsn = "mysql:host={$config->host};port={$config->port}";
+            if ($config->database) {
+                $dsn .= ";dbname={$config->database}";
+            }
+        }
         $pdo = new \PDO(
-            !empty($config->dsn)
-                ? $config->dsn : "mysql:dbname={$config->database};host={$config->host};port={$config->port}",
+            $dsn,
             $config->user,
             $config->password
         );
