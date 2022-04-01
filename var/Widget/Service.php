@@ -57,7 +57,7 @@ class Service extends BaseOptions implements ActionInterface
             set_time_limit(30);
         }
 
-        if (!empty($this->request->pingback)) {
+        if (!empty($this->request->getArray('pingback')[0])) {
             $links = $this->request->getArray('pingback');
             $permalinkPart = parse_url($permalink);
 
@@ -114,7 +114,7 @@ class Service extends BaseOptions implements ActionInterface
         }
 
         /** 发送trackback */
-        if (!empty($this->request->trackback)) {
+        if (!empty($this->request->getArray('trackback')[0])) {
             $links = $this->request->getArray('trackback');
 
             foreach ($links as $url) {
