@@ -82,6 +82,17 @@ class Files extends Base
     }
 
     /**
+     * 判断是否拥有写入权限
+     *
+     * @return bool
+     */
+    public static function isWriteable(): bool
+    {
+        return (!defined('__TYPECHO_THEME_WRITEABLE__') || __TYPECHO_THEME_WRITEABLE__)
+            && !Options::alloc()->missingTheme;
+    }
+
+    /**
      * 获取菜单标题
      *
      * @return string
@@ -111,7 +122,7 @@ class Files extends Base
     {
         return is_writeable(Options::alloc()
                 ->themeFile($this->currentTheme, $this->currentFile))
-            && (!defined('__TYPECHO_THEME_WRITEABLE__') || __TYPECHO_THEME_WRITEABLE__);
+            && self::isWriteable();
     }
 
     /**

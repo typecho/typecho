@@ -36,7 +36,8 @@ class Edit extends Options implements ActionInterface
         $theme = trim($theme, './');
         if (is_dir($this->options->themeFile($theme))) {
             /** 删除原外观设置信息 */
-            $this->delete($this->db->sql()->where('name = ?', 'theme:' . $this->options->theme));
+            $oldTheme = $this->options->missingTheme ?: $this->options->theme;
+            $this->delete($this->db->sql()->where('name = ?', 'theme:' . $oldTheme));
 
             $this->update(['value' => $theme], $this->db->sql()->where('name = ?', 'theme'));
 
@@ -130,7 +131,7 @@ class Edit extends Options implements ActionInterface
         $form = Config::alloc()->config();
 
         /** 验证表单 */
-        if ($form->validate()) {
+        if (!Config::isExists() || $form->validate()) {
             $this->response->goBack();
         }
 
