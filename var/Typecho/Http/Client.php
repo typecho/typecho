@@ -56,7 +56,7 @@ class Client
     /**
      * @var bool
      */
-    private $multipart = true;
+    private $multipart = false;
 
     /**
      * 需要在body中传递的值
