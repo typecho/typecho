@@ -1022,7 +1022,7 @@ function install_step_2_perform()
             $error = (new \Typecho\Validate())
                 ->addRule('dbFile', 'required', _t('确认您的配置'))
                 ->addRule('dbFile', function (string $path) {
-                    return !!preg_match("/^(\/[_a-z0-9-]+)*[a-z0-9]+\.[a-z0-9]{2,}$/i", $path);
+                    return !!preg_match("/^(\/[._a-z0-9-]+)*[a-z0-9]+\.[a-z0-9]{2,}$/i", $path);
                 }, _t('确认您的配置'))
                 ->run($config);
             break;
