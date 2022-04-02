@@ -91,6 +91,7 @@
 
             $('#typecho-nav-list ul.root').each(function () {
                 const ul = $(this), nav = ul.parent();
+                let focused = false;
 
                 ul.on('click touchend', '.parent a', function (e) {
                     nav.removeClass('noexpanded').addClass('expanded');
@@ -102,6 +103,19 @@
                     nav.removeClass('expanded').addClass('noexpanded');
                     return false;
                 }));
+
+                $('a', ul).focus(function () {
+                    ul.addClass('expanded');
+                    focused = true;
+                }).blur(function () {
+                    focused = false;
+
+                    setTimeout(function () {
+                        if (!focused) {
+                            ul.removeClass('expanded');
+                        }
+                    });
+                });
             });
 
             if ($('.typecho-login').length == 0) {

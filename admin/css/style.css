@@ -170,7 +170,7 @@ select { border: 1px solid #CCC; height: 28px; }
 
 .typecho-head-nav #typecho-nav-list > ul.focus .parent a { font-weight: bold; }
 
-.typecho-head-nav #typecho-nav-list > ul.root:hover .child { display: block; }
+.typecho-head-nav #typecho-nav-list > ul.root:hover .child, .typecho-head-nav #typecho-nav-list > ul.root.expanded .child { display: block; }
 
 .typecho-head-nav .operate { float: right; }
 
