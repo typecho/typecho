@@ -108,7 +108,7 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == \Ty
                             'mail'      =>  $comments->mail,
                             'url'       =>  $comments->url,
                             'ip'        =>  $comments->ip,
-                            'type'        =>  $comments->type,
+                            'type'      =>  $comments->type,
                             'text'      =>  $comments->text
                         );
 
@@ -279,7 +279,7 @@ $(document).ready(function () {
             form.submit(function () {
                 var t = $(this), tr = t.parents('tr'), 
                     reply = $('<div class="comment-reply-content"></div>').insertAfter($('.comment-content', tr));
-                
+
                 reply.html('<p>' + textarea.val() + '</p>');
                 $.post(t.attr('action'), t.serialize(), function (o) {
                     reply.html(o.comment.content)
@@ -350,7 +350,7 @@ $(document).ready(function () {
 
             $('.comment-meta', oldTr).html(html)
                 .effect('highlight');
-            $('.comment-content', oldTr).html('<p>' + comment.text + '</p>');
+            $('.comment-content', oldTr).text('<p>' + comment.text + '</p>');
             oldTr.data('comment', comment);
 
             $.post(t.attr('action'), comment, function (o) {
