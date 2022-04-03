@@ -482,7 +482,7 @@ EOF;
          */
         public static function filterSearchQuery(?string $query): string
         {
-            return isset($query) ? str_replace('-', ' ', self::slugName($query)) : '';
+            return isset($query) ? str_replace('-', ' ', self::slugName($query) ?? '') : '';
         }
 
         /**
