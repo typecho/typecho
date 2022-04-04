@@ -1425,13 +1425,7 @@ class Archive extends Contents
      */
     public function feed()
     {
-        if ($this->feedType == Feed::RSS1) {
-            $feedUrl = $this->feedRssUrl;
-        } elseif ($this->feedType == Feed::ATOM1) {
-            $feedUrl = $this->feedAtomUrl;
-        } else {
-            $feedUrl = $this->feedUrl;
-        }
+        $feedUrl = $this->request->makeUriByRequest();
 
         $this->checkPermalink($feedUrl);
 
@@ -1522,7 +1516,7 @@ class Archive extends Contents
     {
         return ($archiveType == $this->archiveType ||
                 (($this->archiveSingle ? 'single' : 'archive') == $archiveType && 'index' != $this->archiveType) ||
-                ('index' == $archiveType && $this->makeSinglePageAsFrontPage))
+                ('index' == $archiveType && $this->makeSinglePageAsFrontPage) || ($this->feedType && 'feed' == $archiveType))
             && (empty($archiveSlug) || $archiveSlug == $this->archiveSlug);
     }
 
@@ -1623,6 +1617,10 @@ class Archive extends Contents
                 $path = Router::url($type, $value);
                 $permalink = Common::url($path, $this->options->index);
             }
+        }
+
+        if ($this->is('feed') && substr($permalink, -1) != '/') {
+            $this->response->redirect($permalink . '/', true);
         }
 
         $requestUrl = $this->request->getRequestUrl();
