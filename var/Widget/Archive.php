@@ -1619,8 +1619,9 @@ class Archive extends Contents
             }
         }
 
-        if ($this->is('feed') && substr($permalink, -1) != '/') {
-            $this->response->redirect($permalink . '/', true);
+        $urlPath = parse_url($permalink, PHP_URL_PATH);
+        if ($this->is('feed') && substr($urlPath, -1) != '/') {
+            $this->response->redirect(str_replace($urlPath, $urlPath . '/', $permalink), true);
         }
 
         $requestUrl = $this->request->getRequestUrl();
