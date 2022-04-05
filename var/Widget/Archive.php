@@ -1516,7 +1516,8 @@ class Archive extends Contents
     {
         return ($archiveType == $this->archiveType ||
                 (($this->archiveSingle ? 'single' : 'archive') == $archiveType && 'index' != $this->archiveType) ||
-                ('index' == $archiveType && $this->makeSinglePageAsFrontPage) || ($this->feedType && 'feed' == $archiveType))
+                ('index' == $archiveType && $this->makeSinglePageAsFrontPage) ||
+                ($this->feedType && 'feed' == $archiveType))
             && (empty($archiveSlug) || $archiveSlug == $this->archiveSlug);
     }
 
