@@ -272,7 +272,7 @@ class General extends Options implements ActionInterface
         }
 
         $attachmentTypesOptions = [
-            '@image@' => _t('图片文件') . ' <code>(gif jpg jpeg png tiff bmp)</code>',
+            '@image@' => _t('图片文件') . ' <code>(gif jpg jpeg png tiff bmp webp)</code>',
             '@media@' => _t('多媒体文件') . ' <code>(mp3 mp4 mov wmv wma rmvb rm avi flv ogg oga ogv)</code>',
             '@doc@'   => _t('常用档案文件') . ' <code>(txt doc docx xls xlsx ppt pptx zip rar pdf)</code>',
             '@other@' => _t(

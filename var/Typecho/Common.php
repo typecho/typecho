@@ -1359,7 +1359,8 @@ EOF;
                 'ice'      => 'x-conference/x-cooltalk',
                 'vrm'      => 'x-world/x-vrml',
                 'rar'      => 'application/x-rar-compressed',
-                'cab'      => 'application/vnd.ms-cab-compressed'
+                'cab'      => 'application/vnd.ms-cab-compressed',
+                'webp'     => 'image/webp'
             ];
 
             $part = explode('.', $fileName);
