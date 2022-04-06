@@ -1012,7 +1012,8 @@ class Archive extends Contents
 
             $linkText = empty($title) ? $content['title'] : $title;
             $linkClass = empty($tagClass) ? '' : 'class="' . $tagClass . '" ';
-            $link = '<a ' . $linkClass . 'href="' . $content['permalink'] . '" title="' . $content['title'] . '">' . $linkText . '</a>';
+            $link = '<a ' . $linkClass . 'href="' . $content['permalink']
+                . '" title="' . $content['title'] . '">' . $linkText . '</a>';
 
             printf($format, $link);
         } else {
