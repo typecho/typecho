@@ -211,8 +211,8 @@ function install_get_default_routers(): array
         'feed'               =>
             [
                 'url'    => '/feed[feed:string:0]',
-                'widget' => '\Widget\Archive',
-                'action' => 'feed',
+                'widget' => '\Widget\Feed',
+                'action' => 'render',
             ],
         'feedback'           =>
             [

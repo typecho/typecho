@@ -116,6 +116,14 @@ class Feed
     }
 
     /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
      * 设置标题
      *
      * @param string $title 标题
@@ -143,6 +151,14 @@ class Feed
     public function setFeedUrl(string $feedUrl)
     {
         $this->feedUrl = $feedUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFeedUrl(): string
+    {
+        return $this->feedUrl;
     }
 
     /**

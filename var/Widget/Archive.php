@@ -7,7 +7,6 @@ use Typecho\Config;
 use Typecho\Cookie;
 use Typecho\Db;
 use Typecho\Db\Query;
-use Typecho\Feed;
 use Typecho\Router;
 use Typecho\Widget\Exception as WidgetException;
 use Typecho\Widget\Helper\PageNavigator;
@@ -16,7 +15,6 @@ use Typecho\Widget\Helper\PageNavigator\Box;
 use Widget\Base\Contents;
 use Widget\Base\Metas;
 use Widget\Comments\Ping;
-use Widget\Comments\Recent;
 use Widget\Contents\Attachment\Related;
 use Widget\Contents\Related\Author;
 use Widget\Metas\Category\Rows;
@@ -91,13 +89,6 @@ class Archive extends Contents
     private $pageRow = [];
 
     /**
-     * 聚合器对象
-     *
-     * @var Feed
-     */
-    private $feed;
-
-    /**
      * RSS 2.0聚合地址
      *
      * @var string
@@ -131,27 +122,6 @@ class Archive extends Contents
      * @var string
      */
     private $description;
-
-    /**
-     * 聚合类型
-     *
-     * @var string
-     */
-    private $feedType;
-
-    /**
-     * 聚合类型
-     *
-     * @var string
-     */
-    private $feedContentType;
-
-    /**
-     * 当前feed地址
-     *
-     * @var string
-     */
-    private $currentFeedUrl;
 
     /**
      * 归档标题
@@ -234,56 +204,6 @@ class Archive extends Contents
 
         /** 初始化皮肤路径 */
         $this->themeDir = rtrim($this->options->themeFile($this->options->theme), '/') . '/';
-
-        /** 处理feed模式 **/
-        if ('feed' == $parameter->type) {
-            $this->currentFeedUrl = '';
-
-            /** 判断聚合类型 */
-            switch (true) {
-                case 0 === strpos($this->request->feed, '/rss/') || '/rss' == $this->request->feed:
-                    /** 如果是RSS1标准 */
-                    $this->request->feed = substr($this->request->feed, 4);
-                    $this->feedType = Feed::RSS1;
-                    $this->currentFeedUrl = $this->options->feedRssUrl;
-                    $this->feedContentType = 'application/rdf+xml';
-                    break;
-                case 0 === strpos($this->request->feed, '/atom/') || '/atom' == $this->request->feed:
-                    /** 如果是ATOM标准 */
-                    $this->request->feed = substr($this->request->feed, 5);
-                    $this->feedType = Feed::ATOM1;
-                    $this->currentFeedUrl = $this->options->feedAtomUrl;
-                    $this->feedContentType = 'application/atom+xml';
-                    break;
-                default:
-                    $this->feedType = Feed::RSS2;
-                    $this->currentFeedUrl = $this->options->feedUrl;
-                    $this->feedContentType = 'application/rss+xml';
-                    break;
-            }
-
-            $feedQuery = $this->request->feed;
-            //$parameter->type = Router::$current;
-            //$this->request->setParams($params);
-
-            if ('/comments/' == $feedQuery || '/comments' == $feedQuery) {
-                /** 专为feed使用的hack */
-                $parameter->type = 'comments';
-            } else {
-                $matched = Router::match($this->request->feed, 'pageSize=10&isFeed=1');
-                if ($matched instanceof Archive) {
-                    $this->import($matched);
-                } else {
-                    throw new WidgetException(_t('聚合页不存在'), 404);
-                }
-            }
-
-            /** 初始化聚合器 */
-            $this->setFeed(new Feed(Common::VERSION, $this->feedType, $this->options->charset, _t('zh-CN')));
-
-            /** 默认输出10则文章 **/
-            $parameter->pageSize = 10;
-        }
     }
 
     /**
@@ -398,22 +318,6 @@ class Archive extends Contents
     /**
      * @return string|null
      */
-    public function getFeedType(): ?string
-    {
-        return $this->feedType;
-    }
-
-    /**
-     * @param string $feedType the $feedType to set
-     */
-    public function setFeedType(string $feedType)
-    {
-        $this->feedType = $feedType;
-    }
-
-    /**
-     * @return string|null
-     */
     public function getDescription(): ?string
     {
         return $this->description;
@@ -489,22 +393,6 @@ class Archive extends Contents
     public function setFeedUrl(string $feedUrl)
     {
         $this->feedUrl = $feedUrl;
-    }
-
-    /**
-     * @return Feed
-     */
-    public function getFeed(): Feed
-    {
-        return $this->feed;
-    }
-
-    /**
-     * @param Feed $feed the $feed to set
-     */
-    public function setFeed(Feed $feed)
-    {
-        $this->feed = $feed;
     }
 
     /**
@@ -1420,98 +1308,6 @@ class Archive extends Contents
     }
 
     /**
-     * 输出feed
-     *
-     * @throws WidgetException
-     */
-    public function feed()
-    {
-        if ($this->feedType == Feed::RSS1) {
-            $feedUrl = $this->feedRssUrl;
-        } elseif ($this->feedType == Feed::ATOM1) {
-            $feedUrl = $this->feedAtomUrl;
-        } else {
-            $feedUrl = $this->feedUrl;
-        }
-
-        $this->checkPermalink($feedUrl);
-
-        $this->feed->setSubTitle($this->description);
-        $this->feed->setFeedUrl($feedUrl);
-        $this->feed->setBaseUrl($this->archiveUrl);
-
-        if ($this->is('single') || 'comments' == $this->parameter->type) {
-            $this->feed->setTitle(_t(
-                '%s 的评论',
-                $this->options->title . ($this->archiveTitle ? ' - ' . $this->archiveTitle : null)
-            ));
-
-            if ('comments' == $this->parameter->type) {
-                $comments = Recent::alloc('pageSize=10');
-            } else {
-                $comments = Recent::alloc('pageSize=10&parentId=' . $this->cid);
-            }
-
-            while ($comments->next()) {
-                $suffix = self::pluginHandle()->trigger($plugged)->commentFeedItem($this->feedType, $comments);
-                if (!$plugged) {
-                    $suffix = null;
-                }
-
-                $this->feed->addItem([
-                    'title'   => $comments->author,
-                    'content' => $comments->content,
-                    'date'    => $comments->created,
-                    'link'    => $comments->permalink,
-                    'author'  => (object)[
-                        'screenName' => $comments->author,
-                        'url'        => $comments->url,
-                        'mail'       => $comments->mail
-                    ],
-                    'excerpt' => strip_tags($comments->content),
-                    'suffix'  => $suffix
-                ]);
-            }
-        } else {
-            $this->feed->setTitle($this->options->title . ($this->archiveTitle ? ' - ' . $this->archiveTitle : null));
-
-            while ($this->next()) {
-                $suffix = self::pluginHandle()->trigger($plugged)->feedItem($this->feedType, $this);
-                if (!$plugged) {
-                    $suffix = null;
-                }
-
-                $feedUrl = '';
-                if (Feed::RSS2 == $this->feedType) {
-                    $feedUrl = $this->feedUrl;
-                } elseif (Feed::RSS1 == $this->feedType) {
-                    $feedUrl = $this->feedRssUrl;
-                } elseif (Feed::ATOM1 == $this->feedType) {
-                    $feedUrl = $this->feedAtomUrl;
-                }
-
-                $this->feed->addItem([
-                    'title'           => $this->title,
-                    'content'         => $this->options->feedFullText ? $this->content
-                        : (false !== strpos($this->text, '<!--more-->') ? $this->excerpt .
-                            "<p class=\"more\"><a href=\"{$this->permalink}\" title=\"{$this->title}\">[...]</a></p>"
-                            : $this->content),
-                    'date'            => $this->created,
-                    'link'            => $this->permalink,
-                    'author'          => $this->author,
-                    'excerpt'         => $this->___description(),
-                    'comments'        => $this->commentsNum,
-                    'commentsFeedUrl' => $feedUrl,
-                    'suffix'          => $suffix
-                ]);
-            }
-        }
-
-        $this->response->setContentType($this->feedContentType);
-        echo (string) $this->feed;
-    }
-
-    /**
      * 判断归档类型和名称
      *
      * @access public
@@ -1519,11 +1315,12 @@ class Archive extends Contents
      * @param string|null $archiveSlug 归档名称
      * @return boolean
      */
-    public function is(string $archiveType, ?string $archiveSlug = null)
+    public function is(string $archiveType, ?string $archiveSlug = null): bool
     {
         return ($archiveType == $this->archiveType ||
                 (($this->archiveSingle ? 'single' : 'archive') == $archiveType && 'index' != $this->archiveType) ||
-                ('index' == $archiveType && $this->makeSinglePageAsFrontPage))
+                ('index' == $archiveType && $this->makeSinglePageAsFrontPage) ||
+                ('feed' == $archiveType && $this->invokeByFeed))
             && (empty($archiveSlug) || $archiveSlug == $this->archiveSlug);
     }
 
@@ -1836,7 +1633,7 @@ class Archive extends Contents
             $this->keywords = implode(',', array_column($this->tags, 'name'));
 
             /** 设置描述 */
-            $this->description = $this->___description();
+            $this->description = $this->plainExcerpt;
         }
 
         /** 设置归档类型 */

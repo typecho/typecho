@@ -9,6 +9,7 @@ use Typecho\Router;
 use Typecho\Widget\Exception as WidgetException;
 use Widget\Base\Contents;
 use Typecho\Feed as FeedGenerator;
+use Widget\Comments\Recent;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -19,6 +20,11 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  */
 class Feed extends Contents
 {
+    /**
+     * @var FeedGenerator
+     */
+    private $feed;
+
     /**
      * @param Config $parameter
      * @throws Exception
@@ -83,15 +89,26 @@ class Feed extends Contents
                 throw new WidgetException(_t('聚合页不存在'), 404);
             }
 
-            $path = parse_url($archive->getArchiveUrl(), PHP_URL_PATH);
-            $currentFeedUrl = Common::url($path, $currentFeedUrl);
+            switch ($feedType) {
+                case FeedGenerator::RSS1:
+                    $currentFeedUrl = $archive->getFeedRssUrl();
+                    break;
+                case FeedGenerator::ATOM1:
+                    $currentFeedUrl = $archive->getFeedAtomUrl();
+                    break;
+                default:
+                    $currentFeedUrl = $archive->getFeedUrl();
+                    break;
+            }
+
             $feed->setBaseUrl($archive->getArchiveUrl());
             $feed->setSubTitle($archive->getDescription());
         }
 
         $this->checkPermalink($currentFeedUrl);
         $feed->setFeedUrl($currentFeedUrl);
-        $this->render($feed, $feedContentType, $isComments, $archive ?? null);
+        $this->feed($feed, $feedContentType, $isComments, $archive ?? null);
+        $this->feed = $feed;
     }
 
     /**
@@ -100,7 +117,7 @@ class Feed extends Contents
      * @param bool $isComments
      * @param Archive|null $archive
      */
-    public function render(
+    public function feed(
         FeedGenerator $feed,
         string $contentType,
         bool $isComments,
@@ -111,10 +128,71 @@ class Feed extends Contents
                 '%s 的评论',
                 $this->options->title . ($isComments ? '' : ' - ' . $archive->getArchiveTitle())
             ));
+
+            if ($isComments) {
+                $comments = Recent::alloc('pageSize=10');
+            } else {
+                $comments = Recent::alloc('pageSize=10&parentId=' . $archive->cid);
+            }
+
+            while ($comments->next()) {
+                $suffix = self::pluginHandle()->trigger($plugged)->commentFeedItem($feed->getType(), $comments);
+
+                if (!$plugged) {
+                    $suffix = null;
+                }
+
+                $feed->addItem([
+                    'title'   => $comments->author,
+                    'content' => $comments->content,
+                    'date'    => $comments->created,
+                    'link'    => $comments->permalink,
+                    'author'  => (object)[
+                        'screenName' => $comments->author,
+                        'url'        => $comments->url,
+                        'mail'       => $comments->mail
+                    ],
+                    'excerpt' => strip_tags($comments->content),
+                    'suffix'  => $suffix
+                ]);
+            }
         } else {
             $feed->setTitle($this->options->title
                 . ($archive->getArchiveTitle() ? ' - ' . $archive->getArchiveTitle() : ''));
+
+            while ($archive->next()) {
+                $suffix = self::pluginHandle()->trigger($plugged)->feedItem($feed->getType(), $archive);
+
+                if (!$plugged) {
+                    $suffix = null;
+                }
+
+                $feed->addItem([
+                    'title'           => $archive->title,
+                    'content'         => $this->options->feedFullText ? $archive->content
+                        : (false !== strpos($archive->text, '<!--more-->') ? $archive->excerpt .
+                            "<p class=\"more\"><a href=\"{$archive->permalink}\" title=\"{$archive->title}\">[...]</a></p>"
+                            : $archive->content),
+                    'date'            => $archive->created,
+                    'link'            => $archive->permalink,
+                    'author'          => $archive->author,
+                    'excerpt'         => $archive->plainExcerpt,
+                    'comments'        => $archive->commentsNum,
+                    'commentsFeedUrl' => Common::url($archive->pathinfo, $feed->getFeedUrl()),
+                    'suffix'          => $suffix
+                ]);
+            }
         }
+
+        $this->response->setContentType($contentType);
+    }
+
+    /**
+     * @return void
+     */
+    public function render()
+    {
+        echo $this->feed;
     }
 
     /**
@@ -122,7 +200,7 @@ class Feed extends Contents
      */
     private function checkPermalink(string $feedUrl)
     {
-        if ($feedUrl != $this->request->getRequestUri()) {
+        if ($feedUrl != $this->request->getRequestUrl()) {
             $this->response->redirect($feedUrl, true);
         }
     }
