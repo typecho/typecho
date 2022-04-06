@@ -266,11 +266,15 @@ class Archive extends Contents
             //$parameter->type = Router::$current;
             //$this->request->setParams($params);
 
+            if (false !== strpos($feedQuery, '/search/')) {
+                $parameter->type = 'search';
+            }
+
             if ('/comments/' == $feedQuery || '/comments' == $feedQuery) {
                 /** 专为feed使用的hack */
                 $parameter->type = 'comments';
             } else {
-                $matched = Router::match($this->request->feed, 'pageSize=10&isFeed=1');
+                $matched = Router::match($feedQuery, 'pageSize=10&isFeed=1');
                 if ($matched instanceof Archive) {
                     $this->import($matched);
                 } else {
@@ -1425,7 +1429,20 @@ class Archive extends Contents
      */
     public function feed()
     {
-        $feedUrl = $this->request->makeUriByRequest();
+        if ($this->feedType == Feed::RSS1) {
+            $feedUrl = $this->feedRssUrl;
+        } elseif ($this->feedType == Feed::ATOM1) {
+            $feedUrl = $this->feedAtomUrl;
+        } else {
+            $feedUrl = $this->feedUrl;
+        }
+
+        if ('comments' == $this->parameter->type) {
+            $feedUrl = Common::url('/comments/', $feedUrl);
+        } elseif ('search' == $this->parameter->type) {
+            $keywords = rtrim(explode($feedUrl, $this->request->getRequestUrl())[1] ?? '', '/');
+            $feedUrl = Common::url("/{$keywords}/", $feedUrl);
+        }
 
         $this->checkPermalink($feedUrl);
 
@@ -1618,11 +1635,6 @@ class Archive extends Contents
                 $path = Router::url($type, $value);
                 $permalink = Common::url($path, $this->options->index);
             }
-        }
-
-        $urlPath = parse_url($permalink, PHP_URL_PATH);
-        if ($this->is('feed') && substr($urlPath, -1) != '/') {
-            $this->response->redirect(str_replace($urlPath, $urlPath . '/', $permalink), true);
         }
 
         $requestUrl = $this->request->getRequestUrl();
