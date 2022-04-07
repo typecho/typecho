@@ -34,4 +34,4 @@ usr/themes/*
 !usr/themes/default
 !usr/themes/classic-22
 node_modules/
-/tools/tmp/
+tools/tmp/
