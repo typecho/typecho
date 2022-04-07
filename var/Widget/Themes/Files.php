@@ -120,7 +120,7 @@ class Files extends Base
      */
     public function currentIsWriteable(): bool
     {
-        return is_writeable(Options::alloc()
+        return is_writable(Options::alloc()
                 ->themeFile($this->currentTheme, $this->currentFile))
             && self::isWriteable();
     }

@@ -103,7 +103,7 @@ class Upgrade
      */
     public static function v0_4r9_1_14($db, $options)
     {
-        if (is_writeable(__TYPECHO_ROOT_DIR__ . '/config.inc.php')) {
+        if (is_writable(__TYPECHO_ROOT_DIR__ . '/config.inc.php')) {
             $handle = fopen(__TYPECHO_ROOT_DIR__ . '/config.inc.php', 'ab');
             fwrite($handle, '
 /** 初始化时区 */
@@ -351,7 +351,7 @@ Typecho_Date::setTimezoneOffset($options->timezone);
         //创建上传目录
         $uploadDir = Common::url(Upload::UPLOAD_DIR, __TYPECHO_ROOT_DIR__);
         if (is_dir($uploadDir)) {
-            if (!is_writeable($uploadDir)) {
+            if (!is_writable($uploadDir)) {
                 if (!@chmod($uploadDir, 0755)) {
                     throw new \Typecho\Widget\Exception(_t('上传目录无法写入, 请手动将安装目录下的 %s 目录的权限设置为可写然后继续升级', Upload::UPLOAD_DIR));
                 }
@@ -530,7 +530,7 @@ Typecho_Date::setTimezoneOffset($options->timezone);
             ->rows(['name' => 'gzip', 'user' => 0, 'value' => 0]));
 
 
-        if (is_writeable(__TYPECHO_ROOT_DIR__ . '/config.inc.php')) {
+        if (is_writable(__TYPECHO_ROOT_DIR__ . '/config.inc.php')) {
             $contents = file_get_contents(__TYPECHO_ROOT_DIR__ . '/config.inc.php');
             $contents = preg_replace("/Common::init([^;]+);/is", "Common::init(array(
     'autoLoad'          =>  true,

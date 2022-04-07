@@ -67,7 +67,7 @@ class Permalink extends Options implements ActionInterface
             $hasWrote = false;
 
             if (!file_exists(__TYPECHO_ROOT_DIR__ . '/.htaccess') && strpos(php_sapi_name(), 'apache') !== false) {
-                if (is_writeable(__TYPECHO_ROOT_DIR__)) {
+                if (is_writable(__TYPECHO_ROOT_DIR__)) {
                     $parsed = parse_url($this->options->siteUrl);
                     $basePath = empty($parsed['path']) ? '/' : $parsed['path'];
                     $basePath = rtrim($basePath, '/') . '/';
@@ -215,7 +215,7 @@ RewriteRule . {$basePath}index.php [L]
                 if (
                     strpos(php_sapi_name(), 'apache') !== false
                     && !file_exists(__TYPECHO_ROOT_DIR__ . '/.htaccess')
-                    && !is_writeable(__TYPECHO_ROOT_DIR__)
+                    && !is_writable(__TYPECHO_ROOT_DIR__)
                 ) {
                     $errorStr .= '<br /><strong>' . _t('我们检测到你使用了apache服务器, 但是程序无法在根目录创建.htaccess文件, 这可能是产生这个错误的原因.')
                         . _t('请调整你的目录权限, 或者手动创建一个.htaccess文件.') . '</strong>';

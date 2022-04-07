@@ -103,7 +103,7 @@ class Edit extends Options implements ActionInterface
         $path = $this->options->themeFile($theme, $file);
 
         if (
-            file_exists($path) && is_writeable($path)
+            file_exists($path) && is_writable($path)
             && (!defined('__TYPECHO_THEME_WRITEABLE__') || __TYPECHO_THEME_WRITEABLE__)
         ) {
             $handle = fopen($path, 'wb');
