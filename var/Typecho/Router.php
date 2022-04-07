@@ -15,7 +15,6 @@ class Router
     /**
      * 当前路由名称
      *
-     * @access public
      * @var string
      */
     public static $current;
@@ -23,24 +22,34 @@ class Router
     /**
      * 已经解析完毕的路由表配置
      *
-     * @access private
-     * @var mixed
+     * @var array
      */
     private static $routingTable = [];
 
     /**
-     * 解析路径
+     * 是否已经匹配过，防止递归匹配
      *
-     * @access public
+     * @var bool
+     */
+    private static $matched = false;
+
+    /**
+     * 解析路径
      *
      * @param string|null $pathInfo 全路径
      * @param mixed $parameter 输入参数
-     *
+     * @param bool $once 是否只匹配一次
      * @return false|Widget
      * @throws \Exception
      */
-    public static function match(?string $pathInfo, $parameter = null)
+    public static function match(?string $pathInfo, $parameter = null, bool $once = true)
     {
+        if ($once && self::$matched) {
+            throw new RouterException("Path '{$pathInfo}' not found", 404);
+        }
+
+        self::$matched = true;
+
         foreach (self::$routingTable as $key => $route) {
             if (preg_match($route['regx'], $pathInfo, $matches)) {
                 self::$current = $key;
@@ -122,7 +131,6 @@ class Router
      * @param string $name 路由配置表名称
      * @param array|null $value 路由填充值
      * @param string|null $prefix 最终合成路径的前缀
-     *
      * @return string
      */
     public static function url(string $name, ?array $value = null, ?string $prefix = null): string
@@ -141,10 +149,7 @@ class Router
     /**
      * 设置路由器默认配置
      *
-     * @access public
-     *
      * @param mixed $routes 配置信息
-     *
      * @return void
      */
     public static function setRoutes($routes)
@@ -162,9 +167,6 @@ class Router
      * 获取路由信息
      *
      * @param string $routeName 路由名称
-     *
-     * @static
-     * @access public
      * @return mixed
      */
     public static function get(string $routeName)

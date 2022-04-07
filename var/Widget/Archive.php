@@ -187,7 +187,8 @@ class Archive extends Contents
             'pageSize'       => $this->options->pageSize,
             'type'           => null,
             'checkPermalink' => true,
-            'preview'        => false
+            'preview'        => false,
+            'commentPage'    => 0
         ]);
 
         /** 用于判断是路由调用还是外部调用 */
@@ -512,7 +513,6 @@ class Archive extends Contents
             'page'               => 'singleHandle',
             'post'               => 'singleHandle',
             'attachment'         => 'singleHandle',
-            'comment_page'       => 'singleHandle',
             'category'           => 'categoryHandle',
             'category_page'      => 'categoryHandle',
             'tag'                => 'tagHandle',
@@ -794,7 +794,7 @@ class Archive extends Contents
             'parentId'      => $this->hidden ? 0 : $this->cid,
             'parentContent' => $this->row,
             'respondId'     => $this->respondId,
-            'commentPage'   => $this->request->filter('int')->commentPage,
+            'commentPage'   => $this->parameter->commentPage,
             'allowComment'  => $this->allow('comment')
         ];
 
@@ -1359,41 +1359,6 @@ class Archive extends Contents
     }
 
     /**
-     * 导入对象
-     *
-     * @param Archive $widget 需要导入的对象
-     */
-    private function import(Archive $widget)
-    {
-        $currentProperties = get_object_vars($this);
-
-        foreach ($currentProperties as $name => $value) {
-            if (false !== strpos('|request|response|parameter|feed|feedType|currentFeedUrl|', '|' . $name . '|')) {
-                continue;
-            }
-
-            if (isset($widget->{$name})) {
-                $this->{$name} = $widget->{$name};
-            } else {
-                $method = ucfirst($name);
-                $setMethod = 'set' . $method;
-                $getMethod = 'get' . $method;
-
-                if (
-                    method_exists($this, $setMethod)
-                    && method_exists($widget, $getMethod)
-                ) {
-                    $value = $widget->{$getMethod}();
-
-                    if ($value !== null) {
-                        $this->{$setMethod}($widget->{$getMethod}());
-                    }
-                }
-            }
-        }
-    }
-
-    /**
      * 检查链接是否正确
      *
      * @param string|null $permalink
@@ -1404,7 +1369,7 @@ class Archive extends Contents
             $type = $this->parameter->type;
 
             if (
-                in_array($type, ['index', 'comment_page', 404])
+                in_array($type, ['index', 404])
                 || $this->makeSinglePageAsFrontPage    // 自定义首页不处理
                 || !$this->parameter->checkPermalink
             ) { // 强制关闭
@@ -1500,17 +1465,6 @@ class Archive extends Contents
      */
     private function singleHandle(Query $select, bool &$hasPushed)
     {
-        if ('comment_page' == $this->parameter->type) {
-            $params = [];
-            $matched = Router::match($this->request->permalink);
-
-            if ($matched && $matched instanceof Archive && $matched->is('single')) {
-                $this->import($matched);
-                $hasPushed = true;
-                return;
-            }
-        }
-
         /** 将这两个设置提前是为了保证在调用query的plugin时可以在插件中使用is判断初步归档类型 */
         /** 如果需要更细判断，则可以使用singleHandle来实现 */
         $this->archiveSingle = true;

@@ -205,8 +205,8 @@ function install_get_default_routers(): array
         'comment_page'       =>
             [
                 'url'    => '[permalink:string]/comment-page-[commentPage:digital]',
-                'widget' => '\Widget\Archive',
-                'action' => 'render',
+                'widget' => '\Widget\CommentPage',
+                'action' => 'action',
             ],
         'feed'               =>
             [
