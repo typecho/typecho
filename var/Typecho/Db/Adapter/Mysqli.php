@@ -64,7 +64,7 @@ class Mysqli implements Adapter
         }
 
         /** 数据库异常 */
-        throw new ConnectionException("Couldn't connect to database.");
+        throw new ConnectionException("Couldn't connect to database.", mysqli_connect_errno());
     }
 
     /**

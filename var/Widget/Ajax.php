@@ -59,7 +59,7 @@ class Ajax extends BaseOptions implements ActionInterface
                     if (
                         isset($json['release'])
                         && preg_match("/^[0-9\.]+$/", $json['release'])
-                        && version_compare($json['release'], $version, '>=')
+                        && version_compare($json['release'], $version, '>')
                     ) {
                         $result = [
                             'available' => 1,

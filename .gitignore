@@ -24,7 +24,8 @@
 *.sublime*
 .sass-cache
 config.rb
-config.inc.php
+prepros.config
+config.inc.*
 usr/uploads/
 usr/*.db
 usr/plugins/

@@ -45,6 +45,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property int $parentId
  * @property-read Users $author
  * @property-read string $permalink
+ * @property-read string $pathinfo
  * @property-read string $url
  * @property-read string $feedUrl
  * @property-read string $feedRssUrl
@@ -57,8 +58,8 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property-read string[] $directory
  * @property-read array $tags
  * @property-read array $categories
- * @property-read string $description
  * @property-read string $excerpt
+ * @property-read string $plainExcerpt
  * @property-read string $summary
  * @property-read string $content
  * @property-read Config $fields
@@ -850,13 +851,12 @@ class Contents extends Base implements QueryInterface
     /**
      * 对文章的简短纯文本描述
      *
+     * @deprecated
      * @return string|null
      */
     protected function ___description(): ?string
     {
-        $plainTxt = str_replace("\n", '', trim(strip_tags($this->excerpt)));
-        $plainTxt = $plainTxt ? $plainTxt : $this->title;
-        return Common::subStr($plainTxt, 0, 100, '...');
+        return $this->___plainExcerpt();
     }
 
     /**
@@ -899,6 +899,18 @@ class Contents extends Base implements QueryInterface
         [$excerpt] = $contents;
 
         return Common::fixHtml(Contents::pluginHandle()->excerptEx($excerpt, $this));
+    }
+
+    /**
+     * 对文章的简短纯文本描述
+     *
+     * @return string|null
+     */
+    protected function ___plainExcerpt(): ?string
+    {
+        $plainText = str_replace("\n", '', trim(strip_tags($this->excerpt)));
+        $plainText = $plainText ?: $this->title;
+        return Common::subStr($plainText, 0, 100, '...');
     }
 
     /**

@@ -288,7 +288,7 @@ class Edit extends Contents implements ActionInterface
             self::pluginHandle()->finishPublish($contents, $this);
 
             /** 发送ping */
-            $trackback = array_unique(preg_split("/(\r|\n|\r\n)/", trim($this->request->trackback)));
+            $trackback = array_filter(array_unique(preg_split("/(\r|\n|\r\n)/", trim($this->request->trackback))));
             Service::alloc()->sendPing($this, $trackback);
 
             /** 设置提示信息 */

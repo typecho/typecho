@@ -46,6 +46,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property string $keywords
  * @property string $lang
  * @property string $theme
+ * @property string|null $missingTheme
  * @property int $pageSize
  * @property int $serverTimezone
  * @property int $timezone
@@ -186,7 +187,12 @@ class Options extends Base
         $this->plugins = unserialize($this->plugins);
 
         /** 动态判断皮肤目录 */
-        $this->theme = is_dir($this->themeFile($this->theme)) ? $this->theme : 'default';
+        $this->missingTheme = null;
+
+        if (!is_dir($this->themeFile($this->theme))) {
+            $this->missingTheme = $this->theme;
+            $this->theme = 'default';
+        }
 
         /** 增加对SSL连接的支持 */
         if ($this->request->isSecure() && 0 === strpos($this->siteUrl, 'http://')) {

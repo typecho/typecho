@@ -149,6 +149,18 @@ class Request
                     $exists = false;
                 }
                 break;
+            case $key === '@json':
+                $exists = false;
+                if ($this->isJson()) {
+                    $body = file_get_contents('php://input');
+
+                    if (false !== $body) {
+                        $exists = true;
+                        $value = json_decode($body, true, 16);
+                        $default = $default ?? $value;
+                    }
+                }
+                break;
             case isset($_GET[$key]):
                 $value = $_GET[$key];
                 break;
@@ -470,6 +482,16 @@ class Request
     public function isAjax(): bool
     {
         return 'XMLHttpRequest' == $this->getHeader('X-Requested-With');
+    }
+
+    /**
+     * 判断是否为Json请求
+     *
+     * @return bool
+     */
+    public function isJson(): bool
+    {
+        return !!preg_match("/^\s*application\/json(;|$)/i", $this->getHeader('Content-Type', ''));
     }
 
     /**
