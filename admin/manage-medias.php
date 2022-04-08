@@ -66,7 +66,7 @@ $attachments = \Widget\Contents\Attachment\Admin::alloc();
                             <tbody>
                             <?php if ($attachments->have()): ?>
                                 <?php while ($attachments->next()): ?>
-                                    <?php $mime = \Typecho\Common::mimeIconType($attachments->attachment->mime); ?>
+                                    <?php $mime = \Typecho\Common::mimeIconType($attachments->attachment->mime ?? ''); ?>
                                     <tr id="<?php $attachments->theId(); ?>">
                                         <td class="kit-hidden-mb"><input type="checkbox"
                                                                          value="<?php $attachments->cid(); ?>"
