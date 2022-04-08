@@ -177,7 +177,7 @@ class Config implements \Iterator, \ArrayAccess
      */
     public function __call(string $name, ?array $args)
     {
-        echo $this->currentConfig[$name];
+        echo $this->currentConfig[$name] ?? '';
     }
 
     /**

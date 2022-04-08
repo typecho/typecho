@@ -23,7 +23,7 @@ $attachment = \Widget\Contents\Attachment\Edit::alloc();
                 <?php endif; ?>
 
                 <p>
-                    <?php $mime = \Typecho\Common::mimeIconType($attachment->attachment->mime); ?>
+                    <?php $mime = \Typecho\Common::mimeIconType($attachment->attachment->mime ?? ''); ?>
                     <i class="mime-<?php echo $mime; ?>"></i>
                     <a href=""><strong><?php $attachment->attachment->name(); ?></strong></a>
                     <span><?php echo number_format(ceil($attachment->attachment->size / 1024)); ?> Kb</span>
