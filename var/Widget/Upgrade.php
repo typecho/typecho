@@ -3,8 +3,9 @@
 namespace Widget;
 
 use Typecho\Common;
-use Typecho\Exception;
+use Exception;
 use Widget\Base\Options as BaseOptions;
+use Utils\Upgrade as UpgradeAction;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -20,50 +21,44 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
 class Upgrade extends BaseOptions implements ActionInterface
 {
     /**
+     * minimum supported version
+     */
+    public const MIN_VERSION = '1.1.0';
+
+    /**
      * 执行升级程序
      *
      * @throws \Typecho\Db\Exception
      */
     public function upgrade()
     {
-        $packages = get_class_methods('Upgrade');
+        $currentVersion = $this->options->version;
 
-        preg_match("/^\w+ ([0-9\.]+)(\/[0-9\.]+)?$/i", $this->options->generator, $matches);
-        $currentVersion = $matches[1];
-        $currentMinor = '0';
-        if (isset($matches[2])) {
-            $currentMinor = substr($matches[2], 1);
+        if (version_compare($currentVersion, self::MIN_VERSION, '<')) {
+            Notice::alloc()->set(
+                _t('请先升级至版本 %s', self::MIN_VERSION),
+                'error'
+            );
+
+            $this->response->goBack();
         }
 
+        $ref = new \ReflectionClass(UpgradeAction::class);
         $message = [];
 
-        foreach ($packages as $package) {
-            preg_match("/^v([_0-9]+)(r[_0-9]+)?$/", $package, $matches);
-
+        foreach ($ref->getMethods() as $method) {
+            preg_match("/^v([_0-9]+)$/", $method->getName(), $matches);
             $version = str_replace('_', '.', $matches[1]);
 
-            if (version_compare($currentVersion, $version, '>')) {
-                break;
+            if (version_compare($currentVersion, $version, '>=')) {
+                continue;
             }
 
-            if (isset($matches[2])) {
-                $minor = substr(str_replace('_', '.', $matches[2]), 1);
-
-                if (
-                    version_compare($currentVersion, $version, '=')
-                    && version_compare($currentMinor, $minor, '>=')
-                ) {
-                    break;
-                }
-
-                $version .= '/' . $minor;
-            }
-
-            $options = Options::allocWithAlias($package);
+            $options = Options::allocWithAlias($version);
 
             /** 执行升级脚本 */
             try {
-                $result = call_user_func([\Utils\Upgrade::class, $package], $this->db, $options);
+                $result = $method->invoke(null, $this->db, $options);
                 if (!empty($result)) {
                     $message[] = $result;
                 }
@@ -78,7 +73,7 @@ class Upgrade extends BaseOptions implements ActionInterface
                 $this->db->sql()->where('name = ?', 'generator')
             );
 
-            Options::destroy($package);
+            Options::destroy($version);
         }
 
         /** 更新版本号 */

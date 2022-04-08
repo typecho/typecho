@@ -636,7 +636,7 @@ class Options extends Base
      */
     protected function ___software(): string
     {
-        [$software, $version] = explode(' ', $this->generator);
+        [$software] = explode(' ', $this->generator);
         return $software;
     }
 
@@ -647,12 +647,12 @@ class Options extends Base
      */
     protected function ___version(): string
     {
-        [$software, $version] = explode(' ', $this->generator);
+        [, $version] = explode(' ', $this->generator);
         $pos = strpos($version, '/');
 
         // fix for old version
         if ($pos !== false) {
-            $version = substr($version, 0, $pos);
+            $version = substr($version, 0, $pos) . '.0';
         }
 
         return $version;
