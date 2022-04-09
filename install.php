@@ -573,17 +573,17 @@ function install_js_support()
             </div>
             <div id="typecho-welcome">
                 <p class="keep-word">
-                    <?php _e('您选择了使用原有的数据, 您的用户名和密码和原来的一致'); ?>
+                    <?php _e('您选择保留原有数据，所以您的用户名和密码与原来相同。'); ?>
                 </p>
                 <p class="fresh-word">
-                    <?php _e('您的用户名是'); ?>: <strong class="warning" id="success-user"></strong><br>
-                    <?php _e('您的密码是'); ?>: <strong class="warning" id="success-password"></strong>
+                    <?php _e('您的用户名：'); ?>: <strong class="warning" id="success-user"></strong><br>
+                    <?php _e('您的密码：'); ?>: <strong class="warning" id="success-password"></strong>
                 </p>
                 <ul>
-                    <li><a id="login-url" href=""><?php _e('点击这里访问您的控制面板'); ?></a></li>
-                    <li><a id="site-url" href=""><?php _e('点击这里查看您的 Blog'); ?></a></li>
+                    <li><a id="login-url" href=""><?php _e('点击此处访问控制面板'); ?></a></li>
+                    <li><a id="site-url" href=""><?php _e('点击此处查看您的 Blog'); ?></a></li>
                 </ul>
-                <p><?php _e('希望您能尽情享用 Typecho 带来的乐趣!'); ?></p>
+                <p><?php _e('望您尽情享用 Typecho 带来的乐趣！'); ?></p>
             </div>
         </div>
     </div>
@@ -683,7 +683,7 @@ function install_check_extension(array $extensions): ?string
         }
     }
 
-    return _n('缺少PHP扩展', '请在服务器上安装以下PHP扩展中的至少一个', count($extensions))
+    return _n('缺少 PHP 扩展', '请在服务器上安装以下 PHP 扩展中的至少一个：', count($extensions))
         . ': ' . implode(', ', $extensions);
 }
 
@@ -701,12 +701,12 @@ function install_step_1()
                 <form autocomplete="off" method="post" action="install.php">
                     <h3><?php _e('安装说明'); ?></h3>
                     <p class="warning">
-                        <strong><?php _e('本安装程序将自动检测服务器环境是否符合最低配置需求. 如果不符合, 将在上方出现提示信息, 请按照提示信息检查您的主机配置. 如果服务器环境符合要求, 将在下方出现 "开始下一步" 的按钮, 点击此按钮即可一步完成安装.'); ?></strong>
+                        <strong><?php _e('安装程序将自动检测您的服务器环境。如果符合 Typecho 的最低配置要求，将在下方如果不符合, 将在上方出现提示信息, 请按照提示信息检查您的主机配置. 如果服务器环境符合要求, 将在下方出现 "开始下一步" 的按钮, 点击此按钮即可一步完成安装.'); ?></strong>
                     </p>
                     <h3><?php _e('许可及协议'); ?></h3>
                     <ul>
                         <li><?php _e('Typecho 基于 <a href="http://www.gnu.org/copyleft/gpl.html">GPL</a> 协议发布, 我们允许用户在 GPL 协议许可的范围内使用, 拷贝, 修改和分发此程序.'); ?>
-                            <?php _e('在GPL许可的范围内, 您可以自由地将其用于商业以及非商业用途.'); ?></li>
+                            <?php _e('在 GPL 许可的范围内, 您可以自由地将其用于商业以及非商业用途.'); ?></li>
                         <li><?php _e('Typecho 软件由其社区提供支持, 核心开发团队负责维护程序日常开发工作以及新特性的制定.'); ?>
                             <?php _e('如果您遇到使用上的问题, 程序中的 BUG, 以及期许的新功能, 欢迎您在社区中交流或者直接向我们贡献代码.'); ?>
                             <?php _e('对于贡献突出者, 他的名字将出现在贡献者名单中.'); ?></li>
