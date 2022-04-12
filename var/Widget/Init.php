@@ -93,7 +93,10 @@ class Init extends Widget
         }
 
         /** cookie初始化 */
-        Cookie::setPrefix($options->rootUrl); 
+        Cookie::setPrefix($options->rootUrl);
+        if (defined('__TYPECHO_COOKIE_OPTIONS__')) {
+            Cookie::setOptions(__TYPECHO_COOKIE_OPTIONS__);
+        }
 
         /** 初始化路由器 */
         Router::setRoutes($options->routingTable);
