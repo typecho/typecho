@@ -10,9 +10,9 @@ $stat = \Widget\Stat::alloc();
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main">
             <div class="col-mb-12 welcome-board" role="main">
-                <p><?php _e('目前有 <em>%s</em> 篇文章, 并有 <em>%s</em> 条关于你的评论在 <em>%s</em> 个分类中.',
-                        $stat->myPublishedPostsNum, $stat->myPublishedCommentsNum, $stat->categoriesNum); ?>
-                    <br><?php _e('点击下面的链接快速开始:'); ?></p>
+                <p><?php _e('全站共计 <em>%s</em> 篇文章，<em>%s</em> 个分类，并有 <em>%s</em> 条评论与您有关。',
+                        $stat->myPublishedPostsNum, $stat->categoriesNum, $stat->myPublishedCommentsNum); ?>
+                    <br><?php _e('点击下面的链接，快速开始：'); ?></p>
 
                 <ul id="start-link" class="clearfix">
                     <?php if ($user->pass('contributor', true)): ?>
@@ -24,7 +24,7 @@ $stat = \Widget\Stat::alloc();
                             </li>
                         <?php elseif ($stat->myWaitingCommentsNum > 0): ?>
                             <li>
-                                <a href="<?php $options->adminUrl('manage-comments.php?status=waiting'); ?>"><?php _e('待审核评论'); ?></a>
+                                <a href="<?php $options->adminUrl('manage-comments.php?status=waiting'); ?>"><?php _e('待审核的评论'); ?></a>
                                 <span class="balloon"><?php $stat->myWaitingCommentsNum(); ?></span>
                             </li>
                         <?php endif; ?>
@@ -46,7 +46,7 @@ $stat = \Widget\Stat::alloc();
                             </li>
                         <?php endif; ?>
                     <?php endif; ?>
-                    <!--<li><a href="<?php $options->adminUrl('profile.php'); ?>"><?php _e('更新我的资料'); ?></a></li>-->
+                    <!--<li><a href="<?php $options->adminUrl('profile.php'); ?>"><?php _e('更改个人资料'); ?></a></li>-->
                 </ul>
             </div>
 
@@ -63,7 +63,7 @@ $stat = \Widget\Stat::alloc();
                                 </li>
                             <?php endwhile; ?>
                         <?php else: ?>
-                            <li><em><?php _e('暂时没有文章'); ?></em></li>
+                            <li><em><?php _e('暂时还没有文章。'); ?></em></li>
                         <?php endif; ?>
                     </ul>
                 </section>
@@ -84,7 +84,7 @@ $stat = \Widget\Stat::alloc();
                                 </li>
                             <?php endwhile; ?>
                         <?php else: ?>
-                            <li><?php _e('暂时没有回复'); ?></li>
+                            <li><?php _e('暂时还没有回复。'); ?></li>
                         <?php endif; ?>
                     </ul>
                 </section>
@@ -95,7 +95,7 @@ $stat = \Widget\Stat::alloc();
                     <h3><?php _e('官方最新日志'); ?></h3>
                     <div id="typecho-message">
                         <ul>
-                            <li><?php _e('读取中...'); ?></li>
+                            <li><?php _e('正在加载…'); ?></li>
                         </ul>
                     </div>
                 </section>
