@@ -19,9 +19,9 @@ $backupFiles = \Widget\Backup::alloc()->listFiles();
                     <form action="<?php echo $actionUrl; ?>" method="post">
                     <h3><?php _e('备份您的数据'); ?></h3>
                     <ul>
-                        <li><?php _e('此备份操作仅包含<strong>内容数据</strong>, 并不会涉及任何<strong>设置信息</strong>'); ?></li>
-                        <li><?php _e('如果您的数据量过大, 为了避免操作超时, 建议您直接使用数据库提供的备份工具备份数据'); ?></li>
-                        <li><strong class="warning"><?php _e('为了缩小备份文件体积, 建议您在备份前删除不必要的数据'); ?></strong></li>
+                        <li><?php _e('此备份操作仅包含<strong>内容数据</strong>。<strong>设置信息</strong>将被排除在备份范围之外。'); ?></li>
+                        <li><?php _e('如果网站的数据量过大，为了避免操作超时，建议您直接使用数据库提供的备份工具来进行备份。'); ?></li>
+                        <li><strong class="warning"><?php _e('另外建议在备份前删除一些不必要的数据，以缩小文件体积。'); ?></strong></li>
                     </ul>
                     <p><button class="btn primary" type="submit"><?php _e('开始备份 &raquo;'); ?></button></p>
                         <input tabindex="1" type="hidden" name="do" value="export">
@@ -33,7 +33,7 @@ $backupFiles = \Widget\Backup::alloc()->listFiles();
                 <h3><?php _e('恢复数据'); ?></h3>
                 <ul class="typecho-option-tabs clearfix">
                     <li class="active w-50"><a href="#from-upload"><?php _e('上传'); ?></a></li>
-                    <li class="w-50"><a href="#from-server"><?php _e('从服务器'); ?></a></li>
+                    <li class="w-50"><a href="#from-server"><?php _e('从服务器…'); ?></a></li>
                 </ul>
 
                 <form action="<?php echo $actionUrl; ?>" id="from-upload" class="tab-content" method="post" enctype="multipart/form-data">
@@ -54,13 +54,13 @@ $backupFiles = \Widget\Backup::alloc()->listFiles();
                     <?php if (empty($backupFiles)): ?>
                     <ul class="typecho-option">
                         <li>
-                            <p class="description"><?php _e('将备份文件手动上传至服务器的 %s 目录下后, 这里会出现文件选项', __TYPECHO_BACKUP_DIR__); ?></p>
+                            <p class="description"><?php _e('请将您的备份文件手动上传至服务器的 %s 目录。上传完成后，文件选项将会出现在此处。', __TYPECHO_BACKUP_DIR__); ?></p>
                         </li>
                     </ul>
                     <?php else: ?>
                     <ul class="typecho-option">
                         <li>
-                            <label class="typecho-label" for="backup-select-file"><?php _e('选择一个备份文件恢复数据'); ?></label>
+                            <label class="typecho-label" for="backup-select-file"><?php _e('选择一个备份文件作为恢复源'); ?></label>
                             <select tabindex="5" name="file" id="backup-select-file">
                                 <?php foreach ($backupFiles as $file): ?>
                                     <option value="<?php echo $file; ?>"><?php echo $file; ?></option>
@@ -98,7 +98,7 @@ include 'common-js.php';
     });
 
     $('#backup-secondary form').submit(function (e) {
-        if (!confirm('<?php _e('恢复操作将清除所有现有数据, 是否继续?'); ?>')) {
+        if (!confirm('<?php _e('恢复操作将同时清除所有现有数据，是否继续？'); ?>')) {
             return false;
         }
     });
