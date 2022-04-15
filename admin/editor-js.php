@@ -50,13 +50,13 @@ $(document).ready(function () {
         exitFullscreen: '<?php _e('退出全屏'); ?> - Ctrl+E',
         fullscreenUnsupport: '<?php _e('此浏览器不支持全屏操作'); ?>',
 
-        imagedialog: '<p><b><?php _e('插入图片'); ?></b></p><p><?php _e('请在下方的输入框内输入要插入的远程图片地址'); ?></p><p><?php _e('您也可以使用附件功能插入上传的本地图片'); ?></p>',
-        linkdialog: '<p><b><?php _e('插入链接'); ?></b></p><p><?php _e('请在下方的输入框内输入要插入的链接地址'); ?></p>',
+        imagedialog: '<p><b><?php _e('插入图片'); ?></b></p><p><?php _e('请在下方的输入框内输入要插入的远程图片网址：'); ?></p><p><?php _e('您也可以使用附件功能上传并插入本地图片。'); ?></p>',
+        linkdialog: '<p><b><?php _e('插入链接'); ?></b></p><p><?php _e('请在下方的输入框内输入要插入的链接地址：'); ?></p>',
 
         ok: '<?php _e('确定'); ?>',
         cancel: '<?php _e('取消'); ?>',
 
-        help: '<?php _e('Markdown语法帮助'); ?>'
+        help: '<?php _e('Markdown 语法帮助'); ?>'
     };
 
     var converter = new HyperDown(),
@@ -221,7 +221,7 @@ $(document).ready(function () {
     if (isMarkdown) {
         initMarkdown();
     } else {
-        var notice = $('<div class="message notice"><?php _e('这篇文章不是由Markdown语法创建的, 继续使用Markdown编辑它吗?'); ?> '
+        var notice = $('<div class="message notice"><?php _e('这篇文章不是使用 Markdown 语法撰写的。您要继续使用 Markdown 来编辑它吗？'); ?> '
             + '<button class="btn btn-xs primary yes"><?php _e('是'); ?></button> ' 
             + '<button class="btn btn-xs no"><?php _e('否'); ?></button></div>')
             .hide().insertBefore(textarea).slideDown();
