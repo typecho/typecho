@@ -281,7 +281,7 @@ $(document).ready(function() {
 
         var frame = $('<iframe frameborder="0" class="preview-frame preview-loading"></iframe>')
             .attr('src', './preview.php?cid=' + cid)
-            .attr('sandbox', 'allow-scripts')
+            .attr('sandbox', 'allow-same-origin allow-scripts')
             .appendTo(document.body);
 
         frame.load(function () {
