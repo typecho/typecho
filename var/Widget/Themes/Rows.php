@@ -45,7 +45,7 @@ class Rows extends Widget
                     }
 
                     $screen = array_filter(glob($theme . '/*'), function ($path) {
-                        return preg_match("/screenshot\.(jpg|png|gif|bmp|jpeg)$/i", $path);
+                        return preg_match("/screenshot\.(jpg|png|gif|bmp|jpeg|webp)$/i", $path);
                     });
 
                     if ($screen) {
