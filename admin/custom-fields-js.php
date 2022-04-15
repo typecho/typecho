@@ -15,7 +15,7 @@ $(document).ready(function () {
 
     function attachDeleteEvent (el) {
         $('button.btn-xs', el).click(function () {
-            if (confirm('<?php _e('确认要删除此字段吗?'); ?>')) {
+            if (confirm('<?php _e('确认要删除此字段吗？'); ?>')) {
                 $(this).parents('tr').fadeOut(function () {
                     $(this).remove();
                 });
