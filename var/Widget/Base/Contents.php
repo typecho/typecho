@@ -550,7 +550,11 @@ class Contents extends Base implements QueryInterface
 
         /** 处理附件 */
         if ('attachment' == $type) {
-            $content = @unserialize($value['text']);
+            $content = @unserialize(
+                preg_replace_callback('#s:(\d+):"(.*?)";#s', function ($match) {
+                    return 's:' . strlen($match[2]) . ':"' . $match[2] . '";';
+                }, $value['text'])
+            );
 
             //增加数据信息
             $value['attachment'] = new Config($content);
