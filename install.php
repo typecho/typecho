@@ -573,11 +573,11 @@ function install_js_support()
             </div>
             <div id="typecho-welcome">
                 <p class="keep-word">
-                    <?php _e('您选择保留原有数据，所以您的用户名和密码与原来相同。'); ?>
+                    <?php _e('先前的数据已悉数保留，因此您的帐户信息与原来相同。'); ?>
                 </p>
                 <p class="fresh-word">
-                    <?php _e('您的用户名：'); ?>: <strong class="warning" id="success-user"></strong><br>
-                    <?php _e('您的密码：'); ?>: <strong class="warning" id="success-password"></strong>
+                    <?php _e('用户名：'); ?>: <strong class="warning" id="success-user"></strong><br>
+                    <?php _e('密码：'); ?>: <strong class="warning" id="success-password"></strong>
                 </p>
                 <ul>
                     <li><a id="login-url" href=""><?php _e('点击此处访问控制面板'); ?></a></li>
@@ -683,7 +683,7 @@ function install_check_extension(array $extensions): ?string
         }
     }
 
-    return _n('缺少 PHP 扩展', '请在服务器上安装以下 PHP 扩展中的至少一个：', count($extensions))
+    return _n('缺少 PHP 扩展', '请在服务器上安装下列 PHP 扩展中的至少一个：', count($extensions))
         . ': ' . implode(', ', $extensions);
 }
 
@@ -701,19 +701,19 @@ function install_step_1()
                 <form autocomplete="off" method="post" action="install.php">
                     <h3><?php _e('安装说明'); ?></h3>
                     <p class="warning">
-                        <strong><?php _e('安装程序将自动检测您的服务器环境。如果符合 Typecho 的最低配置要求，将在下方如果不符合, 将在上方出现提示信息, 请按照提示信息检查您的主机配置. 如果服务器环境符合要求, 将在下方出现 "开始下一步" 的按钮, 点击此按钮即可一步完成安装.'); ?></strong>
+                        <strong><?php _e('安装程序将自动检测您的服务器环境。如果您的环境符合 Typecho 的最低配置要求，将在下方如果不符合, 将在上方出现提示信息, 请按照提示信息检查您的主机配置. 如果服务器环境符合要求, 将在下方出现 "开始下一步" 的按钮, 点击此按钮即可一步完成安装.'); ?></strong>
                     </p>
                     <h3><?php _e('许可及协议'); ?></h3>
                     <ul>
-                        <li><?php _e('Typecho 基于 <a href="http://www.gnu.org/copyleft/gpl.html">GPL</a> 协议发布, 我们允许用户在 GPL 协议许可的范围内使用, 拷贝, 修改和分发此程序.'); ?>
-                            <?php _e('在 GPL 许可的范围内, 您可以自由地将其用于商业以及非商业用途.'); ?></li>
-                        <li><?php _e('Typecho 软件由其社区提供支持, 核心开发团队负责维护程序日常开发工作以及新特性的制定.'); ?>
-                            <?php _e('如果您遇到使用上的问题, 程序中的 BUG, 以及期许的新功能, 欢迎您在社区中交流或者直接向我们贡献代码.'); ?>
-                            <?php _e('对于贡献突出者, 他的名字将出现在贡献者名单中.'); ?></li>
+                        <li><?php _e('Typecho 基于 <a href="http://www.gnu.org/copyleft/gpl.html">GPL</a> 协议发布，我们允许用户在 GPL 协议许可的范围内使用、拷贝、修改和分发 Typecho。'); ?>
+                            <?php _e('在 GPL 许可的范围内，您可以自由地将 Typecho 用于商业以及非商业用途。'); ?></li>
+                        <li><?php _e('Typecho 由其社区提供支持。其中，核心开发团队负责维护日常开发工作，并制定新的特性。'); ?>
+                            <?php _e('如果遇到使用上的问题、程序中的 BUG，或是有什么期许的新功能，欢迎在社区中发起讨论或直接向我们贡献您的代码！'); ?>
+                            <?php _e('作出突出贡献者的名字将出现在贡献者名单中。'); ?></li>
                     </ul>
 
                     <p class="submit">
-                        <button class="btn primary" type="submit"><?php _e('我准备好了, 开始下一步 &raquo;'); ?></button>
+                        <button class="btn primary" type="submit"><?php _e('我准备好了，开始下一步 &raquo;'); ?></button>
                         <input type="hidden" name="step" value="1">
 
                         <?php if (count($langs) > 1) : ?>
@@ -771,7 +771,7 @@ function install_step_1_perform()
     }
 
     if (!$writeable) {
-        $errors[] = _t('上传目录无法写入, 请手动将安装目录下的 %s 目录的权限设置为可写然后继续升级', $uploadDir);
+        $errors[] = _t('安装程序无法写入上传目录。请手动将安装目录下的 %s 目录权限设置为可写，然后继续升级。', $uploadDir);
     }
 
     if (empty($errors)) {
@@ -830,7 +830,7 @@ function install_step_2()
 
                 <ul class="typecho-option typecho-option-submit">
                     <li>
-                        <button id="confirm" type="submit" class="btn primary"><?php _e('确认, 开始安装 &raquo;'); ?></button>
+                        <button id="confirm" type="submit" class="btn primary"><?php _e('确认，开始安装 &raquo;'); ?></button>
                         <input type="hidden" name="step" value="2">
                     </li>
                 </ul>
@@ -846,7 +846,7 @@ function install_step_2()
                 let text = $('<textarea></textarea>'),
                     btn = $('<button></button>');
 
-                btn.html('<?php _e('创建完毕, 继续安装 &raquo;'); ?>')
+                btn.html('<?php _e('创建完毕，继续安装 &raquo;'); ?>')
                     .attr('type', 'button')
                     .addClass('btn btn-s primary');
 
@@ -1051,7 +1051,7 @@ function install_step_2_perform()
     // check config file
     if ($config['dbNext'] == 'config' && !install_check('config')) {
         $code = install_config_file($config['dbAdapter'], $config['dbPrefix'], $dbConfig, true);
-        install_raise_error(_t('没有检测到您手动创建的配置文件, 请检查后再次创建'), ['code' => $code]);
+        install_raise_error(_t('未检测到您手动创建的配置文件。请检查后重试。'), ['code' => $code]);
     } elseif (empty($installDb)) {
         // detect db config
         try {
@@ -1059,17 +1059,17 @@ function install_step_2_perform()
             $installDb->addServer($dbConfig, \Typecho\Db::READ | \Typecho\Db::WRITE);
             $installDb->query('SELECT 1=1');
         } catch (\Typecho\Db\Adapter\ConnectionException $e) {
-            install_raise_error(_t('对不起, 无法连接数据库, 请先检查数据库配置再继续进行安装'));
+            install_raise_error(_t('当前无法连接到数据库。请检查数据库配置是否正确，然后继续进行安装。'));
         } catch (\Typecho\Db\Exception $e) {
-            install_raise_error(_t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.', $e->getMessage()));
+            install_raise_error(_t('安装程序捕捉到以下错误："%s" 安装已被中止。请检查您的配置信息。', $e->getMessage()));
         }
 
         $code = install_config_file($config['dbAdapter'], $config['dbPrefix'], $dbConfig);
 
         if (!install_check('config')) {
             install_raise_error(
-                _t('安装程序无法自动创建 <strong>config.inc.php</strong> 文件') . "\n" .
-                _t('您可以在网站根目录下手动创建 <strong>config.inc.php</strong> 文件, 并复制如下代码至其中'),
+                _t('安装程序无法自动创建 <strong>config.inc.php</strong> 配置文件。') . "\n" .
+                _t('您可以在安装目录下手动创建 <strong>config.inc.php</strong>，并复制如下代码至其中：'),
                 [
                 'code' => $code
                 ]
@@ -1102,7 +1102,7 @@ function install_step_2_perform()
                 }
             }
         } catch (\Typecho\Db\Exception $e) {
-            install_raise_error(_t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.', $e->getMessage()));
+            install_raise_error(_t('安装程序捕捉到以下错误："%s" 安装已被中止。请检查您的配置信息。', $e->getMessage()));
         }
     }
 
@@ -1143,15 +1143,15 @@ function install_step_2_perform()
             } elseif ($config['dbNext'] == 'none') {
                 install_remove_config_file();
 
-                install_raise_error(_t('安装程序检查到原有数据表已经存在.'), [
+                install_raise_error(_t('检测到已存在的数据表…'), [
                     'delete' => _t('删除原有数据'),
-                    'keep' => _t('使用原有数据')
+                    'keep' => _t('保留原有数据')
                 ]);
             }
         } else {
             install_remove_config_file();
 
-            install_raise_error(_t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.', $e->getMessage()));
+            install_raise_error(_t('安装程序捕捉到以下错误："%s" 安装已被中止。请检查您的配置信息。', $e->getMessage()));
         }
     }
 
@@ -1168,35 +1168,35 @@ function install_step_3()
     <div class="row typecho-page-main">
         <div class="col-mb-12 col-tb-8 col-tb-offset-2">
             <div class="typecho-page-title">
-                <h2><?php _e('创建您的管理员帐号'); ?></h2>
+                <h2><?php _e('创建管理员帐号'); ?></h2>
             </div>
             <form autocomplete="off" action="install.php" method="post">
                 <ul class="typecho-option">
                     <li>
                         <label class="typecho-label" for="userUrl"><?php _e('网站地址'); ?></label>
                         <input autocomplete="new-password" type="text" name="userUrl" id="userUrl" class="text" value="<?php $options->rootUrl(); ?>" />
-                        <p class="description"><?php _e('这是程序自动匹配的网站路径, 如果不正确请修改它'); ?></p>
+                        <p class="description"><?php _e('这是安装程序自动匹配的网站路径。如果与当前网址的相关部分有出入，便需作出修改。'); ?></p>
                     </li>
                 </ul>
                 <ul class="typecho-option">
                     <li>
                         <label class="typecho-label" for="userName"><?php _e('用户名'); ?></label>
                         <input autocomplete="new-password" type="text" name="userName" id="userName" class="text" />
-                        <p class="description"><?php _e('请填写您的用户名'); ?></p>
+                        <p class="description"><?php _e('在此处填写管理员帐号的用户名。'); ?></p>
                     </li>
                 </ul>
                 <ul class="typecho-option">
                     <li>
-                        <label class="typecho-label" for="userPassword"><?php _e('登录密码'); ?></label>
+                        <label class="typecho-label" for="userPassword"><?php _e('密码'); ?></label>
                         <input type="password" name="userPassword" id="userPassword" class="text" />
-                        <p class="description"><?php _e('请填写您的登录密码, 如果留空系统将为您随机生成一个'); ?></p>
+                        <p class="description"><?php _e('在此处填写您的登录密码，留空可随机生成。'); ?></p>
                     </li>
                 </ul>
                 <ul class="typecho-option">
                     <li>
                         <label class="typecho-label" for="userMail"><?php _e('邮件地址'); ?></label>
                         <input autocomplete="new-password" type="text" name="userMail" id="userMail" class="text" />
-                        <p class="description"><?php _e('请填写一个您的常用邮箱'); ?></p>
+                        <p class="description"><?php _e('在此处填写您的一个常用邮箱。'); ?></p>
                     </li>
                 </ul>
                 <ul class="typecho-option typecho-option-submit">
@@ -1240,14 +1240,14 @@ function install_step_3_perform()
     }
 
     $error = (new \Typecho\Validate())
-        ->addRule('userUrl', 'required', _t('请填写站点地址'))
-        ->addRule('userUrl', 'url', _t('请填写一个合法的URL地址'))
-        ->addRule('userName', 'required', _t('必须填写用户名称'))
-        ->addRule('userName', 'xssCheck', _t('请不要在用户名中使用特殊字符'))
-        ->addRule('userName', 'maxLength', _t('用户名长度超过限制, 请不要超过 32 个字符'), 32)
-        ->addRule('userMail', 'required', _t('必须填写电子邮箱'))
-        ->addRule('userMail', 'email', _t('电子邮箱格式错误'))
-        ->addRule('userMail', 'maxLength', _t('邮箱长度超过限制, 请不要超过 200 个字符'), 200)
+        ->addRule('userUrl', 'required', _t('请填写站点地址。'))
+        ->addRule('userUrl', 'url', _t('请填写一个合法的URL地址。'))
+        ->addRule('userName', 'required', _t('请填写用户名称。'))
+        ->addRule('userName', 'xssCheck', _t('不能在在用户名中使用特殊字符。'))
+        ->addRule('userName', 'maxLength', _t('用户名长度超过限制！请不要超过 32 个字符。'), 32)
+        ->addRule('userMail', 'required', _t('必须填写电子邮箱。'))
+        ->addRule('userMail', 'email', _t('电子邮箱格式有误。'))
+        ->addRule('userMail', 'maxLength', _t('邮箱长度超过限制！请不要超过 200 个字符。'), 200)
         ->run($config);
 
     if (!empty($error)) {
@@ -1280,7 +1280,7 @@ function install_step_3_perform()
                     'name' => _t('默认分类'),
                     'slug' => 'default',
                     'type' => 'category',
-                    'description' => _t('只是一个默认分类'),
+                    'description' => _t('这是一个默认分类'),
                     'count' => 1
                 ])
         );
@@ -1293,7 +1293,7 @@ function install_step_3_perform()
                 'title' => _t('欢迎使用 Typecho'),
                 'slug' => 'start', 'created' => \Typecho\Date::time(),
                 'modified' => \Typecho\Date::time(),
-                'text' => '<!--markdown-->' . _t('如果您看到这篇文章,表示您的 blog 已经安装成功.'),
+                'text' => '<!--markdown-->' . _t('如果您看到这篇文章，表明您的 blog 已经安装成功。'),
                 'authorId' => 1,
                 'type' => 'post',
                 'status' => 'publish',
@@ -1311,7 +1311,7 @@ function install_step_3_perform()
                 'slug' => 'start-page',
                 'created' => \Typecho\Date::time(),
                 'modified' => \Typecho\Date::time(),
-                'text' => '<!--markdown-->' . _t('本页面由 Typecho 创建, 这只是个测试页面.'),
+                'text' => '<!--markdown-->' . _t('本页面由 Typecho 创建。仅用于测试。'),
                 'authorId' => 1,
                 'order' => 0,
                 'type' => 'page',
