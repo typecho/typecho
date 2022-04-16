@@ -98,7 +98,7 @@ include 'common-js.php';
     });
 
     $('#backup-secondary form').submit(function (e) {
-        if (!confirm('<?php _e('恢复操作将同时清除所有现有数据，是否继续？'); ?>')) {
+        if (!confirm('<?php _e('所有已存在的数据将丢失。是否继续？'); ?>')) {
             return false;
         }
     });
