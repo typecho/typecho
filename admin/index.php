@@ -10,7 +10,7 @@ $stat = \Widget\Stat::alloc();
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main">
             <div class="col-mb-12 welcome-board" role="main">
-                <p><?php _e('全站共计 <em>%s</em> 篇文章，<em>%s</em> 个分类，并有 <em>%s</em> 条评论与您有关。',
+                <p><?php _e('全站共计 <em>%s</em> 篇文章、<em>%s</em> 个分类，并有 <em>%s</em> 条评论与您有关。',
                         $stat->myPublishedPostsNum, $stat->categoriesNum, $stat->myPublishedCommentsNum); ?>
                     <br><?php _e('点击下面的链接，快速开始：'); ?></p>
 
