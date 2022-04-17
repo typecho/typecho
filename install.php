@@ -701,7 +701,7 @@ function install_step_1()
                 <form autocomplete="off" method="post" action="install.php">
                     <h3><?php _e('安装说明'); ?></h3>
                     <p class="warning">
-                        <strong><?php _e('安装程序将自动检测您的服务器环境。如果您的环境符合 Typecho 的最低配置要求，将在下方如果不符合, 将在上方出现提示信息, 请按照提示信息检查您的主机配置. 如果服务器环境符合要求, 将在下方出现 "开始下一步" 的按钮, 点击此按钮即可一步完成安装.'); ?></strong>
+                        <strong><?php _e('安装程序将自动检测您的服务器环境。如果您的环境符合 Typecho 的最低配置要求，将在下方出现“下一步”按钮，点击此按钮即可一步完成安装；如果不符合，将在上方出现提示信息，请按照提示信息检查您的主机配置。'); ?></strong>
                     </p>
                     <h3><?php _e('许可及协议'); ?></h3>
                     <ul>
@@ -1059,7 +1059,7 @@ function install_step_2_perform()
             $installDb->addServer($dbConfig, \Typecho\Db::READ | \Typecho\Db::WRITE);
             $installDb->query('SELECT 1=1');
         } catch (\Typecho\Db\Adapter\ConnectionException $e) {
-            install_raise_error(_t('当前无法连接到数据库。请检查数据库配置是否正确，然后继续进行安装。'));
+            install_raise_error(_t('当前无法连接到数据库。请检查数据库配置是否正确，然后继续安装。'));
         } catch (\Typecho\Db\Exception $e) {
             install_raise_error(_t('安装程序捕捉到以下错误："%s" 安装已被中止。请检查您的配置信息。', $e->getMessage()));
         }
@@ -1175,14 +1175,14 @@ function install_step_3()
                     <li>
                         <label class="typecho-label" for="userUrl"><?php _e('网站地址'); ?></label>
                         <input autocomplete="new-password" type="text" name="userUrl" id="userUrl" class="text" value="<?php $options->rootUrl(); ?>" />
-                        <p class="description"><?php _e('这是安装程序自动匹配的网站路径。如果与当前网址的相关部分有出入，便需作出修改。'); ?></p>
+                        <p class="description"><?php _e('这是程序自动匹配的网站路径。如果与当前网址的相关部分有出入，便需作出修改。'); ?></p>
                     </li>
                 </ul>
                 <ul class="typecho-option">
                     <li>
                         <label class="typecho-label" for="userName"><?php _e('用户名'); ?></label>
                         <input autocomplete="new-password" type="text" name="userName" id="userName" class="text" />
-                        <p class="description"><?php _e('在此处填写管理员帐号的用户名。'); ?></p>
+                        <p class="description"><?php _e('在此处填写您的用户名。'); ?></p>
                     </li>
                 </ul>
                 <ul class="typecho-option">
