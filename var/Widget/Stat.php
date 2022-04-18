@@ -251,7 +251,7 @@ class Stat extends Base
     }
 
     /**
-     * 获取当前用户显示垃圾评论数目
+     * 获取当前用户垃圾评论数目
      *
      * @return integer
      */
