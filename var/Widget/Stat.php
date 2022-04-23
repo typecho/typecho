@@ -238,7 +238,7 @@ class Stat extends Base
     }
 
     /**
-     * 获取当前用户显示的评论数目
+     * 获取当前用户待审核的评论数目
      *
      * @return integer
      */
@@ -251,7 +251,7 @@ class Stat extends Base
     }
 
     /**
-     * 获取当前用户显示的评论数目
+     * 获取当前用户垃圾评论数目
      *
      * @return integer
      */
@@ -289,7 +289,7 @@ class Stat extends Base
     }
 
     /**
-     * 获取当前文章显示的评论数目
+     * 获取当前文章待审核的评论数目
      *
      * @return integer
      */
@@ -302,7 +302,7 @@ class Stat extends Base
     }
 
     /**
-     * 获取当前文章显示的评论数目
+     * 获取当前文章垃圾评论数目
      *
      * @return integer
      */
