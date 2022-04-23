@@ -86,6 +86,24 @@ class Cookie
     }
 
     /**
+     * @access public
+     * @return string
+     */
+    public static function getDomain(): string
+    {
+        return self::$domain;
+    }
+
+    /**
+     * @access public
+     * @return bool
+     */
+    public static function getSecure(): bool
+    {
+        return self::$secure ?: false;
+    }
+
+    /**
      * 设置额外的选项
      *
      * @param array $options
