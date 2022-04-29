@@ -64,7 +64,7 @@ $users = \Widget\Users\Admin::alloc();
                                     <td class="kit-hidden-mb"><input type="checkbox" value="<?php $users->uid(); ?>"
                                                                      name="uid[]"/></td>
                                     <td class="kit-hidden-mb"><a
-                                            href="<?php $options->adminUrl('manage-posts.php?uid=' . $users->uid); ?>"
+                                            href="<?php $options->adminUrl('manage-posts.php?__typecho_all_posts=off&uid=' . $users->uid); ?>"
                                             class="balloon-button left size-<?php echo \Typecho\Common::splitByCount($users->postsNum, 1, 10, 20, 50, 100); ?>"><?php $users->postsNum(); ?></a>
                                     </td>
                                     <td>

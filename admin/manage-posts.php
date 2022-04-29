@@ -172,7 +172,7 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                                             <?php endif; ?>
                                         </td>
                                         <td class="kit-hidden-mb"><a
-                                                href="<?php $options->adminUrl('manage-posts.php?uid=' . $posts->author->uid); ?>"><?php $posts->author(); ?></a>
+                                                href="<?php $options->adminUrl('manage-posts.php?__typecho_all_posts=off&uid=' . $posts->author->uid); ?>"><?php $posts->author(); ?></a>
                                         </td>
                                         <td class="kit-hidden-mb"><?php $categories = $posts->categories;
                                             $length = count($categories); ?>
