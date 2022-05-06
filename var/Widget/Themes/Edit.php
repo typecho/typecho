@@ -46,6 +46,8 @@ class Edit extends Options implements ActionInterface
                 $this->update(['value' => 'recent'], $this->db->sql()->where('name = ?', 'frontPage'));
             }
 
+            $this->options->themeUrl = Common::url(__TYPECHO_THEME_DIR__ . '/' . $theme, $this->options->siteUrl);
+
             $configFile = $this->options->themeFile($theme, 'functions.php');
 
             if (file_exists($configFile)) {
