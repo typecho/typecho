@@ -245,6 +245,8 @@ class Edit extends Users implements ActionInterface
 
         /** 更新数据 */
         $this->update($user, $this->db->sql()->where('uid = ?', $this->request->uid));
+        $this->db->query($this->db->update('table.comments')->rows(array('author'=>$user['screenName'],'mail'=>$user['mail'],'url'=>$user['url']))
+        ->where ('authorId =?',$this->request->uid));
 
         /** 设置高亮 */
         Notice::alloc()->highlight('user-' . $this->request->uid);
