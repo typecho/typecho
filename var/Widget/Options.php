@@ -261,18 +261,18 @@ class Options extends Base
      *
      * @param string|null $path 子路径
      * @param string|null $theme 模版名称
-     * @return string
+     * @return string | void
      */
-    public function themeUrl(?string $path = null, ?string $theme = null): string
+    public function themeUrl(?string $path, ?string $theme)
     {
-        if (empty($theme)) {
+        if (!isset($theme)) {
             echo Common::url($path, $this->themeUrl);
+        } else {
+            $url = defined('__TYPECHO_THEME_URL__') ? __TYPECHO_THEME_URL__ :
+                Common::url(__TYPECHO_THEME_DIR__ . '/' . $theme, $this->siteUrl);
+
+            return isset($path) ? Common::url($path, $url) : $url;
         }
-
-        $url = defined('__TYPECHO_THEME_URL__') ? __TYPECHO_THEME_URL__ :
-            Common::url(__TYPECHO_THEME_DIR__ . '/' . $theme, $this->siteUrl);
-
-        return Common::url($path, $url);
     }
 
     /**
@@ -482,8 +482,7 @@ class Options extends Base
      */
     protected function ___themeUrl(): string
     {
-        return defined('__TYPECHO_THEME_URL__') ? __TYPECHO_THEME_URL__ :
-            Common::url(__TYPECHO_THEME_DIR__ . '/' . $this->theme, $this->siteUrl);
+        return $this->themeUrl(null, $this->theme);
     }
 
     /**
