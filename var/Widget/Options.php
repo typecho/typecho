@@ -263,7 +263,7 @@ class Options extends Base
      * @param string|null $theme 模版名称
      * @return string | void
      */
-    public function themeUrl(?string $path, ?string $theme)
+    public function themeUrl(?string $path = null, ?string $theme = null)
     {
         if (!isset($theme)) {
             echo Common::url($path, $this->themeUrl);
