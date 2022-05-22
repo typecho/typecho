@@ -469,8 +469,6 @@ class XmlRpc extends Contents implements ActionInterface, Hook
         $input['parent'] = $category['parent_id'] ?? ($category['parent'] ?? 0);
         $input['description'] = $category['description'] ?? $category['name'];
 
-        $_POST = array_replace_recursive($_POST, $input);
-
         /** 调用已有组件 */
         $categoryWidget = CategoryEdit::alloc(null, $input, function (CategoryEdit $category) {
             $category->insertCategory();
@@ -1839,7 +1837,7 @@ EOF;
                 'wp.suggestCategories'      => [$this, 'wpSuggestCategories'],
                 'wp.uploadFile'             => [$this, 'mwNewMediaObject'],
 
-                /** New Wordpress API since 2.9.2 */
+                /** New WordPress API since 2.9.2 */
                 'wp.getUsersBlogs'          => [$this, 'wpGetUsersBlogs'],
                 'wp.getTags'                => [$this, 'wpGetTags'],
                 'wp.deleteCategory'         => [$this, 'wpDeleteCategory'],
