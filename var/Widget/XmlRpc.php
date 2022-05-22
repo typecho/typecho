@@ -463,17 +463,23 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      */
     public function wpNewCategory(int $blogId, string $userName, string $password, array $category): int
     {
-
         /** 开始接受数据 */
         $input['name'] = $category['name'];
         $input['slug'] = Common::slugName(empty($category['slug']) ? $category['name'] : $category['slug']);
         $input['parent'] = $category['parent_id'] ?? ($category['parent'] ?? 0);
         $input['description'] = $category['description'] ?? $category['name'];
 
+        $_POST = array_replace_recursive($_POST, $input);
+
         /** 调用已有组件 */
         $categoryWidget = CategoryEdit::alloc(null, $input, function (CategoryEdit $category) {
             $category->insertCategory();
         });
+
+        if (!$categoryWidget->have()) {
+            throw new Exception(_t('分类不存在'), 404);
+        }
+
         return $categoryWidget->mid;
     }
 
