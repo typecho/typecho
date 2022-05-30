@@ -1054,8 +1054,8 @@ class Archive extends Contents
     {
         $rules = [];
         $allows = [
-            'description'  => htmlspecialchars($this->description),
-            'keywords'     => htmlspecialchars($this->keywords),
+            'description'  => htmlspecialchars($this->description ?? ''),
+            'keywords'     => htmlspecialchars($this->keywords ?? ''),
             'generator'    => $this->options->generator,
             'template'     => $this->options->theme,
             'pingback'     => $this->options->xmlRpcUrl,
@@ -1320,7 +1320,7 @@ class Archive extends Contents
      */
     public function keywords(string $split = ',', string $default = '')
     {
-        echo empty($this->keywords) ? $default : str_replace(',', $split, htmlspecialchars($this->keywords));
+        echo empty($this->keywords) ? $default : str_replace(',', $split, htmlspecialchars($this->keywords ?? ''));
     }
 
     /**
