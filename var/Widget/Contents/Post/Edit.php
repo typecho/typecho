@@ -405,7 +405,7 @@ class Edit extends Contents implements ActionInterface
         $realId = 0;
 
         /** 是否是从草稿状态发布 */
-        $isDraftToPublish = ('post_draft' == $this->type);
+        $isDraftToPublish = ('post_draft' == $this->type || 'page_draft' == $this->type);
 
         $isBeforePublish = ('publish' == $this->status);
         $isAfterPublish = ('publish' == $contents['status']);
