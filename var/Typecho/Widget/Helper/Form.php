@@ -131,13 +131,7 @@ class Form extends Layout
      */
     public function getAllRequest(): array
     {
-        $result = [];
-        $request = Request::getInstance();
-
-        foreach ($this->inputs as $name => $input) {
-            $result[$name] = $request->get($name, null);
-        }
-        return $result;
+        return $this->getParams(array_keys($this->inputs));
     }
 
     /**
@@ -208,7 +202,7 @@ class Form extends Layout
         $request = Request::getInstance();
 
         foreach ($params as $param) {
-            $result[$param] = $request->get($param, null);
+            $result[$param] = $request->get($param, is_array($this->getInput($param)->value) ? [] : null);
         }
 
         return $result;
