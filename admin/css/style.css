@@ -360,6 +360,8 @@ a.operate-reply { color: #545c30; }
 
 .comment-edit label { display: block; }
 
+@media (max-width: 575px) { .comment-edit { display: flex;flex-direction: column;width: 90vw; } .comment-edit td:first-child { display: none; } }
+
 .comment-content img { max-width: 100%; }
 
 /** 评论回复 */
