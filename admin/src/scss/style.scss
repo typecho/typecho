@@ -504,6 +504,14 @@ a.operate-reply {
   max-width: 100%;
 }
 
+@media (max-width: 575px) {
+  .comment-edit {
+    display: flex;
+    flex-direction: column;
+    width: 90vw;
+  }
+  .comment-edit td:first-child { display: none; }
+}
 
 /**
 * 评论回复
