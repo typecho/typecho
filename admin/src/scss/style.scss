@@ -504,7 +504,7 @@ a.operate-reply {
   max-width: 100%;
 }
 
-@media (max-width: 575px) {
+@media (max-width: $screen-phone - 1px) {
   .comment-edit {
     display: flex;
     flex-direction: column;
