@@ -928,7 +928,7 @@ class Contents extends Base implements QueryInterface
     {
         $html = Contents::pluginHandle()->trigger($parsed)->autoP($text);
 
-        if (!$parsed) {
+        if (!$parsed && $text) {
             static $parser;
 
             if (empty($parser)) {
