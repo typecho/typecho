@@ -132,7 +132,7 @@ include 'common-js.php';
         }
 
         function applyUpdate(update) {
-            if (update.available) {
+            if (update.available && update.latest !== update.current) {
                 $('<div class="update-check message error"><p>'
                     + '<?php _e('您当前使用的版本是 %s'); ?>'.replace('%s', update.current) + '<br />'
                     + '<strong><a href="' + update.link + '" target="_blank">'
