@@ -21,13 +21,6 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  */
 class Date extends Base
 {
-    /**
-     * @param Config $parameter
-     */
-    protected function initParameter(Config $parameter)
-    {
-        $parameter->setDefault('format=Y-m&type=month&limit=0');
-    }
 
     /**
      * 初始化函数
@@ -36,18 +29,24 @@ class Date extends Base
      */
     public function execute()
     {
-        var_dump(isset($this->options->postArchiveType));
-        if (isset($this->options->postArchiveType)) {
+        // 在开发主题时，type和format应该同时设置
+        // 如果没有设置type，则以全局选项为准
+        // 未来如有需要，可在全局选项中单独设置format和limit
+        if (!isset($this->parameter->type)) {
             switch ($this->options->postArchiveType) {
                 case 'year':
-                    $this->parameter->setDefault('format=Y&type=year', true);
+                    $this->parameter->setDefault('format=Y&type=year&limit=0', true);
                     break;
                 case 'month':
-                    $this->parameter->setDefault('format=F Y&type=month', true);
+                    $this->parameter->setDefault('format=Y-m&type=month&limit=0', true);
+                    break;
+                default:
+                    $this->parameter->setDefault('format=F Y&type=month&limit=0', true);
             }
+        } else {
+            /** 设置参数默认值 */
+            $this->parameter->setDefault('format=Y-m&type=month&limit=0');
         }
-        /** 设置参数默认值 */
-        $this->parameter->setDefault('format=Y-m&type=month&limit=0');
 
         $resource = $this->db->query($this->db->select('created')->from('table.contents')
             ->where('type = ?', 'post')
