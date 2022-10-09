@@ -91,7 +91,8 @@ class General extends Options implements ActionInterface
             'allowRegister',
             'allowXmlRpc',
             'lang',
-            'timezone'
+            'timezone',
+            'postArchiveType'
         );
         $settings['attachmentTypes'] = $this->request->getArray('attachmentTypes');
 
@@ -290,6 +291,16 @@ class General extends Options implements ActionInterface
             _t('用逗号 "," 将后缀名隔开, 例如: %s', '<code>cpp, h, mak</code>')
         );
         $form->addInput($attachmentTypes->multiMode());
+
+
+        /** 归档类型 */
+        $postArchiveType = new Form\Element\Radio(
+            'postArchiveType',
+            ['year' => _t('按年归档'), 'month' => _t('按月归档')],
+            $this->options->postArchiveType,
+            _t('归档类型')
+        );
+        $form->addInput($postArchiveType);
 
         /** 提交按钮 */
         $submit = new Form\Element\Submit('submit', null, _t('保存设置'));

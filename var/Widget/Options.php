@@ -97,6 +97,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property array $plugins
  * @property string $secret
  * @property bool $installed
+ * @property string $postArchiveType
  */
 class Options extends Base
 {

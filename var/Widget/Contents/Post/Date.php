@@ -36,6 +36,16 @@ class Date extends Base
      */
     public function execute()
     {
+        var_dump(isset($this->options->postArchiveType));
+        if (isset($this->options->postArchiveType)) {
+            switch ($this->options->postArchiveType) {
+                case 'year':
+                    $this->parameter->setDefault('format=Y&type=year', true);
+                    break;
+                case 'month':
+                    $this->parameter->setDefault('format=F Y&type=month', true);
+            }
+        }
         /** 设置参数默认值 */
         $this->parameter->setDefault('format=Y-m&type=month&limit=0');
 
