@@ -279,10 +279,12 @@ $(document).ready(function () {
             form.submit(function () {
                 var t = $(this), tr = t.parents('tr'), 
                     reply = $('<div class="comment-reply-content"></div>').insertAfter($('.comment-content', tr));
-                
-                reply.html('<p>' + textarea.val() + '</p>');
+
+                var html = DOMPurify.sanitize(textarea.val(), {USE_PROFILES: {html: true}});
+                reply.html('<p>' + html + '</p>');
                 $.post(t.attr('action'), t.serialize(), function (o) {
-                    reply.html(o.comment.content)
+                    var html = DOMPurify.sanitize(o.comment.content, {USE_PROFILES: {html: true}});
+                    reply.html(html)
                         .effect('highlight');
                 }, 'json');
 
@@ -340,7 +342,7 @@ $(document).ready(function () {
                 }
             });
 
-            var html = '<strong class="comment-author">'
+            var unsafeHTML = '<strong class="comment-author">'
                 + (comment.url ? '<a target="_blank" href="' + comment.url + '">'
                 + comment.author + '</a>' : comment.author) + '</strong>'
                 + ('comment' != comment.type ? '<small><?php _e('引用'); ?></small>' : '')
@@ -348,13 +350,16 @@ $(document).ready(function () {
                 + comment.mail + '</a></span>' : '')
                 + (comment.ip ? '<br /><span>' + comment.ip + '</span>' : '');
 
+            var html = DOMPurify.sanitize(unsafeHTML, {USE_PROFILES: {html: true}});
+            var content = DOMPurify.sanitize(comment.text, {USE_PROFILES: {html: true}});
             $('.comment-meta', oldTr).html(html)
                 .effect('highlight');
-            $('.comment-content', oldTr).html('<p>' + comment.text + '</p>');
+            $('.comment-content', oldTr).html('<p>' + content + '</p>');
             oldTr.data('comment', comment);
 
             $.post(t.attr('action'), comment, function (o) {
-                $('.comment-content', oldTr).html(o.comment.content)
+                var content = DOMPurify.sanitize(o.comment.content, {USE_PROFILES: {html: true}});
+                $('.comment-content', oldTr).html('<p>' + content + '</p>')
                     .effect('highlight');
             }, 'json');
             
