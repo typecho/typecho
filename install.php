@@ -924,7 +924,9 @@ function install_step_2_perform()
             'dbPassword' => null,
             'dbCharset' => 'utf8mb4',
             'dbDatabase' => null,
-            'dbEngine' => 'InnoDB'
+            'dbEngine' => 'InnoDB',
+            'dbSsl' => null,
+            'dbSslVerify' => 'on',
         ],
         'Pgsql' => [
             'dbHost' => 'localhost',
@@ -967,7 +969,9 @@ function install_step_2_perform()
             'dbEngine',
             'dbPrefix',
             'dbAdapter',
-            'dbNext'
+            'dbNext',
+            'dbSsl',
+            'dbSslVerify',
         ]);
     }
 
@@ -1064,7 +1068,7 @@ function install_step_2_perform()
             $installDb->addServer($dbConfig, \Typecho\Db::READ | \Typecho\Db::WRITE);
             $installDb->query('SELECT 1=1');
         } catch (\Typecho\Db\Adapter\ConnectionException $e) {
-            install_raise_error(_t('对不起, 无法连接数据库, 请先检查数据库配置再继续进行安装'));
+            install_raise_error(_t('对不起, 无法连接数据库, 请先检查数据库配置再继续进行安装: "%s"', $e->getMessage()));
         } catch (\Typecho\Db\Exception $e) {
             install_raise_error(_t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.', $e->getMessage()));
         }

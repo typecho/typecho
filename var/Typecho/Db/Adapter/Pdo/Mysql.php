@@ -51,11 +51,20 @@ class Mysql extends Pdo
      */
     public function init(Config $config): \PDO
     {
+        $options = [];
+        if ($config->ssl) {
+            $options[\PDO::MYSQL_ATTR_SSL_CA] = $config->ssl;
+            if ($config->sslverify == 'off') {
+                // FIXME: https://github.com/php/php-src/issues/8577
+                $options[\PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false;
+            }
+        }
         $pdo = new \PDO(
             !empty($config->dsn)
                 ? $config->dsn : "mysql:dbname={$config->database};host={$config->host};port={$config->port}",
             $config->user,
-            $config->password
+            $config->password,
+            $options
         );
         $pdo->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
 
