@@ -100,7 +100,7 @@ $color-nav-child-focus: #6DA1BB;
         font-weight: bold;
       }
 
-      &.root:hover .child {
+      &.root:hover .child, &.root.expanded .child {
         display: block;
       }
     }

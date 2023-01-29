@@ -430,6 +430,7 @@ class Request
     public function isSecure(): bool
     {
         return (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && !strcasecmp('https', $_SERVER['HTTP_X_FORWARDED_PROTO']))
+            || (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && !strcasecmp('quic', $_SERVER['HTTP_X_FORWARDED_PROTO']))
             || (!empty($_SERVER['HTTP_X_FORWARDED_PORT']) && 443 == $_SERVER['HTTP_X_FORWARDED_PORT'])
             || (!empty($_SERVER['HTTPS']) && 'off' != strtolower($_SERVER['HTTPS']))
             || (!empty($_SERVER['SERVER_PORT']) && 443 == $_SERVER['SERVER_PORT'])

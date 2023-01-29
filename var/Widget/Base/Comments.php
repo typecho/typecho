@@ -289,7 +289,7 @@ class Comments extends Base implements QueryInterface
             Comments::pluginHandle()->trigger($plugged)->gravatar($size, $rating, $default, $this);
             if (!$plugged) {
                 $url = Common::gravatarUrl($this->mail, $size, $rating, $default, $this->request->isSecure());
-                echo '<img class="avatar" src="' . $url . '" alt="' .
+                echo '<img class="avatar" loading="lazy" src="' . $url . '" alt="' .
                     $this->author . '" width="' . $size . '" height="' . $size . '" />';
             }
         }

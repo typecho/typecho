@@ -55,10 +55,3 @@ jobs:
         asset_name: typecho.zip
         asset_content_type: application/zip
         max_releases: 1
-    - name: Trigger build
-      run: |
-        curl -XPOST -H "Authorization: token ${{ secrets.WORKFLOW_TOKEN }}" \
-          -H "Accept: application/vnd.github.everest-preview+json" \
-          -H "Content-Type: application/json" \
-          https://api.github.com/repos/typecho/languages/actions/workflows/update.yml/dispatches --data '{"ref": "master"}'
-
