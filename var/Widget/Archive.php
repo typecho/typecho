@@ -646,7 +646,7 @@ class Archive extends Contents
 
         /** 处理搜索结果跳转 */
         if (isset($this->request->s)) {
-            $filterKeywords = $this->request->filter('search')->s;
+            $filterKeywords = $this->request->filter('search')->get('s');
 
             /** 跳转到搜索页 */
             if (null != $filterKeywords) {
