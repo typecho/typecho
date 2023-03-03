@@ -19,6 +19,8 @@ class Request
     private const FILTERS = [
         'int'     => 'intval',
         'integer' => 'intval',
+        'encode'  => 'urlencode',
+        'html'    => 'htmlspecialchars',
         'search'  => ['\Typecho\Common', 'filterSearchQuery'],
         'xss'     => ['\Typecho\Common', 'removeXSS'],
         'url'     => ['\Typecho\Common', 'safeUrl'],
@@ -83,7 +85,7 @@ class Request
     }
 
     /**
-     * 设置过滤器
+     * Add filter to request
      *
      * @param string|callable ...$filters
      * @return $this
@@ -91,8 +93,10 @@ class Request
     public function filter(...$filters): Request
     {
         foreach ($filters as $filter) {
-            $this->filter[] = is_string($filter) && isset(self::FILTERS[$filter])
-                ? self::FILTERS[$filter] : $filter;
+            $this->filter[] = $this->wrapFilter(
+                is_string($filter) && isset(self::FILTERS[$filter])
+                ? self::FILTERS[$filter] : $filter
+            );
         }
 
         return $this;
@@ -343,5 +347,19 @@ class Request
         }
 
         return $value;
+    }
+
+    /**
+     * Wrap a filter to make sure it always receives a string.
+     *
+     * @param callable $filter
+     *
+     * @return callable
+     */
+    private function wrapFilter(callable $filter): callable
+    {
+        return function ($value) use ($filter) {
+            return call_user_func($filter, $value ?? '');
+        };
     }
 }
