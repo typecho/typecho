@@ -16,6 +16,26 @@ $stat = \Widget\Stat::alloc();
                 </p>
                 <h2><?php $user->screenName(); ?></h2>
                 <p><?php $user->name(); ?></p>
+                <p><?php _e('权限组: '); ?><?php switch ($user->group) {
+                    case 'administrator':
+                        _e('管理员');
+                        break;
+                    case 'editor':
+                        _e('编辑');
+                        break;
+                    case 'contributor':
+                        _e('贡献者');
+                        break;
+                    case 'subscriber':
+                        _e('关注者');
+                        break;
+                    case 'visitor':
+                        _e('访问者');
+                        break;
+                    default:
+                        _e('游客');
+                        break;
+                    } ?></p>
                 <p><?php _e('目前有 <em>%s</em> 篇日志, 并有 <em>%s</em> 条关于你的评论在 <em>%s</em> 个分类中.',
                         $stat->myPublishedPostsNum, $stat->myPublishedCommentsNum, $stat->categoriesNum); ?></p>
                 <p><?php
