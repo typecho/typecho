@@ -68,17 +68,17 @@ $(document).ready(function() {
         
         switch (code) {
             case plupload.FILE_SIZE_ERROR:
-                word = '<?php _e('文件大小超过限制'); ?>';
+                word = '<?php _e('文件过大，上传已被阻止。'); ?>';
                 break;
             case plupload.FILE_EXTENSION_ERROR:
-                word = '<?php _e('文件扩展名不被支持'); ?>';
+                word = '<?php _e('文件扩展名不被支持。'); ?>';
                 break;
             case plupload.FILE_DUPLICATE_ERROR:
-                word = '<?php _e('文件已经上传过'); ?>';
+                word = '<?php _e('文件已存在。'); ?>';
                 break;
             case plupload.HTTP_ERROR:
             default:
-                word = '<?php _e('上传出现错误'); ?>';
+                word = '<?php _e('上传出现错误。'); ?>';
                 break;
         }
 
@@ -105,7 +105,7 @@ $(document).ready(function() {
             .data('url', data.url)
             .data('image', data.isImage)
             .html('<input type="hidden" name="attachment[]" value="' + data.cid + '" />'
-                + '<a class="insert" target="_blank" href="###" title="<?php _e('点击插入文件'); ?>">' + data.title + '</a><div class="info">' + data.bytes
+                + '<a class="insert" target="_blank" href="###" title="<?php _e('点击此处插入文件'); ?>">' + data.title + '</a><div class="info">' + data.bytes
                 + ' <a class="file" target="_blank" href="<?php $options->adminUrl('media.php'); ?>?cid=' 
                 + data.cid + '" title="<?php _e('编辑'); ?>"><i class="i-edit"></i></a>'
                 + ' <a class="delete" href="###" title="<?php _e('删除'); ?>"><i class="i-delete"></i></a></div>')
@@ -204,7 +204,7 @@ $(document).ready(function() {
     function attachDeleteEvent (el) {
         var file = $('a.insert', el).text();
         $('.delete', el).click(function () {
-            if (confirm('<?php _e('确认要删除文件 %s 吗?'); ?>'.replace('%s', file))) {
+            if (confirm('<?php _e('确定要删除文件 %s 吗？'); ?>'.replace('%s', file))) {
                 var cid = $(this).parents('li').data('cid');
                 $.post('<?php $security->index('/action/contents-attachment-edit'); ?>',
                     {'do' : 'delete', 'cid' : cid},
