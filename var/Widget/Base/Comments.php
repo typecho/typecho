@@ -60,7 +60,7 @@ class Comments extends Base implements QueryInterface
             'authorId' => empty($rows['authorId']) ? 0 : $rows['authorId'],
             'ownerId'  => empty($rows['ownerId']) ? 0 : $rows['ownerId'],
             'mail'     => !isset($rows['mail']) || strlen($rows['mail']) === 0 ? null : $rows['mail'],
-            'url'      => !isset($rows['url']) || strlen($rows['url']) === 0 ? null : $rows['url'],
+            'url'      => !isset($rows['url']) || strlen($rows['url']) === 0 ? null : (Common::safeUrl($rows['url'])),
             'ip'       => !isset($rows['ip']) || strlen($rows['ip']) === 0 ? $this->request->getIp() : $rows['ip'],
             'agent'    => !isset($rows['agent']) || strlen($rows['agent']) === 0
                 ? $this->request->getAgent() : $rows['agent'],
