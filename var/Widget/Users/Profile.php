@@ -53,7 +53,7 @@ class Profile extends Edit implements ActionInterface
             ['0' => _t('关闭'), '1' => _t('打开')],
             $this->options->markdown,
             _t('使用 Markdown 语法编辑和解析内容'),
-            _t('使用 <a href="http://daringfireball.net/projects/markdown/">Markdown</a> 语法能够使您的撰写过程更加简便直观.')
+            _t('使用 <a href="https://daringfireball.net/projects/markdown/">Markdown</a> 语法能够使您的撰写过程更加简便直观.')
             . '<br />' . _t('此功能开启不会影响以前没有使用 Markdown 语法编辑的内容.')
         );
         $form->addInput($markdown);
@@ -63,7 +63,7 @@ class Profile extends Edit implements ActionInterface
             ['0' => _t('关闭'), '1' => _t('打开')],
             $this->options->xmlrpcMarkdown,
             _t('在 XMLRPC 接口中使用 Markdown 语法'),
-            _t('对于完全支持 <a href="http://daringfireball.net/projects/markdown/">Markdown</a> 语法写作的离线编辑器, 打开此选项后将避免内容被转换为 HTML.')
+            _t('对于完全支持 <a href="https://daringfireball.net/projects/markdown/">Markdown</a> 语法写作的离线编辑器, 打开此选项后将避免内容被转换为 HTML.')
         );
         $form->addInput($xmlrpcMarkdown);
 
