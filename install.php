@@ -954,7 +954,9 @@ function install_step_2_perform()
             'dbEngine' => $request->getServer('TYPECHO_DB_ENGINE'),
             'dbPrefix' => $request->getServer('TYPECHO_DB_PREFIX', 'typecho_'),
             'dbAdapter' => $request->getServer('TYPECHO_DB_ADAPTER', install_get_current_db_driver()),
-            'dbNext' => $request->getServer('TYPECHO_DB_NEXT', 'none')
+            'dbNext' => $request->getServer('TYPECHO_DB_NEXT', 'none'),
+            'dbSslCa' => $request->getServer('TYPECHO_DB_SSL_CA'),
+            'dbSslVerify' => $request->getServer('TYPECHO_DB_SSL_VERIFY', 'on'),
         ];
     } else {
         $config = $request->from([
@@ -970,7 +972,7 @@ function install_step_2_perform()
             'dbPrefix',
             'dbAdapter',
             'dbNext',
-            'dbSsl',
+            'dbSslCa',
             'dbSslVerify',
         ]);
     }
@@ -1009,6 +1011,8 @@ function install_step_2_perform()
                 ->addRule('dbDatabase', 'required', _t('确认您的配置'))
                 ->addRule('dbEngine', 'required', _t('确认您的配置'))
                 ->addRule('dbEngine', 'enum', _t('确认您的配置'), ['InnoDB', 'MyISAM'])
+                ->addRule('dbSslCa', 'file_exists', _t('确认您的配置'))
+                ->addRule('dbSslVerify', 'enum', _t('确认您的配置'), ['on', 'off'])
                 ->run($config);
             break;
         case 'Pgsql':
@@ -1045,12 +1049,17 @@ function install_step_2_perform()
     }
 
     foreach ($configMap[$type] as $key => $value) {
-        $dbConfig[strtolower(substr($key, 2))] = $config[$key];
+        $dbConfig[lcfirst(substr($key, 2))] = $config[$key];
     }
 
     // intval port number
     if (isset($dbConfig['port'])) {
         $dbConfig['port'] = intval($dbConfig['port']);
+    }
+
+    // bool ssl verify
+    if (isset($dbConfig['sslVerify'])) {
+        $dbConfig['sslVerify'] = $dbConfig['sslVerify'] == 'on';
     }
 
     if (isset($dbConfig['file']) && preg_match("/^[a-z0-9]+\.[a-z0-9]{2,}$/i", $dbConfig['file'])) {

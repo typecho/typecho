@@ -66,18 +66,18 @@
 
     <ul class="typecho-option">
         <li>
-            <label class="typecho-label" for="dbSsl"><?php _e('数据库 SSL 认证'); ?></label>
-            <input type="text" class="text" name="dbSsl" id="dbSsl"/>
+            <label class="typecho-label" for="dbSslCa"><?php _e('数据库 SSL 证书'); ?></label>
+            <input type="text" class="text" name="dbSslCa" id="dbSslCa"/>
             <p class="description"><?php _e('如果您的数据库启用了 SSL，请填写 CA 证书路径，否则请留空'); ?></p>
         </li>
     </ul>
 
     <ul class="typecho-option">
         <li>
-            <label class="typecho-label" for="dbSslVerify"><?php _e('数据库 SSL 服务端证书验证'); ?></label>
+            <label class="typecho-label" for="dbSslVerify"><?php _e('启用数据库 SSL 服务端证书验证'); ?></label>
             <select name="dbSslVerify" id="dbSslVerify">
-                <option value="on"><?php _e('验证'); ?></option>
-                <option value="off"><?php _e('不验证'); ?></option>
+                <option value="on"><?php _e('启用'); ?></option>
+                <option value="off"><?php _e('不启用'); ?></option>
             </select>
         </li>
     </ul>

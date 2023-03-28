@@ -49,8 +49,12 @@ class Mysqli implements Adapter
     {
         $mysqli = mysqli_init();
         if ($mysqli) {
-            if ($config->ssl) {
-                $mysqli->ssl_set(null, null, $config->ssl, null, null);
+            if (!empty($config->sslCa)) {
+                $mysqli->ssl_set(null, null, $config->sslCa, null, null);
+
+                if (isset($config->sslVerify)) {
+                    $mysqli->options(MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, $config->sslVerify);
+                }
             }
 
             $mysqli->real_connect(
@@ -58,9 +62,7 @@ class Mysqli implements Adapter
                 $config->user,
                 $config->password,
                 $config->database,
-                (empty($config->port) ? null : $config->port),
-                null,
-                $config->verifyservercert == 'off' ? MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT : null
+                (empty($config->port) ? null : $config->port)
             );
 
             $this->dbLink = $mysqli;

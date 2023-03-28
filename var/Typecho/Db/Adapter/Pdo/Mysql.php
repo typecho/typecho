@@ -52,13 +52,15 @@ class Mysql extends Pdo
     public function init(Config $config): \PDO
     {
         $options = [];
-        if ($config->ssl) {
-            $options[\PDO::MYSQL_ATTR_SSL_CA] = $config->ssl;
-            if ($config->sslverify == 'off') {
+        if (!empty($config->sslCa)) {
+            $options[\PDO::MYSQL_ATTR_SSL_CA] = $config->sslCa;
+
+            if (isset($config->sslVerify)) {
                 // FIXME: https://github.com/php/php-src/issues/8577
-                $options[\PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false;
+                $options[\PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = $config->sslVerify;
             }
         }
+
         $pdo = new \PDO(
             !empty($config->dsn)
                 ? $config->dsn : "mysql:dbname={$config->database};host={$config->host};port={$config->port}",
