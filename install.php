@@ -705,7 +705,7 @@ function install_step_1()
                     </p>
                     <h3><?php _e('许可及协议'); ?></h3>
                     <ul>
-                        <li><?php _e('Typecho 基于 <a href="http://www.gnu.org/copyleft/gpl.html">GPL</a> 协议发布, 我们允许用户在 GPL 协议许可的范围内使用, 拷贝, 修改和分发此程序.'); ?>
+                        <li><?php _e('Typecho 基于 <a href="https://www.gnu.org/copyleft/gpl.html">GPL</a> 协议发布, 我们允许用户在 GPL 协议许可的范围内使用, 拷贝, 修改和分发此程序.'); ?>
                             <?php _e('在GPL许可的范围内, 您可以自由地将其用于商业以及非商业用途.'); ?></li>
                         <li><?php _e('Typecho 软件由其社区提供支持, 核心开发团队负责维护程序日常开发工作以及新特性的制定.'); ?>
                             <?php _e('如果您遇到使用上的问题, 程序中的 BUG, 以及期许的新功能, 欢迎您在社区中交流或者直接向我们贡献代码.'); ?>
@@ -1460,7 +1460,7 @@ function install_dispatch()
 </head>
 <body>
     <div class="body container">
-        <h1><a href="http://typecho.org" target="_blank" class="i-logo">Typecho</a></h1>
+        <h1><a href="https://typecho.org" target="_blank" class="i-logo">Typecho</a></h1>
         <?php $method(); ?>
     </div>
 </body>

@@ -127,7 +127,7 @@ class Discussion extends Options implements ActionInterface
             $this->options->commentDateFormat,
             _t('评论日期格式'),
             _t('这是一个默认的格式,当你在模板中调用显示评论日期方法时, 如果没有指定日期格式, 将按照此格式输出.') . '<br />'
-            . _t('具体写法请参考 <a href="http://www.php.net/manual/zh/function.date.php">PHP 日期格式写法</a>.')
+            . _t('具体写法请参考 <a href="https://www.php.net/manual/zh/function.date.php">PHP 日期格式写法</a>.')
         );
         $commentDateFormat->input->setAttribute('class', 'w-40 mono');
         $form->addInput($commentDateFormat);
@@ -147,8 +147,8 @@ class Discussion extends Options implements ActionInterface
             'commentsShowCommentOnly' => _t('仅显示评论, 不显示 Pingback 和 Trackback'),
             'commentsMarkdown'        => _t('在评论中使用 Markdown 语法'),
             'commentsShowUrl'         => _t('评论者名称显示时自动加上其个人主页链接'),
-            'commentsUrlNofollow'     => _t('对评论者个人主页链接使用 <a href="http://en.wikipedia.org/wiki/Nofollow">nofollow 属性</a>'),
-            'commentsAvatar'          => _t('启用 <a href="http://gravatar.com">Gravatar</a> 头像服务, 最高显示评级为 %s 的头像',
+            'commentsUrlNofollow'     => _t('对评论者个人主页链接使用 <a href="https://en.wikipedia.org/wiki/Nofollow">nofollow 属性</a>'),
+            'commentsAvatar'          => _t('启用 <a href="https://gravatar.com">Gravatar</a> 头像服务, 最高显示评级为 %s 的头像',
                 '</label><select id="commentsShow-commentsAvatarRating" name="commentsAvatarRating">
             <option value="G"' . ('G' == $this->options->commentsAvatarRating ? ' selected="true"' : '') . '>' . _t('G - 普通') . '</option>
             <option value="PG"' . ('PG' == $this->options->commentsAvatarRating ? ' selected="true"' : '') . '>' . _t('PG - 13岁以上') . '</option>
