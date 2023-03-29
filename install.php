@@ -705,7 +705,7 @@ function install_step_1()
                     </p>
                     <h3><?php _e('许可及协议'); ?></h3>
                     <ul>
-                        <li><?php _e('Typecho 基于 <a href="http://www.gnu.org/copyleft/gpl.html">GPL</a> 协议发布, 我们允许用户在 GPL 协议许可的范围内使用, 拷贝, 修改和分发此程序.'); ?>
+                        <li><?php _e('Typecho 基于 <a href="https://www.gnu.org/copyleft/gpl.html">GPL</a> 协议发布, 我们允许用户在 GPL 协议许可的范围内使用, 拷贝, 修改和分发此程序.'); ?>
                             <?php _e('在GPL许可的范围内, 您可以自由地将其用于商业以及非商业用途.'); ?></li>
                         <li><?php _e('Typecho 软件由其社区提供支持, 核心开发团队负责维护程序日常开发工作以及新特性的制定.'); ?>
                             <?php _e('如果您遇到使用上的问题, 程序中的 BUG, 以及期许的新功能, 欢迎您在社区中交流或者直接向我们贡献代码.'); ?>
@@ -924,7 +924,9 @@ function install_step_2_perform()
             'dbPassword' => null,
             'dbCharset' => 'utf8mb4',
             'dbDatabase' => null,
-            'dbEngine' => 'InnoDB'
+            'dbEngine' => 'InnoDB',
+            'dbSslCa' => null,
+            'dbSslVerify' => 'on',
         ],
         'Pgsql' => [
             'dbHost' => 'localhost',
@@ -952,7 +954,9 @@ function install_step_2_perform()
             'dbEngine' => $request->getServer('TYPECHO_DB_ENGINE'),
             'dbPrefix' => $request->getServer('TYPECHO_DB_PREFIX', 'typecho_'),
             'dbAdapter' => $request->getServer('TYPECHO_DB_ADAPTER', install_get_current_db_driver()),
-            'dbNext' => $request->getServer('TYPECHO_DB_NEXT', 'none')
+            'dbNext' => $request->getServer('TYPECHO_DB_NEXT', 'none'),
+            'dbSslCa' => $request->getServer('TYPECHO_DB_SSL_CA'),
+            'dbSslVerify' => $request->getServer('TYPECHO_DB_SSL_VERIFY', 'on'),
         ];
     } else {
         $config = $request->from([
@@ -967,7 +971,9 @@ function install_step_2_perform()
             'dbEngine',
             'dbPrefix',
             'dbAdapter',
-            'dbNext'
+            'dbNext',
+            'dbSslCa',
+            'dbSslVerify',
         ]);
     }
 
@@ -1005,6 +1011,8 @@ function install_step_2_perform()
                 ->addRule('dbDatabase', 'required', _t('确认您的配置'))
                 ->addRule('dbEngine', 'required', _t('确认您的配置'))
                 ->addRule('dbEngine', 'enum', _t('确认您的配置'), ['InnoDB', 'MyISAM'])
+                ->addRule('dbSslCa', 'file_exists', _t('确认您的配置'))
+                ->addRule('dbSslVerify', 'enum', _t('确认您的配置'), ['on', 'off'])
                 ->run($config);
             break;
         case 'Pgsql':
@@ -1041,12 +1049,17 @@ function install_step_2_perform()
     }
 
     foreach ($configMap[$type] as $key => $value) {
-        $dbConfig[strtolower(substr($key, 2))] = $config[$key];
+        $dbConfig[lcfirst(substr($key, 2))] = $config[$key];
     }
 
     // intval port number
     if (isset($dbConfig['port'])) {
         $dbConfig['port'] = intval($dbConfig['port']);
+    }
+
+    // bool ssl verify
+    if (isset($dbConfig['sslVerify'])) {
+        $dbConfig['sslVerify'] = $dbConfig['sslVerify'] == 'on';
     }
 
     if (isset($dbConfig['file']) && preg_match("/^[a-z0-9]+\.[a-z0-9]{2,}$/i", $dbConfig['file'])) {
@@ -1064,7 +1077,7 @@ function install_step_2_perform()
             $installDb->addServer($dbConfig, \Typecho\Db::READ | \Typecho\Db::WRITE);
             $installDb->query('SELECT 1=1');
         } catch (\Typecho\Db\Adapter\ConnectionException $e) {
-            install_raise_error(_t('对不起, 无法连接数据库, 请先检查数据库配置再继续进行安装'));
+            install_raise_error(_t('对不起, 无法连接数据库, 请先检查数据库配置再继续进行安装: "%s"', $e->getMessage()));
         } catch (\Typecho\Db\Exception $e) {
             install_raise_error(_t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.', $e->getMessage()));
         }
@@ -1460,7 +1473,7 @@ function install_dispatch()
 </head>
 <body>
     <div class="body container">
-        <h1><a href="http://typecho.org" target="_blank" class="i-logo">Typecho</a></h1>
+        <h1><a href="https://typecho.org" target="_blank" class="i-logo">Typecho</a></h1>
         <?php $method(); ?>
     </div>
 </body>

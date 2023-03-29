@@ -268,7 +268,7 @@ class Comments extends Base implements QueryInterface
         $noFollow = (null === $noFollow) ? $this->options->commentsUrlNofollow : $noFollow;
 
         if ($this->url && $autoLink) {
-            echo '<a href="' . $this->url . '"'
+            echo '<a href="' . Common::safeUrl($this->url) . '"'
                 . ($noFollow ? ' rel="external nofollow"' : null) . '>' . $this->author . '</a>';
         } else {
             echo $this->author;

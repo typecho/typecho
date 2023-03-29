@@ -82,7 +82,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property bool $commentsRequireModeration
  * @property bool $commentsWhitelist
  * @property bool $commentsRequireMail
- * @property bool $commentsRequireURL
+ * @property bool $commentsRequireUrl
  * @property bool $commentsCheckReferer
  * @property bool $commentsAntiSpam
  * @property bool $commentsAutoClose
