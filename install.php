@@ -925,7 +925,7 @@ function install_step_2_perform()
             'dbCharset' => 'utf8mb4',
             'dbDatabase' => null,
             'dbEngine' => 'InnoDB',
-            'dbSsl' => null,
+            'dbSslCa' => null,
             'dbSslVerify' => 'on',
         ],
         'Pgsql' => [
