@@ -924,7 +924,9 @@ function install_step_2_perform()
             'dbPassword' => null,
             'dbCharset' => 'utf8mb4',
             'dbDatabase' => null,
-            'dbEngine' => 'InnoDB'
+            'dbEngine' => 'InnoDB',
+            'dbSslCa' => null,
+            'dbSslVerify' => 'on',
         ],
         'Pgsql' => [
             'dbHost' => 'localhost',
@@ -952,7 +954,9 @@ function install_step_2_perform()
             'dbEngine' => $request->getServer('TYPECHO_DB_ENGINE'),
             'dbPrefix' => $request->getServer('TYPECHO_DB_PREFIX', 'typecho_'),
             'dbAdapter' => $request->getServer('TYPECHO_DB_ADAPTER', install_get_current_db_driver()),
-            'dbNext' => $request->getServer('TYPECHO_DB_NEXT', 'none')
+            'dbNext' => $request->getServer('TYPECHO_DB_NEXT', 'none'),
+            'dbSslCa' => $request->getServer('TYPECHO_DB_SSL_CA'),
+            'dbSslVerify' => $request->getServer('TYPECHO_DB_SSL_VERIFY', 'on'),
         ];
     } else {
         $config = $request->from([
@@ -967,7 +971,9 @@ function install_step_2_perform()
             'dbEngine',
             'dbPrefix',
             'dbAdapter',
-            'dbNext'
+            'dbNext',
+            'dbSslCa',
+            'dbSslVerify',
         ]);
     }
 
@@ -1005,6 +1011,8 @@ function install_step_2_perform()
                 ->addRule('dbDatabase', 'required', _t('确认您的配置'))
                 ->addRule('dbEngine', 'required', _t('确认您的配置'))
                 ->addRule('dbEngine', 'enum', _t('确认您的配置'), ['InnoDB', 'MyISAM'])
+                ->addRule('dbSslCa', 'file_exists', _t('确认您的配置'))
+                ->addRule('dbSslVerify', 'enum', _t('确认您的配置'), ['on', 'off'])
                 ->run($config);
             break;
         case 'Pgsql':
@@ -1041,12 +1049,17 @@ function install_step_2_perform()
     }
 
     foreach ($configMap[$type] as $key => $value) {
-        $dbConfig[strtolower(substr($key, 2))] = $config[$key];
+        $dbConfig[lcfirst(substr($key, 2))] = $config[$key];
     }
 
     // intval port number
     if (isset($dbConfig['port'])) {
         $dbConfig['port'] = intval($dbConfig['port']);
+    }
+
+    // bool ssl verify
+    if (isset($dbConfig['sslVerify'])) {
+        $dbConfig['sslVerify'] = $dbConfig['sslVerify'] == 'on';
     }
 
     if (isset($dbConfig['file']) && preg_match("/^[a-z0-9]+\.[a-z0-9]{2,}$/i", $dbConfig['file'])) {
@@ -1064,7 +1077,7 @@ function install_step_2_perform()
             $installDb->addServer($dbConfig, \Typecho\Db::READ | \Typecho\Db::WRITE);
             $installDb->query('SELECT 1=1');
         } catch (\Typecho\Db\Adapter\ConnectionException $e) {
-            install_raise_error(_t('对不起, 无法连接数据库, 请先检查数据库配置再继续进行安装'));
+            install_raise_error(_t('对不起, 无法连接数据库, 请先检查数据库配置再继续进行安装: "%s"', $e->getMessage()));
         } catch (\Typecho\Db\Exception $e) {
             install_raise_error(_t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.', $e->getMessage()));
         }
