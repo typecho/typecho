@@ -602,17 +602,26 @@ class Contents extends Base implements QueryInterface
 
         /** 如果访问权限被禁止 */
         if ($value['hidden']) {
-            $value['text'] = '<form class="protected" action="' . $this->security->getTokenUrl($value['permalink'])
+            $replace= '<form class="protected" action="' . $this->security->getTokenUrl($value['permalink'])
                 . '" method="post">' .
                 '<p class="word">' . _t('请输入密码访问') . '</p>' .
                 '<p><input type="password" class="text" name="protectPassword" />
             <input type="hidden" name="protectCID" value="' . $value['cid'] . '" />
             <input type="submit" class="submit" value="' . _t('提交') . '" /></p>' .
                 '</form>';
-
-            $value['title'] = _t('此内容被密码保护');
+            //$value['text'] 
+            if(strpos($value['text'],"[password]")==FALSE||strpos($value['text'],"[/password]")==FALSE){
+				$value['text'] = $replace;
+			}else{
+				$value['text'] = preg_replace("/\[password\](.*?)\[\/password\]/sm",$replace,$value['text']);
+			}
+            //$value['title'] = _t('此内容被密码保护');
             $value['tags'] = [];
             $value['commentsNum'] = 0;
+        }
+        elseif(strlen($value['password'] ?? '') > 0 && !$this->user->pass('editor', true)){ //影响后台编辑，暂时可用
+            $value['text'] = preg_replace("/\[password\]/sm",'',$value['text']);
+            $value['text'] = preg_replace("/\[\/password\]/sm",'',$value['text']);
         }
 
         return $value;
