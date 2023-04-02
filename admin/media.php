@@ -138,7 +138,7 @@ include 'common-js.php';
                 img.get(0).src = '<?php $attachment->attachment->url(); ?>?' + Math.random();
             }
 
-            $('#' + id).html('<?php _e('文件 %s 已经替换'); ?>'.replace('%s', data.title))
+            $('#' + id).text('<?php _e('文件 %s 已经替换'); ?>'.replace('%s', data.title))
                 .effect('highlight', 1000, function () {
                     $(this).remove();
                     $('#file-list').remove();

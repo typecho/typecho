@@ -269,6 +269,9 @@ class Archive extends Contents
             if ('/comments/' == $feedQuery || '/comments' == $feedQuery) {
                 /** 专为feed使用的hack */
                 $parameter->type = 'comments';
+                $this->options->feedUrl = $this->options->commentsFeedUrl;
+                $this->options->feedRssUrl = $this->options->commentsFeedRssUrl;
+                $this->options->feedAtomUrl = $this->options->commentsFeedAtomUrl;
             } else {
                 $matched = Router::match($this->request->feed, 'pageSize=10&isFeed=1');
                 if ($matched instanceof Archive) {
@@ -643,7 +646,7 @@ class Archive extends Contents
 
         /** 处理搜索结果跳转 */
         if (isset($this->request->s)) {
-            $filterKeywords = $this->request->filter('search')->s;
+            $filterKeywords = $this->request->filter('search')->get('s');
 
             /** 跳转到搜索页 */
             if (null != $filterKeywords) {

@@ -218,7 +218,7 @@ xmlns:dc="http://purl.org/dc/elements/1.1/">' . self::EOL;
             $result .= '<channel rdf:about="' . $this->feedUrl . '">
 <title>' . htmlspecialchars($this->title) . '</title>
 <link>' . $this->baseUrl . '</link>
-<description>' . htmlspecialchars($this->subTitle) . '</description>
+<description>' . htmlspecialchars($this->subTitle ?? '') . '</description>
 <items>
 <rdf:Seq>' . self::EOL;
 
@@ -294,7 +294,7 @@ xmlns:wfw="http://wellformedweb.org/CommentAPI/">
 <link>' . $this->baseUrl . '</link>
 <atom:link href="' . $this->feedUrl . '" rel="self" type="application/rss+xml" />
 <language>' . $this->lang . '</language>
-<description>' . htmlspecialchars($this->subTitle) . '</description>
+<description>' . htmlspecialchars($this->subTitle ?? '') . '</description>
 <lastBuildDate>' . $this->dateFormat($lastUpdate) . '</lastBuildDate>
 <pubDate>' . $this->dateFormat($lastUpdate) . '</pubDate>' . self::EOL;
 
@@ -364,7 +364,7 @@ xml:base="' . $this->baseUrl . '"
             }
 
             $result .= '<title type="text">' . htmlspecialchars($this->title) . '</title>
-<subtitle type="text">' . htmlspecialchars($this->subTitle) . '</subtitle>
+<subtitle type="text">' . htmlspecialchars($this->subTitle ?? '') . '</subtitle>
 <updated>' . $this->dateFormat($lastUpdate) . '</updated>
 <generator uri="http://typecho.org/" version="' . $this->version . '">Typecho</generator>
 <link rel="alternate" type="text/html" href="' . $this->baseUrl . '" />

@@ -127,10 +127,10 @@ class Menu extends Base
         $panelTable = unserialize($this->options->panelTable);
         $extendingParentMenu = empty($panelTable['parent']) ? [] : $panelTable['parent'];
         $extendingChildMenu = empty($panelTable['child']) ? [] : $panelTable['child'];
-        $currentUrl = $this->request->makeUriByRequest();
+        $currentUrl = $this->request->getRequestUrl();
         $adminUrl = $this->options->adminUrl;
         $menu = [];
-        $defaultChildeNode = [null, null, null, 'administrator', false, null];
+        $defaultChildNode = [null, null, null, 'administrator', false, null];
 
         $currentUrlParts = parse_url($currentUrl);
         $currentUrlParams = [];
@@ -158,7 +158,7 @@ class Menu extends Base
 
             foreach ($childNodes[$key] as $inKey => $childNode) {
                 // magic merge
-                $childNode += $defaultChildeNode;
+                $childNode += $defaultChildNode;
                 [$name, $title, $url, $access] = $childNode;
 
                 $hidden = $childNode[4] ?? false;
@@ -255,7 +255,7 @@ class Menu extends Base
         }
 
         $this->menu = $menu;
-        $this->currentUrl = $currentUrl;
+        $this->currentUrl = Common::safeUrl($currentUrl);
     }
 
     /**

@@ -1,4 +1,5 @@
 <?php if(!defined('__TYPECHO_ADMIN__')) exit; ?>
+<script src="<?php $options->adminStaticUrl('js', 'purify.js'); ?>"></script>
 <script>
 (function () {
     $(document).ready(function () {

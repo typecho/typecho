@@ -21,9 +21,9 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == \Ty
                     </ul>
                     <ul class="typecho-option-tabs">
                         <li<?php if(!isset($request->status) || 'approved' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php'
-                        . (isset($request->cid) ? '?cid=' . $request->cid : '')); ?>"><?php _e('已通过'); ?></a></li>
+                        . (isset($request->cid) ? '?cid=' . $request->filter('encode')->cid : '')); ?>"><?php _e('已通过'); ?></a></li>
                         <li<?php if('waiting' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=waiting'
-                        . (isset($request->cid) ? '&cid=' . $request->cid : '')); ?>"><?php _e('待审核'); ?>
+                        . (isset($request->cid) ? '&cid=' . $request->filter('encode')->cid : '')); ?>"><?php _e('待审核'); ?>
                         <?php if(!$isAllComments && $stat->myWaitingCommentsNum > 0 && !isset($request->cid)): ?> 
                             <span class="balloon"><?php $stat->myWaitingCommentsNum(); ?></span>
                         <?php elseif($isAllComments && $stat->waitingCommentsNum > 0 && !isset($request->cid)): ?>
@@ -33,7 +33,7 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == \Ty
                         <?php endif; ?>
                         </a></li>
                         <li<?php if('spam' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php?status=spam'
-                        . (isset($request->cid) ? '&cid=' . $request->cid : '')); ?>"><?php _e('垃圾'); ?>
+                        . (isset($request->cid) ? '&cid=' . $request->filter('encode')->cid : '')); ?>"><?php _e('垃圾'); ?>
                         <?php if(!$isAllComments && $stat->mySpamCommentsNum > 0 && !isset($request->cid)): ?> 
                             <span class="balloon"><?php $stat->mySpamCommentsNum(); ?></span>
                         <?php elseif($isAllComments && $stat->spamCommentsNum > 0 && !isset($request->cid)): ?>
@@ -66,15 +66,15 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == \Ty
                             <?php if ('' != $request->keywords || '' != $request->category): ?>
                             <a href="<?php $options->adminUrl('manage-comments.php' 
                             . (isset($request->status) || isset($request->cid) ? '?' .
-                            (isset($request->status) ? 'status=' . htmlspecialchars($request->get('status')) : '') .
-                            (isset($request->cid) ? (isset($request->status) ? '&' : '') . 'cid=' . htmlspecialchars($request->get('cid')) : '') : '')); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
+                            (isset($request->status) ? 'status=' . $request->filter('encode')->status : '') .
+                            (isset($request->cid) ? (isset($request->status) ? '&' : '') . 'cid=' . $request->filter('encode')->cid : '') : '')); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
                             <?php endif; ?>
-                            <input type="text" class="text-s" placeholder="<?php _e('请输入关键字'); ?>" value="<?php echo htmlspecialchars($request->keywords ?? ''); ?>"<?php if ('' == $request->keywords): ?> onclick="value='';name='keywords';" <?php else: ?> name="keywords"<?php endif; ?>/>
+                            <input type="text" class="text-s" placeholder="<?php _e('请输入关键字'); ?>" value="<?php echo $request->filter('html')->keywords; ?>"<?php if ('' == $request->keywords): ?> onclick="value='';name='keywords';" <?php else: ?> name="keywords"<?php endif; ?>/>
                             <?php if(isset($request->status)): ?>
-                                <input type="hidden" value="<?php echo htmlspecialchars($request->get('status')); ?>" name="status" />
+                                <input type="hidden" value="<?php echo $request->filter('html')->status; ?>" name="status" />
                             <?php endif; ?>
                             <?php if(isset($request->cid)): ?>
-                                <input type="hidden" value="<?php echo htmlspecialchars($request->get('cid')); ?>" name="cid" />
+                                <input type="hidden" value="<?php echo $request->filter('html')->cid; ?>" name="cid" />
                             <?php endif; ?>
                             <button type="submit" class="btn btn-s"><?php _e('筛选'); ?></button>
                         </div>
@@ -183,7 +183,7 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == \Ty
                 </div><!-- end .typecho-table-wrap -->
 
                 <?php if(isset($request->cid)): ?>
-                <input type="hidden" value="<?php echo htmlspecialchars($request->get('cid')); ?>" name="cid" />
+                <input type="hidden" value="<?php echo $request->filter('html')->cid; ?>" name="cid" />
                 <?php endif; ?>
                 </form><!-- end .operate-form -->
 
@@ -279,10 +279,12 @@ $(document).ready(function () {
             form.submit(function () {
                 var t = $(this), tr = t.parents('tr'), 
                     reply = $('<div class="comment-reply-content"></div>').insertAfter($('.comment-content', tr));
-                
-                reply.html('<p>' + textarea.val() + '</p>');
+
+                var html = DOMPurify.sanitize(textarea.val(), {USE_PROFILES: {html: true}});
+                reply.html('<p>' + html + '</p>');
                 $.post(t.attr('action'), t.serialize(), function (o) {
-                    reply.html(o.comment.content)
+                    var html = DOMPurify.sanitize(o.comment.content, {USE_PROFILES: {html: true}});
+                    reply.html(html)
                         .effect('highlight');
                 }, 'json');
 
@@ -340,7 +342,7 @@ $(document).ready(function () {
                 }
             });
 
-            var html = '<strong class="comment-author">'
+            var unsafeHTML = '<strong class="comment-author">'
                 + (comment.url ? '<a target="_blank" href="' + comment.url + '">'
                 + comment.author + '</a>' : comment.author) + '</strong>'
                 + ('comment' != comment.type ? '<small><?php _e('引用'); ?></small>' : '')
@@ -348,13 +350,16 @@ $(document).ready(function () {
                 + comment.mail + '</a></span>' : '')
                 + (comment.ip ? '<br /><span>' + comment.ip + '</span>' : '');
 
+            var html = DOMPurify.sanitize(unsafeHTML, {USE_PROFILES: {html: true}});
+            var content = DOMPurify.sanitize(comment.text, {USE_PROFILES: {html: true}});
             $('.comment-meta', oldTr).html(html)
                 .effect('highlight');
-            $('.comment-content', oldTr).html('<p>' + comment.text + '</p>');
+            $('.comment-content', oldTr).html('<p>' + content + '</p>');
             oldTr.data('comment', comment);
 
             $.post(t.attr('action'), comment, function (o) {
-                $('.comment-content', oldTr).html(o.comment.content)
+                var content = DOMPurify.sanitize(o.comment.content, {USE_PROFILES: {html: true}});
+                $('.comment-content', oldTr).html('<p>' + content + '</p>')
                     .effect('highlight');
             }, 'json');
             
