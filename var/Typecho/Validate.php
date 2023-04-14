@@ -96,7 +96,7 @@ class Validate
      */
     public static function email(string $str): bool
     {
-        return filter_var($str, FILTER_VALIDATE_EMAIL) !== false;
+        return (bool) preg_match("/^[_a-z0-9-\.]+@([-a-z0-9]+\.)+[a-z]{2,}$/i", $str);
     }
 
     /**
@@ -110,10 +110,14 @@ class Validate
      */
     public static function url(string $str): bool
     {
-        return filter_var(
-            $str,
-            FILTER_VALIDATE_URL
-        ) !== false;
+        $parts = @parse_url($str);
+        if (!$parts) {
+            return false;
+        }
+
+        return isset($parts['scheme']) &&
+        in_array($parts['scheme'], array('http', 'https', 'ftp')) &&
+        !preg_match('/(\(|\)|\\\|"|<|>|[\x00-\x08]|[\x0b-\x0c]|[\x0e-\x19])/', $str);
     }
 
     /**
