@@ -1032,7 +1032,7 @@ class Archive extends Contents
      */
     public function related(int $limit = 5, ?string $type = null): Contents
     {
-        $type = strtolower($type);
+        $type = strtolower($type ?? '');
 
         switch ($type) {
             case 'author':
