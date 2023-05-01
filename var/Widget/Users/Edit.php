@@ -150,7 +150,7 @@ class Edit extends Users implements ActionInterface
         $group = new Form\Element\Select(
             'group',
             [
-                'subscriber'  => _t('关注者'),
+                'visitor'  => _t('访问者'), 'subscriber'  => _t('关注者'),
                 'contributor' => _t('贡献者'), 'editor' => _t('编辑'), 'administrator' => _t('管理员')
             ],
             null,
