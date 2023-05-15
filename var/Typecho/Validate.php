@@ -110,13 +110,13 @@ class Validate
      */
     public static function url(string $str): bool
     {
-        $parts = @parse_url($str);
+        $parts = parse_url($str);
         if (!$parts) {
             return false;
         }
 
         return isset($parts['scheme']) &&
-        in_array($parts['scheme'], array('http', 'https', 'ftp')) &&
+        in_array($parts['scheme'], ['http', 'https']) &&
         !preg_match('/(\(|\)|\\\|"|<|>|[\x00-\x08]|[\x0b-\x0c]|[\x0e-\x19])/', $str);
     }
 
