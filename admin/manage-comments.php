@@ -131,7 +131,7 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == \Ty
                                 <div class="comment-meta">
                                     <strong class="comment-author"><?php $comments->author(true); ?></strong>
                                     <?php if($comments->mail): ?>
-                                    <br /><span><a href="mailto:<?php $comments->mail(); ?>"><?php $comments->mail(); ?></a></span>
+                                    <br /><span><a href="<?php $comments->mail(true); ?>"><?php $comments->mail(); ?></a></span>
                                     <?php endif; ?>
                                     <?php if($comments->ip): ?>
                                     <br /><span><?php $comments->ip(); ?></span>
