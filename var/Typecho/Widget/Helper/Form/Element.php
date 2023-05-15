@@ -217,7 +217,7 @@ abstract class Element extends Layout
     public function value($value): Element
     {
         $this->value = $value;
-        $this->inputValue($value);
+        $this->inputValue($value ?? '');
         return $this;
     }
 
