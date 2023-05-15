@@ -97,7 +97,7 @@ class Validate
     public static function email(string $str): bool
     {
         $email = filter_var($str, FILTER_SANITIZE_EMAIL);
-        return filter_var($str, FILTER_VALIDATE_EMAIL) && ($email === $str);
+        return !!filter_var($str, FILTER_VALIDATE_EMAIL) && ($email === $str);
     }
 
     /**
@@ -111,14 +111,8 @@ class Validate
      */
     public static function url(string $str): bool
     {
-        $parts = parse_url($str);
-        if (!$parts) {
-            return false;
-        }
-
-        return isset($parts['scheme']) &&
-        in_array($parts['scheme'], ['http', 'https']) &&
-        !preg_match('/(\(|\)|\\\|"|<|>|[\x00-\x08]|[\x0b-\x0c]|[\x0e-\x19])/', $str);
+        $url = Common::safeUrl($str);
+        return !!filter_var($str, FILTER_VALIDATE_URL) && ($url === $str);
     }
 
     /**
