@@ -96,7 +96,8 @@ class Validate
      */
     public static function email(string $str): bool
     {
-        return (bool) preg_match("/^[_a-z0-9-\.]+@([-a-z0-9]+\.)+[a-z]{2,}$/i", $str);
+        $email = filter_var($str, FILTER_SANITIZE_EMAIL);
+        return filter_var($str, FILTER_VALIDATE_EMAIL) && ($email === $str);
     }
 
     /**
