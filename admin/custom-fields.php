@@ -9,8 +9,8 @@ $defaultFields = isset($post) ? $post->getDefaultFieldItems() : $page->getDefaul
                 class="i-caret-right"></i> <?php _e('自定义字段'); ?></a></label>
     <table class="typecho-list-table mono">
         <colgroup>
-            <col width="25%"/>
-            <col width="10%"/>
+            <col width="20%"/>
+            <col width="15%"/>
             <col width="55%"/>
             <col width="10%"/>
         </colgroup>
@@ -37,12 +37,14 @@ $defaultFields = isset($post) ? $post->getDefaultFieldItems() : $page->getDefaul
                             value="int"<?php if ('int' == $field['type']): ?> selected<?php endif; ?>><?php _e('整数'); ?></option>
                         <option
                             value="float"<?php if ('float' == $field['type']): ?> selected<?php endif; ?>><?php _e('小数'); ?></option>
+                        <option
+                            value="json"<?php if ('json' == $field['type']): ?> selected<?php endif; ?>><?php _e('JSON 结构'); ?></option>
                     </select>
                 </td>
                 <td>
                     <label for="fieldvalue" class="sr-only"><?php _e('字段值'); ?></label>
                     <textarea name="fieldValues[]" id="fieldvalue" class="text-s w-100"
-                              rows="2"><?php echo htmlspecialchars($field[$field['type'] . '_value']); ?></textarea>
+                              rows="2"><?php echo htmlspecialchars($field[($field['type'] == 'json' ? 'str' : $field['type']) . '_value']); ?></textarea>
                 </td>
                 <td>
                     <button type="button" class="btn btn-xs"><?php _e('删除'); ?></button>

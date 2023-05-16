@@ -229,14 +229,14 @@ class Edit extends Contents implements ActionInterface
                 if (preg_match("/^fields\[(.+)\]$/", $name, $matches)) {
                     $name = $matches[1];
                 } else {
-                    foreach ($item->inputs as $input) {
-                        $suffix = '';
-                        if (preg_match("/^(.+)\[\]$/", $name, $matches)) {
-                            $name = $matches[1];
-                            $suffix = '[]';
-                        }
+                    $inputName = 'fields[' . $name . ']';
+                    if (preg_match("/^(.+)\[\]$/", $name, $matches)) {
+                        $name = $matches[1];
+                        $inputName = 'fields[' . $name . '][]';
+                    }
 
-                        $input->setAttribute('name', 'fields[' . $name . ']' . $suffix);
+                    foreach ($item->inputs as $input) {
+                        $input->setAttribute('name', $inputName);
                     }
                 }
 
@@ -668,8 +668,8 @@ class Edit extends Contents implements ActionInterface
         }
 
         $customFields = $this->request->getArray('fields');
-        if (!empty($customFields)) {
-            $fields = array_merge($fields, $customFields);
+        foreach ($customFields as $key => $val) {
+            $fields[$key] = [is_array($val) ? 'json' : 'str', $val];
         }
 
         return $fields;
