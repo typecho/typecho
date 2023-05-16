@@ -554,7 +554,7 @@ class Contents extends Base implements QueryInterface
 
             //增加数据信息
             $value['attachment'] = new Config($content);
-            $value['attachment']->isImage = in_array($content['type'], ['jpg', 'jpeg', 'gif', 'png', 'tiff', 'bmp']);
+            $value['attachment']->isImage = in_array($content['type'], ['jpg', 'jpeg', 'gif', 'png', 'tiff', 'bmp', 'webp', 'avif']);
             $value['attachment']->url = Upload::attachmentHandle($value);
 
             if ($value['attachment']->isImage) {
@@ -928,7 +928,7 @@ class Contents extends Base implements QueryInterface
     {
         $html = Contents::pluginHandle()->trigger($parsed)->autoP($text);
 
-        if (!$parsed) {
+        if (!$parsed && $text) {
             static $parser;
 
             if (empty($parser)) {

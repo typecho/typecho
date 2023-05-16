@@ -4,13 +4,13 @@
 /** Typecho 全局样式 */
 html { height: 100%; }
 
-body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; background: #F6F6F3; color: #444; font-size: 87.5%; line-height: 1.5; }
+body { font-family: 'Helvetica Neue', Helvetica, Arial, -apple-system, system-ui, sans-serif; background: #F6F6F3; color: #444; font-size: 87.5%; line-height: 1.5; }
 
 a { color: #467B96; text-decoration: none; }
 
 a:hover { color: #499BC3; text-decoration: underline; }
 
-code, pre, .mono { font-family: Menlo, Monaco, Consolas, "Courier New", monospace; }
+code, pre, .mono { font-family: 'SF Mono', Menlo, Monaco, Consolas, 'Courier New', -apple-system, system-ui, monospace; }
 
 .p { margin: 1em 0; }
 
@@ -170,7 +170,7 @@ select { border: 1px solid #CCC; height: 28px; }
 
 .typecho-head-nav #typecho-nav-list > ul.focus .parent a { font-weight: bold; }
 
-.typecho-head-nav #typecho-nav-list > ul.root:hover .child { display: block; }
+.typecho-head-nav #typecho-nav-list > ul.root:hover .child, .typecho-head-nav #typecho-nav-list > ul.root.expanded .child { display: block; }
 
 .typecho-head-nav .operate { float: right; }
 

@@ -59,7 +59,7 @@ class Helper
 
         $key = $keys[$table];
         $db = Db::get();
-        $widget = Widget::widget($className);
+        $widget = Widget::widget($className . '@' . $pkId);
 
         $db->fetchRow(
             $widget->select()->where("{$key} = ?", $pkId)->limit(1),

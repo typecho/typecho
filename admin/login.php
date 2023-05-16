@@ -13,7 +13,7 @@ include 'header.php';
 ?>
 <div class="typecho-login-wrap">
     <div class="typecho-login">
-        <h1><a href="http://typecho.org" class="i-logo">Typecho</a></h1>
+        <h1><a href="https://typecho.org" class="i-logo">Typecho</a></h1>
         <form action="<?php $options->loginAction(); ?>" method="post" name="login" role="form">
             <p>
                 <label for="name" class="sr-only"><?php _e('用户名'); ?></label>
@@ -25,7 +25,7 @@ include 'header.php';
             </p>
             <p class="submit">
                 <button type="submit" class="btn btn-l w-100 primary"><?php _e('登录'); ?></button>
-                <input type="hidden" name="referer" value="<?php echo htmlspecialchars($request->get('referer') ?? ''); ?>" />
+                <input type="hidden" name="referer" value="<?php echo $request->filter('html')->get('referer'); ?>" />
             </p>
             <p>
                 <label for="remember">

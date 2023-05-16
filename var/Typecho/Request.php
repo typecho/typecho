@@ -149,6 +149,18 @@ class Request
                     $exists = false;
                 }
                 break;
+            case $key === '@json':
+                $exists = false;
+                if ($this->isJson()) {
+                    $body = file_get_contents('php://input');
+
+                    if (false !== $body) {
+                        $exists = true;
+                        $value = json_decode($body, true, 16);
+                        $default = $default ?? $value;
+                    }
+                }
+                break;
             case isset($_GET[$key]):
                 $value = $_GET[$key];
                 break;
@@ -418,6 +430,7 @@ class Request
     public function isSecure(): bool
     {
         return (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && !strcasecmp('https', $_SERVER['HTTP_X_FORWARDED_PROTO']))
+            || (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && !strcasecmp('quic', $_SERVER['HTTP_X_FORWARDED_PROTO']))
             || (!empty($_SERVER['HTTP_X_FORWARDED_PORT']) && 443 == $_SERVER['HTTP_X_FORWARDED_PORT'])
             || (!empty($_SERVER['HTTPS']) && 'off' != strtolower($_SERVER['HTTPS']))
             || (!empty($_SERVER['SERVER_PORT']) && 443 == $_SERVER['SERVER_PORT'])
@@ -470,6 +483,16 @@ class Request
     public function isAjax(): bool
     {
         return 'XMLHttpRequest' == $this->getHeader('X-Requested-With');
+    }
+
+    /**
+     * 判断是否为Json请求
+     *
+     * @return bool
+     */
+    public function isJson(): bool
+    {
+        return !!preg_match("/^\s*application\/json(;|$)/i", $this->getHeader('Content-Type', ''));
     }
 
     /**

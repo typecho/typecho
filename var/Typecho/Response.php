@@ -200,7 +200,7 @@ class Response
 
         // set cookie
         foreach ($this->cookies as $cookie) {
-            [$key, $value, $timeout, $path, $domain] = $cookie;
+            [$key, $value, $timeout, $path, $domain, $secure, $httponly] = $cookie;
 
             if ($timeout > 0) {
                 $now = time();
@@ -209,7 +209,7 @@ class Response
                 $timeout = 1;
             }
 
-            setrawcookie($key, rawurlencode($value), $timeout, $path, $domain ?? '');
+            setrawcookie($key, rawurlencode($value), $timeout, $path, $domain, $secure, $httponly);
         }
     }
 
@@ -275,6 +275,8 @@ class Response
      * @param integer $timeout 过期时间,默认为0,表示随会话时间结束
      * @param string $path 路径信息
      * @param string|null $domain 域名信息
+     * @param bool $secure 是否仅可通过安全的 HTTPS 连接传给客户端
+     * @param bool $httponly 是否仅可通过 HTTP 协议访问
      * @return $this
      */
     public function setCookie(
@@ -282,10 +284,12 @@ class Response
         $value,
         int $timeout = 0,
         string $path = '/',
-        string $domain = null
+        string $domain = '',
+        bool $secure = false,
+        bool $httponly = false
     ): Response {
         if (!$this->sandbox) {
-            $this->cookies[] = [$key, $value, $timeout, $path, $domain];
+            $this->cookies[] = [$key, $value, $timeout, $path, $domain, $secure, $httponly];
         }
 
         return $this;

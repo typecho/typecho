@@ -269,6 +269,9 @@ class Archive extends Contents
             if ('/comments/' == $feedQuery || '/comments' == $feedQuery) {
                 /** 专为feed使用的hack */
                 $parameter->type = 'comments';
+                $this->options->feedUrl = $this->options->commentsFeedUrl;
+                $this->options->feedRssUrl = $this->options->commentsFeedRssUrl;
+                $this->options->feedAtomUrl = $this->options->commentsFeedAtomUrl;
             } else {
                 $matched = Router::match($this->request->feed, 'pageSize=10&isFeed=1');
                 if ($matched instanceof Archive) {
@@ -643,7 +646,7 @@ class Archive extends Contents
 
         /** 处理搜索结果跳转 */
         if (isset($this->request->s)) {
-            $filterKeywords = $this->request->filter('search')->s;
+            $filterKeywords = $this->request->filter('search')->get('s');
 
             /** 跳转到搜索页 */
             if (null != $filterKeywords) {
@@ -1029,7 +1032,7 @@ class Archive extends Contents
      */
     public function related(int $limit = 5, ?string $type = null): Contents
     {
-        $type = strtolower($type);
+        $type = strtolower($type ?? '');
 
         switch ($type) {
             case 'author':
@@ -1054,8 +1057,8 @@ class Archive extends Contents
     {
         $rules = [];
         $allows = [
-            'description'  => htmlspecialchars($this->description),
-            'keywords'     => htmlspecialchars($this->keywords),
+            'description'  => htmlspecialchars($this->description ?? ''),
+            'keywords'     => htmlspecialchars($this->keywords ?? ''),
             'generator'    => $this->options->generator,
             'template'     => $this->options->theme,
             'pingback'     => $this->options->xmlRpcUrl,
@@ -1320,7 +1323,7 @@ class Archive extends Contents
      */
     public function keywords(string $split = ',', string $default = '')
     {
-        echo empty($this->keywords) ? $default : str_replace(',', $split, htmlspecialchars($this->keywords));
+        echo empty($this->keywords) ? $default : str_replace(',', $split, htmlspecialchars($this->keywords ?? ''));
     }
 
     /**

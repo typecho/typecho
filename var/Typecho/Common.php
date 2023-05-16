@@ -168,7 +168,7 @@ namespace Typecho {
     class Common
     {
         /** 程序版本 */
-        public const VERSION = '1.2.0';
+        public const VERSION = '1.2.1';
 
         /**
          * 将路径转化为链接
@@ -482,7 +482,7 @@ EOF;
          */
         public static function filterSearchQuery(?string $query): string
         {
-            return isset($query) ? str_replace('-', ' ', self::slugName($query)) : '';
+            return isset($query) ? str_replace('-', ' ', self::slugName($query) ?? '') : '';
         }
 
         /**
@@ -1359,7 +1359,8 @@ EOF;
                 'ice'      => 'x-conference/x-cooltalk',
                 'vrm'      => 'x-world/x-vrml',
                 'rar'      => 'application/x-rar-compressed',
-                'cab'      => 'application/vnd.ms-cab-compressed'
+                'cab'      => 'application/vnd.ms-cab-compressed',
+                'webp'     => 'image/webp'
             ];
 
             $part = explode('.', $fileName);

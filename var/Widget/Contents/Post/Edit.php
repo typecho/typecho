@@ -288,7 +288,7 @@ class Edit extends Contents implements ActionInterface
             self::pluginHandle()->finishPublish($contents, $this);
 
             /** 发送ping */
-            $trackback = array_unique(preg_split("/(\r|\n|\r\n)/", trim($this->request->trackback)));
+            $trackback = array_filter(array_unique(preg_split("/(\r|\n|\r\n)/", trim($this->request->trackback))));
             Service::alloc()->sendPing($this, $trackback);
 
             /** 设置提示信息 */
@@ -405,7 +405,7 @@ class Edit extends Contents implements ActionInterface
         $realId = 0;
 
         /** 是否是从草稿状态发布 */
-        $isDraftToPublish = ('post_draft' == $this->type);
+        $isDraftToPublish = ('post_draft' == $this->type || 'page_draft' == $this->type);
 
         $isBeforePublish = ('publish' == $this->status);
         $isAfterPublish = ('publish' == $contents['status']);

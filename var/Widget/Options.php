@@ -46,6 +46,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property string $keywords
  * @property string $lang
  * @property string $theme
+ * @property string|null $missingTheme
  * @property int $pageSize
  * @property int $serverTimezone
  * @property int $timezone
@@ -81,7 +82,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property bool $commentsRequireModeration
  * @property bool $commentsWhitelist
  * @property bool $commentsRequireMail
- * @property bool $commentsRequireURL
+ * @property bool $commentsRequireUrl
  * @property bool $commentsCheckReferer
  * @property bool $commentsAntiSpam
  * @property bool $commentsAutoClose
@@ -186,7 +187,12 @@ class Options extends Base
         $this->plugins = unserialize($this->plugins);
 
         /** 动态判断皮肤目录 */
-        $this->theme = is_dir($this->themeFile($this->theme)) ? $this->theme : 'default';
+        $this->missingTheme = null;
+
+        if (!is_dir($this->themeFile($this->theme))) {
+            $this->missingTheme = $this->theme;
+            $this->theme = 'default';
+        }
 
         /** 增加对SSL连接的支持 */
         if ($this->request->isSecure() && 0 === strpos($this->siteUrl, 'http://')) {
@@ -255,18 +261,18 @@ class Options extends Base
      *
      * @param string|null $path 子路径
      * @param string|null $theme 模版名称
-     * @return string
+     * @return string | void
      */
-    public function themeUrl(?string $path = null, ?string $theme = null): string
+    public function themeUrl(?string $path = null, ?string $theme = null)
     {
-        if (empty($theme)) {
+        if (!isset($theme)) {
             echo Common::url($path, $this->themeUrl);
+        } else {
+            $url = defined('__TYPECHO_THEME_URL__') ? __TYPECHO_THEME_URL__ :
+                Common::url(__TYPECHO_THEME_DIR__ . '/' . $theme, $this->siteUrl);
+
+            return isset($path) ? Common::url($path, $url) : $url;
         }
-
-        $url = defined('__TYPECHO_THEME_URL__') ? __TYPECHO_THEME_URL__ :
-            Common::url(__TYPECHO_THEME_DIR__ . '/' . $theme, $this->siteUrl);
-
-        return Common::url($path, $url);
     }
 
     /**
@@ -476,8 +482,7 @@ class Options extends Base
      */
     protected function ___themeUrl(): string
     {
-        return defined('__TYPECHO_THEME_URL__') ? __TYPECHO_THEME_URL__ :
-            Common::url(__TYPECHO_THEME_DIR__ . '/' . $this->theme, $this->siteUrl);
+        return $this->themeUrl(null, $this->theme);
     }
 
     /**
@@ -665,7 +670,7 @@ class Options extends Base
             $attachmentTypes = str_replace(
                 ['@image@', '@media@', '@doc@'],
                 [
-                    'gif,jpg,jpeg,png,tiff,bmp', 'mp3,mp4,mov,wmv,wma,rmvb,rm,avi,flv,ogg,oga,ogv',
+                    'gif,jpg,jpeg,png,tiff,bmp,webp', 'mp3,mp4,mov,wmv,wma,rmvb,rm,avi,flv,ogg,oga,ogv',
                     'txt,doc,docx,xls,xlsx,ppt,pptx,zip,rar,pdf'
                 ],
                 $this->attachmentTypes
