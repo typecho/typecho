@@ -345,41 +345,42 @@ class Contents extends Base implements QueryInterface
      *
      * @param string $name
      * @param string $type
-     * @param string $value
+     * @param mixed $value
      * @param integer $cid
      * @return integer|bool
      * @throws Exception
      */
-    public function setField(string $name, string $type, string $value, int $cid)
+    public function setField(string $name, string $type, $value, int $cid)
     {
         if (
             empty($name) || !$this->checkFieldName($name)
-            || !in_array($type, ['str', 'int', 'float'])
+            || !in_array($type, ['str', 'int', 'float', 'json'])
         ) {
             return false;
+        }
+
+        if ($type === 'json') {
+            $value = json_encode($value);
         }
 
         $exist = $this->db->fetchRow($this->db->select('cid')->from('table.fields')
             ->where('cid = ? AND name = ?', $cid, $name));
 
+        $rows = [
+            'type'        => $type,
+            'str_value'   => 'str' == $type || 'json' == $type ? $value : null,
+            'int_value'   => 'int' == $type ? intval($value) : 0,
+            'float_value' => 'float' == $type ? floatval($value) : 0
+        ];
+
         if (empty($exist)) {
-            return $this->db->query($this->db->insert('table.fields')
-                ->rows([
-                    'cid'         => $cid,
-                    'name'        => $name,
-                    'type'        => $type,
-                    'str_value'   => 'str' == $type ? $value : null,
-                    'int_value'   => 'int' == $type ? intval($value) : 0,
-                    'float_value' => 'float' == $type ? floatval($value) : 0
-                ]));
+            $rows['cid'] = $cid;
+            $rows['name'] = $name;
+
+            return $this->db->query($this->db->insert('table.fields')->rows($rows));
         } else {
             return $this->db->query($this->db->update('table.fields')
-                ->rows([
-                    'type'        => $type,
-                    'str_value'   => 'str' == $type ? $value : null,
-                    'int_value'   => 'int' == $type ? intval($value) : 0,
-                    'float_value' => 'float' == $type ? floatval($value) : 0
-                ])
+                ->rows($rows)
                 ->where('cid = ? AND name = ?', $cid, $name));
         }
     }
@@ -872,7 +873,8 @@ class Contents extends Base implements QueryInterface
             ->where('cid = ?', $this->cid));
 
         foreach ($rows as $row) {
-            $fields[$row['name']] = $row[$row['type'] . '_value'];
+            $value = 'json' == $row['type'] ? json_decode($row['str_value'], true) : $row[$row['type'] . '_value'];
+            $fields[$row['name']] = $value;
         }
 
         return new Config($fields);
