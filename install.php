@@ -1031,8 +1031,7 @@ function install_step_2_perform()
                 ->addRule('dbFile', 'required', _t('确认您的配置'))
                 ->addRule('dbFile', function (string $path) {
                     $pattern = "/^(\/[._a-z0-9-]+)*[a-z0-9]+\.[a-z0-9]{2,}$/i";
-                    if (strstr(PHP_OS, 'WIN'))
-                    {
+                    if (strstr(PHP_OS, 'WIN')) {
                         $pattern = "/(\/[._a-z0-9-]+)*[a-z0-9]+\.[a-z0-9]{2,}$/i";
                     }
                     return !!preg_match($pattern, $path);
