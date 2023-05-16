@@ -230,7 +230,13 @@ class Edit extends Contents implements ActionInterface
                     $name = $matches[1];
                 } else {
                     foreach ($item->inputs as $input) {
-                        $input->setAttribute('name', 'fields[' . $name . ']');
+                        $suffix = '';
+                        if (preg_match("/^(.+)\[\]$/", $name, $matches)) {
+                            $name = $matches[1];
+                            $suffix = '[]';
+                        }
+
+                        $input->setAttribute('name', 'fields[' . $name . ']' . $suffix);
                     }
                 }
 
