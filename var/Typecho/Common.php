@@ -83,7 +83,7 @@ namespace Typecho {
         $isPlugin = false;
 
         // detect if class is predefined
-        if (strpos($className, '\\') !== false) {
+        if ($isNamespace) {
             $isPlugin = strpos(ltrim($className, '\\'), PLUGIN_NAMESPACE . '\\') !== false;
 
             if ($isPlugin) {
