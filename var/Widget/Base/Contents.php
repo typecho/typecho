@@ -610,7 +610,7 @@ class Contents extends Base implements QueryInterface
             <input type="submit" class="submit" value="' . _t('提交') . '" /></p>' .
                 '</form>';
             //$value['text'] 
-            if(strpos($value['text'],"[password]")==FALSE||strpos($value['text'],"[/password]")==FALSE){
+            if(preg_match("/\[password\](.*?)\[\/password\]/sm",$value['text'])==0){
 				$value['text'] = $replace;
 			}else{
 				$value['text'] = preg_replace("/\[password\](.*?)\[\/password\]/sm",$replace,$value['text']);
