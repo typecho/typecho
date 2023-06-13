@@ -71,7 +71,7 @@ class Config extends BaseOptions
 
         if (!empty($inputs)) {
             foreach ($inputs as $key => $val) {
-                if ($this->options->{$key}) {
+                if (isset($this->options->{$key})) {
                     $form->getInput($key)->value($this->options->{$key});
                 }
             }
