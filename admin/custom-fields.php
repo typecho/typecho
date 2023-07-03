@@ -26,7 +26,7 @@ $defaultFields = isset($post) ? $post->getDefaultFieldItems() : $page->getDefaul
                 <td>
                     <label for="fieldname" class="sr-only"><?php _e('字段名称'); ?></label>
                     <input type="text" name="fieldNames[]" value="<?php echo htmlspecialchars($field['name']); ?>"
-                           id="fieldname" class="text-s w-100">
+                           id="fieldname" pattern="^[_a-zA-Z][_a-zA-Z0-9]*$" oninput="this.reportValidity()" class="text-s w-100">
                 </td>
                 <td>
                     <label for="fieldtype" class="sr-only"><?php _e('字段类型'); ?></label>
@@ -56,7 +56,7 @@ $defaultFields = isset($post) ? $post->getDefaultFieldItems() : $page->getDefaul
                 <td>
                     <label for="fieldname" class="sr-only"><?php _e('字段名称'); ?></label>
                     <input type="text" name="fieldNames[]" placeholder="<?php _e('字段名称'); ?>" id="fieldname"
-                           class="text-s w-100">
+                           class="text-s w-100" pattern="^[_a-zA-Z][_a-zA-Z0-9]*$" oninput="this.reportValidity()">
                 </td>
                 <td>
                     <label for="fieldtype" class="sr-only"><?php _e('字段类型'); ?></label>
