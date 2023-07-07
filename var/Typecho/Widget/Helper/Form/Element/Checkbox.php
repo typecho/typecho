@@ -61,7 +61,7 @@ class Checkbox extends Element
      */
     protected function inputValue($value)
     {
-        $values = is_array($value) ? $value : [$value];
+        $values = is_null($value) ? [] : (is_array($value) ? $value : [$value]);
 
         foreach ($this->options as $option) {
             $option->removeAttribute('checked');

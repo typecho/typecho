@@ -1031,8 +1031,7 @@ function install_step_2_perform()
                 ->addRule('dbFile', 'required', _t('确认您的配置'))
                 ->addRule('dbFile', function (string $path) {
                     $pattern = "/^(\/[._a-z0-9-]+)*[a-z0-9]+\.[a-z0-9]{2,}$/i";
-                    if (strstr(PHP_OS, 'WIN'))
-                    {
+                    if (strstr(PHP_OS, 'WIN')) {
                         $pattern = "/(\/[._a-z0-9-]+)*[a-z0-9]+\.[a-z0-9]{2,}$/i";
                     }
                     return !!preg_match($pattern, $path);
@@ -1077,7 +1076,12 @@ function install_step_2_perform()
             $installDb->addServer($dbConfig, \Typecho\Db::READ | \Typecho\Db::WRITE);
             $installDb->query('SELECT 1=1');
         } catch (\Typecho\Db\Adapter\ConnectionException $e) {
-            install_raise_error(_t('对不起, 无法连接数据库, 请先检查数据库配置再继续进行安装: "%s"', $e->getMessage()));
+            $code = $e->getCode();
+            if (('Mysql' == $type && 1049 == $code) || ('Pgsql' == $type && 7 == $code)) {
+                install_raise_error(_t('数据库: "%s"不存在，请手动创建后重试', $config['dbDatabase']));
+            } else {
+                install_raise_error(_t('对不起, 无法连接数据库, 请先检查数据库配置再继续进行安装: "%s"', $e->getMessage()));
+            }
         } catch (\Typecho\Db\Exception $e) {
             install_raise_error(_t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.', $e->getMessage()));
         }

@@ -307,6 +307,18 @@ class Comments extends Base implements QueryInterface
     }
 
     /**
+     * 输出邮箱地址
+     *
+     * @param bool $link
+     * @return void
+     */
+    public function mail(bool $link = false)
+    {
+        $mail = htmlspecialchars($this->mail);
+        echo $link ? 'mailto:' . $mail : $mail;
+    }
+
+    /**
      * 获取查询对象
      *
      * @return Query
