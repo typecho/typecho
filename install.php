@@ -926,7 +926,7 @@ function install_step_2_perform()
             'dbDatabase' => null,
             'dbEngine' => 'InnoDB',
             'dbSslCa' => null,
-            'dbSslVerify' => 'on',
+            'dbSslVerify' => 'off',
         ],
         'Pgsql' => [
             'dbHost' => 'localhost',
@@ -935,6 +935,7 @@ function install_step_2_perform()
             'dbPassword' => null,
             'dbCharset' => 'utf8',
             'dbDatabase' => null,
+            'dbSslVerify' => 'off',
         ],
         'SQLite' => [
             'dbFile' => __TYPECHO_ROOT_DIR__ . '/usr/' . uniqid() . '.db'
@@ -956,7 +957,7 @@ function install_step_2_perform()
             'dbAdapter' => $request->getServer('TYPECHO_DB_ADAPTER', install_get_current_db_driver()),
             'dbNext' => $request->getServer('TYPECHO_DB_NEXT', 'none'),
             'dbSslCa' => $request->getServer('TYPECHO_DB_SSL_CA'),
-            'dbSslVerify' => $request->getServer('TYPECHO_DB_SSL_VERIFY', 'on'),
+            'dbSslVerify' => $request->getServer('TYPECHO_DB_SSL_VERIFY', 'off'),
         ];
     } else {
         $config = $request->from([
@@ -1024,6 +1025,7 @@ function install_step_2_perform()
                 ->addRule('dbCharset', 'required', _t('确认您的配置'))
                 ->addRule('dbCharset', 'enum', _t('确认您的配置'), ['utf8'])
                 ->addRule('dbDatabase', 'required', _t('确认您的配置'))
+                ->addRule('dbSslVerify', 'enum', _t('确认您的配置'), ['on', 'off'])
                 ->run($config);
             break;
         case 'SQLite':
@@ -1058,7 +1060,7 @@ function install_step_2_perform()
 
     // bool ssl verify
     if (isset($dbConfig['sslVerify'])) {
-        $dbConfig['sslVerify'] = $dbConfig['sslVerify'] == 'on';
+        $dbConfig['sslVerify'] = $dbConfig['sslVerify'] == 'on' || !empty($dbConfig['sslCa']);
     }
 
     if (isset($dbConfig['file']) && preg_match("/^[a-z0-9]+\.[a-z0-9]{2,}$/i", $dbConfig['file'])) {
