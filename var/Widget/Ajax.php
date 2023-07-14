@@ -41,10 +41,10 @@ class Ajax extends BaseOptions implements ActionInterface
     {
         $this->user->pass('editor');
         $client = Client::get();
+        $result = ['available' => 0];
         if ($client) {
             $client->setHeader('User-Agent', $this->options->generator)
                 ->setTimeout(10);
-            $result = ['available' => 0];
 
             try {
                 $client->send('https://typecho.org/version.json');
@@ -72,11 +72,9 @@ class Ajax extends BaseOptions implements ActionInterface
             } catch (\Exception $e) {
                 // do nothing
             }
-
-            $this->response->throwJson($result);
         }
 
-        throw new Exception(_t('禁止访问'), 403);
+        $this->response->throwJson($result);
     }
 
     /**
@@ -89,6 +87,7 @@ class Ajax extends BaseOptions implements ActionInterface
     {
         $this->user->pass('subscriber');
         $client = Client::get();
+        $data = [];
         if ($client) {
             $client->setHeader('User-Agent', $this->options->generator)
                 ->setTimeout(10)
@@ -101,8 +100,6 @@ class Ajax extends BaseOptions implements ActionInterface
                 $response,
                 $matches
             );
-
-            $data = [];
 
             if ($matches) {
                 foreach ($matches[0] as $key => $val) {
@@ -117,11 +114,9 @@ class Ajax extends BaseOptions implements ActionInterface
                     }
                 }
             }
-
-            $this->response->throwJson($data);
         }
 
-        throw new Exception(_t('禁止访问'), 403);
+        $this->response->throwJson($data);
     }
 
     /**
