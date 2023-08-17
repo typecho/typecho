@@ -206,7 +206,7 @@ class Feedback extends Comments implements ActionInterface
             /** Anti-XSS */
             $comment['author'] = $this->request->filter('trim')->author;
             $comment['mail'] = $this->request->filter('trim')->mail;
-            $comment['url'] = $this->request->filter('trim')->url;
+            $comment['url'] = $this->request->filter('trim', 'url')->url;
 
             /** 修正用户提交的url */
             if (!empty($comment['url'])) {
@@ -305,7 +305,7 @@ class Feedback extends Comments implements ActionInterface
         ];
 
         $trackback['author'] = $this->request->filter('trim')->blog_name;
-        $trackback['url'] = $this->request->filter('trim')->url;
+        $trackback['url'] = $this->request->filter('trim', 'url')->url;
         $trackback['text'] = $this->request->excerpt;
 
         //检验格式

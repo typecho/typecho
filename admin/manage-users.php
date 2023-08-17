@@ -31,7 +31,7 @@ $users = \Widget\Users\Admin::alloc();
                                 <a href="<?php $options->adminUrl('manage-users.php'); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
                             <?php endif; ?>
                             <input type="text" class="text-s" placeholder="<?php _e('请输入关键字'); ?>"
-                                   value="<?php echo htmlspecialchars($request->keywords ?? ''); ?>" name="keywords"/>
+                                   value="<?php echo $request->filter('html')->keywords; ?>" name="keywords"/>
                             <button type="submit" class="btn btn-s"><?php _e('筛选'); ?></button>
                         </div>
                     </form>
@@ -64,7 +64,7 @@ $users = \Widget\Users\Admin::alloc();
                                     <td class="kit-hidden-mb"><input type="checkbox" value="<?php $users->uid(); ?>"
                                                                      name="uid[]"/></td>
                                     <td class="kit-hidden-mb"><a
-                                            href="<?php $options->adminUrl('manage-posts.php?uid=' . $users->uid); ?>"
+                                            href="<?php $options->adminUrl('manage-posts.php?__typecho_all_posts=off&uid=' . $users->uid); ?>"
                                             class="balloon-button left size-<?php echo \Typecho\Common::splitByCount($users->postsNum, 1, 10, 20, 50, 100); ?>"><?php $users->postsNum(); ?></a>
                                     </td>
                                     <td>

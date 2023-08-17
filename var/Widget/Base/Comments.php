@@ -268,7 +268,7 @@ class Comments extends Base implements QueryInterface
         $noFollow = (null === $noFollow) ? $this->options->commentsUrlNofollow : $noFollow;
 
         if ($this->url && $autoLink) {
-            echo '<a href="' . $this->url . '"'
+            echo '<a href="' . Common::safeUrl($this->url) . '"'
                 . ($noFollow ? ' rel="external nofollow"' : null) . '>' . $this->author . '</a>';
         } else {
             echo $this->author;
@@ -289,7 +289,7 @@ class Comments extends Base implements QueryInterface
             Comments::pluginHandle()->trigger($plugged)->gravatar($size, $rating, $default, $this);
             if (!$plugged) {
                 $url = Common::gravatarUrl($this->mail, $size, $rating, $default, $this->request->isSecure());
-                echo '<img class="avatar" src="' . $url . '" alt="' .
+                echo '<img class="avatar" loading="lazy" src="' . $url . '" alt="' .
                     $this->author . '" width="' . $size . '" height="' . $size . '" />';
             }
         }
@@ -304,6 +304,18 @@ class Comments extends Base implements QueryInterface
     public function excerpt(int $length = 100, string $trim = '...')
     {
         echo Common::subStr(strip_tags($this->content), 0, $length, $trim);
+    }
+
+    /**
+     * 输出邮箱地址
+     *
+     * @param bool $link
+     * @return void
+     */
+    public function mail(bool $link = false)
+    {
+        $mail = htmlspecialchars($this->mail);
+        echo $link ? 'mailto:' . $mail : $mail;
     }
 
     /**

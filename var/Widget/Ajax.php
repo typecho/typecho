@@ -47,7 +47,7 @@ class Ajax extends BaseOptions implements ActionInterface
             $result = ['available' => 0];
 
             try {
-                $client->send('http://typecho.org/version.json');
+                $client->send('https://typecho.org/version.json');
 
                 /** 匹配内容体 */
                 $response = $client->getResponseBody();
@@ -59,13 +59,13 @@ class Ajax extends BaseOptions implements ActionInterface
                     if (
                         isset($json['release'])
                         && preg_match("/^[0-9\.]+$/", $json['release'])
-                        && version_compare($json['release'], $version, '>=')
+                        && version_compare($json['release'], $version, '>')
                     ) {
                         $result = [
                             'available' => 1,
                             'latest'    => $json['release'],
                             'current'   => $version,
-                            'link'      => 'http://typecho.org/download'
+                            'link'      => 'https://typecho.org/download'
                         ];
                     }
                 }
@@ -92,7 +92,7 @@ class Ajax extends BaseOptions implements ActionInterface
         if ($client) {
             $client->setHeader('User-Agent', $this->options->generator)
                 ->setTimeout(10)
-                ->send('http://typecho.org/feed/');
+                ->send('https://typecho.org/feed/');
 
             /** 匹配内容体 */
             $response = $client->getResponseBody();

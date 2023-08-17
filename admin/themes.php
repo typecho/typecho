@@ -12,7 +12,7 @@ include 'menu.php';
                 <ul class="typecho-option-tabs fix-tabs clearfix">
                     <li class="current"><a href="<?php $options->adminUrl('themes.php'); ?>"><?php _e('可以使用的外观'); ?></a>
                     </li>
-                    <?php if (!defined('__TYPECHO_THEME_WRITEABLE__') || __TYPECHO_THEME_WRITEABLE__): ?>
+                    <?php if (\Widget\Themes\Files::isWriteable()): ?>
                         <li><a href="<?php $options->adminUrl('theme-editor.php'); ?>"><?php _e('编辑当前外观'); ?></a></li>
                     <?php endif; ?>
                     <?php if (\Widget\Themes\Config::isExists()): ?>
@@ -33,10 +33,21 @@ include 'menu.php';
                         </thead>
 
                         <tbody>
+                        <?php if ($options->missingTheme): ?>
+                            <tr id="theme-<?php $options->missingTheme; ?>" class="current">
+                                <td colspan="2" class="warning">
+                                    <p><strong><?php _e('检测到您之前使用的 "%s" 外观文件不存在，您可以重新上传此外观或者启用其他外观。', $options->missingTheme); ?></strong></p>
+                                    <ul>
+                                        <li><?php _e('重新上传此外观后刷新当前页面，此提示将会消失。'); ?></li>
+                                        <li><?php _e('启用新外观后，当前外观的设置数据将被删除。'); ?></li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
                         <?php \Widget\Themes\Rows::alloc()->to($themes); ?>
                         <?php while ($themes->next()): ?>
                             <tr id="theme-<?php $themes->name(); ?>"
-                                class="<?php if ($themes->activated): ?>current<?php endif; ?>">
+                                class="<?php if ($themes->activated && !$options->missingTheme): ?>current<?php endif; ?>">
                                 <td valign="top"><img src="<?php $themes->screen(); ?>"
                                                       alt="<?php $themes->name(); ?>"/></td>
                                 <td valign="top">
@@ -46,9 +57,9 @@ include 'menu.php';
                                         <?php if ($themes->version): ?><?php _e('版本'); ?>: <?php $themes->version() ?><?php endif; ?>
                                     </cite>
                                     <p><?php echo nl2br($themes->description); ?></p>
-                                    <?php if ($options->theme != $themes->name): ?>
+                                    <?php if ($options->theme != $themes->name || $options->missingTheme): ?>
                                         <p>
-                                            <?php if (!defined('__TYPECHO_THEME_WRITEABLE__') || __TYPECHO_THEME_WRITEABLE__): ?>
+                                            <?php if (\Widget\Themes\Files::isWriteable()): ?>
                                                 <a class="edit"
                                                    href="<?php $options->adminUrl('theme-editor.php?theme=' . $themes->name); ?>"><?php _e('编辑'); ?></a> &nbsp;
                                             <?php endif; ?>

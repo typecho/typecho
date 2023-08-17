@@ -152,6 +152,22 @@ class Client
     }
 
     /**
+     * 设置需要请求的Json数据
+     *
+     * @param $data
+     * @param string $method
+     * @return $this
+     */
+    public function setJson($data, string $method = self::METHOD_POST): Client
+    {
+        $this->setData(json_encode($data), $method)
+            ->setMultipart(true)
+            ->setHeader('Content-Type', 'application/json');
+
+        return $this;
+    }
+
+    /**
      * 设置方法名
      *
      * @param string $method

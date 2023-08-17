@@ -105,7 +105,7 @@ class Reading extends Permalink
             _t('文章日期格式'),
             _t('此格式用于指定显示在文章归档中的日期默认显示格式.') . '<br />'
             . _t('在某些主题中这个格式可能不会生效, 因为主题作者可以自定义日期格式.') . '<br />'
-            . _t('请参考 <a href="http://www.php.net/manual/zh/function.date.php">PHP 日期格式写法</a>.')
+            . _t('请参考 <a href="https://www.php.net/manual/zh/function.date.php">PHP 日期格式写法</a>.')
         );
         $postDateFormat->input->setAttribute('class', 'w-40 mono');
         $form->addInput($postDateFormat->addRule('xssCheck', _t('请不要在日期格式中使用特殊字符')));

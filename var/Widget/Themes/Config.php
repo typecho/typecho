@@ -47,7 +47,7 @@ class Config extends BaseOptions
         $options = Options::alloc();
         $configFile = $options->themeFile($options->theme, 'functions.php');
 
-        if (file_exists($configFile)) {
+        if (!$options->missingTheme && file_exists($configFile)) {
             require_once $configFile;
 
             if (function_exists('themeConfig')) {
@@ -71,7 +71,9 @@ class Config extends BaseOptions
 
         if (!empty($inputs)) {
             foreach ($inputs as $key => $val) {
-                $form->getInput($key)->value($this->options->{$key});
+                if (isset($this->options->{$key})) {
+                    $form->getInput($key)->value($this->options->{$key});
+                }
             }
         }
 

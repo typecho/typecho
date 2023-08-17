@@ -463,7 +463,6 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      */
     public function wpNewCategory(int $blogId, string $userName, string $password, array $category): int
     {
-
         /** 开始接受数据 */
         $input['name'] = $category['name'];
         $input['slug'] = Common::slugName(empty($category['slug']) ? $category['name'] : $category['slug']);
@@ -474,6 +473,11 @@ class XmlRpc extends Contents implements ActionInterface, Hook
         $categoryWidget = CategoryEdit::alloc(null, $input, function (CategoryEdit $category) {
             $category->insertCategory();
         });
+
+        if (!$categoryWidget->have()) {
+            throw new Exception(_t('分类不存在'), 404);
+        }
+
         return $categoryWidget->mid;
     }
 
@@ -1833,7 +1837,7 @@ EOF;
                 'wp.suggestCategories'      => [$this, 'wpSuggestCategories'],
                 'wp.uploadFile'             => [$this, 'mwNewMediaObject'],
 
-                /** New Wordpress API since 2.9.2 */
+                /** New WordPress API since 2.9.2 */
                 'wp.getUsersBlogs'          => [$this, 'wpGetUsersBlogs'],
                 'wp.getTags'                => [$this, 'wpGetTags'],
                 'wp.deleteCategory'         => [$this, 'wpDeleteCategory'],

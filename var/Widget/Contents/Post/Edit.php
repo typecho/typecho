@@ -229,8 +229,14 @@ class Edit extends Contents implements ActionInterface
                 if (preg_match("/^fields\[(.+)\]$/", $name, $matches)) {
                     $name = $matches[1];
                 } else {
+                    $inputName = 'fields[' . $name . ']';
+                    if (preg_match("/^(.+)\[\]$/", $name, $matches)) {
+                        $name = $matches[1];
+                        $inputName = 'fields[' . $name . '][]';
+                    }
+
                     foreach ($item->inputs as $input) {
-                        $input->setAttribute('name', 'fields[' . $name . ']');
+                        $input->setAttribute('name', $inputName);
                     }
                 }
 
@@ -288,7 +294,7 @@ class Edit extends Contents implements ActionInterface
             self::pluginHandle()->finishPublish($contents, $this);
 
             /** 发送ping */
-            $trackback = array_unique(preg_split("/(\r|\n|\r\n)/", trim($this->request->trackback)));
+            $trackback = array_filter(array_unique(preg_split("/(\r|\n|\r\n)/", trim($this->request->trackback))));
             Service::alloc()->sendPing($this, $trackback);
 
             /** 设置提示信息 */
@@ -405,7 +411,7 @@ class Edit extends Contents implements ActionInterface
         $realId = 0;
 
         /** 是否是从草稿状态发布 */
-        $isDraftToPublish = ('post_draft' == $this->type);
+        $isDraftToPublish = ('post_draft' == $this->type || 'page_draft' == $this->type);
 
         $isBeforePublish = ('publish' == $this->status);
         $isAfterPublish = ('publish' == $contents['status']);
@@ -662,8 +668,8 @@ class Edit extends Contents implements ActionInterface
         }
 
         $customFields = $this->request->getArray('fields');
-        if (!empty($customFields)) {
-            $fields = array_merge($fields, $customFields);
+        foreach ($customFields as $key => $val) {
+            $fields[$key] = [is_array($val) ? 'json' : 'str', $val];
         }
 
         return $fields;

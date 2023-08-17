@@ -26,11 +26,11 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                     <ul class="typecho-option-tabs">
                         <li<?php if (!isset($request->status) || 'all' == $request->get('status')): ?> class="current"<?php endif; ?>>
                             <a href="<?php $options->adminUrl('manage-posts.php'
-                                . (isset($request->uid) ? '?uid=' . $request->uid : '')); ?>"><?php _e('可用'); ?></a>
+                                . (isset($request->uid) ? '?uid=' . $request->filter('encode')->uid : '')); ?>"><?php _e('可用'); ?></a>
                         </li>
                         <li<?php if ('waiting' == $request->get('status')): ?> class="current"<?php endif; ?>><a
                                 href="<?php $options->adminUrl('manage-posts.php?status=waiting'
-                                    . (isset($request->uid) ? '&uid=' . $request->uid : '')); ?>"><?php _e('待审核'); ?>
+                                    . (isset($request->uid) ? '&uid=' . $request->filter('encode')->uid : '')); ?>"><?php _e('待审核'); ?>
                                 <?php if (!$isAllPosts && $stat->myWaitingPostsNum > 0 && !isset($request->uid)): ?>
                                     <span class="balloon"><?php $stat->myWaitingPostsNum(); ?></span>
                                 <?php elseif ($isAllPosts && $stat->waitingPostsNum > 0 && !isset($request->uid)): ?>
@@ -41,7 +41,7 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                             </a></li>
                         <li<?php if ('draft' == $request->get('status')): ?> class="current"<?php endif; ?>><a
                                 href="<?php $options->adminUrl('manage-posts.php?status=draft'
-                                    . (isset($request->uid) ? '&uid=' . $request->uid : '')); ?>"><?php _e('草稿'); ?>
+                                    . (isset($request->uid) ? '&uid=' . $request->filter('encode')->uid : '')); ?>"><?php _e('草稿'); ?>
                                 <?php if (!$isAllPosts && $stat->myDraftPostsNum > 0 && !isset($request->uid)): ?>
                                     <span class="balloon"><?php $stat->myDraftPostsNum(); ?></span>
                                 <?php elseif ($isAllPosts && $stat->draftPostsNum > 0 && !isset($request->uid)): ?>
@@ -87,11 +87,11 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                             <?php if ('' != $request->keywords || '' != $request->category): ?>
                                 <a href="<?php $options->adminUrl('manage-posts.php'
                                     . (isset($request->status) || isset($request->uid) ? '?' .
-                                        (isset($request->status) ? 'status=' . htmlspecialchars($request->get('status')) : '') .
-                                        (isset($request->uid) ? '?uid=' . htmlspecialchars($request->get('uid')) : '') : '')); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
+                                        (isset($request->status) ? 'status=' . $request->filter('encode')->status : '') .
+                                        (isset($request->uid) ? (isset($request->status) ? '&' : '') . 'uid=' . $request->filter('encode')->uid : '') : '')); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
                             <?php endif; ?>
                             <input type="text" class="text-s" placeholder="<?php _e('请输入关键字'); ?>"
-                                   value="<?php echo htmlspecialchars($request->keywords ?? ''); ?>" name="keywords"/>
+                                   value="<?php echo $request->filter('html')->keywords; ?>" name="keywords"/>
                             <select name="category">
                                 <option value=""><?php _e('所有分类'); ?></option>
                                 <?php \Widget\Metas\Category\Rows::alloc()->to($category); ?>
@@ -102,11 +102,11 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                             </select>
                             <button type="submit" class="btn btn-s"><?php _e('筛选'); ?></button>
                             <?php if (isset($request->uid)): ?>
-                                <input type="hidden" value="<?php echo htmlspecialchars($request->get('uid')); ?>"
+                                <input type="hidden" value="<?php echo $request->filter('html')->uid; ?>"
                                        name="uid"/>
                             <?php endif; ?>
                             <?php if (isset($request->status)): ?>
-                                <input type="hidden" value="<?php echo htmlspecialchars($request->get('status')); ?>"
+                                <input type="hidden" value="<?php echo $request->filter('html')->status; ?>"
                                        name="status"/>
                             <?php endif; ?>
                         </div>
@@ -172,15 +172,15 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                                             <?php endif; ?>
                                         </td>
                                         <td class="kit-hidden-mb"><a
-                                                href="<?php $options->adminUrl('manage-posts.php?uid=' . $posts->author->uid); ?>"><?php $posts->author(); ?></a>
+                                                href="<?php $options->adminUrl('manage-posts.php?__typecho_all_posts=off&uid=' . $posts->author->uid); ?>"><?php $posts->author(); ?></a>
                                         </td>
                                         <td class="kit-hidden-mb"><?php $categories = $posts->categories;
                                             $length = count($categories); ?>
                                             <?php foreach ($categories as $key => $val): ?>
                                                 <?php echo '<a href="';
                                                 $options->adminUrl('manage-posts.php?category=' . $val['mid']
-                                                    . (isset($request->uid) ? '&uid=' . $request->uid : '')
-                                                    . (isset($request->status) ? '&status=' . $request->status : ''));
+                                                    . (isset($request->uid) ? '&uid=' . $request->filter('encode')->uid : '')
+                                                    . (isset($request->status) ? '&status=' . $request->filter('encode')->status : ''));
                                                 echo '">' . $val['name'] . '</a>' . ($key < $length - 1 ? ', ' : ''); ?>
                                             <?php endforeach; ?>
                                         </td>

@@ -96,7 +96,8 @@ class Validate
      */
     public static function email(string $str): bool
     {
-        return filter_var($str, FILTER_VALIDATE_EMAIL) !== false;
+        $email = filter_var($str, FILTER_SANITIZE_EMAIL);
+        return !!filter_var($str, FILTER_VALIDATE_EMAIL) && ($email === $str);
     }
 
     /**
@@ -110,10 +111,8 @@ class Validate
      */
     public static function url(string $str): bool
     {
-        return filter_var(
-            $str,
-            FILTER_VALIDATE_URL
-        ) !== false;
+        $url = Common::safeUrl($str);
+        return !!filter_var($str, FILTER_VALIDATE_URL) && ($url === $str);
     }
 
     /**
