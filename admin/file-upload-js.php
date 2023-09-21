@@ -17,7 +17,7 @@ if (preg_match("/^([0-9]+)([a-z]{1,2})$/i", $phpMaxFilesize, $matches)) {
 <script src="<?php $options->adminStaticUrl('js', 'plupload.js'); ?>"></script>
 <script>
 $(document).ready(function() {
-    function updateAttacmentNumber () {
+    function updateAttachmentNumber () {
         var btn = $('#tab-files-btn'),
             balloon = $('.balloon', btn),
             count = $('#file-list li .insert').length;
@@ -56,7 +56,7 @@ $(document).ready(function() {
         }
     });
 
-    updateAttacmentNumber();
+    updateAttachmentNumber();
 
     function fileUploadStart (file) {
         $('<li id="' + file.id + '" class="loading">'
@@ -113,7 +113,7 @@ $(document).ready(function() {
             
         attachInsertEvent(li);
         attachDeleteEvent(li);
-        updateAttacmentNumber();
+        updateAttachmentNumber();
 
         if (!completeFile) {
             completeFile = data;
@@ -211,7 +211,7 @@ $(document).ready(function() {
                     function () {
                         $(el).fadeOut(function () {
                             $(this).remove();
-                            updateAttacmentNumber();
+                            updateAttachmentNumber();
                         });
                     });
             }
