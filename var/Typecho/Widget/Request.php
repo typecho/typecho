@@ -214,6 +214,16 @@ class Request
     }
 
     /**
+     * 获取请求的内容类型
+     *
+     * @return string|null
+     */
+    public function getContentType(): ?string
+    {
+        return $this->request->getContentType();
+    }
+
+    /**
      * 获取环境变量
      *
      * @param string $name 获取环境变量名
@@ -315,6 +325,16 @@ class Request
     public function isAjax(): bool
     {
         return $this->request->isAjax();
+    }
+
+    /**
+     * 判断是否为json
+     *
+     * @return boolean
+     */
+    public function isJson(): bool
+    {
+        return $this->request->isJson();
     }
 
     /**
