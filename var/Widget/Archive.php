@@ -453,7 +453,7 @@ class Archive extends Contents
      */
     public function getTotal(): int
     {
-        if (false === $this->total) {
+        if (!isset($this->total)) {
             $this->total = $this->size($this->countSql);
         }
 
