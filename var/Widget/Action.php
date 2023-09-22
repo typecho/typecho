@@ -3,6 +3,7 @@
 namespace Widget;
 
 use Typecho\Widget;
+use Typecho\Common;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -58,7 +59,7 @@ class Action extends Widget
         $action = $this->request->get('action');
 
         /** 判断是否为plugin */
-        $actionTable = array_merge($this->map, unserialize(Options::alloc()->actionTable));
+        $actionTable = array_merge($this->map, Common::deserialization(Options::alloc()->actionTable));
 
         if (isset($actionTable[$action])) {
             $widgetName = $actionTable[$action];

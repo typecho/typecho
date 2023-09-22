@@ -65,7 +65,7 @@ class Edit extends Options implements ActionInterface
                 $result = call_user_func([$className, 'activate']);
                 Plugin::activate($pluginName);
                 $this->update(
-                    ['value' => serialize(Plugin::export())],
+                    ['value' => Common::serialization(Plugin::export())],
                     $this->db->sql()->where('name = ?', 'plugins')
                 );
             } catch (Plugin\Exception $e) {
@@ -164,16 +164,16 @@ class Edit extends Options implements ActionInterface
                 $db->query($db->insert('table.options')
                     ->rows([
                         'name'  => $pluginName,
-                        'value' => serialize($settings),
+                        'value' => Common::serialization($settings),
                         'user'  => 0
                     ]));
             } else {
                 foreach ($options as $option) {
-                    $value = unserialize($option['value']);
+                    $value = Common::deserialization($option['value']);
                     $value = array_merge($value, $settings);
 
                     $db->query($db->update('table.options')
-                        ->rows(['value' => serialize($value)])
+                        ->rows(['value' => Common::serialization($value)])
                         ->where('name = ?', $pluginName)
                         ->where('user = ?', $option['user']));
                 }
@@ -255,7 +255,7 @@ class Edit extends Options implements ActionInterface
         }
 
         Plugin::deactivate($pluginName);
-        $this->update(['value' => serialize(Plugin::export())], $this->db->sql()->where('name = ?', 'plugins'));
+        $this->update(['value' => Common::serialization(Plugin::export())], $this->db->sql()->where('name = ?', 'plugins'));
 
         $this->delete($this->db->sql()->where('name = ?', 'plugin:' . $pluginName));
         $this->delete($this->db->sql()->where('name = ?', '_plugin:' . $pluginName));

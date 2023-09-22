@@ -550,7 +550,7 @@ class Contents extends Base implements QueryInterface
 
         /** 处理附件 */
         if ('attachment' == $type) {
-            $content = @unserialize($value['text']);
+            $content = Common::deserialization($value['text']);
 
             //增加数据信息
             $value['attachment'] = new Config($content);

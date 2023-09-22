@@ -164,7 +164,7 @@ class Options extends Base
             $themeOptions = null;
 
             /** 解析变量 */
-            if ($themeOptions = unserialize($this->row['theme:' . $this->row['theme']])) {
+            if ($themeOptions = Common::deserialization($this->row['theme:' . $this->row['theme']])) {
                 /** 覆盖变量 */
                 $this->row = array_merge($this->row, $themeOptions);
             }
@@ -189,7 +189,7 @@ class Options extends Base
 
         $this->originalSiteUrl = $this->siteUrl;
         $this->siteUrl = Common::url(null, $this->siteUrl);
-        $this->plugins = unserialize($this->plugins);
+        $this->plugins = Common::deserialization($this->plugins);
 
         /** 动态判断皮肤目录 */
         $this->missingTheme = null;
@@ -205,13 +205,13 @@ class Options extends Base
         }
 
         /** 自动初始化路由表 */
-        $this->routingTable = unserialize($this->routingTable);
+        $this->routingTable = Common::deserialization($this->routingTable);
         if (isset($this->db) && !isset($this->routingTable[0])) {
             /** 解析路由并缓存 */
             $parser = new Parser($this->routingTable);
             $parsedRoutingTable = $parser->parse();
             $this->routingTable = array_merge([$parsedRoutingTable], $this->routingTable);
-            $this->db->query($this->db->update('table.options')->rows(['value' => serialize($this->routingTable)])
+            $this->db->query($this->db->update('table.options')->rows(['value' => Common::serialization($this->routingTable)])
                 ->where('name = ?', 'routingTable'));
         }
     }
@@ -364,7 +364,7 @@ class Options extends Base
         if (!isset($this->pluginConfig[$pluginName])) {
             if (
                 !empty($this->row['plugin:' . $pluginName])
-                && false !== ($options = unserialize($this->row['plugin:' . $pluginName]))
+                && false !== ($options = Common::deserialization($this->row['plugin:' . $pluginName]))
             ) {
                 $this->pluginConfig[$pluginName] = new Config($options);
             } else {
@@ -388,7 +388,7 @@ class Options extends Base
         if (!isset($this->personalPluginConfig[$pluginName])) {
             if (
                 !empty($this->row['_plugin:' . $pluginName])
-                && false !== ($options = unserialize($this->row['_plugin:' . $pluginName]))
+                && false !== ($options = Common::deserialization($this->row['_plugin:' . $pluginName]))
             ) {
                 $this->personalPluginConfig[$pluginName] = new Config($options);
             } else {

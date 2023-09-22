@@ -114,7 +114,7 @@ class Edit extends PostEdit implements ActionInterface
         $content = $this->attachment->toArray();
         $content['description'] = $input['description'];
 
-        $attachment['text'] = serialize($content);
+        $attachment['text'] = Common::serialization($content);
         $cid = $this->request->filter('int')->get('cid');
 
         /** 更新数据 */

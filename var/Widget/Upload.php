@@ -137,7 +137,7 @@ class Upload extends Contents implements ActionInterface
                     self::pluginHandle()->call('beforeModify', $result);
 
                     $this->update([
-                        'text' => serialize($result)
+                        'text' => Common::serialization($result)
                     ], $this->db->sql()->where('cid = ?', $this->cid));
 
                     $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $this->cid)
@@ -308,7 +308,7 @@ class Upload extends Contents implements ActionInterface
                         'slug' => $result['name'],
                         'type' => 'attachment',
                         'status' => 'publish',
-                        'text' => serialize($result),
+                        'text' => Common::serialization($result),
                         'allowComment' => 1,
                         'allowPing' => 0,
                         'allowFeed' => 1

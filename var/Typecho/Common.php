@@ -1477,5 +1477,54 @@ EOF;
 
             return $result;
         }
+
+        /**
+         * Serialize data to string.
+         *
+         * @param array|null $data
+         * @param string|null $format
+         * @return string|null
+         */
+        public static function serialization(?array $data, string $format = null): ?string
+        {
+            switch ($format) {
+                case 'serialize':
+                    return unserialize($data);
+                case 'json':
+                default:
+                    return json_encode($data);
+            }
+        }
+
+        /**
+         * Deserialization data from string.
+         *
+         * @param string $string
+         * @param string|null $format
+         * @return array|null
+         */
+        public static function deserialization(string $string, string $format = null): ?array
+        {
+            switch ($format) {
+                case 'serialize':
+                    return @unserialize($string);
+                case 'json':
+                    return json_decode($string, true);
+                default:
+                    $data = json_decode($string, true);
+
+                    if (json_last_error() === JSON_ERROR_NONE) {
+                        return $data;
+                    }
+
+                    $data = @unserialize($string);
+
+                    if ($data !== false || $string === 'b:0;') {
+                        return $data;
+                    }
+
+                    return null;
+            }
+        }
     }
 }

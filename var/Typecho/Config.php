@@ -200,7 +200,7 @@ class Config implements \Iterator, \ArrayAccess
      */
     public function __toString(): string
     {
-        return serialize($this->currentConfig);
+        return Common::serialization($this->currentConfig);
     }
 
     /**
