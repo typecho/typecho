@@ -29,21 +29,21 @@ class Admin extends Contents
      *
      * @var Query
      */
-    private $countSql;
+    private Query $countSql;
 
     /**
      * 所有文章个数
      *
-     * @var integer
+     * @var integer|null
      */
-    private $total = false;
+    private ?int $total;
 
     /**
      * 当前页
      *
      * @var integer
      */
-    private $currentPage;
+    private int $currentPage;
 
     /**
      * 获取菜单标题
@@ -53,9 +53,9 @@ class Admin extends Contents
      */
     public function getMenuTitle(): string
     {
-        if (isset($this->request->uid)) {
+        if ($this->request->is('uid')) {
             return _t('%s的文章', $this->db->fetchObject($this->db->select('screenName')->from('table.users')
-                ->where('uid = ?', $this->request->filter('int')->uid))->screenName);
+                ->where('uid = ?', $this->request->filter('int')->get('uid')))->screenName);
         }
 
         throw new Exception(_t('用户不存在'), 404);
@@ -100,24 +100,24 @@ class Admin extends Contents
         if (!$this->user->pass('editor', true)) {
             $select->where('table.contents.authorId = ?', $this->user->uid);
         } else {
-            if ('on' == $this->request->__typecho_all_posts) {
+            if ($this->request->is('__typecho_all_posts=on')) {
                 Cookie::set('__typecho_all_posts', 'on');
             } else {
-                if ('off' == $this->request->__typecho_all_posts) {
+                if ($this->request->is('__typecho_all_posts=off')) {
                     Cookie::set('__typecho_all_posts', 'off');
                 }
 
                 if ('on' != Cookie::get('__typecho_all_posts')) {
-                    $select->where('table.contents.authorId = ?', isset($this->request->uid) ?
-                        $this->request->filter('int')->uid : $this->user->uid);
+                    $select->where('table.contents.authorId = ?',
+                        $this->request->filter('int')->get('uid', $this->user->uid));
                 }
             }
         }
 
         /** 按状态查询 */
-        if ('draft' == $this->request->status) {
+        if ($this->request->is('status=draft')) {
             $select->where('table.contents.type = ?', 'post_draft');
-        } elseif ('waiting' == $this->request->status) {
+        } elseif ($this->request->is('status=waiting')) {
             $select->where(
                 '(table.contents.type = ? OR table.contents.type = ?) AND table.contents.status = ?',
                 'post',
@@ -134,13 +134,13 @@ class Admin extends Contents
         }
 
         /** 过滤分类 */
-        if (null != ($category = $this->request->category)) {
+        if (null != ($category = $this->request->get('category'))) {
             $select->join('table.relationships', 'table.contents.cid = table.relationships.cid')
                 ->where('table.relationships.mid = ?', $category);
         }
 
         /** 过滤标题 */
-        if (null != ($keywords = $this->request->filter('search')->keywords)) {
+        if (null != ($keywords = $this->request->filter('search')->get('keywords'))) {
             $args = [];
             $keywordsList = explode(' ', $keywords);
             $args[] = implode(' OR ', array_fill(0, count($keywordsList), 'table.contents.title LIKE ?'));
@@ -174,7 +174,7 @@ class Admin extends Contents
 
         /** 使用盒状分页 */
         $nav = new Box(
-            false === $this->total ? $this->total = $this->size($this->countSql) : $this->total,
+            !isset($this->total) ? $this->total = $this->size($this->countSql) : $this->total,
             $this->currentPage,
             $this->parameter->pageSize,
             $query

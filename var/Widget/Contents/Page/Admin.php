@@ -38,7 +38,7 @@ class Admin extends PostAdmin
         );
 
         /** 过滤标题 */
-        if (null != ($keywords = $this->request->keywords)) {
+        if (null != ($keywords = $this->request->get('keywords'))) {
             $args = [];
             $keywordsList = explode(' ', $keywords);
             $args[] = implode(' OR ', array_fill(0, count($keywordsList), 'table.contents.title LIKE ?'));
@@ -51,7 +51,7 @@ class Admin extends PostAdmin
         }
 
         /** 提交查询 */
-        $select->order('table.contents.order', Db::SORT_ASC);
+        $select->order('table.contents.order');
 
         $this->db->fetchAll($select, [$this, 'push']);
     }

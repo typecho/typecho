@@ -207,7 +207,7 @@ class Plugin
 
                 /** 分行读取 */
                 $described = false;
-                $lines = preg_split("[\r\n]", $token[1]);
+                $lines = preg_split("([\r\n])", $token[1]);
                 foreach ($lines as $line) {
                     $line = trim($line);
                     if (!empty($line) && '*' == $line[0]) {

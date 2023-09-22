@@ -34,9 +34,9 @@ class Menu extends Base
 
     /**
      * 当前增加项目链接
-     * @var string
+     * @var string|null
      */
-    public string $addLink;
+    public ?string $addLink;
 
     /**
      * 父菜单列表

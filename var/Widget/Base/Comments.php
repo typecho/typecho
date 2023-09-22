@@ -243,7 +243,7 @@ class Comments extends Base implements QueryInterface
         $value['text'] = $value['text'] ?? '';
 
         $value['date'] = new Date($value['created']);
-        return Comments::pluginHandle()->filter($value, $this);
+        return Comments::pluginHandle()->call('filter', $value, $this);
     }
 
     /**
@@ -286,7 +286,7 @@ class Comments extends Base implements QueryInterface
         if ($this->options->commentsAvatar && 'comment' == $this->type) {
             $rating = $this->options->commentsAvatarRating;
 
-            Comments::pluginHandle()->trigger($plugged)->gravatar($size, $rating, $default, $this);
+            Comments::pluginHandle()->trigger($plugged)->call('gravatar', $size, $rating, $default, $this);
             if (!$plugged) {
                 $url = Common::gravatarUrl($this->mail, $size, $rating, $default, $this->request->isSecure());
                 echo '<img class="avatar" loading="lazy" src="' . $url . '" alt="' .
@@ -353,7 +353,7 @@ class Comments extends Base implements QueryInterface
      */
     public function markdown(?string $text): ?string
     {
-        $html = Comments::pluginHandle()->trigger($parsed)->markdown($text);
+        $html = Comments::pluginHandle()->trigger($parsed)->call('markdown', $text);
 
         if (!$parsed) {
             $html = Markdown::convert($text);
@@ -370,7 +370,7 @@ class Comments extends Base implements QueryInterface
      */
     public function autoP(?string $text): ?string
     {
-        $html = Comments::pluginHandle()->trigger($parsed)->autoP($text);
+        $html = Comments::pluginHandle()->trigger($parsed)->call('autoP', $text);
 
         if (!$parsed) {
             static $parser;
@@ -436,7 +436,7 @@ class Comments extends Base implements QueryInterface
             $select = $this->db->select('coid', 'parent')
                 ->from('table.comments')->where('cid = ? AND status = ?', $this->parentContent['cid'], 'approved')
                 ->where('coid ' . ('DESC' == $this->options->commentsOrder ? '>=' : '<=') . ' ?', $coid)
-                ->order('coid', Db::SORT_ASC);
+                ->order('coid');
 
             if ($this->options->commentsShowCommentOnly) {
                 $select->where('type = ?', 'comment');
@@ -477,13 +477,13 @@ class Comments extends Base implements QueryInterface
     {
         $text = $this->parentContent['hidden'] ? _t('内容被隐藏') : $this->text;
 
-        $text = Comments::pluginHandle()->trigger($plugged)->content($text, $this);
+        $text = Comments::pluginHandle()->trigger($plugged)->call('content', $text, $this);
         if (!$plugged) {
             $text = $this->options->commentsMarkdown ? $this->markdown($text)
                 : $this->autoP($text);
         }
 
-        $text = Comments::pluginHandle()->contentEx($text, $this);
+        $text = Comments::pluginHandle()->call('contentEx', $text, $this);
         return Common::stripTags($text, '<p><br>' . $this->options->commentsHTMLTagAllowed);
     }
 

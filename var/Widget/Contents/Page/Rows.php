@@ -32,7 +32,7 @@ class Rows extends Contents
         $select = $this->select()->where('table.contents.type = ?', 'page')
             ->where('table.contents.status = ?', 'publish')
             ->where('table.contents.created < ?', $this->options->time)
-            ->order('table.contents.order', Db::SORT_ASC);
+            ->order('table.contents.order');
 
         //去掉自定义首页
         $frontPage = explode(':', $this->options->frontPage);

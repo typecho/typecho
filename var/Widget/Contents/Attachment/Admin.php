@@ -28,21 +28,21 @@ class Admin extends Contents
      *
      * @var Query
      */
-    private $countSql;
+    private Query $countSql;
 
     /**
      * 所有文章个数
      *
-     * @var integer
+     * @var integer|null
      */
-    private $total = false;
+    private ?int $total;
 
     /**
      * 当前页
      *
      * @var integer
      */
-    private $currentPage;
+    private int $currentPage;
 
     /**
      * 执行函数
@@ -64,7 +64,7 @@ class Admin extends Contents
         }
 
         /** 过滤标题 */
-        if (null != ($keywords = $this->request->filter('search')->keywords)) {
+        if (null != ($keywords = $this->request->filter('search')->get('keywords'))) {
             $args = [];
             $keywordsList = explode(' ', $keywords);
             $args[] = implode(' OR ', array_fill(0, count($keywordsList), 'table.contents.title LIKE ?'));
@@ -98,7 +98,7 @@ class Admin extends Contents
 
         /** 使用盒状分页 */
         $nav = new Box(
-            false === $this->total ? $this->total = $this->size($this->countSql) : $this->total,
+            !isset($this->total) ? $this->total = $this->size($this->countSql) : $this->total,
             $this->currentPage,
             $this->parameter->pageSize,
             $query

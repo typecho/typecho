@@ -681,7 +681,7 @@ class Options extends Base
                 $this->attachmentTypes
             );
 
-            $attachmentTypesResult = array_unique(array_map('trim', preg_split("/[,.]/", $attachmentTypes)));
+            $attachmentTypesResult = array_unique(array_map('trim', preg_split("/([,.])/", $attachmentTypes)));
         }
 
         return $attachmentTypesResult;
