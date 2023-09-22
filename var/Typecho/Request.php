@@ -352,6 +352,19 @@ class Request
     }
 
     /**
+     * 获取请求的内容类型
+     *
+     * @return string|null
+     */
+    public function getContentType(): ?string
+    {
+        return $this->getServer(
+            'CONTENT_TYPE',
+            $this->getServer('HTTP_CONTENT_TYPE')
+        );
+    }
+
+    /**
      * 获取环境变量
      *
      * @param string $name 获取环境变量名
@@ -492,7 +505,10 @@ class Request
      */
     public function isJson(): bool
     {
-        return !!preg_match("/^\s*application\/json(;|$)/i", $this->getHeader('Content-Type', ''));
+        return !!preg_match(
+            "/^\s*application\/json(;|$)/i",
+            $this->getContentType() ?? ''
+        );
     }
 
     /**

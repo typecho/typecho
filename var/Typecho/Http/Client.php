@@ -353,7 +353,7 @@ class Client
      * 获取回执的头部信息
      *
      * @param string $key 头信息名称
-     * @return string
+     * @return ?string
      */
     public function getResponseHeader(string $key): ?string
     {
