@@ -112,8 +112,8 @@ class Cookie
     public static function setOptions(array $options)
     {
         self::$domain = $options['domain'] ?: self::$domain;
-        self::$secure = $options['secure'] ? (bool) $options['secure'] : false;
-        self::$httponly = $options['httponly'] ? (bool) $options['httponly'] : false;
+        self::$secure = !!$options['secure'];
+        self::$httponly = !!$options['httponly'];
     }
 
     /**

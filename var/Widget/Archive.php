@@ -397,6 +397,29 @@ class Archive extends Contents
     }
 
     /**
+     * Get the value of feed
+     * Deprecated since 1.3.0
+     *
+     * @deprecated 1.3.0
+     * @return null
+     */
+    public function getFeed()
+    {
+        return null;
+    }
+
+    /**
+     * Set the value of feed
+     * Deprecated since 1.3.0
+     *
+     * @deprecated 1.3.0
+     * @param null $feed
+     */
+    public function setFeed($feed)
+    {
+    }
+
+    /**
      * @return Query|null
      */
     public function getCountSql(): ?Query
