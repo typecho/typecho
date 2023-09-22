@@ -30,7 +30,7 @@ $(document).ready(function () {
     });
 
     $('#custom-field button.operate-add').click(function () {
-        var html = '<tr><td><input type="text" name="fieldNames[]" placeholder="<?php _e('字段名称'); ?>" class="text-s w-100"></td>'
+        var html = '<tr><td><input type="text" name="fieldNames[]" placeholder="<?php _e('字段名称'); ?>" pattern="^[_a-zA-Z][_a-zA-Z0-9]*$" oninput="this.reportValidity()" class="text-s w-100"></td>'
                 + '<td><select name="fieldTypes[]" id="">'
                 + '<option value="str"><?php _e('字符'); ?></option>'
                 + '<option value="int"><?php _e('整数'); ?></option>'
