@@ -126,6 +126,18 @@ class Request
     }
 
     /**
+     * @return $this
+     */
+    public function endProxy(): Request
+    {
+        if (isset($this->params)) {
+            $this->params = null;
+        }
+
+        return $this;
+    }
+
+    /**
      * 获取实际传递参数
      *
      * @param string $key 指定参数
@@ -172,11 +184,6 @@ class Request
                 break;
         }
 
-        // reset params
-        if (isset($this->params)) {
-            $this->params = null;
-        }
-
         if (isset($value)) {
             return is_array($default) == is_array($value) ? $value : $default;
         } else {
@@ -187,6 +194,7 @@ class Request
     /**
      * 获取实际传递参数(magic)
      *
+     * @deprecated ^1.3.0
      * @param string $key 指定参数
      * @return mixed
      */
@@ -198,6 +206,7 @@ class Request
     /**
      * 判断参数是否存在
      *
+     * @deprecated ^1.3.0
      * @param string $key 指定参数
      * @return boolean
      */

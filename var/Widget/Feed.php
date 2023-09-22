@@ -23,7 +23,7 @@ class Feed extends Contents
     /**
      * @var FeedGenerator
      */
-    private $feed;
+    private FeedGenerator $feed;
 
     /**
      * @param Config $parameter
@@ -41,7 +41,7 @@ class Feed extends Contents
      */
     public function execute()
     {
-        $feedPath = $this->request->feed;
+        $feedPath = $this->request->get('feed');
         $feedType = FeedGenerator::RSS2;
         $feedContentType = 'application/rss+xml';
         $currentFeedUrl = $this->options->feedUrl;
@@ -136,7 +136,11 @@ class Feed extends Contents
             }
 
             while ($comments->next()) {
-                $suffix = self::pluginHandle()->trigger($plugged)->commentFeedItem($feed->getType(), $comments);
+                $suffix = self::pluginHandle()->trigger($plugged)->call(
+                    'commentFeedItem',
+                    $feed->getType(),
+                    $comments
+                );
 
                 if (!$plugged) {
                     $suffix = null;
@@ -161,7 +165,7 @@ class Feed extends Contents
                 . ($archive->getArchiveTitle() ? ' - ' . $archive->getArchiveTitle() : ''));
 
             while ($archive->next()) {
-                $suffix = self::pluginHandle()->trigger($plugged)->feedItem($feed->getType(), $archive);
+                $suffix = self::pluginHandle()->trigger($plugged)->call('feedItem', $feed->getType(), $archive);
 
                 if (!$plugged) {
                     $suffix = null;

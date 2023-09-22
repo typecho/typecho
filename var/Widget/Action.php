@@ -21,7 +21,7 @@ class Action extends Widget
      * @access private
      * @var array
      */
-    private $map = [
+    private array $map = [
         'ajax'                     => '\Widget\Ajax',
         'login'                    => '\Widget\Login',
         'logout'                   => '\Widget\Logout',
@@ -55,7 +55,7 @@ class Action extends Widget
     public function execute()
     {
         /** 验证路由地址 **/
-        $action = $this->request->action;
+        $action = $this->request->get('action');
 
         /** 判断是否为plugin */
         $actionTable = array_merge($this->map, unserialize(Options::alloc()->actionTable));

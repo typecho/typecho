@@ -106,7 +106,7 @@ class Options extends Base
      * @access private
      * @var array
      */
-    private $pluginConfig = [];
+    private array $pluginConfig = [];
 
     /**
      * 缓存的个人插件配置
@@ -114,7 +114,7 @@ class Options extends Base
      * @access private
      * @var array
      */
-    private $personalPluginConfig = [];
+    private array $personalPluginConfig = [];
 
     /**
      * @param int $components
@@ -676,7 +676,7 @@ class Options extends Base
                 $this->attachmentTypes
             );
 
-            $attachmentTypesResult = array_unique(array_map('trim', preg_split("/(,|\.)/", $attachmentTypes)));
+            $attachmentTypesResult = array_unique(array_map('trim', preg_split("/[,.]/", $attachmentTypes)));
         }
 
         return $attachmentTypesResult;

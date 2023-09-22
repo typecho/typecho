@@ -58,7 +58,7 @@ class Ajax extends BaseOptions implements ActionInterface
 
                     if (
                         isset($json['release'])
-                        && preg_match("/^[0-9\.]+$/", $json['release'])
+                        && preg_match("/^[0-9.]+$/", $json['release'])
                         && version_compare($json['release'], $version, '>')
                     ) {
                         $result = [
@@ -96,7 +96,7 @@ class Ajax extends BaseOptions implements ActionInterface
             /** 匹配内容体 */
             $response = $client->getResponseBody();
             preg_match_all(
-                "/<item>\s*<title>([^>]*)<\/title>\s*<link>([^>]*)<\/link>\s*<guid>[^>]*<\/guid>\s*<pubDate>([^>]*)<\/pubDate>/is",
+                "/<item>\s*<title>([^>]*)<\/title>\s*<link>([^>]*)<\/link>\s*<guid>[^>]*<\/guid>\s*<pubDate>([^>]*)<\/pubDate>/i",
                 $response,
                 $matches
             );
@@ -127,18 +127,20 @@ class Ajax extends BaseOptions implements ActionInterface
     public function editorResize()
     {
         $this->user->pass('contributor');
+        $size = $this->request->filter('int')->get('size');
+
         if (
             $this->db->fetchObject($this->db->select(['COUNT(*)' => 'num'])
                 ->from('table.options')->where('name = ? AND user = ?', 'editorSize', $this->user->uid))->num > 0
         ) {
             parent::update(
-                ['value' => $this->request->size],
+                ['value' => $size],
                 $this->db->sql()->where('name = ? AND user = ?', 'editorSize', $this->user->uid)
             );
         } else {
             parent::insert([
                 'name'  => 'editorSize',
-                'value' => $this->request->size,
+                'value' => $size,
                 'user'  => $this->user->uid
             ]);
         }

@@ -207,7 +207,7 @@ class Plugin
 
                 /** 分行读取 */
                 $described = false;
-                $lines = preg_split("(\r|\n)", $token[1]);
+                $lines = preg_split("[\r\n]", $token[1]);
                 foreach ($lines as $line) {
                     $line = trim($line);
                     if (!empty($line) && '*' == $line[0]) {
@@ -433,7 +433,7 @@ class Plugin
      * @param array $args 参数
      * @return mixed
      */
-    public function __call(string $component, array $args)
+    public function call(string $component, ... $args)
     {
         $component = $this->handle . ':' . $component;
         $last = count($args);
@@ -448,5 +448,16 @@ class Plugin
         }
 
         return $args[$last];
+    }
+
+    /**
+     * @deprecated ^1.3.0
+     * @param string $component
+     * @param array $args
+     * @return false|mixed|null
+     */
+    public function __call(string $component, array $args)
+    {
+        return $this->call($component, ... $args);
     }
 }

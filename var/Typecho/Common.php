@@ -378,8 +378,8 @@ EOF;
             }
 
             //非自闭合html标签列表
-            preg_match_all("/<([_0-9a-zA-Z-\:]+)\s*([^>]*)>/is", $string, $startTags);
-            preg_match_all("/<\/([_0-9a-zA-Z-\:]+)>/is", $string, $closeTags);
+            preg_match_all("/<([_0-9a-zA-Z-:]+)\s*([^>]*)>/is", $string, $startTags);
+            preg_match_all("/<\/([_0-9a-zA-Z-:]+)>/is", $string, $closeTags);
 
             if (!empty($startTags[1]) && is_array($startTags[1])) {
                 krsort($startTags[1]);
@@ -410,7 +410,7 @@ EOF;
                 }
             }
 
-            return preg_replace("/\<br\s*\/\>\s*\<\/p\>/is", '</p>', $string);
+            return preg_replace("/<br\s*\/>\s*<\/p>/is", '</p>', $string);
         }
 
         /**
@@ -432,7 +432,7 @@ EOF;
             $normalizeTags = '';
             $allowableAttributes = [];
 
-            if (!empty($allowableTags) && preg_match_all("/\<([_a-z0-9-]+)([^>]*)\>/is", $allowableTags, $tags)) {
+            if (!empty($allowableTags) && preg_match_all("/<([_a-z0-9-]+)([^>]*)>/is", $allowableTags, $tags)) {
                 $normalizeTags = '<' . implode('><', array_map('strtolower', $tags[1])) . '>';
                 $attributes = array_map('trim', $tags[2]);
                 foreach ($attributes as $key => $val) {
@@ -546,8 +546,8 @@ EOF;
             $params = array_map(function ($string) {
                 $string = str_replace(['%0d', '%0a'], '', strip_tags($string));
                 return preg_replace([
-                    "/\(\s*(\"|')/i",           //函数开头
-                    "/(\"|')\s*\)/i",           //函数结尾
+                    "/\(\s*([\"'])/i",           //函数开头
+                    "/([\"'])\s*\)/i",           //函数结尾
                 ], '', $string);
             }, $params);
 

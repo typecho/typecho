@@ -55,28 +55,28 @@ abstract class Base extends Widget
      *
      * @var Options
      */
-    protected $options;
+    protected Options $options;
 
     /**
      * 用户对象
      *
      * @var User
      */
-    protected $user;
+    protected User $user;
 
     /**
      * 安全模块
      *
      * @var Security
      */
-    protected $security;
+    protected Security $security;
 
     /**
      * 数据库对象
      *
      * @var Db
      */
-    protected $db;
+    protected Db $db;
 
     /**
      * init method

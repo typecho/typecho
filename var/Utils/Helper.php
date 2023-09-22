@@ -75,9 +75,9 @@ class Helper
      * @param $method
      * @param $params
      */
-    public static function requestService($method, $params)
+    public static function requestService($method, ... $params)
     {
-        Service::alloc()->requestService($method, $params);
+        Service::alloc()->requestService($method, ... $params);
     }
 
     /**

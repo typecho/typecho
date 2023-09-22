@@ -37,119 +37,119 @@ class Archive extends Contents
      *
      * @var string
      */
-    private $themeFile;
+    private string $themeFile;
 
     /**
      * 风格目录
      *
      * @var string
      */
-    private $themeDir;
+    private string $themeDir;
 
     /**
      * 分页计算对象
      *
      * @var Query
      */
-    private $countSql;
+    private Query $countSql;
 
     /**
      * 所有文章个数
      *
-     * @var integer
+     * @var int|null
      */
-    private $total = false;
+    private ?int $total = null;
 
     /**
      * 标记是否为从外部调用
      *
      * @var boolean
      */
-    private $invokeFromOutside = false;
+    private bool $invokeFromOutside = false;
 
     /**
      * 是否由聚合调用
      *
      * @var boolean
      */
-    private $invokeByFeed = false;
+    private bool $invokeByFeed = false;
 
     /**
      * 当前页
      *
      * @var integer
      */
-    private $currentPage;
+    private int $currentPage;
 
     /**
      * 生成分页的内容
      *
      * @var array
      */
-    private $pageRow = [];
+    private array $pageRow = [];
 
     /**
      * RSS 2.0聚合地址
      *
      * @var string
      */
-    private $feedUrl;
+    private string $feedUrl;
 
     /**
      * RSS 1.0聚合地址
      *
      * @var string
      */
-    private $feedRssUrl;
+    private string $feedRssUrl;
 
     /**
      * ATOM 聚合地址
      *
      * @var string
      */
-    private $feedAtomUrl;
+    private string $feedAtomUrl;
 
     /**
      * 本页关键字
      *
      * @var string
      */
-    private $keywords;
+    private string $keywords;
 
     /**
      * 本页描述
      *
      * @var string
      */
-    private $description;
+    private string $description;
 
     /**
      * 归档标题
      *
-     * @var string
+     * @var string|null
      */
-    private $archiveTitle = null;
+    private ?string $archiveTitle = null;
 
     /**
      * 归档地址
      *
      * @var string|null
      */
-    private $archiveUrl = null;
+    private ?string $archiveUrl = null;
 
     /**
      * 归档类型
      *
      * @var string
      */
-    private $archiveType = 'index';
+    private string $archiveType = 'index';
 
     /**
      * 是否为单一归档
      *
-     * @var string
+     * @var boolean
      */
-    private $archiveSingle = false;
+    private bool $archiveSingle = false;
 
     /**
      * 是否为自定义首页, 主要为了标记自定义首页的情况
@@ -159,7 +159,7 @@ class Archive extends Contents
      * @var boolean
      * @access private
      */
-    private $makeSinglePageAsFrontPage = false;
+    private bool $makeSinglePageAsFrontPage = false;
 
     /**
      * 归档缩略名
@@ -167,7 +167,7 @@ class Archive extends Contents
      * @access private
      * @var string
      */
-    private $archiveSlug;
+    private string $archiveSlug;
 
     /**
      * 设置分页对象
@@ -175,7 +175,7 @@ class Archive extends Contents
      * @access private
      * @var PageNavigator
      */
-    private $pageNav;
+    private PageNavigator $pageNav;
 
     /**
      * @param Config $parameter
@@ -266,22 +266,6 @@ class Archive extends Contents
     public function setArchiveSlug(string $archiveSlug)
     {
         $this->archiveSlug = $archiveSlug;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getArchiveSingle(): ?string
-    {
-        return $this->archiveSingle;
-    }
-
-    /**
-     * @param string $archiveSingle the $archiveSingle to set
-     */
-    public function setArchiveSingle(string $archiveSingle)
-    {
-        $this->archiveSingle = $archiveSingle;
     }
 
     /**
@@ -553,7 +537,7 @@ class Archive extends Contents
         ];
 
         /** 处理搜索结果跳转 */
-        if (isset($this->request->s)) {
+        if ($this->request->is('s')) {
             $filterKeywords = $this->request->filter('search')->get('s');
 
             /** 跳转到搜索页 */
@@ -587,11 +571,11 @@ class Archive extends Contents
         }
 
         /** 初始化分页变量 */
-        $this->currentPage = $this->request->filter('int')->page ?? 1;
+        $this->currentPage = $this->request->filter('int')->get('page') ?? 1;
         $hasPushed = false;
 
         /** select初始化 */
-        $select = self::pluginHandle()->trigger($selectPlugged)->select($this);
+        $select = self::pluginHandle()->trigger($selectPlugged)->call('select', $this);
 
         /** 定时发布功能 */
         if (!$selectPlugged) {
@@ -632,7 +616,7 @@ class Archive extends Contents
         }
 
         /** handle初始化 */
-        self::pluginHandle()->handleInit($this, $select);
+        self::pluginHandle()->call('handleInit', $this, $select);
 
         /** 初始化其它变量 */
         $this->feedUrl = $this->options->feedUrl;
@@ -646,7 +630,7 @@ class Archive extends Contents
             $handle = $handles[$this->parameter->type];
             $this->{$handle}($select, $hasPushed);
         } else {
-            $hasPushed = self::pluginHandle()->handle($this->parameter->type, $this, $select);
+            $hasPushed = self::pluginHandle()->call('handle', $this->parameter->type, $this, $select);
         }
 
         /** 初始化皮肤函数 */
@@ -745,7 +729,8 @@ class Archive extends Contents
                 $this->options->index
             );
 
-            self::pluginHandle()->trigger($hasNav)->pageNav(
+            self::pluginHandle()->trigger($hasNav)->call(
+                'pageNav',
                 $this->currentPage,
                 $total,
                 $this->parameter->pageSize,
@@ -988,7 +973,7 @@ class Archive extends Contents
             $allows = array_merge($allows, $rules);
         }
 
-        $allows = self::pluginHandle()->headerOptions($allows, $this);
+        $allows = self::pluginHandle()->call('headerOptions', $allows, $this);
         $title = (empty($this->archiveTitle) ? '' : $this->archiveTitle . ' &raquo; ') . $this->options->title;
 
         $header = '';
@@ -1172,7 +1157,7 @@ class Archive extends Contents
         echo $header;
 
         /** 插件支持 */
-        self::pluginHandle()->header($header, $this);
+        self::pluginHandle()->call('header', $header, $this);
     }
 
     /**
@@ -1180,7 +1165,7 @@ class Archive extends Contents
      */
     public function footer()
     {
-        self::pluginHandle()->footer($this);
+        self::pluginHandle()->call('footer', $this);
     }
 
     /**
@@ -1321,13 +1306,13 @@ class Archive extends Contents
         }
 
         /** 挂接插件 */
-        self::pluginHandle()->beforeRender($this);
+        self::pluginHandle()->call('beforeRender', $this);
 
         /** 输出模板 */
         require_once $this->themeDir . $this->themeFile;
 
         /** 挂接插件 */
-        self::pluginHandle()->afterRender($this);
+        self::pluginHandle()->call('afterRender', $this);
     }
 
     /**
@@ -1355,7 +1340,7 @@ class Archive extends Contents
      */
     public function query($select)
     {
-        self::pluginHandle()->trigger($queryPlugged)->query($this, $select);
+        self::pluginHandle()->trigger($queryPlugged)->call('query', $this, $select);
         if (!$queryPlugged) {
             $this->db->fetchAll($select, [$this, 'push']);
         }
@@ -1373,7 +1358,7 @@ class Archive extends Contents
         $commentUrl = parent::___commentUrl();
 
         //不依赖js的父级评论
-        $reply = $this->request->filter('int')->replyTo;
+        $reply = $this->request->filter('int')->get('replyTo');
         if ($reply && $this->is('single')) {
             $commentUrl .= '?parent=' . $reply;
         }
@@ -1432,7 +1417,7 @@ class Archive extends Contents
         $select->where('table.contents.type = ?', 'post');
 
         /** 插件接口 */
-        self::pluginHandle()->indexHandle($this, $select);
+        self::pluginHandle()->call('indexHandle', $this, $select);
     }
 
     /**
@@ -1476,7 +1461,7 @@ class Archive extends Contents
         $hasPushed = true;
 
         /** 插件接口 */
-        self::pluginHandle()->error404Handle($this, $select);
+        self::pluginHandle()->call('error404Handle', $this, $select);
     }
 
     /**
@@ -1502,18 +1487,18 @@ class Archive extends Contents
         }
 
         /** 如果是单篇文章或独立页面 */
-        if (isset($this->request->cid)) {
-            $select->where('table.contents.cid = ?', $this->request->filter('int')->cid);
+        if ($this->request->is('cid')) {
+            $select->where('table.contents.cid = ?', $this->request->filter('int')->get('cid'));
         }
 
         /** 匹配缩略名 */
-        if (isset($this->request->slug) && !$this->parameter->preview) {
-            $select->where('table.contents.slug = ?', $this->request->slug);
+        if ($this->request->is('slug') && !$this->parameter->preview) {
+            $select->where('table.contents.slug = ?', $this->request->get('slug'));
         }
 
         /** 匹配时间 */
-        if (isset($this->request->year) && !$this->parameter->preview) {
-            $year = $this->request->filter('int')->year;
+        if ($this->request->is('year') && !$this->parameter->preview) {
+            $year = $this->request->filter('int')->get('year');
 
             $fromMonth = 1;
             $toMonth = 12;
@@ -1521,15 +1506,15 @@ class Archive extends Contents
             $fromDay = 1;
             $toDay = 31;
 
-            if (isset($this->request->month)) {
-                $fromMonth = $this->request->filter('int')->month;
+            if ($this->request->is('month')) {
+                $fromMonth = $this->request->filter('int')->get('month');
                 $toMonth = $fromMonth;
 
                 $fromDay = 1;
                 $toDay = date('t', mktime(0, 0, 0, $toMonth, 1, $year));
 
-                if (isset($this->request->day)) {
-                    $fromDay = $this->request->filter('int')->day;
+                if ($this->request->is('day')) {
+                    $fromDay = $this->request->filter('int')->get('day');
                     $toDay = $fromDay;
                 }
             }
@@ -1547,12 +1532,12 @@ class Archive extends Contents
 
         if (
             $this->request->isPost()
-            && isset($this->request->protectPassword)
+            && $this->request->is('protectPassword')
             && !$this->parameter->preview
         ) {
             $this->security->protect();
             Cookie::set(
-                'protectPassword_' . $this->request->filter('int')->protectCID,
+                'protectPassword_' . $this->request->filter('int')->get('protectCID'),
                 $this->request->protectPassword
             );
 
@@ -1565,10 +1550,10 @@ class Archive extends Contents
 
         if (
             !$this->have()
-            || (isset($this->request->category)
-                && $this->category != $this->request->category && !$this->parameter->preview)
-            || (isset($this->request->directory)
-                && $this->request->directory != implode('/', $this->directory) && !$this->parameter->preview)
+            || ($this->request->is('category')
+                && $this->category != $this->request->get('category') && !$this->parameter->preview)
+            || ($this->request->is('directory')
+                && $this->request->get('directory') != implode('/', $this->directory) && !$this->parameter->preview)
         ) {
             if (!$this->invokeFromOutside) {
                 /** 对没有索引情况下的判断 */
@@ -1630,7 +1615,7 @@ class Archive extends Contents
         $hasPushed = true;
 
         /** 插件接口 */
-        self::pluginHandle()->singleHandle($this, $select);
+        self::pluginHandle()->call('singleHandle', $this, $select);
     }
 
     /**
@@ -1648,16 +1633,16 @@ class Archive extends Contents
             ->where('type = ?', 'category')
             ->limit(1);
 
-        if (isset($this->request->mid)) {
-            $categorySelect->where('mid = ?', $this->request->filter('int')->mid);
+        if ($this->request->is('mid')) {
+            $categorySelect->where('mid = ?', $this->request->filter('int')->get('mid'));
         }
 
-        if (isset($this->request->slug)) {
-            $categorySelect->where('slug = ?', $this->request->slug);
+        if ($this->request->is('slug')) {
+            $categorySelect->where('slug = ?', $this->request->get('slug'));
         }
 
-        if (isset($this->request->directory)) {
-            $directory = explode('/', $this->request->directory);
+        if ($this->request->is('directory')) {
+            $directory = explode('/', $this->request->get('directory'));
             $categorySelect->where('slug = ?', $directory[count($directory) - 1]);
         }
 
@@ -1669,7 +1654,7 @@ class Archive extends Contents
         $categoryListWidget = Rows::alloc('current=' . $category['mid']);
         $category = $categoryListWidget->filter($category);
 
-        if (isset($directory) && ($this->request->directory != implode('/', $category['directory']))) {
+        if (isset($directory) && ($this->request->get('directory') != implode('/', $category['directory']))) {
             throw new WidgetException(_t('父级分类不存在'), 404);
         }
 
@@ -1717,7 +1702,7 @@ class Archive extends Contents
         $this->archiveUrl = $category['permalink'];
 
         /** 插件接口 */
-        self::pluginHandle()->categoryHandle($this, $select);
+        self::pluginHandle()->call('categoryHandle', $this, $select);
     }
 
     /**
@@ -1732,12 +1717,12 @@ class Archive extends Contents
         $tagSelect = $this->db->select()->from('table.metas')
             ->where('type = ?', 'tag')->limit(1);
 
-        if (isset($this->request->mid)) {
-            $tagSelect->where('mid = ?', $this->request->filter('int')->mid);
+        if ($this->request->is('mid')) {
+            $tagSelect->where('mid = ?', $this->request->filter('int')->get('mid'));
         }
 
-        if (isset($this->request->slug)) {
-            $tagSelect->where('slug = ?', $this->request->slug);
+        if ($this->request->is('slug')) {
+            $tagSelect->where('slug = ?', $this->request->get('slug'));
         }
 
         /** 如果是标签 */
@@ -1789,7 +1774,7 @@ class Archive extends Contents
         $this->archiveUrl = $tag['permalink'];
 
         /** 插件接口 */
-        self::pluginHandle()->tagHandle($this, $select);
+        self::pluginHandle()->call('tagHandle', $this, $select);
     }
 
     /**
@@ -1801,7 +1786,7 @@ class Archive extends Contents
      */
     private function authorHandle(Query $select, bool &$hasPushed)
     {
-        $uid = $this->request->filter('int')->uid;
+        $uid = $this->request->filter('int')->get('uid');
 
         $author = $this->db->fetchRow(
             $this->db->select()->from('table.users')
@@ -1848,7 +1833,7 @@ class Archive extends Contents
         $this->archiveUrl = $author['permalink'];
 
         /** 插件接口 */
-        self::pluginHandle()->authorHandle($this, $select);
+        self::pluginHandle()->call('authorHandle', $this, $select);
     }
 
     /**
@@ -1862,9 +1847,9 @@ class Archive extends Contents
     private function dateHandle(Query $select, &$hasPushed)
     {
         /** 如果是按日期归档 */
-        $year = $this->request->filter('int')->year;
-        $month = $this->request->filter('int')->month;
-        $day = $this->request->filter('int')->day;
+        $year = $this->request->filter('int')->get('year');
+        $month = $this->request->filter('int')->get('month');
+        $day = $this->request->filter('int')->get('day');
 
         if (!empty($year) && !empty($month) && !empty($day)) {
 
@@ -1934,7 +1919,7 @@ class Archive extends Contents
         $this->archiveUrl = Router::url($currentRoute, $value, $this->options->index);
 
         /** 插件接口 */
-        self::pluginHandle()->dateHandle($this, $select);
+        self::pluginHandle()->call('dateHandle', $this, $select);
     }
 
     /**
@@ -1949,8 +1934,8 @@ class Archive extends Contents
     {
         /** 增加自定义搜索引擎接口 */
         //~ fix issue 40
-        $keywords = $this->request->filter('url', 'search')->keywords;
-        self::pluginHandle()->trigger($hasPushed)->search($keywords, $this);
+        $keywords = $this->request->filter('url', 'search')->get('keywords');
+        self::pluginHandle()->trigger($hasPushed)->call('search', $keywords, $this);
 
         if (!$hasPushed) {
             $searchQuery = '%' . str_replace(' ', '%', $keywords) . '%';
@@ -1999,6 +1984,6 @@ class Archive extends Contents
         $this->archiveUrl = Router::url('search', ['keywords' => $keywords], $this->options->index);
 
         /** 插件接口 */
-        self::pluginHandle()->searchHandle($this, $select);
+        self::pluginHandle()->call('searchHandle', $this, $select);
     }
 }
