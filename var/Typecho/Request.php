@@ -15,7 +15,7 @@ class Request
      * @access private
      * @var Request
      */
-    private static $instance;
+    private static Request $instance;
 
     /**
      * 沙箱参数
@@ -23,7 +23,7 @@ class Request
      * @access private
      * @var Config|null
      */
-    private $sandbox;
+    private ?Config $sandbox;
 
     /**
      * 用户参数
@@ -31,54 +31,54 @@ class Request
      * @access private
      * @var Config|null
      */
-    private $params;
+    private ?Config $params;
 
     /**
      * 路径信息
      *
      * @access private
-     * @var string
+     * @var string|null
      */
-    private $pathInfo = null;
+    private ?string $pathInfo = null;
 
     /**
      * requestUri
      *
-     * @var string
+     * @var string|null
      * @access private
      */
-    private $requestUri = null;
+    private ?string $requestUri = null;
 
     /**
      * requestRoot
      *
-     * @var mixed
+     * @var string|null
      * @access private
      */
-    private $requestRoot = null;
+    private ?string $requestRoot = null;
 
     /**
      * 获取baseurl
      *
-     * @var string
+     * @var string|null
      * @access private
      */
-    private $baseUrl = null;
+    private ?string $baseUrl = null;
 
     /**
      * 客户端ip地址
      *
      * @access private
-     * @var string
+     * @var string|null
      */
-    private $ip = null;
+    private ?string $ip = null;
 
     /**
      * 域名前缀
      *
-     * @var string
+     * @var string|null
      */
-    private $urlPrefix = null;
+    private ?string $urlPrefix = null;
 
     /**
      * 获取单例句柄

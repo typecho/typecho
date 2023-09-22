@@ -70,49 +70,49 @@ class Response
      * @access private
      * @var Response
      */
-    private static $instance;
+    private static Response $instance;
 
     /**
      * 字符编码
      *
      * @var string
      */
-    private $charset = 'UTF-8';
+    private string $charset = 'UTF-8';
 
     /**
      * @var string
      */
-    private $contentType = 'text/html';
+    private string $contentType = 'text/html';
 
     /**
      * @var callable[]
      */
-    private $responders = [];
+    private array $responders = [];
 
     /**
      * @var array
      */
-    private $cookies = [];
+    private array $cookies = [];
 
     /**
      * @var array
      */
-    private $headers = [];
+    private array $headers = [];
 
     /**
      * @var int
      */
-    private $status = 200;
+    private int $status = 200;
 
     /**
      * @var bool
      */
-    private $enableAutoSendHeaders = true;
+    private bool $enableAutoSendHeaders = true;
 
     /**
      * @var bool
      */
-    private $sandbox = false;
+    private bool $sandbox = false;
 
     /**
      * init responder
@@ -194,7 +194,7 @@ class Response
         // set header
         foreach ($this->headers as $name => $value) {
             if (!in_array(strtolower($name), $sentHeaders)) {
-                header($name . ': ' . $value, true);
+                header($name . ': ' . $value);
             }
         }
 
@@ -220,7 +220,7 @@ class Response
     public function respond()
     {
         if ($this->sandbox) {
-            throw new Terminal();
+            throw new Terminal('sandbox mode');
         }
 
         if ($this->enableAutoSendHeaders) {
@@ -301,7 +301,7 @@ class Response
      * @param string $contentType 文档类型
      * @return $this
      */
-    public function setContentType(string $contentType = 'text/html'): Response
+    public function setContentType(string $contentType): Response
     {
         if (!$this->sandbox) {
             $this->contentType = $contentType;

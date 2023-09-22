@@ -26,21 +26,21 @@ class Plugin
      *
      * @var array
      */
-    private static $instances;
+    private static array $instances;
 
     /**
      * 临时存储变量
      *
      * @var array
      */
-    private static $tmp = [];
+    private static array $tmp = [];
 
     /**
      * 唯一句柄
      *
      * @var string
      */
-    private $handle;
+    private string $handle;
 
     /**
      * 组件
@@ -54,7 +54,7 @@ class Plugin
      *
      * @var boolean
      */
-    private $signal;
+    private bool $signal;
 
     /**
      * 插件初始化
@@ -352,9 +352,9 @@ class Plugin
      * 判断插件是否存在
      *
      * @param string $pluginName 插件名称
-     * @return mixed
+     * @return bool
      */
-    public static function exists(string $pluginName)
+    public static function exists(string $pluginName): bool
     {
         return array_key_exists($pluginName, self::$plugin['activated']);
     }

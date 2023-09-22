@@ -17,15 +17,15 @@ class I18n
      * @access private
      * @var GetTextMulti
      */
-    private static $loaded;
+    private static GetTextMulti $loaded;
 
     /**
      * 语言文件
      *
      * @access private
-     * @var string
+     * @var string|null
      */
-    private static $lang = null;
+    private static ?string $lang = null;
 
     /**
      * 翻译文字
