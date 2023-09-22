@@ -87,6 +87,9 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property bool $commentsAntiSpam
  * @property bool $commentsAutoClose
  * @property bool $commentsPostIntervalEnable
+ * @property int $commentsMaxNestingLevels
+ * @property int $commentsPostTimeout
+ * @property int $commentsPostInterval
  * @property string $commentsHTMLTagAllowed
  * @property bool $allowRegister
  * @property bool $allowXmlRpc
@@ -97,6 +100,8 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property array $plugins
  * @property string $secret
  * @property bool $installed
+ * @property bool $rewrite
+ * @property string $postDateFormat
  */
 class Options extends Base
 {

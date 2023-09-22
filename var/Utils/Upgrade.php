@@ -40,5 +40,7 @@ class Upgrade
         $db->query($db->update('table.options')
             ->rows(['value' => serialize($routingTable)])
             ->where('name = ?', 'routingTable'));
+
+        // todo: fix options->commentsRequireURL
     }
 }

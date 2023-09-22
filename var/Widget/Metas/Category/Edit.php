@@ -65,8 +65,8 @@ class Edit extends Metas implements ActionInterface
             ->where('name = ?', $name)
             ->limit(1);
 
-        if ($this->request->mid) {
-            $select->where('mid <> ?', $this->request->mid);
+        if ($this->request->is('mid')) {
+            $select->where('mid <> ?', $this->request->get('mid'));
         }
 
         $category = $this->db->fetchRow($select);
@@ -106,8 +106,8 @@ class Edit extends Metas implements ActionInterface
             ->where('slug = ?', Common::slugName($slug))
             ->limit(1);
 
-        if ($this->request->mid) {
-            $select->where('mid <> ?', $this->request->mid);
+        if ($this->request->is('mid')) {
+            $select->where('mid <> ?', $this->request->get('mid'));
         }
 
         $category = $this->db->fetchRow($select);
@@ -180,7 +180,7 @@ class Edit extends Metas implements ActionInterface
         $options = [0 => _t('不选择')];
         $parents = Rows::allocWithAlias(
             'options',
-            (isset($this->request->mid) ? 'ignore=' . $this->request->mid : '')
+            ($this->request->is('mid') ? 'ignore=' . $this->request->get('mid') : '')
         );
 
         while ($parents->next()) {
@@ -190,7 +190,7 @@ class Edit extends Metas implements ActionInterface
         $parent = new Form\Element\Select(
             'parent',
             $options,
-            $this->request->parent,
+            $this->request->get('parent'),
             _t('父级分类'),
             _t('此分类将归档在您选择的父级分类下.')
         );
@@ -278,7 +278,7 @@ class Edit extends Metas implements ActionInterface
 
         /** 取出数据 */
         $category = $this->request->from('name', 'slug', 'description', 'parent');
-        $category['mid'] = $this->request->mid;
+        $category['mid'] = $this->request->get('mid');
         $category['slug'] = Common::slugName(empty($category['slug']) ? $category['name'] : $category['slug']);
         $category['type'] = 'category';
         $current = $this->db->fetchRow($this->select()->where('mid = ?', $category['mid']));
@@ -298,7 +298,7 @@ class Edit extends Metas implements ActionInterface
         }
 
         /** 更新数据 */
-        $this->update($category, $this->db->sql()->where('mid = ?', $this->request->filter('int')->mid));
+        $this->update($category, $this->db->sql()->where('mid = ?', $this->request->filter('int')->get('mid')));
         $this->push($category);
 
         /** 设置高亮 */
@@ -358,7 +358,7 @@ class Edit extends Metas implements ActionInterface
             $this->response->goBack();
         }
 
-        $merge = $this->request->merge;
+        $merge = $this->request->get('merge');
         $categories = $this->request->filter('int')->getArray('mid');
 
         if ($categories) {
@@ -367,7 +367,7 @@ class Edit extends Metas implements ActionInterface
             /** 提示信息 */
             Notice::alloc()->set(_t('分类已经合并'), 'success');
         } else {
-            Notice::alloc()->set(_t('没有选择任何分类'), 'notice');
+            Notice::alloc()->set(_t('没有选择任何分类'));
         }
 
         /** 转向原页 */
@@ -402,12 +402,12 @@ class Edit extends Metas implements ActionInterface
         $categories = $this->request->filter('int')->getArray('mid');
         if ($categories) {
             foreach ($categories as $category) {
-                $this->refreshCountByTypeAndStatus($category, 'post', 'publish');
+                $this->refreshCountByTypeAndStatus($category, 'post');
             }
 
             Notice::alloc()->set(_t('分类刷新已经完成'), 'success');
         } else {
-            Notice::alloc()->set(_t('没有选择任何分类'), 'notice');
+            Notice::alloc()->set(_t('没有选择任何分类'));
         }
 
         /** 转向原页 */
@@ -430,10 +430,10 @@ class Edit extends Metas implements ActionInterface
             Notice::alloc()->set($error, 'error');
         } else {
             $this->db->query($this->db->update('table.options')
-                ->rows(['value' => $this->request->mid])
+                ->rows(['value' => $this->request->get('mid')])
                 ->where('name = ?', 'defaultCategory'));
 
-            $this->db->fetchRow($this->select()->where('mid = ?', $this->request->mid)
+            $this->db->fetchRow($this->select()->where('mid = ?', $this->request->get('mid'))
                 ->where('type = ?', 'category')->limit(1), [$this, 'push']);
 
             /** 设置高亮 */

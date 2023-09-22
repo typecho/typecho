@@ -37,9 +37,9 @@
                     </p>
                     <p>
                         <label
-                            for="url"<?php if ($this->options->commentsRequireURL): ?> class="required"<?php endif; ?>><?php _e('网站'); ?></label>
+                            for="url"<?php if ($this->options->commentsRequireUrl): ?> class="required"<?php endif; ?>><?php _e('网站'); ?></label>
                         <input type="url" name="url" id="url" class="text" placeholder="<?php _e('http://'); ?>"
-                               value="<?php $this->remember('url'); ?>"<?php if ($this->options->commentsRequireURL): ?> required<?php endif; ?> />
+                               value="<?php $this->remember('url'); ?>"<?php if ($this->options->commentsRequireUrl): ?> required<?php endif; ?> />
                     </p>
                 <?php endif; ?>
                 <p>

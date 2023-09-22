@@ -5,6 +5,7 @@ namespace Widget\Comments;
 use Typecho\Config;
 use Typecho\Cookie;
 use Typecho\Router;
+use Typecho\Widget\Exception;
 use Typecho\Widget\Helper\PageNavigator\Box;
 use Widget\Base\Comments;
 
@@ -28,7 +29,7 @@ class Archive extends Comments
      * @access private
      * @var integer
      */
-    private $currentPage;
+    private int $currentPage;
 
     /**
      * 所有文章个数
@@ -36,7 +37,7 @@ class Archive extends Comments
      * @access private
      * @var integer
      */
-    private $total = false;
+    private int $total = 0;
 
     /**
      * 子父级评论关系
@@ -44,15 +45,15 @@ class Archive extends Comments
      * @access private
      * @var array
      */
-    private $threadedComments = [];
+    private array $threadedComments = [];
 
     /**
      * _singleCommentOptions
      *
-     * @var mixed
+     * @var Config|null
      * @access private
      */
-    private $singleCommentOptions = null;
+    private ?Config $singleCommentOptions = null;
 
     /**
      * @param Config $parameter
@@ -73,7 +74,7 @@ class Archive extends Comments
             $args[] = '%d';
         }
 
-        $num = intval($this->total);
+        $num = $this->total;
 
         echo sprintf($args[$num] ?? array_pop($args), $num);
     }
@@ -101,7 +102,6 @@ class Archive extends Comments
                 $commentsMail,
                 'waiting'
             );
-        $threadedSelect = null;
 
         if ($this->options->commentsShowCommentOnly) {
             $select->where('table.comments.type = ?', 'comment');
@@ -211,7 +211,7 @@ class Archive extends Comments
      * @param string $splitWord 分割字符
      * @param string|array $template 展现配置信息
      * @return void
-     * @throws \Typecho\Widget\Exception
+     * @throws Exception
      */
     public function pageNav(
         string $prev = '&laquo;',
@@ -238,7 +238,8 @@ class Archive extends Comments
             $pageRow['permalink'] = $pageRow['pathinfo'];
             $query = Router::url('comment_page', $pageRow, $this->options->index);
 
-            self::pluginHandle()->trigger($hasNav)->pageNav(
+            self::pluginHandle()->trigger($hasNav)->call(
+                'pageNav',
                 $this->currentPage,
                 $this->total,
                 $this->options->commentsPageSize,
@@ -286,7 +287,7 @@ class Archive extends Comments
             'avatarSize'    => 32,
             'defaultAvatar' => null
         ]);
-        self::pluginHandle()->trigger($plugged)->listComments($this->singleCommentOptions, $this);
+        self::pluginHandle()->trigger($plugged)->call('listComments', $this->singleCommentOptions, $this);
 
         if (!$plugged) {
             if ($this->have()) {
@@ -304,11 +305,12 @@ class Archive extends Comments
     /**
      * 评论回调函数
      */
-    private function threadedCommentsCallback()
+    private function threadedCommentsCallback(): void
     {
         $singleCommentOptions = $this->singleCommentOptions;
         if (function_exists('threadedComments')) {
-            return threadedComments($this, $singleCommentOptions);
+            threadedComments($this, $singleCommentOptions);
+            return;
         }
 
         $commentClass = '';
@@ -403,7 +405,7 @@ class Archive extends Comments
     {
         if ($this->options->commentsThreaded && !$this->isTopLevel && $this->parameter->allowComment) {
             $word = empty($word) ? _t('回复') : $word;
-            self::pluginHandle()->trigger($plugged)->reply($word, $this);
+            self::pluginHandle()->trigger($plugged)->call('reply', $word, $this);
 
             if (!$plugged) {
                 echo '<a href="' . substr($this->permalink, 0, - strlen($this->theId) - 1) . '?replyTo=' . $this->coid .
@@ -449,10 +451,10 @@ class Archive extends Comments
     {
         if ($this->options->commentsThreaded) {
             $word = empty($word) ? _t('取消回复') : $word;
-            self::pluginHandle()->trigger($plugged)->cancelReply($word, $this);
+            self::pluginHandle()->trigger($plugged)->call('cancelReply', $word, $this);
 
             if (!$plugged) {
-                $replyId = $this->request->filter('int')->replyTo;
+                $replyId = $this->request->filter('int')->get('replyTo');
                 echo '<a id="cancel-comment-reply-link" href="' . $this->parameter->parentContent['permalink'] . '#' . $this->parameter->respondId .
                     '" rel="nofollow"' . ($replyId ? '' : ' style="display:none"') . ' onclick="return TypechoComment.cancelReply();">' . $word . '</a>';
             }
