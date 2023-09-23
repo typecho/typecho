@@ -147,7 +147,6 @@ class Request
      */
     public function get(string $key, $default = null, ?bool &$exists = true)
     {
-        $exists = true;
         $value = null;
 
         switch (true) {
@@ -157,17 +156,13 @@ class Request
             case isset($this->sandbox):
                 if (isset($this->sandbox[$key])) {
                     $value = $this->sandbox[$key];
-                } else {
-                    $exists = false;
                 }
                 break;
             case $key === '@json':
-                $exists = false;
                 if ($this->isJson()) {
                     $body = file_get_contents('php://input');
 
                     if (false !== $body) {
-                        $exists = true;
                         $value = json_decode($body, true, 16);
                         $default = $default ?? $value;
                     }
@@ -180,13 +175,19 @@ class Request
                 $value = $_POST[$key];
                 break;
             default:
-                $exists = false;
                 break;
         }
 
         if (isset($value)) {
-            return is_array($default) == is_array($value) ? $value : $default;
+            if (is_array($default) == is_array($value)) {
+                $exists = is_array($value) || (is_string($value) && strlen($value) > 0);
+                return $value;
+            } else {
+                $exists = false;
+                return $default;
+            }
         } else {
+            $exists = false;
             return $default;
         }
     }
