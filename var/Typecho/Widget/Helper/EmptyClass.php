@@ -18,7 +18,7 @@ class EmptyClass
      * @access private
      * @var EmptyClass
      */
-    private static $instance = null;
+    private static ?EmptyClass $instance = null;
 
     /**
      * 获取单例句柄

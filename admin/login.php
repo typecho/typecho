@@ -17,11 +17,11 @@ include 'header.php';
         <form action="<?php $options->loginAction(); ?>" method="post" name="login" role="form">
             <p>
                 <label for="name" class="sr-only"><?php _e('用户名'); ?></label>
-                <input type="text" id="name" name="name" value="<?php echo $rememberName; ?>" placeholder="<?php _e('用户名'); ?>" class="text-l w-100" autofocus />
+                <input type="text" id="name" name="name" value="<?php echo $rememberName; ?>" placeholder="<?php _e('用户名'); ?>" class="text-l w-100" autofocus required />
             </p>
             <p>
                 <label for="password" class="sr-only"><?php _e('密码'); ?></label>
-                <input type="password" id="password" name="password" class="text-l w-100" placeholder="<?php _e('密码'); ?>" />
+                <input type="password" id="password" name="password" class="text-l w-100" placeholder="<?php _e('密码'); ?>" required />
             </p>
             <p class="submit">
                 <button type="submit" class="btn btn-l w-100 primary"><?php _e('登录'); ?></button>

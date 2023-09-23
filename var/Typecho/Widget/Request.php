@@ -33,17 +33,17 @@ class Request
      * @access private
      * @var array
      */
-    private $filter = [];
+    private array $filter = [];
 
     /**
      * @var HttpRequest
      */
-    private $request;
+    private HttpRequest $request;
 
     /**
      * @var Config
      */
-    private $params;
+    private Config $params;
 
     /**
      * @param HttpRequest $request

@@ -155,7 +155,6 @@ class Router
                     }
 
                     return [$route, $params];
-
                 } catch (\Exception $e) {
                     if (404 == $e->getCode()) {
                         Widget::destroy($route['widget']);

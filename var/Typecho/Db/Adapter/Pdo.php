@@ -23,7 +23,7 @@ abstract class Pdo implements Adapter
      * @access protected
      * @var \PDO
      */
-    protected $object;
+    protected \PDO $object;
 
     /**
      * 最后一次操作的数据表
@@ -31,7 +31,7 @@ abstract class Pdo implements Adapter
      * @access protected
      * @var string
      */
-    protected $lastTable;
+    protected string $lastTable;
 
     /**
      * 判断适配器是否可用

@@ -18,7 +18,7 @@ class Config implements \Iterator, \ArrayAccess
      * @access private
      * @var array
      */
-    private $currentConfig = [];
+    private array $currentConfig = [];
 
     /**
      * 实例化一个当前配置

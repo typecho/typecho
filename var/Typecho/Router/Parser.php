@@ -18,7 +18,7 @@ class Parser
      * @access private
      * @var array
      */
-    private $defaultRegex;
+    private array $defaultRegex;
 
     /**
      * 路由器映射表
@@ -26,7 +26,7 @@ class Parser
      * @access private
      * @var array
      */
-    private $routingTable;
+    private array $routingTable;
 
     /**
      * 参数表
@@ -34,7 +34,7 @@ class Parser
      * @access private
      * @var array
      */
-    private $params;
+    private array $params;
 
     /**
      * 设置路由表

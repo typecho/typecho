@@ -15,7 +15,7 @@ if (!defined('__TYPECHO_ROOT_DIR__') && !@include_once __DIR__ . '/../config.inc
 \Widget\Init::alloc();
 
 /** 注册一个初始化插件 */
-\Typecho\Plugin::factory('admin/common.php')->begin();
+\Typecho\Plugin::factory('admin/common.php')->call('begin');
 
 \Widget\Options::alloc()->to($options);
 \Widget\User::alloc()->to($user);

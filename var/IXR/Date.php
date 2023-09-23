@@ -9,17 +9,17 @@ namespace IXR;
  */
 class Date
 {
-    private $year;
+    private int $year;
 
-    private $month;
+    private int $month;
 
-    private $day;
+    private int $day;
 
-    private $hour;
+    private int $hour;
 
-    private $minute;
+    private int $minute;
 
-    private $second;
+    private int $second;
 
     /**
      * @param int|string $time
@@ -39,12 +39,12 @@ class Date
      */
     private function parseTimestamp(int $timestamp)
     {
-        $this->year = date('Y', $timestamp);
-        $this->month = date('m', $timestamp);
-        $this->day = date('d', $timestamp);
-        $this->hour = date('H', $timestamp);
-        $this->minute = date('i', $timestamp);
-        $this->second = date('s', $timestamp);
+        $this->year = intval(date('Y', $timestamp));
+        $this->month = intval(date('m', $timestamp));
+        $this->day = intval(date('d', $timestamp));
+        $this->hour = intval(date('H', $timestamp));
+        $this->minute = intval(date('i', $timestamp));
+        $this->second = intval(date('s', $timestamp));
     }
 
     /**

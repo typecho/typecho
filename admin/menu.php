@@ -5,7 +5,7 @@
         <?php $menu->output(); ?>
     </nav>
     <div class="operate">
-        <?php \Typecho\Plugin::factory('admin/menu.php')->navBar(); ?><a title="<?php
+        <?php \Typecho\Plugin::factory('admin/menu.php')->call('navBar'); ?><a title="<?php
         if ($user->logged > 0) {
             $logged = new \Typecho\Date($user->logged);
             _e('最后登录: %s', $logged->word());

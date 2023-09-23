@@ -19,7 +19,7 @@ class Plugin
      *
      * @var array
      */
-    private static $plugin = [];
+    private static array $plugin = [];
 
     /**
      * 实例化的插件对象
@@ -433,7 +433,7 @@ class Plugin
      * @param array $args 参数
      * @return mixed
      */
-    public function call(string $component, ... $args)
+    public function call(string $component, ...$args)
     {
         $component = $this->handle . ':' . $component;
         $last = count($args);
