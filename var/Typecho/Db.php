@@ -55,14 +55,14 @@ class Db
      * 数据库适配器
      * @var Adapter
      */
-    private $adapter;
+    private Adapter $adapter;
 
     /**
      * 默认配置
      *
      * @var array
      */
-    private $config;
+    private array $config;
 
     /**
      * 已经连接
@@ -70,7 +70,7 @@ class Db
      * @access private
      * @var array
      */
-    private $connectedPool;
+    private array $connectedPool;
 
     /**
      * 前缀
@@ -78,7 +78,7 @@ class Db
      * @access private
      * @var string
      */
-    private $prefix;
+    private string $prefix;
 
     /**
      * 适配器名称
@@ -86,13 +86,13 @@ class Db
      * @access private
      * @var string
      */
-    private $adapterName;
+    private string $adapterName;
 
     /**
      * 实例化的数据库对象
      * @var Db
      */
-    private static $instance;
+    private static Db $instance;
 
     /**
      * 数据库类构造函数

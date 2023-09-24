@@ -256,7 +256,7 @@ function install_get_default_options(): array
             'frontArchive' => 0,
             'commentsRequireMail' => 1,
             'commentsWhitelist' => 0,
-            'commentsRequireURL' => 0,
+            'commentsRequireUrl' => 0,
             'commentsRequireModeration' => 0,
             'plugins' => 'a:0:{}',
             'commentDateFormat' => 'F jS, Y \a\t h:i a',

@@ -23,10 +23,10 @@ class Admin extends Rows
     public function execute()
     {
         $select = $this->db->select('mid')->from('table.metas')->where('type = ?', 'category');
-        $select->where('parent = ?', $this->request->parent ? $this->request->parent : 0);
+        $select->where('parent = ?', $this->request->get('parent', 0));
 
         $this->stack = $this->getCategories(array_column(
-            $this->db->fetchAll($select->order('table.metas.order', Db::SORT_ASC)),
+            $this->db->fetchAll($select->order('table.metas.order')),
             'mid'
         ));
     }
@@ -38,9 +38,9 @@ class Admin extends Rows
      */
     public function backLink()
     {
-        if (isset($this->request->parent)) {
+        if ($this->request->is('parent')) {
             $category = $this->db->fetchRow($this->select()
-                ->where('type = ? AND mid = ?', 'category', $this->request->parent));
+                ->where('type = ? AND mid = ?', 'category', $this->request->get('parent')));
 
             if (!empty($category)) {
                 $parent = $this->db->fetchRow($this->select()
@@ -69,9 +69,9 @@ class Admin extends Rows
      */
     public function getMenuTitle(): ?string
     {
-        if (isset($this->request->parent)) {
+        if ($this->request->is('parent')) {
             $category = $this->db->fetchRow($this->select()
-                ->where('type = ? AND mid = ?', 'category', $this->request->parent));
+                ->where('type = ? AND mid = ?', 'category', $this->request->get('parent')));
 
             if (!empty($category)) {
                 return _t('管理 %s 的子分类', $category['name']);
@@ -90,8 +90,8 @@ class Admin extends Rows
      */
     public function getAddLink(): string
     {
-        if (isset($this->request->parent)) {
-            return 'category.php?parent=' . $this->request->filter('int')->parent;
+        if ($this->request->is('parent')) {
+            return 'category.php?parent=' . $this->request->filter('int')->get('parent');
         } else {
             return 'category.php';
         }

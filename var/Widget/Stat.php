@@ -133,7 +133,7 @@ class Stat extends Base
             ->from('table.contents')
             ->where('table.contents.type = ?', 'post')
             ->where('table.contents.status = ?', 'publish')
-            ->where('table.contents.authorId = ?', $this->request->filter('int')->uid))->num;
+            ->where('table.contents.authorId = ?', $this->request->filter('int')->get('uid')))->num;
     }
 
     /**
@@ -147,7 +147,7 @@ class Stat extends Base
             ->from('table.contents')
             ->where('table.contents.type = ? OR table.contents.type = ?', 'post', 'post_draft')
             ->where('table.contents.status = ?', 'waiting')
-            ->where('table.contents.authorId = ?', $this->request->filter('int')->uid))->num;
+            ->where('table.contents.authorId = ?', $this->request->filter('int')->get('uid')))->num;
     }
 
     /**
@@ -160,7 +160,7 @@ class Stat extends Base
         return $this->db->fetchObject($this->db->select(['COUNT(cid)' => 'num'])
             ->from('table.contents')
             ->where('table.contents.type = ?', 'post_draft')
-            ->where('table.contents.authorId = ?', $this->request->filter('int')->uid))->num;
+            ->where('table.contents.authorId = ?', $this->request->filter('int')->get('uid')))->num;
     }
 
     /**
@@ -272,7 +272,7 @@ class Stat extends Base
     {
         return $this->db->fetchObject($this->db->select(['COUNT(coid)' => 'num'])
             ->from('table.comments')
-            ->where('table.comments.cid = ?', $this->request->filter('int')->cid))->num;
+            ->where('table.comments.cid = ?', $this->request->filter('int')->get('cid')))->num;
     }
 
     /**
@@ -285,7 +285,7 @@ class Stat extends Base
         return $this->db->fetchObject($this->db->select(['COUNT(coid)' => 'num'])
             ->from('table.comments')
             ->where('table.comments.status = ?', 'approved')
-            ->where('table.comments.cid = ?', $this->request->filter('int')->cid))->num;
+            ->where('table.comments.cid = ?', $this->request->filter('int')->get('cid')))->num;
     }
 
     /**
@@ -298,7 +298,7 @@ class Stat extends Base
         return $this->db->fetchObject($this->db->select(['COUNT(coid)' => 'num'])
             ->from('table.comments')
             ->where('table.comments.status = ?', 'waiting')
-            ->where('table.comments.cid = ?', $this->request->filter('int')->cid))->num;
+            ->where('table.comments.cid = ?', $this->request->filter('int')->get('cid')))->num;
     }
 
     /**
@@ -311,7 +311,7 @@ class Stat extends Base
         return $this->db->fetchObject($this->db->select(['COUNT(coid)' => 'num'])
             ->from('table.comments')
             ->where('table.comments.status = ?', 'spam')
-            ->where('table.comments.cid = ?', $this->request->filter('int')->cid))->num;
+            ->where('table.comments.cid = ?', $this->request->filter('int')->get('cid')))->num;
     }
 
     /**

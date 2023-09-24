@@ -240,8 +240,7 @@ class Contents extends Base implements QueryInterface
 
         /** 更新缩略名 */
         if ($updateRows > 0 && isset($rows['slug'])) {
-            $this->applySlug(!isset($rows['slug']) || strlen($rows['slug']) === 0
-                ? null : $rows['slug'], $updateCondition);
+            $this->applySlug(strlen($rows['slug']) === 0 ? null : $rows['slug'], $updateCondition);
         }
 
         return $updateRows;
@@ -312,7 +311,7 @@ class Contents extends Base implements QueryInterface
                 continue;
             }
 
-            $isFieldReadOnly = Contents::pluginHandle()->trigger($plugged)->isFieldReadOnly($name);
+            $isFieldReadOnly = Contents::pluginHandle()->trigger($plugged)->call('isFieldReadOnly', $name);
             if ($plugged && $isFieldReadOnly) {
                 continue;
             }
@@ -403,7 +402,6 @@ class Contents extends Base implements QueryInterface
 
         $exist = $this->db->fetchRow($this->db->select('type')->from('table.fields')
             ->where('cid = ? AND name = ?', $cid, $name));
-        $value = intval($value);
 
         if (empty($exist)) {
             return $this->db->query($this->db->insert('table.fields')
@@ -600,7 +598,7 @@ class Contents extends Base implements QueryInterface
             $value['hidden'] = true;
         }
 
-        $value = Contents::pluginHandle()->filter($value, $this);
+        $value = Contents::pluginHandle()->call('filter', $value, $this);
 
         /** 如果访问权限被禁止 */
         if ($value['hidden']) {
@@ -662,7 +660,7 @@ class Contents extends Base implements QueryInterface
      */
     public function title(int $length = 0, string $trim = '...')
     {
-        $title = Contents::pluginHandle()->trigger($plugged)->title($this->title, $this);
+        $title = Contents::pluginHandle()->trigger($plugged)->call('title', $this->title, $this);
         if (!$plugged) {
             echo $length > 0 ? Common::subStr($this->title, 0, $length, $trim) : $this->title;
         } else {
@@ -747,7 +745,7 @@ class Contents extends Base implements QueryInterface
      * @param string $split 多个分类之间分隔符
      * @param boolean $link 是否输出链接
      * @param string|null $default 如果没有则输出
-     * @throws \Typecho\Widget\Exception
+     * @throws Widget\Exception
      */
     public function directory(string $split = '/', bool $link = true, ?string $default = null)
     {
@@ -891,7 +889,7 @@ class Contents extends Base implements QueryInterface
             return $this->text;
         }
 
-        $content = Contents::pluginHandle()->trigger($plugged)->excerpt($this->text, $this);
+        $content = Contents::pluginHandle()->trigger($plugged)->call('excerpt', $this->text, $this);
         if (!$plugged) {
             $content = $this->isMarkdown ? $this->markdown($content)
                 : $this->autoP($content);
@@ -900,7 +898,7 @@ class Contents extends Base implements QueryInterface
         $contents = explode('<!--more-->', $content);
         [$excerpt] = $contents;
 
-        return Common::fixHtml(Contents::pluginHandle()->excerptEx($excerpt, $this));
+        return Common::fixHtml(Contents::pluginHandle()->call('excerptEx', $excerpt, $this));
     }
 
     /**
@@ -912,7 +910,7 @@ class Contents extends Base implements QueryInterface
     {
         $plainText = str_replace("\n", '', trim(strip_tags($this->excerpt)));
         $plainText = $plainText ?: $this->title;
-        return Common::subStr($plainText, 0, 100, '...');
+        return Common::subStr($plainText, 0, 100);
     }
 
     /**
@@ -923,7 +921,7 @@ class Contents extends Base implements QueryInterface
      */
     public function markdown(?string $text): ?string
     {
-        $html = Contents::pluginHandle()->trigger($parsed)->markdown($text);
+        $html = Contents::pluginHandle()->trigger($parsed)->call('markdown', $text);
 
         if (!$parsed) {
             $html = Markdown::convert($text);
@@ -940,7 +938,7 @@ class Contents extends Base implements QueryInterface
      */
     public function autoP(?string $text): ?string
     {
-        $html = Contents::pluginHandle()->trigger($parsed)->autoP($text);
+        $html = Contents::pluginHandle()->trigger($parsed)->call('autoP', $text);
 
         if (!$parsed && $text) {
             static $parser;
@@ -966,14 +964,14 @@ class Contents extends Base implements QueryInterface
             return $this->text;
         }
 
-        $content = Contents::pluginHandle()->trigger($plugged)->content($this->text, $this);
+        $content = Contents::pluginHandle()->trigger($plugged)->call('content', $this->text, $this);
 
         if (!$plugged) {
             $content = $this->isMarkdown ? $this->markdown($content)
                 : $this->autoP($content);
         }
 
-        return Contents::pluginHandle()->contentEx($content, $this);
+        return Contents::pluginHandle()->call('contentEx', $content, $this);
     }
 
     /**

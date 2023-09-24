@@ -23,63 +23,63 @@ abstract class Widget
      *
      * @var array
      */
-    private static $widgetPool = [];
+    private static array $widgetPool = [];
 
     /**
      * widget别名
      *
      * @var array
      */
-    private static $widgetAlias = [];
+    private static array $widgetAlias = [];
 
     /**
      * request对象
      *
      * @var WidgetRequest
      */
-    protected $request;
+    protected WidgetRequest $request;
 
     /**
      * response对象
      *
      * @var WidgetResponse
      */
-    protected $response;
+    protected WidgetResponse $response;
 
     /**
      * 数据堆栈
      *
      * @var array
      */
-    protected $stack = [];
+    protected array $stack = [];
 
     /**
      * 当前队列指针顺序值,从1开始
      *
      * @var integer
      */
-    protected $sequence = 0;
+    protected int $sequence = 0;
 
     /**
      * 队列长度
      *
      * @var integer
      */
-    protected $length = 0;
+    protected int $length = 0;
 
     /**
      * config对象
      *
      * @var Config
      */
-    protected $parameter;
+    protected Config $parameter;
 
     /**
      * 数据堆栈每一行
      *
      * @var array
      */
-    protected $row = [];
+    protected array $row = [];
 
     /**
      * 构造函数,初始化组件
@@ -361,7 +361,7 @@ abstract class Widget
     public function __call(string $name, array $args)
     {
         $method = 'call' . ucfirst($name);
-        self::pluginHandle()->trigger($plugged)->{$method}($this, $args);
+        self::pluginHandle()->trigger($plugged)->call($method, $this, $args);
 
         if (!$plugged) {
             echo $this->{$name};
@@ -394,7 +394,7 @@ abstract class Widget
             if (method_exists($this, $method)) {
                 return $this->$method();
             } else {
-                $return = self::pluginHandle()->trigger($plugged)->{$method}($this);
+                $return = self::pluginHandle()->trigger($plugged)->call($method, $this);
                 if ($plugged) {
                     return $return;
                 }

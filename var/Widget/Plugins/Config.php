@@ -27,21 +27,21 @@ class Config extends Options
      *
      * @var array
      */
-    public $info;
+    public array $info;
 
     /**
      * 插件文件路径
      *
      * @var string
      */
-    private $pluginFileName;
+    private string $pluginFileName;
 
     /**
      * 插件类
      *
      * @var string
      */
-    private $className;
+    private string $className;
 
     /**
      * 绑定动作
@@ -52,7 +52,7 @@ class Config extends Options
     public function execute()
     {
         $this->user->pass('administrator');
-        $config = $this->request->filter('slug')->config;
+        $config = $this->request->filter('slug')->get('config');
         if (empty($config)) {
             throw new Exception(_t('插件不存在'), 404);
         }
@@ -78,10 +78,10 @@ class Config extends Options
      * @return Form
      * @throws Exception|Plugin\Exception
      */
-    public function config()
+    public function config(): Form
     {
         /** 获取插件名称 */
-        $pluginName = $this->request->filter('slug')->config;
+        $pluginName = $this->request->filter('slug')->get('config');
 
         /** 获取已启用插件 */
         $plugins = Plugin::export();

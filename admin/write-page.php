@@ -66,7 +66,7 @@ include 'menu.php';
                         </span>
                     </p>
 
-                    <?php \Typecho\Plugin::factory('admin/write-page.php')->content($page); ?>
+                    <?php \Typecho\Plugin::factory('admin/write-page.php')->call('content', $page); ?>
                 </div>
                 <div id="edit-secondary" class="col-mb-12 col-tb-3" role="complementary">
                     <ul class="typecho-option-tabs clearfix">
@@ -104,7 +104,7 @@ include 'menu.php';
                             <p class="description"><?php _e('如果你为此页面选择了一个自定义模板, 系统将按照你选择的模板文件展现它'); ?></p>
                         </section>
 
-                        <?php \Typecho\Plugin::factory('admin/write-page.php')->option($page); ?>
+                        <?php \Typecho\Plugin::factory('admin/write-page.php')->call('option', $page); ?>
 
                         <button type="button" id="advance-panel-btn" class="btn btn-xs"><?php _e('高级选项'); ?> <i
                                 class="i-caret-down"></i></button>
@@ -136,7 +136,7 @@ include 'menu.php';
                                 </ul>
                             </section>
 
-                            <?php \Typecho\Plugin::factory('admin/write-page.php')->advanceOption($page); ?>
+                            <?php \Typecho\Plugin::factory('admin/write-page.php')->call('advanceOption', $page); ?>
                         </div>
                         <?php if ($page->have()): ?>
                             <?php $modified = new \Typecho\Date($page->modified); ?>
@@ -167,7 +167,7 @@ include 'common-js.php';
 include 'form-js.php';
 include 'write-js.php';
 
-\Typecho\Plugin::factory('admin/write-page.php')->trigger($plugged)->richEditor($page);
+\Typecho\Plugin::factory('admin/write-page.php')->trigger($plugged)->call('richEditor', $page);
 if (!$plugged) {
     include 'editor-js.php';
 }

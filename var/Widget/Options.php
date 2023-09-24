@@ -87,6 +87,9 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property bool $commentsAntiSpam
  * @property bool $commentsAutoClose
  * @property bool $commentsPostIntervalEnable
+ * @property int $commentsMaxNestingLevels
+ * @property int $commentsPostTimeout
+ * @property int $commentsPostInterval
  * @property string $commentsHTMLTagAllowed
  * @property bool $allowRegister
  * @property bool $allowXmlRpc
@@ -97,6 +100,8 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property array $plugins
  * @property string $secret
  * @property bool $installed
+ * @property bool $rewrite
+ * @property string $postDateFormat
  */
 class Options extends Base
 {
@@ -106,7 +111,7 @@ class Options extends Base
      * @access private
      * @var array
      */
-    private $pluginConfig = [];
+    private array $pluginConfig = [];
 
     /**
      * 缓存的个人插件配置
@@ -114,7 +119,7 @@ class Options extends Base
      * @access private
      * @var array
      */
-    private $personalPluginConfig = [];
+    private array $personalPluginConfig = [];
 
     /**
      * @param int $components
@@ -676,7 +681,7 @@ class Options extends Base
                 $this->attachmentTypes
             );
 
-            $attachmentTypesResult = array_unique(array_map('trim', preg_split("/(,|\.)/", $attachmentTypes)));
+            $attachmentTypesResult = array_unique(array_map('trim', preg_split("/([,.])/", $attachmentTypes)));
         }
 
         return $attachmentTypesResult;

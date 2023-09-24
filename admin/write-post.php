@@ -71,7 +71,7 @@ include 'menu.php';
                         </span>
                     </p>
 
-                    <?php \Typecho\Plugin::factory('admin/write-post.php')->content($post); ?>
+                    <?php \Typecho\Plugin::factory('admin/write-post.php')->call('content', $post); ?>
                 </div>
 
                 <div id="edit-secondary" class="col-mb-12 col-tb-3" role="complementary">
@@ -118,7 +118,7 @@ include 'menu.php';
                                       class="w-100 text"/></p>
                         </section>
 
-                        <?php \Typecho\Plugin::factory('admin/write-post.php')->option($post); ?>
+                        <?php \Typecho\Plugin::factory('admin/write-post.php')->call('option', $post); ?>
 
                         <button type="button" id="advance-panel-btn" class="btn btn-xs"><?php _e('高级选项'); ?> <i
                                 class="i-caret-down"></i></button>
@@ -172,7 +172,7 @@ include 'menu.php';
                                 <p class="description"><?php _e('每一行一个引用地址, 用回车隔开'); ?></p>
                             </section>
 
-                            <?php \Typecho\Plugin::factory('admin/write-post.php')->advanceOption($post); ?>
+                            <?php \Typecho\Plugin::factory('admin/write-post.php')->call('advanceOption', $post); ?>
                         </div><!-- end #advance-panel -->
 
                         <?php if ($post->have()): ?>
@@ -204,13 +204,13 @@ include 'common-js.php';
 include 'form-js.php';
 include 'write-js.php';
 
-\Typecho\Plugin::factory('admin/write-post.php')->trigger($plugged)->richEditor($post);
+\Typecho\Plugin::factory('admin/write-post.php')->trigger($plugged)->call('richEditor', $post);
 if (!$plugged) {
     include 'editor-js.php';
 }
 
 include 'file-upload-js.php';
 include 'custom-fields-js.php';
-\Typecho\Plugin::factory('admin/write-post.php')->bottom($post);
+\Typecho\Plugin::factory('admin/write-post.php')->call('bottom', $post);
 include 'footer.php';
 ?>

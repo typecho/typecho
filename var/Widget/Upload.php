@@ -6,7 +6,6 @@ use Typecho\Common;
 use Typecho\Date;
 use Typecho\Db\Exception;
 use Typecho\Plugin;
-use Typecho\Widget;
 use Widget\Base\Contents;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
@@ -33,7 +32,7 @@ class Upload extends Contents implements ActionInterface
      */
     public static function deleteHandle(array $content): bool
     {
-        $result = Plugin::factory(Upload::class)->trigger($hasDeleted)->deleteHandle($content);
+        $result = Plugin::factory(Upload::class)->trigger($hasDeleted)->call('deleteHandle', $content);
         if ($hasDeleted) {
             return $result;
         }
@@ -49,7 +48,7 @@ class Upload extends Contents implements ActionInterface
      */
     public static function attachmentHandle(array $content): string
     {
-        $result = Plugin::factory(Upload::class)->trigger($hasPlugged)->attachmentHandle($content);
+        $result = Plugin::factory(Upload::class)->trigger($hasPlugged)->call('attachmentHandle', $content);
         if ($hasPlugged) {
             return $result;
         }
@@ -69,7 +68,7 @@ class Upload extends Contents implements ActionInterface
      */
     public static function attachmentDataHandle(array $content): string
     {
-        $result = Plugin::factory(Upload::class)->trigger($hasPlugged)->attachmentDataHandle($content);
+        $result = Plugin::factory(Upload::class)->trigger($hasPlugged)->call('attachmentDataHandle', $content);
         if ($hasPlugged) {
             return $result;
         }
@@ -109,8 +108,13 @@ class Upload extends Contents implements ActionInterface
         if (!empty($_FILES)) {
             $file = array_pop($_FILES);
             if (0 == $file['error'] && is_uploaded_file($file['tmp_name'])) {
-                $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $this->request->filter('int')->cid)
-                    ->where('table.contents.type = ?', 'attachment'), [$this, 'push']);
+                $this->db->fetchRow(
+                    $this->select()->where(
+                        'table.contents.cid = ?',
+                        $this->request->filter('int')->get('cid')
+                    )
+                    ->where('table.contents.type = ?', 'attachment'), [$this, 'push']
+                );
 
                 if (!$this->have()) {
                     $this->response->setStatus(404);
@@ -130,7 +134,7 @@ class Upload extends Contents implements ActionInterface
                 $result = self::modifyHandle($this->row, $file);
 
                 if (false !== $result) {
-                    self::pluginHandle()->beforeModify($result);
+                    self::pluginHandle()->call('beforeModify', $result);
 
                     $this->update([
                         'text' => serialize($result)
@@ -140,7 +144,7 @@ class Upload extends Contents implements ActionInterface
                         ->where('table.contents.type = ?', 'attachment'), [$this, 'push']);
 
                     /** 增加插件接口 */
-                    self::pluginHandle()->modify($this);
+                    self::pluginHandle()->call('modify', $this);
 
                     $this->response->throwJson([$this->attachment->url, [
                         'cid' => $this->cid,
@@ -172,7 +176,7 @@ class Upload extends Contents implements ActionInterface
             return false;
         }
 
-        $result = self::pluginHandle()->trigger($hasModified)->modifyHandle($content, $file);
+        $result = self::pluginHandle()->trigger($hasModified)->call('modifyHandle', $content, $file);
         if ($hasModified) {
             return $result;
         }
@@ -297,7 +301,7 @@ class Upload extends Contents implements ActionInterface
                 $result = self::uploadHandle($file);
 
                 if (false !== $result) {
-                    self::pluginHandle()->beforeUpload($result);
+                    self::pluginHandle()->call('beforeUpload', $result);
 
                     $struct = [
                         'title' => $result['name'],
@@ -311,7 +315,7 @@ class Upload extends Contents implements ActionInterface
                     ];
 
                     if (isset($this->request->cid)) {
-                        $cid = $this->request->filter('int')->cid;
+                        $cid = $this->request->filter('int')->get('cid');
 
                         if ($this->isWriteable($this->db->sql()->where('cid = ?', $cid))) {
                             $struct['parent'] = $cid;
@@ -324,7 +328,7 @@ class Upload extends Contents implements ActionInterface
                         ->where('table.contents.type = ?', 'attachment'), [$this, 'push']);
 
                     /** 增加插件接口 */
-                    self::pluginHandle()->upload($this);
+                    self::pluginHandle()->call('upload', $this);
 
                     $this->response->throwJson([$this->attachment->url, [
                         'cid' => $insertId,
@@ -356,7 +360,7 @@ class Upload extends Contents implements ActionInterface
             return false;
         }
 
-        $result = self::pluginHandle()->trigger($hasUploaded)->uploadHandle($file);
+        $result = self::pluginHandle()->trigger($hasUploaded)->call('uploadHandle', $file);
         if ($hasUploaded) {
             return $result;
         }

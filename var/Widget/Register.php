@@ -60,8 +60,8 @@ class Register extends Users implements ActionInterface
 
         /** 截获验证异常 */
         if ($error = $validator->run($this->request->from('name', 'password', 'mail', 'confirm'))) {
-            Cookie::set('__typecho_remember_name', $this->request->name);
-            Cookie::set('__typecho_remember_mail', $this->request->mail);
+            Cookie::set('__typecho_remember_name', $this->request->get('name'));
+            Cookie::set('__typecho_remember_mail', $this->request->get('mail'));
 
             /** 设置提示信息 */
             Notice::alloc()->set($error);
@@ -72,23 +72,23 @@ class Register extends Users implements ActionInterface
         $generatedPassword = Common::randString(7);
 
         $dataStruct = [
-            'name' => $this->request->name,
-            'mail' => $this->request->mail,
-            'screenName' => $this->request->name,
+            'name' => $this->request->get('name'),
+            'mail' => $this->request->get('mail'),
+            'screenName' => $this->request->get('name'),
             'password' => $hasher->hashPassword($generatedPassword),
             'created' => $this->options->time,
             'group' => 'subscriber'
         ];
 
-        $dataStruct = self::pluginHandle()->register($dataStruct);
+        $dataStruct = self::pluginHandle()->call('register', $dataStruct);
 
         $insertId = $this->insert($dataStruct);
         $this->db->fetchRow($this->select()->where('uid = ?', $insertId)
             ->limit(1), [$this, 'push']);
 
-        self::pluginHandle()->finishRegister($this);
+        self::pluginHandle()->call('finishRegister', $this);
 
-        $this->user->login($this->request->name, $generatedPassword);
+        $this->user->login($this->request->get('name'), $generatedPassword);
 
         Cookie::delete('__typecho_first_run');
         Cookie::delete('__typecho_remember_name');

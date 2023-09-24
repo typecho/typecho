@@ -32,7 +32,7 @@ class Edit extends Contents implements ActionInterface
      *
      * @var string
      */
-    protected $themeCustomFieldsHook = 'themePostFields';
+    protected string $themeCustomFieldsHook = 'themePostFields';
 
     /**
      * 执行函数
@@ -45,10 +45,10 @@ class Edit extends Contents implements ActionInterface
         $this->user->pass('contributor');
 
         /** 获取文章内容 */
-        if (!empty($this->request->cid)) {
+        if ($this->request->is('cid')) {
             $this->db->fetchRow($this->select()
                 ->where('table.contents.type = ? OR table.contents.type = ?', 'post', 'post_draft')
-                ->where('table.contents.cid = ?', $this->request->filter('int')->cid)
+                ->where('table.contents.cid = ?', $this->request->filter('int')->get('cid'))
                 ->limit(1), [$this, 'push']);
 
             if ('post_draft' == $this->type && $this->parent) {
@@ -170,7 +170,7 @@ class Edit extends Contents implements ActionInterface
 
             foreach ($rows as $row) {
                 $isFieldReadOnly = Contents::pluginHandle()
-                    ->trigger($plugged)->isFieldReadOnly($row['name']);
+                    ->trigger($plugged)->call('isFieldReadOnly', $row['name']);
 
                 if ($plugged && $isFieldReadOnly) {
                     continue;
@@ -201,7 +201,7 @@ class Edit extends Contents implements ActionInterface
             $fields = $this->fields;
         }
 
-        self::pluginHandle()->getDefaultFieldItems($layout);
+        self::pluginHandle()->call('getDefaultFieldItems', $layout);
 
         if (file_exists($configFile)) {
             require_once $configFile;
@@ -221,7 +221,7 @@ class Edit extends Contents implements ActionInterface
                 $name = $item->input->getAttribute('name');
 
                 $isFieldReadOnly = Contents::pluginHandle()
-                    ->trigger($plugged)->isFieldReadOnly($name);
+                    ->trigger($plugged)->call('isFieldReadOnly', $name);
                 if ($plugged && $isFieldReadOnly) {
                     continue;
                 }
@@ -279,11 +279,11 @@ class Edit extends Contents implements ActionInterface
         $contents['title'] = $this->request->get('title', _t('未命名文档'));
         $contents['created'] = $this->getCreated();
 
-        if ($this->request->markdown && $this->options->markdown) {
+        if ($this->request->is('markdown=1') && $this->options->markdown) {
             $contents['text'] = '<!--markdown-->' . $contents['text'];
         }
 
-        $contents = self::pluginHandle()->write($contents, $this);
+        $contents = self::pluginHandle()->call('write', $contents, $this);
 
         if ($this->request->is('do=publish')) {
             /** 重新发布已经存在的文章 */
@@ -291,10 +291,10 @@ class Edit extends Contents implements ActionInterface
             $this->publish($contents);
 
             // 完成发布插件接口
-            self::pluginHandle()->finishPublish($contents, $this);
+            self::pluginHandle()->call('finishPublish', $contents, $this);
 
             /** 发送ping */
-            $trackback = array_filter(array_unique(preg_split("/(\r|\n|\r\n)/", trim($this->request->trackback))));
+            $trackback = array_filter(array_unique(preg_split("/(\r|\n|\r\n)/", trim($this->request->get('trackback')))));
             Service::alloc()->sendPing($this, $trackback);
 
             /** 设置提示信息 */
@@ -316,7 +316,7 @@ class Edit extends Contents implements ActionInterface
             $this->save($contents);
 
             // 完成保存插件接口
-            self::pluginHandle()->finishSave($contents, $this);
+            self::pluginHandle()->call('finishSave', $contents, $this);
 
             /** 设置高亮 */
             Notice::alloc()->highlight($this->cid);
@@ -347,24 +347,24 @@ class Edit extends Contents implements ActionInterface
     protected function getCreated(): int
     {
         $created = $this->options->time;
-        if (!empty($this->request->created)) {
-            $created = $this->request->created;
-        } elseif (!empty($this->request->date)) {
-            $dstOffset = !empty($this->request->dst) ? $this->request->dst : 0;
+        if ($this->request->is('created')) {
+            $created = $this->request->get('created');
+        } elseif ($this->request->is('date')) {
+            $dstOffset = $this->request->get('dst', 0);
             $timezoneSymbol = $this->options->timezone >= 0 ? '+' : '-';
             $timezoneOffset = abs($this->options->timezone);
             $timezone = $timezoneSymbol . str_pad($timezoneOffset / 3600, 2, '0', STR_PAD_LEFT) . ':00';
-            [$date, $time] = explode(' ', $this->request->date);
+            [$date, $time] = explode(' ', $this->request->get('date'));
 
             $created = strtotime("{$date}T{$time}{$timezone}") - $dstOffset;
-        } elseif (!empty($this->request->year) && !empty($this->request->month) && !empty($this->request->day)) {
-            $second = intval($this->request->get('sec', date('s')));
-            $min = intval($this->request->get('min', date('i')));
-            $hour = intval($this->request->get('hour', date('H')));
+        } elseif ($this->request->is('year&month&day')) {
+            $second = $this->request->filter('int')->get('sec', date('s'));
+            $min = $this->request->filter('int')->get('min', date('i'));
+            $hour = $this->request->filter('int')->get('hour', date('H'));
 
-            $year = intval($this->request->year);
-            $month = intval($this->request->month);
-            $day = intval($this->request->day);
+            $year = $this->request->filter('int')->get('year');
+            $month = $this->request->filter('int')->get('month');
+            $day = $this->request->filter('int')->get('day');
 
             $created = mktime($hour, $min, $second, $month, $day, $year)
                 - $this->options->timezone + $this->options->serverTimezone;
@@ -388,24 +388,7 @@ class Edit extends Contents implements ActionInterface
     protected function publish(array $contents)
     {
         /** 发布内容, 检查是否具有直接发布的权限 */
-        if ($this->user->pass('editor', true)) {
-            if (empty($contents['visibility'])) {
-                $contents['status'] = 'publish';
-            } elseif (
-                !in_array($contents['visibility'], ['private', 'waiting', 'publish', 'hidden'])
-            ) {
-                if (empty($contents['password']) || 'password' != $contents['visibility']) {
-                    $contents['password'] = '';
-                }
-                $contents['status'] = 'publish';
-            } else {
-                $contents['status'] = $contents['visibility'];
-                $contents['password'] = '';
-            }
-        } else {
-            $contents['status'] = 'waiting';
-            $contents['password'] = '';
-        }
+        $this->checkStatus($contents);
 
         /** 真实的内容id */
         $realId = 0;
@@ -468,7 +451,7 @@ class Edit extends Contents implements ActionInterface
      * @param integer $cid 草稿id
      * @throws DbException
      */
-    protected function deleteDraft($cid)
+    protected function deleteDraft(int $cid)
     {
         $this->delete($this->db->sql()->where('cid = ?', $cid));
 
@@ -690,7 +673,7 @@ class Edit extends Contents implements ActionInterface
             $cid,
             'post',
             $status,
-            'on' == $this->request->__typecho_all_posts ? 0 : $this->user->uid
+            $this->request->is('__typecho_all_posts=on') ? 0 : $this->user->uid
         );
     }
 
@@ -703,24 +686,7 @@ class Edit extends Contents implements ActionInterface
     protected function save(array $contents)
     {
         /** 发布内容, 检查是否具有直接发布的权限 */
-        if ($this->user->pass('editor', true)) {
-            if (empty($contents['visibility'])) {
-                $contents['status'] = 'publish';
-            } elseif (
-                !in_array($contents['visibility'], ['private', 'waiting', 'publish', 'hidden'])
-            ) {
-                if (empty($contents['password']) || 'password' != $contents['visibility']) {
-                    $contents['password'] = '';
-                }
-                $contents['status'] = 'publish';
-            } else {
-                $contents['status'] = $contents['visibility'];
-                $contents['password'] = '';
-            }
-        } else {
-            $contents['status'] = 'waiting';
-            $contents['password'] = '';
-        }
+        $this->checkStatus($contents);
 
         /** 真实的内容id */
         $realId = 0;
@@ -792,7 +758,7 @@ class Edit extends Contents implements ActionInterface
 
         foreach ($posts as $post) {
             // 标记插件接口
-            self::pluginHandle()->mark($status, $post, $this);
+            self::pluginHandle()->call('mark', $status, $post, $this);
 
             $condition = $this->db->sql()->where('cid = ?', $post);
             $postObject = $this->db->fetchObject($this->db->select('status', 'type')
@@ -837,7 +803,7 @@ class Edit extends Contents implements ActionInterface
                 }
 
                 // 完成标记插件接口
-                self::pluginHandle()->finishMark($status, $post, $this);
+                self::pluginHandle()->call('finishMark', $status, $post, $this);
 
                 $markCount++;
             }
@@ -868,7 +834,7 @@ class Edit extends Contents implements ActionInterface
 
         foreach ($posts as $post) {
             // 删除插件接口
-            self::pluginHandle()->delete($post, $this);
+            self::pluginHandle()->call('delete', $post, $this);
 
             $condition = $this->db->sql()->where('cid = ?', $post);
             $postObject = $this->db->fetchObject($this->db->select('status', 'type')
@@ -906,7 +872,7 @@ class Edit extends Contents implements ActionInterface
                 }
 
                 // 完成删除插件接口
-                self::pluginHandle()->finishDelete($post, $this);
+                self::pluginHandle()->call('finishDelete', $post, $this);
 
                 $deleteCount++;
             }
@@ -935,7 +901,7 @@ class Edit extends Contents implements ActionInterface
      * @param integer $cid 内容id
      * @throws DbException
      */
-    protected function unAttach($cid)
+    protected function unAttach(int $cid)
     {
         $this->db->query($this->db->update('table.contents')->rows(['parent' => 0, 'status' => 'publish'])
             ->where('parent = ? AND type = ?', $cid, 'attachment'));
@@ -1043,5 +1009,31 @@ class Edit extends Contents implements ActionInterface
         }
 
         return null;
+    }
+
+    /**
+     * @param array $contents
+     * @return void
+     */
+    private function checkStatus(array &$contents)
+    {
+        if ($this->user->pass('editor', true)) {
+            if (empty($contents['visibility'])) {
+                $contents['status'] = 'publish';
+            } elseif (
+                !in_array($contents['visibility'], ['private', 'waiting', 'publish', 'hidden'])
+            ) {
+                if (empty($contents['password']) || 'password' != $contents['visibility']) {
+                    $contents['password'] = '';
+                }
+                $contents['status'] = 'publish';
+            } else {
+                $contents['status'] = $contents['visibility'];
+                $contents['password'] = '';
+            }
+        } else {
+            $contents['status'] = 'waiting';
+            $contents['password'] = '';
+        }
     }
 }

@@ -30,7 +30,7 @@ class Logout extends Users implements ActionInterface
         $this->security->protect();
 
         $this->user->logout();
-        self::pluginHandle()->logout();
+        self::pluginHandle()->call('logout');
         @session_destroy();
         $this->response->goBack(null, $this->options->index);
     }

@@ -20,7 +20,7 @@ class CommentPage extends Base implements ActionInterface
     {
         $page = abs($this->request->filter('int')->get('commentPage'));
 
-        $archive = Router::match($this->request->permalink, [
+        $archive = Router::match($this->request->get('permalink'), [
             'checkPermalink'    =>  false,
             'commentPage'       =>  $page
         ]);

@@ -50,8 +50,8 @@ class Users extends Base implements QueryInterface
             ->where('name = ?', $name)
             ->limit(1);
 
-        if ($this->request->uid) {
-            $select->where('uid <> ?', $this->request->uid);
+        if ($this->request->is('uid')) {
+            $select->where('uid <> ?', $this->request->get('uid'));
         }
 
         $user = $this->db->fetchRow($select);
@@ -72,8 +72,8 @@ class Users extends Base implements QueryInterface
             ->where('mail = ?', $mail)
             ->limit(1);
 
-        if ($this->request->uid) {
-            $select->where('uid <> ?', $this->request->uid);
+        if ($this->request->is('uid')) {
+            $select->where('uid <> ?', $this->request->get('uid'));
         }
 
         $user = $this->db->fetchRow($select);
@@ -94,8 +94,8 @@ class Users extends Base implements QueryInterface
             ->where('screenName = ?', $screenName)
             ->limit(1);
 
-        if ($this->request->uid) {
-            $select->where('uid <> ?', $this->request->uid);
+        if ($this->request->is('uid')) {
+            $select->where('uid <> ?', $this->request->get('uid'));
         }
 
         $user = $this->db->fetchRow($select);
@@ -137,8 +137,7 @@ class Users extends Base implements QueryInterface
         /** ATOM 1.0 */
         $value['feedAtomUrl'] = $routeExists ? Router::url('author', $value, $this->options->feedAtomUrl) : '#';
 
-        $value = Users::pluginHandle()->filter($value, $this);
-        return $value;
+        return Users::pluginHandle()->call('filter', $value, $this);
     }
 
     /**

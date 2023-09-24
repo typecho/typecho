@@ -17,32 +17,32 @@ class Router
      *
      * @var string
      */
-    public static $current;
+    public static string $current;
 
     /**
      * 已经解析完毕的路由表配置
      *
      * @var array
      */
-    private static $routingTable = [];
+    private static array $routingTable = [];
 
     /**
      * 是否已经匹配过，防止递归匹配
      *
      * @var bool
      */
-    private static $matched = false;
+    private static bool $matched = false;
 
     /**
      * 解析路径
      *
-     * @param string|null $pathInfo 全路径
+     * @param string $pathInfo 全路径
      * @param mixed $parameter 输入参数
      * @param bool $once 是否只匹配一次
      * @return false|Widget
      * @throws \Exception
      */
-    public static function match(?string $pathInfo, $parameter = null, bool $once = true)
+    public static function match(string $pathInfo, $parameter = null, bool $once = true)
     {
         if ($once && self::$matched) {
             throw new RouterException("Path '{$pathInfo}' not found", 404);
@@ -50,29 +50,17 @@ class Router
 
         self::$matched = true;
 
-        foreach (self::$routingTable as $key => $route) {
-            if (preg_match($route['regx'], $pathInfo, $matches)) {
-                self::$current = $key;
-
-                try {
-                    /** 载入参数 */
-                    $params = null;
-
-                    if (!empty($route['params'])) {
-                        unset($matches[0]);
-                        $params = array_combine($route['params'], $matches);
-                    }
-
-                    return Widget::widget($route['widget'], $parameter, $params);
-
-                } catch (\Exception $e) {
-                    if (404 == $e->getCode()) {
-                        Widget::destroy($route['widget']);
-                        continue;
-                    }
-
-                    throw $e;
+        foreach (self::route($pathInfo) as $result) {
+            [$route, $params] = $result;
+            try {
+                return Widget::widget($route['widget'], $parameter, $params);
+            } catch (\Exception $e) {
+                if (404 == $e->getCode()) {
+                    Widget::destroy($route['widget']);
+                    continue;
                 }
+
+                throw $e;
             }
         }
 
@@ -89,35 +77,24 @@ class Router
         /** 获取PATHINFO */
         $pathInfo = Request::getInstance()->getPathInfo();
 
-        foreach (self::$routingTable as $key => $route) {
-            if (preg_match($route['regx'], $pathInfo, $matches)) {
-                self::$current = $key;
+        foreach (self::route($pathInfo) as $result) {
+            [$route, $params] = $result;
 
-                try {
-                    /** 载入参数 */
-                    $params = null;
+            try {
+                $widget = Widget::widget($route['widget'], null, $params);
 
-                    if (!empty($route['params'])) {
-                        unset($matches[0]);
-                        $params = array_combine($route['params'], $matches);
-                    }
-
-                    $widget = Widget::widget($route['widget'], null, $params);
-
-                    if (isset($route['action'])) {
-                        $widget->{$route['action']}();
-                    }
-
-                    return;
-
-                } catch (\Exception $e) {
-                    if (404 == $e->getCode()) {
-                        Widget::destroy($route['widget']);
-                        continue;
-                    }
-
-                    throw $e;
+                if (isset($route['action'])) {
+                    $widget->{$route['action']}();
                 }
+
+                return;
+            } catch (\Exception $e) {
+                if (404 == $e->getCode()) {
+                    Widget::destroy($route['widget']);
+                    continue;
+                }
+
+                throw $e;
             }
         }
 
@@ -172,5 +149,29 @@ class Router
     public static function get(string $routeName)
     {
         return self::$routingTable[$routeName] ?? null;
+    }
+
+    /**
+     * @param string $pathInfo
+     * @return \Generator
+     * @throws \Exception
+     */
+    private static function route(string $pathInfo): \Generator
+    {
+        foreach (self::$routingTable as $key => $route) {
+            if (preg_match($route['regx'], $pathInfo, $matches)) {
+                self::$current = $key;
+
+                /** 载入参数 */
+                $params = null;
+
+                if (!empty($route['params'])) {
+                    unset($matches[0]);
+                    $params = array_combine($route['params'], $matches);
+                }
+
+                yield [$route, $params];
+            }
+        }
     }
 }

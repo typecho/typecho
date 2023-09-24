@@ -30,41 +30,41 @@ class Menu extends Base
      * 当前菜单标题
      * @var string
      */
-    public $title;
+    public string $title;
 
     /**
      * 当前增加项目链接
-     * @var string
+     * @var string|null
      */
-    public $addLink;
+    public ?string $addLink;
 
     /**
      * 父菜单列表
      *
      * @var array
      */
-    private $menu = [];
+    private array $menu = [];
 
     /**
      * 当前父菜单
      *
      * @var integer
      */
-    private $currentParent = 1;
+    private int $currentParent = 1;
 
     /**
      * 当前子菜单
      *
      * @var integer
      */
-    private $currentChild = 0;
+    private int $currentChild = 0;
 
     /**
      * 当前页面
      *
      * @var string
      */
-    private $currentUrl;
+    private string $currentUrl;
 
     /**
      * 执行函数,初始化菜单

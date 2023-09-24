@@ -27,7 +27,7 @@ class Service extends BaseOptions implements ActionInterface
      *
      * @var array
      */
-    public $asyncRequests = [];
+    public array $asyncRequests = [];
 
     /**
      * 发送pingback实现
@@ -224,7 +224,7 @@ class Service extends BaseOptions implements ActionInterface
      * @param $method
      * @param mixed $params
      */
-    public function requestService($method, $params = null)
+    public function requestService($method, ... $params)
     {
         static $called;
 
@@ -281,7 +281,7 @@ class Service extends BaseOptions implements ActionInterface
         if (!empty($requests)) {
             foreach ($requests as $request) {
                 [$method, $params] = $request;
-                $plugin->{$method}($params);
+                $plugin->call($method, ... $params);
             }
         }
     }

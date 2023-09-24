@@ -12,35 +12,35 @@ class Message
     /**
      * @var string
      */
-    public $message;
+    public string $message;
 
     /**
      * @var string
      */
-    public $messageType;  // methodCall / methodResponse / fault
+    public string $messageType;  // methodCall / methodResponse / fault
 
-    public $faultCode;
+    public int $faultCode;
 
-    public $faultString;
+    public string $faultString;
 
     /**
      * @var string
      */
-    public $methodName;
+    public string $methodName;
 
     /**
      * @var array
      */
-    public $params = [];
+    public array $params = [];
 
     // Current variable stacks
-    private $arrayStructs = [];   // The stack used to keep track of the current array/struct
+    private array $arrayStructs = [];   // The stack used to keep track of the current array/struct
 
-    private $arrayStructsTypes = []; // Stack keeping track of if things are structs or array
+    private array $arrayStructsTypes = []; // Stack keeping track of if things are structs or array
 
-    private $currentStructName = [];  // A stack as well
+    private array $currentStructName = [];  // A stack as well
 
-    private $currentTagContents;
+    private string $currentTagContents;
 
     /**
      * @param string $message
@@ -76,7 +76,7 @@ class Message
         xml_parser_free($parser);
         // Grab the error messages, if any
         if ($this->messageType == 'fault') {
-            $this->faultCode = $this->params[0]['faultCode'];
+            $this->faultCode = intval($this->params[0]['faultCode']);
             $this->faultString = $this->params[0]['faultString'];
         }
         return true;
@@ -84,7 +84,7 @@ class Message
 
     /**
      * @param $parser
-     * @param $tag
+     * @param string $tag
      * @param $attr
      */
     private function tagOpen($parser, string $tag, $attr)
@@ -133,7 +133,7 @@ class Message
                 $this->currentTagContents = '';
                 break;
             case 'string':
-                $value = (string)trim($this->currentTagContents);
+                $value = trim($this->currentTagContents);
                 $this->currentTagContents = '';
                 break;
             case 'dateTime.iso8601':
@@ -144,7 +144,7 @@ class Message
             case 'value':
                 // "If no type is indicated, the type is string."
                 if (trim($this->currentTagContents) != '') {
-                    $value = (string) $this->currentTagContents;
+                    $value = $this->currentTagContents;
                     $this->currentTagContents = '';
                 }
                 break;

@@ -24,7 +24,7 @@ class Checkbox extends Element
      *
      * @var array
      */
-    private $options = [];
+    private array $options = [];
 
     /**
      * 初始化当前输入项

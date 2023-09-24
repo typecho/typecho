@@ -29,7 +29,7 @@ class Edit extends Options implements ActionInterface
     /**
      * @var bool
      */
-    private $configNoticed = false;
+    private bool $configNoticed = false;
 
     /**
      * 启用插件
@@ -124,7 +124,7 @@ class Edit extends Options implements ActionInterface
             $result = call_user_func([$className, 'configCheck'], $settings);
 
             if (!empty($result) && is_string($result)) {
-                Notice::alloc()->set($result, 'notice');
+                Notice::alloc()->set($result);
                 $this->configNoticed = true;
             }
         }
@@ -261,7 +261,7 @@ class Edit extends Options implements ActionInterface
         $this->delete($this->db->sql()->where('name = ?', '_plugin:' . $pluginName));
 
         if (isset($result) && is_string($result)) {
-            Notice::alloc()->set($result, 'notice');
+            Notice::alloc()->set($result);
         } else {
             Notice::alloc()->set(_t('插件已经被禁用'), 'success');
         }
@@ -310,9 +310,9 @@ class Edit extends Options implements ActionInterface
     {
         $this->user->pass('administrator');
         $this->security->protect();
-        $this->on($this->request->is('activate'))->activate($this->request->filter('slug')->activate);
-        $this->on($this->request->is('deactivate'))->deactivate($this->request->filter('slug')->deactivate);
-        $this->on($this->request->is('config'))->config($this->request->filter('slug')->config);
+        $this->on($this->request->is('activate'))->activate($this->request->filter('slug')->get('activate'));
+        $this->on($this->request->is('deactivate'))->deactivate($this->request->filter('slug')->get('deactivate'));
+        $this->on($this->request->is('config'))->config($this->request->filter('slug')->get('config'));
         $this->response->redirect($this->options->adminUrl);
     }
 }

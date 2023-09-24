@@ -31,7 +31,7 @@ class Edit extends PostEdit implements ActionInterface
      * @var string
      * @access protected
      */
-    protected $themeCustomFieldsHook = 'themePageFields';
+    protected string $themeCustomFieldsHook = 'themePageFields';
 
     /**
      * 执行函数
@@ -47,10 +47,10 @@ class Edit extends PostEdit implements ActionInterface
         $this->user->pass('editor');
 
         /** 获取文章内容 */
-        if (!empty($this->request->cid)) {
+        if ($this->request->is('cid')) {
             $this->db->fetchRow($this->select()
                 ->where('table.contents.type = ? OR table.contents.type = ?', 'page', 'page_draft')
-                ->where('table.contents.cid = ?', $this->request->filter('int')->cid)
+                ->where('table.contents.cid = ?', $this->request->filter('int')->get('cid'))
                 ->limit(1), [$this, 'push']);
 
             if ('page_draft' == $this->status && $this->parent) {
@@ -85,11 +85,11 @@ class Edit extends PostEdit implements ActionInterface
         $contents['created'] = $this->getCreated();
         $contents['visibility'] = ('hidden' == $contents['visibility'] ? 'hidden' : 'publish');
 
-        if ($this->request->markdown && $this->options->markdown) {
+        if ($this->request->is('markdown=1') && $this->options->markdown) {
             $contents['text'] = '<!--markdown-->' . $contents['text'];
         }
 
-        $contents = self::pluginHandle()->write($contents, $this);
+        $contents = self::pluginHandle()->call('write', $contents, $this);
 
         if ($this->request->is('do=publish')) {
             /** 重新发布已经存在的文章 */
@@ -97,7 +97,7 @@ class Edit extends PostEdit implements ActionInterface
             $this->publish($contents);
 
             // 完成发布插件接口
-            self::pluginHandle()->finishPublish($contents, $this);
+            self::pluginHandle()->call('finishPublish', $contents, $this);
 
             /** 发送ping */
             Service::alloc()->sendPing($this);
@@ -119,7 +119,7 @@ class Edit extends PostEdit implements ActionInterface
             $this->save($contents);
 
             // 完成发布插件接口
-            self::pluginHandle()->finishSave($contents, $this);
+            self::pluginHandle()->call('finishSave', $contents, $this);
 
             /** 设置高亮 */
             Notice::alloc()->highlight($this->cid);
@@ -164,7 +164,7 @@ class Edit extends PostEdit implements ActionInterface
 
         foreach ($pages as $page) {
             // 标记插件接口
-            self::pluginHandle()->mark($status, $page, $this);
+            self::pluginHandle()->call('mark', $status, $page, $this);
             $condition = $this->db->sql()->where('cid = ?', $page);
 
             if ($this->db->query($condition->update('table.contents')->rows(['status' => $status]))) {
@@ -180,7 +180,7 @@ class Edit extends PostEdit implements ActionInterface
                 }
 
                 // 完成标记插件接口
-                self::pluginHandle()->finishMark($status, $page, $this);
+                self::pluginHandle()->call('finishMark', $status, $page, $this);
 
                 $markCount++;
             }
@@ -211,7 +211,7 @@ class Edit extends PostEdit implements ActionInterface
 
         foreach ($pages as $page) {
             // 删除插件接口
-            self::pluginHandle()->delete($page, $this);
+            self::pluginHandle()->call('delete', $page, $this);
 
             if ($this->delete($this->db->sql()->where('cid = ?', $page))) {
                 /** 删除评论 */
@@ -243,7 +243,7 @@ class Edit extends PostEdit implements ActionInterface
                 }
 
                 // 完成删除插件接口
-                self::pluginHandle()->finishDelete($page, $this);
+                self::pluginHandle()->call('finishDelete', $page, $this);
 
                 $deleteCount++;
             }

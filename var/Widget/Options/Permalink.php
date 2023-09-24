@@ -57,7 +57,7 @@ class Permalink extends Options implements ActionInterface
      * @param string $value 是否打开rewrite
      * @return bool
      */
-    public function checkRewrite(string $value)
+    public function checkRewrite(string $value): bool
     {
         if ($value) {
             $this->user->pass('administrator');
@@ -125,7 +125,7 @@ RewriteRule . {$basePath}index.php [L]
                     unlink(__TYPECHO_ROOT_DIR__ . '/.htaccess');
                 }
             } catch (Client\Exception $e) {
-                if (false != $hasWrote) {
+                if ($hasWrote) {
                     @unlink(__TYPECHO_ROOT_DIR__ . '/.htaccess');
                 }
                 return false;
@@ -146,25 +146,28 @@ RewriteRule . {$basePath}index.php [L]
      */
     public function updatePermalinkSettings()
     {
+        $customPattern = $this->request->get('customPattern');
+        $postPattern = $this->request->get('postPattern');
+
         /** 验证格式 */
         if ($this->form()->validate()) {
-            Cookie::set('__typecho_form_item_postPattern', $this->request->customPattern);
+            Cookie::set('__typecho_form_item_postPattern', $customPattern);
             $this->response->goBack();
         }
 
-        $patternValid = $this->checkRule($this->request->postPattern);
+        $patternValid = $this->checkRule($postPattern);
 
         /** 解析url pattern */
-        if ('custom' == $this->request->postPattern) {
-            $this->request->postPattern = '/' . ltrim($this->encodeRule($this->request->customPattern), '/');
+        if ('custom' == $postPattern) {
+            $postPattern = '/' . ltrim($this->encodeRule($customPattern), '/');
         }
 
         $settings = defined('__TYPECHO_REWRITE__') ? [] : $this->request->from('rewrite');
-        if (isset($this->request->postPattern) && isset($this->request->pagePattern)) {
+        if (isset($postPattern) && $this->request->is('pagePattern')) {
             $routingTable = $this->options->routingTable;
-            $routingTable['post']['url'] = $this->request->postPattern;
-            $routingTable['page']['url'] = '/' . ltrim($this->encodeRule($this->request->pagePattern), '/');
-            $routingTable['category']['url'] = '/' . ltrim($this->encodeRule($this->request->categoryPattern), '/');
+            $routingTable['post']['url'] = $postPattern;
+            $routingTable['page']['url'] = '/' . ltrim($this->encodeRule($this->request->get('pagePattern')), '/');
+            $routingTable['category']['url'] = '/' . ltrim($this->encodeRule($this->request->get('categoryPattern')), '/');
             $routingTable['category_page']['url'] = rtrim($routingTable['category']['url'], '/') . '/[page:digital]/';
 
             if (isset($routingTable[0])) {
@@ -181,7 +184,7 @@ RewriteRule . {$basePath}index.php [L]
         if ($patternValid) {
             Notice::alloc()->set(_t("设置已经保存"), 'success');
         } else {
-            Notice::alloc()->set(_t("自定义链接与现有规则存在冲突! 它可能影响解析效率, 建议你重新分配一个规则."), 'notice');
+            Notice::alloc()->set(_t("自定义链接与现有规则存在冲突! 它可能影响解析效率, 建议你重新分配一个规则."));
         }
         $this->response->goBack();
     }
@@ -246,8 +249,8 @@ RewriteRule . {$basePath}index.php [L]
 
         /** 增加个性化路径 */
         $customPatternValue = null;
-        if (isset($this->request->__typecho_form_item_postPattern)) {
-            $customPatternValue = $this->request->__typecho_form_item_postPattern;
+        if ($this->request->is('__typecho_form_item_postPattern')) {
+            $customPatternValue = $this->request->get('__typecho_form_item_postPattern');
             Cookie::delete('__typecho_form_item_postPattern');
         } elseif (!isset($patterns[$postPatternValue])) {
             $customPatternValue = $this->decodeRule($postPatternValue);
@@ -325,7 +328,7 @@ RewriteRule . {$basePath}index.php [L]
         }
 
         $routingTable = $this->options->routingTable;
-        $currentTable = ['custom' => ['url' => $this->encodeRule($this->request->customPattern)]];
+        $currentTable = ['custom' => ['url' => $this->encodeRule($this->request->get('customPattern'))]];
         $parser = new Parser($currentTable);
         $currentTable = $parser->parse();
         $regx = $currentTable['custom']['regx'];

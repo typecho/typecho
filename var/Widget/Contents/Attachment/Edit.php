@@ -40,7 +40,7 @@ class Edit extends PostEdit implements ActionInterface
         if (!empty($this->request->cid)) {
             $this->db->fetchRow($this->select()
                 ->where('table.contents.type = ?', 'attachment')
-                ->where('table.contents.cid = ?', $this->request->filter('int')->cid)
+                ->where('table.contents.cid = ?', $this->request->filter('int')->get('cid'))
                 ->limit(1), [$this, 'push']);
 
             if (!$this->have()) {
@@ -84,8 +84,8 @@ class Edit extends PostEdit implements ActionInterface
             ->where('slug = ?', Common::slugName($slug))
             ->limit(1);
 
-        if ($this->request->cid) {
-            $select->where('cid <> ?', $this->request->cid);
+        if ($this->request->is('cid')) {
+            $select->where('cid <> ?', $this->request->get('cid'));
         }
 
         $attachment = $this->db->fetchRow($select);
@@ -100,7 +100,7 @@ class Edit extends PostEdit implements ActionInterface
      */
     public function updateAttachment()
     {
-        if ($this->form('update')->validate()) {
+        if ($this->form()->validate()) {
             $this->response->goBack();
         }
 
@@ -115,7 +115,7 @@ class Edit extends PostEdit implements ActionInterface
         $content['description'] = $input['description'];
 
         $attachment['text'] = serialize($content);
-        $cid = $this->request->filter('int')->cid;
+        $cid = $this->request->filter('int')->get('cid');
 
         /** 更新数据 */
         $updateRows = $this->update($attachment, $this->db->sql()->where('cid = ?', $cid));
@@ -231,7 +231,7 @@ class Edit extends PostEdit implements ActionInterface
 
         foreach ($posts as $post) {
             // 删除插件接口
-            self::pluginHandle()->delete($post, $this);
+            self::pluginHandle()->call('delete', $post, $this);
 
             $condition = $this->db->sql()->where('cid = ?', $post);
             $row = $this->db->fetchRow($this->select()
@@ -248,7 +248,7 @@ class Edit extends PostEdit implements ActionInterface
                     ->where('cid = ?', $post));
 
                 // 完成删除插件接口
-                self::pluginHandle()->finishDelete($post, $this);
+                self::pluginHandle()->call('finishDelete', $post, $this);
 
                 $deleteCount++;
             }
@@ -285,7 +285,7 @@ class Edit extends PostEdit implements ActionInterface
         $deleteCount = 0;
 
         do {
-            $posts = array_column($this->db->fetchAll($this->select('cid')
+            $posts = array_column($this->db->fetchAll($this->db->select('cid')
                 ->from('table.contents')
                 ->where('type = ? AND parent = ?', 'attachment', 0)
                 ->page($page, 100)), 'cid');
@@ -293,7 +293,7 @@ class Edit extends PostEdit implements ActionInterface
 
             foreach ($posts as $post) {
                 // 删除插件接口
-                self::pluginHandle()->delete($post, $this);
+                self::pluginHandle()->call('delete', $post, $this);
 
                 $condition = $this->db->sql()->where('cid = ?', $post);
                 $row = $this->db->fetchRow($this->select()
@@ -309,10 +309,8 @@ class Edit extends PostEdit implements ActionInterface
                     $this->db->query($this->db->delete('table.comments')
                         ->where('cid = ?', $post));
 
-                    $status = $this->status;
-
                     // 完成删除插件接口
-                    self::pluginHandle()->finishDelete($post, $this);
+                    self::pluginHandle()->call('finishDelete', $post, $this);
 
                     $deleteCount++;
                 }

@@ -96,7 +96,7 @@ class General extends Options implements ActionInterface
         $settings['attachmentTypes'] = $this->request->getArray('attachmentTypes');
 
         if (!defined('__TYPECHO_SITE_URL__')) {
-            $settings['siteUrl'] = rtrim($this->request->siteUrl, '/');
+            $settings['siteUrl'] = rtrim($this->request->get('siteUrl'), '/');
         }
 
         $attachmentTypes = [];
@@ -112,7 +112,7 @@ class General extends Options implements ActionInterface
             $attachmentTypes[] = '@doc@';
         }
 
-        $attachmentTypesOther = $this->request->filter('trim', 'strtolower')->attachmentTypesOther;
+        $attachmentTypesOther = $this->request->filter('trim', 'strtolower')->get('attachmentTypesOther');
         if ($this->isEnableByCheckbox($settings['attachmentTypes'], '@other@') && !empty($attachmentTypesOther)) {
             $types = implode(
                 ',',

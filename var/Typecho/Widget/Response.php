@@ -14,12 +14,12 @@ class Response
     /**
      * @var HttpRequest
      */
-    private $request;
+    private HttpRequest $request;
 
     /**
      * @var HttpResponse
      */
-    private $response;
+    private HttpResponse $response;
 
     /**
      * @param HttpRequest $request

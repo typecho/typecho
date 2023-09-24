@@ -17,6 +17,8 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @package Widget
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
+ * @property-read int $levels
+ * @property-read array $children
  */
 class Rows extends Metas
 {
@@ -26,15 +28,15 @@ class Rows extends Metas
      * @var array
      * @access private
      */
-    private $treeViewCategories = [];
+    private array $treeViewCategories = [];
 
     /**
      * _categoryOptions
      *
-     * @var mixed
+     * @var Config|null
      * @access private
      */
-    private $categoryOptions = null;
+    private ?Config $categoryOptions = null;
 
     /**
      * 顶层分类
@@ -42,7 +44,7 @@ class Rows extends Metas
      * @var array
      * @access private
      */
-    private $top = [];
+    private array $top = [];
 
     /**
      * 所有分类哈希表
@@ -50,7 +52,7 @@ class Rows extends Metas
      * @var array
      * @access private
      */
-    private $map = [];
+    private array $map = [];
 
     /**
      * 顺序流
@@ -58,7 +60,7 @@ class Rows extends Metas
      * @var array
      * @access private
      */
-    private $orders = [];
+    private array $orders = [];
 
     /**
      * 所有子节点列表
@@ -66,7 +68,7 @@ class Rows extends Metas
      * @var array
      * @access private
      */
-    private $childNodes = [];
+    private array $childNodes = [];
 
     /**
      * 所有父节点列表
@@ -74,7 +76,7 @@ class Rows extends Metas
      * @var array
      * @access private
      */
-    private $parents = [];
+    private array $parents = [];
 
     /**
      * @param Config $parameter
@@ -173,7 +175,7 @@ class Rows extends Metas
         ]);
 
         // 插件插件接口
-        self::pluginHandle()->trigger($plugged)->listCategories($this->categoryOptions, $this);
+        self::pluginHandle()->trigger($plugged)->call('listCategories', $this->categoryOptions, $this);
 
         if (!$plugged) {
             $this->stack = $this->getCategories($this->top);

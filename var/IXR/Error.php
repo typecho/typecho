@@ -15,7 +15,7 @@ class Error
      * @access public
      * @var integer
      */
-    public $code;
+    public int $code;
 
     /**
      * 错误消息
@@ -23,7 +23,7 @@ class Error
      * @access public
      * @var string|null
      */
-    public $message;
+    public ?string $message;
 
     /**
      * 构造函数

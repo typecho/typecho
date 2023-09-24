@@ -3,7 +3,6 @@
 namespace Widget;
 
 use IXR\Date;
-use IXR\Error;
 use IXR\Exception;
 use IXR\Hook;
 use IXR\Pingback;
@@ -44,27 +43,12 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
 class XmlRpc extends Contents implements ActionInterface, Hook
 {
     /**
-     * 当前错误
-     *
-     * @var Error
-     */
-    private $error;
-
-    /**
      * wordpress风格的系统选项
      *
      * @access private
      * @var array
      */
-    private $wpOptions;
-
-    /**
-     * 已经使用过的组件列表
-     *
-     * @access private
-     * @var array
-     */
-    private $usedWidgetNameList = [];
+    private array $wpOptions;
 
     /**
      * 如果这里没有重载, 每次都会被默认执行
@@ -354,7 +338,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
 
         $input['text'] = !empty($content['mt_text_more']) ? $content['description']
             . "\n<!--more-->\n" . $content['mt_text_more'] : $content['description'];
-        $input['text'] = self::pluginHandle()->textFilter($input['text'], $this);
+        $input['text'] = self::pluginHandle()->call('textFilter', $input['text'], $this);
 
         $input['password'] = $content["wp_password"] ?? null;
         $input['order'] = $content["wp_page_order"] ?? null;
@@ -1400,7 +1384,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
                 ->where('table.contents.type = ?', 'attachment'), [$this, 'push']);
 
             /** 增加插件接口 */
-            self::pluginHandle()->upload($this);
+            self::pluginHandle()->call('upload', $this);
 
             return [
                 'file' => $this->attachment->name,
@@ -1733,13 +1717,13 @@ class XmlRpc extends Contents implements ActionInterface, Hook
                         ];
 
                         /** 加入plugin */
-                        $pingback = self::pluginHandle()->pingback($pingback, $post);
+                        $pingback = self::pluginHandle()->call('pingback', $pingback, $post);
 
                         /** 执行插入*/
                         $insertId = Comments::alloc()->insert($pingback);
 
                         /** 评论完成接口 */
-                        self::pluginHandle()->finishPingback($this);
+                        self::pluginHandle()->call('finishPingback', $this);
 
                         return $insertId;
                     } catch (WidgetException $e) {
@@ -1774,7 +1758,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
 <rsd version="1.0" xmlns="http://archipelago.phrasewise.com/rsd">
     <service>
         <engineName>Typecho</engineName>
-        <engineLink>http://www.typecho.org/</engineLink>
+        <engineLink>https://typecho.org/</engineLink>
         <homePageLink>{$this->options->siteUrl}</homePageLink>
         <apis>
             <api name="WordPress" blogID="1" preferred="true" apiLink="{$this->options->xmlRpcUrl}" />

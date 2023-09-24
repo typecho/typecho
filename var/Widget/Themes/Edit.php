@@ -100,7 +100,7 @@ class Edit extends Options implements ActionInterface
      * @param string $file 文件名
      * @throws Exception
      */
-    public function editThemeFile($theme, $file)
+    public function editThemeFile(string $theme, string $file)
     {
         $path = $this->options->themeFile($theme, $file);
 
@@ -109,7 +109,7 @@ class Edit extends Options implements ActionInterface
             && (!defined('__TYPECHO_THEME_WRITEABLE__') || __TYPECHO_THEME_WRITEABLE__)
         ) {
             $handle = fopen($path, 'wb');
-            if ($handle && fwrite($handle, $this->request->content)) {
+            if ($handle && fwrite($handle, $this->request->get('content'))) {
                 fclose($handle);
                 Notice::alloc()->set(_t("文件 %s 的更改已经保存", $file), 'success');
             } else {
@@ -174,9 +174,9 @@ class Edit extends Options implements ActionInterface
         /** 需要管理员权限 */
         $this->user->pass('administrator');
         $this->security->protect();
-        $this->on($this->request->is('change'))->changeTheme($this->request->filter('slug')->change);
+        $this->on($this->request->is('change'))->changeTheme($this->request->filter('slug')->get('change'));
         $this->on($this->request->is('edit&theme'))
-            ->editThemeFile($this->request->filter('slug')->theme, $this->request->edit);
+            ->editThemeFile($this->request->filter('slug')->get('theme'), $this->request->get('edit'));
         $this->on($this->request->is('config'))->config($this->options->theme);
         $this->response->redirect($this->options->adminUrl);
     }
