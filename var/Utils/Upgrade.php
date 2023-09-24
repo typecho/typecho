@@ -19,7 +19,7 @@ class Upgrade
      * @param Db $db
      * @param Options $options
      */
-    public static function v1_2_1(Db $db, Options $options)
+    public static function v1_3_0(Db $db, Options $options)
     {
         $routingTable = $options->routingTable;
 
@@ -41,6 +41,9 @@ class Upgrade
             ->rows(['value' => serialize($routingTable)])
             ->where('name = ?', 'routingTable'));
 
-        // todo: fix options->commentsRequireURL
+        // fix options->commentsRequireURL
+        $db->query($db->update('table.options')
+            ->rows(['name' => 'commentsRequireUrl'])
+            ->where('name = ?', 'commentsRequireURL'));
     }
 }
