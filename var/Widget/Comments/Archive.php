@@ -285,7 +285,8 @@ class Archive extends Comments
             'replyWord'     => _t('回复'),
             'commentStatus' => _t('您的评论正等待审核!'),
             'avatarSize'    => 32,
-            'defaultAvatar' => null
+            'defaultAvatar' => null,
+            'avatarHighRes' => false
         ]);
         self::pluginHandle()->trigger($plugged)->call('listComments', $this->singleCommentOptions, $this);
 
@@ -335,7 +336,11 @@ class Archive extends Comments
             <div class="comment-author" itemprop="creator" itemscope itemtype="http://schema.org/Person">
                 <span
                     itemprop="image">
-                    <?php $this->gravatar($singleCommentOptions->avatarSize, $singleCommentOptions->defaultAvatar); ?>
+                    <?php $this->gravatar(
+                        $singleCommentOptions->avatarSize,
+                        $singleCommentOptions->defaultAvatar,
+                        $singleCommentOptions->avatarHighRes
+                    ); ?>
                 </span>
                 <cite class="fn" itemprop="name"><?php $singleCommentOptions->beforeAuthor();
                     $this->author();

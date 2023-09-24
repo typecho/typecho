@@ -281,7 +281,7 @@ class Comments extends Base implements QueryInterface
      * @param integer $size 头像尺寸
      * @param string|null $default 默认输出头像
      */
-    public function gravatar(int $size = 32, ?string $default = null)
+    public function gravatar(int $size = 32, ?string $default = null, $highRes = false)
     {
         if ($this->options->commentsAvatar && 'comment' == $this->type) {
             $rating = $this->options->commentsAvatarRating;
@@ -289,7 +289,15 @@ class Comments extends Base implements QueryInterface
             Comments::pluginHandle()->trigger($plugged)->call('gravatar', $size, $rating, $default, $this);
             if (!$plugged) {
                 $url = Common::gravatarUrl($this->mail, $size, $rating, $default, $this->request->isSecure());
-                echo '<img class="avatar" loading="lazy" src="' . $url . '" alt="' .
+                $srcset = '';
+
+                if ($highRes) {
+                    $url2x = Common::gravatarUrl($this->mail, $size * 2, $rating, $default, $this->request->isSecure());
+                    $url3x = Common::gravatarUrl($this->mail, $size * 3, $rating, $default, $this->request->isSecure());
+                    $srcset = ' srcset="' . $url2x . ' 2x, ' . $url3x . ' 3x"';
+                }
+
+                echo '<img class="avatar" loading="lazy" src="' . $url . '"' . $srcset . ' alt="' .
                     $this->author . '" width="' . $size . '" height="' . $size . '" />';
             }
         }
