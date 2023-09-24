@@ -45,10 +45,7 @@ class Upgrade
         $db->query($db->update('table.options')
             ->rows(['name' => 'commentsRequireUrl'])
             ->where('name = ?', 'commentsRequireURL'));
-    }
 
-    public static function v1_3_0(Db $db, Options $options)
-    {
         $rows = $db->fetchAll($db->select()->from('table.options'));
 
         foreach ($rows as $row) {
