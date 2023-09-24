@@ -571,7 +571,7 @@ class Archive extends Contents
         }
 
         /** 初始化分页变量 */
-        $this->currentPage = $this->request->filter('int')->get('page') ?? 1;
+        $this->currentPage = $this->request->filter('int')->get('page', 1);
         $hasPushed = false;
 
         /** select初始化 */
