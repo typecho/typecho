@@ -176,12 +176,16 @@ class Metas extends Base implements QueryInterface, RowFilterInterface
     /**
      * 获取原始查询对象
      *
+     * @param array|null $fields
      * @return Query
-     * @throws Exception
      */
-    public function select(): Query
+    public function select(?array $fields = null): Query
     {
-        return $this->db->select()->from('table.metas');
+        $fields = array_map(function ($field) {
+            return 'table.metas.' . $field;
+        }, $fields ?? ['mid', 'name', 'slug', 'type', 'description', 'count', 'order', 'parent']);
+
+        return $this->db->select(...$fields)->from('table.metas');
     }
 
     /**

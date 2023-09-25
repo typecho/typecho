@@ -143,12 +143,28 @@ class Users extends Base implements QueryInterface, RowFilterInterface
     /**
      * 查询方法
      *
+     * @param array|null $fields
      * @return Query
-     * @throws Exception
      */
-    public function select(): Query
+    public function select(?array $fields = null): Query
     {
-        return $this->db->select()->from('table.users');
+        $fields = array_map(function ($field) {
+            return 'table.users.' . $field;
+        }, $fields ?: [
+            'uid',
+            'name',
+            'password',
+            'mail',
+            'url',
+            'screenName',
+            'created',
+            'activated',
+            'logged',
+            'group',
+            'authCode'
+        ]);
+
+        return $this->db->select(...$fields)->from('table.users');
     }
 
     /**

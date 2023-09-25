@@ -75,30 +75,34 @@ class Contents extends Base implements QueryInterface, RowFilterInterface
     /**
      * 获取查询对象
      *
+     * @param array|null $fields
      * @return Query
-     * @throws Exception
      */
-    public function select(): Query
+    public function select(?array $fields = null): Query
     {
-        return $this->db->select(
-            'table.contents.cid',
-            'table.contents.title',
-            'table.contents.slug',
-            'table.contents.created',
-            'table.contents.authorId',
-            'table.contents.modified',
-            'table.contents.type',
-            'table.contents.status',
-            'table.contents.text',
-            'table.contents.commentsNum',
-            'table.contents.order',
-            'table.contents.template',
-            'table.contents.password',
-            'table.contents.allowComment',
-            'table.contents.allowPing',
-            'table.contents.allowFeed',
-            'table.contents.parent'
-        )->from('table.contents');
+        $fields = array_map(function ($field) {
+            return 'table.contents.' . $field;
+        }, $fields ?? [
+            'cid',
+            'title',
+            'slug',
+            'created',
+            'modified',
+            'text',
+            'order',
+            'authorId',
+            'template',
+            'type',
+            'status',
+            'password',
+            'commentsNum',
+            'allowComment',
+            'allowPing',
+            'allowFeed',
+            'parent'
+        ]);
+
+        return $this->db->select(...$fields)->from('table.contents');
     }
 
     /**

@@ -12,9 +12,10 @@ interface QueryInterface
     /**
      * 查询方法
      *
+     * @param array|null $fields 字段
      * @return Query
      */
-    public function select(): Query;
+    public function select(?array $fields = null): Query;
 
     /**
      * 获得所有记录数
