@@ -381,9 +381,7 @@ class Archive extends Comments
      */
     public function levelsAlt(...$args)
     {
-        $num = count($args);
-        $split = $this->levels % $num;
-        echo $args[(0 == $split ? $num : $split) - 1];
+        $this->altBy($this->levels, ...$args);
     }
 
     /**
@@ -393,12 +391,8 @@ class Archive extends Comments
      */
     public function alt(...$args)
     {
-        $num = count($args);
-
         $sequence = $this->levels <= 0 ? $this->sequence : $this->order;
-
-        $split = $sequence % $num;
-        echo $args[(0 == $split ? $num : $split) - 1];
+        $this->altBy($sequence, ...$args);
     }
 
     /**

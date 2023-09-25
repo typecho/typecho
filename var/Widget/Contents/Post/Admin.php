@@ -64,23 +64,23 @@ class Admin extends Contents
     /**
      * 重载过滤函数
      *
-     * @param array $value
+     * @param array $row
      * @return array
      * @throws DbException
      */
-    public function filter(array $value): array
+    public function filter(array $row): array
     {
-        $value = parent::filter($value);
+        $row = parent::filter($row);
 
-        if (!empty($value['parent'])) {
-            $parent = $this->db->fetchObject($this->select()->where('cid = ?', $value['parent']));
+        if (!empty($row['parent'])) {
+            $parent = $this->db->fetchObject($this->select()->where('cid = ?', $row['parent']));
 
             if (!empty($parent)) {
-                $value['commentsNum'] = $parent->commentsNum;
+                $row['commentsNum'] = $parent->commentsNum;
             }
         }
 
-        return $value;
+        return $row;
     }
 
     /**

@@ -337,8 +337,19 @@ abstract class Widget
      */
     public function alt(...$args)
     {
+        $this->altBy($this->sequence, ...$args);
+    }
+
+    /**
+     * 根据余数输出
+     *
+     * @param int $current
+     * @param mixed ...$args
+     */
+    public function altBy(int $current, ...$args)
+    {
         $num = count($args);
-        $split = $this->sequence % $num;
+        $split = $current % $num;
         echo $args[(0 == $split ? $num : $split) - 1];
     }
 

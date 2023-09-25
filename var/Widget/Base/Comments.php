@@ -41,7 +41,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property string $permalink
  * @property string $content
  */
-class Comments extends Base implements QueryInterface
+class Comments extends Base implements QueryInterface, RowFilterInterface
 {
     /**
      * 增加评论
@@ -229,21 +229,21 @@ class Comments extends Base implements QueryInterface
     /**
      * 通用过滤器
      *
-     * @param array $value 需要过滤的行数据
+     * @param array $row 需要过滤的行数据
      * @return array
      */
-    public function filter(array $value): array
+    public function filter(array $row): array
     {
         /** 处理默认空值 */
-        $value['author'] = $value['author'] ?? '';
-        $value['mail'] = $value['mail'] ?? '';
-        $value['url'] = $value['url'] ?? '';
-        $value['ip'] = $value['ip'] ?? '';
-        $value['agent'] = $value['agent'] ?? '';
-        $value['text'] = $value['text'] ?? '';
+        $row['author'] = $row['author'] ?? '';
+        $row['mail'] = $row['mail'] ?? '';
+        $row['url'] = $row['url'] ?? '';
+        $row['ip'] = $row['ip'] ?? '';
+        $row['agent'] = $row['agent'] ?? '';
+        $row['text'] = $row['text'] ?? '';
 
-        $value['date'] = new Date($value['created']);
-        return Comments::pluginHandle()->call('filter', $value, $this);
+        $row['date'] = new Date($row['created']);
+        return Comments::pluginHandle()->call('filter', $row, $this);
     }
 
     /**

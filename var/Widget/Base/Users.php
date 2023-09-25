@@ -34,7 +34,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property-read string $feedRssUrl
  * @property-read string $feedAtomUrl
  */
-class Users extends Base implements QueryInterface
+class Users extends Base implements QueryInterface, RowFilterInterface
 {
     /**
      * 判断用户名称是否存在
@@ -117,27 +117,27 @@ class Users extends Base implements QueryInterface
     /**
      * 通用过滤器
      *
-     * @param array $value 需要过滤的行数据
+     * @param array $row 需要过滤的行数据
      * @return array
      */
-    public function filter(array $value): array
+    public function filter(array $row): array
     {
         //生成静态链接
         $routeExists = (null != Router::get('author'));
 
-        $value['permalink'] = $routeExists ? Router::url('author', $value, $this->options->index) : '#';
+        $row['permalink'] = $routeExists ? Router::url('author', $row, $this->options->index) : '#';
 
         /** 生成聚合链接 */
         /** RSS 2.0 */
-        $value['feedUrl'] = $routeExists ? Router::url('author', $value, $this->options->feedUrl) : '#';
+        $row['feedUrl'] = $routeExists ? Router::url('author', $row, $this->options->feedUrl) : '#';
 
         /** RSS 1.0 */
-        $value['feedRssUrl'] = $routeExists ? Router::url('author', $value, $this->options->feedRssUrl) : '#';
+        $row['feedRssUrl'] = $routeExists ? Router::url('author', $row, $this->options->feedRssUrl) : '#';
 
         /** ATOM 1.0 */
-        $value['feedAtomUrl'] = $routeExists ? Router::url('author', $value, $this->options->feedAtomUrl) : '#';
+        $row['feedAtomUrl'] = $routeExists ? Router::url('author', $row, $this->options->feedAtomUrl) : '#';
 
-        return Users::pluginHandle()->call('filter', $value, $this);
+        return Users::pluginHandle()->call('filter', $row, $this);
     }
 
     /**

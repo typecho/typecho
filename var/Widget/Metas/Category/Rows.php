@@ -294,21 +294,21 @@ class Rows extends Metas
      * 将每行的值压入堆栈
      *
      * @access public
-     * @param array $value 每行的值
+     * @param array $row 每行的值
      * @return array
      */
-    public function filter(array $value): array
+    public function filter(array $row): array
     {
-        $value['directory'] = $this->getAllParentsSlug($value['mid']);
-        $value['directory'][] = $value['slug'];
+        $row['directory'] = $this->getAllParentsSlug($row['mid']);
+        $row['directory'][] = $row['slug'];
 
-        $tmpCategoryTree = $value['directory'];
-        $value['directory'] = implode('/', array_map('urlencode', $value['directory']));
+        $tmpCategoryTree = $row['directory'];
+        $row['directory'] = implode('/', array_map('urlencode', $row['directory']));
 
-        $value = parent::filter($value);
-        $value['directory'] = $tmpCategoryTree;
+        $row = parent::filter($row);
+        $row['directory'] = $tmpCategoryTree;
 
-        return $value;
+        return $row;
     }
 
     /**
@@ -388,10 +388,10 @@ class Rows extends Metas
     /**
      * 获取多个分类
      *
-     * @param mixed $mids
+     * @param array $mids
      * @return array
      */
-    public function getCategories($mids): array
+    public function getCategories(array $mids): array
     {
         $result = [];
 

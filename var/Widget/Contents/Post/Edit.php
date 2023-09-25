@@ -94,24 +94,24 @@ class Edit extends Contents implements ActionInterface
     /**
      * 过滤堆栈
      *
-     * @param array $value 每行的值
+     * @param array $row 每行的值
      * @return array
      * @throws DbException
      */
-    public function filter(array $value): array
+    public function filter(array $row): array
     {
-        if ('post' == $value['type'] || 'page' == $value['type']) {
+        if ('post' == $row['type'] || 'page' == $row['type']) {
             $draft = $this->db->fetchRow(Contents::alloc()->select()
                 ->where(
                     'table.contents.parent = ? AND table.contents.type = ?',
-                    $value['cid'],
-                    $value['type'] . '_draft'
+                    $row['cid'],
+                    $row['type'] . '_draft'
                 )
                 ->limit(1));
 
             if (!empty($draft)) {
                 $draft['slug'] = ltrim($draft['slug'], '@');
-                $draft['type'] = $value['type'];
+                $draft['type'] = $row['type'];
 
                 $draft = parent::filter($draft);
 
@@ -120,13 +120,13 @@ class Edit extends Contents implements ActionInterface
                     ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
                     ->where('table.relationships.cid = ?', $draft['cid'])
                     ->where('table.metas.type = ?', 'tag'), [Metas::alloc(), 'filter']);
-                $draft['cid'] = $value['cid'];
+                $draft['cid'] = $row['cid'];
 
                 return $draft;
             }
         }
 
-        return parent::filter($value);
+        return parent::filter($row);
     }
 
     /**

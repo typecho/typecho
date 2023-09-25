@@ -30,7 +30,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property-read string $feedRssUrl
  * @property-read string $feedAtomUrl
  */
-class Metas extends Base implements QueryInterface
+class Metas extends Base implements QueryInterface, RowFilterInterface
 {
     /**
      * 获取记录总数
@@ -59,31 +59,31 @@ class Metas extends Base implements QueryInterface
     /**
      * 通用过滤器
      *
-     * @param array $value 需要过滤的行数据
+     * @param array $row 需要过滤的行数据
      * @return array
      */
-    public function filter(array $value): array
+    public function filter(array $row): array
     {
         //生成静态链接
-        $type = $value['type'];
+        $type = $row['type'];
         $routeExists = (null != Router::get($type));
-        $tmpSlug = $value['slug'];
-        $value['slug'] = urlencode($value['slug']);
+        $tmpSlug = $row['slug'];
+        $row['slug'] = urlencode($row['slug']);
 
-        $value['url'] = $value['permalink'] = $routeExists ? Router::url($type, $value, $this->options->index) : '#';
+        $row['url'] = $row['permalink'] = $routeExists ? Router::url($type, $row, $this->options->index) : '#';
 
         /** 生成聚合链接 */
         /** RSS 2.0 */
-        $value['feedUrl'] = $routeExists ? Router::url($type, $value, $this->options->feedUrl) : '#';
+        $row['feedUrl'] = $routeExists ? Router::url($type, $row, $this->options->feedUrl) : '#';
 
         /** RSS 1.0 */
-        $value['feedRssUrl'] = $routeExists ? Router::url($type, $value, $this->options->feedRssUrl) : '#';
+        $row['feedRssUrl'] = $routeExists ? Router::url($type, $row, $this->options->feedRssUrl) : '#';
 
         /** ATOM 1.0 */
-        $value['feedAtomUrl'] = $routeExists ? Router::url($type, $value, $this->options->feedAtomUrl) : '#';
+        $row['feedAtomUrl'] = $routeExists ? Router::url($type, $row, $this->options->feedAtomUrl) : '#';
 
-        $value['slug'] = $tmpSlug;
-        return Metas::pluginHandle()->call('filter', $value, $this);
+        $row['slug'] = $tmpSlug;
+        return Metas::pluginHandle()->call('filter', $row, $this);
     }
 
     /**

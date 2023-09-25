@@ -70,7 +70,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property-read string $trackbackUrl
  * @property-read string $responseUrl
  */
-class Contents extends Base implements QueryInterface
+class Contents extends Base implements QueryInterface, RowFilterInterface
 {
     /**
      * 获取查询对象
@@ -482,30 +482,30 @@ class Contents extends Base implements QueryInterface
     /**
      * 通用过滤器
      *
-     * @param array $value 需要过滤的行数据
+     * @param array $row 需要过滤的行数据
      * @return array
      */
-    public function filter(array $value): array
+    public function filter(array $row): array
     {
         /** 处理默认空值 */
-        $value['title'] = $value['title'] ?? '';
-        $value['text'] = $value['text'] ?? '';
-        $value['slug'] = $value['slug'] ?? '';
+        $row['title'] = $row['title'] ?? '';
+        $row['text'] = $row['text'] ?? '';
+        $row['slug'] = $row['slug'] ?? '';
 
         /** 取出所有分类 */
-        $value['categories'] = $this->db->fetchAll($this->db
+        $row['categories'] = $this->db->fetchAll($this->db
             ->select()->from('table.metas')
             ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
-            ->where('table.relationships.cid = ?', $value['cid'])
+            ->where('table.relationships.cid = ?', $row['cid'])
             ->where('table.metas.type = ?', 'category'), [Rows::alloc(), 'filter']);
 
-        $value['category'] = '';
-        $value['directory'] = [];
+        $row['category'] = '';
+        $row['directory'] = [];
 
         /** 取出第一个分类作为slug条件 */
-        if (!empty($value['categories'])) {
+        if (!empty($row['categories'])) {
             /** 使用自定义排序 */
-            usort($value['categories'], function ($a, $b) {
+            usort($row['categories'], function ($a, $b) {
                 $field = 'order';
                 if ($a['order'] == $b['order']) {
                     $field = 'mid';
@@ -514,108 +514,108 @@ class Contents extends Base implements QueryInterface
                 return $a[$field] < $b[$field] ? - 1 : 1;
             });
 
-            $value['category'] = $value['categories'][0]['slug'];
+            $row['category'] = $row['categories'][0]['slug'];
 
-            $value['directory'] = Rows::alloc()
-                ->getAllParentsSlug($value['categories'][0]['mid']);
-            $value['directory'][] = $value['category'];
+            $row['directory'] = Rows::alloc()
+                ->getAllParentsSlug($row['categories'][0]['mid']);
+            $row['directory'][] = $row['category'];
         }
 
-        $value['date'] = new Date($value['created']);
+        $row['date'] = new Date($row['created']);
 
         /** 生成日期 */
-        $value['year'] = $value['date']->year;
-        $value['month'] = $value['date']->month;
-        $value['day'] = $value['date']->day;
+        $row['year'] = $row['date']->year;
+        $row['month'] = $row['date']->month;
+        $row['day'] = $row['date']->day;
 
         /** 生成访问权限 */
-        $value['hidden'] = false;
+        $row['hidden'] = false;
 
         /** 获取路由类型并判断此类型在路由表中是否存在 */
-        $type = $value['type'];
+        $type = $row['type'];
         $routeExists = (null != Router::get($type));
 
-        $tmpSlug = $value['slug'];
-        $tmpCategory = $value['category'];
-        $tmpDirectory = $value['directory'];
-        $value['slug'] = urlencode($value['slug']);
-        $value['category'] = urlencode($value['category']);
-        $value['directory'] = implode('/', array_map('urlencode', $value['directory']));
+        $tmpSlug = $row['slug'];
+        $tmpCategory = $row['category'];
+        $tmpDirectory = $row['directory'];
+        $row['slug'] = urlencode($row['slug']);
+        $row['category'] = urlencode($row['category']);
+        $row['directory'] = implode('/', array_map('urlencode', $row['directory']));
 
         /** 生成静态路径 */
-        $value['pathinfo'] = $routeExists ? Router::url($type, $value) : '#';
+        $row['pathinfo'] = $routeExists ? Router::url($type, $row) : '#';
 
         /** 生成静态链接 */
-        $value['url'] = $value['permalink'] = Common::url($value['pathinfo'], $this->options->index);
+        $row['url'] = $row['permalink'] = Common::url($row['pathinfo'], $this->options->index);
 
         /** 处理附件 */
         if ('attachment' == $type) {
-            $content = @unserialize($value['text']);
+            $content = @unserialize($row['text']);
 
             //增加数据信息
-            $value['attachment'] = new Config($content);
-            $value['attachment']->isImage = in_array($content['type'], ['jpg', 'jpeg', 'gif', 'png', 'tiff', 'bmp', 'webp', 'avif']);
-            $value['attachment']->url = Upload::attachmentHandle($value);
+            $row['attachment'] = new Config($content);
+            $row['attachment']->isImage = in_array($content['type'], ['jpg', 'jpeg', 'gif', 'png', 'tiff', 'bmp', 'webp', 'avif']);
+            $row['attachment']->url = Upload::attachmentHandle($row);
 
-            if ($value['attachment']->isImage) {
-                $value['text'] = '<img src="' . $value['attachment']->url . '" alt="' .
-                    $value['title'] . '" />';
+            if ($row['attachment']->isImage) {
+                $row['text'] = '<img src="' . $row['attachment']->url . '" alt="' .
+                    $row['title'] . '" />';
             } else {
-                $value['text'] = '<a href="' . $value['attachment']->url . '" title="' .
-                    $value['title'] . '">' . $value['title'] . '</a>';
+                $row['text'] = '<a href="' . $row['attachment']->url . '" title="' .
+                    $row['title'] . '">' . $row['title'] . '</a>';
             }
         }
 
         /** 处理Markdown **/
-        if (isset($value['text'])) {
-            $value['isMarkdown'] = (0 === strpos($value['text'], '<!--markdown-->'));
-            if ($value['isMarkdown']) {
-                $value['text'] = substr($value['text'], 15);
+        if (isset($row['text'])) {
+            $row['isMarkdown'] = (0 === strpos($row['text'], '<!--markdown-->'));
+            if ($row['isMarkdown']) {
+                $row['text'] = substr($row['text'], 15);
             }
         }
 
         /** 生成聚合链接 */
         /** RSS 2.0 */
-        $value['feedUrl'] = $routeExists ? Router::url($type, $value, $this->options->feedUrl) : '#';
+        $row['feedUrl'] = $routeExists ? Router::url($type, $row, $this->options->feedUrl) : '#';
 
         /** RSS 1.0 */
-        $value['feedRssUrl'] = $routeExists ? Router::url($type, $value, $this->options->feedRssUrl) : '#';
+        $row['feedRssUrl'] = $routeExists ? Router::url($type, $row, $this->options->feedRssUrl) : '#';
 
         /** ATOM 1.0 */
-        $value['feedAtomUrl'] = $routeExists ? Router::url($type, $value, $this->options->feedAtomUrl) : '#';
+        $row['feedAtomUrl'] = $routeExists ? Router::url($type, $row, $this->options->feedAtomUrl) : '#';
 
-        $value['slug'] = $tmpSlug;
-        $value['category'] = $tmpCategory;
-        $value['directory'] = $tmpDirectory;
+        $row['slug'] = $tmpSlug;
+        $row['category'] = $tmpCategory;
+        $row['directory'] = $tmpDirectory;
 
         /** 处理密码保护流程 */
         if (
-            strlen($value['password'] ?? '') > 0 &&
-            $value['password'] !== Cookie::get('protectPassword_' . $value['cid']) &&
-            $value['authorId'] != $this->user->uid &&
+            strlen($row['password'] ?? '') > 0 &&
+            $row['password'] !== Cookie::get('protectPassword_' . $row['cid']) &&
+            $row['authorId'] != $this->user->uid &&
             !$this->user->pass('editor', true)
         ) {
-            $value['hidden'] = true;
+            $row['hidden'] = true;
         }
 
-        $value = Contents::pluginHandle()->call('filter', $value, $this);
+        $row = Contents::pluginHandle()->call('filter', $row, $this);
 
         /** 如果访问权限被禁止 */
-        if ($value['hidden']) {
-            $value['text'] = '<form class="protected" action="' . $this->security->getTokenUrl($value['permalink'])
+        if ($row['hidden']) {
+            $row['text'] = '<form class="protected" action="' . $this->security->getTokenUrl($row['permalink'])
                 . '" method="post">' .
                 '<p class="word">' . _t('请输入密码访问') . '</p>' .
                 '<p><input type="password" class="text" name="protectPassword" />
-            <input type="hidden" name="protectCID" value="' . $value['cid'] . '" />
+            <input type="hidden" name="protectCID" value="' . $row['cid'] . '" />
             <input type="submit" class="submit" value="' . _t('提交') . '" /></p>' .
                 '</form>';
 
-            $value['title'] = _t('此内容被密码保护');
-            $value['tags'] = [];
-            $value['commentsNum'] = 0;
+            $row['title'] = _t('此内容被密码保护');
+            $row['tags'] = [];
+            $row['commentsNum'] = 0;
         }
 
-        return $value;
+        return $row;
     }
 
     /**
