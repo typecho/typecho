@@ -222,6 +222,15 @@ trait TreeTrait
     }
 
     /**
+     * @param int $id
+     * @return array|null
+     */
+    public function getRow(int $id): ?array
+    {
+        return $this->map[$id] ?? null;
+    }
+
+    /**
      * 是否拥有某个父级节点
      *
      * @param mixed $id

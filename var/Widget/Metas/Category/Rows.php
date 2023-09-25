@@ -5,6 +5,7 @@ namespace Widget\Metas\Category;
 use Typecho\Config;
 use Typecho\Db;
 use Widget\Base\Metas;
+use Widget\Base\TreeTrait;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -22,13 +23,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  */
 class Rows extends Metas
 {
-    /**
-     * 树状分类结构
-     *
-     * @var array
-     * @access private
-     */
-    private array $treeViewCategories = [];
+    use TreeTrait;
 
     /**
      * _categoryOptions
@@ -39,46 +34,6 @@ class Rows extends Metas
     private ?Config $categoryOptions = null;
 
     /**
-     * 顶层分类
-     *
-     * @var array
-     * @access private
-     */
-    private array $top = [];
-
-    /**
-     * 所有分类哈希表
-     *
-     * @var array
-     * @access private
-     */
-    private array $map = [];
-
-    /**
-     * 顺序流
-     *
-     * @var array
-     * @access private
-     */
-    private array $orders = [];
-
-    /**
-     * 所有子节点列表
-     *
-     * @var array
-     * @access private
-     */
-    private array $childNodes = [];
-
-    /**
-     * 所有父节点列表
-     *
-     * @var array
-     * @access private
-     */
-    private array $parents = [];
-
-    /**
      * @param Config $parameter
      */
     protected function initParameter(Config $parameter)
@@ -86,62 +41,9 @@ class Rows extends Metas
         $parameter->setDefault('ignore=0&current=');
 
         $select = $this->select()->where('type = ?', 'category');
-
         $categories = $this->db->fetchAll($select->order('table.metas.order', Db::SORT_ASC));
-        foreach ($categories as $category) {
-            $category['levels'] = 0;
-            $this->map[$category['mid']] = $category;
-        }
 
-        // 读取数据
-        foreach ($this->map as $mid => $category) {
-            $parent = $category['parent'];
-
-            if (0 != $parent && isset($this->map[$parent])) {
-                $this->treeViewCategories[$parent][] = $mid;
-            } else {
-                $this->top[] = $mid;
-            }
-        }
-
-        // 预处理深度
-        $this->levelWalkCallback($this->top);
-        $this->map = array_map([$this, 'filter'], $this->map);
-    }
-
-    /**
-     * 预处理分类迭代
-     *
-     * @param array $categories
-     * @param array $parents
-     */
-    private function levelWalkCallback(array $categories, array $parents = [])
-    {
-        foreach ($parents as $parent) {
-            if (!isset($this->childNodes[$parent])) {
-                $this->childNodes[$parent] = [];
-            }
-
-            $this->childNodes[$parent] = array_merge($this->childNodes[$parent], $categories);
-        }
-
-        foreach ($categories as $mid) {
-            $this->orders[] = $mid;
-            $parent = $this->map[$mid]['parent'];
-
-            if (0 != $parent && isset($this->map[$parent])) {
-                $levels = $this->map[$parent]['levels'] + 1;
-                $this->map[$mid]['levels'] = $levels;
-            }
-
-            $this->parents[$mid] = $parents;
-
-            if (!empty($this->treeViewCategories[$mid])) {
-                $new = $parents;
-                $new[] = $mid;
-                $this->levelWalkCallback($this->treeViewCategories[$mid], $new);
-            }
-        }
+        $this->initTree('mid', $categories);
     }
 
     /**
@@ -151,7 +53,7 @@ class Rows extends Metas
      */
     public function execute()
     {
-        $this->stack = $this->getCategories($this->orders);
+        $this->stack = $this->getRows($this->orders, $this->parameter->ignore);
     }
 
     /**
@@ -178,7 +80,7 @@ class Rows extends Metas
         self::pluginHandle()->trigger($plugged)->call('listCategories', $this->categoryOptions, $this);
 
         if (!$plugged) {
-            $this->stack = $this->getCategories($this->top);
+            $this->stack = $this->getRows($this->top);
 
             if ($this->have()) {
                 echo '<' . $this->categoryOptions->wrapTag . (empty($this->categoryOptions->wrapClass)
@@ -248,18 +150,6 @@ class Rows extends Metas
     }
 
     /**
-     * 根据深度余数输出
-     *
-     * @param ...$args
-     */
-    public function levelsAlt(...$args)
-    {
-        $num = count($args);
-        $split = $this->levels % $num;
-        echo $args[(0 == $split ? $num : $split) - 1];
-    }
-
-    /**
      * treeViewCategories
      *
      * @access public
@@ -291,6 +181,16 @@ class Rows extends Metas
     }
 
     /**
+     * 根据深度余数输出
+     *
+     * @param ...$args
+     */
+    public function levelsAlt(...$args)
+    {
+        $this->altBy($this->levels, ...$args);
+    }
+
+    /**
      * 将每行的值压入堆栈
      *
      * @access public
@@ -299,79 +199,13 @@ class Rows extends Metas
      */
     public function filter(array $row): array
     {
-        $row['directory'] = $this->getAllParentsSlug($row['mid']);
-        $row['directory'][] = $row['slug'];
+        [$directory, $path] = $this->getDirectory($row['mid'], $row['slug']);
 
-        $tmpCategoryTree = $row['directory'];
-        $row['directory'] = implode('/', array_map('urlencode', $row['directory']));
-
+        $row['directory'] = $path;
         $row = parent::filter($row);
-        $row['directory'] = $tmpCategoryTree;
+        $row['directory'] = $directory;
 
         return $row;
-    }
-
-    /**
-     * 获取某个分类所有父级节点缩略名
-     *
-     * @param mixed $mid
-     * @access public
-     * @return array
-     */
-    public function getAllParentsSlug($mid): array
-    {
-        $parents = [];
-
-        if (isset($this->parents[$mid])) {
-            foreach ($this->parents[$mid] as $parent) {
-                $parents[] = $this->map[$parent]['slug'];
-            }
-        }
-
-        return $parents;
-    }
-
-    /**
-     * 获取某个分类下的所有子节点
-     *
-     * @param mixed $mid
-     * @access public
-     * @return array
-     */
-    public function getAllChildren($mid): array
-    {
-        return $this->childNodes[$mid] ?? [];
-    }
-
-    /**
-     * 获取某个分类所有父级节点
-     *
-     * @param mixed $mid
-     * @access public
-     * @return array
-     */
-    public function getAllParents($mid): array
-    {
-        $parents = [];
-
-        if (isset($this->parents[$mid])) {
-            foreach ($this->parents[$mid] as $parent) {
-                $parents[] = $this->map[$parent];
-            }
-        }
-
-        return $parents;
-    }
-
-    /**
-     * 获取单个分类
-     *
-     * @param integer $mid
-     * @return mixed
-     */
-    public function getCategory(int $mid)
-    {
-        return $this->map[$mid] ?? null;
     }
 
     /**
@@ -381,52 +215,6 @@ class Rows extends Metas
      */
     protected function ___children(): array
     {
-        return isset($this->treeViewCategories[$this->mid]) ?
-            $this->getCategories($this->treeViewCategories[$this->mid]) : [];
-    }
-
-    /**
-     * 获取多个分类
-     *
-     * @param array $mids
-     * @return array
-     */
-    public function getCategories(array $mids): array
-    {
-        $result = [];
-
-        if (!empty($mids)) {
-            foreach ($mids as $mid) {
-                if (
-                    !$this->parameter->ignore
-                    || ($this->parameter->ignore != $mid
-                        && !$this->hasParent($mid, $this->parameter->ignore))
-                ) {
-                    $result[] = $this->map[$mid];
-                }
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * 是否拥有某个父级分类
-     *
-     * @param mixed $mid
-     * @param mixed $parentId
-     * @return bool
-     */
-    public function hasParent($mid, $parentId): bool
-    {
-        if (isset($this->parents[$mid])) {
-            foreach ($this->parents[$mid] as $parent) {
-                if ($parent == $parentId) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return $this->getChildren($this->mid);
     }
 }

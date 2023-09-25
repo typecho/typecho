@@ -121,7 +121,7 @@ class Archive extends Contents
      *
      * @var string
      */
-    private string $description;
+    private ?string $description = null;
 
     /**
      * 归档标题
@@ -1658,7 +1658,7 @@ class Archive extends Contents
             throw new WidgetException(_t('父级分类不存在'), 404);
         }
 
-        $children = $categoryListWidget->getAllChildren($category['mid']);
+        $children = $categoryListWidget->getAllChildIds($category['mid']);
         $children[] = $category['mid'];
 
         /** fix sql92 by 70 */

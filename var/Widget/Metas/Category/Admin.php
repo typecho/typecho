@@ -25,7 +25,7 @@ class Admin extends Rows
         $select = $this->db->select('mid')->from('table.metas')->where('type = ?', 'category');
         $select->where('parent = ?', $this->request->get('parent', 0));
 
-        $this->stack = $this->getCategories(array_column(
+        $this->stack = $this->getRows(array_column(
             $this->db->fetchAll($select->order('table.metas.order')),
             'mid'
         ));
