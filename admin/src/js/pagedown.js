@@ -1767,6 +1767,8 @@ else
         hooks.addNoop("enterFakeFullScreen");
         hooks.addNoop("exitFullScreen");
 
+        hooks.addNoop("saveDraft");
+
         this.getConverter = function () { return markdownConverter; }
 
         var that = this,
@@ -3082,10 +3084,12 @@ else
                             doClick(buttons.undo);
                         }
                         break;
+                    case "s":
+                        hooks.saveDraft();
+                        break;
                     default:
                         return;
                 }
-
 
                 if (key.preventDefault) {
                     key.preventDefault();
