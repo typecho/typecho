@@ -156,8 +156,8 @@ $(document).ready(function () {
         textarea.trigger('input');
     });
 
-    editor.hooks.chain('saveDraft', function () {
-        $('#btn-save').removeAttr('name').removeAttr('value').click();
+    editor.hooks.chain('save', function () {
+        window.saveDraft();
     });
 
     function initMarkdown() {

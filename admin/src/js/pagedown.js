@@ -1767,7 +1767,7 @@ else
         hooks.addNoop("enterFakeFullScreen");
         hooks.addNoop("exitFullScreen");
 
-        hooks.addNoop("saveDraft");
+        hooks.addNoop("save");
 
         this.getConverter = function () { return markdownConverter; }
 
@@ -3085,7 +3085,7 @@ else
                         }
                         break;
                     case "s":
-                        hooks.saveDraft();
+                        hooks.save();
                         break;
                     default:
                         return;

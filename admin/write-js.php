@@ -179,7 +179,7 @@ $(document).ready(function() {
     });
 
     // 发送保存请求
-    function saveData(cb) {
+    window.saveDraft = function saveData(cb) {
         function callback(o) {
             lastSaveTime = o.time;
             cid = o.cid;
