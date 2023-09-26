@@ -148,76 +148,87 @@ $(document).ready(function() {
         textarea.setSelection(offset, offset);
     };
 
-    var submitted = false, form = $('form[name=write_post],form[name=write_page]').submit(function () {
-        submitted = true;
-    }), formAction = form.attr('action'),
+    // 处理保存文章的逻辑
+    var form = $('form[name=write_post],form[name=write_page]'),
         idInput = $('input[name=cid]'),
         cid = idInput.val(),
         draft = $('input[name=draft]'),
         draftId = draft.length > 0 ? draft.val() : 0,
-        btnSave = $('#btn-save').removeAttr('name').removeAttr('value'),
-        btnSubmit = $('#btn-submit').removeAttr('name').removeAttr('value'),
         btnPreview = $('#btn-preview'),
-        doAction = $('<input type="hidden" name="do" value="publish" />').appendTo(form),
-        locked = false,
         changed = false,
         autoSave = $('<span id="auto-save-message" class="left"></span>').prependTo('.submit'),
         lastSaveTime = null;
 
-    $(':input', form).bind('input change', function (e) {
-        var tagName = $(this).prop('tagName');
-
-        if (tagName.match(/(input|textarea)/i) && e.type == 'change') {
-            return;
-        }
-
+    form.on('input change field', function (e) {
+        // todo: check if the input is really changed
         changed = true;
+        form.trigger('datachange');
     });
 
-    form.bind('field', function () {
-        changed = true;
+    $('button[name=do]').click(function () {
+        $('input[name=do]').val($(this).val());
+    });
+
+    // 自动检测离开页
+    $(window).bind('beforeunload', function () {
+        if (changed && !form.hasClass('submitting')) {
+            return '<?php _e('内容已经改变尚未保存, 您确认要离开此页面吗?'); ?>';
+        }
     });
 
     // 发送保存请求
-    window.saveDraft = function saveData(cb) {
-        function callback(o) {
+    Typecho.savePost = function(cb) {
+        const callback = function (o) {
             lastSaveTime = o.time;
             cid = o.cid;
             draftId = o.draftId;
             idInput.val(cid);
             autoSave.text('<?php _e('已保存'); ?>' + ' (' + o.time + ')').effect('highlight', 1000);
-            locked = false;
-
-            btnSave.removeAttr('disabled');
-            btnPreview.removeAttr('disabled');
 
             if (!!cb) {
-                cb(o)
+                cb(o);
             }
-        }
+        };
 
         changed = false;
-        btnSave.attr('disabled', 'disabled');
-        btnPreview.attr('disabled', 'disabled');
         autoSave.text('<?php _e('正在保存'); ?>');
 
-        if (typeof FormData !== 'undefined') {
-            var data = new FormData(form.get(0));
-            data.append('do', 'save');
+        const data = new FormData(form.get(0));
+        data.append('do', 'save');
+        form.triggerHandler('submit');
 
-            $.ajax({
-                url: formAction,
-                processData: false,
-                contentType: false,
-                type: 'POST',
-                data: data,
-                success: callback
-            });
-        } else {
-            var data = form.serialize() + '&do=save';
-            $.post(formAction, data, callback, 'json');
+        $.ajax({
+            url: form.attr('action'),
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            data: data,
+            success: callback,
+            error: function () {
+                autoSave.text('<?php _e('保存失败, 请重试'); ?>');
+            },
+            complete: function () {
+                form.trigger('submitted');
+            }
+        });
+    };
+
+    <?php if ($options->autoSave): ?>
+    // 自动保存
+    let saveTimer = null;
+
+    form.on('datachange', function () {
+        autoSave.text('<?php _e('尚未保存'); ?>' + (lastSaveTime ? ' (<?php _e('上次保存时间'); ?>: ' + lastSaveTime + ')' : ''));
+
+        if (saveTimer) {
+            clearTimeout(saveTimer);
         }
-    }
+
+        saveTimer = setTimeout(function () {
+            Typecho.savePost();
+        }, 5000);
+    });
+    <?php endif; ?>
 
     // 计算夏令时偏移
     var dstOffset = (function () {
@@ -235,42 +246,6 @@ $(document).ready(function() {
 
     // 时区
     $('<input name="timezone" type="hidden" />').appendTo(form).val(- (new Date).getTimezoneOffset() * 60);
-
-    // 自动保存
-<?php if ($options->autoSave): ?>
-    var autoSaveOnce = !!cid;
-
-    function autoSaveListener () {
-        setInterval(function () {
-            if (changed && !locked) {
-                locked = true;
-                saveData();
-            }
-        }, 10000);
-    }
-
-    if (autoSaveOnce) {
-        autoSaveListener();
-    }
-
-    $('#text').bind('input propertychange', function () {
-        if (!locked) {
-            autoSave.text('<?php _e('尚未保存'); ?>' + (lastSaveTime ? ' (<?php _e('上次保存时间'); ?>: ' + lastSaveTime + ')' : ''));
-        }
-
-        if (!autoSaveOnce) {
-            autoSaveOnce = true;
-            autoSaveListener();
-        }
-    });
-<?php endif; ?>
-
-    // 自动检测离开页
-    $(window).bind('beforeunload', function () {
-        if (changed && !submitted) {
-            return '<?php _e('内容已经改变尚未保存, 您确认要离开此页面吗?'); ?>';
-        }
-    });
 
     // 预览功能
     var isFullScreen = false;
@@ -292,10 +267,6 @@ $(document).ready(function() {
     }
 
     function cancelPreview() {
-        if (submitted) {
-            return;
-        }
-
         if (!isFullScreen) {
             $(document.body).removeClass('fullscreen');
         }
@@ -314,28 +285,16 @@ $(document).ready(function() {
 
     btnPreview.click(function () {
         if (changed) {
-            locked = true;
-
             if (confirm('<?php _e('修改后的内容需要保存后才能预览, 是否保存?'); ?>')) {
-                saveData(function (o) {
+                savePost(function (o) {
                     previewData(o.draftId);
                 });
-            } else {
-                locked = false;
             }
         } else if (!!draftId) {
             previewData(draftId);
         } else if (!!cid) {
             previewData(cid);
         }
-    });
-
-    btnSave.click(function () {
-        doAction.attr('value', 'save');
-    });
-
-    btnSubmit.click(function () {
-        doAction.attr('value', 'publish');
     });
 
     // 控制选项和附件的切换

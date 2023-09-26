@@ -157,7 +157,7 @@ $(document).ready(function () {
     });
 
     editor.hooks.chain('save', function () {
-        window.saveDraft();
+        Typecho.savePost();
     });
 
     function initMarkdown() {

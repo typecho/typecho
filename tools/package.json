@@ -19,7 +19,7 @@
   "dependencies": {
     "@picocss/pico": "^1.5.0",
     "chalk": "^4.0.0",
-    "node-sass": "^6.0.1",
+    "node-sass": "^9.0.0",
     "sprite-magic-importer": "^1.6.2",
     "uglify-js": "^3.11.6"
   }

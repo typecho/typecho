@@ -53,6 +53,7 @@ include 'menu.php';
                                     class="i-caret-left"></i> <?php _e('取消预览'); ?></button>
                         </span>
                         <span class="right">
+                            <input type="hidden" name="do" value="publish" />
                             <input type="hidden" name="cid" value="<?php $page->cid(); ?>"/>
                             <button type="button" id="btn-preview" class="btn"><i
                                     class="i-exlink"></i> <?php _e('预览页面'); ?></button>
