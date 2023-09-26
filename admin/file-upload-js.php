@@ -6,10 +6,13 @@ if (isset($post) && $post instanceof \Typecho\Widget && $post->have()) {
     $fileParentContent = $page;
 }
 
-$phpMaxFilesize = function_exists('ini_get') ? trim(ini_get('upload_max_filesize')) : 0;
+$phpMaxFilesize = function_exists('ini_get') ? trim(ini_get('upload_max_filesize')) : '0';
 
-if (preg_match("/^([0-9]+)([a-z]{1,2})$/i", $phpMaxFilesize, $matches)) {
-    $phpMaxFilesize = strtolower($matches[1] . $matches[2] . (1 == strlen($matches[2]) ? 'b' : ''));
+if (preg_match("/^([0-9]+)([a-z]{1,2})?$/i", $phpMaxFilesize, $matches)) {
+    $size = intval($matches[1]);
+    $unit = $matches[2] ?? 'b';
+
+    $phpMaxFilesize = round($size * pow(1024, strpos('bkmgtpezy', $unit[0])));
 }
 ?>
 
