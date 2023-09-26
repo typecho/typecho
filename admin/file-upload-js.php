@@ -66,22 +66,21 @@ $(document).ready(function() {
             + file.name + '</li>').appendTo('#file-list');
     }
 
-    function fileUploadError (error) {
-        var file = error.file, code = error.code, word; 
+    function fileUploadError (type, file) {
+        let word = '<?php _e('上传出现错误'); ?>';
         
-        switch (code) {
-            case plupload.FILE_SIZE_ERROR:
+        switch (type) {
+            case 'size':
                 word = '<?php _e('文件大小超过限制'); ?>';
                 break;
-            case plupload.FILE_EXTENSION_ERROR:
+            case 'type':
                 word = '<?php _e('文件扩展名不被支持'); ?>';
                 break;
-            case plupload.FILE_DUPLICATE_ERROR:
+            case 'duplicate':
                 word = '<?php _e('文件已经上传过'); ?>';
                 break;
-            case plupload.HTTP_ERROR:
+            case 'network':
             default:
-                word = '<?php _e('上传出现错误'); ?>';
                 break;
         }
 
@@ -179,7 +178,27 @@ $(document).ready(function() {
         uploader.init();
     });
 
-    Typecho.uploadFile = function (file, name) {
+    let uploadIndex = 0;
+
+    Typecho.uploadFile = function (file) {
+        const url = '<?php $security->index('/action/upload'
+            . (isset($fileParentContent) ? '?cid=' . $fileParentContent->cid : '')); ?>';
+        const types = '<?php echo json_encode($options->allowedAttachmentTypes); ?>';
+        const maxSize = <?php echo $phpMaxFilesize ?>;
+        file.id = 'upload-' + (uploadIndex ++);
+
+        if (file.size > maxSize) {
+            return fileUploadError('size', file);
+        }
+
+        const match = file.name.match(/\.([a-z0-9]+)$/i);
+        if (!match || types.indexOf(match[1].toLowerCase()) < 0) {
+            return fileUploadError('type', file);
+        }
+
+        const data = new FormData();
+        data.append('file', file);
+
         if (!uploader) {
             $('#tab-files-btn').parent().trigger('click');
         }

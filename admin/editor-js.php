@@ -218,7 +218,7 @@ $(document).ready(function () {
                 name += '.' + ext;
             }
 
-            Typecho.uploadFile(new File([data.blob], name), name);
+            Typecho.uploadFile(new File([data.blob], name));
         });
     }
 
