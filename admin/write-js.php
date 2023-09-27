@@ -298,19 +298,12 @@ $(document).ready(function() {
     });
 
     // 控制选项和附件的切换
-    var fileUploadInit = false;
     $('#edit-secondary .typecho-option-tabs li').click(function() {
-        $('#edit-secondary .typecho-option-tabs li').removeClass('active');
-        $(this).addClass('active');
-        $(this).parents('#edit-secondary').find('.tab-content').addClass('hidden');
-        
-        var selected_tab = $(this).find('a').attr('href'),
-            selected_el = $(selected_tab).removeClass('hidden');
+        $('#edit-secondary .typecho-option-tabs li.active').removeClass('active');
+        $('#edit-secondary .tab-content').addClass('hidden');
 
-        if (!fileUploadInit) {
-            selected_el.trigger('init');
-            fileUploadInit = true;
-        }
+        const activeTab = $(this).find('a').attr('href');
+        $(activeTab).removeClass('hidden');
 
         return false;
     });

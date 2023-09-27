@@ -2,7 +2,6 @@
 <?php $content = !empty($post) ? $post : $page; if ($options->markdown): ?>
 <script src="<?php $options->adminStaticUrl('js', 'hyperdown.js'); ?>"></script>
 <script src="<?php $options->adminStaticUrl('js', 'pagedown.js'); ?>"></script>
-<script src="<?php $options->adminStaticUrl('js', 'paste.js'); ?>"></script>
 <script src="<?php $options->adminStaticUrl('js', 'purify.js'); ?>"></script>
 <script>
 $(document).ready(function () {
@@ -211,14 +210,23 @@ $(document).ready(function () {
         });
 
         // 剪贴板复制图片
-        textarea.pastableTextarea().on('pasteImage', function (e, data) {
-            var name = data.name ? data.name.replace(/[\(\)\[\]\*#!]/g, '') : (new Date()).toISOString().replace(/\..+$/, '');
-            if (!name.match(/\.[a-z0-9]{2,}$/i)) {
-                var ext = data.blob.type.split('/').pop();
-                name += '.' + ext;
-            }
+        textarea.bind('paste', function (e) {
+            const items = (e.clipboardData || e.originalEvent.clipboardData).items;
 
-            Typecho.uploadFile(new File([data.blob], name));
+            for (const item of items) {
+                if (item.kind === 'file') {
+                    const file = item.getAsFile();
+
+                    if (file.size > 0) {
+                        if (!file.name) {
+                            file.name = (new Date()).toISOString().replace(/\..+$/, '')
+                                + '.' + file.type.split('/').pop();
+                        }
+
+                        Typecho.uploadFile(file);
+                    }
+                }
+            }
         });
     }
 
