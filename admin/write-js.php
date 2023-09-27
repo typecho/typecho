@@ -45,7 +45,7 @@ $(document).ready(function() {
     const tags = $('#tags'), tagsPre = [];
     
     if (tags.length > 0) {
-        const items = tags.val().split(','), result = [];
+        const items = tags.val().split(',');
         for (let i = 0; i < items.length; i ++) {
             const tag = items[i];
 
@@ -87,7 +87,7 @@ $(document).ready(function() {
                     result = [];
                 }
 
-                if (!result[0] || result[0]['id'] != query) {
+                if (!result[0] || result[0]['id'] !== query) {
                     result.unshift({
                         id      :   val,
                         tags    :   val
@@ -126,7 +126,7 @@ $(document).ready(function() {
             'minWidth'  :   '5px',
             'position'  :   'absolute',
             'width'     :   '100%'
-        })), originalWidth = slug.width();
+        }));
 
         function justifySlugWidth() {
             const val = slug.val();
@@ -174,6 +174,11 @@ $(document).ready(function() {
 
     // 发送保存请求
     Typecho.savePost = function(cb) {
+        if (!changed) {
+            cb && cb();
+            return;
+        }
+
         const callback = function (o) {
             lastSaveTime = o.time;
             cid = o.cid;
@@ -181,9 +186,7 @@ $(document).ready(function() {
             idInput.val(cid);
             autoSave.text('<?php _e('已保存'); ?>' + ' (' + o.time + ')').effect('highlight', 1000);
 
-            if (!!cb) {
-                cb(o);
-            }
+            cb && cb();
         };
 
         changed = false;
@@ -232,8 +235,8 @@ $(document).ready(function() {
     <?php endif; ?>
 
     // 计算夏令时偏移
-    var dstOffset = (function () {
-        var d = new Date(),
+    const dstOffset = (function () {
+        const d = new Date(),
             jan = new Date(d.getFullYear(), 0, 1),
             jul = new Date(d.getFullYear(), 6, 1),
             stdOffset = Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
@@ -249,13 +252,13 @@ $(document).ready(function() {
     $('<input name="timezone" type="hidden" />').appendTo(form).val(- (new Date).getTimezoneOffset() * 60);
 
     // 预览功能
-    var isFullScreen = false;
+    let isFullScreen = false;
 
     function previewData(cid) {
         isFullScreen = $(document.body).hasClass('fullscreen');
         $(document.body).addClass('fullscreen preview');
 
-        var frame = $('<iframe frameborder="0" class="preview-frame preview-loading"></iframe>')
+        const frame = $('<iframe frameborder="0" class="preview-frame preview-loading"></iframe>')
             .attr('src', './preview.php?cid=' + cid)
             .attr('sandbox', 'allow-same-origin allow-scripts')
             .appendTo(document.body);
@@ -274,12 +277,12 @@ $(document).ready(function() {
 
         $(document.body).removeClass('preview');
         $('.preview-frame').remove();
-    };
+    }
 
     $('#btn-cancel-preview').click(cancelPreview);
 
     $(window).bind('message', function (e) {
-        if (e.originalEvent.data == 'cancelPreview') {
+        if (e.originalEvent.data === 'cancelPreview') {
             cancelPreview();
         }
     });
@@ -287,8 +290,8 @@ $(document).ready(function() {
     btnPreview.click(function () {
         if (changed) {
             if (confirm('<?php _e('修改后的内容需要保存后才能预览, 是否保存?'); ?>')) {
-                Typecho.savePost(function (o) {
-                    previewData(o.draftId);
+                Typecho.savePost(function () {
+                    previewData(draftId);
                 });
             }
         } else if (!!draftId) {
@@ -317,9 +320,9 @@ $(document).ready(function() {
 
     // 自动隐藏密码框
     $('#visibility').change(function () {
-        var val = $(this).val(), password = $('#post-password');
+        const val = $(this).val(), password = $('#post-password');
 
-        if ('password' == val) {
+        if ('password' === val) {
             password.removeClass('hidden');
         } else {
             password.addClass('hidden');
