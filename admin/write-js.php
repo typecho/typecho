@@ -42,12 +42,12 @@ $(document).ready(function() {
     Typecho.editorResize('text', '<?php $security->index('/action/ajax?do=editorResize'); ?>');
 
     // tag autocomplete 提示
-    var tags = $('#tags'), tagsPre = [];
+    const tags = $('#tags'), tagsPre = [];
     
     if (tags.length > 0) {
-        var items = tags.val().split(','), result = [];
-        for (var i = 0; i < items.length; i ++) {
-            var tag = items[i];
+        const items = tags.val().split(','), result = [];
+        for (let i = 0; i < items.length; i ++) {
+            const tag = items[i];
 
             if (!tag) {
                 continue;
@@ -100,17 +100,17 @@ $(document).ready(function() {
 
         // tag autocomplete 提示宽度设置
         $('#token-input-tags').focus(function() {
-            var t = $('.token-input-dropdown'),
+            const t = $('.token-input-dropdown'),
                 offset = t.outerWidth() - t.width();
             t.width($('.token-input-list').outerWidth() - offset);
         });
     }
 
     // 缩略名自适应宽度
-    var slug = $('#slug');
+    const slug = $('#slug');
 
     if (slug.length > 0) {
-        var wrap = $('<div />').css({
+        const wrap = $('<div />').css({
             'position'  :   'relative',
             'display'   :   'inline-block'
         }),
@@ -129,7 +129,7 @@ $(document).ready(function() {
         })), originalWidth = slug.width();
 
         function justifySlugWidth() {
-            var val = slug.val();
+            const val = slug.val();
             justifySlug.text(val.length > 0 ? val : '     ');
         }
 
@@ -137,32 +137,28 @@ $(document).ready(function() {
         justifySlugWidth();
     }
 
-    // 原始的插入图片和文件
-    Typecho.insertFileToEditor = function (file, url, isImage) {
-        var textarea = $('#text'), sel = textarea.getSelection(),
-            html = isImage ? '<img src="' + url + '" alt="' + file + '" />'
-                : '<a href="' + url + '">' + file + '</a>',
-            offset = (sel ? sel.start : 0) + html.length;
-
-        textarea.replaceSelection(html);
-        textarea.setSelection(offset, offset);
-    };
-
     // 处理保存文章的逻辑
-    var form = $('form[name=write_post],form[name=write_page]'),
+    const form = $('form[name=write_post],form[name=write_page]'),
         idInput = $('input[name=cid]'),
-        cid = idInput.val(),
         draft = $('input[name=draft]'),
-        draftId = draft.length > 0 ? draft.val() : 0,
         btnPreview = $('#btn-preview'),
+        autoSave = $('<span id="auto-save-message" class="left"></span>').prependTo('.submit');
+
+    let cid = idInput.val(),
+        draftId = draft.length > 0 ? draft.val() : 0,
         changed = false,
-        autoSave = $('<span id="auto-save-message" class="left"></span>').prependTo('.submit'),
+        written = false,
         lastSaveTime = null;
 
-    form.on('input change field', function (e) {
-        // todo: check if the input is really changed
-        changed = true;
+    form.on('write', function () {
+        written = true;
         form.trigger('datachange');
+    });
+
+    form.on('change', function () {
+        if (written) {
+            form.trigger('datachange');
+        }
     });
 
     $('button[name=do]').click(function () {
@@ -218,6 +214,7 @@ $(document).ready(function() {
     let saveTimer = null;
 
     form.on('datachange', function () {
+        changed = true;
         autoSave.text('<?php _e('尚未保存'); ?>' + (lastSaveTime ? ' (<?php _e('上次保存时间'); ?>: ' + lastSaveTime + ')' : ''));
 
         if (saveTimer) {
@@ -226,7 +223,11 @@ $(document).ready(function() {
 
         saveTimer = setTimeout(function () {
             Typecho.savePost();
-        }, 5000);
+        }, 3000);
+    });
+    <?php else: ?>
+    form.on('datachange', function () {
+        changed = true;
     });
     <?php endif; ?>
 
@@ -286,7 +287,7 @@ $(document).ready(function() {
     btnPreview.click(function () {
         if (changed) {
             if (confirm('<?php _e('修改后的内容需要保存后才能预览, 是否保存?'); ?>')) {
-                savePost(function (o) {
+                Typecho.savePost(function (o) {
                     previewData(o.draftId);
                 });
             }
@@ -302,7 +303,7 @@ $(document).ready(function() {
         $('#edit-secondary .typecho-option-tabs li.active').removeClass('active');
         $('#edit-secondary .tab-content').addClass('hidden');
 
-        const activeTab = $(this).find('a').attr('href');
+        const activeTab = $(this).addClass('active').find('a').attr('href');
         $(activeTab).removeClass('hidden');
 
         return false;
