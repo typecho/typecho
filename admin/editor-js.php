@@ -1,11 +1,19 @@
 <?php if(!defined('__TYPECHO_ADMIN__')) exit; ?>
 <?php $content = !empty($post) ? $post : $page; ?>
+<script>
+(function () {
+    $('#text').on('change', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }).on('input', function () {
+        $(this).parents('form').trigger('write');
+    });
+})();
+</script>
 <?php if (!$options->markdown): ?>
 <script>
 (function () {
-    const textarea = $('#text').on('input', function () {
-        textarea.parents('form').trigger('write');
-    });
+    const textarea = $('#text');
 
     // 原始的插入图片和文件
     Typecho.insertFileToEditor = function (file, url, isImage) {
@@ -127,11 +135,6 @@ $(document).ready(function () {
                 }
             });
         }
-    });
-
-    // 触发输入事件
-    textarea.on('input', function () {
-        textarea.parents('form').trigger('write');
     });
 
     <?php \Typecho\Plugin::factory('admin/editor-js.php')->call('markdownEditor', $content); ?>

@@ -74,7 +74,7 @@ class Edit extends Contents implements ActionInterface
         if ($this->request->is('do=publish')) {
             /** 重新发布已经存在的文章 */
             $contents['type'] = 'page';
-            $this->publish($contents);
+            $this->publish($contents, false);
 
             // 完成发布插件接口
             self::pluginHandle()->call('finishPublish', $contents, $this);
@@ -96,7 +96,7 @@ class Edit extends Contents implements ActionInterface
         } else {
             /** 保存文章 */
             $contents['type'] = 'page_draft';
-            $this->save($contents);
+            $draftId = $this->save($contents, false);
 
             // 完成发布插件接口
             self::pluginHandle()->call('finishSave', $contents, $this);
@@ -110,7 +110,7 @@ class Edit extends Contents implements ActionInterface
                     'success' => 1,
                     'time'    => $created->format('H:i:s A'),
                     'cid'     => $this->cid,
-                    'draftId' => $this->draft['cid']
+                    'draftId' => $draftId
                 ]);
             } else {
                 /** 设置提示信息 */
@@ -218,7 +218,7 @@ class Edit extends Contents implements ActionInterface
                 $this->deleteFields($page);
 
                 if ($draft) {
-                    $this->deleteDraft($draft['cid']);
+                    $this->deleteDraft($draft['cid'], false);
                     $this->deleteFields($draft['cid']);
                 }
 

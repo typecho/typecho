@@ -416,7 +416,7 @@ trait EditTrait
         $realId = 0;
 
         /** 是否是从草稿状态发布 */
-        $isDraftToPublish = ('post_draft' == $this->type || 'page_draft' == $this->type);
+        $isDraftToPublish = preg_match("/_draft$/", $this->type);
 
         $isBeforePublish = ('publish' == $this->status);
         $isAfterPublish = ('publish' == $contents['status']);
@@ -465,7 +465,8 @@ trait EditTrait
             /** 保存自定义字段 */
             $this->applyFields($this->getFields(), $realId);
 
-            $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $realId)->limit(1), [$this, 'push']);
+            $this->db->fetchRow($this->select()
+                ->where('table.contents.cid = ?', $realId)->limit(1), [$this, 'push']);
         }
     }
 
@@ -475,9 +476,10 @@ trait EditTrait
      *
      * @param array $contents 内容结构
      * @param boolean $hasMetas 是否有metas
+     * @return integer
      * @throws DbException|Exception
      */
-    protected function save(array $contents, bool $hasMetas = true)
+    protected function save(array $contents, bool $hasMetas = true): int
     {
         /** 发布内容, 检查是否具有直接发布的权限 */
         $this->checkStatus($contents);
@@ -527,7 +529,11 @@ trait EditTrait
 
             /** 保存自定义字段 */
             $this->applyFields($this->getFields(), $realId);
+
+            return $realId;
         }
+
+        return $this->draft['cid'];
     }
 
     /**

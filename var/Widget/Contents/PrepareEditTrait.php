@@ -58,7 +58,7 @@ trait PrepareEditTrait
                         ->where('table.relationships.cid = ?', $draft['cid'])
                         ->where('table.metas.type = ?', 'tag'), [Metas::alloc(), 'filter']);
 
-                    $this->push($draft);
+                    $this->row = $draft;
                 }
             }
 

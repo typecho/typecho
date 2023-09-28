@@ -20,8 +20,6 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
 
 /**
  * 编辑文章组件
- *
- * @property-read array|null $draft
  */
 class Edit extends Contents implements ActionInterface
 {
@@ -95,7 +93,7 @@ class Edit extends Contents implements ActionInterface
         } else {
             /** 保存文章 */
             $contents['type'] = 'post_draft';
-            $this->save($contents);
+            $draftId = $this->save($contents);
 
             // 完成保存插件接口
             self::pluginHandle()->call('finishSave', $contents, $this);
@@ -109,7 +107,7 @@ class Edit extends Contents implements ActionInterface
                     'success' => 1,
                     'time'    => $created->format('H:i:s A'),
                     'cid'     => $this->cid,
-                    'draftId' => $this->draft['cid']
+                    'draftId' => $draftId
                 ]);
             } else {
                 /** 设置提示信息 */
