@@ -412,7 +412,7 @@ abstract class Widget
      */
     public function __set(string $name, $value)
     {
-        $this->row[$name] = $value;
+        $this->setRow($name, $value);
     }
 
     /**
@@ -468,5 +468,15 @@ abstract class Widget
     public function ___parameter(): Config
     {
         return $this->parameter;
+    }
+
+    /**
+     * @param string $key
+     * @param $value
+     * @return void
+     */
+    protected function setRow(string $key, $value)
+    {
+        $this->row[$key] = $value;
     }
 }

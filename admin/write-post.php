@@ -115,7 +115,7 @@ include 'menu.php';
 
                         <section class="typecho-post-option">
                             <label for="token-input-tags" class="typecho-label"><?php _e('标签'); ?></label>
-                            <p><input id="tags" name="tags" type="text" value="<?php $post->tags(',', false); ?>"
+                            <p><input id="tags" name="tags" type="text" value="<?php $post->have() ? $post->tags(',', false) : ''; ?>"
                                       class="w-100 text"/></p>
                         </section>
 
