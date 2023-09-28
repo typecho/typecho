@@ -3,7 +3,7 @@ include 'common.php';
 include 'header.php';
 include 'menu.php';
 
-$attachment = \Widget\Contents\Attachment\Edit::alloc();
+\Widget\Contents\Attachment\Edit::alloc()->prepare()->to($attachment);
 ?>
 
 <div class="main">

@@ -3,17 +3,14 @@
 namespace Widget\Contents\Post;
 
 use Typecho\Common;
-use Typecho\Config;
-use Typecho\Validate;
 use Typecho\Widget\Exception;
-use Typecho\Widget\Helper\Form\Element;
-use Typecho\Widget\Helper\Layout;
 use Widget\Base\Contents;
 use Widget\Base\Metas;
 use Widget\ActionInterface;
 use Typecho\Db\Exception as DbException;
 use Typecho\Date as TypechoDate;
 use Widget\Contents\EditTrait;
+use Widget\Contents\PrepareEditTrait;
 use Widget\Notice;
 use Widget\Service;
 
@@ -28,14 +25,8 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  */
 class Edit extends Contents implements ActionInterface
 {
+    use PrepareEditTrait;
     use EditTrait;
-
-    /**
-     * 自定义字段的hook名称
-     *
-     * @var string
-     */
-    protected string $themeCustomFieldsHook = 'themePostFields';
 
     /**
      * 执行函数
@@ -46,16 +37,6 @@ class Edit extends Contents implements ActionInterface
     {
         /** 必须为贡献者以上权限 */
         $this->user->pass('contributor');
-    }
-
-    /**
-     * 获取网页标题
-     *
-     * @return string
-     */
-    public function getMenuTitle(): string
-    {
-        return _t('编辑 %s', $this->title);
     }
 
     /**
@@ -93,7 +74,9 @@ class Edit extends Contents implements ActionInterface
             self::pluginHandle()->call('finishPublish', $contents, $this);
 
             /** 发送ping */
-            $trackback = array_filter(array_unique(preg_split("/(\r|\n|\r\n)/", trim($this->request->get('trackback')))));
+            $trackback = array_filter(
+                array_unique(preg_split("/(\r|\n|\r\n)/", trim($this->request->get('trackback'))))
+            );
             Service::alloc()->sendPing($this, $trackback);
 
             /** 设置提示信息 */
@@ -139,127 +122,6 @@ class Edit extends Contents implements ActionInterface
     }
 
     /**
-     * 发布内容
-     *
-     * @param array $contents 内容结构
-     * @throws DbException|Exception
-     */
-    protected function publish(array $contents)
-    {
-        /** 发布内容, 检查是否具有直接发布的权限 */
-        $this->checkStatus($contents);
-
-        /** 真实的内容id */
-        $realId = 0;
-
-        /** 是否是从草稿状态发布 */
-        $isDraftToPublish = ('post_draft' == $this->type || 'page_draft' == $this->type);
-
-        $isBeforePublish = ('publish' == $this->status);
-        $isAfterPublish = ('publish' == $contents['status']);
-
-        /** 重新发布现有内容 */
-        if ($this->have()) {
-
-            /** 如果它本身不是草稿, 需要删除其草稿 */
-            if (!$isDraftToPublish && $this->draft) {
-                $cid = $this->draft['cid'];
-                $this->deleteDraft($cid);
-                $this->deleteFields($cid);
-            }
-
-            /** 直接将草稿状态更改 */
-            if ($this->update($contents, $this->db->sql()->where('cid = ?', $this->cid))) {
-                $realId = $this->cid;
-            }
-        } else {
-            /** 发布一个新内容 */
-            $realId = $this->insert($contents);
-        }
-
-        if ($realId > 0) {
-            /** 插入分类 */
-            if (array_key_exists('category', $contents)) {
-                $this->setCategories(
-                    $realId,
-                    !empty($contents['category']) && is_array($contents['category'])
-                        ? $contents['category'] : [$this->options->defaultCategory],
-                    !$isDraftToPublish && $isBeforePublish,
-                    $isAfterPublish
-                );
-            }
-
-            /** 插入标签 */
-            if (array_key_exists('tags', $contents)) {
-                $this->setTags($realId, $contents['tags'], !$isDraftToPublish && $isBeforePublish, $isAfterPublish);
-            }
-
-            /** 同步附件 */
-            $this->attach($realId);
-
-            /** 保存自定义字段 */
-            $this->applyFields($this->getFields(), $realId);
-
-            $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $realId)->limit(1), [$this, 'push']);
-        }
-    }
-
-    /**
-     * 同步附件
-     *
-     * @param integer $cid 内容id
-     * @throws DbException
-     */
-    protected function attach(int $cid)
-    {
-        $attachments = $this->request->getArray('attachment');
-        if (!empty($attachments)) {
-            foreach ($attachments as $key => $attachment) {
-                $this->db->query($this->db->update('table.contents')->rows([
-                    'parent' => $cid,
-                    'status' => 'publish',
-                    'order'  => $key + 1
-                ])->where('cid = ? AND type = ?', $attachment, 'attachment'));
-            }
-        }
-    }
-
-    /**
-     * getFields
-     *
-     * @return array
-     */
-    protected function getFields(): array
-    {
-        $fields = [];
-        $fieldNames = $this->request->getArray('fieldNames');
-
-        if (!empty($fieldNames)) {
-            $data = [
-                'fieldNames'  => $this->request->getArray('fieldNames'),
-                'fieldTypes'  => $this->request->getArray('fieldTypes'),
-                'fieldValues' => $this->request->getArray('fieldValues')
-            ];
-            foreach ($data['fieldNames'] as $key => $val) {
-                $val = trim($val);
-
-                if (0 == strlen($val)) {
-                    continue;
-                }
-
-                $fields[$val] = [$data['fieldTypes'][$key], $data['fieldValues'][$key]];
-            }
-        }
-
-        $customFields = $this->request->getArray('fields');
-        foreach ($customFields as $key => $val) {
-            $fields[$key] = [is_array($val) ? 'json' : 'str', $val];
-        }
-
-        return $fields;
-    }
-
-    /**
      * 获取页面偏移的URL Query
      *
      * @param integer $cid 文章id
@@ -276,63 +138,6 @@ class Edit extends Contents implements ActionInterface
             $status,
             $this->request->is('__typecho_all_posts=on') ? 0 : $this->user->uid
         );
-    }
-
-    /**
-     * 保存内容
-     *
-     * @param array $contents 内容结构
-     * @throws DbException|Exception
-     */
-    protected function save(array $contents)
-    {
-        /** 发布内容, 检查是否具有直接发布的权限 */
-        $this->checkStatus($contents);
-
-        /** 真实的内容id */
-        $realId = 0;
-
-        /** 如果草稿已经存在 */
-        if ($this->draft) {
-
-            /** 直接将草稿状态更改 */
-            if ($this->update($contents, $this->db->sql()->where('cid = ?', $this->draft['cid']))) {
-                $realId = $this->draft['cid'];
-            }
-        } else {
-            if ($this->have()) {
-                $contents['parent'] = $this->cid;
-            }
-
-            /** 发布一个新内容 */
-            $realId = $this->insert($contents);
-
-            if (!$this->have()) {
-                $this->db->fetchRow(
-                    $this->select()->where('table.contents.cid = ?', $realId)->limit(1),
-                    [$this, 'push']
-                );
-            }
-        }
-
-        if ($realId > 0) {
-            /** 插入分类 */
-            if (array_key_exists('category', $contents)) {
-                $this->setCategories($realId, !empty($contents['category']) && is_array($contents['category']) ?
-                    $contents['category'] : [$this->options->defaultCategory], false, false);
-            }
-
-            /** 插入标签 */
-            if (array_key_exists('tags', $contents)) {
-                $this->setTags($realId, $contents['tags'], false, false);
-            }
-
-            /** 同步附件 */
-            $this->attach($this->cid);
-
-            /** 保存自定义字段 */
-            $this->applyFields($this->getFields(), $realId);
-        }
     }
 
     /**
@@ -497,18 +302,6 @@ class Edit extends Contents implements ActionInterface
     }
 
     /**
-     * 取消附件关联
-     *
-     * @param integer $cid 内容id
-     * @throws DbException
-     */
-    protected function unAttach(int $cid)
-    {
-        $this->db->query($this->db->update('table.contents')->rows(['parent' => 0, 'status' => 'publish'])
-            ->where('parent = ? AND type = ?', $cid, 'attachment'));
-    }
-
-    /**
      * 删除文章所属草稿
      *
      * @throws DbException
@@ -544,14 +337,25 @@ class Edit extends Contents implements ActionInterface
     }
 
     /**
+     * @return $this
+     * @throws DbException
+     * @throws Exception
+     */
+    public function prepare(): self
+    {
+        return $this->prepareEdit('post', true, _t('文章不存在'));
+    }
+
+    /**
      * 绑定动作
+     *
+     * @throws Exception|DbException
      */
     public function action()
     {
         $this->security->protect();
         $this->on($this->request->is('do=publish') || $this->request->is('do=save'))
-            ->prepareEdit('post', true, _t('文章不存在'))
-            ->writePost();
+            ->prepare()->writePost();
         $this->on($this->request->is('do=delete'))->deletePost();
         $this->on($this->request->is('do=mark'))->markPost();
         $this->on($this->request->is('do=deleteDraft'))->deletePostDraft();
@@ -560,28 +364,10 @@ class Edit extends Contents implements ActionInterface
     }
 
     /**
-     * @param array $contents
-     * @return void
+     * @return string
      */
-    private function checkStatus(array &$contents)
+    protected function getThemeFieldsHook(): string
     {
-        if ($this->user->pass('editor', true)) {
-            if (empty($contents['visibility'])) {
-                $contents['status'] = 'publish';
-            } elseif (
-                !in_array($contents['visibility'], ['private', 'waiting', 'publish', 'hidden'])
-            ) {
-                if (empty($contents['password']) || 'password' != $contents['visibility']) {
-                    $contents['password'] = '';
-                }
-                $contents['status'] = 'publish';
-            } else {
-                $contents['status'] = $contents['visibility'];
-                $contents['password'] = '';
-            }
-        } else {
-            $contents['status'] = 'waiting';
-            $contents['password'] = '';
-        }
+        return 'themePostFields';
     }
 }

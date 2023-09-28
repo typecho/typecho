@@ -15,39 +15,6 @@ use Widget\Base\Metas;
 trait EditTrait
 {
     /**
-     * 自定义字段的hook名称
-     *
-     * @var string
-     */
-    protected string $themeCustomFieldsHook;
-
-    /**
-     * 获取权限
-     *
-     * @param mixed ...$permissions
-     * @return bool
-     * @throws Exception|DbException
-     */
-    public function allow(...$permissions): bool
-    {
-        $allow = true;
-
-        foreach ($permissions as $permission) {
-            $permission = strtolower($permission);
-
-            if ('edit' == $permission) {
-                $allow &= ($this->user->pass('editor', true) || $this->authorId == $this->user->uid);
-            } else {
-                $permission = 'allow' . ucfirst(strtolower($permission));
-                $optionPermission = 'default' . ucfirst($permission);
-                $allow &= ($this->{$permission} ?? $this->options->{$optionPermission});
-            }
-        }
-
-        return $allow;
-    }
-
-    /**
      * getFieldItems
      *
      * @throws DbException
@@ -109,8 +76,9 @@ trait EditTrait
                 themeFields($layout);
             }
 
-            if (function_exists($this->themeCustomFieldsHook)) {
-                call_user_func($this->themeCustomFieldsHook, $layout);
+            $func = $this->getThemeFieldsHook();
+            if (function_exists($func)) {
+                call_user_func($func, $layout);
             }
         }
 
@@ -158,6 +126,47 @@ trait EditTrait
         return $defaultFields;
     }
 
+    /**
+     * 获取自定义字段的hook名称
+     *
+     * @return string
+     */
+    abstract protected function getThemeFieldsHook(): string;
+
+    /**
+     * getFields
+     *
+     * @return array
+     */
+    protected function getFields(): array
+    {
+        $fields = [];
+        $fieldNames = $this->request->getArray('fieldNames');
+
+        if (!empty($fieldNames)) {
+            $data = [
+                'fieldNames'  => $this->request->getArray('fieldNames'),
+                'fieldTypes'  => $this->request->getArray('fieldTypes'),
+                'fieldValues' => $this->request->getArray('fieldValues')
+            ];
+            foreach ($data['fieldNames'] as $key => $val) {
+                $val = trim($val);
+
+                if (0 == strlen($val)) {
+                    continue;
+                }
+
+                $fields[$val] = [$data['fieldTypes'][$key], $data['fieldValues'][$key]];
+            }
+        }
+
+        $customFields = $this->request->getArray('fields');
+        foreach ($customFields as $key => $val) {
+            $fields[$key] = [is_array($val) ? 'json' : 'str', $val];
+        }
+
+        return $fields;
+    }
 
     /**
      * 删除草稿
@@ -165,15 +174,17 @@ trait EditTrait
      * @param integer $cid 草稿id
      * @throws DbException
      */
-    protected function deleteDraft(int $cid)
+    protected function deleteDraft(int $cid, bool $hasMetas = true)
     {
         $this->delete($this->db->sql()->where('cid = ?', $cid));
 
-        /** 删除草稿分类 */
-        $this->setCategories($cid, [], false, false);
+        if ($hasMetas) {
+            /** 删除草稿分类 */
+            $this->setCategories($cid, [], false, false);
 
-        /** 删除标签 */
-        $this->setTags($cid, null, false, false);
+            /** 删除标签 */
+            $this->setTags($cid, null, false, false);
+        }
     }
 
     /**
@@ -214,65 +225,6 @@ trait EditTrait
         }
 
         return $created;
-    }
-
-    /**
-     * 准备编辑
-     *
-     * @param string $type
-     * @param bool $hasDraft
-     * @param string $notFoundMessage
-     * @return $this
-     */
-    protected function prepareEdit(string $type, bool $hasDraft, string $notFoundMessage): self
-    {
-        if ($this->request->is('cid')) {
-            $contentTypes = [$type];
-            if ($hasDraft) {
-                $contentTypes[] = $type . '_draft';
-            }
-
-            $this->db->fetchRow($this->select()
-                ->where('table.contents.type IN ?', $contentTypes)
-                ->where('table.contents.cid = ?', $this->request->filter('int')->get('cid'))
-                ->limit(1), [$this, 'push']);
-
-            if (!$this->have()) {
-                throw new Exception($notFoundMessage, 404);
-            }
-
-            if ($hasDraft) {
-                if ($type . '_draft' === $this->type && $this->parent) {
-                    $this->response->redirect(
-                        Common::url('write-' . $type . '.php?cid=' . $this->parent, $this->options->adminUrl)
-                    );
-                }
-
-                $draft = $this->type === $type . '_draft' ? $this->row : $this->db->fetchRow($this->select()
-                    ->where('table.contents.parent = ? AND table.contents.type = ?', $this->cid, $type . '_draft')
-                    ->limit(1), [$this, 'filter']);
-
-                if (isset($draft)) {
-                    $draft['slug'] = ltrim($draft['slug'], '@');
-                    $draft['type'] = $type;
-                    $draft['draft'] = $draft;
-                    $draft['cid'] = $this->cid;
-                    $draft['tags'] = $this->db->fetchAll($this->db
-                        ->select()->from('table.metas')
-                        ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
-                        ->where('table.relationships.cid = ?', $draft['cid'])
-                        ->where('table.metas.type = ?', 'tag'), [Metas::alloc(), 'filter']);
-
-                    $this->push($draft);
-                }
-            }
-
-            if (!$this->allow('edit')) {
-                throw new Exception(_t('没有编辑权限'), 403);
-            }
-        }
-
-        return $this;
     }
 
     /**
@@ -413,6 +365,196 @@ trait EditTrait
                         ->where('mid = ?', $tag));
                 }
             }
+        }
+    }
+
+    /**
+     * 同步附件
+     *
+     * @param integer $cid 内容id
+     * @throws DbException
+     */
+    protected function attach(int $cid)
+    {
+        $attachments = $this->request->getArray('attachment');
+        if (!empty($attachments)) {
+            foreach ($attachments as $key => $attachment) {
+                $this->db->query($this->db->update('table.contents')->rows([
+                    'parent' => $cid,
+                    'status' => 'publish',
+                    'order'  => $key + 1
+                ])->where('cid = ? AND type = ?', $attachment, 'attachment'));
+            }
+        }
+    }
+
+    /**
+     * 取消附件关联
+     *
+     * @param integer $cid 内容id
+     * @throws DbException
+     */
+    protected function unAttach(int $cid)
+    {
+        $this->db->query($this->db->update('table.contents')->rows(['parent' => 0, 'status' => 'publish'])
+            ->where('parent = ? AND type = ?', $cid, 'attachment'));
+    }
+
+    /**
+     * 发布内容
+     *
+     * @param array $contents 内容结构
+     * @param boolean $hasMetas 是否有metas
+     * @throws DbException|Exception
+     */
+    protected function publish(array $contents, bool $hasMetas = true)
+    {
+        /** 发布内容, 检查是否具有直接发布的权限 */
+        $this->checkStatus($contents);
+
+        /** 真实的内容id */
+        $realId = 0;
+
+        /** 是否是从草稿状态发布 */
+        $isDraftToPublish = ('post_draft' == $this->type || 'page_draft' == $this->type);
+
+        $isBeforePublish = ('publish' == $this->status);
+        $isAfterPublish = ('publish' == $contents['status']);
+
+        /** 重新发布现有内容 */
+        if ($this->have()) {
+
+            /** 如果它本身不是草稿, 需要删除其草稿 */
+            if (!$isDraftToPublish && $this->draft) {
+                $cid = $this->draft['cid'];
+                $this->deleteDraft($cid);
+                $this->deleteFields($cid);
+            }
+
+            /** 直接将草稿状态更改 */
+            if ($this->update($contents, $this->db->sql()->where('cid = ?', $this->cid))) {
+                $realId = $this->cid;
+            }
+        } else {
+            /** 发布一个新内容 */
+            $realId = $this->insert($contents);
+        }
+
+        if ($realId > 0) {
+            if ($hasMetas) {
+                /** 插入分类 */
+                if (array_key_exists('category', $contents)) {
+                    $this->setCategories(
+                        $realId,
+                        !empty($contents['category']) && is_array($contents['category'])
+                            ? $contents['category'] : [$this->options->defaultCategory],
+                        !$isDraftToPublish && $isBeforePublish,
+                        $isAfterPublish
+                    );
+                }
+
+                /** 插入标签 */
+                if (array_key_exists('tags', $contents)) {
+                    $this->setTags($realId, $contents['tags'], !$isDraftToPublish && $isBeforePublish, $isAfterPublish);
+                }
+            }
+
+            /** 同步附件 */
+            $this->attach($realId);
+
+            /** 保存自定义字段 */
+            $this->applyFields($this->getFields(), $realId);
+
+            $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $realId)->limit(1), [$this, 'push']);
+        }
+    }
+
+
+    /**
+     * 保存内容
+     *
+     * @param array $contents 内容结构
+     * @param boolean $hasMetas 是否有metas
+     * @throws DbException|Exception
+     */
+    protected function save(array $contents, bool $hasMetas = true)
+    {
+        /** 发布内容, 检查是否具有直接发布的权限 */
+        $this->checkStatus($contents);
+
+        /** 真实的内容id */
+        $realId = 0;
+
+        /** 如果草稿已经存在 */
+        if ($this->draft) {
+
+            /** 直接将草稿状态更改 */
+            if ($this->update($contents, $this->db->sql()->where('cid = ?', $this->draft['cid']))) {
+                $realId = $this->draft['cid'];
+            }
+        } else {
+            if ($this->have()) {
+                $contents['parent'] = $this->cid;
+            }
+
+            /** 发布一个新内容 */
+            $realId = $this->insert($contents);
+
+            if (!$this->have()) {
+                $this->db->fetchRow(
+                    $this->select()->where('table.contents.cid = ?', $realId)->limit(1),
+                    [$this, 'push']
+                );
+            }
+        }
+
+        if ($realId > 0) {
+            if ($hasMetas) {
+                /** 插入分类 */
+                if (array_key_exists('category', $contents)) {
+                    $this->setCategories($realId, !empty($contents['category']) && is_array($contents['category']) ?
+                        $contents['category'] : [$this->options->defaultCategory], false, false);
+                }
+
+                /** 插入标签 */
+                if (array_key_exists('tags', $contents)) {
+                    $this->setTags($realId, $contents['tags'], false, false);
+                }
+            }
+
+            /** 同步附件 */
+            $this->attach($this->cid);
+
+            /** 保存自定义字段 */
+            $this->applyFields($this->getFields(), $realId);
+        }
+    }
+
+    /**
+     * @param array $contents
+     * @return void
+     * @throws DbException
+     * @throws Exception
+     */
+    private function checkStatus(array &$contents)
+    {
+        if ($this->user->pass('editor', true)) {
+            if (empty($contents['visibility'])) {
+                $contents['status'] = 'publish';
+            } elseif (
+                !in_array($contents['visibility'], ['private', 'waiting', 'publish', 'hidden'])
+            ) {
+                if (empty($contents['password']) || 'password' != $contents['visibility']) {
+                    $contents['password'] = '';
+                }
+                $contents['status'] = 'publish';
+            } else {
+                $contents['status'] = $contents['visibility'];
+                $contents['password'] = '';
+            }
+        } else {
+            $contents['status'] = 'waiting';
+            $contents['password'] = '';
         }
     }
 }

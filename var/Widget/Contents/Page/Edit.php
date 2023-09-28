@@ -4,9 +4,12 @@ namespace Widget\Contents\Page;
 
 use Typecho\Common;
 use Typecho\Date;
+use Typecho\Db\Exception as DbException;
 use Typecho\Widget\Exception;
-use Widget\Contents\Post\Edit as PostEdit;
+use Widget\Base\Contents;
+use Widget\Contents\EditTrait;
 use Widget\ActionInterface;
+use Widget\Contents\PrepareEditTrait;
 use Widget\Notice;
 use Widget\Service;
 
@@ -23,15 +26,10 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Edit extends PostEdit implements ActionInterface
+class Edit extends Contents implements ActionInterface
 {
-    /**
-     * 自定义字段的hook名称
-     *
-     * @var string
-     * @access protected
-     */
-    protected string $themeCustomFieldsHook = 'themePageFields';
+    use PrepareEditTrait;
+    use EditTrait;
 
     /**
      * 执行函数
@@ -39,30 +37,12 @@ class Edit extends PostEdit implements ActionInterface
      * @access public
      * @return void
      * @throws Exception
-     * @throws \Typecho\Db\Exception
+     * @throws DbException
      */
     public function execute()
     {
         /** 必须为编辑以上权限 */
         $this->user->pass('editor');
-
-        /** 获取文章内容 */
-        if ($this->request->is('cid')) {
-            $this->db->fetchRow($this->select()
-                ->where('table.contents.type = ? OR table.contents.type = ?', 'page', 'page_draft')
-                ->where('table.contents.cid = ?', $this->request->filter('int')->get('cid'))
-                ->limit(1), [$this, 'push']);
-
-            if ('page_draft' == $this->status && $this->parent) {
-                $this->response->redirect(Common::url('write-page.php?cid=' . $this->parent, $this->options->adminUrl));
-            }
-
-            if (!$this->have()) {
-                throw new Exception(_t('页面不存在'), 404);
-            } elseif (!$this->allow('edit')) {
-                throw new Exception(_t('没有编辑权限'), 403);
-            }
-        }
     }
 
     /**
@@ -145,7 +125,7 @@ class Edit extends PostEdit implements ActionInterface
     /**
      * 标记页面
      *
-     * @throws \Typecho\Db\Exception
+     * @throws DbException
      */
     public function markPage()
     {
@@ -202,7 +182,7 @@ class Edit extends PostEdit implements ActionInterface
     /**
      * 删除页面
      *
-     * @throws \Typecho\Db\Exception
+     * @throws DbException
      */
     public function deletePage()
     {
@@ -263,7 +243,7 @@ class Edit extends PostEdit implements ActionInterface
     /**
      * 删除页面所属草稿
      *
-     * @throws \Typecho\Db\Exception
+     * @throws DbException
      */
     public function deletePageDraft()
     {
@@ -298,7 +278,7 @@ class Edit extends PostEdit implements ActionInterface
     /**
      * 页面排序
      *
-     * @throws \Typecho\Db\Exception
+     * @throws DbException
      */
     public function sortPage()
     {
@@ -320,19 +300,39 @@ class Edit extends PostEdit implements ActionInterface
     }
 
     /**
+     * @return $this
+     * @throws DbException
+     * @throws Exception
+     */
+    public function prepare(): self
+    {
+        return $this->prepareEdit('page', true, _t('页面不存在'));
+    }
+
+    /**
      * 绑定动作
      *
-     * @access public
      * @return void
+     * @throws DbException
+     * @throws Exception
      */
     public function action()
     {
         $this->security->protect();
-        $this->on($this->request->is('do=publish') || $this->request->is('do=save'))->writePage();
+        $this->on($this->request->is('do=publish') || $this->request->is('do=save'))
+            ->prepare()->writePage();
         $this->on($this->request->is('do=delete'))->deletePage();
         $this->on($this->request->is('do=mark'))->markPage();
         $this->on($this->request->is('do=deleteDraft'))->deletePageDraft();
         $this->on($this->request->is('do=sort'))->sortPage();
         $this->response->redirect($this->options->adminUrl);
+    }
+
+    /**
+     * @return string
+     */
+    protected function getThemeFieldsHook(): string
+    {
+        return 'themePageFields';
     }
 }

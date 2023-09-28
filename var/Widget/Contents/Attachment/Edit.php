@@ -7,8 +7,8 @@ use Typecho\Widget\Exception;
 use Typecho\Widget\Helper\Form;
 use Typecho\Widget\Helper\Layout;
 use Widget\ActionInterface;
-use Widget\Contents\EditTrait;
-use Widget\Contents\Post\Edit as PostEdit;
+use Widget\Base\Contents;
+use Widget\Contents\PrepareEditTrait;
 use Widget\Notice;
 use Widget\Upload;
 
@@ -25,9 +25,9 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Edit extends PostEdit implements ActionInterface
+class Edit extends Contents implements ActionInterface
 {
-    use EditTrait;
+    use PrepareEditTrait;
 
     /**
      * 执行函数
@@ -269,6 +269,16 @@ class Edit extends PostEdit implements ActionInterface
     }
 
     /**
+     * @return $this
+     * @throws Exception
+     * @throws \Typecho\Db\Exception
+     */
+    public function prepare(): self
+    {
+        return $this->prepareEdit('attachment', false, _t('文件不存在'));
+    }
+
+    /**
      * 绑定动作
      *
      * @access public
@@ -279,8 +289,7 @@ class Edit extends PostEdit implements ActionInterface
         $this->security->protect();
         $this->on($this->request->is('do=delete'))->deleteAttachment();
         $this->on($this->request->is('do=update'))
-            ->prepareEdit('attachment', false, _t('文件不存在'))
-            ->updateAttachment();
+            ->prepare()->updateAttachment();
         $this->on($this->request->is('do=clear'))->clearAttachment();
         $this->response->redirect($this->options->adminUrl);
     }
