@@ -8,13 +8,13 @@
             $('html,body').scrollTop(error.parents('.typecho-option').offset().top);
         }
 
-        $('form').on('submit', function () {
+        $('form').submit(function () {
             if (this.submitted) {
                 return false;
             } else {
-                var siteUrl = $('input[name="siteUrl"], input[name="url"]');
-                if (siteUrl) {
-                    var url = new URL(siteUrl.val());
+                let siteUrl = $('input[name="siteUrl"], input[name="url"]');
+                if (siteUrl.length) {
+                    const url = new URL(siteUrl.val());
                     siteUrl.val(url.origin);
                 }
                 this.submitted = true;
