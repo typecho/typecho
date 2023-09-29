@@ -8,10 +8,15 @@
             $('html,body').scrollTop(error.parents('.typecho-option').offset().top);
         }
 
-        $('form').submit(function () {
+        $('form').on('submit', function () {
             if (this.submitted) {
                 return false;
             } else {
+                var siteUrl = $('input[name="siteUrl"], input[name="url"]');
+                if (siteUrl) {
+                    var url = new URL(siteUrl.val());
+                    siteUrl.val(url.origin);
+                }
                 this.submitted = true;
             }
         });

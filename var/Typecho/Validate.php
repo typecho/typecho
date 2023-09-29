@@ -112,13 +112,6 @@ class Validate
     public static function url(string $str): bool
     {
         $url = Common::safeUrl($str);
-
-        if (function_exists('idn_to_ascii')) {
-            $host = parse_url($url, PHP_URL_HOST);
-            $asciiUrl = str_replace($host, idn_to_ascii($host), $url);
-            return !!filter_var($asciiUrl, FILTER_VALIDATE_URL) && ($url === $str);
-        }
-
         return !!filter_var($str, FILTER_VALIDATE_URL) && ($url === $str);
     }
 
