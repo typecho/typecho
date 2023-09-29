@@ -97,6 +97,11 @@ class General extends Options implements ActionInterface
 
         if (!defined('__TYPECHO_SITE_URL__')) {
             $settings['siteUrl'] = rtrim($this->request->get('siteUrl'), '/');
+
+            if (function_exists('idn_to_ascii')) {
+                $host = parse_url($settings['siteUrl'], PHP_URL_HOST);
+                $settings['siteUrl'] = str_replace($host, idn_to_ascii($host), $settings['siteUrl']);
+            }
         }
 
         $attachmentTypes = [];
@@ -151,14 +156,23 @@ class General extends Options implements ActionInterface
 
         /** 站点地址 */
         if (!defined('__TYPECHO_SITE_URL__')) {
+            $originalSiteUrl = $this->options->originalSiteUrl;
+            $rootUrl = $this->options->rootUrl;
+            if (function_exists('idn_to_utf8')) {
+                $hostOriginalSite = parse_url($originalSiteUrl, PHP_URL_HOST);
+                $hostRootUrl = parse_url($rootUrl, PHP_URL_HOST);
+                $originalSiteUrl = str_replace($hostOriginalSite, idn_to_utf8($hostOriginalSite), $originalSiteUrl);
+                $rootUrl = str_replace($hostRootUrl, idn_to_utf8($hostRootUrl), $rootUrl);
+            }
+
             $siteUrl = new Form\Element\Text(
                 'siteUrl',
                 null,
-                $this->options->originalSiteUrl,
+                $originalSiteUrl,
                 _t('站点地址'),
                 _t('站点地址主要用于生成内容的永久链接.') . ($this->options->originalSiteUrl == $this->options->rootUrl ?
                     '' : '</p><p class="message notice mono">'
-                    . _t('当前地址 <strong>%s</strong> 与上述设定值不一致', $this->options->rootUrl))
+                    . _t('当前地址 <strong>%s</strong> 与上述设定值不一致', $rootUrl))
             );
             $siteUrl->input->setAttribute('class', 'w-100 mono');
             $form->addInput($siteUrl->addRule('required', _t('请填写站点地址'))
