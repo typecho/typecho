@@ -666,17 +666,18 @@ class Archive extends Contents
     /**
      * 重载select
      *
+     * @param mixed $fields
      * @return Query
      * @throws Db\Exception
      */
-    public function select(): Query
+    public function select(...$fields): Query
     {
         if ($this->invokeByFeed) {
             // 对feed输出加入限制条件
-            return parent::select()->where('table.contents.allowFeed = ?', 1)
+            return parent::select(...$fields)->where('table.contents.allowFeed = ?', 1)
                 ->where("table.contents.password IS NULL OR table.contents.password = ''");
         } else {
-            return parent::select();
+            return parent::select(...$fields);
         }
     }
 

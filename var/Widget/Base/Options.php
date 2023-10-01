@@ -23,15 +23,11 @@ class Options extends Base implements QueryInterface
     /**
      * 获取原始查询对象
      *
-     * @param array|null $fields
+     * @param mixed ...$fields
      * @return Query
      */
-    public function select(?array $fields = null): Query
+    public function select(...$fields): Query
     {
-        $fields = array_map(function ($field) {
-            return 'table.options.' . $field;
-        }, $fields ?: ['name', 'user', 'value']);
-
         return $this->db->select(...$fields)->from('table.options');
     }
 

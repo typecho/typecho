@@ -329,16 +329,11 @@ class Comments extends Base implements QueryInterface, RowFilterInterface
     /**
      * 获取查询对象
      *
-     * @param array|null $fields
+     * @param mixed $fields
      * @return Query
      */
-    public function select(?array $fields = null): Query
+    public function select(...$fields): Query
     {
-        $fields = array_map(function ($field) {
-            return 'table.comments.' . $field;
-        }, $fields ?? ['coid', 'cid', 'created', 'author', 'authorId', 'ownerId', 'mail', 'url', 'ip', 'agent',
-            'text', 'type', 'status', 'parent']);
-
         return $this->db->select(...$fields)->from('table.comments');
     }
 
