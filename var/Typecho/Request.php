@@ -183,7 +183,7 @@ class Request
                 $exists = is_array($value) || (is_string($value) && strlen($value) > 0);
                 return $value;
             } else {
-                $exists = false;
+                $exists = true;
                 return $default;
             }
         } else {
