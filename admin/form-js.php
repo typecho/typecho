@@ -8,12 +8,18 @@
             $('html,body').scrollTop(error.parents('.typecho-option').offset().top);
         }
 
-        $('form').submit(function () {
-            if (this.submitted) {
+        $('.main form').submit(function () {
+            const self = $(this);
+
+            if (self.hasClass('submitting')) {
                 return false;
             } else {
-                this.submitted = true;
+                $('button[type=submit]', this).attr('disabled', 'disabled');
+                self.addClass('submitting');
             }
+        }).on('submitted', function () {
+            $('button[type=submit]', this).removeAttr('disabled');
+            $(this).removeClass('submitting');
         });
 
         $('label input[type=text]').click(function (e) {
