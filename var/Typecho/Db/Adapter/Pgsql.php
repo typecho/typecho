@@ -106,9 +106,9 @@ class Pgsql implements Adapter
      * 将数据查询的其中一行作为对象取出,其中字段名对应对象属性
      *
      * @param resource $resource 查询的资源数据
-     * @return object|null
+     * @return \stdClass|null
      */
-    public function fetchObject($resource): ?object
+    public function fetchObject($resource): ?\stdClass
     {
         return pg_fetch_object($resource) ?: null;
     }
