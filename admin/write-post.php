@@ -14,7 +14,7 @@ include 'menu.php';
                         <?php if ($post->draft['cid'] != $post->cid): ?>
                             <?php $postModifyDate = new \Typecho\Date($post->draft['modified']); ?>
                             <cite
-                                class="edit-draft-notice"><?php _e('你正在编辑的是保存于 %s 的草稿, 你也可以 <a href="%s">删除它</a>', $postModifyDate->word(),
+                                class="edit-draft-notice"><?php _e('你正在编辑的是保存于 %s 的修订版, 你也可以 <a href="%s">删除它</a>', $postModifyDate->word(),
                                     $security->getIndex('/action/contents-post-edit?do=deleteDraft&cid=' . $post->cid)); ?></cite>
                         <?php else: ?>
                             <cite class="edit-draft-notice"><?php _e('当前正在编辑的是未发布的草稿'); ?></cite>

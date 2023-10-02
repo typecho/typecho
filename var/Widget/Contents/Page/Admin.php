@@ -3,8 +3,8 @@
 namespace Widget\Contents\Page;
 
 use Typecho\Db;
+use Widget\Base\Contents;
 use Widget\Contents\AdminTrait;
-use Widget\Contents\Post\Admin as PostAdmin;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -18,7 +18,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Admin extends PostAdmin
+class Admin extends Contents
 {
     use AdminTrait;
 
@@ -33,10 +33,9 @@ class Admin extends PostAdmin
     {
         /** 过滤状态 */
         $select = $this->select()->where(
-            'table.contents.type = ? OR (table.contents.type = ? AND table.contents.parent = ?)',
+            'table.contents.type = ? OR table.contents.type = ?',
             'page',
-            'page_draft',
-            0
+            'page_draft'
         );
 
         $this->searchQuery($select);

@@ -254,7 +254,7 @@ class Edit extends Contents implements ActionInterface
             /** 删除草稿 */
             $draft = $this->db->fetchRow($this->db->select('cid')
                 ->from('table.contents')
-                ->where('table.contents.parent = ? AND table.contents.type = ?', $page, 'page_draft')
+                ->where('table.contents.parent = ? AND table.contents.type = ?', $page, 'revision')
                 ->limit(1));
 
             if ($draft) {

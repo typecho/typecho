@@ -80,8 +80,10 @@ $pages = \Widget\Contents\Page\Admin::alloc();
                                         <td>
                                             <a href="<?php $options->adminUrl('write-page.php?cid=' . $pages->cid); ?>"><?php $pages->title(); ?></a>
                                             <?php
-                                            if ($pages->hasSaved || 'page_draft' == $pages->type) {
+                                            if ('page_draft' == $pages->type) {
                                                 echo '<em class="status">' . _t('草稿') . '</em>';
+                                            } elseif ($pages->hasRevision) {
+                                                echo '<em class="status">' . _t('有修订版') . '</em>';
                                             }
 
                                             if ('hidden' == $pages->status) {
@@ -100,7 +102,7 @@ $pages = \Widget\Contents\Page\Admin::alloc();
                                         <td><?php $pages->slug(); ?></td>
                                         <td class="kit-hidden-mb"><?php $pages->author(); ?></td>
                                         <td>
-                                            <?php if ($pages->hasSaved): ?>
+                                            <?php if ('page_draft' == $pages->type || $pages->hasRevision): ?>
                                                 <span class="description">
                                 <?php $modifyDate = new \Typecho\Date($pages->modified); ?>
                                 <?php _e('保存于 %s', $modifyDate->word()); ?>

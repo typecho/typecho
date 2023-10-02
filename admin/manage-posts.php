@@ -148,8 +148,10 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                                         <td>
                                             <a href="<?php $options->adminUrl('write-post.php?cid=' . $posts->cid); ?>"><?php $posts->title(); ?></a>
                                             <?php
-                                            if ($posts->hasSaved || 'post_draft' == $posts->type) {
+                                            if ('post_draft' == $posts->type) {
                                                 echo '<em class="status">' . _t('草稿') . '</em>';
+                                            } elseif ($posts->hasRevision) {
+                                                echo '<em class="status">' . _t('有修订版') . '</em>';
                                             }
 
                                             if ('hidden' == $posts->status) {
@@ -185,7 +187,7 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                                             <?php endforeach; ?>
                                         </td>
                                         <td>
-                                            <?php if ($posts->hasSaved): ?>
+                                            <?php if ('post_draft' == $posts->type || $posts->hasRevision): ?>
                                                 <span class="description">
                                 <?php $modifyDate = new \Typecho\Date($posts->modified); ?>
                                 <?php _e('保存于 %s', $modifyDate->word()); ?>

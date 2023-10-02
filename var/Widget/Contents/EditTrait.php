@@ -430,7 +430,7 @@ trait EditTrait
             /** 如果它本身不是草稿, 需要删除其草稿 */
             if (!$isDraftToPublish && $this->draft) {
                 $cid = $this->draft['cid'];
-                $this->deleteDraft($cid);
+                $this->deleteContent($cid);
                 $this->deleteFields($cid);
             }
 
@@ -500,6 +500,7 @@ trait EditTrait
         } else {
             if ($this->have()) {
                 $contents['parent'] = $this->cid;
+                $contents['type'] = 'revision';
             }
 
             /** 发布一个新内容 */

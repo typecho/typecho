@@ -47,7 +47,7 @@ trait PrepareEditTrait
                 }
 
                 $draft = $this->type === $type . '_draft' ? $this->row : $this->db->fetchRow($this->select()
-                    ->where('table.contents.parent = ? AND table.contents.type = ?', $this->cid, $type . '_draft')
+                    ->where('table.contents.parent = ? AND table.contents.type = ?', $this->cid, 'revision')
                     ->limit(1), [$this, 'filter']);
 
                 if (isset($draft)) {

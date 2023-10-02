@@ -42,28 +42,6 @@ class Admin extends Contents
     }
 
     /**
-     * 重载过滤函数
-     *
-     * @param array $row
-     * @return array
-     * @throws DbException
-     */
-    public function filter(array $row): array
-    {
-        $row = parent::filter($row);
-
-        if (!empty($row['parent'])) {
-            $parent = $this->db->fetchObject($this->select()->where('cid = ?', $row['parent']));
-
-            if (!empty($parent)) {
-                $row['commentsNum'] = $parent->commentsNum;
-            }
-        }
-
-        return $row;
-    }
-
-    /**
      * 执行函数
      *
      * @throws DbException
@@ -88,8 +66,10 @@ class Admin extends Contents
                 }
 
                 if ('on' != Cookie::get('__typecho_all_posts')) {
-                    $select->where('table.contents.authorId = ?',
-                        $this->request->filter('int')->get('uid', $this->user->uid));
+                    $select->where(
+                        'table.contents.authorId = ?',
+                        $this->request->filter('int')->get('uid', $this->user->uid)
+                    );
                 }
             }
         }
@@ -106,10 +86,9 @@ class Admin extends Contents
             );
         } else {
             $select->where(
-                'table.contents.type = ? OR (table.contents.type = ? AND table.contents.parent = ?)',
+                'table.contents.type = ? OR table.contents.type = ?',
                 'post',
-                'post_draft',
-                0
+                'post_draft'
             );
         }
 
@@ -128,35 +107,4 @@ class Admin extends Contents
 
         $this->db->fetchAll($select, [$this, 'push']);
     }
-
-    /**
-     * 当前文章的草稿
-     *
-     * @return bool
-     * @throws DbException
-     */
-    protected function ___hasSaved(): bool
-    {
-        if (in_array($this->type, ['post_draft', 'page_draft'])) {
-            return true;
-        }
-
-        $savedPost = $this->db->fetchRow($this->db->select('cid', 'modified', 'status')
-            ->from('table.contents')
-            ->where(
-                'table.contents.parent = ? AND (table.contents.type = ? OR table.contents.type = ?)',
-                $this->cid,
-                'post_draft',
-                'page_draft'
-            )
-            ->limit(1));
-
-        if ($savedPost) {
-            $this->modified = $savedPost['modified'];
-            return true;
-        }
-
-        return false;
-    }
 }
-
