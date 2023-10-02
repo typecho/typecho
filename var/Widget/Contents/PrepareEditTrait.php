@@ -7,6 +7,9 @@ use Typecho\Db\Exception as DbException;
 use Typecho\Widget\Exception;
 use Widget\Base\Metas;
 
+/**
+ * 编辑准备组件
+ */
 trait PrepareEditTrait
 {
 

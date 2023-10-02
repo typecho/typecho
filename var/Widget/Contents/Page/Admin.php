@@ -2,8 +2,8 @@
 
 namespace Widget\Contents\Page;
 
-use Typecho\Common;
 use Typecho\Db;
+use Widget\Contents\AdminTrait;
 use Widget\Contents\Post\Admin as PostAdmin;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
@@ -20,6 +20,8 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  */
 class Admin extends PostAdmin
 {
+    use AdminTrait;
+
     /**
      * 执行函数
      *
@@ -37,18 +39,7 @@ class Admin extends PostAdmin
             0
         );
 
-        /** 过滤标题 */
-        if (null != ($keywords = $this->request->get('keywords'))) {
-            $args = [];
-            $keywordsList = explode(' ', $keywords);
-            $args[] = implode(' OR ', array_fill(0, count($keywordsList), 'table.contents.title LIKE ?'));
-
-            foreach ($keywordsList as $keyword) {
-                $args[] = '%' . Common::filterSearchQuery($keyword) . '%';
-            }
-
-            call_user_func_array([$select, 'where'], $args);
-        }
+        $this->searchQuery($select);
 
         /** 提交查询 */
         $select->order('table.contents.order');

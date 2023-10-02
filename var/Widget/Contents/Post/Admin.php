@@ -6,9 +6,8 @@ use Typecho\Cookie;
 use Typecho\Db;
 use Typecho\Db\Exception as DbException;
 use Typecho\Widget\Exception;
-use Typecho\Db\Query;
-use Typecho\Widget\Helper\PageNavigator\Box;
 use Widget\Base\Contents;
+use Widget\Contents\AdminTrait;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -24,26 +23,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  */
 class Admin extends Contents
 {
-    /**
-     * 用于计算数值的语句对象
-     *
-     * @var Query
-     */
-    private Query $countSql;
-
-    /**
-     * 所有文章个数
-     *
-     * @var integer|null
-     */
-    private ?int $total;
-
-    /**
-     * 当前页
-     *
-     * @var integer
-     */
-    private int $currentPage;
+    use AdminTrait;
 
     /**
      * 获取菜单标题
@@ -139,47 +119,14 @@ class Admin extends Contents
                 ->where('table.relationships.mid = ?', $category);
         }
 
-        /** 过滤标题 */
-        if (null != ($keywords = $this->request->filter('search')->get('keywords'))) {
-            $args = [];
-            $keywordsList = explode(' ', $keywords);
-            $args[] = implode(' OR ', array_fill(0, count($keywordsList), 'table.contents.title LIKE ?'));
-
-            foreach ($keywordsList as $keyword) {
-                $args[] = '%' . $keyword . '%';
-            }
-
-            call_user_func_array([$select, 'where'], $args);
-        }
-
-        /** 给计算数目对象赋值,克隆对象 */
-        $this->countSql = clone $select;
+        $this->searchQuery($select);
+        $this->countTotal($select);
 
         /** 提交查询 */
         $select->order('table.contents.cid', Db::SORT_DESC)
             ->page($this->currentPage, $this->parameter->pageSize);
 
         $this->db->fetchAll($select, [$this, 'push']);
-    }
-
-    /**
-     * 输出分页
-     *
-     * @throws Exception
-     * @throws DbException
-     */
-    public function pageNav()
-    {
-        $query = $this->request->makeUriByRequest('page={page}');
-
-        /** 使用盒状分页 */
-        $nav = new Box(
-            !isset($this->total) ? $this->total = $this->size($this->countSql) : $this->total,
-            $this->currentPage,
-            $this->parameter->pageSize,
-            $query
-        );
-        $nav->render('&laquo;', '&raquo;');
     }
 
     /**

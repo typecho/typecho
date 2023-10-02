@@ -12,6 +12,9 @@ use Typecho\Widget\Helper\Layout;
 use Widget\Base\Contents;
 use Widget\Base\Metas;
 
+/**
+ * 内容编辑组件
+ */
 trait EditTrait
 {
     /**
