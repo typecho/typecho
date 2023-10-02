@@ -271,7 +271,7 @@ class Edit extends Contents implements ActionInterface
                 $this->deleteFields($post);
 
                 if ($draft) {
-                    $this->deleteDraft($draft['cid']);
+                    $this->deleteContent($draft['cid']);
                     $this->deleteFields($draft['cid']);
                 }
 
@@ -317,7 +317,7 @@ class Edit extends Contents implements ActionInterface
                 ->limit(1));
 
             if ($draft) {
-                $this->deleteDraft($draft['cid']);
+                $this->deleteContent($draft['cid']);
                 $this->deleteFields($draft['cid']);
                 $deleteCount++;
             }

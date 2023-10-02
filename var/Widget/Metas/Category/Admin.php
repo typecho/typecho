@@ -22,7 +22,7 @@ class Admin extends Rows
      */
     public function execute()
     {
-        $select = $this->db->select('mid')->from('table.metas')->where('type = ?', 'category');
+        $select = $this->select('mid')->where('type = ?', 'category');
         $select->where('parent = ?', $this->request->get('parent', 0));
 
         $this->stack = $this->getRows(array_column(

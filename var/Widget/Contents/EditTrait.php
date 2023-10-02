@@ -172,12 +172,12 @@ trait EditTrait
     }
 
     /**
-     * 删除草稿
+     * 删除内容
      *
      * @param integer $cid 草稿id
      * @throws DbException
      */
-    protected function deleteDraft(int $cid, bool $hasMetas = true)
+    protected function deleteContent(int $cid, bool $hasMetas = true)
     {
         $this->delete($this->db->sql()->where('cid = ?', $cid));
 

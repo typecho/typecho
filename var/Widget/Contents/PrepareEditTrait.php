@@ -52,7 +52,7 @@ trait PrepareEditTrait
 
                 if (isset($draft)) {
                     $draft['slug'] = ltrim($draft['slug'], '@');
-                    $draft['type'] = $type;
+                    $draft['type'] = $this->type;
                     $draft['draft'] = $draft;
                     $draft['cid'] = $this->cid;
                     $draft['tags'] = $this->db->fetchAll($this->db
