@@ -449,10 +449,10 @@ class Db
      *
      * @param mixed $query 查询对象
      * @param array|null $filter 行过滤器函数,将查询的每一行作为第一个参数传入指定的过滤器中
-     * @return object|null
+     * @return \stdClass|null
      * @throws DbException
      */
-    public function fetchObject($query, ?array $filter = null): ?object
+    public function fetchObject($query, ?array $filter = null): ?\stdClass
     {
         $resource = $this->query($query);
 
