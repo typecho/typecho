@@ -23,6 +23,8 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  */
 class Discussion extends Options implements ActionInterface
 {
+    use EditTrait;
+
     /**
      * 执行更新动作
      *

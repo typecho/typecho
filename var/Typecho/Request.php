@@ -178,12 +178,11 @@ class Request
                 break;
         }
 
-        if (isset($value)) {
+        if (isset($value) && $value !== '') {
+            $exists = true;
             if (is_array($default) == is_array($value)) {
-                $exists = is_array($value) || (is_string($value) && strlen($value) > 0);
                 return $value;
             } else {
-                $exists = true;
                 return $default;
             }
         } else {

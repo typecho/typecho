@@ -24,6 +24,8 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  */
 class General extends Options implements ActionInterface
 {
+    use EditTrait;
+
     /**
      * 检查是否在语言列表中
      *
