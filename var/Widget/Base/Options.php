@@ -25,6 +25,7 @@ class Options extends Base implements QueryInterface
      *
      * @param mixed ...$fields
      * @return Query
+     * @throws Exception
      */
     public function select(...$fields): Query
     {

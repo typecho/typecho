@@ -79,6 +79,7 @@ class Users extends Base implements QueryInterface, RowFilterInterface
      *
      * @param mixed $fields
      * @return Query
+     * @throws Exception
      */
     public function select(...$fields): Query
     {

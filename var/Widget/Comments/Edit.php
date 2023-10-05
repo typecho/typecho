@@ -3,6 +3,7 @@
 namespace Widget\Comments;
 
 use Typecho\Db\Exception;
+use Typecho\Db\Query;
 use Widget\Base\Comments;
 use Widget\ActionInterface;
 use Widget\Notice;
@@ -45,6 +46,30 @@ class Edit extends Comments implements ActionInterface
 
         /** 返回原网页 */
         $this->response->goBack();
+    }
+
+    /**
+     * 评论是否可以被修改
+     *
+     * @param Query|null $condition 条件
+     * @return bool
+     * @throws Exception|\Typecho\Widget\Exception
+     */
+    public function commentIsWriteable(?Query $condition = null): bool
+    {
+        if (empty($condition)) {
+            if ($this->have() && ($this->user->pass('editor', true) || $this->ownerId == $this->user->uid)) {
+                return true;
+            }
+        } else {
+            $post = $this->db->fetchRow($condition->select('ownerId')->from('table.comments')->limit(1));
+
+            if ($post && ($this->user->pass('editor', true) || $post['ownerId'] == $this->user->uid)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
