@@ -27,7 +27,7 @@ class Markdown
             $parser->hook('afterParseCode', function ($html) {
                 preg_match("/<code class=\"htmlexec\">([\s\S]*?)<\/code>/i", $html, $matches);
                 if($matches && $matches[1]){
-                    $html = preg_replace("/<code class=\"htmlexec\">([\s\S]*?)<\/code>/i", html_entity_decode($matches[1]), $html);
+                    $html = preg_replace("/<pre><code class=\"htmlexec\">([\s\S]*?)<\/code><\/pre>/i", html_entity_decode($matches[1]), $html);
                 }
                 return preg_replace("/<code class=\"([_a-z0-9-]+)\">/i", "<code class=\"lang-\\1\">", $html);
             });
