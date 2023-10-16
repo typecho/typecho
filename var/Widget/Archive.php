@@ -951,9 +951,9 @@ class Archive extends Contents
      *
      * @param string $format 格式
      * @param string|null $default 如果没有下一篇,显示的默认文字
-     * @param array $custom 定制化样式
+     * @param string|null $tagClass 定制化样式
      */
-    public function theNext(string $format = '%s', ?string $default = null, array $custom = [])
+    public function theNext(string $format = '%s', ?string $default = null, ?string $tagClass = '')
     {
         $content = $this->db->fetchRow($this->select()->where(
             'table.contents.created > ? AND table.contents.created < ?',
@@ -968,19 +968,11 @@ class Archive extends Contents
 
         if ($content) {
             $content = $this->filter($content);
-            $default = [
-                'title'    => null,
-                'tagClass' => null
-            ];
-            $custom = array_merge($default, $custom);
-            extract($custom);
 
-            $linkText = empty($title) ? $content['title'] : $title;
             $linkClass = empty($tagClass) ? '' : 'class="' . $tagClass . '" ';
-            $link = '<a ' . $linkClass . 'href="' . $content['permalink']
-                . '" title="' . $content['title'] . '">' . $linkText . '</a>';
+            $link = '<a ' . $linkClass . 'href="' . $content['permalink'] . '" title="' . $content['title'] . '">' . $format . '</a>';
 
-            printf($format, $link);
+            printf($link, $content['title']);
         } else {
             echo $default;
         }
@@ -991,11 +983,11 @@ class Archive extends Contents
      *
      * @access public
      * @param string $format 格式
-     * @param string $default 如果没有上一篇,显示的默认文字
-     * @param array $custom 定制化样式
+     * @param string|null $default 如果没有上一篇,显示的默认文字
+     * @param string|null $tagClass 定制化样式
      * @return void
      */
-    public function thePrev($format = '%s', $default = null, $custom = [])
+    public function thePrev(string $format = '%s', ?string $default = null, ?string $tagClass = '')
     {
         $content = $this->db->fetchRow($this->select()->where('table.contents.created < ?', $this->created)
             ->where('table.contents.status = ?', 'publish')
@@ -1006,18 +998,11 @@ class Archive extends Contents
 
         if ($content) {
             $content = $this->filter($content);
-            $default = [
-                'title'    => null,
-                'tagClass' => null
-            ];
-            $custom = array_merge($default, $custom);
-            extract($custom);
-
-            $linkText = empty($title) ? $content['title'] : $title;
+           
             $linkClass = empty($tagClass) ? '' : 'class="' . $tagClass . '" ';
-            $link = '<a ' . $linkClass . 'href="' . $content['permalink'] . '" title="' . $content['title'] . '">' . $linkText . '</a>';
+            $link = '<a ' . $linkClass . 'href="' . $content['permalink'] . '" title="' . $content['title'] . '">' . $format . '</a>';
 
-            printf($format, $link);
+            printf($link, $content['title']);
         } else {
             echo $default;
         }
