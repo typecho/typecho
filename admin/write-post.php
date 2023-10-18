@@ -2,7 +2,7 @@
 include 'common.php';
 include 'header.php';
 include 'menu.php';
-\Widget\Contents\Post\Edit::alloc()->to($post);
+\Widget\Contents\Post\Edit::alloc()->prepare()->to($post);
 ?>
 <div class="main">
     <div class="body container">
@@ -58,6 +58,7 @@ include 'menu.php';
                                     class="i-caret-left"></i> <?php _e('取消预览'); ?></button>
                         </span>
                         <span class="right">
+                            <input type="hidden" name="do" value="publish" />
                             <input type="hidden" name="cid" value="<?php $post->cid(); ?>"/>
                             <button type="button" id="btn-preview" class="btn"><i
                                     class="i-exlink"></i> <?php _e('预览文章'); ?></button>
@@ -114,7 +115,7 @@ include 'menu.php';
 
                         <section class="typecho-post-option">
                             <label for="token-input-tags" class="typecho-label"><?php _e('标签'); ?></label>
-                            <p><input id="tags" name="tags" type="text" value="<?php $post->tags(',', false); ?>"
+                            <p><input id="tags" name="tags" type="text" value="<?php $post->have() ? $post->tags(',', false) : ''; ?>"
                                       class="w-100 text"/></p>
                         </section>
 

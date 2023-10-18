@@ -80,16 +80,4 @@ class Options extends Base implements QueryInterface
     {
         return $this->db->fetchObject($condition->select(['COUNT(name)' => 'num'])->from('table.options'))->num;
     }
-
-    /**
-     * 以checkbox选项判断是否某个值被启用
-     *
-     * @param mixed $settings 选项集合
-     * @param string $name 选项名称
-     * @return integer
-     */
-    protected function isEnableByCheckbox($settings, string $name): int
-    {
-        return is_array($settings) && in_array($name, $settings) ? 1 : 0;
-    }
 }

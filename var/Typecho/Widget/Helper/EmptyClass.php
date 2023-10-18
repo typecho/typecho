@@ -41,9 +41,10 @@ class EmptyClass
      * @access public
      * @param string $name 方法名
      * @param array $args 参数列表
-     * @return void
+     * @return $this
      */
     public function __call(string $name, array $args)
     {
+        return $this;
     }
 }

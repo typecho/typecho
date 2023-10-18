@@ -1,17 +1,44 @@
 <?php if(!defined('__TYPECHO_ADMIN__')) exit; ?>
-<?php $content = !empty($post) ? $post : $page; if ($options->markdown): ?>
+<?php $content = !empty($post) ? $post : $page; ?>
+<script>
+(function () {
+    $('#text').on('change', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }).on('input', function () {
+        $(this).parents('form').trigger('write');
+    });
+})();
+</script>
+<?php if (!$options->markdown): ?>
+<script>
+(function () {
+    const textarea = $('#text');
+
+    // 原始的插入图片和文件
+    Typecho.insertFileToEditor = function (file, url, isImage) {
+        const sel = textarea.getSelection(),
+            html = isImage ? '<img src="' + url + '" alt="' + file + '" />'
+                : '<a href="' + url + '">' + file + '</a>',
+            offset = (sel ? sel.start : 0) + html.length;
+
+        textarea.replaceSelection(html);
+        textarea.setSelection(offset, offset);
+    };
+})();
+</script>
+<?php else: ?>
 <script src="<?php $options->adminStaticUrl('js', 'hyperdown.js'); ?>"></script>
 <script src="<?php $options->adminStaticUrl('js', 'pagedown.js'); ?>"></script>
-<script src="<?php $options->adminStaticUrl('js', 'paste.js'); ?>"></script>
 <script src="<?php $options->adminStaticUrl('js', 'purify.js'); ?>"></script>
 <script>
 $(document).ready(function () {
-    var textarea = $('#text'),
-        isFullScreen = false,
+    const textarea = $('#text'),
         toolbar = $('<div class="editor" id="wmd-button-bar" />').insertBefore(textarea.parent()),
         preview = $('<div id="wmd-preview" class="wmd-hidetab" />').insertAfter('.editor');
+    let isFullScreen = false;
 
-    var options = {}, isMarkdown = <?php echo intval($content->isMarkdown || !$content->have()); ?>;
+    const options = {}, isMarkdown = <?php echo intval($content->isMarkdown || !$content->have()); ?>;
 
     options.strings = {
         bold: '<?php _e('加粗'); ?> <strong> Ctrl+B',
@@ -59,13 +86,13 @@ $(document).ready(function () {
         help: '<?php _e('Markdown语法帮助'); ?>'
     };
 
-    var converter = new HyperDown(),
+    const converter = new HyperDown(),
         editor = new Markdown.Editor(converter, '', options);
 
     // 自动跟随
     converter.enableHtml(true);
     converter.enableLine(true);
-    reloadScroll = scrollableEditor(textarea, preview);
+    const reloadScroll = scrollableEditor(textarea, preview);
 
     // 修正白名单
     converter.hook('makeHtml', function (html) {
@@ -82,7 +109,7 @@ $(document).ready(function () {
 
         // 替换block
         html = html.replace(/<(iframe|embed)\s+([^>]*)>/ig, function (all, tag, src) {
-            if (src[src.length - 1] == '/') {
+            if (src[src.length - 1] === '/') {
                 src = src.substring(0, src.length - 1);
             }
 
@@ -94,15 +121,16 @@ $(document).ready(function () {
     });
 
     editor.hooks.chain('onPreviewRefresh', function () {
-        var images = $('img', preview), count = images.length;
+        const images = $('img', preview);
+        let count = images.length;
 
-        if (count == 0) {
+        if (count === 0) {
             reloadScroll(true);
         } else {
             images.bind('load error', function () {
                 count --;
 
-                if (count == 0) {
+                if (count === 0) {
                     reloadScroll(true);
                 }
             });
@@ -111,8 +139,8 @@ $(document).ready(function () {
 
     <?php \Typecho\Plugin::factory('admin/editor-js.php')->call('markdownEditor', $content); ?>
 
-    var th = textarea.height(), ph = preview.height(),
-        uploadBtn = $('<button type="button" id="btn-fullscreen-upload" class="btn btn-link">'
+    let th = textarea.height(), ph = preview.height();
+    const uploadBtn = $('<button type="button" id="btn-fullscreen-upload" class="btn btn-link">'
             + '<i class="i-upload"><?php _e('附件'); ?></i></button>')
             .prependTo('.submit .right')
             .click(function() {
@@ -129,7 +157,7 @@ $(document).ready(function () {
         th = textarea.height();
         ph = preview.height();
         $(document.body).addClass('fullscreen');
-        var h = $(window).height() - toolbar.outerHeight();
+        const h = $(window).height() - toolbar.outerHeight();
         
         textarea.css('height', h);
         preview.css('height', h);
@@ -139,7 +167,7 @@ $(document).ready(function () {
     editor.hooks.chain('enterFullScreen', function () {
         $(document.body).addClass('fullscreen');
         
-        var h = window.screen.height - toolbar.outerHeight();
+        const h = window.screen.height - toolbar.outerHeight();
         textarea.css('height', h);
         preview.css('height', h);
         isFullScreen = true;
@@ -156,19 +184,23 @@ $(document).ready(function () {
         textarea.trigger('input');
     });
 
+    editor.hooks.chain('save', function () {
+        Typecho.savePost();
+    });
+
     function initMarkdown() {
         editor.run();
 
-        var imageButton = $('#wmd-image-button'),
+        const imageButton = $('#wmd-image-button'),
             linkButton = $('#wmd-link-button');
 
         Typecho.insertFileToEditor = function (file, url, isImage) {
-            var button = isImage ? imageButton : linkButton;
+            const button = isImage ? imageButton : linkButton;
 
             options.strings[isImage ? 'imagename' : 'linkname'] = file;
             button.trigger('click');
 
-            var checkDialog = setInterval(function () {
+            let checkDialog = setInterval(function () {
                 if ($('.wmd-prompt-dialog').length > 0) {
                     $('.wmd-prompt-dialog input').val(url).select();
                     clearInterval(checkDialog);
@@ -177,12 +209,12 @@ $(document).ready(function () {
             }, 10);
         };
 
-        Typecho.uploadComplete = function (file) {
-            Typecho.insertFileToEditor(file.title, file.url, file.isImage);
+        Typecho.uploadComplete = function (attachment) {
+            Typecho.insertFileToEditor(attachment.title, attachment.url, attachment.isImage);
         };
 
         // 编辑预览切换
-        var edittab = $('.editor').prepend('<div class="wmd-edittab"><a href="#wmd-editarea" class="active"><?php _e('撰写'); ?></a><a href="#wmd-preview"><?php _e('预览'); ?></a></div>'),
+        const edittab = $('.editor').prepend('<div class="wmd-edittab"><a href="#wmd-editarea" class="active"><?php _e('撰写'); ?></a><a href="#wmd-preview"><?php _e('预览'); ?></a></div>'),
             editarea = $(textarea.parent()).attr("id", "wmd-editarea");
 
         $(".wmd-edittab a").click(function() {
@@ -190,11 +222,11 @@ $(document).ready(function () {
             $(this).addClass("active");
             $("#wmd-editarea, #wmd-preview").addClass("wmd-hidetab");
         
-            var selected_tab = $(this).attr("href"),
+            const selected_tab = $(this).attr("href"),
                 selected_el = $(selected_tab).removeClass("wmd-hidetab");
 
             // 预览时隐藏编辑器按钮
-            if (selected_tab == "#wmd-preview") {
+            if (selected_tab === "#wmd-preview") {
                 $("#wmd-button-row").addClass("wmd-visualhide");
             } else {
                 $("#wmd-button-row").removeClass("wmd-visualhide");
@@ -207,21 +239,30 @@ $(document).ready(function () {
         });
 
         // 剪贴板复制图片
-        textarea.pastableTextarea().on('pasteImage', function (e, data) {
-            var name = data.name ? data.name.replace(/[\(\)\[\]\*#!]/g, '') : (new Date()).toISOString().replace(/\..+$/, '');
-            if (!name.match(/\.[a-z0-9]{2,}$/i)) {
-                var ext = data.blob.type.split('/').pop();
-                name += '.' + ext;
-            }
+        textarea.bind('paste', function (e) {
+            const items = (e.clipboardData || e.originalEvent.clipboardData).items;
 
-            Typecho.uploadFile(new File([data.blob], name), name);
+            for (const item of items) {
+                if (item.kind === 'file') {
+                    const file = item.getAsFile();
+
+                    if (file.size > 0) {
+                        if (!file.name) {
+                            file.name = (new Date()).toISOString().replace(/\..+$/, '')
+                                + '.' + file.type.split('/').pop();
+                        }
+
+                        Typecho.uploadFile(file);
+                    }
+                }
+            }
         });
     }
 
     if (isMarkdown) {
         initMarkdown();
     } else {
-        var notice = $('<div class="message notice"><?php _e('这篇文章不是由Markdown语法创建的, 继续使用Markdown编辑它吗?'); ?> '
+        const notice = $('<div class="message notice"><?php _e('这篇文章不是由Markdown语法创建的, 继续使用Markdown编辑它吗?'); ?> '
             + '<button class="btn btn-xs primary yes"><?php _e('是'); ?></button> ' 
             + '<button class="btn btn-xs no"><?php _e('否'); ?></button></div>')
             .hide().insertBefore(textarea).slideDown();
