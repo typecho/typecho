@@ -222,7 +222,7 @@ class Profile extends Users implements ActionInterface
         $form->addInput($screenName);
 
         /** 个人主页地址 */
-        $url = new Form\Element\Text('url', null, null, _t('个人主页地址'), _t('此用户的个人主页地址, 请用 <code>https://</code> 开头.'));
+        $url = new Form\Element\Url('url', null, null, _t('个人主页地址'), _t('此用户的个人主页地址, 请用 <code>https://</code> 开头.'));
         $form->addInput($url);
 
         /** 电子邮箱地址 */
@@ -240,7 +240,7 @@ class Profile extends Users implements ActionInterface
         $form->addItem($submit);
 
         $screenName->value($this->user->screenName);
-        $url->value($this->user->url);
+        $url->value(Common::idnToUtf8($this->user->url));
         $mail->value($this->user->mail);
 
         /** 给表单增加规则 */

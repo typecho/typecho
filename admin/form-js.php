@@ -14,12 +14,6 @@
             if (self.hasClass('submitting')) {
                 return false;
             } else {
-                let siteUrl = $('input[name="siteUrl"], input[name="url"]');
-                if (siteUrl.length) {
-                    const url = new URL(siteUrl.val());
-                    siteUrl.val(url.origin);
-                }
-
                 $('button[type=submit]', this).attr('disabled', 'disabled');
                 self.addClass('submitting');
             }
@@ -32,6 +26,15 @@
             var check = $('#' + $(this).parents('label').attr('for'));
             check.prop('checked', true);
             return false;
+        });
+
+        $('input[type="url"]').blur(function () {
+            const self = $(this);
+            const originalUrl = self.val();
+            if (originalUrl) {
+                const url = new URL(originalUrl);
+                self.val(url.origin);
+            }
         });
     });
 })();
