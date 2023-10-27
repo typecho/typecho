@@ -17,6 +17,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  *
  * @property int $mid
  * @property string $name
+ * @property string $title
  * @property string $slug
  * @property string $type
  * @property string $description
@@ -30,8 +31,16 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property-read string $feedRssUrl
  * @property-read string $feedAtomUrl
  */
-class Metas extends Base implements QueryInterface, RowFilterInterface
+class Metas extends Base implements QueryInterface, RowFilterInterface, PrimaryKeyInterface
 {
+    /**
+     * @return string 获取主键
+     */
+    public function getPrimaryKey(): string
+    {
+        return 'mid';
+    }
+
     /**
      * 获取记录总数
      *
@@ -144,5 +153,13 @@ class Metas extends Base implements QueryInterface, RowFilterInterface
     protected function ___theId(): string
     {
         return $this->type . '-' . $this->mid;
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___title(): string
+    {
+        return $this->name;
     }
 }

@@ -41,8 +41,16 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property string $permalink
  * @property string $content
  */
-class Comments extends Base implements QueryInterface, RowFilterInterface
+class Comments extends Base implements QueryInterface, RowFilterInterface, PrimaryKeyInterface
 {
+    /**
+     * @return string 获取主键
+     */
+    public function getPrimaryKey(): string
+    {
+        return 'coid';
+    }
+
     /**
      * 增加评论
      *

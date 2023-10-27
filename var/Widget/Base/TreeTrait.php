@@ -58,84 +58,33 @@ trait TreeTrait
     private array $parents = [];
 
     /**
-     * 初始化
+     * 根据深度余数输出
      *
-     * @param string $pk
-     * @param array $rows
-     * @return void
+     * @param ...$args
      */
-    protected function initTree(string $pk, array $rows)
+    public function levelsAlt(...$args)
     {
-        foreach ($rows as $row) {
-            $row['levels'] = 0;
-            $this->map[$row[$pk]] = $row;
-        }
-
-        // 读取数据
-        foreach ($this->map as $id => $row) {
-            $parent = $row['parent'];
-
-            if (0 != $parent && isset($this->map[$parent])) {
-                $this->treeRows[$parent][] = $id;
-            } else {
-                $this->top[] = $id;
-            }
-        }
-
-        // 预处理深度
-        $this->levelWalkCallback($this->top);
-        $this->map = array_map([$this, 'filter'], $this->map);
+        $this->altBy($this->levels, ...$args);
     }
 
     /**
-     * 预处理节点迭代
+     * 将每行的值压入堆栈
      *
-     * @param array $rows
-     * @param array $parents
-     */
-    private function levelWalkCallback(array $rows, array $parents = [])
-    {
-        foreach ($parents as $parent) {
-            if (!isset($this->childNodes[$parent])) {
-                $this->childNodes[$parent] = [];
-            }
-
-            $this->childNodes[$parent] = array_merge($this->childNodes[$parent], $rows);
-        }
-
-        foreach ($rows as $id) {
-            $this->orders[] = $id;
-            $parent = $this->map[$id]['parent'];
-
-            if (0 != $parent && isset($this->map[$parent])) {
-                $levels = $this->map[$parent]['levels'] + 1;
-                $this->map[$id]['levels'] = $levels;
-            }
-
-            $this->parents[$id] = $parents;
-
-            if (!empty($this->treeRows[$id])) {
-                $new = $parents;
-                $new[] = $id;
-                $this->levelWalkCallback($this->treeRows[$id], $new);
-            }
-        }
-    }
-
-    /**
-     * 获取目录
-     *
-     * @param int $id
-     * @param string $slug
+     * @access public
+     * @param array $row 每行的值
      * @return array
      */
-    public function getDirectory(int $id, string $slug): array
+    public function filter(array $row): array
     {
-        $directory = $this->getAllParentsSlug($id);
-        $directory[] = $slug;
+        $directory = $this->getAllParentsSlug($row[$this->getPrimaryKey()]);
+        $directory[] = $row['slug'];
         $path = implode('/', array_map('urlencode', $directory));
 
-        return [$directory, $path];
+        $row['directory'] = $path;
+        $row = parent::filter($row);
+        $row['directory'] = $directory;
+
+        return $row;
     }
 
     /**
@@ -188,18 +137,6 @@ trait TreeTrait
     }
 
     /**
-     * 获取所有子节点
-     *
-     * @param int $id
-     * @return array
-     */
-    public function getChildren(int $id): array
-    {
-        return isset($this->treeRows[$id]) ?
-            $this->getRows($this->treeRows[$id]) : [];
-    }
-
-    /**
      * 获取多个节点
      *
      * @param array $ids
@@ -248,5 +185,90 @@ trait TreeTrait
         }
 
         return false;
+    }
+
+    /**
+     * @return string
+     */
+    abstract protected function getType(): string;
+
+    /**
+     * @param Config $parameter
+     */
+    protected function initParameter(Config $parameter)
+    {
+        $parameter->setDefault('ignore=0&current=');
+
+        $select = $this->select()->where('type = ?', $this->getType());
+        $rows = $this->db->fetchAll($select->order('order'));
+        $pk = $this->getPrimaryKey();
+
+        foreach ($rows as $row) {
+            $row['levels'] = 0;
+            $this->map[$row[$pk]] = $row;
+        }
+
+        // 读取数据
+        foreach ($this->map as $id => $row) {
+            $parent = $row['parent'];
+
+            if (0 != $parent && isset($this->map[$parent])) {
+                $this->treeRows[$parent][] = $id;
+            } else {
+                $this->top[] = $id;
+            }
+        }
+
+        // 预处理深度
+        $this->levelWalkCallback($this->top);
+        $this->map = array_map([$this, 'filter'], $this->map);
+    }
+
+    /**
+     * 获取所有子节点
+     *
+     * @return array
+     */
+    protected function ___children(): array
+    {
+        $id = $this->{$this->getPrimaryKey()};
+        return isset($this->treeRows[$id]) ?
+            $this->getRows($this->treeRows[$id]) : [];
+    }
+
+
+    /**
+     * 预处理节点迭代
+     *
+     * @param array $rows
+     * @param array $parents
+     */
+    private function levelWalkCallback(array $rows, array $parents = [])
+    {
+        foreach ($parents as $parent) {
+            if (!isset($this->childNodes[$parent])) {
+                $this->childNodes[$parent] = [];
+            }
+
+            $this->childNodes[$parent] = array_merge($this->childNodes[$parent], $rows);
+        }
+
+        foreach ($rows as $id) {
+            $this->orders[] = $id;
+            $parent = $this->map[$id]['parent'];
+
+            if (0 != $parent && isset($this->map[$parent])) {
+                $levels = $this->map[$parent]['levels'] + 1;
+                $this->map[$id]['levels'] = $levels;
+            }
+
+            $this->parents[$id] = $parents;
+
+            if (!empty($this->treeRows[$id])) {
+                $new = $parents;
+                $new[] = $id;
+                $this->levelWalkCallback($this->treeRows[$id], $new);
+            }
+        }
     }
 }

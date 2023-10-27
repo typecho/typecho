@@ -34,8 +34,16 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property-read string $feedRssUrl
  * @property-read string $feedAtomUrl
  */
-class Users extends Base implements QueryInterface, RowFilterInterface
+class Users extends Base implements QueryInterface, RowFilterInterface, PrimaryKeyInterface
 {
+    /**
+     * @return string 获取主键
+     */
+    public function getPrimaryKey(): string
+    {
+        return 'uid';
+    }
+
     /**
      * 将每行的值压入堆栈
      *

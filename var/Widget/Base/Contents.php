@@ -70,8 +70,16 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property-read string $trackbackUrl
  * @property-read string $responseUrl
  */
-class Contents extends Base implements QueryInterface, RowFilterInterface
+class Contents extends Base implements QueryInterface, RowFilterInterface, PrimaryKeyInterface
 {
+    /**
+     * @return string 获取主键
+     */
+    public function getPrimaryKey(): string
+    {
+        return 'cid';
+    }
+
     /**
      * 获取查询对象
      *
@@ -901,7 +909,7 @@ class Contents extends Base implements QueryInterface, RowFilterInterface
      * @param string|null $text
      * @return string|null
      */
-    public function markdown(?string $text): ?string
+    protected function markdown(?string $text): ?string
     {
         $html = Contents::pluginHandle()->trigger($parsed)->call('markdown', $text);
 
@@ -918,7 +926,7 @@ class Contents extends Base implements QueryInterface, RowFilterInterface
      * @param string|null $text
      * @return string|null
      */
-    public function autoP(?string $text): ?string
+    protected function autoP(?string $text): ?string
     {
         $html = Contents::pluginHandle()->trigger($parsed)->call('autoP', $text);
 

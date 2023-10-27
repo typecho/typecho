@@ -5,6 +5,8 @@ namespace Widget\Metas\Category;
 use Typecho\Common;
 use Typecho\Db;
 use Typecho\Widget\Exception;
+use Widget\Base\Metas;
+use Widget\Base\TreeTrait;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -13,8 +15,10 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
 /**
  * Category Admin
  */
-class Admin extends Rows
+class Admin extends Metas
 {
+    use TreeTrait;
+
     /**
      * 执行函数
      *
@@ -95,5 +99,13 @@ class Admin extends Rows
         } else {
             return 'category.php';
         }
+    }
+
+    /**
+     * @return string
+     */
+    protected function getType(): string
+    {
+        return 'category';
     }
 }
