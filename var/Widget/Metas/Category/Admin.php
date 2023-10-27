@@ -26,8 +26,8 @@ class Admin extends Metas
      */
     public function execute()
     {
-        $select = $this->select('mid')->where('type = ?', 'category');
-        $select->where('parent = ?', $this->request->get('parent', 0));
+        $select = $this->select('mid')
+            ->where('parent = ?', $this->request->get('parent', 0));
 
         $this->stack = $this->getRows(array_column(
             $this->db->fetchAll($select->order('table.metas.order')),

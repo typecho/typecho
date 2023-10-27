@@ -3,6 +3,7 @@
 namespace Widget\Base;
 
 use Typecho\Config;
+use Typecho\Db\Query;
 
 /**
  * 处理树状数据结构
@@ -193,14 +194,22 @@ trait TreeTrait
     abstract protected function getType(): string;
 
     /**
+     * @param ...$fields
+     * @return Query
+     */
+    public function select(...$fields): Query
+    {
+        return parent::select(...$fields)->where('type = ?', $this->getType());
+    }
+
+    /**
      * @param Config $parameter
      */
     protected function initParameter(Config $parameter)
     {
         $parameter->setDefault('ignore=0&current=');
 
-        $select = $this->select()->where('type = ?', $this->getType());
-        $rows = $this->db->fetchAll($select->order('order'));
+        $rows = $this->db->fetchAll($this->select()->order('order'));
         $pk = $this->getPrimaryKey();
 
         foreach ($rows as $row) {
