@@ -150,7 +150,7 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                                             <?php
                                             if ('post_draft' == $posts->type) {
                                                 echo '<em class="status">' . _t('草稿') . '</em>';
-                                            } elseif ($posts->hasRevision) {
+                                            } elseif ($posts->revision) {
                                                 echo '<em class="status">' . _t('有修订版') . '</em>';
                                             }
 
@@ -187,9 +187,9 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                                             <?php endforeach; ?>
                                         </td>
                                         <td>
-                                            <?php if ('post_draft' == $posts->type || $posts->hasRevision): ?>
+                                            <?php if ('post_draft' == $posts->type || $posts->revision): ?>
                                                 <span class="description">
-                                <?php $modifyDate = new \Typecho\Date($posts->modified); ?>
+                                <?php $modifyDate = new \Typecho\Date($posts->revision ? $posts->revision['modified'] : $posts->modified); ?>
                                 <?php _e('保存于 %s', $modifyDate->word()); ?>
                                 </span>
                                             <?php else: ?>

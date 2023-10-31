@@ -58,15 +58,16 @@ class Rows extends Metas
         self::pluginHandle()->trigger($plugged)->call('listCategories', $categoryOptions, $this);
 
         if (!$plugged) {
-            $this->listRows($categoryOptions, 'treeViewCategoriesCallback', intval($this->parameter->current));
+            $this->listRows($categoryOptions, 'category', 'treeViewCategoriesCallback', intval($this->parameter->current));
         }
     }
 
     /**
-     * @return string
+     * @return array
      */
-    protected function getType(): string
+    protected function initTreeRows(): array
     {
-        return 'category';
+        return $this->db->fetchAll($this->select()
+            ->where('type = ?', 'category'));
     }
 }

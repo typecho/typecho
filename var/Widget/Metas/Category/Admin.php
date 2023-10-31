@@ -26,13 +26,8 @@ class Admin extends Metas
      */
     public function execute()
     {
-        $select = $this->select('mid')
-            ->where('parent = ?', $this->request->get('parent', 0));
-
-        $this->stack = $this->getRows(array_column(
-            $this->db->fetchAll($select->order('table.metas.order')),
-            'mid'
-        ));
+        $parentId = $this->request->filter('int')->get('parent', 0);
+        $this->stack = $this->getRows($this->getChildIds($parentId));
     }
 
     /**
@@ -102,10 +97,11 @@ class Admin extends Metas
     }
 
     /**
-     * @return string
+     * @return array
      */
-    protected function getType(): string
+    protected function initTreeRows(): array
     {
-        return 'category';
+        return $this->db->fetchAll($this->select()
+            ->where('type = ?', 'category'));
     }
 }

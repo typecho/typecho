@@ -82,7 +82,7 @@ $pages = \Widget\Contents\Page\Admin::alloc();
                                             <?php
                                             if ('page_draft' == $pages->type) {
                                                 echo '<em class="status">' . _t('草稿') . '</em>';
-                                            } elseif ($pages->hasRevision) {
+                                            } elseif ($pages->revision) {
                                                 echo '<em class="status">' . _t('有修订版') . '</em>';
                                             }
 
@@ -102,9 +102,9 @@ $pages = \Widget\Contents\Page\Admin::alloc();
                                         <td><?php $pages->slug(); ?></td>
                                         <td class="kit-hidden-mb"><?php $pages->author(); ?></td>
                                         <td>
-                                            <?php if ('page_draft' == $pages->type || $pages->hasRevision): ?>
+                                            <?php if ('page_draft' == $pages->type || $pages->revision): ?>
                                                 <span class="description">
-                                <?php $modifyDate = new \Typecho\Date($pages->modified); ?>
+                                <?php $modifyDate = new \Typecho\Date($pages->revision ? $pages->revision['modified'] : $pages->modified); ?>
                                 <?php _e('保存于 %s', $modifyDate->word()); ?>
                                 </span>
                                             <?php else: ?>

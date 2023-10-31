@@ -12,10 +12,11 @@ trait TreeViewTrait
      * treeViewRows
      *
      * @param mixed $rowOptions 输出选项
+     * @param string $type 类型
      * @param string $func 回调函数
      * @param int $current 当前项
      */
-    protected function listRows(Config $rowOptions, string $func, int $current = 0)
+    protected function listRows(Config $rowOptions, string $type, string $func, int $current = 0)
     {
         $this->stack = $this->getRows($this->top);
 
@@ -23,7 +24,7 @@ trait TreeViewTrait
             echo '<' . $rowOptions->wrapTag . (empty($rowOptions->wrapClass)
                     ? '' : ' class="' . $rowOptions->wrapClass . '"') . '>';
             while ($this->next()) {
-                $this->treeViewRowsCallback($rowOptions, $func, $current);
+                $this->treeViewRowsCallback($rowOptions, $type, $func, $current);
             }
             echo '</' . $rowOptions->wrapTag . '>';
         }
@@ -35,10 +36,11 @@ trait TreeViewTrait
      * 列出分类回调
      *
      * @param Config $rowOptions 输出选项
+     * @param string $type 类型
      * @param string $func 回调函数
      * @param int $current 当前项
      */
-    private function treeViewRowsCallback(Config $rowOptions, string $func, int $current): void
+    private function treeViewRowsCallback(Config $rowOptions, string $type, string $func, int $current): void
     {
         if (function_exists($func)) {
             call_user_func($func, $this, $rowOptions);
@@ -46,7 +48,6 @@ trait TreeViewTrait
         }
 
         $id = $this->{$this->getPrimaryKey()};
-        $type = $this->getType();
         $classes = [];
 
         if ($rowOptions->itemClass) {
@@ -84,7 +85,7 @@ trait TreeViewTrait
         }
 
         if ($this->children) {
-            $this->treeViewRows($rowOptions, $func, $current);
+            $this->treeViewRows($rowOptions, $type, $func, $current);
         }
 
         echo '</' . $rowOptions->itemTag . '>';
@@ -94,10 +95,11 @@ trait TreeViewTrait
      * treeViewRows
      *
      * @param Config $rowOptions 输出选项
+     * @param string $type 类型
      * @param string $func 回调函数
      * @param int $current 当前项
      */
-    private function treeViewRows(Config $rowOptions, string $func, int $current)
+    private function treeViewRows(Config $rowOptions, string $type, string $func, int $current)
     {
         $children = $this->children;
         if ($children) {
@@ -111,7 +113,7 @@ trait TreeViewTrait
 
             foreach ($children as $child) {
                 $this->row = $child;
-                $this->treeViewRowsCallback($rowOptions, $func, $current);
+                $this->treeViewRowsCallback($rowOptions, $type, $func, $current);
                 $this->row = $tmp;
             }
 

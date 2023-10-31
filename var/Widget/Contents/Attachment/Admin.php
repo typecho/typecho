@@ -32,8 +32,7 @@ class Admin extends Contents
      */
     public function execute()
     {
-        $this->parameter->setDefault('pageSize=20');
-        $this->currentPage = $this->request->get('page', 1);
+        $this->initPage();
 
         /** 构建基础查询 */
         $select = $this->select()->where('table.contents.type = ?', 'attachment');

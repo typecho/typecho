@@ -119,6 +119,17 @@ trait TreeTrait
     }
 
     /**
+     * 获取某个节点下的子节点
+     *
+     * @param int $id
+     * @return array
+     */
+    public function getChildIds(int $id): array
+    {
+        return $id > 0 ? ($this->treeRows[$id] ?? []) : $this->top;
+    }
+
+    /**
      * 获取某个节点所有父级节点
      *
      * @param int $id
@@ -189,18 +200,9 @@ trait TreeTrait
     }
 
     /**
-     * @return string
+     * @return array
      */
-    abstract protected function getType(): string;
-
-    /**
-     * @param ...$fields
-     * @return Query
-     */
-    public function select(...$fields): Query
-    {
-        return parent::select(...$fields)->where('type = ?', $this->getType());
-    }
+    abstract protected function initTreeRows(): array;
 
     /**
      * @param Config $parameter
@@ -209,8 +211,13 @@ trait TreeTrait
     {
         $parameter->setDefault('ignore=0&current=');
 
-        $rows = $this->db->fetchAll($this->select()->order('order'));
+        $rows = $this->initTreeRows();
         $pk = $this->getPrimaryKey();
+
+        // Sort by order asc
+        usort($rows, function ($a, $b) {
+            return $a['order'] <=> $b['order'];
+        });
 
         foreach ($rows as $row) {
             $row['levels'] = 0;
@@ -241,10 +248,8 @@ trait TreeTrait
     protected function ___children(): array
     {
         $id = $this->{$this->getPrimaryKey()};
-        return isset($this->treeRows[$id]) ?
-            $this->getRows($this->treeRows[$id]) : [];
+        return $this->getRows($this->getChildIds($id));
     }
-
 
     /**
      * 预处理节点迭代

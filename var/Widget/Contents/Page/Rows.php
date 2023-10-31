@@ -22,9 +22,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  */
 class Rows extends Contents
 {
-    use TreeViewTrait {
-        select as private treeSelect;
-    }
+    use TreeViewTrait;
 
     /**
      * 执行函数
@@ -37,12 +35,11 @@ class Rows extends Contents
     }
 
     /**
-     * @param ...$fields
-     * @return Query
+     * @return array
      */
-    public function select(...$fields): Query
+    protected function initTreeRows(): array
     {
-        $select = parent::select(
+        $select = $this->select(
             'table.contents.cid',
             'table.contents.title',
             'table.contents.slug',
@@ -69,7 +66,7 @@ class Rows extends Contents
             $select->where('table.contents.cid <> ?', $frontPage[1]);
         }
 
-        return $select;
+        return $this->db->fetchAll($select);
     }
 
     /**
@@ -98,13 +95,5 @@ class Rows extends Contents
         if (!$plugged) {
             $this->listRows($pageOptions, 'treeViewPagesCallback', intval($this->parameter->current));
         }
-    }
-
-    /**
-     * @return string
-     */
-    protected function getType(): string
-    {
-        return 'page';
     }
 }

@@ -10,6 +10,8 @@ use Typecho\Widget\Helper\PageNavigator\Box;
 
 /**
  * 文章管理列表组件
+ *
+ * @property-read array? $revision
  */
 trait AdminTrait
 {
@@ -28,39 +30,11 @@ trait AdminTrait
     private int $currentPage;
 
     /**
-     * @param array $row
-     * @return array
-     * @throws DbException
-     */
-    public function filter(array $row): array
-    {
-        $row['hasRevision'] = false;
-
-        $revision = $this->db->fetchRow(
-            $this->select('cid', 'modified')
-            ->where(
-                'table.contents.parent = ? AND table.contents.type = ?',
-                $row['cid'],
-                'revision'
-            )
-            ->limit(1)
-        );
-
-        if ($revision) {
-            $row['modified'] = $revision['modified'];
-            $row['hasRevision'] = true;
-        }
-
-        return parent::filter($row);
-    }
-
-    /**
-     * @param Config $parameter
      * @return void
      */
-    protected function initParameter(Config $parameter)
+    protected function initPage()
     {
-        $parameter->setDefault('pageSize=20');
+        $this->parameter->setDefault('pageSize=20');
         $this->currentPage = $this->request->get('page', 1);
     }
 
@@ -113,5 +87,22 @@ trait AdminTrait
         );
 
         $nav->render('&laquo;', '&raquo;');
+    }
+
+    /**
+     * @return array|null
+     * @throws DbException
+     */
+    protected function ___revision(): ?array
+    {
+        return $this->db->fetchRow(
+            $this->select('cid', 'modified')
+                ->where(
+                    'table.contents.parent = ? AND table.contents.type = ?',
+                    $this->cid,
+                    'revision'
+                )
+                ->limit(1)
+        );
     }
 }
