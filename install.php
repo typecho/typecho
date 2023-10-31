@@ -1355,7 +1355,7 @@ function install_step_3_perform()
                 'url' => 'https://typecho.org',
                 'ip' => '127.0.0.1',
                 'agent' => $options->generator,
-                'text' => '欢迎加入 Typecho 大家族',
+                'text' => _t('欢迎加入 Typecho 大家族'),
                 'type' => 'comment',
                 'status' => 'approved',
                 'parent' => 0
