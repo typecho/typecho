@@ -300,7 +300,8 @@ function install_get_default_options(): array
             'attachmentTypes' => '@image@',
             'secret' => \Typecho\Common::randString(32, true),
             'installed' => 0,
-            'allowXmlRpc' => 2
+            'allowXmlRpc' => 2,
+            'postArchiveType' => 'month'
         ];
     }
 
