@@ -311,7 +311,7 @@ trait EditTrait
      */
     protected function setTags(int $cid, ?string $tags, bool $beforeCount = true, bool $afterCount = true)
     {
-        $tags = str_replace('，', ',', $tags);
+        $tags = str_replace('，', ',', $tags ?? '');
         $tags = array_unique(array_map('trim', explode(',', $tags)));
         $tags = array_filter($tags, [Validate::class, 'xssCheck']);
 
@@ -492,6 +492,11 @@ trait EditTrait
 
         /** 如果草稿已经存在 */
         if ($this->draft) {
+            $isRevision = !preg_match("/_draft$/", $this->type);
+            if ($isRevision) {
+                $contents['parent'] = $this->cid;
+                $contents['type'] = 'revision';
+            }
 
             /** 直接将草稿状态更改 */
             if ($this->update($contents, $this->db->sql()->where('cid = ?', $this->draft['cid']))) {

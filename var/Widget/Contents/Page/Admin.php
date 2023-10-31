@@ -2,7 +2,9 @@
 
 namespace Widget\Contents\Page;
 
+use Typecho\Common;
 use Typecho\Db;
+use Typecho\Widget\Exception;
 use Widget\Base\Contents;
 use Widget\Base\TreeTrait;
 use Widget\Contents\AdminTrait;
@@ -33,10 +35,84 @@ class Admin extends Contents
      */
     public function execute()
     {
-        $this->initPage();
+        $this->parameter->setDefault('ignoreRequest=0');
 
-        $parentId = $this->request->filter('int')->get('parent', 0);
-        $this->stack = $this->getRows($this->getChildIds($parentId));
+        if ($this->parameter->ignoreRequest) {
+            $this->stack = $this->getRows($this->orders, $this->parameter->ignore);
+        } elseif ($this->request->is('keywords')) {
+            $select = $this->select('table.contents.cid')
+                ->where('table.contents.type = ? OR table.contents.type = ?', 'page', 'page_draft');
+            $this->searchQuery($select);
+
+            $ids = array_column($this->db->fetchAll($select), 'cid');
+            $this->stack = $this->getRows($ids);
+        } else {
+            $parentId = $this->request->filter('int')->get('parent', 0);
+            $this->stack = $this->getRows($this->getChildIds($parentId));
+        }
+    }
+
+    /**
+     * 向上的返回链接
+     *
+     * @throws Db\Exception
+     */
+    public function backLink()
+    {
+        if ($this->request->is('parent')) {
+            $page = $this->getRow($this->request->filter('int')->get('parent'));
+
+            if (!empty($page)) {
+                $parent = $this->getRow($page['parent']);
+
+                if ($parent) {
+                    echo '<a href="'
+                        . Common::url('manage-pages.php?parent=' . $parent['mid'], $this->options->adminUrl)
+                        . '">';
+                } else {
+                    echo '<a href="' . Common::url('manage-pages.php', $this->options->adminUrl) . '">';
+                }
+
+                echo '&laquo; ';
+                _e('返回父级页面');
+                echo '</a>';
+            }
+        }
+    }
+
+    /**
+     * 获取菜单标题
+     *
+     * @return string|null
+     * @throws Db\Exception|Exception
+     */
+    public function getMenuTitle(): ?string
+    {
+        if ($this->request->is('parent')) {
+            $page = $this->getRow($this->request->filter('int')->get('parent'));
+
+            if (!empty($page)) {
+                return _t('管理 %s 的子页面', $page['title']);
+            }
+        } else {
+            return null;
+        }
+
+        throw new Exception(_t('页面不存在'), 404);
+    }
+
+    /**
+     * 获取菜单标题
+     *
+     * @return string
+     */
+    public function getAddLink(): string
+    {
+        if ($this->request->is('parent')) {
+            return 'write-page.php?parent=' . $this->request->filter('int')->get('parent');
+        } else {
+            return 'write-page.php';
+        }
     }
 
     /**

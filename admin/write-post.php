@@ -2,7 +2,8 @@
 include 'common.php';
 include 'header.php';
 include 'menu.php';
-\Widget\Contents\Post\Edit::alloc()->prepare()->to($post);
+
+$post = \Widget\Contents\Post\Edit::alloc()->prepare();
 ?>
 <div class="main">
     <div class="body container">

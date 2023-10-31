@@ -2,7 +2,19 @@
 include 'common.php';
 include 'header.php';
 include 'menu.php';
-\Widget\Contents\Page\Edit::alloc()->prepare()->to($page);
+
+$page = \Widget\Contents\Page\Edit::alloc()->prepare();
+
+$parentPageId = $page->getParent();
+$parentPages = [0 => _t('不选择')];
+$parents = \Widget\Contents\Page\Admin::allocWithAlias(
+    'options',
+    'ignoreRequest=1' . ($request->is('cid') ? '&ignore=' . $request->get('cid') : '')
+);
+
+while ($parents->next()) {
+    $parentPages[$parents->cid] = str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;', $parents->levels) . $parents->title;
+}
 ?>
 <div class="main">
     <div class="body container">
@@ -103,6 +115,19 @@ include 'menu.php';
                                 </select>
                             </p>
                             <p class="description"><?php _e('如果你为此页面选择了一个自定义模板, 系统将按照你选择的模板文件展现它'); ?></p>
+                        </section>
+
+                        <section class="typecho-post-option">
+                            <label for="parent" class="typecho-label"><?php _e('父级页面'); ?></label>
+                            <p>
+                                <select name="parent" id="parent">
+                                    <?php foreach ($parentPages as $pageId => $pageTitle): ?>
+                                        <option
+                                            value="<?php echo $pageId; ?>"<?php if ($pageId == ($page->parent ?? $parentPageId)): ?> selected="true"<?php endif; ?>><?php echo $pageTitle; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </p>
+                            <p class="description"><?php _e('如果你设定了父级页面, 此页面将作为子页面呈现'); ?></p>
                         </section>
 
                         <?php \Typecho\Plugin::factory('admin/write-page.php')->call('option', $page); ?>

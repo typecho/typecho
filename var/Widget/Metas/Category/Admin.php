@@ -38,12 +38,10 @@ class Admin extends Metas
     public function backLink()
     {
         if ($this->request->is('parent')) {
-            $category = $this->db->fetchRow($this->select()
-                ->where('type = ? AND mid = ?', 'category', $this->request->get('parent')));
+            $category = $this->getRow($this->request->filter('int')->get('parent'));
 
             if (!empty($category)) {
-                $parent = $this->db->fetchRow($this->select()
-                    ->where('type = ? AND mid = ?', 'category', $category['parent']));
+                $parent = $this->getRow($category['parent']);
 
                 if ($parent) {
                     echo '<a href="'
@@ -69,8 +67,7 @@ class Admin extends Metas
     public function getMenuTitle(): ?string
     {
         if ($this->request->is('parent')) {
-            $category = $this->db->fetchRow($this->select()
-                ->where('type = ? AND mid = ?', 'category', $this->request->get('parent')));
+            $category = $this->getRow($this->request->filter('int')->get('parent'));
 
             if (!empty($category)) {
                 return _t('管理 %s 的子分类', $category['name']);

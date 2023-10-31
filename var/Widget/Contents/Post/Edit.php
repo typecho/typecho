@@ -20,6 +20,8 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
 
 /**
  * 编辑文章组件
+ *
+ * @property-read array $draft
  */
 class Edit extends Contents implements ActionInterface
 {

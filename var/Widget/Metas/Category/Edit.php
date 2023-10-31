@@ -465,17 +465,18 @@ class Edit extends Metas implements ActionInterface
      */
     public function getMenuTitle(): ?string
     {
-        if (isset($this->request->mid)) {
+        if ($this->request->is('mid')) {
             $category = $this->db->fetchRow($this->select()
-                ->where('type = ? AND mid = ?', 'category', $this->request->mid));
+                ->where('type = ? AND mid = ?', 'category', $this->request->filter('int')->get('mid')));
 
             if (!empty($category)) {
                 return _t('编辑分类 %s', $category['name']);
             }
         }
-        if (isset($this->request->parent)) {
+
+        if ($this->request->is('parent')) {
             $category = $this->db->fetchRow($this->select()
-                ->where('type = ? AND mid = ?', 'category', $this->request->parent));
+                ->where('type = ? AND mid = ?', 'category', $this->request->filter('int')->get('parent')));
 
             if (!empty($category)) {
                 return _t('新增 %s 的子分类', $category['name']);

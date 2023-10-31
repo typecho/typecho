@@ -3,7 +3,6 @@
 namespace Widget\Contents\Page;
 
 use Typecho\Config;
-use Typecho\Db\Query;
 use Widget\Base\Contents;
 use Widget\Base\TreeViewTrait;
 

@@ -20,11 +20,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
 /**
  * 编辑页面组件
  *
- * @author qining
- * @category typecho
- * @package Widget
- * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
- * @license GNU General Public License 2.0
+ * @property-read array $draft
  */
 class Edit extends Contents implements ActionInterface
 {
@@ -64,6 +60,7 @@ class Edit extends Contents implements ActionInterface
         $contents['title'] = $this->request->get('title', _t('未命名页面'));
         $contents['created'] = $this->getCreated();
         $contents['visibility'] = ('hidden' == $contents['visibility'] ? 'hidden' : 'publish');
+        $contents['parent'] = $this->getParent();
 
         if ($this->request->is('markdown=1') && $this->options->markdown) {
             $contents['text'] = '<!--markdown-->' . $contents['text'];
@@ -92,7 +89,8 @@ class Edit extends Contents implements ActionInterface
             Notice::alloc()->highlight($this->theId);
 
             /** 页面跳转 */
-            $this->response->redirect(Common::url('manage-pages.php?', $this->options->adminUrl));
+            $this->response->redirect(Common::url('manage-pages.php'
+                . ($this->parent ? '?parent=' . $this->parent : ''), $this->options->adminUrl));
         } else {
             /** 保存文章 */
             $contents['type'] = 'page_draft';
@@ -326,6 +324,55 @@ class Edit extends Contents implements ActionInterface
         $this->on($this->request->is('do=deleteDraft'))->deletePageDraft();
         $this->on($this->request->is('do=sort'))->sortPage();
         $this->response->redirect($this->options->adminUrl);
+    }
+
+    /**
+     * 获取网页标题
+     *
+     * @return string
+     */
+    public function getMenuTitle(): string
+    {
+        $this->prepare();
+
+        if ($this->have()) {
+            return _t('编辑 %s', $this->title);
+        }
+
+        if ($this->request->is('parent')) {
+            $page = $this->db->fetchRow($this->select()
+                ->where('table.contents.type = ? OR table.contents.type', 'page', 'page_draft')
+                ->where('table.contents.cid = ?', $this->request->filter('int')->get('parent')));
+
+            if (!empty($page)) {
+                return _t('新增 %s 的子页面', $page['title']);
+            }
+        }
+
+        throw new Exception(_t('页面不存在'), 404);
+    }
+
+
+    /**
+     * @return int
+     */
+    public function getParent(): int
+    {
+        if ($this->request->is('parent')) {
+            $parent = $this->request->filter('int')->get('parent');
+
+            if (!$this->have() || $this->cid != $parent) {
+                $parentPage = $this->db->fetchRow($this->select()
+                    ->where('table.contents.type = ? OR table.contents.type = ?', 'page', 'page_draft')
+                    ->where('table.contents.cid = ?', $parent));
+
+                if (!empty($parentPage)) {
+                    return $parent;
+                }
+            }
+        }
+
+        return 0;
     }
 
     /**

@@ -40,17 +40,12 @@ trait PrepareEditTrait
             }
 
             if ($hasDraft) {
-                if ($type . '_draft' === $this->type && $this->parent) {
-                    $this->response->redirect(
-                        Common::url('write-' . $type . '.php?cid=' . $this->parent, $this->options->adminUrl)
-                    );
-                }
-
                 $draft = $this->type === $type . '_draft' ? $this->row : $this->db->fetchRow($this->select()
                     ->where('table.contents.parent = ? AND table.contents.type = ?', $this->cid, 'revision')
                     ->limit(1), [$this, 'filter']);
 
                 if (isset($draft)) {
+                    $draft['parent'] = $this->row['parent'];    // keep parent
                     $draft['slug'] = ltrim($draft['slug'], '@');
                     $draft['type'] = $this->type;
                     $draft['draft'] = $draft;
@@ -87,7 +82,6 @@ trait PrepareEditTrait
     {
         return _t('编辑 %s', $this->prepare()->title);
     }
-
 
     /**
      * 获取权限
