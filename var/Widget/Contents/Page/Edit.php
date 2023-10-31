@@ -149,7 +149,7 @@ class Edit extends Contents implements ActionInterface
                 // 处理草稿
                 $draft = $this->db->fetchRow($this->db->select('cid')
                     ->from('table.contents')
-                    ->where('table.contents.parent = ? AND table.contents.type = ?', $page, 'page_draft')
+                    ->where('table.contents.parent = ? AND table.contents.type = ?', $page, 'revision')
                     ->limit(1));
 
                 if (!empty($draft)) {
@@ -190,6 +190,7 @@ class Edit extends Contents implements ActionInterface
         foreach ($pages as $page) {
             // 删除插件接口
             self::pluginHandle()->call('delete', $page, $this);
+            $parent = $this->db->fetchObject($this->select()->where('cid = ?', $page))->parent;
 
             if ($this->delete($this->db->sql()->where('cid = ?', $page))) {
                 /** 删除评论 */
@@ -209,7 +210,7 @@ class Edit extends Contents implements ActionInterface
                 /** 删除草稿 */
                 $draft = $this->db->fetchRow($this->db->select('cid')
                     ->from('table.contents')
-                    ->where('table.contents.parent = ? AND table.contents.type = ?', $page, 'page_draft')
+                    ->where('table.contents.parent = ? AND table.contents.type = ?', $page, 'revision')
                     ->limit(1));
 
                 /** 删除自定义字段 */
@@ -219,6 +220,13 @@ class Edit extends Contents implements ActionInterface
                     $this->deleteContent($draft['cid'], false);
                     $this->deleteFields($draft['cid']);
                 }
+
+                // update parent
+                $this->update(
+                    ['parent' => $parent],
+                    $this->db->sql()->where('parent = ?', $page)
+                        ->where('type = ? OR type = ?', 'page', 'page_draft')
+                );
 
                 // 完成删除插件接口
                 self::pluginHandle()->call('finishDelete', $page, $this);

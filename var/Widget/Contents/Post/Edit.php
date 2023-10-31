@@ -200,7 +200,7 @@ class Edit extends Contents implements ActionInterface
                 // 处理草稿
                 $draft = $this->db->fetchRow($this->db->select('cid')
                     ->from('table.contents')
-                    ->where('table.contents.parent = ? AND table.contents.type = ?', $post, 'post_draft')
+                    ->where('table.contents.parent = ? AND table.contents.type = ?', $post, 'revision')
                     ->limit(1));
 
                 if (!empty($draft)) {
@@ -266,7 +266,7 @@ class Edit extends Contents implements ActionInterface
                 /** 删除草稿 */
                 $draft = $this->db->fetchRow($this->db->select('cid')
                     ->from('table.contents')
-                    ->where('table.contents.parent = ? AND table.contents.type = ?', $post, 'post_draft')
+                    ->where('table.contents.parent = ? AND table.contents.type = ?', $post, 'revision')
                     ->limit(1));
 
                 /** 删除自定义字段 */
