@@ -32,7 +32,9 @@ include 'menu.php';
                                     <li class="multiline">
                                         <button type="button" class="btn btn-s merge"
                                                 rel="<?php $security->index('/action/metas-tag-edit?do=merge'); ?>"><?php _e('合并到'); ?></button>
-                                        <input type="text" name="merge" class="text-s"/>
+                                        <select name="merge">
+                                            <?php $tags->parse('<option value="{name}">{name}</option>'); ?>
+                                        </select>
                                     </li>
                                 </ul>
                             </div>

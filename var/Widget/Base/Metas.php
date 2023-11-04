@@ -153,7 +153,7 @@ class Metas extends Base implements QueryInterface
                     ->where('mid = ?', $meta)), 'cid');
 
                 $where = $this->db->sql()->where('mid = ? AND type = ?', $meta, $type);
-                $this->delete($where);
+                // $this->delete($where);
                 $diffContents = array_diff($existsContents, $contents);
                 $this->db->query($this->db->delete('table.relationships')->where('mid = ?', $meta));
 
@@ -163,7 +163,7 @@ class Metas extends Base implements QueryInterface
                     $contents[] = $content;
                 }
 
-                $this->update(['parent' => $mid], $this->db->sql()->where('parent = ?', $meta));
+                $this->update(['parent' => $mid], $this->db->sql()->where('mid = ?', $meta));
                 unset($existsContents);
             }
         }
