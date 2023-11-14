@@ -17,7 +17,8 @@ use Widget\Base\Metas;
 use Widget\Comments\Ping;
 use Widget\Contents\Attachment\Related;
 use Widget\Contents\Related\Author;
-use Widget\Metas\Category\Rows;
+use Widget\Metas\Category\Rows as CategoryRows;
+use Widget\Contents\Page\Rows as PageRows;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -1493,12 +1494,17 @@ class Archive extends Contents
         }
 
         /** 匹配缩略名 */
-        if ($this->request->is('slug') && !$this->parameter->preview) {
+        if ($this->request->is('slug')) {
             $select->where('table.contents.slug = ?', $this->request->get('slug'));
         }
 
+        if ($this->request->is('directory') && 'page' == $this->parameter->type) {
+            $directory = explode('/', $this->request->get('directory'));
+            $select->where('slug = ?', $directory[count($directory) - 1]);
+        }
+
         /** 匹配时间 */
-        if ($this->request->is('year') && !$this->parameter->preview) {
+        if ($this->request->is('year')) {
             $year = $this->request->filter('int')->get('year');
 
             $fromMonth = 1;
@@ -1511,7 +1517,6 @@ class Archive extends Contents
                 $fromMonth = $this->request->filter('int')->get('month');
                 $toMonth = $fromMonth;
 
-                $fromDay = 1;
                 $toDay = date('t', mktime(0, 0, 0, $toMonth, 1, $year));
 
                 if ($this->request->is('day')) {
@@ -1549,13 +1554,7 @@ class Archive extends Contents
         $select->limit(1);
         $this->query($select);
 
-        if (
-            !$this->have()
-            || ($this->request->is('category')
-                && $this->category != $this->request->get('category') && !$this->parameter->preview)
-            || ($this->request->is('directory')
-                && $this->request->get('directory') != implode('/', $this->directory) && !$this->parameter->preview)
-        ) {
+        if (!$this->have()) {
             if (!$this->invokeFromOutside) {
                 /** 对没有索引情况下的判断 */
                 throw new WidgetException(_t('请求的地址不存在'), 404);
@@ -1563,7 +1562,15 @@ class Archive extends Contents
                 $hasPushed = true;
                 return;
             }
+        } elseif ('page' == $this->parameter->type) {
+            $page = PageRows::alloc('current=' . $this->cid);
+            $directory = $page->getAllParentsSlug($this->cid);
+            $directory[] = $this->slug;
+            $this->row['directory'] = $directory;
         }
+
+        var_dump($this->row);
+        exit;
 
         /** 密码表单判断逻辑 */
         if ($isPasswordPosted && $this->hidden) {
@@ -1652,7 +1659,7 @@ class Archive extends Contents
             throw new WidgetException(_t('分类不存在'), 404);
         }
 
-        $categoryListWidget = Rows::alloc('current=' . $category['mid']);
+        $categoryListWidget = CategoryRows::alloc('current=' . $category['mid']);
         $category = $categoryListWidget->filter($category);
 
         if (isset($directory) && ($this->request->get('directory') != implode('/', $category['directory']))) {

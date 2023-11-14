@@ -76,22 +76,24 @@ class Metas extends Base implements QueryInterface, RowFilterInterface, PrimaryK
         //生成静态链接
         $type = $row['type'];
         $routeExists = (null != Router::get($type));
-        $tmpSlug = $row['slug'];
-        $row['slug'] = urlencode($row['slug']);
+        $routeParams = [
+            'mid' => $row['mid'],
+            'slug' => urlencode($row['slug']),
+            'directory' => isset($row['directory']) ? implode('/', array_map('urlencode', $row['directory'])) : ''
+        ];
 
-        $row['url'] = $row['permalink'] = $routeExists ? Router::url($type, $row, $this->options->index) : '#';
+        $row['url'] = $row['permalink'] = $routeExists ? Router::url($type, $routeParams, $this->options->index) : '#';
 
         /** 生成聚合链接 */
         /** RSS 2.0 */
-        $row['feedUrl'] = $routeExists ? Router::url($type, $row, $this->options->feedUrl) : '#';
+        $row['feedUrl'] = $routeExists ? Router::url($type, $routeParams, $this->options->feedUrl) : '#';
 
         /** RSS 1.0 */
-        $row['feedRssUrl'] = $routeExists ? Router::url($type, $row, $this->options->feedRssUrl) : '#';
+        $row['feedRssUrl'] = $routeExists ? Router::url($type, $routeParams, $this->options->feedRssUrl) : '#';
 
         /** ATOM 1.0 */
-        $row['feedAtomUrl'] = $routeExists ? Router::url($type, $row, $this->options->feedAtomUrl) : '#';
+        $row['feedAtomUrl'] = $routeExists ? Router::url($type, $routeParams, $this->options->feedAtomUrl) : '#';
 
-        $row['slug'] = $tmpSlug;
         return Metas::pluginHandle()->call('filter', $row, $this);
     }
 

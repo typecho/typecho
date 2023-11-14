@@ -35,7 +35,9 @@ class Permalink extends Options implements ActionInterface
      */
     public function checkPagePattern($value): bool
     {
-        return strpos($value, '{slug}') !== false || strpos($value, '{cid}') !== false;
+        return strpos($value, '{slug}') !== false
+            || strpos($value, '{cid}') !== false
+            || strpos($value, '{directory}') !== false;
     }
 
     /**

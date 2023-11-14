@@ -30,13 +30,6 @@ $pages = \Widget\Contents\Page\Admin::alloc();
                                     <li>
                                         <a href="<?php $security->index('/action/contents-page-edit?do=mark&status=hidden'); ?>"><?php _e('标记为<strong>%s</strong>', _t('隐藏')); ?></a>
                                     </li>
-                                    <li class="multiline">
-                                        <button type="button" class="btn merge btn-s"
-                                                rel="<?php $security->index('/action/contents-page-edit?do=merge'); ?>"><?php _e('合并到'); ?></button>
-                                        <select name="merge">
-                                            <?php $pages->parse('<option value="{cid}">{title}</option>'); ?>
-                                        </select>
-                                    </li>
                                 </ul>
                             </div>
                         </div>

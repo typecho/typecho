@@ -79,13 +79,9 @@ trait TreeTrait
     {
         $directory = $this->getAllParentsSlug($row[$this->getPrimaryKey()]);
         $directory[] = $row['slug'];
-        $path = implode('/', array_map('urlencode', $directory));
 
-        $row['directory'] = $path;
-        $row = parent::filter($row);
         $row['directory'] = $directory;
-
-        return $row;
+        return parent::filter($row);
     }
 
     /**
