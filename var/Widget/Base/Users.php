@@ -6,8 +6,8 @@ use Typecho\Common;
 use Typecho\Config;
 use Typecho\Db\Exception;
 use Typecho\Db\Query;
-use Typecho\Plugin;
 use Typecho\Router;
+use Typecho\Router\ParamsDelegateInterface;
 use Widget\Base;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
@@ -34,7 +34,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property-read string $feedRssUrl
  * @property-read string $feedAtomUrl
  */
-class Users extends Base implements QueryInterface, RowFilterInterface, PrimaryKeyInterface
+class Users extends Base implements QueryInterface, RowFilterInterface, PrimaryKeyInterface, ParamsDelegateInterface
 {
     /**
      * @return string 获取主键
@@ -64,22 +64,21 @@ class Users extends Base implements QueryInterface, RowFilterInterface, PrimaryK
      */
     public function filter(array $row): array
     {
-        //生成静态链接
-        $routeExists = (null != Router::get('author'));
-
-        $row['permalink'] = $routeExists ? Router::url('author', $row, $this->options->index) : '#';
-
-        /** 生成聚合链接 */
-        /** RSS 2.0 */
-        $row['feedUrl'] = $routeExists ? Router::url('author', $row, $this->options->feedUrl) : '#';
-
-        /** RSS 1.0 */
-        $row['feedRssUrl'] = $routeExists ? Router::url('author', $row, $this->options->feedRssUrl) : '#';
-
-        /** ATOM 1.0 */
-        $row['feedAtomUrl'] = $routeExists ? Router::url('author', $row, $this->options->feedAtomUrl) : '#';
-
         return Users::pluginHandle()->call('filter', $row, $this);
+    }
+
+    /**
+     * @param string $key
+     * @return string
+     */
+    public function getRouterParam(string $key): string
+    {
+        switch ($key) {
+            case 'uid':
+                return $this->uid;
+            default:
+                return '{' . $key . '}';
+        }
     }
 
     /**
@@ -156,6 +155,38 @@ class Users extends Base implements QueryInterface, RowFilterInterface, PrimaryK
         $url = Common::gravatarUrl($this->mail, $size, $rating, $default, $this->request->isSecure());
         echo '<img' . (empty($class) ? '' : ' class="' . $class . '"') . ' src="' . $url . '" alt="' .
             $this->screenName . '" width="' . $size . '" height="' . $size . '" />';
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___permalink(): string
+    {
+        return Router::url('author', $this, $this->options->index);
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___feedUrl(): string
+    {
+        return Router::url('author', $this, $this->options->feedUrl);
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___feedRssUrl(): string
+    {
+        return Router::url('author', $this, $this->options->feedRssUrl);
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___feedAtomUrl(): string
+    {
+        return Router::url('author', $this, $this->options->feedAtomUrl);
     }
 
     /**

@@ -551,7 +551,9 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
 
             //增加数据信息
             $row['attachment'] = new Config($content);
-            $row['attachment']->isImage = in_array($content['type'], ['jpg', 'jpeg', 'gif', 'png', 'tiff', 'bmp', 'webp', 'avif']);
+            $row['attachment']->isImage = in_array($content['type'], [
+                'jpg', 'jpeg', 'gif', 'png', 'tiff', 'bmp', 'webp', 'avif'
+            ]);
             $row['attachment']->url = Upload::attachmentHandle($row);
 
             if ($row['attachment']->isImage) {

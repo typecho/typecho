@@ -1569,9 +1569,6 @@ class Archive extends Contents
             $this->row['directory'] = $directory;
         }
 
-        var_dump($this->row);
-        exit;
-
         /** 密码表单判断逻辑 */
         if ($isPasswordPosted && $this->hidden) {
             throw new WidgetException(_t('对不起,您输入的密码错误'), 403);
