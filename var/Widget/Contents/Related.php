@@ -3,7 +3,6 @@
 namespace Widget\Contents;
 
 use Typecho\Db;
-use Typecho\Db\Query;
 use Typecho\Db\Exception;
 use Widget\Base\Contents;
 

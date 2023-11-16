@@ -10,6 +10,7 @@ use Typecho\Db\Exception;
 use Typecho\Db\Query;
 use Typecho\Plugin;
 use Typecho\Router;
+use Typecho\Router\ParamsDelegateInterface;
 use Typecho\Widget;
 use Utils\AutoP;
 use Utils\Markdown;
@@ -17,6 +18,8 @@ use Widget\Base;
 use Widget\Metas\Category\Rows;
 use Widget\Upload;
 use Widget\Users\Author;
+use Widget\Metas\Category\Related as CategoryRelated;
+use Widget\Metas\Tag\Related as TagRelated;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -45,19 +48,18 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property int $parentId
  * @property-read Users $author
  * @property-read string $permalink
- * @property-read string $pathinfo
+ * @property-read string $path
  * @property-read string $url
  * @property-read string $feedUrl
  * @property-read string $feedRssUrl
  * @property-read string $feedAtomUrl
  * @property-read bool $isMarkdown
  * @property-read bool $hidden
- * @property-read string $category
  * @property-read Date $date
  * @property-read string $dateWord
  * @property-read string[] $directory
- * @property-read array $tags
- * @property-read array $categories
+ * @property-read TagRelated $tags
+ * @property-read CategoryRelated $categories
  * @property-read string $excerpt
  * @property-read string $plainExcerpt
  * @property-read string $summary
@@ -70,7 +72,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property-read string $trackbackUrl
  * @property-read string $responseUrl
  */
-class Contents extends Base implements QueryInterface, RowFilterInterface, PrimaryKeyInterface
+class Contents extends Base implements QueryInterface, RowFilterInterface, PrimaryKeyInterface, ParamsDelegateInterface
 {
     /**
      * @return string 获取主键
@@ -78,6 +80,32 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
     public function getPrimaryKey(): string
     {
         return 'cid';
+    }
+
+    /**
+     * @param string $key
+     * @return string
+     */
+    public function getRouterParam(string $key): string
+    {
+        switch ($key) {
+            case 'cid':
+                return $this->cid;
+            case 'slug':
+                return urlencode($this->slug);
+            case 'directory':
+                return implode('/', array_map('urlencode', $this->directory));
+            case 'category':
+                return urlencode($this->categories->slug);
+            case 'year':
+                return $this->date->year;
+            case 'month':
+                return $this->date->month;
+            case 'day':
+                return $this->date->day;
+            default:
+                return '{' . $key . '}';
+        }
     }
 
     /**
@@ -479,71 +507,15 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
     {
         /** 获取路由类型并判断此类型在路由表中是否存在 */
         $type = $row['type'];
-        $routeExists = (null != Router::get($type));
 
         /** 处理默认空值 */
         $row['title'] = $row['title'] ?? '';
         $row['text'] = $row['text'] ?? '';
         $row['slug'] = $row['slug'] ?? '';
-
-        /** 处理文章分类 */
-        if ('post' == $type || 'post_draft' == $type) {
-            $row['categories'] = $this->db->fetchAll($this->db
-                ->select()->from('table.metas')
-                ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
-                ->where('table.relationships.cid = ?', $row['cid'])
-                ->where('table.metas.type = ?', 'category'), [Rows::alloc(), 'filter']);
-
-            $row['category'] = '';
-            $row['directory'] = [];
-
-            /** 取出第一个分类作为slug条件 */
-            if (!empty($row['categories'])) {
-                /** 使用自定义排序 */
-                usort($row['categories'], function ($a, $b) {
-                    $field = 'order';
-                    if ($a['order'] == $b['order']) {
-                        $field = 'mid';
-                    }
-
-                    return $a[$field] < $b[$field] ? -1 : 1;
-                });
-
-                $firstCategory = $row['categories'][0];
-                $row['category'] = $firstCategory['slug'];
-
-                $row['directory'] = Rows::alloc()->getAllParentsSlug($firstCategory['mid']);
-                $row['directory'][] = $row['category'];
-            }
-        }
-
-        $row['category'] = $row['category'] ?? '';
-        $row['directory'] = $row['directory'] ?? [];
         $row['date'] = new Date($row['created']);
-
-        /** 生成日期 */
-        $row['year'] = $row['date']->year;
-        $row['month'] = $row['date']->month;
-        $row['day'] = $row['date']->day;
 
         /** 生成访问权限 */
         $row['hidden'] = false;
-
-        $routeParams = [
-            'cid' => $row['cid'],
-            'slug' => urlencode($row['slug']),
-            'directory' => isset($row['directory']) ? implode('/', array_map('urlencode', $row['directory'])) : '',
-            'category' => isset($row['category']) ? urlencode($row['category']) : '',
-            'year' => $row['year'],
-            'month' => $row['month'],
-            'day' => $row['day']
-        ];
-
-        /** 生成静态路径 */
-        $row['pathinfo'] = $routeExists ? Router::url($type, $routeParams) : '#';
-
-        /** 生成静态链接 */
-        $row['url'] = $row['permalink'] = Common::url($row['pathinfo'], $this->options->index);
 
         /** 处理附件 */
         if ('attachment' == $type) {
@@ -572,16 +544,6 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
                 $row['text'] = substr($row['text'], 15);
             }
         }
-
-        /** 生成聚合链接 */
-        /** RSS 2.0 */
-        $row['feedUrl'] = $routeExists ? Router::url($type, $routeParams, $this->options->feedUrl) : '#';
-
-        /** RSS 1.0 */
-        $row['feedRssUrl'] = $routeExists ? Router::url($type, $routeParams, $this->options->feedRssUrl) : '#';
-
-        /** ATOM 1.0 */
-        $row['feedAtomUrl'] = $routeExists ? Router::url($type, $routeParams, $this->options->feedAtomUrl) : '#';
 
         /** 处理密码保护流程 */
         if (
@@ -720,12 +682,12 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
     public function category(string $split = ',', bool $link = true, ?string $default = null)
     {
         $categories = $this->categories;
-        if ($categories) {
+
+        if ($categories->have()) {
             $result = [];
 
-            foreach ($categories as $category) {
-                $result[] = $link ? '<a href="' . $category['permalink'] . '">'
-                    . $category['name'] . '</a>' : $category['name'];
+            while ($categories->next()) {
+                $result[] = $link ? $categories->template('<a href="{permalink}">{name}</a>') : $categories->name;
             }
 
             echo implode($split, $result);
@@ -771,12 +733,13 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
      */
     public function tags(string $split = ',', bool $link = true, ?string $default = null)
     {
-        /** 取出tags */
-        if ($this->tags) {
+        $tags = $this->tags;
+
+        if ($tags->have()) {
             $result = [];
-            foreach ($this->tags as $tag) {
-                $result[] = $link ? '<a href="' . $tag['permalink'] . '">'
-                    . $tag['name'] . '</a>' : $tag['name'];
+
+            while ($tags->next()) {
+                $result[] = $link ? $tags->template('<a href="{permalink}">{name}</a>') : $tags->name;
             }
 
             echo implode($split, $result);
@@ -798,18 +761,88 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
     }
 
     /**
-     * 将tags取出
+     * @return string
+     */
+    protected function ___path(): string
+    {
+        return Router::url($this->type, $this);
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___permalink(): string
+    {
+        return Common::url($this->path, $this->options->index);
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___url(): string
+    {
+        return $this->permalink;
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___feedUrl(): string
+    {
+        return Router::url($this->type, $this, $this->options->feedUrl);
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___feedRssUrl(): string
+    {
+        return Router::url($this->type, $this, $this->options->feedRssUrl);
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___feedAtomUrl(): string
+    {
+        return Router::url($this->type, $this, $this->options->feedAtomUrl);
+    }
+
+    /**
+     * 多级目录结构
      *
      * @return array
-     * @throws Exception
      */
-    protected function ___tags(): array
+    protected function ___directory(): array
     {
-        return $this->db->fetchAll($this->db
-            ->select()->from('table.metas')
-            ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
-            ->where('table.relationships.cid = ?', $this->cid)
-            ->where('table.metas.type = ?', 'tag'), [Metas::alloc(), 'filter']);
+        $directory = [];
+
+        $category = $this->categories;
+
+        if ($category->have()) {
+            $directory = Rows::alloc()->getAllParentsSlug($category->mid);
+            $directory[] = $category->slug;
+        }
+
+        return $directory;
+    }
+
+    /**
+     * @return CategoryRelated
+     */
+    protected function ___categories(): CategoryRelated
+    {
+        return CategoryRelated::allocWithAlias($this->cid, ['cid' => $this->cid]);
+    }
+
+    /**
+     * 将tags取出
+     *
+     * @return TagRelated
+     */
+    protected function ___tags(): TagRelated
+    {
+        return TagRelated::allocWithAlias($this->cid, ['cid' => $this->cid]);
     }
 
     /**
@@ -1016,7 +1049,7 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
         /** 评论 */
         return Router::url(
             'feedback',
-            ['type' => 'comment', 'permalink' => $this->pathinfo],
+            ['type' => 'comment', 'permalink' => $this->path],
             $this->options->index
         );
     }
@@ -1030,7 +1063,7 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
     {
         return Router::url(
             'feedback',
-            ['type' => 'trackback', 'permalink' => $this->pathinfo],
+            ['type' => 'trackback', 'permalink' => $this->path],
             $this->options->index
         );
     }

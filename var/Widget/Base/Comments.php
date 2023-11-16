@@ -4,13 +4,14 @@ namespace Widget\Base;
 
 use Typecho\Common;
 use Typecho\Date;
-use Typecho\Db;
 use Typecho\Db\Exception;
 use Typecho\Db\Query;
 use Typecho\Router;
+use Typecho\Router\ParamsDelegateInterface;
 use Utils\AutoP;
 use Utils\Markdown;
 use Widget\Base;
+use Widget\Contents\Single;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -36,12 +37,12 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property Date $date
  * @property string $dateWord
  * @property string $theId
- * @property array $parentContent
+ * @property Contents $parentContent
  * @property string $title
  * @property string $permalink
  * @property string $content
  */
-class Comments extends Base implements QueryInterface, RowFilterInterface, PrimaryKeyInterface
+class Comments extends Base implements QueryInterface, RowFilterInterface, PrimaryKeyInterface, ParamsDelegateInterface
 {
     /**
      * @return string 获取主键
@@ -49,6 +50,20 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
     public function getPrimaryKey(): string
     {
         return 'coid';
+    }
+
+    /**
+     * @param string $key
+     * @return string
+     */
+    public function getRouterParam(string $key): string
+    {
+        switch ($key) {
+            case 'permalink':
+                return $this->parentContent->path;
+            default:
+                return '{' . $key . '}';
+        }
     }
 
     /**
@@ -364,14 +379,11 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
     /**
      * 获取当前内容结构
      *
-     * @return array|null
-     * @throws Exception
+     * @return Contents
      */
-    protected function ___parentContent(): ?array
+    protected function ___parentContent(): Contents
     {
-        return $this->db->fetchRow(Contents::alloc()->select()
-            ->where('table.contents.cid = ?', $this->cid)
-            ->limit(1), [Contents::alloc(), 'filter']);
+        return Single::allocWithAlias($this->cid, ['cid' => $this->cid]);
     }
 
     /**
@@ -381,7 +393,7 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
      */
     protected function ___title(): ?string
     {
-        return $this->parentContent['title'];
+        return $this->parentContent->title;
     }
 
     /**
@@ -410,7 +422,7 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
             }
 
             $select = $this->db->select('coid', 'parent')
-                ->from('table.comments')->where('cid = ? AND status = ?', $this->parentContent['cid'], 'approved')
+                ->from('table.comments')->where('cid = ? AND status = ?', $this->cid, 'approved')
                 ->where('coid ' . ('DESC' == $this->options->commentsOrder ? '>=' : '<=') . ' ?', $coid)
                 ->order('coid');
 
@@ -433,7 +445,7 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
 
             $currentPage = ceil($total / $this->options->commentsPageSize);
 
-            $pageRow = ['permalink' => $this->parentContent['pathinfo'], 'commentPage' => $currentPage];
+            $pageRow = ['permalink' => $this->parentContent->path, 'commentPage' => $currentPage];
             return Router::url(
                 'comment_page',
                 $pageRow,
@@ -441,7 +453,7 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
             ) . '#' . $this->theId;
         }
 
-        return $this->parentContent['permalink'] . '#' . $this->theId;
+        return $this->parentContent->permalink . '#' . $this->theId;
     }
 
     /**
@@ -451,7 +463,7 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
      */
     protected function ___content(): ?string
     {
-        $text = $this->parentContent['hidden'] ? _t('内容被隐藏') : $this->text;
+        $text = $this->parentContent->hidden ? _t('内容被隐藏') : $this->text;
 
         $text = Comments::pluginHandle()->trigger($plugged)->call('content', $text, $this);
         if (!$plugged) {

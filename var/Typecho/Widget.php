@@ -275,20 +275,31 @@ abstract class Widget
     }
 
     /**
+     * 按模版渲染
+     *
+     * @param string $template 模版
+     * @return string
+     */
+    public function template(string $template): string
+    {
+        return preg_replace_callback(
+            "/\{([_a-z0-9]+)\}/i",
+            function (array $matches) {
+                return $this->{$matches[1]};
+            },
+            $template
+        );
+    }
+
+    /**
      * 格式化解析堆栈内的所有数据
      *
-     * @param string $format 数据格式
+     * @param string $template 模版
      */
-    public function parse(string $format)
+    public function parse(string $template)
     {
         while ($this->next()) {
-            echo preg_replace_callback(
-                "/\{([_a-z0-9]+)\}/i",
-                function (array $matches) {
-                    return $this->{$matches[1]};
-                },
-                $format
-            );
+            echo $this->template($template);
         }
     }
 

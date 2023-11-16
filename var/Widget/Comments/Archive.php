@@ -8,6 +8,7 @@ use Typecho\Router;
 use Typecho\Widget\Exception;
 use Typecho\Widget\Helper\PageNavigator\Box;
 use Widget\Base\Comments;
+use Widget\Base\Contents;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -60,7 +61,14 @@ class Archive extends Comments
      */
     protected function initParameter(Config $parameter)
     {
-        $parameter->setDefault('parentId=0&commentPage=0&commentsNum=0&allowComment=1');
+        $parameter->setDefault([
+            'parentId' => 0,
+            'respondId' => '',
+            'commentPage' => 0,
+            'commentsNum' => 0,
+            'allowComment' => 1,
+            'parentContent' => null,
+        ]);
     }
 
     /**
@@ -233,10 +241,7 @@ class Archive extends Comments
             }
 
             $template = array_merge($default, $config);
-
-            $pageRow = $this->parameter->parentContent;
-            $pageRow['permalink'] = $pageRow['pathinfo'];
-            $query = Router::url('comment_page', $pageRow, $this->options->index);
+            $query = Router::url('comment_page', $this, $this->options->index);
 
             self::pluginHandle()->trigger($hasNav)->call(
                 'pageNav',
@@ -469,7 +474,7 @@ class Archive extends Comments
     {
 
         if ($this->options->commentsPageBreak) {
-            $pageRow = ['permalink' => $this->parentContent['pathinfo'], 'commentPage' => $this->currentPage];
+            $pageRow = ['permalink' => $this->parentContent->path, 'commentPage' => $this->currentPage];
             return Router::url('comment_page', $pageRow, $this->options->index) . '#' . $this->theId;
         }
 
@@ -500,9 +505,9 @@ class Archive extends Comments
     /**
      * 重载内容获取
      *
-     * @return array|null
+     * @return Contents
      */
-    protected function ___parentContent(): ?array
+    protected function ___parentContent(): Contents
     {
         return $this->parameter->parentContent;
     }
