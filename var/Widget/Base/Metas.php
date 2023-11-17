@@ -5,6 +5,7 @@ namespace Widget\Base;
 use Typecho\Db\Exception;
 use Typecho\Db\Query;
 use Typecho\Router;
+use Typecho\Router\ParamsDelegateInterface;
 use Widget\Base;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
@@ -30,7 +31,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property-read string $feedRssUrl
  * @property-read string $feedAtomUrl
  */
-class Metas extends Base implements QueryInterface, RowFilterInterface, PrimaryKeyInterface
+class Metas extends Base implements QueryInterface, RowFilterInterface, PrimaryKeyInterface, ParamsDelegateInterface
 {
     /**
      * @return string 获取主键
@@ -38,6 +39,24 @@ class Metas extends Base implements QueryInterface, RowFilterInterface, PrimaryK
     public function getPrimaryKey(): string
     {
         return 'mid';
+    }
+
+    /**
+     * @param string $key
+     * @return string
+     */
+    public function getRouterParam(string $key): string
+    {
+        switch ($key) {
+            case 'mid':
+                return (string)$this->mid;
+            case 'slug':
+                return urlencode($this->slug);
+            case 'directory':
+                return implode('/', array_map('urlencode', $this->directory));
+            default:
+                return '';
+        }
     }
 
     /**
@@ -72,27 +91,6 @@ class Metas extends Base implements QueryInterface, RowFilterInterface, PrimaryK
      */
     public function filter(array $row): array
     {
-        //生成静态链接
-        $type = $row['type'];
-        $routeExists = (null != Router::get($type));
-        $routeParams = [
-            'mid' => $row['mid'],
-            'slug' => urlencode($row['slug']),
-            'directory' => isset($row['directory']) ? implode('/', array_map('urlencode', $row['directory'])) : ''
-        ];
-
-        $row['url'] = $row['permalink'] = $routeExists ? Router::url($type, $routeParams, $this->options->index) : '#';
-
-        /** 生成聚合链接 */
-        /** RSS 2.0 */
-        $row['feedUrl'] = $routeExists ? Router::url($type, $routeParams, $this->options->feedUrl) : '#';
-
-        /** RSS 1.0 */
-        $row['feedRssUrl'] = $routeExists ? Router::url($type, $routeParams, $this->options->feedRssUrl) : '#';
-
-        /** ATOM 1.0 */
-        $row['feedAtomUrl'] = $routeExists ? Router::url($type, $routeParams, $this->options->feedAtomUrl) : '#';
-
         return Metas::pluginHandle()->call('filter', $row, $this);
     }
 
@@ -162,5 +160,53 @@ class Metas extends Base implements QueryInterface, RowFilterInterface, PrimaryK
     protected function ___title(): string
     {
         return $this->name;
+    }
+
+    /**
+     * @return array
+     */
+    protected function ___directory(): array
+    {
+        return [];
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___permalink(): string
+    {
+        return Router::url($this->type, $this, $this->options->index);
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___url(): string
+    {
+        return $this->permalink;
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___feedUrl(): string
+    {
+        return Router::url($this->type, $this, $this->options->feedUrl);
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___feedRssUrl(): string
+    {
+        return Router::url($this->type, $this, $this->options->feedRssUrl);
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___feedAtomUrl(): string
+    {
+        return Router::url($this->type, $this, $this->options->feedAtomUrl);
     }
 }

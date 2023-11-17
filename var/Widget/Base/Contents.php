@@ -61,6 +61,8 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property-read TagRelated $tags
  * @property-read CategoryRelated $categories
  * @property-read string $excerpt
+ * @property-read string $originalText
+ * @property-read string $originalTitle
  * @property-read string $plainExcerpt
  * @property-read string $summary
  * @property-read string $content
@@ -505,74 +507,15 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
      */
     public function filter(array $row): array
     {
-        /** 获取路由类型并判断此类型在路由表中是否存在 */
-        $type = $row['type'];
-
         /** 处理默认空值 */
-        $row['title'] = $row['title'] ?? '';
-        $row['text'] = $row['text'] ?? '';
+        $row['originalTitle'] = $row['title'] ?? '';
+        $row['originalText'] = $row['text'] ?? '';
         $row['slug'] = $row['slug'] ?? '';
+        $row['password'] = $row['password'] ?? '';
         $row['date'] = new Date($row['created']);
 
-        /** 生成访问权限 */
-        $row['hidden'] = false;
-
-        /** 处理附件 */
-        if ('attachment' == $type) {
-            $content = @unserialize($row['text']);
-
-            //增加数据信息
-            $row['attachment'] = new Config($content);
-            $row['attachment']->isImage = in_array($content['type'], [
-                'jpg', 'jpeg', 'gif', 'png', 'tiff', 'bmp', 'webp', 'avif'
-            ]);
-            $row['attachment']->url = Upload::attachmentHandle($row);
-
-            if ($row['attachment']->isImage) {
-                $row['text'] = '<img src="' . $row['attachment']->url . '" alt="' .
-                    $row['title'] . '" />';
-            } else {
-                $row['text'] = '<a href="' . $row['attachment']->url . '" title="' .
-                    $row['title'] . '">' . $row['title'] . '</a>';
-            }
-        }
-
-        /** 处理Markdown **/
-        if (isset($row['text'])) {
-            $row['isMarkdown'] = (0 === strpos($row['text'], '<!--markdown-->'));
-            if ($row['isMarkdown']) {
-                $row['text'] = substr($row['text'], 15);
-            }
-        }
-
-        /** 处理密码保护流程 */
-        if (
-            strlen($row['password'] ?? '') > 0 &&
-            $row['password'] !== Cookie::get('protectPassword_' . $row['cid']) &&
-            $row['authorId'] != $this->user->uid &&
-            !$this->user->pass('editor', true)
-        ) {
-            $row['hidden'] = true;
-        }
-
-        $row = Contents::pluginHandle()->call('filter', $row, $this);
-
-        /** 如果访问权限被禁止 */
-        if ($row['hidden']) {
-            $row['text'] = '<form class="protected" action="' . $this->security->getTokenUrl($row['permalink'])
-                . '" method="post">' .
-                '<p class="word">' . _t('请输入密码访问') . '</p>' .
-                '<p><input type="password" class="text" name="protectPassword" />
-            <input type="hidden" name="protectCID" value="' . $row['cid'] . '" />
-            <input type="submit" class="submit" value="' . _t('提交') . '" /></p>' .
-                '</form>';
-
-            $row['title'] = _t('此内容被密码保护');
-            $row['tags'] = [];
-            $row['commentsNum'] = 0;
-        }
-
-        return $row;
+        unset($row['text'], $row['title']);
+        return Contents::pluginHandle()->call('filter', $row, $this);
     }
 
     /**
@@ -763,6 +706,67 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
     /**
      * @return string
      */
+    protected function ___title(): string
+    {
+        return $this->hidden ? _t('此内容被密码保护') : $this->originalTitle;
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___text(): string
+    {
+        if ('attachment' == $this->type) {
+            if ($this->attachment->isImage) {
+                return '<img src="' . $this->attachment->url . '" alt="' .
+                    $this->title . '" />';
+            } else {
+                return '<a href="' . $this->attachment->url . '" title="' .
+                    $this->title . '">' . $this->title . '</a>';
+            }
+        } elseif ($this->hidden) {
+            return '<form class="protected" action="' . $this->security->getTokenUrl($this->permalink)
+                . '" method="post">' .
+                '<p class="word">' . _t('请输入密码访问') . '</p>' .
+                '<p><input type="password" class="text" name="protectPassword" />
+            <input type="hidden" name="protectCID" value="' . $this->cid . '" />
+            <input type="submit" class="submit" value="' . _t('提交') . '" /></p>' .
+                '</form>';
+        }
+
+        return $this->isMarkdown ? substr($this->originalText, 15) : $this->originalText;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function ___isMarkdown(): bool
+    {
+        return 0 === strpos($this->originalText, '<!--markdown-->');
+    }
+
+    /**
+     * 是否为隐藏文章
+     *
+     * @return bool
+     */
+    protected function ___hidden(): bool
+    {
+        if (
+            strlen($this->password) > 0 &&
+            $this->password !== Cookie::get('protectPassword_' . $this->cid) &&
+            $this->authorId != $this->user->uid &&
+            !$this->user->pass('editor', true)
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return string
+     */
     protected function ___path(): string
     {
         return Router::url($this->type, $this);
@@ -872,7 +876,7 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
      */
     protected function ___parentId(): ?int
     {
-        return $this->row['parent'];
+        return $this->parent;
     }
 
     /**
@@ -883,7 +887,28 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
      */
     protected function ___description(): ?string
     {
-        return $this->___plainExcerpt();
+        return $this->plainExcerpt;
+    }
+
+    /**
+     * @return Config|null
+     */
+    protected function ___attachment(): ?Config
+    {
+        if ('attachment' == $this->type) {
+            $content = @unserialize($this->text);
+
+            //增加数据信息
+            $attachment = new Config($content);
+            $attachment->isImage = in_array($content['type'], [
+                'jpg', 'jpeg', 'gif', 'png', 'tiff', 'bmp', 'webp', 'avif'
+            ]);
+            $attachment->url = Upload::attachmentHandle($this);
+
+            return $attachment;
+        }
+
+        return null;
     }
 
     /**
@@ -917,14 +942,8 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
             return $this->text;
         }
 
-        $content = Contents::pluginHandle()->trigger($plugged)->call('excerpt', $this->text, $this);
-        if (!$plugged) {
-            $content = $this->isMarkdown ? $this->markdown($content)
-                : $this->autoP($content);
-        }
-
-        $contents = explode('<!--more-->', $content);
-        [$excerpt] = $contents;
+        $content = Contents::pluginHandle()->call('excerpt', $this->content, $this);
+        [$excerpt] = explode('<!--more-->', $content);
 
         return Common::fixHtml(Contents::pluginHandle()->call('excerptEx', $excerpt, $this));
     }

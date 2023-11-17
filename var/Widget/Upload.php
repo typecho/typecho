@@ -43,10 +43,10 @@ class Upload extends Contents implements ActionInterface
     /**
      * 获取实际文件绝对访问路径
      *
-     * @param array $content 文件相关信息
+     * @param Contents $content 文件相关信息
      * @return string
      */
-    public static function attachmentHandle(array $content): string
+    public static function attachmentHandle(Contents $content): string
     {
         $result = Plugin::factory(Upload::class)->trigger($hasPlugged)->call('attachmentHandle', $content);
         if ($hasPlugged) {
@@ -55,7 +55,7 @@ class Upload extends Contents implements ActionInterface
 
         $options = Options::alloc();
         return Common::url(
-            $content['attachment']->path,
+            $content->attachment->path,
             defined('__TYPECHO_UPLOAD_URL__') ? __TYPECHO_UPLOAD_URL__ : $options->siteUrl
         );
     }

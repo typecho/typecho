@@ -91,18 +91,18 @@ class Feed extends Contents
 
             switch ($feedType) {
                 case FeedGenerator::RSS1:
-                    $currentFeedUrl = $archive->getFeedRssUrl();
+                    $currentFeedUrl = $archive->getArchiveFeedRssUrl();
                     break;
                 case FeedGenerator::ATOM1:
-                    $currentFeedUrl = $archive->getFeedAtomUrl();
+                    $currentFeedUrl = $archive->getArchiveFeedAtomUrl();
                     break;
                 default:
-                    $currentFeedUrl = $archive->getFeedUrl();
+                    $currentFeedUrl = $archive->getArchiveFeedUrl();
                     break;
             }
 
             $feed->setBaseUrl($archive->getArchiveUrl());
-            $feed->setSubTitle($archive->getDescription());
+            $feed->setSubTitle($archive->getArchiveDescription());
         }
 
         $this->checkPermalink($currentFeedUrl);

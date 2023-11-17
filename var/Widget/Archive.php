@@ -94,35 +94,35 @@ class Archive extends Contents
      *
      * @var string
      */
-    private string $feedUrl;
+    private string $archiveFeedUrl;
 
     /**
      * RSS 1.0聚合地址
      *
      * @var string
      */
-    private string $feedRssUrl;
+    private string $archiveFeedRssUrl;
 
     /**
      * ATOM 聚合地址
      *
      * @var string
      */
-    private string $feedAtomUrl;
+    private string $archiveFeedAtomUrl;
 
     /**
      * 本页关键字
      *
      * @var string
      */
-    private string $keywords;
+    private string $archiveKeywords;
 
     /**
      * 本页描述
      *
      * @var string
      */
-    private ?string $description = null;
+    private ?string $archiveDescription = null;
 
     /**
      * 归档标题
@@ -304,81 +304,81 @@ class Archive extends Contents
     /**
      * @return string|null
      */
-    public function getDescription(): ?string
+    public function getArchiveDescription(): ?string
     {
-        return $this->description;
+        return $this->archiveDescription;
     }
 
     /**
-     * @param string $description the $description to set
+     * @param string $archiveDescription the $description to set
      */
-    public function setDescription(string $description)
+    public function setArchiveDescription(string $archiveDescription)
     {
-        $this->description = $description;
+        $this->archiveDescription = $archiveDescription;
     }
 
     /**
      * @return string|null
      */
-    public function getKeywords(): ?string
+    public function getArchiveKeywords(): ?string
     {
-        return $this->keywords;
+        return $this->archiveKeywords;
     }
 
     /**
-     * @param string $keywords the $keywords to set
+     * @param string $archiveKeywords the $keywords to set
      */
-    public function setKeywords(string $keywords)
+    public function setArchiveKeywords(string $archiveKeywords)
     {
-        $this->keywords = $keywords;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFeedAtomUrl(): string
-    {
-        return $this->feedAtomUrl;
-    }
-
-    /**
-     * @param string $feedAtomUrl the $feedAtomUrl to set
-     */
-    public function setFeedAtomUrl(string $feedAtomUrl)
-    {
-        $this->feedAtomUrl = $feedAtomUrl;
+        $this->archiveKeywords = $archiveKeywords;
     }
 
     /**
      * @return string
      */
-    public function getFeedRssUrl(): string
+    public function getArchiveFeedAtomUrl(): string
     {
-        return $this->feedRssUrl;
+        return $this->archiveFeedAtomUrl;
     }
 
     /**
-     * @param string $feedRssUrl the $feedRssUrl to set
+     * @param string $archiveFeedAtomUrl the $feedAtomUrl to set
      */
-    public function setFeedRssUrl(string $feedRssUrl)
+    public function setArchiveFeedAtomUrl(string $archiveFeedAtomUrl)
     {
-        $this->feedRssUrl = $feedRssUrl;
+        $this->archiveFeedAtomUrl = $archiveFeedAtomUrl;
     }
 
     /**
      * @return string
      */
-    public function getFeedUrl(): string
+    public function getArchiveFeedRssUrl(): string
     {
-        return $this->feedUrl;
+        return $this->archiveFeedRssUrl;
     }
 
     /**
-     * @param string $feedUrl the $feedUrl to set
+     * @param string $archiveFeedRssUrl the $feedRssUrl to set
      */
-    public function setFeedUrl(string $feedUrl)
+    public function setArchiveFeedRssUrl(string $archiveFeedRssUrl)
     {
-        $this->feedUrl = $feedUrl;
+        $this->archiveFeedRssUrl = $archiveFeedRssUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getArchiveFeedUrl(): string
+    {
+        return $this->archiveFeedUrl;
+    }
+
+    /**
+     * @param string $archiveFeedUrl the $feedUrl to set
+     */
+    public function setArchiveFeedUrl(string $archiveFeedUrl)
+    {
+        $this->archiveFeedUrl = $archiveFeedUrl;
     }
 
     /**
@@ -620,11 +620,11 @@ class Archive extends Contents
         self::pluginHandle()->call('handleInit', $this, $select);
 
         /** 初始化其它变量 */
-        $this->feedUrl = $this->options->feedUrl;
-        $this->feedRssUrl = $this->options->feedRssUrl;
-        $this->feedAtomUrl = $this->options->feedAtomUrl;
-        $this->keywords = $this->options->keywords;
-        $this->description = $this->options->description;
+        $this->archiveFeedUrl = $this->options->feedUrl;
+        $this->archiveFeedRssUrl = $this->options->feedRssUrl;
+        $this->archiveFeedAtomUrl = $this->options->feedAtomUrl;
+        $this->archiveKeywords = $this->options->keywords;
+        $this->archiveDescription = $this->options->description;
         $this->archiveUrl = $this->options->siteUrl;
 
         if (isset($handles[$this->parameter->type])) {
@@ -886,11 +886,11 @@ class Archive extends Contents
      *
      * @access public
      * @param string $format 格式
-     * @param string $default 如果没有上一篇,显示的默认文字
+     * @param string|null $default 如果没有上一篇,显示的默认文字
      * @param array $custom 定制化样式
      * @return void
      */
-    public function thePrev($format = '%s', $default = null, $custom = [])
+    public function thePrev(string $format = '%s', ?string $default = null, array $custom = [])
     {
         $content = $this->db->fetchRow($this->select()->where('table.contents.created < ?', $this->created)
             ->where('table.contents.status = ?', 'publish')
@@ -953,18 +953,18 @@ class Archive extends Contents
     {
         $rules = [];
         $allows = [
-            'description'  => htmlspecialchars($this->description ?? ''),
-            'keywords'     => htmlspecialchars($this->keywords ?? ''),
+            'description'  => htmlspecialchars($this->archiveDescription ?? ''),
+            'keywords'     => htmlspecialchars($this->archiveKeywords ?? ''),
             'generator'    => $this->options->generator,
             'template'     => $this->options->theme,
             'pingback'     => $this->options->xmlRpcUrl,
             'xmlrpc'       => $this->options->xmlRpcUrl . '?rsd',
             'wlw'          => $this->options->xmlRpcUrl . '?wlw',
-            'rss2'         => $this->feedUrl,
-            'rss1'         => $this->feedRssUrl,
+            'rss2'         => $this->archiveFeedUrl,
+            'rss1'         => $this->archiveFeedRssUrl,
             'commentReply' => 1,
             'antiSpam'     => 1,
-            'atom'         => $this->feedAtomUrl
+            'atom'         => $this->archiveFeedAtomUrl
         ];
 
         /** 头部是否输出聚合 */
@@ -1219,7 +1219,7 @@ class Archive extends Contents
      */
     public function keywords(string $split = ',', string $default = '')
     {
-        echo empty($this->keywords) ? $default : str_replace(',', $split, htmlspecialchars($this->keywords ?? ''));
+        echo empty($this->archiveKeywords) ? $default : str_replace(',', $split, htmlspecialchars($this->archiveKeywords ?? ''));
     }
 
     /**
@@ -1346,6 +1346,22 @@ class Archive extends Contents
         if (!$queryPlugged) {
             $this->db->fetchAll($select, [$this, 'push']);
         }
+    }
+
+    /**
+     * @return array
+     */
+    protected function ___directory(): array
+    {
+        if ($this->is('page')) {
+            $page = PageRows::alloc('current=' . $this->cid);
+            $directory = $page->getAllParentsSlug($this->cid);
+            $directory[] = $this->slug;
+
+            return $directory;
+        }
+
+        return parent::___directory();
     }
 
     /**
@@ -1562,11 +1578,6 @@ class Archive extends Contents
                 $hasPushed = true;
                 return;
             }
-        } elseif ('page' == $this->parameter->type) {
-            $page = PageRows::alloc('current=' . $this->cid);
-            $directory = $page->getAllParentsSlug($this->cid);
-            $directory[] = $this->slug;
-            $this->row['directory'] = $directory;
         }
 
         /** 密码表单判断逻辑 */
@@ -1585,29 +1596,29 @@ class Archive extends Contents
 
         //对自定义首页使用全局变量
         if (!$this->makeSinglePageAsFrontPage) {
-            $this->feedUrl = $this->row['feedUrl'];
+            $this->archiveFeedUrl = $this->row['feedUrl'];
 
             /** RSS 1.0 */
-            $this->feedRssUrl = $this->row['feedRssUrl'];
+            $this->archiveFeedRssUrl = $this->row['feedRssUrl'];
 
             /** ATOM 1.0 */
-            $this->feedAtomUrl = $this->row['feedAtomUrl'];
+            $this->archiveFeedAtomUrl = $this->row['feedAtomUrl'];
 
             /** 设置标题 */
             $this->archiveTitle = $this->title;
 
             /** 设置关键词 */
-            $this->keywords = implode(',', array_column($this->tags, 'name'));
+            $this->archiveKeywords = implode(',', $this->tags->toArray('name'));
 
             /** 设置描述 */
-            $this->description = $this->plainExcerpt;
+            $this->archiveDescription = $this->plainExcerpt;
         }
 
         /** 设置归档类型 */
         [$this->archiveType] = explode('_', $this->type);
 
         /** 设置归档缩略名 */
-        $this->archiveSlug = ('post' == $this->type || 'attachment' == $this->type) ? $this->cid : $this->slug;
+        $this->archiveSlug = ('post' == $this->archiveType || 'attachment' == $this->archiveType) ? $this->cid : $this->slug;
 
         /** 设置归档地址 */
         $this->archiveUrl = $this->permalink;
@@ -1679,20 +1690,20 @@ class Archive extends Contents
         ]);
 
         /** 设置关键词 */
-        $this->keywords = $category['name'];
+        $this->archiveKeywords = $category['name'];
 
         /** 设置描述 */
-        $this->description = $category['description'];
+        $this->archiveDescription = $category['description'];
 
         /** 设置头部feed */
         /** RSS 2.0 */
-        $this->feedUrl = $category['feedUrl'];
+        $this->archiveFeedUrl = $category['feedUrl'];
 
         /** RSS 1.0 */
-        $this->feedRssUrl = $category['feedRssUrl'];
+        $this->archiveFeedRssUrl = $category['feedRssUrl'];
 
         /** ATOM 1.0 */
-        $this->feedAtomUrl = $category['feedAtomUrl'];
+        $this->archiveFeedAtomUrl = $category['feedAtomUrl'];
 
         /** 设置标题 */
         $this->archiveTitle = $category['name'];
@@ -1751,20 +1762,20 @@ class Archive extends Contents
         ]);
 
         /** 设置关键词 */
-        $this->keywords = $tag['name'];
+        $this->archiveKeywords = $tag['name'];
 
         /** 设置描述 */
-        $this->description = $tag['description'];
+        $this->archiveDescription = $tag['description'];
 
         /** 设置头部feed */
         /** RSS 2.0 */
-        $this->feedUrl = $tag['feedUrl'];
+        $this->archiveFeedUrl = $tag['feedUrl'];
 
         /** RSS 1.0 */
-        $this->feedRssUrl = $tag['feedRssUrl'];
+        $this->archiveFeedRssUrl = $tag['feedRssUrl'];
 
         /** ATOM 1.0 */
-        $this->feedAtomUrl = $tag['feedAtomUrl'];
+        $this->archiveFeedAtomUrl = $tag['feedAtomUrl'];
 
         /** 设置标题 */
         $this->archiveTitle = $tag['name'];
@@ -1810,20 +1821,20 @@ class Archive extends Contents
         $this->pageRow = $author;
 
         /** 设置关键词 */
-        $this->keywords = $author['screenName'];
+        $this->archiveKeywords = $author['screenName'];
 
         /** 设置描述 */
-        $this->description = $author['screenName'];
+        $this->archiveDescription = $author['screenName'];
 
         /** 设置头部feed */
         /** RSS 2.0 */
-        $this->feedUrl = $author['feedUrl'];
+        $this->archiveFeedUrl = $author['feedUrl'];
 
         /** RSS 1.0 */
-        $this->feedRssUrl = $author['feedRssUrl'];
+        $this->archiveFeedRssUrl = $author['feedRssUrl'];
 
         /** ATOM 1.0 */
-        $this->feedAtomUrl = $author['feedAtomUrl'];
+        $this->archiveFeedAtomUrl = $author['feedAtomUrl'];
 
         /** 设置标题 */
         $this->archiveTitle = $author['screenName'];
@@ -1912,13 +1923,13 @@ class Archive extends Contents
         $currentRoute = str_replace('_page', '', $this->parameter->type);
 
         /** RSS 2.0 */
-        $this->feedUrl = Router::url($currentRoute, $value, $this->options->feedUrl);
+        $this->archiveFeedUrl = Router::url($currentRoute, $value, $this->options->feedUrl);
 
         /** RSS 1.0 */
-        $this->feedRssUrl = Router::url($currentRoute, $value, $this->options->feedRssUrl);
+        $this->archiveFeedRssUrl = Router::url($currentRoute, $value, $this->options->feedRssUrl);
 
         /** ATOM 1.0 */
-        $this->feedAtomUrl = Router::url($currentRoute, $value, $this->options->feedAtomUrl);
+        $this->archiveFeedAtomUrl = Router::url($currentRoute, $value, $this->options->feedAtomUrl);
 
         /** 设置归档地址 */
         $this->archiveUrl = Router::url($currentRoute, $value, $this->options->index);
@@ -1961,20 +1972,20 @@ class Archive extends Contents
         }
 
         /** 设置关键词 */
-        $this->keywords = $keywords;
+        $this->archiveKeywords = $keywords;
 
         /** 设置分页 */
         $this->pageRow = ['keywords' => urlencode($keywords)];
 
         /** 设置头部feed */
         /** RSS 2.0 */
-        $this->feedUrl = Router::url('search', ['keywords' => $keywords], $this->options->feedUrl);
+        $this->archiveFeedUrl = Router::url('search', ['keywords' => $keywords], $this->options->feedUrl);
 
         /** RSS 1.0 */
-        $this->feedRssUrl = Router::url('search', ['keywords' => $keywords], $this->options->feedAtomUrl);
+        $this->archiveFeedRssUrl = Router::url('search', ['keywords' => $keywords], $this->options->feedAtomUrl);
 
         /** ATOM 1.0 */
-        $this->feedAtomUrl = Router::url('search', ['keywords' => $keywords], $this->options->feedAtomUrl);
+        $this->archiveFeedAtomUrl = Router::url('search', ['keywords' => $keywords], $this->options->feedAtomUrl);
 
         /** 设置标题 */
         $this->archiveTitle = $keywords;

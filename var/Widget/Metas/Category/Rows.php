@@ -22,6 +22,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  */
 class Rows extends Metas
 {
+    use InitTreeRowsTrait;
     use TreeViewTrait;
 
     /**
@@ -60,14 +61,5 @@ class Rows extends Metas
         if (!$plugged) {
             $this->listRows($categoryOptions, 'category', 'treeViewCategoriesCallback', intval($this->parameter->current));
         }
-    }
-
-    /**
-     * @return array
-     */
-    protected function initTreeRows(): array
-    {
-        return $this->db->fetchAll($this->select()
-            ->where('type = ?', 'category'));
     }
 }

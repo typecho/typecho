@@ -11,6 +11,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
 
 class Related extends Metas
 {
+    use InitTreeRowsTrait;
     use TreeTrait;
 
     /**
@@ -31,14 +32,5 @@ class Related extends Metas
         });
 
         $this->stack = $this->getRows($ids);
-    }
-
-    /**
-     * @return array
-     */
-    protected function initTreeRows(): array
-    {
-        return $this->db->fetchAll($this->select()
-            ->where('type = ?', 'category'));
     }
 }

@@ -17,6 +17,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  */
 class Admin extends Metas
 {
+    use InitTreeRowsTrait;
     use TreeTrait;
 
     /**
@@ -91,14 +92,5 @@ class Admin extends Metas
         } else {
             return 'category.php';
         }
-    }
-
-    /**
-     * @return array
-     */
-    protected function initTreeRows(): array
-    {
-        return $this->db->fetchAll($this->select()
-            ->where('type = ?', 'category'));
     }
 }

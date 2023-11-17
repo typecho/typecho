@@ -304,6 +304,27 @@ abstract class Widget
     }
 
     /**
+     * @param string|array $column
+     * @return array
+     */
+    public function toArray($column): array
+    {
+        $result = [];
+
+        while ($this->next()) {
+            if (is_array($column)) {
+                $result[] = array_map(function ($item) {
+                    return $this->{$item};
+                }, $column);
+            } else {
+                $result[] = $this->{$column};
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * 返回堆栈每一行的值
      *
      * @return mixed
