@@ -27,6 +27,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property-read string $theId
  * @property-read string $url
  * @property-read string $permalink
+ * @property-read string[] $directory
  * @property-read string $feedUrl
  * @property-read string $feedRssUrl
  * @property-read string $feedAtomUrl

@@ -2,7 +2,6 @@
 
 namespace Widget\Contents;
 
-use Typecho\Config;
 use Typecho\Db\Exception;
 use Widget\Base\Contents;
 use Widget\Base\TreeTrait;
@@ -22,15 +21,6 @@ class Single extends Contents
     }
 
     /**
-     * @param Config $parameter
-     * @return void
-     */
-    public function initParameter(Config $parameter)
-    {
-        $parameter->setDefault('cid=0');
-    }
-
-    /**
      * @return void
      * @throws Exception
      */
@@ -38,9 +28,9 @@ class Single extends Contents
     {
         $query = null;
 
-        if ($this->parameter->cid) {
-            $query = $this->select()->where('table.contents.cid = ?', $this->parameter->cid);
-        } elseif ($this->parameter->query) {
+        if (isset($this->parameter->cid)) {
+            $query = $this->select()->where('cid = ?', $this->parameter->cid);
+        } elseif (isset($this->parameter->query)) {
             $query = $this->parameter->query;
         }
 
