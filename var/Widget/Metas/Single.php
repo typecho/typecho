@@ -10,10 +10,7 @@ use Widget\Metas\Category\InitTreeRowsTrait;
 class Single extends Metas
 {
     use InitTreeRowsTrait;
-
-    use TreeTrait {
-        initParameter as initTreeParameter;
-    }
+    use TreeTrait;
 
     /**
      * @return void

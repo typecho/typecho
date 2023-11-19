@@ -35,6 +35,7 @@ class Admin extends Contents
      */
     public function execute()
     {
+        $this->initTreeParameter($this->parameter);
         $this->parameter->setDefault('ignoreRequest=0');
 
         if ($this->parameter->ignoreRequest) {
@@ -117,6 +118,7 @@ class Admin extends Contents
 
     /**
      * @return array
+     * @throws Db\Exception
      */
     protected function initTreeRows(): array
     {

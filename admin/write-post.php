@@ -97,7 +97,7 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
                             <ul>
                                 <?php
                                 if ($post->have()) {
-                                    $categories = array_column($post->categories, 'mid');
+                                    $categories = $post->categories->toArray('mid');
                                 } else {
                                     $categories = [];
                                 }

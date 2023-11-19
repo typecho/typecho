@@ -1397,26 +1397,29 @@ class Archive extends Contents
             if ($this->archiveSingle) {
                 $permalink = $this->permalink;
             } else {
-                $path = Router::url($type, new class($this->currentPage, $this->pageRow) implements Router\ParamsDelegateInterface {
-                    private Router\ParamsDelegateInterface $pageRow;
-                    private int $currentPage;
+                $path = Router::url(
+                    $type,
+                    new class ($this->currentPage, $this->pageRow) implements Router\ParamsDelegateInterface {
+                        private Router\ParamsDelegateInterface $pageRow;
+                        private int $currentPage;
 
-                    public function __construct(int $currentPage, Router\ParamsDelegateInterface $pageRow)
-                    {
-                        $this->pageRow = $pageRow;
-                        $this->currentPage = $currentPage;
-                    }
+                        public function __construct(int $currentPage, Router\ParamsDelegateInterface $pageRow)
+                        {
+                            $this->pageRow = $pageRow;
+                            $this->currentPage = $currentPage;
+                        }
 
-                    public function getRouterParam(string $key): string
-                    {
-                        switch ($key) {
-                            case 'page':
-                                return $this->currentPage;
-                            default:
-                                return $this->pageRow->getRouterParam($key);
+                        public function getRouterParam(string $key): string
+                        {
+                            switch ($key) {
+                                case 'page':
+                                    return $this->currentPage;
+                                default:
+                                    return $this->pageRow->getRouterParam($key);
+                            }
                         }
                     }
-                });
+                );
                 $permalink = Common::url($path, $this->options->index);
             }
         }
@@ -1906,7 +1909,7 @@ class Archive extends Contents
         $this->archiveType = 'date';
 
         /** 设置分页 */
-        $this->pageRow = new class($year, $month, $day) implements Router\ParamsDelegateInterface {
+        $this->pageRow = new class ($year, $month, $day) implements Router\ParamsDelegateInterface {
             private int $year;
             private int $month;
             private int $day;
@@ -1989,7 +1992,7 @@ class Archive extends Contents
         $this->archiveKeywords = $keywords;
 
         /** 设置分页 */
-        $this->pageRow = new class($keywords) implements Router\ParamsDelegateInterface {
+        $this->pageRow = new class ($keywords) implements Router\ParamsDelegateInterface {
             private string $keywords;
 
             public function __construct(string $keywords)

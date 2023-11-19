@@ -896,14 +896,14 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
     protected function ___attachment(): ?Config
     {
         if ('attachment' == $this->type) {
-            $content = @unserialize($this->text);
+            $content = @unserialize($this->originalText);
 
             //增加数据信息
             $attachment = new Config($content);
             $attachment->isImage = in_array($content['type'], [
                 'jpg', 'jpeg', 'gif', 'png', 'tiff', 'bmp', 'webp', 'avif'
             ]);
-            $attachment->url = Upload::attachmentHandle($this);
+            $attachment->url = Upload::attachmentHandle($attachment);
 
             return $attachment;
         }

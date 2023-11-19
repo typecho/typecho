@@ -4,7 +4,6 @@ namespace Widget\Base;
 
 use Typecho\Config;
 use Typecho\Db\Exception;
-use Typecho\Db\Query;
 
 /**
  * 处理树状数据结构
@@ -189,7 +188,7 @@ trait TreeTrait
      * @param Config $parameter
      * @throws Exception
      */
-    protected function initParameter(Config $parameter)
+    protected function initTreeParameter(Config $parameter)
     {
         $parameter->setDefault('ignore=0&current=');
 

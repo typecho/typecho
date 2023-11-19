@@ -16,7 +16,6 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
 class Single extends Contents
 {
     use TreeTrait {
-        initParameter as initTreeParameter;
         ___directory as ___treeDirectory;
     }
 

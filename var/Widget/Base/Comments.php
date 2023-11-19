@@ -404,7 +404,6 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
      */
     protected function ___permalink(): string
     {
-
         if ($this->options->commentsPageBreak && 'approved' == $this->status) {
             $coid = $this->coid;
             $parent = $this->parent;

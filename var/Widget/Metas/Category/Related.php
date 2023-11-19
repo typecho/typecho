@@ -2,6 +2,7 @@
 
 namespace Widget\Metas\Category;
 
+use Typecho\Db\Exception;
 use Widget\Base\Metas;
 use Widget\Base\TreeTrait;
 
@@ -16,6 +17,7 @@ class Related extends Metas
 
     /**
      * @return void
+     * @throws Exception
      */
     public function execute()
     {

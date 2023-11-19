@@ -59,7 +59,12 @@ class Rows extends Metas
         self::pluginHandle()->trigger($plugged)->call('listCategories', $categoryOptions, $this);
 
         if (!$plugged) {
-            $this->listRows($categoryOptions, 'category', 'treeViewCategoriesCallback', intval($this->parameter->current));
+            $this->listRows(
+                $categoryOptions,
+                'category',
+                'treeViewCategoriesCallback',
+                intval($this->parameter->current)
+            );
         }
     }
 }

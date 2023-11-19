@@ -22,8 +22,6 @@ class Admin extends Metas
 
     /**
      * 执行函数
-     *
-     * @throws Db\Exception
      */
     public function execute()
     {

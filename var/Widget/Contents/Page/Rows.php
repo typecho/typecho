@@ -28,9 +28,11 @@ class Rows extends Contents
      * 执行函数
      *
      * @return void
+     * @throws Exception
      */
     public function execute()
     {
+        $this->initTreeParameter($this->parameter);
         $this->stack = $this->getRows($this->orders, $this->parameter->ignore);
     }
 
