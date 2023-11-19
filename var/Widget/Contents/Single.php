@@ -3,7 +3,9 @@
 namespace Widget\Contents;
 
 use Typecho\Config;
+use Typecho\Db\Exception;
 use Widget\Base\Contents;
+use Widget\Base\TreeTrait;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -14,6 +16,11 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  */
 class Single extends Contents
 {
+    use TreeTrait {
+        initParameter as initTreeParameter;
+        ___directory as ___treeDirectory;
+    }
+
     /**
      * @param Config $parameter
      * @return void
@@ -25,14 +32,68 @@ class Single extends Contents
 
     /**
      * @return void
+     * @throws Exception
      */
     public function execute()
     {
+        $query = null;
+
         if ($this->parameter->cid) {
-            $this->db->fetchRow(
-                $this->select()->where('table.contents.cid = ?', $this->parameter->cid),
-                [$this, 'push']
-            );
+            $query = $this->select()->where('table.contents.cid = ?', $this->parameter->cid);
+        } elseif ($this->parameter->query) {
+            $query = $this->parameter->query;
         }
+
+        if ($query) {
+            $this->push($this->db->fetchRow($query));
+        }
+    }
+
+    /**
+     * @param array $row
+     * @return array
+     * @throws Exception
+     */
+    public function filter(array $row): array
+    {
+        if ($row['type'] == 'page') {
+            $this->initTreeParameter($this->parameter);
+        }
+
+        return parent::filter($row);
+    }
+
+    /**
+     * @return array
+     */
+    protected function ___directory(): array
+    {
+        return $this->type == 'page' ? $this->___treeDirectory() : parent::___directory();
+    }
+
+    /**
+     * @return array
+     * @throws Exception
+     */
+    protected function initTreeRows(): array
+    {
+        return $this->db->fetchAll($this->select(
+            'table.contents.cid',
+            'table.contents.title',
+            'table.contents.slug',
+            'table.contents.created',
+            'table.contents.authorId',
+            'table.contents.modified',
+            'table.contents.type',
+            'table.contents.status',
+            'table.contents.commentsNum',
+            'table.contents.order',
+            'table.contents.parent',
+            'table.contents.template',
+            'table.contents.password',
+            'table.contents.allowComment',
+            'table.contents.allowPing',
+            'table.contents.allowFeed'
+        )->where('table.contents.type = ?', 'page'));
     }
 }

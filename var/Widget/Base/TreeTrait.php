@@ -3,6 +3,7 @@
 namespace Widget\Base;
 
 use Typecho\Config;
+use Typecho\Db\Exception;
 use Typecho\Db\Query;
 
 /**
@@ -66,22 +67,6 @@ trait TreeTrait
     public function levelsAlt(...$args)
     {
         $this->altBy($this->levels, ...$args);
-    }
-
-    /**
-     * 将每行的值压入堆栈
-     *
-     * @access public
-     * @param array $row 每行的值
-     * @return array
-     */
-    public function filter(array $row): array
-    {
-        $directory = $this->getAllParentsSlug($row[$this->getPrimaryKey()]);
-        $directory[] = $row['slug'];
-
-        $row['directory'] = $directory;
-        return parent::filter($row);
     }
 
     /**
@@ -202,6 +187,7 @@ trait TreeTrait
 
     /**
      * @param Config $parameter
+     * @throws Exception
      */
     protected function initParameter(Config $parameter)
     {
@@ -234,6 +220,16 @@ trait TreeTrait
         // 预处理深度
         $this->levelWalkCallback($this->top);
         $this->map = array_map([$this, 'filter'], $this->map);
+    }
+
+    /**
+     * @return array
+     */
+    protected function ___directory(): array
+    {
+        $directory = $this->getAllParentsSlug($this->{$this->getPrimaryKey()});
+        $directory[] = $this->slug;
+        return $directory;
     }
 
     /**

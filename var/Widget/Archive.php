@@ -17,6 +17,7 @@ use Widget\Base\Metas;
 use Widget\Comments\Ping;
 use Widget\Contents\Attachment\Related;
 use Widget\Contents\Related\Author;
+use Widget\Contents\Single;
 use Widget\Metas\Category\Rows as CategoryRows;
 use Widget\Contents\Page\Rows as PageRows;
 
@@ -850,19 +851,20 @@ class Archive extends Contents
      */
     public function theNext(string $format = '%s', ?string $default = null, array $custom = [])
     {
-        $content = $this->db->fetchRow($this->select()->where(
-            'table.contents.created > ? AND table.contents.created < ?',
-            $this->created,
-            $this->options->time
-        )
+        $content = Single::allocWithAlias('next:' . $this->cid, [
+            'query' => $this->select()->where(
+                'table.contents.created > ? AND table.contents.created < ?',
+                $this->created,
+                $this->options->time
+            )
             ->where('table.contents.status = ?', 'publish')
             ->where('table.contents.type = ?', $this->type)
             ->where("table.contents.password IS NULL OR table.contents.password = ''")
             ->order('table.contents.created', Db::SORT_ASC)
-            ->limit(1));
+            ->limit(1)
+        ]);
 
-        if ($content) {
-            $content = $this->filter($content);
+        if ($content->have()) {
             $default = [
                 'title'    => null,
                 'tagClass' => null
@@ -870,10 +872,10 @@ class Archive extends Contents
             $custom = array_merge($default, $custom);
             extract($custom);
 
-            $linkText = empty($title) ? $content['title'] : $title;
+            $linkText = empty($title) ? $content->title : $title;
             $linkClass = empty($tagClass) ? '' : 'class="' . $tagClass . '" ';
-            $link = '<a ' . $linkClass . 'href="' . $content['permalink']
-                . '" title="' . $content['title'] . '">' . $linkText . '</a>';
+            $link = '<a ' . $linkClass . 'href="' . $content->permalink
+                . '" title="' . $content->title . '">' . $linkText . '</a>';
 
             printf($format, $link);
         } else {
@@ -1596,13 +1598,13 @@ class Archive extends Contents
 
         //对自定义首页使用全局变量
         if (!$this->makeSinglePageAsFrontPage) {
-            $this->archiveFeedUrl = $this->row['feedUrl'];
+            $this->archiveFeedUrl = $this->feedUrl;
 
             /** RSS 1.0 */
-            $this->archiveFeedRssUrl = $this->row['feedRssUrl'];
+            $this->archiveFeedRssUrl = $this->feedRssUrl;
 
             /** ATOM 1.0 */
-            $this->archiveFeedAtomUrl = $this->row['feedAtomUrl'];
+            $this->archiveFeedAtomUrl = $this->feedAtomUrl;
 
             /** 设置标题 */
             $this->archiveTitle = $this->title;
@@ -1618,7 +1620,8 @@ class Archive extends Contents
         [$this->archiveType] = explode('_', $this->type);
 
         /** 设置归档缩略名 */
-        $this->archiveSlug = ('post' == $this->archiveType || 'attachment' == $this->archiveType) ? $this->cid : $this->slug;
+        $this->archiveSlug = ('post' == $this->archiveType || 'attachment' == $this->archiveType)
+            ? $this->cid : $this->slug;
 
         /** 设置归档地址 */
         $this->archiveUrl = $this->permalink;

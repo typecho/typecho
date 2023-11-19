@@ -3,6 +3,7 @@
 namespace Widget\Contents\Page;
 
 use Typecho\Config;
+use Typecho\Db\Exception;
 use Widget\Base\Contents;
 use Widget\Base\TreeViewTrait;
 
@@ -35,6 +36,7 @@ class Rows extends Contents
 
     /**
      * @return array
+     * @throws Exception
      */
     protected function initTreeRows(): array
     {
