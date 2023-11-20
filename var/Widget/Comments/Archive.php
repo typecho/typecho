@@ -472,13 +472,12 @@ class Archive extends Comments
      */
     protected function ___permalink(): string
     {
-
         if ($this->options->commentsPageBreak) {
             $pageRow = ['permalink' => $this->parentContent->path, 'commentPage' => $this->currentPage];
             return Router::url('comment_page', $pageRow, $this->options->index) . '#' . $this->theId;
         }
 
-        return $this->parentContent['permalink'] . '#' . $this->theId;
+        return $this->parentContent->permalink . '#' . $this->theId;
     }
 
     /**

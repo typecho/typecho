@@ -181,6 +181,7 @@ class Feed extends Contents
                     'link'            => $archive->permalink,
                     'author'          => $archive->author,
                     'excerpt'         => $archive->plainExcerpt,
+                    'category'        => $archive->categories->toArray(['name', 'permalink']),
                     'comments'        => $archive->commentsNum,
                     'commentsFeedUrl' => Common::url($archive->path, $feed->getFeedUrl()),
                     'suffix'          => $suffix

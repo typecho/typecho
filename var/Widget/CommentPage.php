@@ -30,7 +30,7 @@ class CommentPage extends Base implements ActionInterface
         }
 
         $currentCommentUrl = Router::url('comment_page', [
-            'permalink'     =>  $archive->pathinfo,
+            'permalink'     =>  $archive->path,
             'commentPage'   =>  $page
         ], $this->options->index);
 

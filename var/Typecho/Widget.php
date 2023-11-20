@@ -313,9 +313,12 @@ abstract class Widget
 
         while ($this->next()) {
             if (is_array($column)) {
-                $result[] = array_map(function ($item) {
-                    return $this->{$item};
-                }, $column);
+                $item = [];
+                foreach ($column as $key) {
+                    $item[$key] = $this->{$key};
+                }
+
+                $result[] = $item;
             } else {
                 $result[] = $this->{$column};
             }
