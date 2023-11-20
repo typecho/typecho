@@ -13,7 +13,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
 /**
  * 单个内容组件
  */
-class Single extends Contents
+class From extends Contents
 {
     use TreeTrait {
         initParameter as initTreeParameter;
@@ -35,7 +35,7 @@ class Single extends Contents
         }
 
         if ($query) {
-            $this->push($this->db->fetchRow($query));
+            $this->db->fetchAll($query, [$this, 'push']);
 
             if ($this->type == 'page') {
                 $this->initTreeParameter($this->parameter);

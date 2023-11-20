@@ -9,7 +9,7 @@ use Typecho\Widget\Exception;
 use Typecho\Widget\Helper\PageNavigator\Box;
 use Widget\Base\Comments;
 use Widget\Base\Contents;
-use Widget\Contents\Single;
+use Widget\Contents\From;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -149,6 +149,6 @@ class Admin extends Comments
     protected function ___parentContent(): Contents
     {
         $cid = $this->request->is('cid') ? $this->request->filter('int')->get('cid') : $this->cid;
-        return Single::allocWithAlias($cid, ['cid' => $cid]);
+        return From::allocWithAlias($cid, ['cid' => $cid]);
     }
 }

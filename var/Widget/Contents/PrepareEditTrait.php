@@ -5,7 +5,7 @@ namespace Widget\Contents;
 use Typecho\Db\Exception as DbException;
 use Typecho\Widget\Exception;
 use Widget\Base\Metas;
-use Widget\Metas\Single as MetasSingle;
+use Widget\Metas\From as MetasFrom;
 
 /**
  * 编辑准备组件
@@ -131,7 +131,7 @@ trait PrepareEditTrait
     protected function ___categories(): Metas
     {
         return $this->have() ? parent::___categories()
-            : MetasSingle::allocWithAlias(
+            : MetasFrom::allocWithAlias(
                 'category:' . $this->options->defaultCategory,
                 ['mid' => $this->options->defaultCategory]
             );

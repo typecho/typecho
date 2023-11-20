@@ -182,7 +182,7 @@ class Feed extends Contents
                     'author'          => $archive->author,
                     'excerpt'         => $archive->plainExcerpt,
                     'comments'        => $archive->commentsNum,
-                    'commentsFeedUrl' => Common::url($archive->pathinfo, $feed->getFeedUrl()),
+                    'commentsFeedUrl' => Common::url($archive->path, $feed->getFeedUrl()),
                     'suffix'          => $suffix
                 ]);
             }

@@ -7,7 +7,7 @@ use Widget\Base\Metas;
 use Widget\Base\TreeTrait;
 use Widget\Metas\Category\InitTreeRowsTrait;
 
-class Single extends Metas
+class From extends Metas
 {
     use InitTreeRowsTrait;
     use TreeTrait {
@@ -29,7 +29,7 @@ class Single extends Metas
         }
 
         if ($query) {
-            $this->push($this->db->fetchRow($query));
+            $this->db->fetchAll($query, [$this, 'push']);
 
             if ($this->type == 'category') {
                 $this->initTreeParameter($this->parameter);

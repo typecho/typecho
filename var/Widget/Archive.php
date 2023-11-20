@@ -9,16 +9,15 @@ use Typecho\Db;
 use Typecho\Db\Query;
 use Typecho\Router;
 use Typecho\Widget\Exception as WidgetException;
-use Typecho\Widget\Helper\PageNavigator;
 use Typecho\Widget\Helper\PageNavigator\Classic;
 use Typecho\Widget\Helper\PageNavigator\Box;
 use Widget\Base\Contents;
 use Widget\Comments\Ping;
 use Widget\Contents\Attachment\Related as AttachmentRelated;
 use Widget\Contents\Related\Author as AuthorRelated;
-use Widget\Contents\Single;
+use Widget\Contents\From as ContentsFrom;
 use Widget\Contents\Related as ContentsRelated;
-use Widget\Metas\Single as MetasSingle;
+use Widget\Metas\From as MetasFrom;
 use Widget\Contents\Page\Rows as PageRows;
 use Widget\Users\Author;
 
@@ -171,14 +170,6 @@ class Archive extends Contents
      * @var string
      */
     private string $archiveSlug;
-
-    /**
-     * 设置分页对象
-     *
-     * @access private
-     * @var PageNavigator
-     */
-    private PageNavigator $pageNav;
 
     /**
      * @param Config $parameter
@@ -761,8 +752,10 @@ class Archive extends Contents
      */
     public function pageLink(string $word = '&laquo; Previous Entries', string $page = 'prev')
     {
+        static $nav;
+
         if ($this->have()) {
-            if (empty($this->pageNav)) {
+            if (!isset($nav)) {
                 $query = Router::url(
                     $this->parameter->type .
                     (false === strpos($this->parameter->type, '_page') ? '_page' : null),
@@ -771,7 +764,7 @@ class Archive extends Contents
                 );
 
                 /** 使用盒状分页 */
-                $this->pageNav = new Classic(
+                $nav = new Classic(
                     $this->getTotal(),
                     $this->currentPage,
                     $this->parameter->pageSize,
@@ -779,7 +772,7 @@ class Archive extends Contents
                 );
             }
 
-            $this->pageNav->{$page}($word);
+            $nav->{$page}($word);
         }
     }
 
@@ -793,7 +786,7 @@ class Archive extends Contents
     {
         $parameter = [
             'parentId'      => $this->hidden ? 0 : $this->cid,
-            'parentContent' => $this->row,
+            'parentContent' => $this,
             'respondId'     => $this->respondId,
             'commentPage'   => $this->parameter->commentPage,
             'allowComment'  => $this->allow('comment')
@@ -841,36 +834,23 @@ class Archive extends Contents
      */
     public function theNext(string $format = '%s', ?string $default = null, array $custom = [])
     {
-        $content = Single::allocWithAlias('next:' . $this->cid, [
-            'query' => $this->select()->where(
-                'table.contents.created > ? AND table.contents.created < ?',
-                $this->created,
-                $this->options->time
-            )
+        $query = $this->select()->where(
+            'table.contents.created > ? AND table.contents.created < ?',
+            $this->created,
+            $this->options->time
+        )
             ->where('table.contents.status = ?', 'publish')
             ->where('table.contents.type = ?', $this->type)
             ->where("table.contents.password IS NULL OR table.contents.password = ''")
             ->order('table.contents.created', Db::SORT_ASC)
-            ->limit(1)
-        ]);
+            ->limit(1);
 
-        if ($content->have()) {
-            $default = [
-                'title'    => null,
-                'tagClass' => null
-            ];
-            $custom = array_merge($default, $custom);
-            extract($custom);
-
-            $linkText = empty($title) ? $content->title : $title;
-            $linkClass = empty($tagClass) ? '' : 'class="' . $tagClass . '" ';
-            $link = '<a ' . $linkClass . 'href="' . $content->permalink
-                . '" title="' . $content->title . '">' . $linkText . '</a>';
-
-            printf($format, $link);
-        } else {
-            echo $default;
-        }
+        $this->theLink(
+            ContentsFrom::allocWithAlias('next:' . $this->cid, ['query' => $query]),
+            $format,
+            $default,
+            $custom
+        );
     }
 
     /**
@@ -884,26 +864,41 @@ class Archive extends Contents
      */
     public function thePrev(string $format = '%s', ?string $default = null, array $custom = [])
     {
-        $content = $this->db->fetchRow($this->select()->where('table.contents.created < ?', $this->created)
+        $query = $this->select()->where('table.contents.created < ?', $this->created)
             ->where('table.contents.status = ?', 'publish')
             ->where('table.contents.type = ?', $this->type)
             ->where("table.contents.password IS NULL OR table.contents.password = ''")
             ->order('table.contents.created', Db::SORT_DESC)
-            ->limit(1));
+            ->limit(1);
 
-        if ($content) {
-            $content = $this->filter($content);
+        $this->theLink(
+            ContentsFrom::allocWithAlias('prev:' . $this->cid, ['query' => $query]),
+            $format,
+            $default,
+            $custom
+        );
+    }
+
+    /**
+     * @param Contents $content
+     * @param string $format
+     * @param string|null $default
+     * @param array $custom
+     * @return void
+     */
+    public function theLink(Contents $content, string $format = '%s', ?string $default = null, array $custom = [])
+    {
+        if ($content->have()) {
             $default = [
                 'title'    => null,
                 'tagClass' => null
             ];
             $custom = array_merge($default, $custom);
-            extract($custom);
 
-            $linkText = empty($title) ? $content['title'] : $title;
-            $linkClass = empty($tagClass) ? '' : 'class="' . $tagClass . '" ';
-            $link = '<a ' . $linkClass . 'href="' . $content['permalink']
-                . '" title="' . $content['title'] . '">' . $linkText . '</a>';
+            $linkText = $custom['title'] ?? $content->title;
+            $linkClass = empty($custom['tagClass']) ? '' : 'class="' . $custom['tagClass'] . '" ';
+            $link = '<a ' . $linkClass . 'href="' . $content->permalink
+                . '" title="' . $content->title . '">' . $linkText . '</a>';
 
             printf($format, $link);
         } else {
@@ -1672,7 +1667,7 @@ class Archive extends Contents
             $categorySelect->where('slug = ?', $directory[count($directory) - 1]);
         }
 
-        $category = MetasSingle::allocWithAlias('category:' . $this->cid, [
+        $category = MetasFrom::allocWithAlias('category:' . $this->cid, [
             'query' => $categorySelect
         ]);
 
@@ -1748,7 +1743,7 @@ class Archive extends Contents
         }
 
         /** 如果是标签 */
-        $tag = MetasSingle::allocWithAlias('tag:' . $this->cid, [
+        $tag = MetasFrom::allocWithAlias('tag:' . $this->cid, [
             'query' => $tagSelect
         ]);
 

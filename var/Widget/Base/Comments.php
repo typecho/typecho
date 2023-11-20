@@ -11,7 +11,7 @@ use Typecho\Router\ParamsDelegateInterface;
 use Utils\AutoP;
 use Utils\Markdown;
 use Widget\Base;
-use Widget\Contents\Single;
+use Widget\Contents\From;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -383,7 +383,7 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
      */
     protected function ___parentContent(): Contents
     {
-        return Single::allocWithAlias($this->cid, ['cid' => $this->cid]);
+        return From::allocWithAlias($this->cid, ['cid' => $this->cid]);
     }
 
     /**
