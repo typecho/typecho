@@ -2,10 +2,10 @@
 
 namespace Widget\Contents;
 
-use Typecho\Common;
 use Typecho\Db\Exception as DbException;
 use Typecho\Widget\Exception;
 use Widget\Base\Metas;
+use Widget\Metas\Single as MetasSingle;
 
 /**
  * 编辑准备组件
@@ -107,5 +107,33 @@ trait PrepareEditTrait
         }
 
         return $allow;
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___title(): string
+    {
+        return $this->have() ? $this->originalTitle : '';
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___text(): string
+    {
+        return $this->have() ? ($this->isMarkdown ? substr($this->originalText, 15) : $this->originalText) : '';
+    }
+
+    /**
+     * @return Metas
+     */
+    protected function ___categories(): Metas
+    {
+        return $this->have() ? parent::___categories()
+            : MetasSingle::allocWithAlias(
+                'category:' . $this->options->defaultCategory,
+                ['mid' => $this->options->defaultCategory]
+            );
     }
 }

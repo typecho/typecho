@@ -16,6 +16,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
 class Single extends Contents
 {
     use TreeTrait {
+        initParameter as initTreeParameter;
         ___directory as ___treeDirectory;
     }
 
@@ -35,21 +36,11 @@ class Single extends Contents
 
         if ($query) {
             $this->push($this->db->fetchRow($query));
-        }
-    }
 
-    /**
-     * @param array $row
-     * @return array
-     * @throws Exception
-     */
-    public function filter(array $row): array
-    {
-        if ($row['type'] == 'page') {
-            $this->initTreeParameter($this->parameter);
+            if ($this->type == 'page') {
+                $this->initTreeParameter($this->parameter);
+            }
         }
-
-        return parent::filter($row);
     }
 
     /**

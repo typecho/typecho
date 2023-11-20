@@ -58,8 +58,8 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property-read Date $date
  * @property-read string $dateWord
  * @property-read string[] $directory
- * @property-read TagRelated $tags
- * @property-read CategoryRelated $categories
+ * @property-read Metas $tags
+ * @property-read Metas $categories
  * @property-read string $excerpt
  * @property-read string $originalText
  * @property-read string $originalTitle
@@ -832,9 +832,9 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
     }
 
     /**
-     * @return CategoryRelated
+     * @return Metas
      */
-    protected function ___categories(): CategoryRelated
+    protected function ___categories(): Metas
     {
         return CategoryRelated::allocWithAlias($this->cid, ['cid' => $this->cid]);
     }
@@ -842,9 +842,9 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
     /**
      * 将tags取出
      *
-     * @return TagRelated
+     * @return Metas
      */
-    protected function ___tags(): TagRelated
+    protected function ___tags(): Metas
     {
         return TagRelated::allocWithAlias($this->cid, ['cid' => $this->cid]);
     }

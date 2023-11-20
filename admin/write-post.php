@@ -48,7 +48,7 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
                     <p>
                         <label for="text" class="sr-only"><?php _e('文章内容'); ?></label>
                         <textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text"
-                                  name="text" class="w-100 mono"><?php echo htmlspecialchars($post->text ?? ''); ?></textarea>
+                                  name="text" class="w-100 mono"><?php echo htmlspecialchars($post->text); ?></textarea>
                     </p>
 
                     <?php include 'custom-fields.php'; ?>
@@ -95,13 +95,7 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
                             <label class="typecho-label"><?php _e('分类'); ?></label>
                             <?php \Widget\Metas\Category\Rows::alloc()->to($category); ?>
                             <ul>
-                                <?php
-                                if ($post->have()) {
-                                    $categories = $post->categories->toArray('mid');
-                                } else {
-                                    $categories = [];
-                                }
-                                ?>
+                                <?php $categories = $post->categories->toArray('mid'); ?>
                                 <?php while ($category->next()): ?>
                                     <li><?php echo str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;', $category->levels); ?><input
                                             type="checkbox" id="category-<?php $category->mid(); ?>"

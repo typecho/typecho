@@ -188,7 +188,7 @@ trait TreeTrait
      * @param Config $parameter
      * @throws Exception
      */
-    protected function initTreeParameter(Config $parameter)
+    protected function initParameter(Config $parameter)
     {
         $parameter->setDefault('ignore=0&current=');
 

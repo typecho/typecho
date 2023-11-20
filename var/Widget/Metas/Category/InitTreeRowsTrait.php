@@ -2,7 +2,6 @@
 
 namespace Widget\Metas\Category;
 
-use Typecho\Config;
 use Typecho\Db\Exception;
 
 /**
@@ -10,15 +9,6 @@ use Typecho\Db\Exception;
  */
 trait InitTreeRowsTrait
 {
-    /**
-     * @param Config $parameter
-     * @throws Exception
-     */
-    protected function initParameter(Config $parameter)
-    {
-        $this->initTreeParameter($parameter);
-    }
-
     /**
      * @return array
      * @throws Exception

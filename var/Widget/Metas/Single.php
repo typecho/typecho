@@ -10,7 +10,9 @@ use Widget\Metas\Category\InitTreeRowsTrait;
 class Single extends Metas
 {
     use InitTreeRowsTrait;
-    use TreeTrait;
+    use TreeTrait {
+        initParameter as initTreeParameter;
+    }
 
     /**
      * @return void
@@ -28,20 +30,10 @@ class Single extends Metas
 
         if ($query) {
             $this->push($this->db->fetchRow($query));
-        }
-    }
 
-    /**
-     * @param array $row
-     * @return array
-     * @throws Exception
-     */
-    public function filter(array $row): array
-    {
-        if ($row['type'] == 'category') {
-            $this->initTreeParameter($this->parameter);
+            if ($this->type == 'category') {
+                $this->initTreeParameter($this->parameter);
+            }
         }
-
-        return parent::filter($row);
     }
 }

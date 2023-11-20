@@ -32,7 +32,6 @@ class Rows extends Contents
      */
     public function execute()
     {
-        $this->initTreeParameter($this->parameter);
         $this->stack = $this->getRows($this->orders, $this->parameter->ignore);
     }
 

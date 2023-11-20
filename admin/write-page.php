@@ -55,7 +55,7 @@ while ($parents->next()) {
                     <p>
                         <label for="text" class="sr-only"><?php _e('页面内容'); ?></label>
                         <textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text"
-                                  name="text" class="w-100 mono"><?php echo htmlspecialchars($page->text ?? ''); ?></textarea>
+                                  name="text" class="w-100 mono"><?php echo htmlspecialchars($page->text); ?></textarea>
                     </p>
 
                     <?php include 'custom-fields.php'; ?>
