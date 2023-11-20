@@ -21,12 +21,17 @@ class Admin extends Metas
     use TreeTrait;
 
     /**
+     * @var int Parent category
+     */
+    private int $parentId = 0;
+
+    /**
      * 执行函数
      */
     public function execute()
     {
-        $parentId = $this->request->filter('int')->get('parent', 0);
-        $this->stack = $this->getRows($this->getChildIds($parentId));
+        $this->parentId = $this->request->filter('int')->get('parent', 0);
+        $this->stack = $this->getRows($this->getChildIds($this->parentId));
     }
 
     /**
@@ -36,8 +41,8 @@ class Admin extends Metas
      */
     public function backLink()
     {
-        if ($this->request->is('parent')) {
-            $category = $this->getRow($this->request->filter('int')->get('parent'));
+        if ($this->parentId) {
+            $category = $this->getRow($this->parentId);
 
             if (!empty($category)) {
                 $parent = $this->getRow($category['parent']);
@@ -65,8 +70,8 @@ class Admin extends Metas
      */
     public function getMenuTitle(): ?string
     {
-        if ($this->request->is('parent')) {
-            $category = $this->getRow($this->request->filter('int')->get('parent'));
+        if ($this->parentId) {
+            $category = $this->getRow($this->parentId);
 
             if (!empty($category)) {
                 return _t('管理 %s 的子分类', $category['name']);
@@ -85,10 +90,6 @@ class Admin extends Metas
      */
     public function getAddLink(): string
     {
-        if ($this->request->is('parent')) {
-            return 'category.php?parent=' . $this->request->filter('int')->get('parent');
-        } else {
-            return 'category.php';
-        }
+        return 'category.php' . ($this->parentId ? '?parent=' . $this->parentId : '');
     }
 }

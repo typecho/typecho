@@ -432,18 +432,20 @@ abstract class Widget
      */
     public function __get(string $name)
     {
-        if (array_key_exists($name, $this->row)) {
+        $method = '___' . $name;
+        $key = '#' . $name;
+
+        if (array_key_exists($key, $this->row)) {
+            return $this->row[$key];
+        } elseif (method_exists($this, $method)) {
+            $this->row[$key] = $this->$method();
+            return $this->row[$key];
+        } elseif (array_key_exists($name, $this->row)) {
             return $this->row[$name];
         } else {
-            $method = '___' . $name;
-
-            if (method_exists($this, $method)) {
-                return $this->$method();
-            } else {
-                $return = self::pluginHandle()->trigger($plugged)->call($method, $this);
-                if ($plugged) {
-                    return $return;
-                }
+            $return = self::pluginHandle()->trigger($plugged)->call($method, $this);
+            if ($plugged) {
+                return $return;
             }
         }
 

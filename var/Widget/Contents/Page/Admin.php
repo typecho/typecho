@@ -8,6 +8,7 @@ use Typecho\Widget\Exception;
 use Widget\Base\Contents;
 use Widget\Base\TreeTrait;
 use Widget\Contents\AdminTrait;
+use Widget\Contents\From;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -25,6 +26,11 @@ class Admin extends Contents
 {
     use AdminTrait;
     use TreeTrait;
+
+    /**
+     * @var int 父级页面
+     */
+    private int $parentId = 0;
 
     /**
      * 执行函数
@@ -47,8 +53,8 @@ class Admin extends Contents
             $ids = array_column($this->db->fetchAll($select), 'cid');
             $this->stack = $this->getRows($ids);
         } else {
-            $parentId = $this->request->filter('int')->get('parent', 0);
-            $this->stack = $this->getRows($this->getChildIds($parentId));
+            $this->parentId = $this->request->filter('int')->get('parent', 0);
+            $this->stack = $this->getRows($this->getChildIds($this->parentId));
         }
     }
 
@@ -59,8 +65,8 @@ class Admin extends Contents
      */
     public function backLink()
     {
-        if ($this->request->is('parent')) {
-            $page = $this->getRow($this->request->filter('int')->get('parent'));
+        if ($this->parentId) {
+            $page = $this->getRow($this->parentId);
 
             if (!empty($page)) {
                 $parent = $this->getRow($page['parent']);
@@ -88,8 +94,8 @@ class Admin extends Contents
      */
     public function getMenuTitle(): ?string
     {
-        if ($this->request->is('parent')) {
-            $page = $this->getRow($this->request->filter('int')->get('parent'));
+        if ($this->parentId) {
+            $page = $this->getRow($this->parentId);
 
             if (!empty($page)) {
                 return _t('管理 %s 的子页面', $page['title']);
@@ -108,11 +114,7 @@ class Admin extends Contents
      */
     public function getAddLink(): string
     {
-        if ($this->request->is('parent')) {
-            return 'write-page.php?parent=' . $this->request->filter('int')->get('parent');
-        } else {
-            return 'write-page.php';
-        }
+        return 'write-page.php' . ($this->parentId ? '?parent=' . $this->parentId : '');
     }
 
     /**

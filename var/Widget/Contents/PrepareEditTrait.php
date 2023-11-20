@@ -114,7 +114,7 @@ trait PrepareEditTrait
      */
     protected function ___title(): string
     {
-        return $this->have() ? $this->originalTitle : '';
+        return $this->have() ? $this->row['title'] : '';
     }
 
     /**
@@ -122,7 +122,7 @@ trait PrepareEditTrait
      */
     protected function ___text(): string
     {
-        return $this->have() ? ($this->isMarkdown ? substr($this->originalText, 15) : $this->originalText) : '';
+        return $this->have() ? ($this->isMarkdown ? substr($this->row['text'], 15) : $this->row['text']) : '';
     }
 
     /**

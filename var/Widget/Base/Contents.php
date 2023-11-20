@@ -45,7 +45,6 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property bool $allowPing
  * @property bool $allowFeed
  * @property int $parent
- * @property int $parentId
  * @property-read Users $author
  * @property-read string $permalink
  * @property-read string $path
@@ -61,8 +60,6 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property-read Metas $tags
  * @property-read Metas $categories
  * @property-read string $excerpt
- * @property-read string $originalText
- * @property-read string $originalTitle
  * @property-read string $plainExcerpt
  * @property-read string $summary
  * @property-read string $content
@@ -349,13 +346,12 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
     public function filter(array $row): array
     {
         /** 处理默认空值 */
-        $row['originalTitle'] = $row['title'] ?? '';
-        $row['originalText'] = $row['text'] ?? '';
+        $row['title'] = $row['title'] ?? '';
+        $row['text'] = $row['text'] ?? '';
         $row['slug'] = $row['slug'] ?? '';
         $row['password'] = $row['password'] ?? '';
         $row['date'] = new Date($row['created']);
 
-        unset($row['text'], $row['title']);
         return Contents::pluginHandle()->call('filter', $row, $this);
     }
 
@@ -549,7 +545,7 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
      */
     protected function ___title(): string
     {
-        return $this->hidden ? _t('此内容被密码保护') : $this->originalTitle;
+        return $this->hidden ? _t('此内容被密码保护') : $this->row['title'];
     }
 
     /**
@@ -575,7 +571,7 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
                 '</form>';
         }
 
-        return $this->isMarkdown ? substr($this->originalText, 15) : $this->originalText;
+        return $this->isMarkdown ? substr($this->row['text'], 15) : $this->row['text'];
     }
 
     /**
@@ -583,7 +579,7 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
      */
     protected function ___isMarkdown(): bool
     {
-        return 0 === strpos($this->originalText, '<!--markdown-->');
+        return 0 === strpos($this->row['text'], '<!--markdown-->');
     }
 
     /**
@@ -711,16 +707,6 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
     }
 
     /**
-     * 获取父id
-     *
-     * @return int|null
-     */
-    protected function ___parentId(): ?int
-    {
-        return $this->parent;
-    }
-
-    /**
      * 对文章的简短纯文本描述
      *
      * @deprecated
@@ -737,7 +723,7 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
     protected function ___attachment(): ?Config
     {
         if ('attachment' == $this->type) {
-            $content = @unserialize($this->originalText);
+            $content = @unserialize($this->row['text']);
 
             //增加数据信息
             $attachment = new Config($content);
