@@ -2,10 +2,10 @@
 
 namespace Widget\Base;
 
-use Typecho\Common;
 use Typecho\Db\Exception;
 use Typecho\Db\Query;
 use Typecho\Router;
+use Typecho\Router\ParamsDelegateInterface;
 use Widget\Base;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
@@ -17,6 +17,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  *
  * @property int $mid
  * @property string $name
+ * @property string $title
  * @property string $slug
  * @property string $type
  * @property string $description
@@ -26,12 +27,39 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property-read string $theId
  * @property-read string $url
  * @property-read string $permalink
+ * @property-read string[] $directory
  * @property-read string $feedUrl
  * @property-read string $feedRssUrl
  * @property-read string $feedAtomUrl
  */
-class Metas extends Base implements QueryInterface
+class Metas extends Base implements QueryInterface, RowFilterInterface, PrimaryKeyInterface, ParamsDelegateInterface
 {
+    /**
+     * @return string 获取主键
+     */
+    public function getPrimaryKey(): string
+    {
+        return 'mid';
+    }
+
+    /**
+     * @param string $key
+     * @return string
+     */
+    public function getRouterParam(string $key): string
+    {
+        switch ($key) {
+            case 'mid':
+                return (string)$this->mid;
+            case 'slug':
+                return urlencode($this->slug);
+            case 'directory':
+                return implode('/', array_map('urlencode', $this->directory));
+            default:
+                return '';
+        }
+    }
+
     /**
      * 获取记录总数
      *
@@ -59,62 +87,12 @@ class Metas extends Base implements QueryInterface
     /**
      * 通用过滤器
      *
-     * @param array $value 需要过滤的行数据
+     * @param array $row 需要过滤的行数据
      * @return array
      */
-    public function filter(array $value): array
+    public function filter(array $row): array
     {
-        //生成静态链接
-        $type = $value['type'];
-        $routeExists = (null != Router::get($type));
-        $tmpSlug = $value['slug'];
-        $value['slug'] = urlencode($value['slug']);
-
-        $value['url'] = $value['permalink'] = $routeExists ? Router::url($type, $value, $this->options->index) : '#';
-
-        /** 生成聚合链接 */
-        /** RSS 2.0 */
-        $value['feedUrl'] = $routeExists ? Router::url($type, $value, $this->options->feedUrl) : '#';
-
-        /** RSS 1.0 */
-        $value['feedRssUrl'] = $routeExists ? Router::url($type, $value, $this->options->feedRssUrl) : '#';
-
-        /** ATOM 1.0 */
-        $value['feedAtomUrl'] = $routeExists ? Router::url($type, $value, $this->options->feedAtomUrl) : '#';
-
-        $value['slug'] = $tmpSlug;
-        return Metas::pluginHandle()->call('filter', $value, $this);
-    }
-
-    /**
-     * 获取最大排序
-     *
-     * @param string $type
-     * @param int $parent
-     * @return integer
-     * @throws Exception
-     */
-    public function getMaxOrder(string $type, int $parent = 0): int
-    {
-        return $this->db->fetchObject($this->db->select(['MAX(order)' => 'maxOrder'])
-            ->from('table.metas')
-            ->where('type = ? AND parent = ?', $type, $parent))->maxOrder ?? 0;
-    }
-
-    /**
-     * 对数据按照sort字段排序
-     *
-     * @param array $metas
-     * @param string $type
-     */
-    public function sort(array $metas, string $type)
-    {
-        foreach ($metas as $sort => $mid) {
-            $this->update(
-                ['order' => $sort + 1],
-                $this->db->sql()->where('mid = ?', $mid)->where('type = ?', $type)
-            );
-        }
+        return Metas::pluginHandle()->call('filter', $row, $this);
     }
 
     /**
@@ -131,57 +109,15 @@ class Metas extends Base implements QueryInterface
     }
 
     /**
-     * 合并数据
-     *
-     * @param integer $mid 数据主键
-     * @param string $type 数据类型
-     * @param array $metas 需要合并的数据集
-     * @throws Exception
-     */
-    public function merge(int $mid, string $type, array $metas)
-    {
-        $contents = array_column($this->db->fetchAll($this->db->select('cid')
-            ->from('table.relationships')
-            ->where('mid = ?', $mid)), 'cid');
-
-        foreach ($metas as $meta) {
-            if ($mid != $meta) {
-                $existsContents = array_column($this->db->fetchAll($this->db
-                    ->select('cid')->from('table.relationships')
-                    ->where('mid = ?', $meta)), 'cid');
-
-                $where = $this->db->sql()->where('mid = ? AND type = ?', $meta, $type);
-                $this->delete($where);
-                $diffContents = array_diff($existsContents, $contents);
-                $this->db->query($this->db->delete('table.relationships')->where('mid = ?', $meta));
-
-                foreach ($diffContents as $content) {
-                    $this->db->query($this->db->insert('table.relationships')
-                        ->rows(['mid' => $mid, 'cid' => $content]));
-                    $contents[] = $content;
-                }
-
-                $this->update(['parent' => $mid], $this->db->sql()->where('parent = ?', $meta));
-                unset($existsContents);
-            }
-        }
-
-        $num = $this->db->fetchObject($this->db
-            ->select(['COUNT(mid)' => 'num'])->from('table.relationships')
-            ->where('table.relationships.mid = ?', $mid))->num;
-
-        $this->update(['count' => $num], $this->db->sql()->where('mid = ?', $mid));
-    }
-
-    /**
      * 获取原始查询对象
      *
+     * @param mixed $fields
      * @return Query
      * @throws Exception
      */
-    public function select(): Query
+    public function select(...$fields): Query
     {
-        return $this->db->select()->from('table.metas');
+        return $this->db->select(...$fields)->from('table.metas');
     }
 
     /**
@@ -197,47 +133,6 @@ class Metas extends Base implements QueryInterface
     }
 
     /**
-     * 根据tag获取ID
-     *
-     * @param mixed $inputTags 标签名
-     * @return array|int
-     * @throws Exception
-     */
-    public function scanTags($inputTags)
-    {
-        $tags = is_array($inputTags) ? $inputTags : [$inputTags];
-        $result = [];
-
-        foreach ($tags as $tag) {
-            if (empty($tag)) {
-                continue;
-            }
-
-            $row = $this->db->fetchRow($this->select()
-                ->where('type = ?', 'tag')
-                ->where('name = ?', $tag)->limit(1));
-
-            if ($row) {
-                $result[] = $row['mid'];
-            } else {
-                $slug = Common::slugName($tag);
-
-                if ($slug) {
-                    $result[] = $this->insert([
-                        'name'  => $tag,
-                        'slug'  => $slug,
-                        'type'  => 'tag',
-                        'count' => 0,
-                        'order' => 0,
-                    ]);
-                }
-            }
-        }
-
-        return is_array($inputTags) ? $result : current($result);
-    }
-
-    /**
      * 插入一条记录
      *
      * @param array $rows 记录插入值
@@ -250,50 +145,6 @@ class Metas extends Base implements QueryInterface
     }
 
     /**
-     * 清理没有任何内容的标签
-     *
-     * @throws Exception
-     */
-    public function clearTags()
-    {
-        // 取出count为0的标签
-        $tags = array_column($this->db->fetchAll($this->db->select('mid')
-            ->from('table.metas')->where('type = ? AND count = ?', 'tags', 0)), 'mid');
-
-        foreach ($tags as $tag) {
-            // 确认是否已经没有关联了
-            $content = $this->db->fetchRow($this->db->select('cid')
-                ->from('table.relationships')->where('mid = ?', $tag)
-                ->limit(1));
-
-            if (empty($content)) {
-                $this->db->query($this->db->delete('table.metas')
-                    ->where('mid = ?', $tag));
-            }
-        }
-    }
-
-    /**
-     * 根据内容的指定类别和状态更新相关meta的计数信息
-     *
-     * @param int $mid meta id
-     * @param string $type 类别
-     * @param string $status 状态
-     * @throws Exception
-     */
-    public function refreshCountByTypeAndStatus(int $mid, string $type, string $status = 'publish')
-    {
-        $num = $this->db->fetchObject($this->db->select(['COUNT(table.contents.cid)' => 'num'])->from('table.contents')
-            ->join('table.relationships', 'table.contents.cid = table.relationships.cid')
-            ->where('table.relationships.mid = ?', $mid)
-            ->where('table.contents.type = ?', $type)
-            ->where('table.contents.status = ?', $status))->num;
-
-        $this->db->query($this->db->update('table.metas')->rows(['count' => $num])
-            ->where('mid = ?', $mid));
-    }
-
-    /**
      * 锚点id
      *
      * @access protected
@@ -302,5 +153,61 @@ class Metas extends Base implements QueryInterface
     protected function ___theId(): string
     {
         return $this->type . '-' . $this->mid;
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___title(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return array
+     */
+    protected function ___directory(): array
+    {
+        return [];
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___permalink(): string
+    {
+        return Router::url($this->type, $this, $this->options->index);
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___url(): string
+    {
+        return $this->permalink;
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___feedUrl(): string
+    {
+        return Router::url($this->type, $this, $this->options->feedUrl);
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___feedRssUrl(): string
+    {
+        return Router::url($this->type, $this, $this->options->feedRssUrl);
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___feedAtomUrl(): string
+    {
+        return Router::url($this->type, $this, $this->options->feedAtomUrl);
     }
 }

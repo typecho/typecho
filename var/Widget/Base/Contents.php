@@ -10,6 +10,7 @@ use Typecho\Db\Exception;
 use Typecho\Db\Query;
 use Typecho\Plugin;
 use Typecho\Router;
+use Typecho\Router\ParamsDelegateInterface;
 use Typecho\Widget;
 use Utils\AutoP;
 use Utils\Markdown;
@@ -17,6 +18,8 @@ use Widget\Base;
 use Widget\Metas\Category\Rows;
 use Widget\Upload;
 use Widget\Users\Author;
+use Widget\Metas\Category\Related as CategoryRelated;
+use Widget\Metas\Tag\Related as TagRelated;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -42,22 +45,20 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property bool $allowPing
  * @property bool $allowFeed
  * @property int $parent
- * @property int $parentId
  * @property-read Users $author
  * @property-read string $permalink
- * @property-read string $pathinfo
+ * @property-read string $path
  * @property-read string $url
  * @property-read string $feedUrl
  * @property-read string $feedRssUrl
  * @property-read string $feedAtomUrl
  * @property-read bool $isMarkdown
  * @property-read bool $hidden
- * @property-read string $category
  * @property-read Date $date
  * @property-read string $dateWord
  * @property-read string[] $directory
- * @property-read array $tags
- * @property-read array $categories
+ * @property-read Metas $tags
+ * @property-read Metas $categories
  * @property-read string $excerpt
  * @property-read string $plainExcerpt
  * @property-read string $summary
@@ -70,35 +71,51 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property-read string $trackbackUrl
  * @property-read string $responseUrl
  */
-class Contents extends Base implements QueryInterface
+class Contents extends Base implements QueryInterface, RowFilterInterface, PrimaryKeyInterface, ParamsDelegateInterface
 {
+    /**
+     * @return string 获取主键
+     */
+    public function getPrimaryKey(): string
+    {
+        return 'cid';
+    }
+
+    /**
+     * @param string $key
+     * @return string
+     */
+    public function getRouterParam(string $key): string
+    {
+        switch ($key) {
+            case 'cid':
+                return $this->cid;
+            case 'slug':
+                return urlencode($this->slug);
+            case 'directory':
+                return implode('/', array_map('urlencode', $this->directory));
+            case 'category':
+                return urlencode($this->categories->slug);
+            case 'year':
+                return $this->date->year;
+            case 'month':
+                return $this->date->month;
+            case 'day':
+                return $this->date->day;
+            default:
+                return '{' . $key . '}';
+        }
+    }
+
     /**
      * 获取查询对象
      *
+     * @param mixed $fields
      * @return Query
-     * @throws Exception
      */
-    public function select(): Query
+    public function select(...$fields): Query
     {
-        return $this->db->select(
-            'table.contents.cid',
-            'table.contents.title',
-            'table.contents.slug',
-            'table.contents.created',
-            'table.contents.authorId',
-            'table.contents.modified',
-            'table.contents.type',
-            'table.contents.status',
-            'table.contents.text',
-            'table.contents.commentsNum',
-            'table.contents.order',
-            'table.contents.template',
-            'table.contents.password',
-            'table.contents.allowComment',
-            'table.contents.allowPing',
-            'table.contents.allowFeed',
-            'table.contents.parent'
-        )->from('table.contents');
+        return $this->db->select(...$fields)->from('table.contents');
     }
 
     /**
@@ -272,165 +289,6 @@ class Contents extends Base implements QueryInterface
     }
 
     /**
-     * 删除自定义字段
-     *
-     * @param integer $cid
-     * @return integer
-     * @throws Exception
-     */
-    public function deleteFields(int $cid): int
-    {
-        return $this->db->query($this->db->delete('table.fields')
-            ->where('cid = ?', $cid));
-    }
-
-    /**
-     * 保存自定义字段
-     *
-     * @param array $fields
-     * @param mixed $cid
-     * @return void
-     * @throws Exception
-     */
-    public function applyFields(array $fields, $cid)
-    {
-        $exists = array_flip(array_column($this->db->fetchAll($this->db->select('name')
-            ->from('table.fields')->where('cid = ?', $cid)), 'name'));
-
-        foreach ($fields as $name => $value) {
-            $type = 'str';
-
-            if (is_array($value) && 2 == count($value)) {
-                $type = $value[0];
-                $value = $value[1];
-            } elseif (strpos($name, ':') > 0) {
-                [$type, $name] = explode(':', $name, 2);
-            }
-
-            if (!$this->checkFieldName($name)) {
-                continue;
-            }
-
-            $isFieldReadOnly = Contents::pluginHandle()->trigger($plugged)->call('isFieldReadOnly', $name);
-            if ($plugged && $isFieldReadOnly) {
-                continue;
-            }
-
-            if (isset($exists[$name])) {
-                unset($exists[$name]);
-            }
-
-            $this->setField($name, $type, $value, $cid);
-        }
-
-        foreach ($exists as $name => $value) {
-            $this->db->query($this->db->delete('table.fields')
-                ->where('cid = ? AND name = ?', $cid, $name));
-        }
-    }
-
-    /**
-     * 检查字段名是否符合要求
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function checkFieldName(string $name): bool
-    {
-        return preg_match("/^[_a-z][_a-z0-9]*$/i", $name);
-    }
-
-    /**
-     * 设置单个字段
-     *
-     * @param string $name
-     * @param string $type
-     * @param mixed $value
-     * @param integer $cid
-     * @return integer|bool
-     * @throws Exception
-     */
-    public function setField(string $name, string $type, $value, int $cid)
-    {
-        if (
-            empty($name) || !$this->checkFieldName($name)
-            || !in_array($type, ['str', 'int', 'float', 'json'])
-        ) {
-            return false;
-        }
-
-        if ($type === 'json') {
-            $value = json_encode($value);
-        }
-
-        $exist = $this->db->fetchRow($this->db->select('cid')->from('table.fields')
-            ->where('cid = ? AND name = ?', $cid, $name));
-
-        $rows = [
-            'type'        => $type,
-            'str_value'   => 'str' == $type || 'json' == $type ? $value : null,
-            'int_value'   => 'int' == $type ? intval($value) : 0,
-            'float_value' => 'float' == $type ? floatval($value) : 0
-        ];
-
-        if (empty($exist)) {
-            $rows['cid'] = $cid;
-            $rows['name'] = $name;
-
-            return $this->db->query($this->db->insert('table.fields')->rows($rows));
-        } else {
-            return $this->db->query($this->db->update('table.fields')
-                ->rows($rows)
-                ->where('cid = ? AND name = ?', $cid, $name));
-        }
-    }
-
-    /**
-     * 自增一个整形字段
-     *
-     * @param string $name
-     * @param integer $value
-     * @param integer $cid
-     * @return integer
-     * @throws Exception
-     */
-    public function incrIntField(string $name, int $value, int $cid)
-    {
-        if (!$this->checkFieldName($name)) {
-            return false;
-        }
-
-        $exist = $this->db->fetchRow($this->db->select('type')->from('table.fields')
-            ->where('cid = ? AND name = ?', $cid, $name));
-
-        if (empty($exist)) {
-            return $this->db->query($this->db->insert('table.fields')
-                ->rows([
-                    'cid'         => $cid,
-                    'name'        => $name,
-                    'type'        => 'int',
-                    'str_value'   => null,
-                    'int_value'   => $value,
-                    'float_value' => 0
-                ]));
-        } else {
-            $struct = [
-                'str_value'   => null,
-                'float_value' => null
-            ];
-
-            if ('int' != $exist['type']) {
-                $struct['type'] = 'int';
-            }
-
-            return $this->db->query($this->db->update('table.fields')
-                ->rows($struct)
-                ->expression('int_value', 'int_value ' . ($value >= 0 ? '+' : '') . $value)
-                ->where('cid = ? AND name = ?', $cid, $name));
-        }
-    }
-
-    /**
      * 按照条件计算内容数量
      *
      * @param Query $condition 查询对象
@@ -482,140 +340,19 @@ class Contents extends Base implements QueryInterface
     /**
      * 通用过滤器
      *
-     * @param array $value 需要过滤的行数据
+     * @param array $row 需要过滤的行数据
      * @return array
      */
-    public function filter(array $value): array
+    public function filter(array $row): array
     {
         /** 处理默认空值 */
-        $value['title'] = $value['title'] ?? '';
-        $value['text'] = $value['text'] ?? '';
-        $value['slug'] = $value['slug'] ?? '';
+        $row['title'] = $row['title'] ?? '';
+        $row['text'] = $row['text'] ?? '';
+        $row['slug'] = $row['slug'] ?? '';
+        $row['password'] = $row['password'] ?? '';
+        $row['date'] = new Date($row['created']);
 
-        /** 取出所有分类 */
-        $value['categories'] = $this->db->fetchAll($this->db
-            ->select()->from('table.metas')
-            ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
-            ->where('table.relationships.cid = ?', $value['cid'])
-            ->where('table.metas.type = ?', 'category'), [Rows::alloc(), 'filter']);
-
-        $value['category'] = '';
-        $value['directory'] = [];
-
-        /** 取出第一个分类作为slug条件 */
-        if (!empty($value['categories'])) {
-            /** 使用自定义排序 */
-            usort($value['categories'], function ($a, $b) {
-                $field = 'order';
-                if ($a['order'] == $b['order']) {
-                    $field = 'mid';
-                }
-
-                return $a[$field] < $b[$field] ? - 1 : 1;
-            });
-
-            $value['category'] = $value['categories'][0]['slug'];
-
-            $value['directory'] = Rows::alloc()
-                ->getAllParentsSlug($value['categories'][0]['mid']);
-            $value['directory'][] = $value['category'];
-        }
-
-        $value['date'] = new Date($value['created']);
-
-        /** 生成日期 */
-        $value['year'] = $value['date']->year;
-        $value['month'] = $value['date']->month;
-        $value['day'] = $value['date']->day;
-
-        /** 生成访问权限 */
-        $value['hidden'] = false;
-
-        /** 获取路由类型并判断此类型在路由表中是否存在 */
-        $type = $value['type'];
-        $routeExists = (null != Router::get($type));
-
-        $tmpSlug = $value['slug'];
-        $tmpCategory = $value['category'];
-        $tmpDirectory = $value['directory'];
-        $value['slug'] = urlencode($value['slug']);
-        $value['category'] = urlencode($value['category']);
-        $value['directory'] = implode('/', array_map('urlencode', $value['directory']));
-
-        /** 生成静态路径 */
-        $value['pathinfo'] = $routeExists ? Router::url($type, $value) : '#';
-
-        /** 生成静态链接 */
-        $value['url'] = $value['permalink'] = Common::url($value['pathinfo'], $this->options->index);
-
-        /** 处理附件 */
-        if ('attachment' == $type) {
-            $content = Common::deserialization($value['text']);
-
-            //增加数据信息
-            $value['attachment'] = new Config($content);
-            $value['attachment']->isImage = in_array($content['type'], ['jpg', 'jpeg', 'gif', 'png', 'tiff', 'bmp', 'webp', 'avif', 'svg']);
-            $value['attachment']->url = Upload::attachmentHandle($value);
-
-            if ($value['attachment']->isImage) {
-                $value['text'] = '<img src="' . $value['attachment']->url . '" alt="' .
-                    $value['title'] . '" />';
-            } else {
-                $value['text'] = '<a href="' . $value['attachment']->url . '" title="' .
-                    $value['title'] . '">' . $value['title'] . '</a>';
-            }
-        }
-
-        /** 处理Markdown **/
-        if (isset($value['text'])) {
-            $value['isMarkdown'] = (0 === strpos($value['text'], '<!--markdown-->'));
-            if ($value['isMarkdown']) {
-                $value['text'] = substr($value['text'], 15);
-            }
-        }
-
-        /** 生成聚合链接 */
-        /** RSS 2.0 */
-        $value['feedUrl'] = $routeExists ? Router::url($type, $value, $this->options->feedUrl) : '#';
-
-        /** RSS 1.0 */
-        $value['feedRssUrl'] = $routeExists ? Router::url($type, $value, $this->options->feedRssUrl) : '#';
-
-        /** ATOM 1.0 */
-        $value['feedAtomUrl'] = $routeExists ? Router::url($type, $value, $this->options->feedAtomUrl) : '#';
-
-        $value['slug'] = $tmpSlug;
-        $value['category'] = $tmpCategory;
-        $value['directory'] = $tmpDirectory;
-
-        /** 处理密码保护流程 */
-        if (
-            strlen($value['password'] ?? '') > 0 &&
-            $value['password'] !== Cookie::get('protectPassword_' . $value['cid']) &&
-            $value['authorId'] != $this->user->uid &&
-            !$this->user->pass('editor', true)
-        ) {
-            $value['hidden'] = true;
-        }
-
-        $value = Contents::pluginHandle()->call('filter', $value, $this);
-
-        /** 如果访问权限被禁止 */
-        if ($value['hidden']) {
-            $value['text'] = '<form class="protected" action="' . $this->security->getTokenUrl($value['permalink'])
-                . '" method="post">' .
-                '<p class="word">' . _t('请输入密码访问') . '</p>' .
-                '<p><input type="password" class="text" name="protectPassword" />
-            <input type="hidden" name="protectCID" value="' . $value['cid'] . '" />
-            <input type="submit" class="submit" value="' . _t('提交') . '" /></p>' .
-                '</form>';
-
-            $value['title'] = _t('此内容被密码保护');
-            $value['tags'] = [];
-            $value['commentsNum'] = 0;
-        }
-
-        return $value;
+        return Contents::pluginHandle()->call('filter', $row, $this);
     }
 
     /**
@@ -725,12 +462,12 @@ class Contents extends Base implements QueryInterface
     public function category(string $split = ',', bool $link = true, ?string $default = null)
     {
         $categories = $this->categories;
-        if ($categories) {
+
+        if ($categories->have()) {
             $result = [];
 
-            foreach ($categories as $category) {
-                $result[] = $link ? '<a href="' . $category['permalink'] . '">'
-                    . $category['name'] . '</a>' : $category['name'];
+            while ($categories->next()) {
+                $result[] = $link ? $categories->template('<a href="{permalink}">{name}</a>') : $categories->name;
             }
 
             echo implode($split, $result);
@@ -776,12 +513,13 @@ class Contents extends Base implements QueryInterface
      */
     public function tags(string $split = ',', bool $link = true, ?string $default = null)
     {
-        /** 取出tags */
-        if ($this->tags) {
+        $tags = $this->tags;
+
+        if ($tags->have()) {
             $result = [];
-            foreach ($this->tags as $tag) {
-                $result[] = $link ? '<a href="' . $tag['permalink'] . '">'
-                    . $tag['name'] . '</a>' : $tag['name'];
+
+            while ($tags->next()) {
+                $result[] = $link ? $tags->template('<a href="{permalink}">{name}</a>') : $tags->name;
             }
 
             echo implode($split, $result);
@@ -803,18 +541,149 @@ class Contents extends Base implements QueryInterface
     }
 
     /**
-     * 将tags取出
+     * @return string
+     */
+    protected function ___title(): string
+    {
+        return $this->hidden ? _t('此内容被密码保护') : $this->row['title'];
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___text(): string
+    {
+        if ('attachment' == $this->type) {
+            if ($this->attachment->isImage) {
+                return '<img src="' . $this->attachment->url . '" alt="' .
+                    $this->title . '" />';
+            } else {
+                return '<a href="' . $this->attachment->url . '" title="' .
+                    $this->title . '">' . $this->title . '</a>';
+            }
+        } elseif ($this->hidden) {
+            return '<form class="protected" action="' . $this->security->getTokenUrl($this->permalink)
+                . '" method="post">' .
+                '<p class="word">' . _t('请输入密码访问') . '</p>' .
+                '<p><input type="password" class="text" name="protectPassword" />
+            <input type="hidden" name="protectCID" value="' . $this->cid . '" />
+            <input type="submit" class="submit" value="' . _t('提交') . '" /></p>' .
+                '</form>';
+        }
+
+        return $this->isMarkdown ? substr($this->row['text'], 15) : $this->row['text'];
+    }
+
+    /**
+     * @return bool
+     */
+    protected function ___isMarkdown(): bool
+    {
+        return 0 === strpos($this->row['text'], '<!--markdown-->');
+    }
+
+    /**
+     * 是否为隐藏文章
+     *
+     * @return bool
+     */
+    protected function ___hidden(): bool
+    {
+        if (
+            strlen($this->password) > 0 &&
+            $this->password !== Cookie::get('protectPassword_' . $this->cid) &&
+            $this->authorId != $this->user->uid &&
+            !$this->user->pass('editor', true)
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___path(): string
+    {
+        return Router::url($this->type, $this);
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___permalink(): string
+    {
+        return Common::url($this->path, $this->options->index);
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___url(): string
+    {
+        return $this->permalink;
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___feedUrl(): string
+    {
+        return Router::url($this->type, $this, $this->options->feedUrl);
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___feedRssUrl(): string
+    {
+        return Router::url($this->type, $this, $this->options->feedRssUrl);
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___feedAtomUrl(): string
+    {
+        return Router::url($this->type, $this, $this->options->feedAtomUrl);
+    }
+
+    /**
+     * 多级目录结构
      *
      * @return array
-     * @throws Exception
      */
-    protected function ___tags(): array
+    protected function ___directory(): array
     {
-        return $this->db->fetchAll($this->db
-            ->select()->from('table.metas')
-            ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
-            ->where('table.relationships.cid = ?', $this->cid)
-            ->where('table.metas.type = ?', 'tag'), [Metas::alloc(), 'filter']);
+        $directory = [];
+
+        $category = $this->categories;
+
+        if ($category->have()) {
+            $directory = Rows::alloc()->getAllParentsSlug($category->mid);
+            $directory[] = $category->slug;
+        }
+
+        return $directory;
+    }
+
+    /**
+     * @return Metas
+     */
+    protected function ___categories(): Metas
+    {
+        return CategoryRelated::allocWithAlias($this->cid, ['cid' => $this->cid]);
+    }
+
+    /**
+     * 将tags取出
+     *
+     * @return Metas
+     */
+    protected function ___tags(): Metas
+    {
+        return TagRelated::allocWithAlias($this->cid, ['cid' => $this->cid]);
     }
 
     /**
@@ -838,16 +707,6 @@ class Contents extends Base implements QueryInterface
     }
 
     /**
-     * 获取父id
-     *
-     * @return int|null
-     */
-    protected function ___parentId(): ?int
-    {
-        return $this->row['parent'];
-    }
-
-    /**
      * 对文章的简短纯文本描述
      *
      * @deprecated
@@ -855,7 +714,28 @@ class Contents extends Base implements QueryInterface
      */
     protected function ___description(): ?string
     {
-        return $this->___plainExcerpt();
+        return $this->plainExcerpt;
+    }
+
+    /**
+     * @return Config|null
+     */
+    protected function ___attachment(): ?Config
+    {
+        if ('attachment' == $this->type) {
+            $content = Common::deserialization($this->row['text']);
+
+            //增加数据信息
+            $attachment = new Config($content);
+            $attachment->isImage = in_array($content['type'], [
+                'jpg', 'jpeg', 'gif', 'png', 'tiff', 'bmp', 'webp', 'avif'
+            ]);
+            $attachment->url = Upload::attachmentHandle($attachment);
+
+            return $attachment;
+        }
+
+        return null;
     }
 
     /**
@@ -889,14 +769,8 @@ class Contents extends Base implements QueryInterface
             return $this->text;
         }
 
-        $content = Contents::pluginHandle()->trigger($plugged)->call('excerpt', $this->text, $this);
-        if (!$plugged) {
-            $content = $this->isMarkdown ? $this->markdown($content)
-                : $this->autoP($content);
-        }
-
-        $contents = explode('<!--more-->', $content);
-        [$excerpt] = $contents;
+        $content = Contents::pluginHandle()->call('excerpt', $this->content, $this);
+        [$excerpt] = explode('<!--more-->', $content);
 
         return Common::fixHtml(Contents::pluginHandle()->call('excerptEx', $excerpt, $this));
     }
@@ -919,7 +793,7 @@ class Contents extends Base implements QueryInterface
      * @param string|null $text
      * @return string|null
      */
-    public function markdown(?string $text): ?string
+    protected function markdown(?string $text): ?string
     {
         $html = Contents::pluginHandle()->trigger($parsed)->call('markdown', $text);
 
@@ -936,7 +810,7 @@ class Contents extends Base implements QueryInterface
      * @param string|null $text
      * @return string|null
      */
-    public function autoP(?string $text): ?string
+    protected function autoP(?string $text): ?string
     {
         $html = Contents::pluginHandle()->trigger($parsed)->call('autoP', $text);
 
@@ -1021,7 +895,7 @@ class Contents extends Base implements QueryInterface
         /** 评论 */
         return Router::url(
             'feedback',
-            ['type' => 'comment', 'permalink' => $this->pathinfo],
+            ['type' => 'comment', 'permalink' => $this->path],
             $this->options->index
         );
     }
@@ -1035,7 +909,7 @@ class Contents extends Base implements QueryInterface
     {
         return Router::url(
             'feedback',
-            ['type' => 'trackback', 'permalink' => $this->pathinfo],
+            ['type' => 'trackback', 'permalink' => $this->path],
             $this->options->index
         );
     }
@@ -1048,46 +922,5 @@ class Contents extends Base implements QueryInterface
     protected function ___responseUrl(): string
     {
         return $this->permalink . '#' . $this->respondId;
-    }
-
-    /**
-     * 获取页面偏移
-     *
-     * @param string $column 字段名
-     * @param integer $offset 偏移值
-     * @param string $type 类型
-     * @param string|null $status 状态值
-     * @param integer $authorId 作者
-     * @param integer $pageSize 分页值
-     * @return integer
-     * @throws Exception
-     */
-    protected function getPageOffset(
-        string $column,
-        int $offset,
-        string $type,
-        ?string $status = null,
-        int $authorId = 0,
-        int $pageSize = 20
-    ): int {
-        $select = $this->db->select(['COUNT(table.contents.cid)' => 'num'])->from('table.contents')
-            ->where("table.contents.{$column} > {$offset}")
-            ->where(
-                "table.contents.type = ? OR (table.contents.type = ? AND table.contents.parent = ?)",
-                $type,
-                $type . '_draft',
-                0
-            );
-
-        if (!empty($status)) {
-            $select->where("table.contents.status = ?", $status);
-        }
-
-        if ($authorId > 0) {
-            $select->where('table.contents.authorId = ?', $authorId);
-        }
-
-        $count = $this->db->fetchObject($select)->num + 1;
-        return ceil($count / $pageSize);
     }
 }

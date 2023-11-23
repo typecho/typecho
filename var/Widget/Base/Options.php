@@ -23,13 +23,13 @@ class Options extends Base implements QueryInterface
     /**
      * 获取原始查询对象
      *
-     * @access public
+     * @param mixed ...$fields
      * @return Query
      * @throws Exception
      */
-    public function select(): Query
+    public function select(...$fields): Query
     {
-        return $this->db->select()->from('table.options');
+        return $this->db->select(...$fields)->from('table.options');
     }
 
     /**

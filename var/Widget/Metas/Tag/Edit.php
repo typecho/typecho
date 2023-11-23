@@ -7,6 +7,7 @@ use Typecho\Db\Exception;
 use Typecho\Widget\Helper\Form;
 use Widget\Base\Metas;
 use Widget\ActionInterface;
+use Widget\Metas\EditTrait;
 use Widget\Notice;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
@@ -24,6 +25,8 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  */
 class Edit extends Metas implements ActionInterface
 {
+    use EditTrait;
+
     /**
      * 入口函数
      */
@@ -78,6 +81,7 @@ class Edit extends Metas implements ActionInterface
      *
      * @param string $name 标签名
      * @return boolean
+     * @throws Exception
      */
     public function nameToSlug(string $name): bool
     {
@@ -358,6 +362,31 @@ class Edit extends Metas implements ActionInterface
         $this->response->goBack();
     }
 
+
+    /**
+     * 清理没有任何内容的标签
+     *
+     * @throws Exception
+     */
+    public function clearTags()
+    {
+        // 取出count为0的标签
+        $tags = array_column($this->db->fetchAll($this->select('mid')
+            ->where('type = ? AND count = ?', 'tags', 0)), 'mid');
+
+        foreach ($tags as $tag) {
+            // 确认是否已经没有关联了
+            $content = $this->db->fetchRow($this->db->select('cid')
+                ->from('table.relationships')->where('mid = ?', $tag)
+                ->limit(1));
+
+            if (empty($content)) {
+                $this->db->query($this->db->delete('table.metas')
+                    ->where('mid = ?', $tag));
+            }
+        }
+    }
+
     /**
      * 入口函数,绑定事件
      *
@@ -374,5 +403,47 @@ class Edit extends Metas implements ActionInterface
         $this->on($this->request->is('do=merge'))->mergeTag();
         $this->on($this->request->is('do=refresh'))->refreshTag();
         $this->response->redirect($this->options->adminUrl);
+    }
+
+
+    /**
+     * 根据tag获取ID
+     *
+     * @param mixed $inputTags 标签名
+     * @return array|int
+     * @throws Exception
+     */
+    private function scanTags($inputTags)
+    {
+        $tags = is_array($inputTags) ? $inputTags : [$inputTags];
+        $result = [];
+
+        foreach ($tags as $tag) {
+            if (empty($tag)) {
+                continue;
+            }
+
+            $row = $this->db->fetchRow($this->select()
+                ->where('type = ?', 'tag')
+                ->where('name = ?', $tag)->limit(1));
+
+            if ($row) {
+                $result[] = $row['mid'];
+            } else {
+                $slug = Common::slugName($tag);
+
+                if ($slug) {
+                    $result[] = $this->insert([
+                        'name'  => $tag,
+                        'slug'  => $slug,
+                        'type'  => 'tag',
+                        'count' => 0,
+                        'order' => 0,
+                    ]);
+                }
+            }
+        }
+
+        return is_array($inputTags) ? $result : current($result);
     }
 }

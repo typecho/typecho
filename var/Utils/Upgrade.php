@@ -46,6 +46,10 @@ class Upgrade
             ->rows(['name' => 'commentsRequireUrl'])
             ->where('name = ?', 'commentsRequireURL'));
 
+        $db->query($db->update('table.contents')
+            ->rows(['type' => 'revision'])
+            ->where('parent <> 0 AND (type = ? OR type = ?)', 'post_draft', 'page_draft'));
+
         $rows = $db->fetchAll($db->select()->from('table.options'));
 
         foreach ($rows as $row) {
