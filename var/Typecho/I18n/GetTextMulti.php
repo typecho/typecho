@@ -69,10 +69,10 @@ class GetTextMulti
      * @access public
      * @param string $single single
      * @param string $plural plural
-     * @param string $number number
+     * @param int $number number
      * @return string translated plural form
      */
-    public function ngettext($single, $plural, $number): string
+    public function ngettext(string $single, string $plural, int $number): string
     {
         $count = - 1;
 

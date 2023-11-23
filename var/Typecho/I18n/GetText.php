@@ -34,30 +34,30 @@ namespace Typecho\I18n;
 class GetText
 {
     //public:
-    public $error = 0; // public variable that holds error code (0 if no error)
+    public int $error = 0; // public variable that holds error code (0 if no error)
 
     //private:
-    private $BYTE_ORDER = 0;        // 0: low endian, 1: big endian
+    private int $BYTE_ORDER = 0;        // 0: low endian, 1: big endian
 
     private $STREAM = null;
 
-    private $short_circuit = false;
+    private bool $short_circuit = false;
 
-    private $enable_cache = false;
+    private bool $enable_cache = false;
 
-    private $originals = null;      // offset of original table
+    private ?int $originals = null;      // offset of original table
 
-    private $translations = null;    // offset of translation table
+    private ?int $translations = null;    // offset of translation table
 
-    private $pluralHeader = null;    // cache header field for plural forms
+    private ?string $pluralHeader = null;    // cache header field for plural forms
 
-    private $total = 0;          // total string count
+    private int $total = 0;          // total string count
 
-    private $table_originals = null;  // table for original strings (offsets)
+    private ?array $table_originals = null;  // table for original strings (offsets)
 
-    private $table_translations = null;  // table for translated strings (offsets)
+    private ?array $table_translations = null;  // table for translated strings (offsets)
 
-    private $cache_translations = null;  // original -> translation mapping
+    private ?array $cache_translations = null;  // original -> translation mapping
 
 
     /* Methods */
@@ -65,9 +65,9 @@ class GetText
      * Constructor
      *
      * @param string $file file name
-     * @param boolean enable_cache Enable or disable caching of strings (default on)
+     * @param boolean $enable_cache Enable or disable caching of strings (default on)
      */
-    public function __construct(string $file, $enable_cache = true)
+    public function __construct(string $file, bool $enable_cache = true)
     {
         // If there isn't a StreamReader, turn on short circuit mode.
         if (!file_exists($file)) {
@@ -88,7 +88,7 @@ class GetText
             $this->BYTE_ORDER = 1;
         } else {
             $this->error = 1; // not MO file
-            return false;
+            return;
         }
 
         // FIXME: Do we care about revision? We should.
@@ -103,7 +103,7 @@ class GetText
      * Translates a string
      *
      * @access public
-     * @param string string to be translated
+     * @param string $string to be translated
      * @param integer|null $num found string number
      * @return string translated string (or original, if not found)
      */
@@ -263,10 +263,10 @@ class GetText
     /**
      * Reads an array of Integers from the Stream
      *
-     * @param int count How many elements should be read
+     * @param int $count How many elements should be read
      * @return array of Integers
      */
-    private function readIntArray($count): array
+    private function readIntArray(int $count): array
     {
         return unpack(($this->BYTE_ORDER == 0 ? 'V' : 'N') . $count, $this->read(4 * $count));
     }
@@ -275,12 +275,12 @@ class GetText
      * Binary search for string
      *
      * @access private
-     * @param string string
-     * @param int start (internally used in recursive function)
-     * @param int end (internally used in recursive function)
+     * @param string $string
+     * @param int $start (internally used in recursive function)
+     * @param int $end (internally used in recursive function)
      * @return int string number (offset in originals table)
      */
-    private function findString($string, $start = -1, $end = -1): int
+    private function findString(string $string, int $start = -1, int $end = -1): int
     {
         if (($start == -1) or ($end == -1)) {
             // findString is called with only one parameter, set start end end
@@ -318,10 +318,10 @@ class GetText
      * Returns a string from the "originals" table
      *
      * @access private
-     * @param int num Offset number of original string
+     * @param int $num Offset number of original string
      * @return string Requested string if found, otherwise ''
      */
-    private function getOriginalString($num): string
+    private function getOriginalString(int $num): string
     {
         $length = $this->table_originals[$num * 2 + 1];
         $offset = $this->table_originals[$num * 2 + 2];
@@ -337,10 +337,10 @@ class GetText
      * Returns a string from the "translations" table
      *
      * @access private
-     * @param int num Offset number of original string
+     * @param int $num Offset number of original string
      * @return string Requested string if found, otherwise ''
      */
-    private function getTranslationString($num): string
+    private function getTranslationString(int $num): string
     {
         $length = $this->table_translations[$num * 2 + 1];
         $offset = $this->table_translations[$num * 2 + 2];
@@ -355,11 +355,10 @@ class GetText
     /**
      * Detects which plural form to take
      *
-     * @access private
-     * @param n count
+     * @param int $n count
      * @return int array index of the right plural form
      */
-    private function selectString($n): int
+    private function selectString(int $n): int
     {
         $string = $this->getPluralForms();
         $string = str_replace('nplurals', "\$total", $string);

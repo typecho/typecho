@@ -47,7 +47,7 @@ class Edit extends Metas implements ActionInterface
             ->where('type = ?', 'category')
             ->where('mid = ?', $mid)->limit(1));
 
-        return (bool)$category;
+        return isset($category);
     }
 
     /**

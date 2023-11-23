@@ -9,6 +9,7 @@ use Typecho\Widget\Helper\Form;
 use Utils\PasswordHash;
 use Widget\ActionInterface;
 use Widget\Base\Options;
+use Widget\Base\Users;
 use Widget\Notice;
 use Widget\Plugins\Rows;
 
@@ -24,8 +25,10 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Profile extends Edit implements ActionInterface
+class Profile extends Users implements ActionInterface
 {
+    use EditTrait;
+
     /**
      * 执行函数
      */

@@ -13,7 +13,9 @@ if (isset($post) || isset($page)) {
 ?>
 
 <div id="upload-panel" class="p">
-    <div class="upload-area" draggable="true"><?php _e('拖放文件到这里<br>或者 %s选择文件上传%s', '<a href="###" class="upload-file">', '</a>'); ?></div>
+    <div class="upload-area" data-url="<?php $security->index('/action/upload'); ?>">
+        <?php _e('拖放文件到这里<br>或者 %s选择文件上传%s', '<a href="###" class="upload-file">', '</a>'); ?>
+    </div>
     <ul id="file-list">
     <?php while ($attachment->next()): ?>
         <li data-cid="<?php $attachment->cid(); ?>" data-url="<?php echo $attachment->attachment->url; ?>" data-image="<?php echo $attachment->attachment->isImage ? 1 : 0; ?>"><input type="hidden" name="attachment[]" value="<?php $attachment->cid(); ?>" />
