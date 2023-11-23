@@ -1232,65 +1232,65 @@ class Archive extends Contents
         if (2 == $this->options->allowXmlRpc) {
             $this->response->setHeader('X-Pingback', $this->options->xmlRpcUrl);
         }
-        $validated = false;
+        $valid = false;
 
         //~ 自定义模板
         if (!empty($this->themeFile)) {
             if (file_exists($this->themeDir . $this->themeFile)) {
-                $validated = true;
+                $valid = true;
             }
         }
 
-        if (!$validated && !empty($this->archiveType)) {
+        if (!$valid && !empty($this->archiveType)) {
             //~ 首先找具体路径, 比如 category/default.php
-            if (!$validated && !empty($this->archiveSlug)) {
+            if (!empty($this->archiveSlug)) {
                 $themeFile = $this->archiveType . '/' . $this->archiveSlug . '.php';
                 if (file_exists($this->themeDir . $themeFile)) {
                     $this->themeFile = $themeFile;
-                    $validated = true;
+                    $valid = true;
                 }
             }
 
             //~ 然后找归档类型路径, 比如 category.php
-            if (!$validated) {
+            if (!$valid) {
                 $themeFile = $this->archiveType . '.php';
                 if (file_exists($this->themeDir . $themeFile)) {
                     $this->themeFile = $themeFile;
-                    $validated = true;
+                    $valid = true;
                 }
             }
 
             //针对attachment的hook
-            if (!$validated && 'attachment' == $this->archiveType) {
+            if (!$valid && 'attachment' == $this->archiveType) {
                 if (file_exists($this->themeDir . 'page.php')) {
                     $this->themeFile = 'page.php';
-                    $validated = true;
+                    $valid = true;
                 } elseif (file_exists($this->themeDir . 'post.php')) {
                     $this->themeFile = 'post.php';
-                    $validated = true;
+                    $valid = true;
                 }
             }
 
             //~ 最后找归档路径, 比如 archive.php 或者 single.php
-            if (!$validated && 'index' != $this->archiveType && 'front' != $this->archiveType) {
+            if (!$valid && 'index' != $this->archiveType && 'front' != $this->archiveType) {
                 $themeFile = $this->archiveSingle ? 'single.php' : 'archive.php';
                 if (file_exists($this->themeDir . $themeFile)) {
                     $this->themeFile = $themeFile;
-                    $validated = true;
+                    $valid = true;
                 }
             }
 
-            if (!$validated) {
+            if (!$valid) {
                 $themeFile = 'index.php';
                 if (file_exists($this->themeDir . $themeFile)) {
                     $this->themeFile = $themeFile;
-                    $validated = true;
+                    $valid = true;
                 }
             }
         }
 
         /** 文件不存在 */
-        if (!$validated) {
+        if (!$valid) {
             throw new WidgetException(_t('文件不存在'), 500);
         }
 
@@ -1340,7 +1340,7 @@ class Archive extends Contents
      */
     protected function ___directory(): array
     {
-        if ($this->is('page')) {
+        if ('page' == $this->type) {
             $page = PageRows::alloc('current=' . $this->cid);
             $directory = $page->getAllParentsSlug($this->cid);
             $directory[] = $this->slug;
@@ -1373,50 +1373,47 @@ class Archive extends Contents
 
     /**
      * 检查链接是否正确
-     *
-     * @param string|null $permalink
      */
-    private function checkPermalink(?string $permalink = null)
+    private function checkPermalink()
     {
-        if (!isset($permalink)) {
-            $type = $this->parameter->type;
+        $type = $this->parameter->type;
 
-            if (
-                in_array($type, ['index', 404])
-                || $this->makeSinglePageAsFrontPage    // 自定义首页不处理
-                || !$this->parameter->checkPermalink
-            ) { // 强制关闭
-                return;
-            }
+        if (
+            in_array($type, ['index', 404])
+            || $this->makeSinglePageAsFrontPage    // 自定义首页不处理
+            || !$this->parameter->checkPermalink
+        ) { // 强制关闭
+            return;
+        }
 
-            if ($this->archiveSingle) {
-                $permalink = $this->permalink;
-            } else {
-                $path = Router::url(
-                    $type,
-                    new class ($this->currentPage, $this->pageRow) implements Router\ParamsDelegateInterface {
-                        private Router\ParamsDelegateInterface $pageRow;
-                        private int $currentPage;
+        if ($this->archiveSingle) {
+            $permalink = $this->permalink;
+        } else {
+            $path = Router::url(
+                $type,
+                new class ($this->currentPage, $this->pageRow) implements Router\ParamsDelegateInterface {
+                    private Router\ParamsDelegateInterface $pageRow;
+                    private int $currentPage;
 
-                        public function __construct(int $currentPage, Router\ParamsDelegateInterface $pageRow)
-                        {
-                            $this->pageRow = $pageRow;
-                            $this->currentPage = $currentPage;
-                        }
+                    public function __construct(int $currentPage, Router\ParamsDelegateInterface $pageRow)
+                    {
+                        $this->pageRow = $pageRow;
+                        $this->currentPage = $currentPage;
+                    }
 
-                        public function getRouterParam(string $key): string
-                        {
-                            switch ($key) {
-                                case 'page':
-                                    return $this->currentPage;
-                                default:
-                                    return $this->pageRow->getRouterParam($key);
-                            }
+                    public function getRouterParam(string $key): string
+                    {
+                        switch ($key) {
+                            case 'page':
+                                return $this->currentPage;
+                            default:
+                                return $this->pageRow->getRouterParam($key);
                         }
                     }
-                );
-                $permalink = Common::url($path, $this->options->index);
-            }
+                }
+            );
+
+            $permalink = Common::url($path, $this->options->index);
         }
 
         $requestUrl = $this->request->getRequestUrl();
@@ -1565,7 +1562,7 @@ class Archive extends Contents
             $this->security->protect();
             Cookie::set(
                 'protectPassword_' . $this->request->filter('int')->get('protectCID'),
-                $this->request->protectPassword
+                $this->request->get('protectPassword')
             );
 
             $isPasswordPosted = true;
