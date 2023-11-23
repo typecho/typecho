@@ -50,7 +50,13 @@ while ($parents->next()) {
                     ?>
                     <p class="mono url-slug">
                         <label for="slug" class="sr-only"><?php _e('网址缩略名'); ?></label>
-                        <?php echo preg_replace("/\{slug\}/i", $input, $permalink); ?>
+                        <?php echo preg_replace_callback("/\{(slug|directory)\}/i", function ($matches) use ($input) {
+                            if ($matches[1] == 'slug') {
+                                return $input;
+                            } else {
+                                return '{directory/' . $input . '}';
+                            }
+                        }, $permalink); ?>
                     </p>
                     <p>
                         <label for="text" class="sr-only"><?php _e('页面内容'); ?></label>
