@@ -20,6 +20,8 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
 
 /**
  * 编辑文章组件
+ *
+ * @property-read array $draft
  */
 class Edit extends Contents implements ActionInterface
 {
@@ -198,7 +200,7 @@ class Edit extends Contents implements ActionInterface
                 // 处理草稿
                 $draft = $this->db->fetchRow($this->db->select('cid')
                     ->from('table.contents')
-                    ->where('table.contents.parent = ? AND table.contents.type = ?', $post, 'post_draft')
+                    ->where('table.contents.parent = ? AND table.contents.type = ?', $post, 'revision')
                     ->limit(1));
 
                 if (!empty($draft)) {
@@ -264,14 +266,14 @@ class Edit extends Contents implements ActionInterface
                 /** 删除草稿 */
                 $draft = $this->db->fetchRow($this->db->select('cid')
                     ->from('table.contents')
-                    ->where('table.contents.parent = ? AND table.contents.type = ?', $post, 'post_draft')
+                    ->where('table.contents.parent = ? AND table.contents.type = ?', $post, 'revision')
                     ->limit(1));
 
                 /** 删除自定义字段 */
                 $this->deleteFields($post);
 
                 if ($draft) {
-                    $this->deleteDraft($draft['cid']);
+                    $this->deleteContent($draft['cid']);
                     $this->deleteFields($draft['cid']);
                 }
 
@@ -313,11 +315,11 @@ class Edit extends Contents implements ActionInterface
             /** 删除草稿 */
             $draft = $this->db->fetchRow($this->db->select('cid')
                 ->from('table.contents')
-                ->where('table.contents.parent = ? AND table.contents.type = ?', $post, 'post_draft')
+                ->where('table.contents.parent = ? AND table.contents.type = ?', $post, 'revision')
                 ->limit(1));
 
             if ($draft) {
-                $this->deleteDraft($draft['cid']);
+                $this->deleteContent($draft['cid']);
                 $this->deleteFields($draft['cid']);
                 $deleteCount++;
             }

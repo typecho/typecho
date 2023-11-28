@@ -275,21 +275,56 @@ abstract class Widget
     }
 
     /**
+     * 按模版渲染
+     *
+     * @param string $template 模版
+     * @return string
+     */
+    public function template(string $template): string
+    {
+        return preg_replace_callback(
+            "/\{([_a-z0-9]+)\}/i",
+            function (array $matches) {
+                return $this->{$matches[1]};
+            },
+            $template
+        );
+    }
+
+    /**
      * 格式化解析堆栈内的所有数据
      *
-     * @param string $format 数据格式
+     * @param string $template 模版
      */
-    public function parse(string $format)
+    public function parse(string $template)
     {
         while ($this->next()) {
-            echo preg_replace_callback(
-                "/\{([_a-z0-9]+)\}/i",
-                function (array $matches) {
-                    return $this->{$matches[1]};
-                },
-                $format
-            );
+            echo $this->template($template);
         }
+    }
+
+    /**
+     * @param string|array $column
+     * @return array
+     */
+    public function toArray($column): array
+    {
+        $result = [];
+
+        while ($this->next()) {
+            if (is_array($column)) {
+                $item = [];
+                foreach ($column as $key) {
+                    $item[$key] = $this->{$key};
+                }
+
+                $result[] = $item;
+            } else {
+                $result[] = $this->{$column};
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -337,8 +372,19 @@ abstract class Widget
      */
     public function alt(...$args)
     {
+        $this->altBy($this->sequence, ...$args);
+    }
+
+    /**
+     * 根据余数输出
+     *
+     * @param int $current
+     * @param mixed ...$args
+     */
+    public function altBy(int $current, ...$args)
+    {
         $num = count($args);
-        $split = $this->sequence % $num;
+        $split = $current % $num;
         echo $args[(0 == $split ? $num : $split) - 1];
     }
 
@@ -386,18 +432,20 @@ abstract class Widget
      */
     public function __get(string $name)
     {
-        if (array_key_exists($name, $this->row)) {
+        $method = '___' . $name;
+        $key = '#' . $name;
+
+        if (array_key_exists($key, $this->row)) {
+            return $this->row[$key];
+        } elseif (method_exists($this, $method)) {
+            $this->row[$key] = $this->$method();
+            return $this->row[$key];
+        } elseif (array_key_exists($name, $this->row)) {
             return $this->row[$name];
         } else {
-            $method = '___' . $name;
-
-            if (method_exists($this, $method)) {
-                return $this->$method();
-            } else {
-                $return = self::pluginHandle()->trigger($plugged)->call($method, $this);
-                if ($plugged) {
-                    return $return;
-                }
+            $return = self::pluginHandle()->trigger($plugged)->call($method, $this);
+            if ($plugged) {
+                return $return;
             }
         }
 

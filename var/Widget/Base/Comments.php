@@ -4,13 +4,14 @@ namespace Widget\Base;
 
 use Typecho\Common;
 use Typecho\Date;
-use Typecho\Db;
 use Typecho\Db\Exception;
 use Typecho\Db\Query;
 use Typecho\Router;
+use Typecho\Router\ParamsDelegateInterface;
 use Utils\AutoP;
 use Utils\Markdown;
 use Widget\Base;
+use Widget\Contents\From;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -36,13 +37,35 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property Date $date
  * @property string $dateWord
  * @property string $theId
- * @property array $parentContent
+ * @property Contents $parentContent
  * @property string $title
  * @property string $permalink
  * @property string $content
  */
-class Comments extends Base implements QueryInterface
+class Comments extends Base implements QueryInterface, RowFilterInterface, PrimaryKeyInterface, ParamsDelegateInterface
 {
+    /**
+     * @return string 获取主键
+     */
+    public function getPrimaryKey(): string
+    {
+        return 'coid';
+    }
+
+    /**
+     * @param string $key
+     * @return string
+     */
+    public function getRouterParam(string $key): string
+    {
+        switch ($key) {
+            case 'permalink':
+                return $this->parentContent->path;
+            default:
+                return '{' . $key . '}';
+        }
+    }
+
     /**
      * 增加评论
      *
@@ -179,30 +202,6 @@ class Comments extends Base implements QueryInterface
     }
 
     /**
-     * 评论是否可以被修改
-     *
-     * @param Query|null $condition 条件
-     * @return bool
-     * @throws Exception
-     */
-    public function commentIsWriteable(?Query $condition = null): bool
-    {
-        if (empty($condition)) {
-            if ($this->have() && ($this->user->pass('editor', true) || $this->ownerId == $this->user->uid)) {
-                return true;
-            }
-        } else {
-            $post = $this->db->fetchRow($condition->select('ownerId')->from('table.comments')->limit(1));
-
-            if ($post && ($this->user->pass('editor', true) || $post['ownerId'] == $this->user->uid)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * 按照条件计算评论数量
      *
      * @param Query $condition 查询对象
@@ -229,21 +228,21 @@ class Comments extends Base implements QueryInterface
     /**
      * 通用过滤器
      *
-     * @param array $value 需要过滤的行数据
+     * @param array $row 需要过滤的行数据
      * @return array
      */
-    public function filter(array $value): array
+    public function filter(array $row): array
     {
         /** 处理默认空值 */
-        $value['author'] = $value['author'] ?? '';
-        $value['mail'] = $value['mail'] ?? '';
-        $value['url'] = $value['url'] ?? '';
-        $value['ip'] = $value['ip'] ?? '';
-        $value['agent'] = $value['agent'] ?? '';
-        $value['text'] = $value['text'] ?? '';
+        $row['author'] = $row['author'] ?? '';
+        $row['mail'] = $row['mail'] ?? '';
+        $row['url'] = $row['url'] ?? '';
+        $row['ip'] = $row['ip'] ?? '';
+        $row['agent'] = $row['agent'] ?? '';
+        $row['text'] = $row['text'] ?? '';
 
-        $value['date'] = new Date($value['created']);
-        return Comments::pluginHandle()->call('filter', $value, $this);
+        $row['date'] = new Date($row['created']);
+        return Comments::pluginHandle()->call('filter', $row, $this);
     }
 
     /**
@@ -329,28 +328,12 @@ class Comments extends Base implements QueryInterface
     /**
      * 获取查询对象
      *
+     * @param mixed $fields
      * @return Query
-     * @throws Exception
      */
-    public function select(): Query
+    public function select(...$fields): Query
     {
-        return $this->db->select(
-            'table.comments.coid',
-            'table.comments.cid',
-            'table.comments.author',
-            'table.comments.mail',
-            'table.comments.url',
-            'table.comments.ip',
-            'table.comments.authorId',
-            'table.comments.ownerId',
-            'table.comments.agent',
-            'table.comments.text',
-            'table.comments.type',
-            'table.comments.status',
-            'table.comments.parent',
-            'table.comments.created'
-        )
-            ->from('table.comments');
+        return $this->db->select(...$fields)->from('table.comments');
     }
 
     /**
@@ -396,14 +379,11 @@ class Comments extends Base implements QueryInterface
     /**
      * 获取当前内容结构
      *
-     * @return array|null
-     * @throws Exception
+     * @return Contents
      */
-    protected function ___parentContent(): ?array
+    protected function ___parentContent(): Contents
     {
-        return $this->db->fetchRow(Contents::alloc()->select()
-            ->where('table.contents.cid = ?', $this->cid)
-            ->limit(1), [Contents::alloc(), 'filter']);
+        return From::allocWithAlias($this->cid, ['cid' => $this->cid]);
     }
 
     /**
@@ -413,7 +393,7 @@ class Comments extends Base implements QueryInterface
      */
     protected function ___title(): ?string
     {
-        return $this->parentContent['title'];
+        return $this->parentContent->title;
     }
 
     /**
@@ -424,7 +404,6 @@ class Comments extends Base implements QueryInterface
      */
     protected function ___permalink(): string
     {
-
         if ($this->options->commentsPageBreak && 'approved' == $this->status) {
             $coid = $this->coid;
             $parent = $this->parent;
@@ -442,7 +421,7 @@ class Comments extends Base implements QueryInterface
             }
 
             $select = $this->db->select('coid', 'parent')
-                ->from('table.comments')->where('cid = ? AND status = ?', $this->parentContent['cid'], 'approved')
+                ->from('table.comments')->where('cid = ? AND status = ?', $this->cid, 'approved')
                 ->where('coid ' . ('DESC' == $this->options->commentsOrder ? '>=' : '<=') . ' ?', $coid)
                 ->order('coid');
 
@@ -465,7 +444,7 @@ class Comments extends Base implements QueryInterface
 
             $currentPage = ceil($total / $this->options->commentsPageSize);
 
-            $pageRow = ['permalink' => $this->parentContent['pathinfo'], 'commentPage' => $currentPage];
+            $pageRow = ['permalink' => $this->parentContent->path, 'commentPage' => $currentPage];
             return Router::url(
                 'comment_page',
                 $pageRow,
@@ -473,7 +452,7 @@ class Comments extends Base implements QueryInterface
             ) . '#' . $this->theId;
         }
 
-        return $this->parentContent['permalink'] . '#' . $this->theId;
+        return $this->parentContent->permalink . '#' . $this->theId;
     }
 
     /**
@@ -483,7 +462,7 @@ class Comments extends Base implements QueryInterface
      */
     protected function ___content(): ?string
     {
-        $text = $this->parentContent['hidden'] ? _t('内容被隐藏') : $this->text;
+        $text = $this->parentContent->hidden ? _t('内容被隐藏') : $this->text;
 
         $text = Comments::pluginHandle()->trigger($plugged)->call('content', $text, $this);
         if (!$plugged) {

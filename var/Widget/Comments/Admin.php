@@ -9,6 +9,7 @@ use Typecho\Widget\Exception;
 use Typecho\Widget\Helper\PageNavigator\Box;
 use Widget\Base\Comments;
 use Widget\Base\Contents;
+use Widget\Contents\From;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -142,14 +143,12 @@ class Admin extends Comments
     /**
      * 获取当前内容结构
      *
-     * @return array|null
+     * @return Contents
      * @throws Db\Exception
      */
-    protected function ___parentContent(): ?array
+    protected function ___parentContent(): Contents
     {
         $cid = $this->request->is('cid') ? $this->request->filter('int')->get('cid') : $this->cid;
-        return $this->db->fetchRow(Contents::alloc()->select()
-            ->where('table.contents.cid = ?', $cid)
-            ->limit(1), [Contents::alloc(), 'filter']);
+        return From::allocWithAlias($cid, ['cid' => $cid]);
     }
 }

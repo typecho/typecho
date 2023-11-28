@@ -387,9 +387,11 @@ class Db
         /** 选择连接池 */
         $handle = $this->selectDb($op);
 
+        /** 如果是查询对象,则将其转换为查询语句 */
+        $sql = $query instanceof Query ? $query->prepare($query) : $query;
+
         /** 提交查询 */
-        $resource = $this->adapter->query($query instanceof Query ?
-            $query->prepare($query) : $query, $handle, $op, $action, $table);
+        $resource = $this->adapter->query($sql, $handle, $op, $action, $table);
 
         if ($action) {
             //根据查询动作返回相应资源

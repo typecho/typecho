@@ -2,7 +2,6 @@
 
 namespace Widget\Contents;
 
-use Typecho\Common;
 use Typecho\Config;
 use Typecho\Db\Exception as DbException;
 use Typecho\Validate;
@@ -12,8 +11,170 @@ use Typecho\Widget\Helper\Layout;
 use Widget\Base\Contents;
 use Widget\Base\Metas;
 
+/**
+ * 内容编辑组件
+ */
 trait EditTrait
 {
+    /**
+     * 删除自定义字段
+     *
+     * @param integer $cid
+     * @return integer
+     * @throws DbException
+     */
+    public function deleteFields(int $cid): int
+    {
+        return $this->db->query($this->db->delete('table.fields')
+            ->where('cid = ?', $cid));
+    }
+
+    /**
+     * 保存自定义字段
+     *
+     * @param array $fields
+     * @param mixed $cid
+     * @return void
+     * @throws Exception
+     */
+    public function applyFields(array $fields, $cid)
+    {
+        $exists = array_flip(array_column($this->db->fetchAll($this->db->select('name')
+            ->from('table.fields')->where('cid = ?', $cid)), 'name'));
+
+        foreach ($fields as $name => $value) {
+            $type = 'str';
+
+            if (is_array($value) && 2 == count($value)) {
+                $type = $value[0];
+                $value = $value[1];
+            } elseif (strpos($name, ':') > 0) {
+                [$type, $name] = explode(':', $name, 2);
+            }
+
+            if (!$this->checkFieldName($name)) {
+                continue;
+            }
+
+            $isFieldReadOnly = Contents::pluginHandle()->trigger($plugged)->call('isFieldReadOnly', $name);
+            if ($plugged && $isFieldReadOnly) {
+                continue;
+            }
+
+            if (isset($exists[$name])) {
+                unset($exists[$name]);
+            }
+
+            $this->setField($name, $type, $value, $cid);
+        }
+
+        foreach ($exists as $name => $value) {
+            $this->db->query($this->db->delete('table.fields')
+                ->where('cid = ? AND name = ?', $cid, $name));
+        }
+    }
+
+    /**
+     * 检查字段名是否符合要求
+     *
+     * @param string $name
+     * @return boolean
+     */
+    public function checkFieldName(string $name): bool
+    {
+        return preg_match("/^[_a-z][_a-z0-9]*$/i", $name);
+    }
+
+    /**
+     * 设置单个字段
+     *
+     * @param string $name
+     * @param string $type
+     * @param mixed $value
+     * @param integer $cid
+     * @return integer|bool
+     * @throws Exception
+     */
+    public function setField(string $name, string $type, $value, int $cid)
+    {
+        if (
+            empty($name) || !$this->checkFieldName($name)
+            || !in_array($type, ['str', 'int', 'float', 'json'])
+        ) {
+            return false;
+        }
+
+        if ($type === 'json') {
+            $value = json_encode($value);
+        }
+
+        $exist = $this->db->fetchRow($this->db->select('cid')->from('table.fields')
+            ->where('cid = ? AND name = ?', $cid, $name));
+
+        $rows = [
+            'type'        => $type,
+            'str_value'   => 'str' == $type || 'json' == $type ? $value : null,
+            'int_value'   => 'int' == $type ? intval($value) : 0,
+            'float_value' => 'float' == $type ? floatval($value) : 0
+        ];
+
+        if (empty($exist)) {
+            $rows['cid'] = $cid;
+            $rows['name'] = $name;
+
+            return $this->db->query($this->db->insert('table.fields')->rows($rows));
+        } else {
+            return $this->db->query($this->db->update('table.fields')
+                ->rows($rows)
+                ->where('cid = ? AND name = ?', $cid, $name));
+        }
+    }
+
+    /**
+     * 自增一个整形字段
+     *
+     * @param string $name
+     * @param integer $value
+     * @param integer $cid
+     * @return integer
+     * @throws Exception
+     */
+    public function incrIntField(string $name, int $value, int $cid)
+    {
+        if (!$this->checkFieldName($name)) {
+            return false;
+        }
+
+        $exist = $this->db->fetchRow($this->db->select('type')->from('table.fields')
+            ->where('cid = ? AND name = ?', $cid, $name));
+
+        if (empty($exist)) {
+            return $this->db->query($this->db->insert('table.fields')
+                ->rows([
+                    'cid'         => $cid,
+                    'name'        => $name,
+                    'type'        => 'int',
+                    'str_value'   => null,
+                    'int_value'   => $value,
+                    'float_value' => 0
+                ]));
+        } else {
+            $struct = [
+                'str_value'   => null,
+                'float_value' => null
+            ];
+
+            if ('int' != $exist['type']) {
+                $struct['type'] = 'int';
+            }
+
+            return $this->db->query($this->db->update('table.fields')
+                ->rows($struct)
+                ->expression('int_value', 'int_value ' . ($value >= 0 ? '+' : '') . $value)
+                ->where('cid = ? AND name = ?', $cid, $name));
+        }
+    }
+
     /**
      * getFieldItems
      *
@@ -169,12 +330,12 @@ trait EditTrait
     }
 
     /**
-     * 删除草稿
+     * 删除内容
      *
      * @param integer $cid 草稿id
      * @throws DbException
      */
-    protected function deleteDraft(int $cid, bool $hasMetas = true)
+    protected function deleteContent(int $cid, bool $hasMetas = true)
     {
         $this->delete($this->db->sql()->where('cid = ?', $cid));
 
@@ -308,7 +469,7 @@ trait EditTrait
      */
     protected function setTags(int $cid, ?string $tags, bool $beforeCount = true, bool $afterCount = true)
     {
-        $tags = str_replace('，', ',', $tags);
+        $tags = str_replace('，', ',', $tags ?? '');
         $tags = array_unique(array_map('trim', explode(',', $tags)));
         $tags = array_filter($tags, [Validate::class, 'xssCheck']);
 
@@ -427,7 +588,7 @@ trait EditTrait
             /** 如果它本身不是草稿, 需要删除其草稿 */
             if (!$isDraftToPublish && $this->draft) {
                 $cid = $this->draft['cid'];
-                $this->deleteDraft($cid);
+                $this->deleteContent($cid);
                 $this->deleteFields($cid);
             }
 
@@ -489,6 +650,11 @@ trait EditTrait
 
         /** 如果草稿已经存在 */
         if ($this->draft) {
+            $isRevision = !preg_match("/_draft$/", $this->type);
+            if ($isRevision) {
+                $contents['parent'] = $this->cid;
+                $contents['type'] = 'revision';
+            }
 
             /** 直接将草稿状态更改 */
             if ($this->update($contents, $this->db->sql()->where('cid = ?', $this->draft['cid']))) {
@@ -497,6 +663,7 @@ trait EditTrait
         } else {
             if ($this->have()) {
                 $contents['parent'] = $this->cid;
+                $contents['type'] = 'revision';
             }
 
             /** 发布一个新内容 */
@@ -534,6 +701,47 @@ trait EditTrait
         }
 
         return $this->draft['cid'];
+    }
+
+    /**
+     * 获取页面偏移
+     *
+     * @param string $column 字段名
+     * @param integer $offset 偏移值
+     * @param string $type 类型
+     * @param string|null $status 状态值
+     * @param integer $authorId 作者
+     * @param integer $pageSize 分页值
+     * @return integer
+     * @throws DbException
+     */
+    protected function getPageOffset(
+        string $column,
+        int $offset,
+        string $type,
+        ?string $status = null,
+        int $authorId = 0,
+        int $pageSize = 20
+    ): int {
+        $select = $this->db->select(['COUNT(table.contents.cid)' => 'num'])->from('table.contents')
+            ->where("table.contents.{$column} > {$offset}")
+            ->where(
+                "table.contents.type = ? OR (table.contents.type = ? AND table.contents.parent = ?)",
+                $type,
+                $type . '_draft',
+                0
+            );
+
+        if (!empty($status)) {
+            $select->where("table.contents.status = ?", $status);
+        }
+
+        if ($authorId > 0) {
+            $select->where('table.contents.authorId = ?', $authorId);
+        }
+
+        $count = $this->db->fetchObject($select)->num + 1;
+        return ceil($count / $pageSize);
     }
 
     /**

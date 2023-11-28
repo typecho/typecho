@@ -35,7 +35,9 @@ class Permalink extends Options implements ActionInterface
      */
     public function checkPagePattern($value): bool
     {
-        return strpos($value, '{slug}') !== false || strpos($value, '{cid}') !== false;
+        return strpos($value, '{slug}') !== false
+            || strpos($value, '{cid}') !== false
+            || strpos($value, '{directory}') !== false;
     }
 
     /**
@@ -278,7 +280,7 @@ RewriteRule . {$basePath}index.php [L]
             null,
             $this->decodeRule($this->options->routingTable['page']['url']),
             _t('独立页面路径'),
-            _t('可用参数: <code>{cid}</code> 页面 ID, <code>{slug}</code> 页面缩略名')
+            _t('可用参数: <code>{cid}</code> 页面 ID, <code>{slug}</code> 页面缩略名, <code>{directory}</code> 多级页面')
             . '<br />' . _t('请在路径中至少包含上述的一项参数.')
         );
         $pagePattern->input->setAttribute('class', 'mono w-60');

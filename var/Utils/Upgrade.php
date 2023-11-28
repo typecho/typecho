@@ -45,5 +45,9 @@ class Upgrade
         $db->query($db->update('table.options')
             ->rows(['name' => 'commentsRequireUrl'])
             ->where('name = ?', 'commentsRequireURL'));
+
+        $db->query($db->update('table.contents')
+            ->rows(['type' => 'revision'])
+            ->where('parent <> 0 AND (type = ? OR type = ?)', 'post_draft', 'page_draft'));
     }
 }
