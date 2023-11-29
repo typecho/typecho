@@ -248,6 +248,7 @@ namespace Typecho {
             if (defined('__TYPECHO_EXCEPTION_FILE__')) {
                 require_once __TYPECHO_EXCEPTION_FILE__;
             } else {
+                $message = str_replace(__TYPECHO_ROOT_DIR__, '', $message);
                 echo
                 <<<EOF
 <!DOCTYPE html>
