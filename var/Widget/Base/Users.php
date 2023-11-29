@@ -6,8 +6,8 @@ use Typecho\Common;
 use Typecho\Config;
 use Typecho\Db\Exception;
 use Typecho\Db\Query;
-use Typecho\Plugin;
 use Typecho\Router;
+use Typecho\Router\ParamsDelegateInterface;
 use Widget\Base;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
@@ -34,8 +34,16 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property-read string $feedRssUrl
  * @property-read string $feedAtomUrl
  */
-class Users extends Base implements QueryInterface
+class Users extends Base implements QueryInterface, RowFilterInterface, PrimaryKeyInterface, ParamsDelegateInterface
 {
+    /**
+     * @return string 获取主键
+     */
+    public function getPrimaryKey(): string
+    {
+        return 'uid';
+    }
+
     /**
      * 将每行的值压入堆栈
      *
@@ -51,38 +59,38 @@ class Users extends Base implements QueryInterface
     /**
      * 通用过滤器
      *
-     * @param array $value 需要过滤的行数据
+     * @param array $row 需要过滤的行数据
      * @return array
      */
-    public function filter(array $value): array
+    public function filter(array $row): array
     {
-        //生成静态链接
-        $routeExists = (null != Router::get('author'));
+        return Users::pluginHandle()->call('filter', $row, $this);
+    }
 
-        $value['permalink'] = $routeExists ? Router::url('author', $value, $this->options->index) : '#';
-
-        /** 生成聚合链接 */
-        /** RSS 2.0 */
-        $value['feedUrl'] = $routeExists ? Router::url('author', $value, $this->options->feedUrl) : '#';
-
-        /** RSS 1.0 */
-        $value['feedRssUrl'] = $routeExists ? Router::url('author', $value, $this->options->feedRssUrl) : '#';
-
-        /** ATOM 1.0 */
-        $value['feedAtomUrl'] = $routeExists ? Router::url('author', $value, $this->options->feedAtomUrl) : '#';
-
-        return Users::pluginHandle()->call('filter', $value, $this);
+    /**
+     * @param string $key
+     * @return string
+     */
+    public function getRouterParam(string $key): string
+    {
+        switch ($key) {
+            case 'uid':
+                return $this->uid;
+            default:
+                return '{' . $key . '}';
+        }
     }
 
     /**
      * 查询方法
      *
+     * @param mixed $fields
      * @return Query
      * @throws Exception
      */
-    public function select(): Query
+    public function select(...$fields): Query
     {
-        return $this->db->select()->from('table.users');
+        return $this->db->select(...$fields)->from('table.users');
     }
 
     /**
@@ -147,6 +155,38 @@ class Users extends Base implements QueryInterface
         $url = Common::gravatarUrl($this->mail, $size, $rating, $default, $this->request->isSecure());
         echo '<img' . (empty($class) ? '' : ' class="' . $class . '"') . ' src="' . $url . '" alt="' .
             $this->screenName . '" width="' . $size . '" height="' . $size . '" />';
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___permalink(): string
+    {
+        return Router::url('author', $this, $this->options->index);
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___feedUrl(): string
+    {
+        return Router::url('author', $this, $this->options->feedUrl);
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___feedRssUrl(): string
+    {
+        return Router::url('author', $this, $this->options->feedRssUrl);
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___feedAtomUrl(): string
+    {
+        return Router::url('author', $this, $this->options->feedAtomUrl);
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace Typecho;
 
+use Typecho\Router\ParamsDelegateInterface;
 use Typecho\Router\Parser;
 use Typecho\Router\Exception as RouterException;
 
@@ -106,18 +107,31 @@ class Router
      * 路由反解析函数
      *
      * @param string $name 路由配置表名称
-     * @param array|null $value 路由填充值
+     * @param mixed $value 路由填充值
      * @param string|null $prefix 最终合成路径的前缀
      * @return string
      */
-    public static function url(string $name, ?array $value = null, ?string $prefix = null): string
-    {
+    public static function url(
+        string $name,
+        $value = null,
+        ?string $prefix = null
+    ): string {
+        if (!isset(self::$routingTable[$name])) {
+            return '#';
+        }
+
         $route = self::$routingTable[$name];
 
         //交换数组键值
         $pattern = [];
-        foreach ($route['params'] as $row) {
-            $pattern[$row] = $value[$row] ?? '{' . $row . '}';
+        foreach ($route['params'] as $param) {
+            if (is_array($value) && isset($value[$param])) {
+                $pattern[$param] = $value[$param];
+            } elseif ($value instanceof ParamsDelegateInterface) {
+                $pattern[$param] = $value->getRouterParam($param);
+            } else {
+                $pattern[$param] = '{' . $param . '}';
+            }
         }
 
         return Common::url(vsprintf($route['format'], $pattern), $prefix);

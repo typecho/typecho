@@ -2,7 +2,8 @@
 include 'common.php';
 include 'header.php';
 include 'menu.php';
-\Widget\Contents\Post\Edit::alloc()->prepare()->to($post);
+
+$post = \Widget\Contents\Post\Edit::alloc()->prepare();
 ?>
 <div class="main">
     <div class="body container">
@@ -14,7 +15,7 @@ include 'menu.php';
                         <?php if ($post->draft['cid'] != $post->cid): ?>
                             <?php $postModifyDate = new \Typecho\Date($post->draft['modified']); ?>
                             <cite
-                                class="edit-draft-notice"><?php _e('你正在编辑的是保存于 %s 的草稿, 你也可以 <a href="%s">删除它</a>', $postModifyDate->word(),
+                                class="edit-draft-notice"><?php _e('你正在编辑的是保存于 %s 的修订版, 你也可以 <a href="%s">删除它</a>', $postModifyDate->word(),
                                     $security->getIndex('/action/contents-post-edit?do=deleteDraft&cid=' . $post->cid)); ?></cite>
                         <?php else: ?>
                             <cite class="edit-draft-notice"><?php _e('当前正在编辑的是未发布的草稿'); ?></cite>
@@ -47,7 +48,7 @@ include 'menu.php';
                     <p>
                         <label for="text" class="sr-only"><?php _e('文章内容'); ?></label>
                         <textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text"
-                                  name="text" class="w-100 mono"><?php echo htmlspecialchars($post->text ?? ''); ?></textarea>
+                                  name="text" class="w-100 mono"><?php echo htmlspecialchars($post->text); ?></textarea>
                     </p>
 
                     <?php include 'custom-fields.php'; ?>
@@ -94,13 +95,7 @@ include 'menu.php';
                             <label class="typecho-label"><?php _e('分类'); ?></label>
                             <?php \Widget\Metas\Category\Rows::alloc()->to($category); ?>
                             <ul>
-                                <?php
-                                if ($post->have()) {
-                                    $categories = array_column($post->categories, 'mid');
-                                } else {
-                                    $categories = [];
-                                }
-                                ?>
+                                <?php $categories = $post->categories->toArray('mid'); ?>
                                 <?php while ($category->next()): ?>
                                     <li><?php echo str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;', $category->levels); ?><input
                                             type="checkbox" id="category-<?php $category->mid(); ?>"

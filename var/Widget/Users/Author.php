@@ -27,7 +27,7 @@ class Author extends Users
      */
     public function execute()
     {
-        if ($this->parameter->uid) {
+        if (isset($this->parameter->uid)) {
             $this->db->fetchRow($this->select()
                 ->where('uid = ?', $this->parameter->uid), [$this, 'push']);
         }

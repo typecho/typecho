@@ -91,18 +91,18 @@ class Feed extends Contents
 
             switch ($feedType) {
                 case FeedGenerator::RSS1:
-                    $currentFeedUrl = $archive->getFeedRssUrl();
+                    $currentFeedUrl = $archive->getArchiveFeedRssUrl();
                     break;
                 case FeedGenerator::ATOM1:
-                    $currentFeedUrl = $archive->getFeedAtomUrl();
+                    $currentFeedUrl = $archive->getArchiveFeedAtomUrl();
                     break;
                 default:
-                    $currentFeedUrl = $archive->getFeedUrl();
+                    $currentFeedUrl = $archive->getArchiveFeedUrl();
                     break;
             }
 
             $feed->setBaseUrl($archive->getArchiveUrl());
-            $feed->setSubTitle($archive->getDescription());
+            $feed->setSubTitle($archive->getArchiveDescription());
         }
 
         $this->checkPermalink($currentFeedUrl);
@@ -181,8 +181,9 @@ class Feed extends Contents
                     'link'            => $archive->permalink,
                     'author'          => $archive->author,
                     'excerpt'         => $archive->plainExcerpt,
+                    'category'        => $archive->categories->toArray(['name', 'permalink']),
                     'comments'        => $archive->commentsNum,
-                    'commentsFeedUrl' => Common::url($archive->pathinfo, $feed->getFeedUrl()),
+                    'commentsFeedUrl' => Common::url($archive->path, $feed->getFeedUrl()),
                     'suffix'          => $suffix
                 ]);
             }

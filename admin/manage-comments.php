@@ -120,7 +120,7 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == \Ty
                             <td valign="top" class="kit-hidden-mb">
                                 <div class="comment-avatar">
                                     <?php if ('comment' == $comments->type): ?>
-                                    <?php $comments->gravatar(40); ?>
+                                    <?php $comments->gravatar(40, null, true); ?>
                                     <?php endif; ?>
                                     <?php if ('comment' != $comments->type): ?>
                                     <?php _e('引用'); ?>
