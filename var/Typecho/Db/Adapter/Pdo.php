@@ -29,7 +29,7 @@ abstract class Pdo implements Adapter
      * 最后一次操作的数据表
      *
      * @access protected
-     * @var ?string
+     * @var string|null
      */
     protected ?string $lastTable;
 
