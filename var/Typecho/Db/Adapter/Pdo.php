@@ -29,9 +29,9 @@ abstract class Pdo implements Adapter
      * 最后一次操作的数据表
      *
      * @access protected
-     * @var string
+     * @var ?string
      */
-    protected string $lastTable;
+    protected ?string $lastTable;
 
     /**
      * 判断适配器是否可用
