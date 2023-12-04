@@ -4,7 +4,6 @@ namespace Typecho\Widget\Helper\Form\Element;
 
 use Typecho\Common;
 use Typecho\Widget\Helper\Form\Element;
-use Typecho\Widget\Helper\Layout;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -20,35 +19,22 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  */
 class Url extends Element
 {
-    /**
-     * 初始化当前输入项
-     *
-     * @param string|null $name 表单元素名称
-     * @param array|null $options 选择项
-     * @return Layout|null
-     */
-    public function input(?string $name = null, ?array $options = null): ?Layout
-    {
-        $input = new Layout('input', ['id' => $name . '-0-' . self::$uniqueId,
-            'name' => $name, 'type' => 'url', 'class' => 'text']);
-        $this->container($input);
-        $this->label->setAttribute('for', $name . '-0-' . self::$uniqueId);
-        $this->inputs[] = $input;
+    use TextInputTrait;
 
-        return $input;
+    /**
+     * @param string $value
+     * @return string
+     */
+    protected function filterValue(string $value): string
+    {
+        return htmlspecialchars(Common::idnToUtf8($value));
     }
 
     /**
-     * 设置表单项默认值
-     *
-     * @param mixed $value 表单项默认值
+     * @return string
      */
-    protected function inputValue($value)
+    protected function getType(): string
     {
-        if (isset($value)) {
-            $this->input->setAttribute('value', htmlspecialchars(Common::idnToUtf8($value)));
-        } else {
-            $this->input->removeAttribute('value');
-        }
+        return 'url';
     }
 }
