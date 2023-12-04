@@ -1505,7 +1505,7 @@ EOF;
         {
             switch ($format) {
                 case 'serialize':
-                    return unserialize($data);
+                    return serialize($data);
                 case 'json':
                 default:
                     return json_encode($data);
