@@ -157,7 +157,7 @@ class General extends Options implements ActionInterface
             $siteUrl = new Form\Element\Url(
                 'siteUrl',
                 null,
-                Common::idnToUtf8($this->options->originalSiteUrl),
+                $this->options->originalSiteUrl,
                 _t('站点地址'),
                 _t('站点地址主要用于生成内容的永久链接.') . ($this->options->originalSiteUrl == $this->options->rootUrl ?
                     '' : '</p><p class="message notice mono">'

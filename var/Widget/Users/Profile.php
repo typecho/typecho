@@ -240,7 +240,7 @@ class Profile extends Users implements ActionInterface
         $form->addItem($submit);
 
         $screenName->value($this->user->screenName);
-        $url->value(Common::idnToUtf8($this->user->url));
+        $url->value($this->user->url);
         $mail->value($this->user->mail);
 
         /** 给表单增加规则 */

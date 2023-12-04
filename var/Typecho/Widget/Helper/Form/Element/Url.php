@@ -2,6 +2,7 @@
 
 namespace Typecho\Widget\Helper\Form\Element;
 
+use Typecho\Common;
 use Typecho\Widget\Helper\Form\Element;
 use Typecho\Widget\Helper\Layout;
 
@@ -45,7 +46,7 @@ class Url extends Element
     protected function inputValue($value)
     {
         if (isset($value)) {
-            $this->input->setAttribute('value', htmlspecialchars($value));
+            $this->input->setAttribute('value', htmlspecialchars(Common::idnToUtf8($value)));
         } else {
             $this->input->removeAttribute('value');
         }
