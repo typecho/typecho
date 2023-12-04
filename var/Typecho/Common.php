@@ -1477,5 +1477,21 @@ EOF;
 
             return $result;
         }
+
+        /**
+         * IDN转UTF8
+         *
+         * @param string $url
+         * @return string
+         */
+        public static function idnToUtf8(string $url): string
+        {
+            if (function_exists('idn_to_utf8') && !empty($url)) {
+                $host = parse_url($url, PHP_URL_HOST);
+                $url = str_replace($host, idn_to_utf8($host), $url);
+            }
+
+            return $url;
+        }
     }
 }
