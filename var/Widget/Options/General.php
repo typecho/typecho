@@ -2,7 +2,6 @@
 
 namespace Widget\Options;
 
-use Typecho\Common;
 use Typecho\Db\Exception;
 use Typecho\I18n\GetText;
 use Typecho\Widget\Helper\Form;
