@@ -176,7 +176,7 @@ RewriteRule . {$basePath}index.php [L]
                 unset($routingTable[0]);
             }
 
-            $settings['routingTable'] = Common::serialization($routingTable);
+            $settings['routingTable'] = json_encode($routingTable);
         }
 
         foreach ($settings as $name => $value) {

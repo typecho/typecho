@@ -3,7 +3,6 @@
 namespace Widget\Options;
 
 use Typecho\Db\Exception;
-use Typecho\Common;
 use Typecho\Plugin;
 use Typecho\Widget\Helper\Form;
 use Widget\Notice;
@@ -74,7 +73,7 @@ class Reading extends Permalink
                     unset($routingTable[0]);
                 }
 
-                $settings['routingTable'] = Common::serialization($routingTable);
+                $settings['routingTable'] = json_encode($routingTable);
             }
         } else {
             $settings['frontArchive'] = 0;

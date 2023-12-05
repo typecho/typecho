@@ -61,7 +61,7 @@ class Edit extends Options implements ActionInterface
                     if ($options && !$this->configHandle($options, true)) {
                         $this->insert([
                             'name'  => 'theme:' . $theme,
-                            'value' => Common::serialization($options),
+                            'value' => json_encode($options),
                             'user'  => 0
                         ]);
                     }
@@ -142,13 +142,13 @@ class Edit extends Options implements ActionInterface
         if (!$this->configHandle($settings, false)) {
             if ($this->options->__get('theme:' . $theme)) {
                 $this->update(
-                    ['value' => Common::serialization($settings)],
+                    ['value' => json_encode($settings)],
                     $this->db->sql()->where('name = ?', 'theme:' . $theme)
                 );
             } else {
                 $this->insert([
                     'name'  => 'theme:' . $theme,
-                    'value' => Common::serialization($settings),
+                    'value' => json_encode($settings),
                     'user'  => 0
                 ]);
             }

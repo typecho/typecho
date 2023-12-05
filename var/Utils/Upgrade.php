@@ -38,7 +38,7 @@ class Upgrade
         unset($routingTable[0]);
 
         $db->query($db->update('table.options')
-            ->rows(['value' => serialize($routingTable)])
+            ->rows(['value' => json_encode($routingTable)])
             ->where('name = ?', 'routingTable'));
 
         // fix options->commentsRequireURL
@@ -46,19 +46,52 @@ class Upgrade
             ->rows(['name' => 'commentsRequireUrl'])
             ->where('name = ?', 'commentsRequireURL'));
 
+        // fix draft
         $db->query($db->update('table.contents')
             ->rows(['type' => 'revision'])
             ->where('parent <> 0 AND (type = ? OR type = ?)', 'post_draft', 'page_draft'));
 
+        // fix attachment serialize
+        $lastId = 0;
+        do {
+            $rows = $db->fetchAll(
+                $db->select('cid', 'text')->from('table.contents')
+                    ->where('cid > ?', $lastId)
+                    ->where('type = ?', 'attachment')
+                    ->order('cid', Db::SORT_ASC)
+                    ->limit(100)
+            );
+
+            foreach ($rows as $row) {
+                if (strpos($row['text'], 'a:') !== 0) {
+                    continue;
+                }
+
+                $value = @unserialize($row['text']);
+                if ($value !== false) {
+                    $db->query($db->update('table.contents')
+                        ->rows(['text' => json_encode($value)])
+                        ->where('cid = ?', $row['cid']));
+                }
+
+                $lastId = $row['cid'];
+            }
+        } while (count($rows) === 100);
+
         $rows = $db->fetchAll($db->select()->from('table.options'));
 
         foreach ($rows as $row) {
-            $value = @unserialize($row['value']);
-            if ($value !== false && $row['value'] !== 'b:0;') {
-                $db->query($db->update('table.options')
-                    ->rows(['value' => json_encode($value)])
-                    ->where('name = ?', $row['name'])
-                    ->where('user = ?', $row['user']));
+            if (
+                in_array($row['name'], ['plugins', 'actionTable', 'panelTable'])
+                || strpos($row['name'], 'plugin:') === 0
+                || strpos($row['name'], 'theme:') === 0
+            ) {
+                $value = @unserialize($row['value']);
+                if ($value !== false) {
+                    $db->query($db->update('table.options')
+                        ->rows(['value' => json_encode($value)])
+                        ->where('name = ?', $row['name']));
+                }
             }
         }
     }
