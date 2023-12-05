@@ -3,7 +3,6 @@
 namespace Typecho\Widget\Helper\Form\Element;
 
 use Typecho\Widget\Helper\Form\Element;
-use Typecho\Widget\Helper\Layout;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -19,6 +18,8 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  */
 class Hidden extends Element
 {
+    use TextInputTrait;
+
     /**
      * 自定义初始函数
      *
@@ -31,28 +32,19 @@ class Hidden extends Element
     }
 
     /**
-     * 初始化当前输入项
-     *
-     * @access public
-     * @param string|null $name 表单元素名称
-     * @param array|null $options 选择项
-     * @return Layout|null
+     * @param string $value
+     * @return string
      */
-    public function input(?string $name = null, ?array $options = null): ?Layout
+    protected function filterValue(string $value): string
     {
-        $input = new Layout('input', ['name' => $name, 'type' => 'hidden']);
-        $this->container($input);
-        $this->inputs[] = $input;
-        return $input;
+        return htmlspecialchars($value);
     }
 
     /**
-     * 设置表单项默认值
-     *
-     * @param mixed $value 表单项默认值
+     * @return string
      */
-    protected function inputValue($value)
+    protected function getType(): string
     {
-        $this->input->setAttribute('value', htmlspecialchars($value));
+        return 'hidden';
     }
 }

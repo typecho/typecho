@@ -65,7 +65,7 @@ class Radio extends Element
             $option->removeAttribute('checked');
         }
 
-        if (isset($this->options[$value])) {
+        if (isset($value) && isset($this->options[$value])) {
             $this->value = $value;
             $this->options[$value]->setAttribute('checked', 'true');
             $this->input = $this->options[$value];
