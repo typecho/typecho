@@ -3,7 +3,6 @@
 namespace Widget;
 
 use Typecho\Widget;
-use Typecho\Common;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
