@@ -60,7 +60,7 @@ class Select extends Element
             $option->removeAttribute('selected');
         }
 
-        if (isset($this->options[$value])) {
+        if (isset($value) && isset($this->options[$value])) {
             $this->options[$value]->setAttribute('selected', 'true');
         }
     }

@@ -43,6 +43,6 @@ class Submit extends Element
      */
     protected function inputValue($value)
     {
-        $this->input->html($value);
+        $this->input->html($value ?? 'Submit');
     }
 }

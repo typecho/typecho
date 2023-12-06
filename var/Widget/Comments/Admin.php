@@ -76,7 +76,7 @@ class Admin extends Comments
     {
         $select = $this->select();
         $this->parameter->setDefault('pageSize=20');
-        $this->currentPage = $this->request->get('page', 1);
+        $this->currentPage = $this->request->filter('int')->get('page', 1);
 
         /** 过滤标题 */
         if (null != ($keywords = $this->request->filter('search')->get('keywords'))) {

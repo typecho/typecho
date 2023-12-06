@@ -241,7 +241,16 @@ function install_get_default_options(): array
     if (empty($options)) {
         $options = [
             'theme' => 'default',
-            'theme:default' => 'a:2:{s:7:"logoUrl";N;s:12:"sidebarBlock";a:5:{i:0;s:15:"ShowRecentPosts";i:1;s:18:"ShowRecentComments";i:2;s:12:"ShowCategory";i:3;s:11:"ShowArchive";i:4;s:9:"ShowOther";}}',
+            'theme:default' => json_encode([
+                'logoUrl' => '',
+                'sidebarBlock' => [
+                    'ShowRecentPosts',
+                    'ShowRecentComments',
+                    'ShowCategory',
+                    'ShowArchive',
+                    'ShowOther'
+                ]
+            ]),
             'timezone' => '28800',
             'lang' => install_get_lang(),
             'charset' => 'UTF-8',
@@ -294,9 +303,9 @@ function install_get_default_options(): array
             'commentsAvatar' => 1,
             'commentsAvatarRating' => 'G',
             'commentsAntiSpam' => 1,
-            'routingTable' => serialize(install_get_default_routers()),
-            'actionTable' => 'a:0:{}',
-            'panelTable' => 'a:0:{}',
+            'routingTable' => json_encode(install_get_default_routers()),
+            'actionTable' => json_encode([]),
+            'panelTable' => json_encode([]),
             'attachmentTypes' => '@image@',
             'secret' => \Typecho\Common::randString(32, true),
             'installed' => 0,

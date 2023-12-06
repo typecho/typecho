@@ -43,6 +43,6 @@ class Textarea extends Element
      */
     protected function inputValue($value)
     {
-        $this->input->html(htmlspecialchars($value));
+        $this->input->html(htmlspecialchars($value ?? ''));
     }
 }

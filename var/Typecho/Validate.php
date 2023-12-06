@@ -134,7 +134,7 @@ class Validate
      *
      * @access public
      *
-     * @param string
+     * @param string $str
      *
      * @return boolean
      */
@@ -148,7 +148,7 @@ class Validate
      *
      * @access public
      *
-     * @param string
+     * @param string $str
      *
      * @return boolean
      */

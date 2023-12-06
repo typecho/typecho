@@ -127,7 +127,7 @@ class Menu extends Base
         ];
 
         /** 获取扩展菜单 */
-        $panelTable = unserialize($this->options->panelTable);
+        $panelTable = $this->options->panelTable;
         $extendingParentMenu = empty($panelTable['parent']) ? [] : $panelTable['parent'];
         $extendingChildMenu = empty($panelTable['child']) ? [] : $panelTable['child'];
         $currentUrl = $this->request->getRequestUrl();

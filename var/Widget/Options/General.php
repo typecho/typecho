@@ -153,7 +153,7 @@ class General extends Options implements ActionInterface
 
         /** 站点地址 */
         if (!defined('__TYPECHO_SITE_URL__')) {
-            $siteUrl = new Form\Element\Text(
+            $siteUrl = new Form\Element\Url(
                 'siteUrl',
                 null,
                 $this->options->originalSiteUrl,

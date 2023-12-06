@@ -54,7 +54,7 @@ class Admin extends Users
     {
         $this->parameter->setDefault('pageSize=20');
         $select = $this->select();
-        $this->currentPage = $this->request->get('page', 1);
+        $this->currentPage = $this->request->filter('int')->get('page', 1);
 
         /** 过滤标题 */
         if (null != ($keywords = $this->request->get('keywords'))) {

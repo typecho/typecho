@@ -35,7 +35,7 @@ trait AdminTrait
     protected function initPage()
     {
         $this->parameter->setDefault('pageSize=20');
-        $this->currentPage = $this->request->get('page', 1);
+        $this->currentPage = $this->request->filter('int')->get('page', 1);
     }
 
     /**
