@@ -185,9 +185,6 @@ class Request
             } else {
                 return $default;
             }
-        } elseif (isset($value)) {
-            $exists = true;
-            return $value;
         } else {
             $exists = false;
             return $default;
