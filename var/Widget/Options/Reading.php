@@ -73,7 +73,7 @@ class Reading extends Permalink
                     unset($routingTable[0]);
                 }
 
-                $settings['routingTable'] = serialize($routingTable);
+                $settings['routingTable'] = json_encode($routingTable);
             }
         } else {
             $settings['frontArchive'] = 0;

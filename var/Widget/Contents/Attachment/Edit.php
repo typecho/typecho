@@ -103,7 +103,7 @@ class Edit extends Contents implements ActionInterface
         $content = $this->attachment->toArray();
         $content['description'] = $input['description'];
 
-        $attachment['text'] = serialize($content);
+        $attachment['text'] = json_encode($content);
         $cid = $this->request->filter('int')->get('cid');
 
         /** 更新数据 */

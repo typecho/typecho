@@ -723,7 +723,7 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
     protected function ___attachment(): ?Config
     {
         if ('attachment' == $this->type) {
-            $content = @unserialize($this->row['text']);
+            $content = json_decode($this->row['text'], true);
 
             //增加数据信息
             $attachment = new Config($content);
