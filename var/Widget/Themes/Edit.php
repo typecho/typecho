@@ -133,7 +133,7 @@ class Edit extends Options implements ActionInterface
         $form = Config::alloc()->config();
 
         /** 验证表单 */
-        if (!Config::isExists() || $form->validate()) {
+        if (!Config::isExists($theme) || $form->validate()) {
             $this->response->goBack();
         }
 
@@ -177,7 +177,7 @@ class Edit extends Options implements ActionInterface
         $this->on($this->request->is('change'))->changeTheme($this->request->filter('slug')->get('change'));
         $this->on($this->request->is('edit&theme'))
             ->editThemeFile($this->request->filter('slug')->get('theme'), $this->request->get('edit'));
-        $this->on($this->request->is('config'))->config($this->options->theme);
+        $this->on($this->request->is('config'))->config($this->request->filter('slug')->get('config'));
         $this->response->redirect($this->options->adminUrl);
     }
 }
