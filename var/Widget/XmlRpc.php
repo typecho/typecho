@@ -89,12 +89,12 @@ class XmlRpc extends Contents implements ActionInterface, Hook
             'login_url'        => [
                 'desc'     => _t('登录地址'),
                 'readonly' => true,
-                'value'    => $this->options->siteUrl . 'admin/login.php'
+                'value'    => $this->options->loginUrl
             ],
             'admin_url'        => [
                 'desc'     => _t('管理区域的地址'),
                 'readonly' => true,
-                'value'    => $this->options->siteUrl . 'admin/'
+                'value'    => $this->options->adminUrl
             ],
 
             'post_thumbnail'     => [
