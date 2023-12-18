@@ -28,7 +28,7 @@ class Recent extends Contents
     {
         $this->parameter->setDefault(['pageSize' => $this->options->postsListSize]);
 
-        $this->db->fetchAll($this->select([
+        $this->db->fetchAll($this->select(
             'table.contents.cid',
             'table.contents.title',
             'table.contents.slug',
@@ -44,7 +44,7 @@ class Recent extends Contents
             'table.contents.password',
             'table.contents.authorId',
             'table.contents.parent',
-        ])
+        )
             ->where('table.contents.status = ?', 'publish')
             ->where('table.contents.created < ?', $this->options->time)
             ->where('table.contents.type = ?', 'post')
