@@ -75,31 +75,38 @@ class Response
     }
 
     /**
+     * @param callable $callback
+     * @param string $contentType
+     */
+    public function throwCallback(callable $callback, string $contentType = 'text/html')
+    {
+        $this->response->setContentType($contentType)
+            ->addResponder($callback)
+            ->respond();
+    }
+
+    /**
      * @param string $content
      * @param string $contentType
      */
     public function throwContent(string $content, string $contentType = 'text/html')
     {
-        $this->response->setContentType($contentType)
-            ->addResponder(function () use ($content) {
-                echo $content;
-            })
-            ->respond();
+        $this->throwCallback(function () use ($content) {
+            echo $content;
+        }, $contentType);
     }
 
     /**
      * @param mixed $message
      */
-    public function throwXml(string $message)
+    public function throwXml($message)
     {
-        $this->response->setContentType('text/xml')
-            ->addResponder(function () use ($message) {
-                echo '<?xml version="1.0" encoding="' . $this->response->getCharset() . '"?>',
-                '<response>',
-                $this->parseXml($message),
-                '</response>';
-            })
-            ->respond();
+        $this->throwCallback(function () use ($message) {
+            echo '<?xml version="1.0" encoding="' . $this->response->getCharset() . '"?>',
+            '<response>',
+            $this->parseXml($message),
+            '</response>';
+        }, 'text/xml');
     }
 
     /**
@@ -109,12 +116,9 @@ class Response
      */
     public function throwJson($message)
     {
-        /** 设置http头信息 */
-        $this->response->setContentType('application/json')
-            ->addResponder(function () use ($message) {
-                echo json_encode($message);
-            })
-            ->respond();
+        $this->throwCallback(function () use ($message) {
+            echo json_encode($message);
+        }, 'application/json');
     }
 
     /**
