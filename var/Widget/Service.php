@@ -224,7 +224,7 @@ class Service extends BaseOptions implements ActionInterface
      * @param $method
      * @param mixed $params
      */
-    public function requestService($method, ... $params)
+    public function requestService($method, ...$params)
     {
         static $called;
 
