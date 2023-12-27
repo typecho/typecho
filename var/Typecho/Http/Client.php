@@ -33,6 +33,13 @@ class Client
     private string $method = self::METHOD_GET;
 
     /**
+     * User-Agent
+     *
+     * @var string
+     */
+    public string $agent;
+
+    /**
      * 传递参数
      *
      * @var string

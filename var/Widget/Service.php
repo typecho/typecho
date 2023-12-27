@@ -49,6 +49,8 @@ class Service extends BaseOptions implements ActionInterface
             throw new Exception(_t('禁止访问'), 403);
         }
 
+        $this->response->throwFinish();
+
         /** 忽略超时 */
         if (function_exists('ignore_user_abort')) {
             ignore_user_abort(true);
@@ -265,6 +267,8 @@ class Service extends BaseOptions implements ActionInterface
         if (!Common::timeTokenValidate($token, $this->options->secret, 3)) {
             throw new Exception(_t('禁止访问'), 403);
         }
+
+        $this->response->throwFinish();
 
         /** 忽略超时 */
         if (function_exists('ignore_user_abort')) {
