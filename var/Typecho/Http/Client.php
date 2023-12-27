@@ -40,13 +40,6 @@ class Client
     private string $query;
 
     /**
-     * User Agent
-     *
-     * @var string
-     */
-    private string $agent;
-
-    /**
      * 设置超时
      *
      * @var integer
@@ -116,6 +109,7 @@ class Client
     public function setCookie(string $key, $value): Client
     {
         $this->cookies[$key] = $value;
+        $this->setHeader('Cookie', str_replace('&', '; ', http_build_query($this->cookies)));
         return $this;
     }
 
@@ -302,10 +296,6 @@ class Client
 
             foreach ($this->headers as $key => $val) {
                 $headers[] = $key . ': ' . $val;
-            }
-
-            if (!empty($this->cookies)) {
-                $headers[] = 'Cookie: ' . str_replace('&', '; ', http_build_query($this->cookies));
             }
 
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
