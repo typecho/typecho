@@ -6,7 +6,9 @@
             <li><a href="<?php $this->options->feedUrl(); ?>" aria-label="<?php _e('Feed'); ?>"><i data-feather="rss" class="is-sm"></i></a></li>
         </ul>
         <ul class="list-inline text-muted">
-            <li><?php _e('由 <a href="http://www.typecho.org">Typecho</a> 强力驱动'); ?></li>
+            <li>
+                <?php _e('由 <a href="https://typecho.org">Typecho</a> 强力驱动'); ?>
+            </li>
         </ul>
     </div>
 </footer>

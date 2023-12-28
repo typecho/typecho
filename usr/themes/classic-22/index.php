@@ -14,6 +14,12 @@ $this->need('header.php');
 
 <main class="container">
     <div class="container-thin">
+        <?php if (!($this->is('index')) and !($this->is('post'))): ?>
+            <h4 class="text-center text-muted">
+                <?php $this->archiveTitle('', '', ''); ?>
+            </h4>
+        <?php endif; ?>
+
     <?php while ($this->next()): ?>
         <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
             <header class="entry-header text-center">
@@ -21,12 +27,12 @@ $this->need('header.php');
                 <ul class="entry-meta list-inline text-muted">
                     <li><i data-feather="calendar" class="is-sm me-2"></i><time datetime="<?php $this->date('c'); ?>" itemprop="datePublished"><?php $this->date(); ?></time></li>
                     <li><i data-feather="folder" class="is-sm me-2"></i><?php $this->category(', '); ?></li>
-                    <li><i data-feather="message-circle" class="is-sm me-2"></i><a href="<?php $this->permalink() ?>#comments"  itemprop="discussionUrl"><?php $this->commentsNum('暂无评论', '1 条评论', '%d 条评论'); ?></a></li>
+                    <li><i data-feather="message-circle" class="is-sm me-2"></i><a href="<?php $this->permalink() ?>#comments"  itemprop="discussionUrl"><?php $this->commentsNum(_t('暂无评论'), _t('仅有一条评论'), _t('已有 %d 条评论')); ?></a></li>
                 </ul>
             </header>
             
             <div class="entry-content fmt" itemprop="articleBody">
-                <?php $this->content('阅读剩余部分'); ?>
+                <?php $this->content(_t('阅读剩余部分')); ?>
             </div>
         </article>
         <hr class="post-separator">
@@ -38,7 +44,7 @@ $this->need('header.php');
         <span class="mx-2 text-muted">&middot;</span>
         <a href="#">Newer Posts &raquo;</a>
     </div> -->
-    <?php $this->pageNav('&laquo; 前一页', '后一页 &raquo;'); ?>
+    <?php $this->pageNav('&laquo; ' . _t('前一页'), _t('后一页') . ' &raquo;'); ?>
 </main>
 
 <?php $this->need('footer.php'); ?>

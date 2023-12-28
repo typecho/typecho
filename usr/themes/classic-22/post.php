@@ -24,11 +24,11 @@
     <div class="grid post-next">
         <div>
             <div class="text-muted">&laquo; 上一篇</div>
-            <?php $this->thePrev('%s', '已经是最后一篇了'); ?>
+            <?php $this->thePrev('%s', '没有了'); ?>
         </div>
         <div class="text-end">
             <div class="text-muted">下一篇 &raquo;</div>
-            <?php $this->theNext('%s', '已经是最后一篇了'); ?>
+            <?php $this->theNext('%s', '没有了'); ?>
         </div>
     </div>
 
