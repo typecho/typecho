@@ -3,7 +3,7 @@
     <div class="d-flex justify-content-between container-inner">
         <ul class="list-inline text-muted">
             <li>&copy; <?php echo date('Y'); ?> <a href="<?php $this->options->siteUrl(); ?>"><?php $this->options->title(); ?></a></li>
-            <li><a href="<?php $this->options->feedUrl(); ?>" aria-label="<?php _e('Feed'); ?>"><i data-feather="rss" class="is-sm"></i></a></li>
+            <li><a href="<?php $this->options->feedUrl(); ?>"><?php _e('RSS'); ?></a></li>
         </ul>
         <ul class="list-inline text-muted">
             <li>

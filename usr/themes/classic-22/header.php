@@ -1,7 +1,6 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <!DOCTYPE html>
-<!-- <html lang="zh-CN"> -->
-<html lang="zh-CN" data-theme="<?php $this->options->themeStyle(); ?>">
+<html lang="zh-Hans" data-theme="<?php $this->options->themeStyle(); ?>">
 
 <head>
     <meta charset="<?php $this->options->charset(); ?>">
@@ -9,7 +8,6 @@
     <title><?php $this->archiveTitle('', '', ' - '); ?><?php $this->options->title(); ?></title>
 
     <link rel="stylesheet" href="<?php $this->options->themeUrl('static/css/style.css'); ?>">
-    <script src="//unpkg.com/feather-icons"></script>
 
     <?php $this->header(); ?>
 </head>
@@ -23,14 +21,16 @@
             <?php if ($this->options->logoUrl): ?>
                 <li><a href="<?php $this->options->siteUrl(); ?>" class="brand"><img src="<?php $this->options->logoUrl() ?>" alt="<?php $this->options->title() ?>"></a></li>
             <?php else: ?>
-                <li><a href="<?php $this->options->siteUrl(); ?>" class="brand"><?php $this->options->title() ?></a></li>
+                <li>
+                    <a href="<?php $this->options->siteUrl(); ?>" class="brand"><?php $this->options->title() ?></a>
+                </li>
                 <li class="desc"><?php $this->options->description() ?></li>
             <?php endif; ?>
             </ul>
 
             <ul>
                 <li>
-                    <label for="nav-toggler" class="nav-toggler-btn"><i data-feather="menu" class="is-sm"></i></label>
+                    <label for="nav-toggler" class="nav-toggler-btn"><img src="<?php $this->options->themeUrl('static/img/menu.svg'); ?>" alt="Menu"></label>
                 </li>
             </ul>
         </nav>
@@ -51,7 +51,7 @@
                 <?php endwhile; ?>
 
                 <li>
-                    <a href="<?php $this->options->index('search/keywords'); ?>" aria-label="<?php _e('搜索'); ?>"><i data-feather="search" class="is-sm"></i></a>
+                    <a href="<?php $this->options->index('search/keywords'); ?>" aria-label="<?php _e('搜索'); ?>"><img src="<?php $this->options->themeUrl('static/img/search.svg'); ?>" alt="Search"></a>
                 </li>
             </ul>
         </nav>

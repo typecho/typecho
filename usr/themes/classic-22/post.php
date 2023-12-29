@@ -19,7 +19,7 @@
             <?php $this->thePrev('%s', _t('没有了')); ?>
         </div>
         <div class="text-end">
-            <div class="text-muted">&laquo; <?php _e('下一篇'); ?></div>
+            <div class="text-muted"><?php _e('下一篇'); ?> &raquo;</div>
             <?php $this->theNext('%s', _t('没有了')); ?>
         </div>
     </div>

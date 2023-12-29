@@ -30,7 +30,7 @@ $this->need('header.php');
             <?php postMeta($this); ?>
             
             <div class="entry-content fmt" itemprop="articleBody">
-                <?php $this->content(_t('阅读剩余部分')); ?>
+                <?php $this->content(_t('阅读全文')); ?>
             </div>
         </article>
         <hr class="post-separator">

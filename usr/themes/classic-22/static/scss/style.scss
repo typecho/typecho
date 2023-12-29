@@ -17,15 +17,19 @@ body {
   --primary: #{$primary-500};
   --primary-hover: #{$primary-400};
   --muted-border-color: #{$grey-800};
+
+  .site-navbar {
+    background-color: #{$primary-600};
+  }
 }
 
 // Content
 h1, h2, h3, h4, h5 { line-height: 1.25; }
-h1 { --font-size: 2.5rem; }
-h2 { --font-size: 2rem; }
-h3 { --font-size: 1.75rem; }
-h4 { --font-size: 1.5rem; }
-h5 { --font-size: 1.25rem; }
+// h1 { --font-size: 2.5rem; }
+// h2 { --font-size: 2rem; }
+// h3 { --font-size: 1.75rem; }
+// h4 { --font-size: 1.5rem; }
+// h5 { --font-size: 1.25rem; }
 
 // Icon Size
 .is-sm {
@@ -95,7 +99,7 @@ h5 { --font-size: 1.25rem; }
 
 .container-thin {
   margin: 0 auto;
-  max-width: 736px;
+  max-width: 46rem;
 }
 
 .d-flex {
@@ -126,7 +130,7 @@ h5 { --font-size: 1.25rem; }
 
   a {
     color: rgba(255, 255, 255, 1.0);
-    &:hover { text-decoration: underline; }
+    // &:hover { text-decoration: underline; }
   }
 
   .site-name {
@@ -151,7 +155,6 @@ h5 { --font-size: 1.25rem; }
 
 .site-nav {
   display: block;
-  .active { font-weight: 700; }
 }
 
 #nav-toggler {
@@ -212,8 +215,42 @@ h5 { --font-size: 1.25rem; }
   a { color: var(--h1-color); }
 }
 
-.more {
+.entry-meta {
+  font-size: .875rem;
+}
+
+.feather-calendar::before,
+.feather-folder::before,
+.feather-message::before {
+  content: "";
+  display: inline-block;
+  margin-right: .25rem;
+  background: url("../img/calendar.svg") no-repeat center center / contain;
+  width: 1rem;
+  height: 1rem;
+  vertical-align: text-top;
+  fill: #396;
+}
+.feather-folder::before {
+  background-image: url("../img/folder.svg");
+}
+.feather-message::before {
+  background-image: url("../img/message-circle.svg");
+}
+
+
+
+.entry-content .more {
   text-align: center;
+  a {
+    display: inline-block;
+    font-size: .875rem;
+    padding: 6px 16px;
+    border: 1px solid var(--muted-border-color);
+    color: var(--muted-color);
+    border-radius: 100px;
+    text-decoration: none;
+  }
 }
 
 .post-next {
@@ -319,6 +356,10 @@ h5 { --font-size: 1.25rem; }
 
 .comment-body .respond {
   margin-top: var(--spacing);
+}
+
+#comment-form textarea {
+  resize: vertical;
 }
 
 // page nav
