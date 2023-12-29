@@ -16,6 +16,7 @@ jobs:
         mkdir build/usr/uploads/
         chmod 755 build/usr/uploads/
         rm -rf build/admin/src
+        rm -rf build/usr/themes/classic-22/static/scss
         cd build && zip -q -r typecho.zip * && mv typecho.zip ../ && cd -
     - name: Upload Release Asset
       uses: shogo82148/actions-upload-release-asset@v1
