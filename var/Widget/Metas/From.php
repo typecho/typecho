@@ -2,6 +2,7 @@
 
 namespace Widget\Metas;
 
+use Typecho\Config;
 use Typecho\Db\Exception;
 use Widget\Base\Metas;
 use Widget\Base\TreeTrait;
@@ -12,6 +13,18 @@ class From extends Metas
     use InitTreeRowsTrait;
     use TreeTrait {
         initParameter as initTreeParameter;
+    }
+
+    /**
+     * @param Config $parameter
+     * @return void
+     */
+    protected function initParameter(Config $parameter)
+    {
+        $parameter->setDefault([
+            'mid' => null,
+            'query' => null,
+        ]);
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace Widget\Contents;
 
+use Typecho\Config;
 use Typecho\Db\Exception;
 use Widget\Base\Contents;
 use Widget\Base\TreeTrait;
@@ -18,6 +19,18 @@ class From extends Contents
     use TreeTrait {
         initParameter as initTreeParameter;
         ___directory as ___treeDirectory;
+    }
+
+    /**
+     * @param Config $parameter
+     * @return void
+     */
+    protected function initParameter(Config $parameter)
+    {
+        $parameter->setDefault([
+            'cid' => null,
+            'query' => null,
+        ]);
     }
 
     /**

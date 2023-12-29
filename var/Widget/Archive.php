@@ -562,12 +562,12 @@ class Archive extends Contents
 
         /** 定时发布功能 */
         if (!$selectPlugged) {
-            if ($this->parameter->preview) {
-                $select = $this->select();
-            } else {
+            $select = $this->select('table.contents.*');
+
+            if (!$this->parameter->preview) {
                 if ('post' == $this->parameter->type || 'page' == $this->parameter->type) {
                     if ($this->user->hasLogin()) {
-                        $select = $this->select()->where(
+                        $select->where(
                             'table.contents.status = ? OR table.contents.status = ? 
                                 OR (table.contents.status = ? AND table.contents.authorId = ?)',
                             'publish',
@@ -576,7 +576,7 @@ class Archive extends Contents
                             $this->user->uid
                         );
                     } else {
-                        $select = $this->select()->where(
+                        $select->where(
                             'table.contents.status = ? OR table.contents.status = ?',
                             'publish',
                             'hidden'
@@ -584,14 +584,14 @@ class Archive extends Contents
                     }
                 } else {
                     if ($this->user->hasLogin()) {
-                        $select = $this->select()->where(
+                        $select->where(
                             'table.contents.status = ? OR (table.contents.status = ? AND table.contents.authorId = ?)',
                             'publish',
                             'private',
                             $this->user->uid
                         );
                     } else {
-                        $select = $this->select()->where('table.contents.status = ?', 'publish');
+                        $select->where('table.contents.status = ?', 'publish');
                     }
                 }
                 $select->where('table.contents.created < ?', $this->options->time);
