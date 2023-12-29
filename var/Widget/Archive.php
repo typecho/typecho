@@ -951,6 +951,7 @@ class Archive extends Contents
             'rss1'         => $this->archiveFeedRssUrl,
             'commentReply' => 1,
             'antiSpam'     => 1,
+            'social'       => 1,
             'atom'         => $this->archiveFeedAtomUrl
         ];
 
@@ -965,22 +966,7 @@ class Archive extends Contents
         $allows = self::pluginHandle()->call('headerOptions', $allows, $this);
         $title = (empty($this->archiveTitle) ? '' : $this->archiveTitle . ' &raquo; ') . $this->options->title;
 
-        $header = '';
-        if (!empty($allows['description'])) {
-            $header .= '<meta name="description" content="' . $allows['description'] . '" />' . "\n";
-        }
-
-        if (!empty($allows['keywords'])) {
-            $header .= '<meta name="keywords" content="' . $allows['keywords'] . '" />' . "\n";
-        }
-
-        if (!empty($allows['generator'])) {
-            $header .= '<meta name="generator" content="' . $allows['generator'] . '" />' . "\n";
-        }
-
-        if (!empty($allows['template'])) {
-            $header .= '<meta name="template" content="' . $allows['template'] . '" />' . "\n";
-        }
+        $header = '<link rel="canonical" href="' . $this->archiveUrl . '" />' . "\n";
 
         if (!empty($allows['pingback']) && 2 == $this->options->allowXmlRpc) {
             $header .= '<link rel="pingback" href="' . $allows['pingback'] . '" />' . "\n";
@@ -1009,6 +995,34 @@ class Archive extends Contents
         if (!empty($allows['atom']) && $allowFeed) {
             $header .= '<link rel="alternate" type="application/atom+xml" title="'
                 . $title . ' &raquo; ATOM 1.0" href="' . $allows['atom'] . '" />' . "\n";
+        }
+
+        if (!empty($allows['description'])) {
+            $header .= '<meta name="description" content="' . $allows['description'] . '" />' . "\n";
+        }
+
+        if (!empty($allows['keywords'])) {
+            $header .= '<meta name="keywords" content="' . $allows['keywords'] . '" />' . "\n";
+        }
+
+        if (!empty($allows['generator'])) {
+            $header .= '<meta name="generator" content="' . $allows['generator'] . '" />' . "\n";
+        }
+
+        if (!empty($allows['template'])) {
+            $header .= '<meta name="template" content="' . $allows['template'] . '" />' . "\n";
+        }
+
+        if (!empty($allows['social'])) {
+            $header .= '<meta property="og:type" content="' . ($this->is('single') ? 'article' : 'website') . '" />' . "\n";
+            $header .= '<meta property="og:url" content="' . $this->archiveUrl . '" />' . "\n";
+            $header .= '<meta name="twitter:title" property="og:title" itemprop="name" content="'
+                . htmlspecialchars($this->archiveTitle ?? $this->options->title) . '" />' . "\n";
+            $header .= '<meta name="twitter:description" property="og:description" itemprop="description" content="'
+                . htmlspecialchars($this->archiveDescription ?? $this->options->description) . '" />' . "\n";
+            $header .= '<meta property="og:site_name" content="' . htmlspecialchars($this->options->title) . '" />' . "\n";
+            $header .= '<meta name="twitter:card" content="summary" />' . "\n";
+            $header .= '<meta name="twitter:domain" content="' . $this->options->siteDomain . '" />' . "\n";
         }
 
         if ($this->options->commentsThreaded && $this->is('single')) {

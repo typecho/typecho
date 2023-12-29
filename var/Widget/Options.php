@@ -29,6 +29,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property string $xmlRpcUrl
  * @property string $index
  * @property string $siteUrl
+ * @property string $siteDomain
  * @property array $routingTable
  * @property string $rootUrl
  * @property string $pluginUrl
@@ -451,6 +452,14 @@ class Options extends Base
         }
 
         return $siteUrl;
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___siteDomain(): string
+    {
+        return parse_url($this->siteUrl, PHP_URL_HOST);
     }
 
     /**
