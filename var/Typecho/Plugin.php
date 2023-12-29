@@ -54,7 +54,7 @@ class Plugin
      *
      * @var boolean
      */
-    private bool $signal;
+    private bool $signal = false;
 
     /**
      * 插件初始化
