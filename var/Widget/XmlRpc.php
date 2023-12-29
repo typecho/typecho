@@ -224,7 +224,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
                     throw new Exception(_t('权限不足'), 403);
                 }
             } else {
-                throw new Exception(_t('无法登陆, 密码错误'), 403);
+                throw new Exception(_t('无法登录, 密码错误'), 403);
             }
         }
     }

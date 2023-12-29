@@ -96,7 +96,7 @@ class User extends Users
         } else {
             $cookieUid = Cookie::get('__typecho_uid');
             if (null !== $cookieUid) {
-                /** 验证登陆 */
+                /** 验证登录 */
                 $user = $this->db->fetchRow($this->db->select()->from('table.users')
                     ->where('uid = ?', intval($cookieUid))
                     ->limit(1));
