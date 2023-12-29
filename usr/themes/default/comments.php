@@ -6,7 +6,7 @@
 
         <?php $comments->listComments(); ?>
 
-        <?php $comments->pageNav('&laquo; 前一页', '后一页 &raquo;'); ?>
+        <?php $comments->pageNav(); ?>
 
     <?php endif; ?>
 
@@ -19,7 +19,7 @@
             <h3 id="response"><?php _e('添加新评论'); ?></h3>
             <form method="post" action="<?php $this->commentUrl() ?>" id="comment-form" role="form">
                 <?php if ($this->user->hasLogin()): ?>
-                    <p><?php _e('登录身份: '); ?><a
+                    <p><?php _e('登录身份'); ?>: <a
                             href="<?php $this->options->profileUrl(); ?>"><?php $this->user->screenName(); ?></a>. <a
                             href="<?php $this->options->logoutUrl(); ?>" title="Logout"><?php _e('退出'); ?> &raquo;</a>
                     </p>
