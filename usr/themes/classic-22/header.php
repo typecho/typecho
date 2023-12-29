@@ -9,7 +9,6 @@
     <title><?php $this->archiveTitle('', '', ' - '); ?><?php $this->options->title(); ?></title>
 
     <link rel="stylesheet" href="<?php $this->options->themeUrl('static/css/style.css'); ?>">
-    <link rel="stylesheet" href="//unpkg.com/heti/umd/heti.min.css">
     <script src="//unpkg.com/feather-icons"></script>
 
     <?php $this->header(); ?>
