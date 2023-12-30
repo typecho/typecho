@@ -27,7 +27,7 @@ class Files extends Base
      * @access private
      * @var string
      */
-    private $currentTheme;
+    private string $currentTheme;
 
     /**
      * 当前文件
@@ -35,7 +35,7 @@ class Files extends Base
      * @access private
      * @var string
      */
-    private $currentFile;
+    private string $currentFile;
 
     /**
      * 执行函数
@@ -49,7 +49,7 @@ class Files extends Base
         $this->currentTheme = $this->request->filter('slug')->get('theme', Options::alloc()->theme);
 
         if (
-            preg_match("/^([_0-9a-z-\.\ ])+$/i", $this->currentTheme)
+            preg_match("/^([_0-9a-z-. ])+$/i", $this->currentTheme)
             && is_dir($dir = Options::alloc()->themeFile($this->currentTheme))
             && (!defined('__TYPECHO_THEME_WRITEABLE__') || __TYPECHO_THEME_WRITEABLE__)
         ) {
@@ -60,7 +60,7 @@ class Files extends Base
             $this->currentFile = $this->request->get('file', 'index.php');
 
             if (
-                preg_match("/^([_0-9a-z-\.\ ])+$/i", $this->currentFile)
+                preg_match("/^([_0-9a-z-. ])+$/i", $this->currentFile)
                 && file_exists($dir . '/' . $this->currentFile)
             ) {
                 foreach ($files as $file) {
@@ -120,7 +120,7 @@ class Files extends Base
      */
     public function currentIsWriteable(): bool
     {
-        return is_writeable(Options::alloc()
+        return is_writable(Options::alloc()
                 ->themeFile($this->currentTheme, $this->currentFile))
             && self::isWriteable();
     }

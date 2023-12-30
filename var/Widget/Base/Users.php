@@ -6,8 +6,8 @@ use Typecho\Common;
 use Typecho\Config;
 use Typecho\Db\Exception;
 use Typecho\Db\Query;
-use Typecho\Plugin;
 use Typecho\Router;
+use Typecho\Router\ParamsDelegateInterface;
 use Widget\Base;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
@@ -34,72 +34,14 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property-read string $feedRssUrl
  * @property-read string $feedAtomUrl
  */
-class Users extends Base implements QueryInterface
+class Users extends Base implements QueryInterface, RowFilterInterface, PrimaryKeyInterface, ParamsDelegateInterface
 {
     /**
-     * 判断用户名称是否存在
-     *
-     * @param string $name 用户名称
-     * @return boolean
-     * @throws Exception
+     * @return string 获取主键
      */
-    public function nameExists(string $name): bool
+    public function getPrimaryKey(): string
     {
-        $select = $this->db->select()
-            ->from('table.users')
-            ->where('name = ?', $name)
-            ->limit(1);
-
-        if ($this->request->uid) {
-            $select->where('uid <> ?', $this->request->uid);
-        }
-
-        $user = $this->db->fetchRow($select);
-        return !$user;
-    }
-
-    /**
-     * 判断电子邮件是否存在
-     *
-     * @param string $mail 电子邮件
-     * @return boolean
-     * @throws Exception
-     */
-    public function mailExists(string $mail): bool
-    {
-        $select = $this->db->select()
-            ->from('table.users')
-            ->where('mail = ?', $mail)
-            ->limit(1);
-
-        if ($this->request->uid) {
-            $select->where('uid <> ?', $this->request->uid);
-        }
-
-        $user = $this->db->fetchRow($select);
-        return !$user;
-    }
-
-    /**
-     * 判断用户昵称是否存在
-     *
-     * @param string $screenName 昵称
-     * @return boolean
-     * @throws Exception
-     */
-    public function screenNameExists(string $screenName): bool
-    {
-        $select = $this->db->select()
-            ->from('table.users')
-            ->where('screenName = ?', $screenName)
-            ->limit(1);
-
-        if ($this->request->uid) {
-            $select->where('uid <> ?', $this->request->uid);
-        }
-
-        $user = $this->db->fetchRow($select);
-        return !$user;
+        return 'uid';
     }
 
     /**
@@ -117,39 +59,38 @@ class Users extends Base implements QueryInterface
     /**
      * 通用过滤器
      *
-     * @param array $value 需要过滤的行数据
+     * @param array $row 需要过滤的行数据
      * @return array
      */
-    public function filter(array $value): array
+    public function filter(array $row): array
     {
-        //生成静态链接
-        $routeExists = (null != Router::get('author'));
+        return Users::pluginHandle()->call('filter', $row, $this);
+    }
 
-        $value['permalink'] = $routeExists ? Router::url('author', $value, $this->options->index) : '#';
-
-        /** 生成聚合链接 */
-        /** RSS 2.0 */
-        $value['feedUrl'] = $routeExists ? Router::url('author', $value, $this->options->feedUrl) : '#';
-
-        /** RSS 1.0 */
-        $value['feedRssUrl'] = $routeExists ? Router::url('author', $value, $this->options->feedRssUrl) : '#';
-
-        /** ATOM 1.0 */
-        $value['feedAtomUrl'] = $routeExists ? Router::url('author', $value, $this->options->feedAtomUrl) : '#';
-
-        $value = Users::pluginHandle()->filter($value, $this);
-        return $value;
+    /**
+     * @param string $key
+     * @return string
+     */
+    public function getRouterParam(string $key): string
+    {
+        switch ($key) {
+            case 'uid':
+                return $this->uid;
+            default:
+                return '{' . $key . '}';
+        }
     }
 
     /**
      * 查询方法
      *
+     * @param mixed $fields
      * @return Query
      * @throws Exception
      */
-    public function select(): Query
+    public function select(...$fields): Query
     {
-        return $this->db->select()->from('table.users');
+        return $this->db->select(...$fields)->from('table.users');
     }
 
     /**
@@ -217,6 +158,38 @@ class Users extends Base implements QueryInterface
     }
 
     /**
+     * @return string
+     */
+    protected function ___permalink(): string
+    {
+        return Router::url('author', $this, $this->options->index);
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___feedUrl(): string
+    {
+        return Router::url('author', $this, $this->options->feedUrl);
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___feedRssUrl(): string
+    {
+        return Router::url('author', $this, $this->options->feedRssUrl);
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___feedAtomUrl(): string
+    {
+        return Router::url('author', $this, $this->options->feedAtomUrl);
+    }
+
+    /**
      * personalOptions
      *
      * @return Config
@@ -232,28 +205,5 @@ class Users extends Base implements QueryInterface
         }
 
         return new Config($options);
-    }
-
-    /**
-     * 获取页面偏移
-     *
-     * @param string $column 字段名
-     * @param integer $offset 偏移值
-     * @param string|null $group 用户组
-     * @param integer $pageSize 分页值
-     * @return integer
-     * @throws Exception
-     */
-    protected function getPageOffset(string $column, int $offset, ?string $group = null, int $pageSize = 20): int
-    {
-        $select = $this->db->select(['COUNT(uid)' => 'num'])->from('table.users')
-            ->where("table.users.{$column} > {$offset}");
-
-        if (!empty($group)) {
-            $select->where('table.users.group = ?', $group);
-        }
-
-        $count = $this->db->fetchObject($select)->num + 1;
-        return ceil($count / $pageSize);
     }
 }

@@ -7,7 +7,8 @@ use Typecho\Widget\Exception;
 use Typecho\Widget\Helper\Form;
 use Typecho\Widget\Helper\Layout;
 use Widget\ActionInterface;
-use Widget\Contents\Post\Edit as PostEdit;
+use Widget\Base\Contents;
+use Widget\Contents\PrepareEditTrait;
 use Widget\Notice;
 use Widget\Upload;
 
@@ -24,8 +25,10 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Edit extends PostEdit implements ActionInterface
+class Edit extends Contents implements ActionInterface
 {
+    use PrepareEditTrait;
+
     /**
      * 执行函数
      *
@@ -35,20 +38,6 @@ class Edit extends PostEdit implements ActionInterface
     {
         /** 必须为贡献者以上权限 */
         $this->user->pass('contributor');
-
-        /** 获取文章内容 */
-        if (!empty($this->request->cid)) {
-            $this->db->fetchRow($this->select()
-                ->where('table.contents.type = ?', 'attachment')
-                ->where('table.contents.cid = ?', $this->request->filter('int')->cid)
-                ->limit(1), [$this, 'push']);
-
-            if (!$this->have()) {
-                throw new Exception(_t('文件不存在'), 404);
-            } elseif (!$this->allow('edit')) {
-                throw new Exception(_t('没有编辑权限'), 403);
-            }
-        }
     }
 
     /**
@@ -84,8 +73,8 @@ class Edit extends PostEdit implements ActionInterface
             ->where('slug = ?', Common::slugName($slug))
             ->limit(1);
 
-        if ($this->request->cid) {
-            $select->where('cid <> ?', $this->request->cid);
+        if ($this->request->is('cid')) {
+            $select->where('cid <> ?', $this->request->get('cid'));
         }
 
         $attachment = $this->db->fetchRow($select);
@@ -100,7 +89,7 @@ class Edit extends PostEdit implements ActionInterface
      */
     public function updateAttachment()
     {
-        if ($this->form('update')->validate()) {
+        if ($this->form()->validate()) {
             $this->response->goBack();
         }
 
@@ -114,8 +103,8 @@ class Edit extends PostEdit implements ActionInterface
         $content = $this->attachment->toArray();
         $content['description'] = $input['description'];
 
-        $attachment['text'] = serialize($content);
-        $cid = $this->request->filter('int')->cid;
+        $attachment['text'] = json_encode($content);
+        $cid = $this->request->filter('int')->get('cid');
 
         /** 更新数据 */
         $updateRows = $this->update($attachment, $this->db->sql()->where('cid = ?', $cid));
@@ -229,32 +218,7 @@ class Edit extends PostEdit implements ActionInterface
         $posts = $this->request->filter('int')->getArray('cid');
         $deleteCount = 0;
 
-        foreach ($posts as $post) {
-            // 删除插件接口
-            self::pluginHandle()->delete($post, $this);
-
-            $condition = $this->db->sql()->where('cid = ?', $post);
-            $row = $this->db->fetchRow($this->select()
-                ->where('table.contents.type = ?', 'attachment')
-                ->where('table.contents.cid = ?', $post)
-                ->limit(1), [$this, 'push']);
-
-            if ($this->isWriteable(clone $condition) && $this->delete($condition)) {
-                /** 删除文件 */
-                Upload::deleteHandle($row);
-
-                /** 删除评论 */
-                $this->db->query($this->db->delete('table.comments')
-                    ->where('cid = ?', $post));
-
-                // 完成删除插件接口
-                self::pluginHandle()->finishDelete($post, $this);
-
-                $deleteCount++;
-            }
-
-            unset($condition);
-        }
+        $this->deleteByIds($posts, $deleteCount);
 
         if ($this->request->isAjax()) {
             $this->response->throwJson($deleteCount > 0 ? ['code' => 200, 'message' => _t('文件已经被删除')]
@@ -285,40 +249,13 @@ class Edit extends PostEdit implements ActionInterface
         $deleteCount = 0;
 
         do {
-            $posts = array_column($this->db->fetchAll($this->select('cid')
+            $posts = array_column($this->db->fetchAll($this->db->select('cid')
                 ->from('table.contents')
                 ->where('type = ? AND parent = ?', 'attachment', 0)
                 ->page($page, 100)), 'cid');
             $page++;
 
-            foreach ($posts as $post) {
-                // 删除插件接口
-                self::pluginHandle()->delete($post, $this);
-
-                $condition = $this->db->sql()->where('cid = ?', $post);
-                $row = $this->db->fetchRow($this->select()
-                    ->where('table.contents.type = ?', 'attachment')
-                    ->where('table.contents.cid = ?', $post)
-                    ->limit(1), [$this, 'push']);
-
-                if ($this->isWriteable(clone $condition) && $this->delete($condition)) {
-                    /** 删除文件 */
-                    Upload::deleteHandle($row);
-
-                    /** 删除评论 */
-                    $this->db->query($this->db->delete('table.comments')
-                        ->where('cid = ?', $post));
-
-                    $status = $this->status;
-
-                    // 完成删除插件接口
-                    self::pluginHandle()->finishDelete($post, $this);
-
-                    $deleteCount++;
-                }
-
-                unset($condition);
-            }
+            $this->deleteByIds($posts, $deleteCount);
         } while (count($posts) == 100);
 
         /** 设置提示信息 */
@@ -332,6 +269,16 @@ class Edit extends PostEdit implements ActionInterface
     }
 
     /**
+     * @return $this
+     * @throws Exception
+     * @throws \Typecho\Db\Exception
+     */
+    public function prepare(): self
+    {
+        return $this->prepareEdit('attachment', false, _t('文件不存在'));
+    }
+
+    /**
      * 绑定动作
      *
      * @access public
@@ -341,8 +288,44 @@ class Edit extends PostEdit implements ActionInterface
     {
         $this->security->protect();
         $this->on($this->request->is('do=delete'))->deleteAttachment();
-        $this->on($this->have() && $this->request->is('do=update'))->updateAttachment();
+        $this->on($this->request->is('do=update'))
+            ->prepare()->updateAttachment();
         $this->on($this->request->is('do=clear'))->clearAttachment();
         $this->response->redirect($this->options->adminUrl);
+    }
+
+    /**
+     * @param array $posts
+     * @param int $deleteCount
+     * @return void
+     */
+    protected function deleteByIds(array $posts, int &$deleteCount): void
+    {
+        foreach ($posts as $post) {
+            // 删除插件接口
+            self::pluginHandle()->call('delete', $post, $this);
+
+            $condition = $this->db->sql()->where('cid = ?', $post);
+            $row = $this->db->fetchRow($this->select()
+                ->where('table.contents.type = ?', 'attachment')
+                ->where('table.contents.cid = ?', $post)
+                ->limit(1), [$this, 'push']);
+
+            if ($this->isWriteable(clone $condition) && $this->delete($condition)) {
+                /** 删除文件 */
+                Upload::deleteHandle($row);
+
+                /** 删除评论 */
+                $this->db->query($this->db->delete('table.comments')
+                    ->where('cid = ?', $post));
+
+                // 完成删除插件接口
+                self::pluginHandle()->call('finishDelete', $post, $this);
+
+                $deleteCount++;
+            }
+
+            unset($condition);
+        }
     }
 }

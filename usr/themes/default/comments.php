@@ -6,7 +6,7 @@
 
         <?php $comments->listComments(); ?>
 
-        <?php $comments->pageNav('&laquo; 前一页', '后一页 &raquo;'); ?>
+        <?php $comments->pageNav(); ?>
 
     <?php endif; ?>
 
@@ -19,7 +19,7 @@
             <h3 id="response"><?php _e('添加新评论'); ?></h3>
             <form method="post" action="<?php $this->commentUrl() ?>" id="comment-form" role="form">
                 <?php if ($this->user->hasLogin()): ?>
-                    <p><?php _e('登录身份: '); ?><a
+                    <p><?php _e('登录身份'); ?>: <a
                             href="<?php $this->options->profileUrl(); ?>"><?php $this->user->screenName(); ?></a>. <a
                             href="<?php $this->options->logoutUrl(); ?>" title="Logout"><?php _e('退出'); ?> &raquo;</a>
                     </p>
@@ -37,9 +37,9 @@
                     </p>
                     <p>
                         <label
-                            for="url"<?php if ($this->options->commentsRequireURL): ?> class="required"<?php endif; ?>><?php _e('网站'); ?></label>
+                            for="url"<?php if ($this->options->commentsRequireUrl): ?> class="required"<?php endif; ?>><?php _e('网站'); ?></label>
                         <input type="url" name="url" id="url" class="text" placeholder="<?php _e('http://'); ?>"
-                               value="<?php $this->remember('url'); ?>"<?php if ($this->options->commentsRequireURL): ?> required<?php endif; ?> />
+                               value="<?php $this->remember('url'); ?>"<?php if ($this->options->commentsRequireUrl): ?> required<?php endif; ?> />
                     </p>
                 <?php endif; ?>
                 <p>

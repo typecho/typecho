@@ -23,13 +23,13 @@ class Options extends Base implements QueryInterface
     /**
      * 获取原始查询对象
      *
-     * @access public
+     * @param mixed ...$fields
      * @return Query
      * @throws Exception
      */
-    public function select(): Query
+    public function select(...$fields): Query
     {
-        return $this->db->select()->from('table.options');
+        return $this->db->select(...$fields)->from('table.options');
     }
 
     /**
@@ -79,17 +79,5 @@ class Options extends Base implements QueryInterface
     public function size(Query $condition): int
     {
         return $this->db->fetchObject($condition->select(['COUNT(name)' => 'num'])->from('table.options'))->num;
-    }
-
-    /**
-     * 以checkbox选项判断是否某个值被启用
-     *
-     * @param mixed $settings 选项集合
-     * @param string $name 选项名称
-     * @return integer
-     */
-    protected function isEnableByCheckbox($settings, string $name): int
-    {
-        return is_array($settings) && in_array($name, $settings) ? 1 : 0;
     }
 }

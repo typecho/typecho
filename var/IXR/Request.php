@@ -12,7 +12,7 @@ class Request
     /**
      * @var string
      */
-    private $xml;
+    private string $xml;
 
     /**
      * @param string $method

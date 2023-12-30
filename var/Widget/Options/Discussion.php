@@ -23,6 +23,8 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  */
 class Discussion extends Options implements ActionInterface
 {
+    use EditTrait;
+
     /**
      * 执行更新动作
      *
@@ -52,7 +54,7 @@ class Discussion extends Options implements ActionInterface
             'commentsPostTimeout',
             'commentsPostInterval',
             'commentsRequireModeration',
-            'commentsRequireURL',
+            'commentsRequireUrl',
             'commentsHTMLTagAllowed',
             'commentsStopWords',
             'commentsIpBlackList'
@@ -84,7 +86,7 @@ class Discussion extends Options implements ActionInterface
         );
         $settings['commentsWhitelist'] = $this->isEnableByCheckbox($settings['commentsPost'], 'commentsWhitelist');
         $settings['commentsRequireMail'] = $this->isEnableByCheckbox($settings['commentsPost'], 'commentsRequireMail');
-        $settings['commentsRequireURL'] = $this->isEnableByCheckbox($settings['commentsPost'], 'commentsRequireURL');
+        $settings['commentsRequireUrl'] = $this->isEnableByCheckbox($settings['commentsPost'], 'commentsRequireUrl');
         $settings['commentsCheckReferer'] = $this->isEnableByCheckbox(
             $settings['commentsPost'],
             'commentsCheckReferer'
@@ -212,7 +214,7 @@ class Discussion extends Options implements ActionInterface
             'commentsRequireModeration'  => _t('所有评论必须经过审核'),
             'commentsWhitelist'          => _t('评论者之前须有评论通过了审核'),
             'commentsRequireMail'        => _t('必须填写邮箱'),
-            'commentsRequireURL'         => _t('必须填写网址'),
+            'commentsRequireUrl'         => _t('必须填写网址'),
             'commentsCheckReferer'       => _t('检查评论来源页 URL 是否与文章链接一致'),
             'commentsAntiSpam'           => _t('开启反垃圾保护'),
             'commentsAutoClose'          => _t('在文章发布 %s 天以后自动关闭评论',
@@ -236,8 +238,8 @@ class Discussion extends Options implements ActionInterface
             $commentsPostOptionsValue[] = 'commentsRequireMail';
         }
 
-        if ($this->options->commentsRequireURL) {
-            $commentsPostOptionsValue[] = 'commentsRequireURL';
+        if ($this->options->commentsRequireUrl) {
+            $commentsPostOptionsValue[] = 'commentsRequireUrl';
         }
 
         if ($this->options->commentsCheckReferer) {

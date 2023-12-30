@@ -8,6 +8,7 @@ use Typecho\Validate;
 use Typecho\Widget\Helper\Form;
 use Widget\Base\Metas;
 use Widget\ActionInterface;
+use Widget\Metas\EditTrait;
 use Widget\Notice;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
@@ -24,8 +25,11 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  */
 class Edit extends Metas implements ActionInterface
 {
+    use EditTrait;
+
     /**
      * 入口函数
+     * @throws \Exception
      */
     public function execute()
     {
@@ -47,7 +51,7 @@ class Edit extends Metas implements ActionInterface
             ->where('type = ?', 'category')
             ->where('mid = ?', $mid)->limit(1));
 
-        return (bool)$category;
+        return isset($category);
     }
 
     /**
@@ -65,8 +69,8 @@ class Edit extends Metas implements ActionInterface
             ->where('name = ?', $name)
             ->limit(1);
 
-        if ($this->request->mid) {
-            $select->where('mid <> ?', $this->request->mid);
+        if ($this->request->is('mid')) {
+            $select->where('mid <> ?', $this->request->get('mid'));
         }
 
         $category = $this->db->fetchRow($select);
@@ -78,6 +82,7 @@ class Edit extends Metas implements ActionInterface
      *
      * @param string $name 分类名
      * @return boolean
+     * @throws Exception
      */
     public function nameToSlug(string $name): bool
     {
@@ -106,8 +111,8 @@ class Edit extends Metas implements ActionInterface
             ->where('slug = ?', Common::slugName($slug))
             ->limit(1);
 
-        if ($this->request->mid) {
-            $select->where('mid <> ?', $this->request->mid);
+        if ($this->request->is('mid')) {
+            $select->where('mid <> ?', $this->request->get('mid'));
         }
 
         $category = $this->db->fetchRow($select);
@@ -180,7 +185,7 @@ class Edit extends Metas implements ActionInterface
         $options = [0 => _t('不选择')];
         $parents = Rows::allocWithAlias(
             'options',
-            (isset($this->request->mid) ? 'ignore=' . $this->request->mid : '')
+            ($this->request->is('mid') ? 'ignore=' . $this->request->get('mid') : '')
         );
 
         while ($parents->next()) {
@@ -190,7 +195,7 @@ class Edit extends Metas implements ActionInterface
         $parent = new Form\Element\Select(
             'parent',
             $options,
-            $this->request->parent,
+            $this->request->get('parent'),
             _t('父级分类'),
             _t('此分类将归档在您选择的父级分类下.')
         );
@@ -278,7 +283,7 @@ class Edit extends Metas implements ActionInterface
 
         /** 取出数据 */
         $category = $this->request->from('name', 'slug', 'description', 'parent');
-        $category['mid'] = $this->request->mid;
+        $category['mid'] = $this->request->get('mid');
         $category['slug'] = Common::slugName(empty($category['slug']) ? $category['name'] : $category['slug']);
         $category['type'] = 'category';
         $current = $this->db->fetchRow($this->select()->where('mid = ?', $category['mid']));
@@ -298,7 +303,7 @@ class Edit extends Metas implements ActionInterface
         }
 
         /** 更新数据 */
-        $this->update($category, $this->db->sql()->where('mid = ?', $this->request->filter('int')->mid));
+        $this->update($category, $this->db->sql()->where('mid = ?', $this->request->filter('int')->get('mid')));
         $this->push($category);
 
         /** 设置高亮 */
@@ -345,6 +350,7 @@ class Edit extends Metas implements ActionInterface
 
     /**
      * 合并分类
+     * @throws Exception
      */
     public function mergeCategory()
     {
@@ -358,7 +364,7 @@ class Edit extends Metas implements ActionInterface
             $this->response->goBack();
         }
 
-        $merge = $this->request->merge;
+        $merge = $this->request->get('merge');
         $categories = $this->request->filter('int')->getArray('mid');
 
         if ($categories) {
@@ -367,7 +373,7 @@ class Edit extends Metas implements ActionInterface
             /** 提示信息 */
             Notice::alloc()->set(_t('分类已经合并'), 'success');
         } else {
-            Notice::alloc()->set(_t('没有选择任何分类'), 'notice');
+            Notice::alloc()->set(_t('没有选择任何分类'));
         }
 
         /** 转向原页 */
@@ -376,6 +382,7 @@ class Edit extends Metas implements ActionInterface
 
     /**
      * 分类排序
+     * @throws Exception
      */
     public function sortCategory()
     {
@@ -402,12 +409,12 @@ class Edit extends Metas implements ActionInterface
         $categories = $this->request->filter('int')->getArray('mid');
         if ($categories) {
             foreach ($categories as $category) {
-                $this->refreshCountByTypeAndStatus($category, 'post', 'publish');
+                $this->refreshCountByTypeAndStatus($category, 'post');
             }
 
             Notice::alloc()->set(_t('分类刷新已经完成'), 'success');
         } else {
-            Notice::alloc()->set(_t('没有选择任何分类'), 'notice');
+            Notice::alloc()->set(_t('没有选择任何分类'));
         }
 
         /** 转向原页 */
@@ -430,10 +437,10 @@ class Edit extends Metas implements ActionInterface
             Notice::alloc()->set($error, 'error');
         } else {
             $this->db->query($this->db->update('table.options')
-                ->rows(['value' => $this->request->mid])
+                ->rows(['value' => $this->request->get('mid')])
                 ->where('name = ?', 'defaultCategory'));
 
-            $this->db->fetchRow($this->select()->where('mid = ?', $this->request->mid)
+            $this->db->fetchRow($this->select()->where('mid = ?', $this->request->get('mid'))
                 ->where('type = ?', 'category')->limit(1), [$this, 'push']);
 
             /** 设置高亮 */
@@ -458,23 +465,22 @@ class Edit extends Metas implements ActionInterface
      */
     public function getMenuTitle(): ?string
     {
-        if (isset($this->request->mid)) {
+        if ($this->request->is('mid')) {
             $category = $this->db->fetchRow($this->select()
-                ->where('type = ? AND mid = ?', 'category', $this->request->mid));
+                ->where('type = ? AND mid = ?', 'category', $this->request->filter('int')->get('mid')));
 
             if (!empty($category)) {
                 return _t('编辑分类 %s', $category['name']);
             }
-
         }
-        if (isset($this->request->parent)) {
+
+        if ($this->request->is('parent')) {
             $category = $this->db->fetchRow($this->select()
-                ->where('type = ? AND mid = ?', 'category', $this->request->parent));
+                ->where('type = ? AND mid = ?', 'category', $this->request->filter('int')->get('parent')));
 
             if (!empty($category)) {
                 return _t('新增 %s 的子分类', $category['name']);
             }
-
         } else {
             return null;
         }
@@ -487,6 +493,7 @@ class Edit extends Metas implements ActionInterface
      *
      * @access public
      * @return void
+     * @throws Exception
      */
     public function action()
     {

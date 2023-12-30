@@ -25,7 +25,7 @@ class Mysqli implements Adapter
      * @access private
      * @var \mysqli
      */
-    private $dbLink;
+    private \mysqli $dbLink;
 
     /**
      * 判断适配器是否可用

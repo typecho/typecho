@@ -15,7 +15,7 @@ class Request
      * @access private
      * @var Request
      */
-    private static $instance;
+    private static Request $instance;
 
     /**
      * 沙箱参数
@@ -23,7 +23,7 @@ class Request
      * @access private
      * @var Config|null
      */
-    private $sandbox;
+    private ?Config $sandbox;
 
     /**
      * 用户参数
@@ -31,54 +31,54 @@ class Request
      * @access private
      * @var Config|null
      */
-    private $params;
+    private ?Config $params;
 
     /**
      * 路径信息
      *
      * @access private
-     * @var string
+     * @var string|null
      */
-    private $pathInfo = null;
+    private ?string $pathInfo = null;
 
     /**
      * requestUri
      *
-     * @var string
+     * @var string|null
      * @access private
      */
-    private $requestUri = null;
+    private ?string $requestUri = null;
 
     /**
      * requestRoot
      *
-     * @var mixed
+     * @var string|null
      * @access private
      */
-    private $requestRoot = null;
+    private ?string $requestRoot = null;
 
     /**
      * 获取baseurl
      *
-     * @var string
+     * @var string|null
      * @access private
      */
-    private $baseUrl = null;
+    private ?string $baseUrl = null;
 
     /**
      * 客户端ip地址
      *
      * @access private
-     * @var string
+     * @var string|null
      */
-    private $ip = null;
+    private ?string $ip = null;
 
     /**
      * 域名前缀
      *
-     * @var string
+     * @var string|null
      */
-    private $urlPrefix = null;
+    private ?string $urlPrefix = null;
 
     /**
      * 获取单例句柄
@@ -126,6 +126,18 @@ class Request
     }
 
     /**
+     * @return $this
+     */
+    public function endProxy(): Request
+    {
+        if (isset($this->params)) {
+            $this->params = null;
+        }
+
+        return $this;
+    }
+
+    /**
      * 获取实际传递参数
      *
      * @param string $key 指定参数
@@ -135,7 +147,6 @@ class Request
      */
     public function get(string $key, $default = null, ?bool &$exists = true)
     {
-        $exists = true;
         $value = null;
 
         switch (true) {
@@ -145,17 +156,13 @@ class Request
             case isset($this->sandbox):
                 if (isset($this->sandbox[$key])) {
                     $value = $this->sandbox[$key];
-                } else {
-                    $exists = false;
                 }
                 break;
             case $key === '@json':
-                $exists = false;
                 if ($this->isJson()) {
                     $body = file_get_contents('php://input');
 
                     if (false !== $body) {
-                        $exists = true;
                         $value = json_decode($body, true, 16);
                         $default = $default ?? $value;
                     }
@@ -168,18 +175,18 @@ class Request
                 $value = $_POST[$key];
                 break;
             default:
-                $exists = false;
                 break;
         }
 
-        // reset params
-        if (isset($this->params)) {
-            $this->params = null;
-        }
-
-        if (isset($value)) {
-            return is_array($default) == is_array($value) ? $value : $default;
+        if (isset($value) && $value !== '') {
+            $exists = true;
+            if (is_array($default) == is_array($value)) {
+                return $value;
+            } else {
+                return $default;
+            }
         } else {
+            $exists = false;
             return $default;
         }
     }
@@ -187,6 +194,7 @@ class Request
     /**
      * 获取实际传递参数(magic)
      *
+     * @deprecated ^1.3.0
      * @param string $key 指定参数
      * @return mixed
      */
@@ -198,6 +206,7 @@ class Request
     /**
      * 判断参数是否存在
      *
+     * @deprecated ^1.3.0
      * @param string $key 指定参数
      * @return boolean
      */

@@ -60,6 +60,6 @@ include 'menu.php';
 <?php
 include 'copyright.php';
 include 'common-js.php';
-\Typecho\Plugin::factory('admin/theme-editor.php')->bottom($files);
+\Typecho\Plugin::factory('admin/theme-editor.php')->call('bottom', $files);
 include 'footer.php';
 ?>

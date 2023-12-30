@@ -10,7 +10,7 @@ namespace Typecho;
  * @copyright Copyright (c) 2008 Typecho team (http://www.typecho.org)
  * @license GNU General Public License 2.0
  */
-class Config implements \Iterator, \ArrayAccess
+class Config extends \stdClass implements \Iterator, \ArrayAccess
 {
     /**
      * 当前配置
@@ -18,7 +18,7 @@ class Config implements \Iterator, \ArrayAccess
      * @access private
      * @var array
      */
-    private $currentConfig = [];
+    private array $currentConfig = [];
 
     /**
      * 实例化一个当前配置
@@ -200,7 +200,7 @@ class Config implements \Iterator, \ArrayAccess
      */
     public function __toString(): string
     {
-        return serialize($this->currentConfig);
+        return json_encode($this->currentConfig);
     }
 
     /**

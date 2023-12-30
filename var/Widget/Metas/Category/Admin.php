@@ -5,6 +5,8 @@ namespace Widget\Metas\Category;
 use Typecho\Common;
 use Typecho\Db;
 use Typecho\Widget\Exception;
+use Widget\Base\Metas;
+use Widget\Base\TreeTrait;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -13,22 +15,23 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
 /**
  * Category Admin
  */
-class Admin extends Rows
+class Admin extends Metas
 {
+    use InitTreeRowsTrait;
+    use TreeTrait;
+
+    /**
+     * @var int Parent category
+     */
+    private int $parentId = 0;
+
     /**
      * 执行函数
-     *
-     * @throws Db\Exception
      */
     public function execute()
     {
-        $select = $this->db->select('mid')->from('table.metas')->where('type = ?', 'category');
-        $select->where('parent = ?', $this->request->parent ? $this->request->parent : 0);
-
-        $this->stack = $this->getCategories(array_column(
-            $this->db->fetchAll($select->order('table.metas.order', Db::SORT_ASC)),
-            'mid'
-        ));
+        $this->parentId = $this->request->filter('int')->get('parent', 0);
+        $this->stack = $this->getRows($this->getChildIds($this->parentId));
     }
 
     /**
@@ -38,13 +41,11 @@ class Admin extends Rows
      */
     public function backLink()
     {
-        if (isset($this->request->parent)) {
-            $category = $this->db->fetchRow($this->select()
-                ->where('type = ? AND mid = ?', 'category', $this->request->parent));
+        if ($this->parentId) {
+            $category = $this->getRow($this->parentId);
 
             if (!empty($category)) {
-                $parent = $this->db->fetchRow($this->select()
-                    ->where('type = ? AND mid = ?', 'category', $category['parent']));
+                $parent = $this->getRow($category['parent']);
 
                 if ($parent) {
                     echo '<a href="'
@@ -69,9 +70,8 @@ class Admin extends Rows
      */
     public function getMenuTitle(): ?string
     {
-        if (isset($this->request->parent)) {
-            $category = $this->db->fetchRow($this->select()
-                ->where('type = ? AND mid = ?', 'category', $this->request->parent));
+        if ($this->parentId) {
+            $category = $this->getRow($this->parentId);
 
             if (!empty($category)) {
                 return _t('管理 %s 的子分类', $category['name']);
@@ -90,10 +90,6 @@ class Admin extends Rows
      */
     public function getAddLink(): string
     {
-        if (isset($this->request->parent)) {
-            return 'category.php?parent=' . $this->request->filter('int')->parent;
-        } else {
-            return 'category.php';
-        }
+        return 'category.php' . ($this->parentId ? '?parent=' . $this->parentId : '');
     }
 }

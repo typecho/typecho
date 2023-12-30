@@ -42,6 +42,10 @@ class Pgsql implements Adapter
         $dsn = "host={$config->host} port={$config->port}"
             . " dbname={$config->database} user={$config->user} password={$config->password}";
 
+        if ($config->sslVerify) {
+            $dsn .= ' sslmode=require';
+        }
+
         if ($config->charset) {
             $dsn .= " options='--client_encoding={$config->charset}'";
         }

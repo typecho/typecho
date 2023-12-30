@@ -44,17 +44,17 @@ class Reading extends Permalink
         );
 
         if (
-            'page' == $settings['frontPage'] && isset($this->request->frontPagePage) &&
+            'page' == $settings['frontPage'] && $this->request->is('frontPagePage') &&
             $this->db->fetchRow($this->db->select('cid')
                 ->from('table.contents')->where('type = ?', 'page')
                 ->where('status = ?', 'publish')->where('created < ?', $this->options->time)
-                ->where('cid = ?', $pageId = intval($this->request->frontPagePage)))
+                ->where('cid = ?', $pageId = intval($this->request->get('frontPagePage'))))
         ) {
             $settings['frontPage'] = 'page:' . $pageId;
         } elseif (
-            'file' == $settings['frontPage'] && isset($this->request->frontPageFile) &&
+            'file' == $settings['frontPage'] && $this->request->is('frontPageFile') &&
             file_exists(__TYPECHO_ROOT_DIR__ . '/' . __TYPECHO_THEME_DIR__ . '/' . $this->options->theme . '/' .
-                ($file = trim($this->request->frontPageFile, " ./\\")))
+                ($file = trim($this->request->get('frontPageFile'), " ./\\")))
         ) {
             $settings['frontPage'] = 'file:' . $file;
         } else {
@@ -65,7 +65,7 @@ class Reading extends Permalink
             $settings['frontArchive'] = empty($settings['frontArchive']) ? 0 : 1;
             if ($settings['frontArchive']) {
                 $routingTable = $this->options->routingTable;
-                $routingTable['archive']['url'] = '/' . ltrim($this->encodeRule($this->request->archivePattern), '/');
+                $routingTable['archive']['url'] = '/' . ltrim($this->encodeRule($this->request->get('archivePattern')), '/');
                 $routingTable['archive_page']['url'] = rtrim($routingTable['archive']['url'], '/')
                     . '/page/[page:digital]/';
 
@@ -73,7 +73,7 @@ class Reading extends Permalink
                     unset($routingTable[0]);
                 }
 
-                $settings['routingTable'] = serialize($routingTable);
+                $settings['routingTable'] = json_encode($routingTable);
             }
         } else {
             $settings['frontArchive'] = 0;

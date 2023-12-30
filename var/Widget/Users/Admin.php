@@ -29,21 +29,21 @@ class Admin extends Users
      *
      * @var Query
      */
-    private $countSql;
+    private Query $countSql;
 
     /**
      * 所有文章个数
      *
      * @var integer
      */
-    private $total;
+    private int $total;
 
     /**
      * 当前页
      *
      * @var integer
      */
-    private $currentPage;
+    private int $currentPage;
 
     /**
      * 执行函数
@@ -54,10 +54,10 @@ class Admin extends Users
     {
         $this->parameter->setDefault('pageSize=20');
         $select = $this->select();
-        $this->currentPage = $this->request->get('page', 1);
+        $this->currentPage = $this->request->filter('int')->get('page', 1);
 
         /** 过滤标题 */
-        if (null != ($keywords = $this->request->keywords)) {
+        if (null != ($keywords = $this->request->get('keywords'))) {
             $select->where(
                 'name LIKE ? OR screenName LIKE ?',
                 '%' . Common::filterSearchQuery($keywords) . '%',
@@ -67,7 +67,7 @@ class Admin extends Users
 
         $this->countSql = clone $select;
 
-        $select->order('table.users.uid', Db::SORT_ASC)
+        $select->order('table.users.uid')
             ->page($this->currentPage, $this->parameter->pageSize);
 
         $this->db->fetchAll($select, [$this, 'push']);

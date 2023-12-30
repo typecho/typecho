@@ -42,7 +42,7 @@ class Form extends Layout
      * @access private
      * @var array
      */
-    private $inputs = [];
+    private array $inputs = [];
 
     /**
      * 构造函数,设置基本属性

@@ -23,12 +23,12 @@ class Security extends Base
     /**
      * @var string
      */
-    private $token;
+    private string $token;
 
     /**
      * @var boolean
      */
-    private $enabled = true;
+    private bool $enabled = true;
 
     /**
      * @param int $components

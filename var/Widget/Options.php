@@ -29,6 +29,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property string $xmlRpcUrl
  * @property string $index
  * @property string $siteUrl
+ * @property string $siteDomain
  * @property array $routingTable
  * @property string $rootUrl
  * @property string $pluginUrl
@@ -63,8 +64,8 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property string $frontPage
  * @property int $commentsListSize
  * @property bool $commentsShowCommentOnly
- * @property string $actionTable
- * @property string $panelTable
+ * @property array $actionTable
+ * @property array $panelTable
  * @property bool $commentsThreaded
  * @property bool $defaultAllowComment
  * @property bool $defaultAllowPing
@@ -87,6 +88,9 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property bool $commentsAntiSpam
  * @property bool $commentsAutoClose
  * @property bool $commentsPostIntervalEnable
+ * @property int $commentsMaxNestingLevels
+ * @property int $commentsPostTimeout
+ * @property int $commentsPostInterval
  * @property string $commentsHTMLTagAllowed
  * @property bool $allowRegister
  * @property bool $allowXmlRpc
@@ -97,6 +101,8 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property array $plugins
  * @property string $secret
  * @property bool $installed
+ * @property bool $rewrite
+ * @property string $postDateFormat
  */
 class Options extends Base
 {
@@ -106,7 +112,7 @@ class Options extends Base
      * @access private
      * @var array
      */
-    private $pluginConfig = [];
+    private array $pluginConfig = [];
 
     /**
      * 缓存的个人插件配置
@@ -114,7 +120,7 @@ class Options extends Base
      * @access private
      * @var array
      */
-    private $personalPluginConfig = [];
+    private array $personalPluginConfig = [];
 
     /**
      * @param int $components
@@ -143,72 +149,29 @@ class Options extends Base
      */
     public function execute()
     {
+        $options = [];
+
         if (isset($this->db)) {
             $values = $this->db->fetchAll($this->db->select()->from('table.options')
-                ->where('user = 0'), [$this, 'push']);
+                ->where('user = 0'));
 
             // finish install
             if (empty($values)) {
                 $this->response->redirect(defined('__TYPECHO_ADMIN__')
                     ? '../install.php?step=3' : 'install.php?step=3');
             }
-        }
 
-        /** 支持皮肤变量重载 */
-        if (!empty($this->row['theme:' . $this->row['theme']])) {
-            $themeOptions = null;
+            $options = array_column($values, 'value', 'name');
 
-            /** 解析变量 */
-            if ($themeOptions = unserialize($this->row['theme:' . $this->row['theme']])) {
-                /** 覆盖变量 */
-                $this->row = array_merge($this->row, $themeOptions);
+            /** 支持皮肤变量重载 */
+            $themeOptionsKey = 'theme:' . $options['theme'];
+            if (!empty($options[$themeOptionsKey])) {
+                $themeOptions = $this->tryDeserialize($options[$themeOptionsKey]);
+                $options = array_merge($options, $themeOptions);
             }
         }
 
-        $this->stack[] = &$this->row;
-
-        /** 动态获取根目录 */
-        $this->rootUrl = defined('__TYPECHO_ROOT_URL__') ? __TYPECHO_ROOT_URL__ : $this->request->getRequestRoot();
-        if (defined('__TYPECHO_ADMIN__')) {
-            /** 识别在admin目录中的情况 */
-            $adminDir = '/' . trim(defined('__TYPECHO_ADMIN_DIR__') ? __TYPECHO_ADMIN_DIR__ : '/admin/', '/');
-            $this->rootUrl = substr($this->rootUrl, 0, - strlen($adminDir));
-        }
-
-        /** 初始化站点信息 */
-        if (defined('__TYPECHO_SITE_URL__')) {
-            $this->siteUrl = __TYPECHO_SITE_URL__;
-        } elseif (defined('__TYPECHO_DYNAMIC_SITE_URL__') && __TYPECHO_DYNAMIC_SITE_URL__) {
-            $this->siteUrl = $this->rootUrl;
-        }
-
-        $this->originalSiteUrl = $this->siteUrl;
-        $this->siteUrl = Common::url(null, $this->siteUrl);
-        $this->plugins = unserialize($this->plugins);
-
-        /** 动态判断皮肤目录 */
-        $this->missingTheme = null;
-
-        if (!is_dir($this->themeFile($this->theme))) {
-            $this->missingTheme = $this->theme;
-            $this->theme = 'default';
-        }
-
-        /** 增加对SSL连接的支持 */
-        if ($this->request->isSecure() && 0 === strpos($this->siteUrl, 'http://')) {
-            $this->siteUrl = substr_replace($this->siteUrl, 'https', 0, 4);
-        }
-
-        /** 自动初始化路由表 */
-        $this->routingTable = unserialize($this->routingTable);
-        if (isset($this->db) && !isset($this->routingTable[0])) {
-            /** 解析路由并缓存 */
-            $parser = new Parser($this->routingTable);
-            $parsedRoutingTable = $parser->parse();
-            $this->routingTable = array_merge([$parsedRoutingTable], $this->routingTable);
-            $this->db->query($this->db->update('table.options')->rows(['value' => serialize($this->routingTable)])
-                ->where('name = ?', 'routingTable'));
-        }
+        $this->push($options);
     }
 
     /**
@@ -221,19 +184,6 @@ class Options extends Base
     public function themeFile(string $theme, string $file = ''): string
     {
         return __TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . '/' . trim($theme, './') . '/' . trim($file, './');
-    }
-
-    /**
-     * 重载父类push函数,将所有变量值压入堆栈
-     *
-     * @param array $value 每行的值
-     * @return array
-     */
-    public function push(array $value): array
-    {
-        //将行数据按顺序置位
-        $this->row[$value['name']] = $value['value'];
-        return $value;
     }
 
     /**
@@ -359,7 +309,7 @@ class Options extends Base
         if (!isset($this->pluginConfig[$pluginName])) {
             if (
                 !empty($this->row['plugin:' . $pluginName])
-                && false !== ($options = unserialize($this->row['plugin:' . $pluginName]))
+                && false !== ($options = $this->tryDeserialize($this->row['plugin:' . $pluginName]))
             ) {
                 $this->pluginConfig[$pluginName] = new Config($options);
             } else {
@@ -383,7 +333,7 @@ class Options extends Base
         if (!isset($this->personalPluginConfig[$pluginName])) {
             if (
                 !empty($this->row['_plugin:' . $pluginName])
-                && false !== ($options = unserialize($this->row['_plugin:' . $pluginName]))
+                && false !== ($options = $this->tryDeserialize($this->row['_plugin:' . $pluginName]))
             ) {
                 $this->personalPluginConfig[$pluginName] = new Config($options);
             } else {
@@ -392,6 +342,124 @@ class Options extends Base
         }
 
         return $this->personalPluginConfig[$pluginName];
+    }
+
+    /**
+     * @return array
+     */
+    protected function ___routingTable(): array
+    {
+        $routingTable = $this->tryDeserialize($this->row['routingTable']);
+
+        if (isset($this->db) && !isset($routingTable[0])) {
+            /** 解析路由并缓存 */
+            $parser = new Parser($routingTable);
+            $parsedRoutingTable = $parser->parse();
+            $routingTable = array_merge([$parsedRoutingTable], $routingTable);
+            $this->db->query($this->db->update('table.options')->rows(['value' => json_encode($routingTable)])
+                ->where('name = ?', 'routingTable'));
+        }
+
+        return $routingTable;
+    }
+
+    /**
+     * @return array
+     */
+    protected function ___actionTable(): array
+    {
+        return $this->tryDeserialize($this->row['actionTable']);
+    }
+
+    /**
+     * @return array
+     */
+    protected function ___panelTable(): array
+    {
+        return $this->tryDeserialize($this->row['panelTable']);
+    }
+
+    /**
+     * @return array
+     */
+    protected function ___plugins(): array
+    {
+        return $this->tryDeserialize($this->row['plugins']);
+    }
+
+    /**
+     * 动态判断皮肤目录
+     *
+     * @return string|null
+     */
+    protected function ___missingTheme(): ?string
+    {
+        return !is_dir($this->themeFile($this->row['theme'])) ? $this->row['theme'] : null;
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___theme(): string
+    {
+        return $this->missingTheme ? 'default' : $this->row['theme'];
+    }
+
+    /**
+     * 动态获取根目录
+     *
+     * @return string
+     */
+    protected function ___rootUrl(): string
+    {
+        $rootUrl = defined('__TYPECHO_ROOT_URL__') ? __TYPECHO_ROOT_URL__ : $this->request->getRequestRoot();
+
+        if (defined('__TYPECHO_ADMIN__')) {
+            /** 识别在admin目录中的情况 */
+            $adminDir = '/' . trim(defined('__TYPECHO_ADMIN_DIR__') ? __TYPECHO_ADMIN_DIR__ : '/admin/', '/');
+            $rootUrl = substr($rootUrl, 0, - strlen($adminDir));
+        }
+
+        return $rootUrl;
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___originalSiteUrl(): string
+    {
+        $siteUrl = $this->row['siteUrl'];
+
+        if (defined('__TYPECHO_SITE_URL__')) {
+            $siteUrl = __TYPECHO_SITE_URL__;
+        } elseif (defined('__TYPECHO_DYNAMIC_SITE_URL__') && __TYPECHO_DYNAMIC_SITE_URL__) {
+            $siteUrl = $this->rootUrl;
+        }
+
+        return $siteUrl;
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___siteUrl(): string
+    {
+        $siteUrl = Common::url(null, $this->originalSiteUrl);
+
+        /** 增加对SSL连接的支持 */
+        if ($this->request->isSecure() && 0 === strpos($siteUrl, 'http://')) {
+            $siteUrl = substr_replace($siteUrl, 'https', 0, 4);
+        }
+
+        return $siteUrl;
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___siteDomain(): string
+    {
+        return parse_url($this->siteUrl, PHP_URL_HOST);
     }
 
     /**
@@ -635,7 +703,7 @@ class Options extends Base
      */
     protected function ___software(): string
     {
-        [$software, $version] = explode(' ', $this->generator);
+        [$software] = explode(' ', $this->generator);
         return $software;
     }
 
@@ -646,12 +714,12 @@ class Options extends Base
      */
     protected function ___version(): string
     {
-        [$software, $version] = explode(' ', $this->generator);
+        [, $version] = explode(' ', $this->generator);
         $pos = strpos($version, '/');
 
         // fix for old version
         if ($pos !== false) {
-            $version = substr($version, 0, $pos);
+            $version = substr($version, 0, $pos) . '.0';
         }
 
         return $version;
@@ -676,9 +744,21 @@ class Options extends Base
                 $this->attachmentTypes
             );
 
-            $attachmentTypesResult = array_unique(array_map('trim', preg_split("/(,|\.)/", $attachmentTypes)));
+            $attachmentTypesResult = array_unique(array_map('trim', preg_split("/([,.])/", $attachmentTypes)));
         }
 
         return $attachmentTypesResult;
+    }
+
+    /**
+     * Try to deserialize a value
+     *
+     * @param string $value
+     * @return mixed
+     */
+    private function tryDeserialize(string $value)
+    {
+        $isSerialized = strpos($value, 'a:') === 0 || $value === 'b:0;';
+        return $isSerialized ? @unserialize($value) : json_decode($value, true);
     }
 }

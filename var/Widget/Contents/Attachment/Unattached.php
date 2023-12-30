@@ -42,7 +42,7 @@ class Unattached extends Contents
         (table.contents.parent = 0 OR table.contents.parent IS NULL)', 'attachment');
 
         /** 加上对用户的判断 */
-        $this->where('table.contents.authorId = ?', $this->user->uid);
+        $select->where('table.contents.authorId = ?', $this->user->uid);
 
         /** 提交查询 */
         $select->order('table.contents.created', Db::SORT_DESC);

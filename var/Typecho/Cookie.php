@@ -17,7 +17,7 @@ class Cookie
      * @var string
      * @access private
      */
-    private static $prefix = '';
+    private static string $prefix = '';
 
     /**
      * 路径
@@ -25,25 +25,25 @@ class Cookie
      * @var string
      * @access private
      */
-    private static $path = '/';
+    private static string $path = '/';
 
     /**
      * @var string
      * @access private
      */
-    private static $domain = '';
+    private static string $domain = '';
 
     /**
      * @var bool
      * @access private
      */
-    private static $secure = false;
+    private static bool $secure = false;
 
     /**
      * @var bool
      * @access private
      */
-    private static $httponly = false;
+    private static bool $httponly = false;
 
     /**
      * 获取前缀
@@ -112,8 +112,8 @@ class Cookie
     public static function setOptions(array $options)
     {
         self::$domain = $options['domain'] ?: self::$domain;
-        self::$secure = $options['secure'] ? (bool) $options['secure'] : false;
-        self::$httponly = $options['httponly'] ? (bool) $options['httponly'] : false;
+        self::$secure = !!$options['secure'];
+        self::$httponly = !!$options['httponly'];
     }
 
     /**
@@ -141,7 +141,15 @@ class Cookie
     {
         $key = self::$prefix . $key;
         $_COOKIE[$key] = $value;
-        Response::getInstance()->setCookie($key, $value, $expire, self::$path, self::$domain, self::$secure, self::$httponly);
+        Response::getInstance()->setCookie(
+            $key,
+            $value,
+            $expire,
+            self::$path,
+            self::$domain,
+            self::$secure,
+            self::$httponly
+        );
     }
 
     /**
@@ -160,4 +168,3 @@ class Cookie
         unset($_COOKIE[$key]);
     }
 }
-

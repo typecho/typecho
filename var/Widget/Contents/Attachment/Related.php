@@ -42,7 +42,7 @@ class Related extends Contents
         $select->where('table.contents.parent = ?', $this->parameter->parentId);
 
         /** 提交查询 */
-        $select->order('table.contents.created', Db::SORT_ASC);
+        $select->order('table.contents.created');
 
         if ($this->parameter->limit > 0) {
             $select->limit($this->parameter->limit);

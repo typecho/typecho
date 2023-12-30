@@ -37,7 +37,7 @@ class Feedback extends Comments implements ActionInterface
      *
      * @param string $userName 用户名
      * @return bool
-     * @throws \Typecho\Db\Exception
+     * @throws Db\Exception
      */
     public function requireUserLogin(string $userName): bool
     {
@@ -63,8 +63,8 @@ class Feedback extends Comments implements ActionInterface
     public function action()
     {
         /** 回调方法 */
-        $callback = $this->request->type;
-        $this->content = Router::match($this->request->permalink);
+        $callback = $this->request->get('type');
+        $this->content = Router::match($this->request->get('permalink'));
 
         /** 判断内容是否存在 */
         if (
@@ -199,20 +199,20 @@ class Feedback extends Comments implements ActionInterface
 
         $validator->addRule('text', 'required', _t('必须填写评论内容'));
 
-        $comment['text'] = $this->request->text;
+        $comment['text'] = $this->request->get('text');
 
         /** 对一般匿名访问者,将用户数据保存一个月 */
         if (!$this->user->hasLogin()) {
             /** Anti-XSS */
-            $comment['author'] = $this->request->filter('trim')->author;
-            $comment['mail'] = $this->request->filter('trim')->mail;
-            $comment['url'] = $this->request->filter('trim', 'url')->url;
+            $comment['author'] = $this->request->filter('trim')->get('author');
+            $comment['mail'] = $this->request->filter('trim')->get('mail');
+            $comment['url'] = $this->request->filter('trim', 'url')->get('url');
 
             /** 修正用户提交的url */
             if (!empty($comment['url'])) {
                 $urlParams = parse_url($comment['url']);
                 if (!isset($urlParams['scheme'])) {
-                    $comment['url'] = 'http://' . $comment['url'];
+                    $comment['url'] = 'https://' . $comment['url'];
                 }
             }
 
@@ -255,7 +255,7 @@ class Feedback extends Comments implements ActionInterface
 
         /** 生成过滤器 */
         try {
-            $comment = self::pluginHandle()->comment($comment, $this->content);
+            $comment = self::pluginHandle()->call('comment', $comment, $this->content);
         } catch (\Typecho\Exception $e) {
             Cookie::set('__typecho_remember_text', $comment['text']);
             throw $e;
@@ -268,7 +268,7 @@ class Feedback extends Comments implements ActionInterface
             ->limit(1), [$this, 'push']);
 
         /** 评论完成接口 */
-        self::pluginHandle()->finishComment($this);
+        self::pluginHandle()->call('finishComment', $this);
 
         $this->response->goBack('#' . $this->theId);
     }
@@ -276,7 +276,7 @@ class Feedback extends Comments implements ActionInterface
     /**
      * 引用处理函数
      *
-     * @throws Exception|\Typecho\Db\Exception
+     * @throws Exception|Db\Exception
      */
     private function trackback()
     {
@@ -304,9 +304,9 @@ class Feedback extends Comments implements ActionInterface
             'status' => $this->options->commentsRequireModeration ? 'waiting' : 'approved'
         ];
 
-        $trackback['author'] = $this->request->filter('trim')->blog_name;
-        $trackback['url'] = $this->request->filter('trim', 'url')->url;
-        $trackback['text'] = $this->request->excerpt;
+        $trackback['author'] = $this->request->filter('trim')->get('blog_name');
+        $trackback['url'] = $this->request->filter('trim', 'url')->get('url');
+        $trackback['text'] = $this->request->get('excerpt');
 
         //检验格式
         $validator = new Validate();
@@ -337,13 +337,13 @@ class Feedback extends Comments implements ActionInterface
         }
 
         /** 生成过滤器 */
-        $trackback = self::pluginHandle()->trackback($trackback, $this->content);
+        $trackback = self::pluginHandle()->call('trackback', $trackback, $this->content);
 
         /** 添加引用 */
         $this->insert($trackback);
 
         /** 评论完成接口 */
-        self::pluginHandle()->finishTrackback($this);
+        self::pluginHandle()->call('finishTrackback', $this);
 
         /** 返回正确 */
         $this->response->throwXml(['success' => 0, 'message' => 'Trackback has registered.']);

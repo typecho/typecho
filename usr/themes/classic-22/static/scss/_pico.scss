@@ -1,0 +1,105 @@
+/*!
+ * Pico.css (https://picocss.com)
+ * Licensed under MIT
+ */
+
+// Config
+// $enable-responsive-typography: false;
+
+// Grey
+$grey-50: #f8fafc;
+$grey-100: #f1f5f9;
+$grey-200: #e2e8f0;
+$grey-300: #cbd5e1;
+$grey-400: #94a3b8;
+$grey-500: #64748b;
+$grey-600: #475569;
+$grey-700: #334155;
+$grey-800: #1e293b;
+$grey-900: #0f172a;
+
+// Blue
+$primary-50: #E9F2FC;
+$primary-100: #D1E5FB;
+$primary-200: #9BCCFD;
+$primary-300: #51B4FF;
+$primary-400: #029AE8;
+$primary-500: #017FC0;
+$primary-600: #02659A;
+$primary-700: #014C75;
+$primary-800: #033452;
+$primary-900: #061E2F;
+
+// Amber
+$amber-50: #fffbeb;
+$amber-100: #fef3c7;
+$amber-200: #fde68a;
+$amber-300: #fcd34d;
+$amber-400: #fbbf24;
+$amber-500: #f59e0b;
+$amber-600: #d97706;
+$amber-700: #b45309;
+$amber-800: #92400e;
+$amber-900: #78350f;
+
+// Green
+$green-50: #f0fdf4;
+$green-100: #dcfce7;
+$green-200: #bbf7d0;
+$green-300: #86efac;
+$green-400: #4ade80;
+$green-500: #22c55e;
+$green-600: #16a34a;
+$green-700: #15803d;
+$green-800: #166534;
+$green-900: #14532d;
+
+// Red
+$red-50: #fef2f2;
+$red-100: #fee2e2;
+$red-200: #fecaca;
+$red-300: #fca5a5;
+$red-400: #f87171;
+$red-500: #ef4444;
+$red-600: #dc2626;
+$red-700: #b91c1c;
+$red-800: #991b1b;
+$red-900: #7f1d1d;
+
+@import "../../../../../tools/node_modules/@picocss/pico/scss/variables";
+
+// Theming
+@import "../../../../../tools/node_modules/@picocss/pico/scss/themes/default";
+
+// Layout
+@import "../../../../../tools/node_modules/@picocss/pico/scss/layout/document"; // html
+@import "../../../../../tools/node_modules/@picocss/pico/scss/layout/sectioning"; // body, header, main, footer
+@import "../../../../../tools/node_modules/@picocss/pico/scss/layout/container"; // .container, .container-fluid
+@import "../../../../../tools/node_modules/@picocss/pico/scss/layout/section"; // section
+@import "../../../../../tools/node_modules/@picocss/pico/scss/layout/grid"; // .grid
+// @import "../../../../../tools/node_modules/@picocss/pico/scss/layout/scroller"; // figure
+
+// Content
+@import "../../../../../tools/node_modules/@picocss/pico/scss/content/typography"; // a, headings, p, ul, blockquote, ...
+@import "../../../../../tools/node_modules/@picocss/pico/scss/content/embedded"; // audio, canvas, iframe, img, svg, video
+@import "../../../../../tools/node_modules/@picocss/pico/scss/content/button"; // button, a[role=button], type=button, type=submit ...
+@import "../../../../../tools/node_modules/@picocss/pico/scss/content/form"; // input, select, textarea, label, fieldset, legend
+// @import "../../../../../tools/node_modules/@picocss/pico/scss/content/form-checkbox-radio"; // type=checkbox, type=radio, role=switch
+@import "../../../../../tools/node_modules/@picocss/pico/scss/content/form-alt-input-types"; // type=color, type=date, type=file, type=search, ...
+@import "../../../../../tools/node_modules/@picocss/pico/scss/content/table"; // table, tr, td, ...
+@import "../../../../../tools/node_modules/@picocss/pico/scss/content/code"; // pre, code, ...
+@import "../../../../../tools/node_modules/@picocss/pico/scss/content/miscs"; // hr, template, [hidden], dialog, canvas
+
+// Components
+// @import "../../../../../tools/node_modules/@picocss/pico/scss/components/accordion"; // details, summary
+// @import "../../../../../tools/node_modules/@picocss/pico/scss/components/card"; // article
+// @import "../../../../../tools/node_modules/@picocss/pico/scss/components/modal"; // dialog
+@import "../../../../../tools/node_modules/@picocss/pico/scss/components/nav"; // nav
+// @import "../../../../../tools/node_modules/@picocss/pico/scss/components/progress"; // progress
+// @import "../../../../../tools/node_modules/@picocss/pico/scss/components/dropdown"; // dropdown
+
+// Utilities
+// @import "../../../../../tools/node_modules/@picocss/pico/scss/utilities/loading"; // aria-busy=true
+// @import "../../../../../tools/node_modules/@picocss/pico/scss/utilities/tooltip"; // data-tooltip
+@import "../../../../../tools/node_modules/@picocss/pico/scss/utilities/accessibility"; // -ms-touch-action, aria-*
+@import "../../../../../tools/node_modules/@picocss/pico/scss/utilities/reduce-motion"; // prefers-reduced-motion

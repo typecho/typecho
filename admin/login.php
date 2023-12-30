@@ -21,7 +21,7 @@ include 'header.php';
             </p>
             <p>
                 <label for="password" class="sr-only"><?php _e('密码'); ?></label>
-                <input type="password" id="password" name="password" class="text-l w-100" placeholder="<?php _e('密码'); ?>" />
+                <input type="password" id="password" name="password" class="text-l w-100" placeholder="<?php _e('密码'); ?>" required />
             </p>
             <p class="submit">
                 <button type="submit" class="btn btn-l w-100 primary"><?php _e('登录'); ?></button>

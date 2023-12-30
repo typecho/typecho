@@ -7,6 +7,7 @@ use Typecho\Db\Exception;
 use Typecho\Widget\Helper\Form;
 use Widget\Base\Metas;
 use Widget\ActionInterface;
+use Widget\Metas\EditTrait;
 use Widget\Notice;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
@@ -24,6 +25,8 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  */
 class Edit extends Metas implements ActionInterface
 {
+    use EditTrait;
+
     /**
      * 入口函数
      */
@@ -47,7 +50,7 @@ class Edit extends Metas implements ActionInterface
             ->where('type = ?', 'tag')
             ->where('mid = ?', $mid)->limit(1));
 
-        return (bool)$tag;
+        return isset($tag);
     }
 
     /**
@@ -65,8 +68,8 @@ class Edit extends Metas implements ActionInterface
             ->where('name = ?', $name)
             ->limit(1);
 
-        if ($this->request->mid) {
-            $select->where('mid <> ?', $this->request->filter('int')->mid);
+        if ($this->request->is('mid')) {
+            $select->where('mid <> ?', $this->request->filter('int')->get('mid'));
         }
 
         $tag = $this->db->fetchRow($select);
@@ -78,6 +81,7 @@ class Edit extends Metas implements ActionInterface
      *
      * @param string $name 标签名
      * @return boolean
+     * @throws Exception
      */
     public function nameToSlug(string $name): bool
     {
@@ -106,8 +110,8 @@ class Edit extends Metas implements ActionInterface
             ->where('slug = ?', Common::slugName($slug))
             ->limit(1);
 
-        if ($this->request->mid) {
-            $select->where('mid <> ?', $this->request->mid);
+        if ($this->request->is('mid')) {
+            $select->where('mid <> ?', $this->request->get('mid'));
         }
 
         $tag = $this->db->fetchRow($select);
@@ -192,10 +196,10 @@ class Edit extends Metas implements ActionInterface
         $submit->input->setAttribute('class', 'btn primary');
         $form->addItem($submit);
 
-        if (isset($this->request->mid) && 'insert' != $action) {
+        if ($this->request->is('mid') && 'insert' != $action) {
             /** 更新模式 */
             $meta = $this->db->fetchRow($this->select()
-                ->where('mid = ?', $this->request->mid)
+                ->where('mid = ?', $this->request->get('mid'))
                 ->where('type = ?', 'tag')->limit(1));
 
             if (!$meta) {
@@ -253,7 +257,7 @@ class Edit extends Metas implements ActionInterface
         $tag['slug'] = Common::slugName(empty($tag['slug']) ? $tag['name'] : $tag['slug']);
 
         /** 更新数据 */
-        $this->update($tag, $this->db->sql()->where('mid = ?', $this->request->filter('int')->mid));
+        $this->update($tag, $this->db->sql()->where('mid = ?', $this->request->filter('int')->get('mid')));
         $this->push($tag);
 
         /** 设置高亮 */
@@ -279,7 +283,7 @@ class Edit extends Metas implements ActionInterface
         $tags = $this->request->filter('int')->getArray('mid');
         $deleteCount = 0;
 
-        if ($tags && is_array($tags)) {
+        if ($tags) {
             foreach ($tags as $tag) {
                 if ($this->delete($this->db->sql()->where('mid = ?', $tag))) {
                     $this->db->query($this->db->delete('table.relationships')->where('mid = ?', $tag));
@@ -306,11 +310,11 @@ class Edit extends Metas implements ActionInterface
     public function mergeTag()
     {
         if (empty($this->request->merge)) {
-            Notice::alloc()->set(_t('请填写需要合并到的标签'), 'notice');
+            Notice::alloc()->set(_t('请填写需要合并到的标签'));
             $this->response->goBack();
         }
 
-        $merge = $this->scanTags($this->request->merge);
+        $merge = $this->scanTags($this->request->get('merge'));
         if (empty($merge)) {
             Notice::alloc()->set(_t('合并到的标签名不合法'), 'error');
             $this->response->goBack();
@@ -324,7 +328,7 @@ class Edit extends Metas implements ActionInterface
             /** 提示信息 */
             Notice::alloc()->set(_t('标签已经合并'), 'success');
         } else {
-            Notice::alloc()->set(_t('没有选择任何标签'), 'notice');
+            Notice::alloc()->set(_t('没有选择任何标签'));
         }
 
         /** 转向原页 */
@@ -343,7 +347,7 @@ class Edit extends Metas implements ActionInterface
         $tags = $this->request->filter('int')->getArray('mid');
         if ($tags) {
             foreach ($tags as $tag) {
-                $this->refreshCountByTypeAndStatus($tag, 'post', 'publish');
+                $this->refreshCountByTypeAndStatus($tag, 'post');
             }
 
             // 自动清理标签
@@ -351,11 +355,36 @@ class Edit extends Metas implements ActionInterface
 
             Notice::alloc()->set(_t('标签刷新已经完成'), 'success');
         } else {
-            Notice::alloc()->set(_t('没有选择任何标签'), 'notice');
+            Notice::alloc()->set(_t('没有选择任何标签'));
         }
 
         /** 转向原页 */
         $this->response->goBack();
+    }
+
+
+    /**
+     * 清理没有任何内容的标签
+     *
+     * @throws Exception
+     */
+    public function clearTags()
+    {
+        // 取出count为0的标签
+        $tags = array_column($this->db->fetchAll($this->select('mid')
+            ->where('type = ? AND count = ?', 'tags', 0)), 'mid');
+
+        foreach ($tags as $tag) {
+            // 确认是否已经没有关联了
+            $content = $this->db->fetchRow($this->db->select('cid')
+                ->from('table.relationships')->where('mid = ?', $tag)
+                ->limit(1));
+
+            if (empty($content)) {
+                $this->db->query($this->db->delete('table.metas')
+                    ->where('mid = ?', $tag));
+            }
+        }
     }
 
     /**

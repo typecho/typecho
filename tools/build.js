@@ -5,6 +5,7 @@ const sass = require('node-sass'),
     UglifyJS = require("uglify-js"),
     srcDir = __dirname + '/../admin/src',
     distDir = __dirname + '/../admin',
+    themeDir = __dirname + '/../usr/themes/classic-22',
     action = process.argv.pop();
 
 let spriteImporter = SpriteMagicImporter({
@@ -29,16 +30,16 @@ let spriteImporter = SpriteMagicImporter({
     }
 });
 
-function buildSass(file) {
-    let outFile = distDir + '/css/' + file.split('.')[0] + '.css',
-        sassDir = srcDir + '/scss';
+function buildSass(file, dist, sassDir)
+{
+    let outFile = dist + '/' + file.split('.')[0] + '.css';
     console.log(color.green('processing ' + file));
 
     sass.render({
         file: sassDir + '/' + file,
         outFile: outFile,
         includePaths: [sassDir],
-        outputStyle: 'compact',
+        outputStyle: 'compressed',
         importer: spriteImporter
     }, function (error, result) {
         if (error) {
@@ -51,17 +52,21 @@ function buildSass(file) {
     });
 }
 
-function minifyJs(file) {
+function minifyJs(file, dist)
+{
     console.log(color.green('minify ' + file));
     let code = {};
     code[file] = fs.readFileSync(srcDir + '/js/' + file).toString('utf8');
 
-    fs.writeFileSync(distDir + '/js/' + file,
-        UglifyJS.minify(code).code);
+    fs.writeFileSync(
+        dist + '/' + file,
+        UglifyJS.minify(code).code
+    );
 }
 
-function listFiles(dir, regExp) {
-    let files = fs.readdirSync(srcDir + dir), result = [];
+function listFiles(dir, regExp)
+{
+    let files = fs.readdirSync(dir), result = [];
 
     files.map(function (file) {
         if (file.match(regExp)) {
@@ -75,14 +80,20 @@ function listFiles(dir, regExp) {
 if (action === 'css') {
     console.log(color.blue('build css'));
 
-    listFiles('/scss', /^[a-z0-9-]+\.scss$/).forEach(function (file) {
-        buildSass(file);
+    listFiles(srcDir + '/scss', /^[a-z0-9-]+\.scss$/).forEach(function (file) {
+        buildSass(file, distDir + '/css', srcDir + '/scss');
     });
 } else if (action === 'js') {
     console.log(color.blue('build js'));
 
-    listFiles('/js', /^[-\w]+\.js$/).forEach(function (file) {
-        minifyJs(file);
+    listFiles(srcDir + '/js', /^[-\w]+\.js$/).forEach(function (file) {
+        minifyJs(file, distDir + '/js');
+    });
+} else if (action === 'theme_css') {
+    console.log(color.blue('build theme css'));
+
+    listFiles(themeDir + '/static/scss', /^[a-z0-9-]+\.scss$/).forEach(function (file) {
+        buildSass(file, themeDir + '/static/css', themeDir + '/static/scss');
     });
 } else {
     console.log(color.red('Please choose correct action.'));

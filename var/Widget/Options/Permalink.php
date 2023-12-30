@@ -35,7 +35,9 @@ class Permalink extends Options implements ActionInterface
      */
     public function checkPagePattern($value): bool
     {
-        return strpos($value, '{slug}') !== false || strpos($value, '{cid}') !== false;
+        return strpos($value, '{slug}') !== false
+            || strpos($value, '{cid}') !== false
+            || strpos($value, '{directory}') !== false;
     }
 
     /**
@@ -57,7 +59,7 @@ class Permalink extends Options implements ActionInterface
      * @param string $value 是否打开rewrite
      * @return bool
      */
-    public function checkRewrite(string $value)
+    public function checkRewrite(string $value): bool
     {
         if ($value) {
             $this->user->pass('administrator');
@@ -67,7 +69,7 @@ class Permalink extends Options implements ActionInterface
             $hasWrote = false;
 
             if (!file_exists(__TYPECHO_ROOT_DIR__ . '/.htaccess') && strpos(php_sapi_name(), 'apache') !== false) {
-                if (is_writeable(__TYPECHO_ROOT_DIR__)) {
+                if (is_writable(__TYPECHO_ROOT_DIR__)) {
                     $parsed = parse_url($this->options->siteUrl);
                     $basePath = empty($parsed['path']) ? '/' : $parsed['path'];
                     $basePath = rtrim($basePath, '/') . '/';
@@ -125,7 +127,7 @@ RewriteRule . {$basePath}index.php [L]
                     unlink(__TYPECHO_ROOT_DIR__ . '/.htaccess');
                 }
             } catch (Client\Exception $e) {
-                if (false != $hasWrote) {
+                if ($hasWrote) {
                     @unlink(__TYPECHO_ROOT_DIR__ . '/.htaccess');
                 }
                 return false;
@@ -146,32 +148,35 @@ RewriteRule . {$basePath}index.php [L]
      */
     public function updatePermalinkSettings()
     {
+        $customPattern = $this->request->get('customPattern');
+        $postPattern = $this->request->get('postPattern');
+
         /** 验证格式 */
         if ($this->form()->validate()) {
-            Cookie::set('__typecho_form_item_postPattern', $this->request->customPattern);
+            Cookie::set('__typecho_form_item_postPattern', $customPattern);
             $this->response->goBack();
         }
 
-        $patternValid = $this->checkRule($this->request->postPattern);
+        $patternValid = $this->checkRule($postPattern);
 
         /** 解析url pattern */
-        if ('custom' == $this->request->postPattern) {
-            $this->request->postPattern = '/' . ltrim($this->encodeRule($this->request->customPattern), '/');
+        if ('custom' == $postPattern) {
+            $postPattern = '/' . ltrim($this->encodeRule($customPattern), '/');
         }
 
         $settings = defined('__TYPECHO_REWRITE__') ? [] : $this->request->from('rewrite');
-        if (isset($this->request->postPattern) && isset($this->request->pagePattern)) {
+        if (isset($postPattern) && $this->request->is('pagePattern')) {
             $routingTable = $this->options->routingTable;
-            $routingTable['post']['url'] = $this->request->postPattern;
-            $routingTable['page']['url'] = '/' . ltrim($this->encodeRule($this->request->pagePattern), '/');
-            $routingTable['category']['url'] = '/' . ltrim($this->encodeRule($this->request->categoryPattern), '/');
+            $routingTable['post']['url'] = $postPattern;
+            $routingTable['page']['url'] = '/' . ltrim($this->encodeRule($this->request->get('pagePattern')), '/');
+            $routingTable['category']['url'] = '/' . ltrim($this->encodeRule($this->request->get('categoryPattern')), '/');
             $routingTable['category_page']['url'] = rtrim($routingTable['category']['url'], '/') . '/[page:digital]/';
 
             if (isset($routingTable[0])) {
                 unset($routingTable[0]);
             }
 
-            $settings['routingTable'] = serialize($routingTable);
+            $settings['routingTable'] = json_encode($routingTable);
         }
 
         foreach ($settings as $name => $value) {
@@ -181,7 +186,7 @@ RewriteRule . {$basePath}index.php [L]
         if ($patternValid) {
             Notice::alloc()->set(_t("设置已经保存"), 'success');
         } else {
-            Notice::alloc()->set(_t("自定义链接与现有规则存在冲突! 它可能影响解析效率, 建议你重新分配一个规则."), 'notice');
+            Notice::alloc()->set(_t("自定义链接与现有规则存在冲突! 它可能影响解析效率, 建议你重新分配一个规则."));
         }
         $this->response->goBack();
     }
@@ -215,7 +220,7 @@ RewriteRule . {$basePath}index.php [L]
                 if (
                     strpos(php_sapi_name(), 'apache') !== false
                     && !file_exists(__TYPECHO_ROOT_DIR__ . '/.htaccess')
-                    && !is_writeable(__TYPECHO_ROOT_DIR__)
+                    && !is_writable(__TYPECHO_ROOT_DIR__)
                 ) {
                     $errorStr .= '<br /><strong>' . _t('我们检测到你使用了apache服务器, 但是程序无法在根目录创建.htaccess文件, 这可能是产生这个错误的原因.')
                         . _t('请调整你的目录权限, 或者手动创建一个.htaccess文件.') . '</strong>';
@@ -246,8 +251,8 @@ RewriteRule . {$basePath}index.php [L]
 
         /** 增加个性化路径 */
         $customPatternValue = null;
-        if (isset($this->request->__typecho_form_item_postPattern)) {
-            $customPatternValue = $this->request->__typecho_form_item_postPattern;
+        if ($this->request->is('__typecho_form_item_postPattern')) {
+            $customPatternValue = $this->request->get('__typecho_form_item_postPattern');
             Cookie::delete('__typecho_form_item_postPattern');
         } elseif (!isset($patterns[$postPatternValue])) {
             $customPatternValue = $this->decodeRule($postPatternValue);
@@ -275,7 +280,7 @@ RewriteRule . {$basePath}index.php [L]
             null,
             $this->decodeRule($this->options->routingTable['page']['url']),
             _t('独立页面路径'),
-            _t('可用参数: <code>{cid}</code> 页面 ID, <code>{slug}</code> 页面缩略名')
+            _t('可用参数: <code>{cid}</code> 页面 ID, <code>{slug}</code> 页面缩略名, <code>{directory}</code> 多级页面')
             . '<br />' . _t('请在路径中至少包含上述的一项参数.')
         );
         $pagePattern->input->setAttribute('class', 'mono w-60');
@@ -325,7 +330,7 @@ RewriteRule . {$basePath}index.php [L]
         }
 
         $routingTable = $this->options->routingTable;
-        $currentTable = ['custom' => ['url' => $this->encodeRule($this->request->customPattern)]];
+        $currentTable = ['custom' => ['url' => $this->encodeRule($this->request->get('customPattern'))]];
         $parser = new Parser($currentTable);
         $currentTable = $parser->parse();
         $regx = $currentTable['custom']['regx'];

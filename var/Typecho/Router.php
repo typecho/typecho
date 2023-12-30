@@ -2,6 +2,7 @@
 
 namespace Typecho;
 
+use Typecho\Router\ParamsDelegateInterface;
 use Typecho\Router\Parser;
 use Typecho\Router\Exception as RouterException;
 
@@ -15,55 +16,52 @@ class Router
     /**
      * 当前路由名称
      *
-     * @access public
      * @var string
      */
-    public static $current;
+    public static string $current;
 
     /**
      * 已经解析完毕的路由表配置
      *
-     * @access private
-     * @var mixed
+     * @var array
      */
-    private static $routingTable = [];
+    private static array $routingTable = [];
+
+    /**
+     * 是否已经匹配过，防止递归匹配
+     *
+     * @var bool
+     */
+    private static bool $matched = false;
 
     /**
      * 解析路径
      *
-     * @access public
-     *
-     * @param string|null $pathInfo 全路径
+     * @param string $pathInfo 全路径
      * @param mixed $parameter 输入参数
-     *
+     * @param bool $once 是否只匹配一次
      * @return false|Widget
      * @throws \Exception
      */
-    public static function match(?string $pathInfo, $parameter = null)
+    public static function match(string $pathInfo, $parameter = null, bool $once = true)
     {
-        foreach (self::$routingTable as $key => $route) {
-            if (preg_match($route['regx'], $pathInfo, $matches)) {
-                self::$current = $key;
+        if ($once && self::$matched) {
+            throw new RouterException("Path '{$pathInfo}' not found", 404);
+        }
 
-                try {
-                    /** 载入参数 */
-                    $params = null;
+        self::$matched = true;
 
-                    if (!empty($route['params'])) {
-                        unset($matches[0]);
-                        $params = array_combine($route['params'], $matches);
-                    }
-
-                    return Widget::widget($route['widget'], $parameter, $params);
-
-                } catch (\Exception $e) {
-                    if (404 == $e->getCode()) {
-                        Widget::destroy($route['widget']);
-                        continue;
-                    }
-
-                    throw $e;
+        foreach (self::route($pathInfo) as $result) {
+            [$route, $params] = $result;
+            try {
+                return Widget::widget($route['widget'], $parameter, $params);
+            } catch (\Exception $e) {
+                if (404 == $e->getCode()) {
+                    Widget::destroy($route['widget']);
+                    continue;
                 }
+
+                throw $e;
             }
         }
 
@@ -80,35 +78,24 @@ class Router
         /** 获取PATHINFO */
         $pathInfo = Request::getInstance()->getPathInfo();
 
-        foreach (self::$routingTable as $key => $route) {
-            if (preg_match($route['regx'], $pathInfo, $matches)) {
-                self::$current = $key;
+        foreach (self::route($pathInfo) as $result) {
+            [$route, $params] = $result;
 
-                try {
-                    /** 载入参数 */
-                    $params = null;
+            try {
+                $widget = Widget::widget($route['widget'], null, $params);
 
-                    if (!empty($route['params'])) {
-                        unset($matches[0]);
-                        $params = array_combine($route['params'], $matches);
-                    }
-
-                    $widget = Widget::widget($route['widget'], null, $params);
-
-                    if (isset($route['action'])) {
-                        $widget->{$route['action']}();
-                    }
-
-                    return;
-
-                } catch (\Exception $e) {
-                    if (404 == $e->getCode()) {
-                        Widget::destroy($route['widget']);
-                        continue;
-                    }
-
-                    throw $e;
+                if (isset($route['action'])) {
+                    $widget->{$route['action']}();
                 }
+
+                return;
+            } catch (\Exception $e) {
+                if (404 == $e->getCode()) {
+                    Widget::destroy($route['widget']);
+                    continue;
+                }
+
+                throw $e;
             }
         }
 
@@ -120,19 +107,31 @@ class Router
      * 路由反解析函数
      *
      * @param string $name 路由配置表名称
-     * @param array|null $value 路由填充值
+     * @param mixed $value 路由填充值
      * @param string|null $prefix 最终合成路径的前缀
-     *
      * @return string
      */
-    public static function url(string $name, ?array $value = null, ?string $prefix = null): string
-    {
+    public static function url(
+        string $name,
+        $value = null,
+        ?string $prefix = null
+    ): string {
+        if (!isset(self::$routingTable[$name])) {
+            return '#';
+        }
+
         $route = self::$routingTable[$name];
 
         //交换数组键值
         $pattern = [];
-        foreach ($route['params'] as $row) {
-            $pattern[$row] = $value[$row] ?? '{' . $row . '}';
+        foreach ($route['params'] as $param) {
+            if (is_array($value) && isset($value[$param])) {
+                $pattern[$param] = $value[$param];
+            } elseif ($value instanceof ParamsDelegateInterface) {
+                $pattern[$param] = $value->getRouterParam($param);
+            } else {
+                $pattern[$param] = '{' . $param . '}';
+            }
         }
 
         return Common::url(vsprintf($route['format'], $pattern), $prefix);
@@ -141,10 +140,7 @@ class Router
     /**
      * 设置路由器默认配置
      *
-     * @access public
-     *
      * @param mixed $routes 配置信息
-     *
      * @return void
      */
     public static function setRoutes($routes)
@@ -162,13 +158,34 @@ class Router
      * 获取路由信息
      *
      * @param string $routeName 路由名称
-     *
-     * @static
-     * @access public
      * @return mixed
      */
     public static function get(string $routeName)
     {
         return self::$routingTable[$routeName] ?? null;
+    }
+
+    /**
+     * @param string $pathInfo
+     * @return \Generator
+     * @throws \Exception
+     */
+    private static function route(string $pathInfo): \Generator
+    {
+        foreach (self::$routingTable as $key => $route) {
+            if (preg_match($route['regx'], $pathInfo, $matches)) {
+                self::$current = $key;
+
+                /** 载入参数 */
+                $params = null;
+
+                if (!empty($route['params'])) {
+                    unset($matches[0]);
+                    $params = array_combine($route['params'], $matches);
+                }
+
+                yield [$route, $params];
+            }
+        }
     }
 }

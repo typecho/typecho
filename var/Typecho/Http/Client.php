@@ -30,33 +30,33 @@ class Client
      *
      * @var string
      */
-    private $method = self::METHOD_GET;
+    private string $method = self::METHOD_GET;
+
+    /**
+     * User-Agent
+     *
+     * @var string
+     */
+    public string $agent;
 
     /**
      * 传递参数
      *
      * @var string
      */
-    private $query;
-
-    /**
-     * User Agent
-     *
-     * @var string
-     */
-    private $agent;
+    private string $query;
 
     /**
      * 设置超时
      *
-     * @var string
+     * @var integer
      */
-    private $timeout = 3;
+    private int $timeout = 3;
 
     /**
      * @var bool
      */
-    private $multipart = true;
+    private bool $multipart = true;
 
     /**
      * 需要在body中传递的值
@@ -71,40 +71,40 @@ class Client
      * @access private
      * @var array
      */
-    private $headers = [];
+    private array $headers = [];
 
     /**
      * cookies
      *
      * @var array
      */
-    private $cookies = [];
+    private array $cookies = [];
 
     /**
      * @var array
      */
-    private $options = [];
+    private array $options = [];
 
     /**
      * 回执头部信息
      *
      * @var array
      */
-    private $responseHeader = [];
+    private array $responseHeader = [];
 
     /**
      * 回执代码
      *
      * @var integer
      */
-    private $responseStatus;
+    private int $responseStatus;
 
     /**
      * 回执身体
      *
      * @var string
      */
-    private $responseBody;
+    private string $responseBody;
 
     /**
      * 设置指定的COOKIE值
@@ -116,6 +116,7 @@ class Client
     public function setCookie(string $key, $value): Client
     {
         $this->cookies[$key] = $value;
+        $this->setHeader('Cookie', str_replace('&', '; ', http_build_query($this->cookies)));
         return $this;
     }
 
@@ -302,10 +303,6 @@ class Client
 
             foreach ($this->headers as $key => $val) {
                 $headers[] = $key . ': ' . $val;
-            }
-
-            if (!empty($this->cookies)) {
-                $headers[] = 'Cookie: ' . str_replace('&', '; ', http_build_query($this->cookies));
             }
 
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);

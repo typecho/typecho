@@ -10,7 +10,8 @@
                 }
             })
         },
-        uploadComplete      :   function (file) {}
+        uploadComplete      :   function (attachment) {},
+        savePost            :   function (cb) {},
     };
 })(window);
 

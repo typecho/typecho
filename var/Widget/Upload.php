@@ -3,10 +3,10 @@
 namespace Widget;
 
 use Typecho\Common;
+use Typecho\Config;
 use Typecho\Date;
 use Typecho\Db\Exception;
 use Typecho\Plugin;
-use Typecho\Widget;
 use Widget\Base\Contents;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
@@ -33,7 +33,7 @@ class Upload extends Contents implements ActionInterface
      */
     public static function deleteHandle(array $content): bool
     {
-        $result = Plugin::factory(Upload::class)->trigger($hasDeleted)->deleteHandle($content);
+        $result = Plugin::factory(Upload::class)->trigger($hasDeleted)->call('deleteHandle', $content);
         if ($hasDeleted) {
             return $result;
         }
@@ -44,19 +44,19 @@ class Upload extends Contents implements ActionInterface
     /**
      * 获取实际文件绝对访问路径
      *
-     * @param array $content 文件相关信息
+     * @param Config $attachment 文件相关信息
      * @return string
      */
-    public static function attachmentHandle(array $content): string
+    public static function attachmentHandle(Config $attachment): string
     {
-        $result = Plugin::factory(Upload::class)->trigger($hasPlugged)->attachmentHandle($content);
+        $result = Plugin::factory(Upload::class)->trigger($hasPlugged)->call('attachmentHandle', $attachment);
         if ($hasPlugged) {
             return $result;
         }
 
         $options = Options::alloc();
         return Common::url(
-            $content['attachment']->path,
+            $attachment->path,
             defined('__TYPECHO_UPLOAD_URL__') ? __TYPECHO_UPLOAD_URL__ : $options->siteUrl
         );
     }
@@ -69,7 +69,7 @@ class Upload extends Contents implements ActionInterface
      */
     public static function attachmentDataHandle(array $content): string
     {
-        $result = Plugin::factory(Upload::class)->trigger($hasPlugged)->attachmentDataHandle($content);
+        $result = Plugin::factory(Upload::class)->trigger($hasPlugged)->call('attachmentDataHandle', $content);
         if ($hasPlugged) {
             return $result;
         }
@@ -109,8 +109,13 @@ class Upload extends Contents implements ActionInterface
         if (!empty($_FILES)) {
             $file = array_pop($_FILES);
             if (0 == $file['error'] && is_uploaded_file($file['tmp_name'])) {
-                $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $this->request->filter('int')->cid)
-                    ->where('table.contents.type = ?', 'attachment'), [$this, 'push']);
+                $this->db->fetchRow(
+                    $this->select()->where(
+                        'table.contents.cid = ?',
+                        $this->request->filter('int')->get('cid')
+                    )
+                    ->where('table.contents.type = ?', 'attachment'), [$this, 'push']
+                );
 
                 if (!$this->have()) {
                     $this->response->setStatus(404);
@@ -130,17 +135,17 @@ class Upload extends Contents implements ActionInterface
                 $result = self::modifyHandle($this->row, $file);
 
                 if (false !== $result) {
-                    self::pluginHandle()->beforeModify($result);
+                    self::pluginHandle()->call('beforeModify', $result);
 
                     $this->update([
-                        'text' => serialize($result)
+                        'text' => json_encode($result)
                     ], $this->db->sql()->where('cid = ?', $this->cid));
 
                     $this->db->fetchRow($this->select()->where('table.contents.cid = ?', $this->cid)
                         ->where('table.contents.type = ?', 'attachment'), [$this, 'push']);
 
                     /** 增加插件接口 */
-                    self::pluginHandle()->modify($this);
+                    self::pluginHandle()->call('modify', $this);
 
                     $this->response->throwJson([$this->attachment->url, [
                         'cid' => $this->cid,
@@ -172,7 +177,7 @@ class Upload extends Contents implements ActionInterface
             return false;
         }
 
-        $result = self::pluginHandle()->trigger($hasModified)->modifyHandle($content, $file);
+        $result = self::pluginHandle()->trigger($hasModified)->call('modifyHandle', $content, $file);
         if ($hasModified) {
             return $result;
         }
@@ -297,21 +302,21 @@ class Upload extends Contents implements ActionInterface
                 $result = self::uploadHandle($file);
 
                 if (false !== $result) {
-                    self::pluginHandle()->beforeUpload($result);
+                    self::pluginHandle()->call('beforeUpload', $result);
 
                     $struct = [
                         'title' => $result['name'],
                         'slug' => $result['name'],
                         'type' => 'attachment',
                         'status' => 'publish',
-                        'text' => serialize($result),
+                        'text' => json_encode($result),
                         'allowComment' => 1,
                         'allowPing' => 0,
                         'allowFeed' => 1
                     ];
 
                     if (isset($this->request->cid)) {
-                        $cid = $this->request->filter('int')->cid;
+                        $cid = $this->request->filter('int')->get('cid');
 
                         if ($this->isWriteable($this->db->sql()->where('cid = ?', $cid))) {
                             $struct['parent'] = $cid;
@@ -324,7 +329,7 @@ class Upload extends Contents implements ActionInterface
                         ->where('table.contents.type = ?', 'attachment'), [$this, 'push']);
 
                     /** 增加插件接口 */
-                    self::pluginHandle()->upload($this);
+                    self::pluginHandle()->call('upload', $this);
 
                     $this->response->throwJson([$this->attachment->url, [
                         'cid' => $insertId,
@@ -356,7 +361,7 @@ class Upload extends Contents implements ActionInterface
             return false;
         }
 
-        $result = self::pluginHandle()->trigger($hasUploaded)->uploadHandle($file);
+        $result = self::pluginHandle()->trigger($hasUploaded)->call('uploadHandle', $file);
         if ($hasUploaded) {
             return $result;
         }

@@ -29,7 +29,7 @@ class Edit extends Options implements ActionInterface
     /**
      * @var bool
      */
-    private $configNoticed = false;
+    private bool $configNoticed = false;
 
     /**
      * 启用插件
@@ -65,7 +65,7 @@ class Edit extends Options implements ActionInterface
                 $result = call_user_func([$className, 'activate']);
                 Plugin::activate($pluginName);
                 $this->update(
-                    ['value' => serialize(Plugin::export())],
+                    ['value' => json_encode(Plugin::export())],
                     $this->db->sql()->where('name = ?', 'plugins')
                 );
             } catch (Plugin\Exception $e) {
@@ -124,7 +124,7 @@ class Edit extends Options implements ActionInterface
             $result = call_user_func([$className, 'configCheck'], $settings);
 
             if (!empty($result) && is_string($result)) {
-                Notice::alloc()->set($result, 'notice');
+                Notice::alloc()->set($result);
                 $this->configNoticed = true;
             }
         }
@@ -164,16 +164,16 @@ class Edit extends Options implements ActionInterface
                 $db->query($db->insert('table.options')
                     ->rows([
                         'name'  => $pluginName,
-                        'value' => serialize($settings),
+                        'value' => json_encode($settings),
                         'user'  => 0
                     ]));
             } else {
                 foreach ($options as $option) {
-                    $value = unserialize($option['value']);
+                    $value = json_decode($option['value'], true);
                     $value = array_merge($value, $settings);
 
                     $db->query($db->update('table.options')
-                        ->rows(['value' => serialize($value)])
+                        ->rows(['value' => json_encode($value)])
                         ->where('name = ?', $pluginName)
                         ->where('user = ?', $option['user']));
                 }
@@ -255,13 +255,13 @@ class Edit extends Options implements ActionInterface
         }
 
         Plugin::deactivate($pluginName);
-        $this->update(['value' => serialize(Plugin::export())], $this->db->sql()->where('name = ?', 'plugins'));
+        $this->update(['value' => json_encode(Plugin::export())], $this->db->sql()->where('name = ?', 'plugins'));
 
         $this->delete($this->db->sql()->where('name = ?', 'plugin:' . $pluginName));
         $this->delete($this->db->sql()->where('name = ?', '_plugin:' . $pluginName));
 
         if (isset($result) && is_string($result)) {
-            Notice::alloc()->set($result, 'notice');
+            Notice::alloc()->set($result);
         } else {
             Notice::alloc()->set(_t('插件已经被禁用'), 'success');
         }
@@ -310,9 +310,9 @@ class Edit extends Options implements ActionInterface
     {
         $this->user->pass('administrator');
         $this->security->protect();
-        $this->on($this->request->is('activate'))->activate($this->request->filter('slug')->activate);
-        $this->on($this->request->is('deactivate'))->deactivate($this->request->filter('slug')->deactivate);
-        $this->on($this->request->is('config'))->config($this->request->filter('slug')->config);
+        $this->on($this->request->is('activate'))->activate($this->request->filter('slug')->get('activate'));
+        $this->on($this->request->is('deactivate'))->deactivate($this->request->filter('slug')->get('deactivate'));
+        $this->on($this->request->is('config'))->config($this->request->filter('slug')->get('config'));
         $this->response->redirect($this->options->adminUrl);
     }
 }

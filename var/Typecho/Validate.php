@@ -15,7 +15,7 @@ class Validate
      * @access private
      * @var array
      */
-    private $data;
+    private array $data;
 
     /**
      * 当前验证指针
@@ -23,7 +23,7 @@ class Validate
      * @access private
      * @var string
      */
-    private $key;
+    private string $key;
 
     /**
      * 验证规则数组
@@ -31,7 +31,7 @@ class Validate
      * @access private
      * @var array
      */
-    private $rules = [];
+    private array $rules = [];
 
     /**
      * 中断模式,一旦出现验证错误即抛出而不再继续执行
@@ -39,7 +39,7 @@ class Validate
      * @access private
      * @var boolean
      */
-    private $break = false;
+    private bool $break = false;
 
     /**
      * 最小长度
@@ -120,7 +120,7 @@ class Validate
      *
      * @access public
      *
-     * @param string
+     * @param string $str
      *
      * @return boolean
      */
@@ -134,7 +134,7 @@ class Validate
      *
      * @access public
      *
-     * @param string
+     * @param string $str
      *
      * @return boolean
      */
@@ -148,7 +148,7 @@ class Validate
      *
      * @access public
      *
-     * @param string
+     * @param string $str
      *
      * @return boolean
      */

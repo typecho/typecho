@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ['7.2', '7.3', '7.4', '8.0', '8.1']
+        php: ['7.4', '8.0', '8.1', '8.2']
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -43,6 +43,7 @@ jobs:
         mkdir build/usr/uploads/
         chmod 755 build/usr/uploads/
         rm -rf build/admin/src
+        rm -rf build/usr/themes/classic-22/static/scss
         cd build && zip -q -r typecho.zip * && mv typecho.zip ../ && cd -
     - name: Upload a Build Artifact
       uses: WebFreak001/deploy-nightly@v1.1.0

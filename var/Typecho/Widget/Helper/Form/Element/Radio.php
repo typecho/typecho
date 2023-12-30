@@ -24,7 +24,7 @@ class Radio extends Element
      *
      * @var array
      */
-    private $options = [];
+    private array $options = [];
 
     /**
      * 初始化当前输入项
@@ -65,7 +65,7 @@ class Radio extends Element
             $option->removeAttribute('checked');
         }
 
-        if (isset($this->options[$value])) {
+        if (isset($value) && isset($this->options[$value])) {
             $this->value = $value;
             $this->options[$value]->setAttribute('checked', 'true');
             $this->input = $this->options[$value];

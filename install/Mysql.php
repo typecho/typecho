@@ -76,8 +76,8 @@
         <li>
             <label class="typecho-label" for="dbSslVerify"><?php _e('启用数据库 SSL 服务端证书验证'); ?></label>
             <select name="dbSslVerify" id="dbSslVerify">
-                <option value="on"><?php _e('启用'); ?></option>
                 <option value="off"><?php _e('不启用'); ?></option>
+                <option value="on"><?php _e('启用'); ?></option>
             </select>
         </li>
     </ul>

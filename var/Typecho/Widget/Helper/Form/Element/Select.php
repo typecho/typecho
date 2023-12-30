@@ -24,7 +24,7 @@ class Select extends Element
      *
      * @var array
      */
-    private $options = [];
+    private array $options = [];
 
     /**
      * 初始化当前输入项
@@ -60,7 +60,7 @@ class Select extends Element
             $option->removeAttribute('selected');
         }
 
-        if (isset($this->options[$value])) {
+        if (isset($value) && isset($this->options[$value])) {
             $this->options[$value]->setAttribute('selected', 'true');
         }
     }

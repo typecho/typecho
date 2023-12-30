@@ -9,6 +9,7 @@ use Typecho\Widget\Exception;
 use Typecho\Widget\Helper\PageNavigator\Box;
 use Widget\Base\Comments;
 use Widget\Base\Contents;
+use Widget\Contents\From;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -31,7 +32,7 @@ class Admin extends Comments
      * @access private
      * @var Query
      */
-    private $countSql;
+    private Query $countSql;
 
     /**
      * 当前页
@@ -39,15 +40,15 @@ class Admin extends Comments
      * @access private
      * @var integer
      */
-    private $currentPage;
+    private int $currentPage;
 
     /**
      * 所有文章个数
      *
      * @access private
-     * @var integer
+     * @var integer|null
      */
-    private $total = false;
+    private ?int $total;
 
     /**
      * 获取菜单标题
@@ -75,21 +76,21 @@ class Admin extends Comments
     {
         $select = $this->select();
         $this->parameter->setDefault('pageSize=20');
-        $this->currentPage = $this->request->get('page', 1);
+        $this->currentPage = $this->request->filter('int')->get('page', 1);
 
         /** 过滤标题 */
-        if (null != ($keywords = $this->request->filter('search')->keywords)) {
+        if (null != ($keywords = $this->request->filter('search')->get('keywords'))) {
             $select->where('table.comments.text LIKE ?', '%' . $keywords . '%');
         }
 
         /** 如果具有贡献者以上权限,可以查看所有评论,反之只能查看自己的评论 */
         if (!$this->user->pass('editor', true)) {
             $select->where('table.comments.ownerId = ?', $this->user->uid);
-        } elseif (!isset($this->request->cid)) {
-            if ('on' == $this->request->__typecho_all_comments) {
+        } elseif (!$this->request->is('cid')) {
+            if ($this->request->is('__typecho_all_comments=on')) {
                 Cookie::set('__typecho_all_comments', 'on');
             } else {
-                if ('off' == $this->request->__typecho_all_comments) {
+                if ($this->request->is('__typecho_all_comments=off')) {
                     Cookie::set('__typecho_all_comments', 'off');
                 }
 
@@ -99,17 +100,17 @@ class Admin extends Comments
             }
         }
 
-        if (in_array($this->request->status, ['approved', 'waiting', 'spam'])) {
-            $select->where('table.comments.status = ?', $this->request->status);
-        } elseif ('hold' == $this->request->status) {
+        if (in_array($this->request->get('status'), ['approved', 'waiting', 'spam'])) {
+            $select->where('table.comments.status = ?', $this->request->get('status'));
+        } elseif ('hold' == $this->request->get('status')) {
             $select->where('table.comments.status <> ?', 'approved');
         } else {
             $select->where('table.comments.status = ?', 'approved');
         }
 
         //增加按文章归档功能
-        if (isset($this->request->cid)) {
-            $select->where('table.comments.cid = ?', $this->request->filter('int')->cid);
+        if ($this->request->is('cid')) {
+            $select->where('table.comments.cid = ?', $this->request->filter('int')->get('cid'));
         }
 
         $this->countSql = clone $select;
@@ -131,7 +132,7 @@ class Admin extends Comments
 
         /** 使用盒状分页 */
         $nav = new Box(
-            false === $this->total ? $this->total = $this->size($this->countSql) : $this->total,
+            !isset($this->total) ? $this->total = $this->size($this->countSql) : $this->total,
             $this->currentPage,
             $this->parameter->pageSize,
             $query
@@ -142,14 +143,12 @@ class Admin extends Comments
     /**
      * 获取当前内容结构
      *
-     * @return array|null
+     * @return Contents
      * @throws Db\Exception
      */
-    protected function ___parentContent(): ?array
+    protected function ___parentContent(): Contents
     {
-        $cid = isset($this->request->cid) ? $this->request->filter('int')->cid : $this->cid;
-        return $this->db->fetchRow(Contents::alloc()->select()
-            ->where('table.contents.cid = ?', $cid)
-            ->limit(1), [Contents::alloc(), 'filter']);
+        $cid = $this->request->is('cid') ? $this->request->filter('int')->get('cid') : $this->cid;
+        return From::allocWithAlias($cid, ['cid' => $cid]);
     }
 }

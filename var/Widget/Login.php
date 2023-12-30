@@ -44,7 +44,7 @@ class Login extends Users implements ActionInterface
         $expire = 30 * 24 * 3600;
 
         /** 记住密码状态 */
-        if ($this->request->remember) {
+        if ($this->request->is('remember=1')) {
             Cookie::set('__typecho_remember_remember', 1, $expire);
         } elseif (Cookie::get('__typecho_remember_remember')) {
             Cookie::delete('__typecho_remember_remember');
@@ -52,7 +52,7 @@ class Login extends Users implements ActionInterface
 
         /** 截获验证异常 */
         if ($error = $validator->run($this->request->from('name', 'password'))) {
-            Cookie::set('__typecho_remember_name', $this->request->name);
+            Cookie::set('__typecho_remember_name', $this->request->get('name'));
 
             /** 设置提示信息 */
             Notice::alloc()->set($error);
@@ -61,10 +61,10 @@ class Login extends Users implements ActionInterface
 
         /** 开始验证用户 **/
         $valid = $this->user->login(
-            $this->request->name,
-            $this->request->password,
+            $this->request->get('name'),
+            $this->request->get('password'),
             false,
-            1 == $this->request->remember ? $expire : 0
+            1 == $this->request->get('name') ? $expire : 0
         );
 
         /** 比对密码 */
@@ -72,23 +72,25 @@ class Login extends Users implements ActionInterface
             /** 防止穷举,休眠3秒 */
             sleep(3);
 
-            self::pluginHandle()->loginFail(
+            self::pluginHandle()->call(
+                'loginFailure',
                 $this->user,
-                $this->request->name,
-                $this->request->password,
-                1 == $this->request->remember
+                $this->request->get('name'),
+                $this->request->get('password'),
+                $this->request->is('remember=1')
             );
 
-            Cookie::set('__typecho_remember_name', $this->request->name);
+            Cookie::set('__typecho_remember_name', $this->request->get('name'));
             Notice::alloc()->set(_t('用户名或密码无效'), 'error');
-            $this->response->goBack('?referer=' . urlencode($this->request->referer));
+            $this->response->goBack('?referer=' . urlencode($this->request->get('referer')));
         }
 
-        self::pluginHandle()->loginSucceed(
+        self::pluginHandle()->call(
+            'loginSuccess',
             $this->user,
-            $this->request->name,
-            $this->request->password,
-            1 == $this->request->remember
+            $this->request->get('name'),
+            $this->request->get('password'),
+            $this->request->is('remember=1')
         );
 
         /** 跳转验证后地址 */

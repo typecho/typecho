@@ -18,7 +18,7 @@ class GetTextMulti
      * @access private
      * @var GetText[]
      */
-    private $handlers = [];
+    private array $handlers = [];
 
     /**
      * 构造函数
@@ -48,7 +48,7 @@ class GetTextMulti
      * Translates a string
      *
      * @access public
-     * @param string string to be translated
+     * @param string $string string to be translated
      * @return string translated string (or original, if not found)
      */
     public function translate(string $string): string
@@ -67,12 +67,12 @@ class GetTextMulti
      * Plural version of gettext
      *
      * @access public
-     * @param string single
-     * @param string plural
-     * @param string number
+     * @param string $single single
+     * @param string $plural plural
+     * @param int $number number
      * @return string translated plural form
      */
-    public function ngettext($single, $plural, $number): string
+    public function ngettext(string $single, string $plural, int $number): string
     {
         $count = - 1;
 

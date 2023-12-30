@@ -24,7 +24,7 @@ abstract class Element extends Layout
      * @access protected
      * @var integer
      */
-    protected static $uniqueId = 0;
+    protected static int $uniqueId = 0;
 
     /**
      * 表单元素容器
@@ -32,15 +32,15 @@ abstract class Element extends Layout
      * @access public
      * @var Layout
      */
-    public $container;
+    public Layout $container;
 
     /**
      * 输入栏
      *
      * @access public
-     * @var Layout
+     * @var Layout|null
      */
-    public $input;
+    public ?Layout $input;
 
     /**
      * inputs
@@ -48,7 +48,7 @@ abstract class Element extends Layout
      * @var array
      * @access public
      */
-    public $inputs = [];
+    public array $inputs = [];
 
     /**
      * 表单标题
@@ -56,7 +56,7 @@ abstract class Element extends Layout
      * @access public
      * @var Layout
      */
-    public $label;
+    public Layout $label;
 
     /**
      * 表单验证器
@@ -64,7 +64,7 @@ abstract class Element extends Layout
      * @access public
      * @var array
      */
-    public $rules = [];
+    public array $rules = [];
 
     /**
      * 表单名称
@@ -72,7 +72,7 @@ abstract class Element extends Layout
      * @access public
      * @var string
      */
-    public $name;
+    public ?string $name;
 
     /**
      * 表单值
@@ -86,17 +86,17 @@ abstract class Element extends Layout
      * 表单描述
      *
      * @access private
-     * @var string
+     * @var Layout
      */
-    protected $description;
+    protected Layout $description;
 
     /**
      * 表单消息
      *
      * @access protected
-     * @var string
+     * @var Layout
      */
-    protected $message;
+    protected Layout $message;
 
     /**
      * 多行输入
@@ -104,7 +104,7 @@ abstract class Element extends Layout
      * @access public
      * @var array()
      */
-    protected $multiline = [];
+    protected array $multiline = [];
 
     /**
      * 构造函数
@@ -217,7 +217,7 @@ abstract class Element extends Layout
     public function value($value): Element
     {
         $this->value = $value;
-        $this->inputValue($value ?? '');
+        $this->inputValue($value);
         return $this;
     }
 

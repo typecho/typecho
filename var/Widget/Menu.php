@@ -10,6 +10,7 @@ use Widget\Contents\Attachment\Edit as AttachmentEdit;
 use Widget\Contents\Post\Edit as PostEdit;
 use Widget\Contents\Page\Edit as PageEdit;
 use Widget\Contents\Post\Admin as PostAdmin;
+use Widget\Contents\Page\Admin as PageAdmin;
 use Widget\Comments\Admin as CommentsAdmin;
 use Widget\Metas\Category\Admin as CategoryAdmin;
 use Widget\Metas\Category\Edit as CategoryEdit;
@@ -30,41 +31,41 @@ class Menu extends Base
      * 当前菜单标题
      * @var string
      */
-    public $title;
+    public string $title;
 
     /**
      * 当前增加项目链接
-     * @var string
+     * @var string|null
      */
-    public $addLink;
+    public ?string $addLink;
 
     /**
      * 父菜单列表
      *
      * @var array
      */
-    private $menu = [];
+    private array $menu = [];
 
     /**
      * 当前父菜单
      *
      * @var integer
      */
-    private $currentParent = 1;
+    private int $currentParent = 1;
 
     /**
      * 当前子菜单
      *
      * @var integer
      */
-    private $currentChild = 0;
+    private int $currentChild = 0;
 
     /**
      * 当前页面
      *
      * @var string
      */
-    private $currentUrl;
+    private string $currentUrl;
 
     /**
      * 执行函数,初始化菜单
@@ -95,11 +96,13 @@ class Menu extends Base
                 [[PostEdit::class, 'getMenuTitle'], [PostEdit::class, 'getMenuTitle'], 'write-post.php?cid=', 'contributor', true],
                 [_t('创建页面'), _t('创建新页面'), 'write-page.php', 'editor'],
                 [[PageEdit::class, 'getMenuTitle'], [PageEdit::class, 'getMenuTitle'], 'write-page.php?cid=', 'editor', true],
+                [[PageEdit::class, 'getMenuTitle'], [PageEdit::class, 'getMenuTitle'], 'write-page.php?parent=', 'editor', true],
             ],
             [
                 [_t('文章'), _t('管理文章'), 'manage-posts.php', 'contributor', false, 'write-post.php'],
                 [[PostAdmin::class, 'getMenuTitle'], [PostAdmin::class, 'getMenuTitle'], 'manage-posts.php?uid=', 'contributor', true],
                 [_t('独立页面'), _t('管理独立页面'), 'manage-pages.php', 'editor', false, 'write-page.php'],
+                [[PageAdmin::class, 'getMenuTitle'], [PageAdmin::class, 'getMenuTitle'], 'manage-pages.php?parent=', 'editor', true, [PageAdmin::class, 'getAddLink']],
                 [_t('评论'), _t('管理评论'), 'manage-comments.php', 'contributor'],
                 [[CommentsAdmin::class, 'getMenuTitle'], [CommentsAdmin::class, 'getMenuTitle'], 'manage-comments.php?cid=', 'contributor', true],
                 [_t('分类'), _t('管理分类'), 'manage-categories.php', 'editor', false, 'category.php'],
@@ -124,7 +127,7 @@ class Menu extends Base
         ];
 
         /** 获取扩展菜单 */
-        $panelTable = unserialize($this->options->panelTable);
+        $panelTable = $this->options->panelTable;
         $extendingParentMenu = empty($panelTable['parent']) ? [] : $panelTable['parent'];
         $extendingChildMenu = empty($panelTable['child']) ? [] : $panelTable['child'];
         $currentUrl = $this->request->getRequestUrl();

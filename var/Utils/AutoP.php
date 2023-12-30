@@ -20,7 +20,7 @@ class AutoP
      * @access private
      * @var integer
      */
-    private $uniqueId = 0;
+    private int $uniqueId = 0;
 
     /**
      * 存储的段落
@@ -28,7 +28,7 @@ class AutoP
      * @access private
      * @var array
      */
-    private $blocks = [];
+    private array $blocks = [];
 
     /**
      * 替换段落的回调函数

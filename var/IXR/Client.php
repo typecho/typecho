@@ -20,33 +20,33 @@ class Client
      *
      * @var string
      */
-    private $url;
+    private string $url;
 
     /**
      * 消息体
      *
      * @var Message
      */
-    private $message;
+    private Message $message;
 
     /**
      * 调试开关
      *
      * @var boolean
      */
-    private $debug = false;
+    private bool $debug = false;
 
     /**
      * 请求前缀
      *
      * @var string|null
      */
-    private $prefix;
+    private ?string $prefix;
 
     /**
      * @var Error
      */
-    private $error;
+    private Error $error;
 
     /**
      * 客户端构造函数

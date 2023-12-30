@@ -35,6 +35,7 @@ $pages = \Widget\Contents\Page\Admin::alloc();
                         </div>
 
                         <div class="search" role="search">
+                            <?php $pages->backLink(); ?>
                             <?php if ('' != $request->keywords): ?>
                                 <a href="<?php $options->adminUrl('manage-pages.php'); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
                             <?php endif; ?>
@@ -61,7 +62,7 @@ $pages = \Widget\Contents\Page\Admin::alloc();
                                 <th class="kit-hidden-mb"></th>
                                 <th class="kit-hidden-mb"></th>
                                 <th><?php _e('标题'); ?></th>
-                                <th><?php _e('缩略名'); ?></th>
+                                <th><?php _e('子页面'); ?></th>
                                 <th class="kit-hidden-mb"><?php _e('作者'); ?></th>
                                 <th><?php _e('日期'); ?></th>
                             </tr>
@@ -80,8 +81,10 @@ $pages = \Widget\Contents\Page\Admin::alloc();
                                         <td>
                                             <a href="<?php $options->adminUrl('write-page.php?cid=' . $pages->cid); ?>"><?php $pages->title(); ?></a>
                                             <?php
-                                            if ($pages->hasSaved || 'page_draft' == $pages->type) {
+                                            if ('page_draft' == $pages->type) {
                                                 echo '<em class="status">' . _t('草稿') . '</em>';
+                                            } elseif ($pages->revision) {
+                                                echo '<em class="status">' . _t('有修订版') . '</em>';
                                             }
 
                                             if ('hidden' == $pages->status) {
@@ -97,12 +100,18 @@ $pages = \Widget\Contents\Page\Admin::alloc();
                                                         class="i-exlink"></i></a>
                                             <?php endif; ?>
                                         </td>
-                                        <td><?php $pages->slug(); ?></td>
+                                        <td>
+                                            <?php if (count($pages->children) > 0): ?>
+                                                <a href="<?php $options->adminUrl('manage-pages.php?parent=' . $pages->cid); ?>"><?php echo _n('一个页面', '%d个页面', count($pages->children)); ?></a>
+                                            <?php else: ?>
+                                                <a href="<?php $options->adminUrl('write-page.php?parent=' . $pages->cid); ?>"><?php echo _e('新增'); ?></a>
+                                            <?php endif; ?>
+                                        </td>
                                         <td class="kit-hidden-mb"><?php $pages->author(); ?></td>
                                         <td>
-                                            <?php if ($pages->hasSaved): ?>
+                                            <?php if ('page_draft' == $pages->type || $pages->revision): ?>
                                                 <span class="description">
-                                <?php $modifyDate = new \Typecho\Date($pages->modified); ?>
+                                <?php $modifyDate = new \Typecho\Date($pages->revision ? $pages->revision['modified'] : $pages->modified); ?>
                                 <?php _e('保存于 %s', $modifyDate->word()); ?>
                                 </span>
                                             <?php else: ?>
@@ -132,7 +141,7 @@ include 'common-js.php';
 include 'table-js.php';
 ?>
 
-<?php if (!isset($request->status) || 'publish' == $request->get('status')): ?>
+<?php if (!$request->is('keywords')): ?>
     <script type="text/javascript">
         (function () {
             $(document).ready(function () {

@@ -23,63 +23,63 @@ abstract class Widget
      *
      * @var array
      */
-    private static $widgetPool = [];
+    private static array $widgetPool = [];
 
     /**
      * widget别名
      *
      * @var array
      */
-    private static $widgetAlias = [];
+    private static array $widgetAlias = [];
 
     /**
      * request对象
      *
      * @var WidgetRequest
      */
-    protected $request;
+    protected WidgetRequest $request;
 
     /**
      * response对象
      *
      * @var WidgetResponse
      */
-    protected $response;
+    protected WidgetResponse $response;
 
     /**
      * 数据堆栈
      *
      * @var array
      */
-    protected $stack = [];
+    protected array $stack = [];
 
     /**
      * 当前队列指针顺序值,从1开始
      *
      * @var integer
      */
-    protected $sequence = 0;
+    protected int $sequence = 0;
 
     /**
      * 队列长度
      *
      * @var integer
      */
-    protected $length = 0;
+    protected int $length = 0;
 
     /**
      * config对象
      *
      * @var Config
      */
-    protected $parameter;
+    protected Config $parameter;
 
     /**
      * 数据堆栈每一行
      *
      * @var array
      */
-    protected $row = [];
+    protected array $row = [];
 
     /**
      * 构造函数,初始化组件
@@ -275,21 +275,56 @@ abstract class Widget
     }
 
     /**
+     * 按模版渲染
+     *
+     * @param string $template 模版
+     * @return string
+     */
+    public function template(string $template): string
+    {
+        return preg_replace_callback(
+            "/\{([_a-z0-9]+)\}/i",
+            function (array $matches) {
+                return $this->{$matches[1]};
+            },
+            $template
+        );
+    }
+
+    /**
      * 格式化解析堆栈内的所有数据
      *
-     * @param string $format 数据格式
+     * @param string $template 模版
      */
-    public function parse(string $format)
+    public function parse(string $template)
     {
         while ($this->next()) {
-            echo preg_replace_callback(
-                "/\{([_a-z0-9]+)\}/i",
-                function (array $matches) {
-                    return $this->{$matches[1]};
-                },
-                $format
-            );
+            echo $this->template($template);
         }
+    }
+
+    /**
+     * @param string|array $column
+     * @return array
+     */
+    public function toArray($column): array
+    {
+        $result = [];
+
+        while ($this->next()) {
+            if (is_array($column)) {
+                $item = [];
+                foreach ($column as $key) {
+                    $item[$key] = $this->{$key};
+                }
+
+                $result[] = $item;
+            } else {
+                $result[] = $this->{$column};
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -337,8 +372,19 @@ abstract class Widget
      */
     public function alt(...$args)
     {
+        $this->altBy($this->sequence, ...$args);
+    }
+
+    /**
+     * 根据余数输出
+     *
+     * @param int $current
+     * @param mixed ...$args
+     */
+    public function altBy(int $current, ...$args)
+    {
         $num = count($args);
-        $split = $this->sequence % $num;
+        $split = $current % $num;
         echo $args[(0 == $split ? $num : $split) - 1];
     }
 
@@ -361,7 +407,7 @@ abstract class Widget
     public function __call(string $name, array $args)
     {
         $method = 'call' . ucfirst($name);
-        self::pluginHandle()->trigger($plugged)->{$method}($this, $args);
+        self::pluginHandle()->trigger($plugged)->call($method, $this, $args);
 
         if (!$plugged) {
             echo $this->{$name};
@@ -386,18 +432,20 @@ abstract class Widget
      */
     public function __get(string $name)
     {
-        if (array_key_exists($name, $this->row)) {
+        $method = '___' . $name;
+        $key = '#' . $name;
+
+        if (array_key_exists($key, $this->row)) {
+            return $this->row[$key];
+        } elseif (method_exists($this, $method)) {
+            $this->row[$key] = $this->$method();
+            return $this->row[$key];
+        } elseif (array_key_exists($name, $this->row)) {
             return $this->row[$name];
         } else {
-            $method = '___' . $name;
-
-            if (method_exists($this, $method)) {
-                return $this->$method();
-            } else {
-                $return = self::pluginHandle()->trigger($plugged)->{$method}($this);
-                if ($plugged) {
-                    return $return;
-                }
+            $return = self::pluginHandle()->trigger($plugged)->call($method, $this);
+            if ($plugged) {
+                return $return;
             }
         }
 
