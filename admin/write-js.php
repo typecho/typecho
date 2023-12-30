@@ -215,6 +215,7 @@ $(document).ready(function() {
     <?php if ($options->autoSave): ?>
     // 自动保存
     let saveTimer = null;
+    let stopAutoSave = false;
 
     form.on('datachange', function () {
         changed = true;
@@ -225,8 +226,12 @@ $(document).ready(function() {
         }
 
         saveTimer = setTimeout(function () {
-            Typecho.savePost();
+            !stopAutoSave && Typecho.savePost();
         }, 3000);
+    }).on('submit', function () {
+        stopAutoSave = true;
+    }).on('submitted', function () {
+        stopAutoSave = false;
     });
     <?php else: ?>
     form.on('datachange', function () {

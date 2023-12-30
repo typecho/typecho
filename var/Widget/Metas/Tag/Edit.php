@@ -404,46 +404,4 @@ class Edit extends Metas implements ActionInterface
         $this->on($this->request->is('do=refresh'))->refreshTag();
         $this->response->redirect($this->options->adminUrl);
     }
-
-
-    /**
-     * 根据tag获取ID
-     *
-     * @param mixed $inputTags 标签名
-     * @return array|int
-     * @throws Exception
-     */
-    private function scanTags($inputTags)
-    {
-        $tags = is_array($inputTags) ? $inputTags : [$inputTags];
-        $result = [];
-
-        foreach ($tags as $tag) {
-            if (empty($tag)) {
-                continue;
-            }
-
-            $row = $this->db->fetchRow($this->select()
-                ->where('type = ?', 'tag')
-                ->where('name = ?', $tag)->limit(1));
-
-            if ($row) {
-                $result[] = $row['mid'];
-            } else {
-                $slug = Common::slugName($tag);
-
-                if ($slug) {
-                    $result[] = $this->insert([
-                        'name'  => $tag,
-                        'slug'  => $slug,
-                        'type'  => 'tag',
-                        'count' => 0,
-                        'order' => 0,
-                    ]);
-                }
-            }
-        }
-
-        return is_array($inputTags) ? $result : current($result);
-    }
 }
