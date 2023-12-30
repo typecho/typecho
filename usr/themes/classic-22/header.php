@@ -49,9 +49,10 @@
                     <a href="<?php $pages->permalink(); ?>"<?php if ($this->is('page', $pages->slug)): ?> class="active"<?php endif; ?>><?php $pages->title(); ?></a>
                 </li>
                 <?php endwhile; ?>
-
                 <li>
-                    <a href="<?php $this->options->index('search/keywords'); ?>" aria-label="<?php _e('搜索'); ?>"><img src="<?php $this->options->themeUrl('static/img/search.svg'); ?>" alt="Search"></a>
+                    <form method="post" action="<?php $this->options->siteUrl(); ?>">
+                        <input type="search" id="s" name="s">
+                    </form>
                 </li>
             </ul>
         </nav>

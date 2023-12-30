@@ -182,6 +182,29 @@ h1, h2, h3, h4, h5 { line-height: 1.25; }
     margin: calc(var(--spacing) * -.5);
     padding: calc(var(--spacing) * .5);
   }
+
+  form {
+    margin-bottom: 0;
+
+    input[type=search] {
+      height: 50px;
+      background-image: url("../img/search.svg");
+      background-size: auto;
+      color: rgb(255,255,255);
+
+      &:focus {
+        --form-element-focus-color: rgba(255,255,255,0.5);
+      }
+
+      &:not(:focus) {
+        padding: 0;
+        border: none;
+        width: 30px;
+        padding-inline-start: 0;
+        background-position: center center;
+      }
+    }
+  }
 }
 
 .nav-toggler-btn {

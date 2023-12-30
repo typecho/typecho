@@ -4,7 +4,7 @@
 <main class="container">
     <div class="container-thin">
 
-        <h1 class="text-center"><?php _e('搜索关键词'); ?></h1>
+        <h1 class="text-center"><?php _e('搜索'); ?></h1>
         
         <form method="post" action="<?php $this->options->siteUrl(); ?>">
             <input type="search" id="s" name="s" placeholder="<?php _e('搜索关键字'); ?>" value="<?php $this->archiveTitle('','',''); ?>">
