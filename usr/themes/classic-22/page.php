@@ -10,11 +10,9 @@
                 <?php $this->content(); ?>
             </div>
         </article>
-    </div>
 
-    <hr class="post-separator">
+        <hr class="post-separator">
     
-    <div class="container-thin">
         <?php $this->need('comments.php'); ?>
     </div>
 </main>
