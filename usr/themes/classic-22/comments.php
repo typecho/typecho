@@ -2,7 +2,7 @@
 <div id="comments">
     <?php $this->comments()->to($comments); ?>
     <?php if ($comments->have()): ?>
-        <h2 class="text-center"><?php $this->commentsNum(_t('暂无评论'), _t('仅有一条评论'), _t('已有 %d 条评论')); ?></h2>
+        <h2 class="text-center"><?php $this->commentsNum(_t('暂无评论'), _t('1 条评论'), _t('%d 条评论')); ?></h2>
 
         <?php $comments->listComments(array(
             'commentStatus' => _t('你的评论正等待审核'),
@@ -32,7 +32,7 @@
                 <div class="grid">
                     <input type="text" placeholder="<?php _e('名字'); ?>" name="author" id="author" value="<?php $this->remember('author'); ?>" required/>
                     <input type="email" placeholder="<?php _e('Email'); ?>" name="mail" id="mail" value="<?php $this->remember('mail'); ?>"<?php if ($this->options->commentsRequireMail): ?> required<?php endif; ?> />
-                    <input type="url" placeholder="<?php _e('网站'); ?><?php if (!($this->options->commentsRequireUrl)): ?><?php _e('（选填）'); ?><?php endif; ?>" name="url" id="url" placeholder="<?php _e('https://'); ?>" value="<?php $this->remember('url'); ?>"<?php if ($this->options->commentsRequireUrl): ?> required<?php endif; ?> />
+                    <input type="url" placeholder="<?php _e('网站 http://'); ?><?php if (!($this->options->commentsRequireUrl)): ?><?php _e('（选填）'); ?><?php endif; ?>" name="url" id="url" placeholder="<?php _e('https://'); ?>" value="<?php $this->remember('url'); ?>"<?php if ($this->options->commentsRequireUrl): ?> required<?php endif; ?> />
                 </div>
                 <?php endif; ?>
                 <button type="submit"><?php _e('提交评论'); ?></button>
