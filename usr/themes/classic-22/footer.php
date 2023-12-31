@@ -14,9 +14,6 @@
 </footer>
 
 <?php $this->footer(); ?>
-<script>
-  feather.replace();
-</script>
 
 </body>
 </html>
