@@ -12,6 +12,8 @@ jobs:
   auto-merge:
     if: github.event.action == 'closed' && github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'fix/')
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Merge to dev branch
         uses: devmasx/merge-branch@master
@@ -23,6 +25,8 @@ jobs:
   label-merge:
     if: github.event.action == 'labeled' && !startsWith(github.event.pull_request.head.ref, 'fix/')
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Merge to dev branch
         uses: devmasx/merge-branch@master
