@@ -169,6 +169,13 @@ class Options extends Base
                 $themeOptions = $this->tryDeserialize($options[$themeOptionsKey]);
                 $options = array_merge($options, $themeOptions);
             }
+        } elseif (function_exists('install_get_default_options')) {
+            $defaultOptions = install_get_default_options();
+            $initOptionKeys = ['routingTable', 'plugins', 'charset', 'contentType', 'timezone', 'installed', 'generator', 'siteUrl', 'lang', 'secret'];
+
+            foreach ($initOptionKeys as $option) {
+                $options[$option] = $defaultOptions[$option];
+            }
         }
 
         $this->push($options);
