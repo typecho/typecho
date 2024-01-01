@@ -57,7 +57,7 @@ class Metas extends Base implements QueryInterface, RowFilterInterface, PrimaryK
             case 'directory':
                 return implode('/', array_map('urlencode', $this->directory));
             default:
-                return '';
+                return '{' . $key . '}';
         }
     }
 
