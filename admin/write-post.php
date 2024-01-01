@@ -33,11 +33,14 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
                     $permalink = ltrim($permalink, '/');
                     $permalink = preg_replace("/\[([_a-z0-9-]+)[^\]]*\]/i", "{\\1}", $permalink);
                     if ($post->have()) {
-                        $permalink = str_replace([
-                            '{cid}', '{category}', '{year}', '{month}', '{day}'
-                        ], [
-                            $post->cid, $post->category, $post->year, $post->month, $post->day
-                        ], $permalink);
+                        $permalink = preg_replace_callback(
+                            "/\{(cid|category|year|month|day)\}/i",
+                            function ($matches) use ($post) {
+                                $key = $matches[1];
+                                return $post->getRouterParam($key);
+                            },
+                            $permalink
+                        );
                     }
                     $input = '<input type="text" id="slug" name="slug" autocomplete="off" value="' . htmlspecialchars($post->slug ?? '') . '" class="mono" />';
                     ?>

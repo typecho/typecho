@@ -32,6 +32,7 @@ class Admin extends Metas
     {
         $this->parentId = $this->request->filter('int')->get('parent', 0);
         $this->stack = $this->getRows($this->getChildIds($this->parentId));
+        $this->row = reset($this->stack);
     }
 
     /**

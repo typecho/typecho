@@ -34,5 +34,6 @@ class Related extends Metas
         });
 
         $this->stack = $this->getRows($ids);
+        $this->row = reset($this->stack);
     }
 }
