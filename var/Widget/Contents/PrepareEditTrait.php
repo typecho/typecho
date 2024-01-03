@@ -126,14 +126,14 @@ trait PrepareEditTrait
     }
 
     /**
-     * @return Metas
+     * @return array
      */
-    protected function ___categories(): Metas
+    protected function ___categories(): array
     {
         return $this->have() ? parent::___categories()
             : MetasFrom::allocWithAlias(
                 'category:' . $this->options->defaultCategory,
                 ['mid' => $this->options->defaultCategory]
-            );
+            )->toArray(['mid', 'name', 'slug']);
     }
 }

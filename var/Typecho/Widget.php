@@ -366,6 +366,18 @@ abstract class Widget
     }
 
     /**
+     * 将所有行的值压入堆栈
+     *
+     * @param array $values 所有行的值
+     */
+    public function pushAll(array $values)
+    {
+        foreach ($values as $value) {
+            $this->push($value);
+        }
+    }
+
+    /**
      * 根据余数输出
      *
      * @param mixed ...$args
@@ -471,7 +483,10 @@ abstract class Widget
      */
     public function __isSet(string $name)
     {
-        return isset($this->row[$name]);
+        $method = '___' . $name;
+        $key = '#' . $name;
+
+        return isset($this->row[$key]) || method_exists($this, $method) || isset($this->row[$name]);
     }
 
     /**

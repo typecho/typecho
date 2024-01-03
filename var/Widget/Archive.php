@@ -1624,7 +1624,7 @@ class Archive extends Contents
             $this->archiveTitle = $this->title;
 
             /** 设置关键词 */
-            $this->archiveKeywords = implode(',', $this->tags->toArray('name'));
+            $this->archiveKeywords = implode(',', array_column($this->tags, 'name'));
 
             /** 设置描述 */
             $this->archiveDescription = $this->plainExcerpt;
