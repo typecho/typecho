@@ -1028,53 +1028,85 @@ class Archive extends Contents
         if ($this->options->commentsThreaded && $this->is('single')) {
             if ('' != $allows['commentReply']) {
                 if (1 == $allows['commentReply']) {
-                    $header .= "<script type=\"text/javascript\">
+                    $header .= <<<EOF
+<script type="text/javascript">
 (function () {
     window.TypechoComment = {
-        dom : function (id) {
-            return document.getElementById(id);
+        dom : function (sel) {
+            return document.querySelector(sel);
+        },
+        
+        visiable: function (el, show) {
+            el.style.display = show ? '' : 'none';
         },
     
         create : function (tag, attr) {
-            var el = document.createElement(tag);
+            const el = document.createElement(tag);
         
-            for (var key in attr) {
+            for (const key in attr) {
                 el.setAttribute(key, attr[key]);
             }
         
             return el;
         },
-
-        reply : function (cid, coid) {
-            var comment = this.dom(cid), parent = comment.parentNode,
-                response = this.dom('" . $this->respondId . "'), input = this.dom('comment-parent'),
-                form = 'form' == response.tagName ? response : response.getElementsByTagName('form')[0],
-                textarea = response.getElementsByTagName('textarea')[0];
-
-            if (null == input) {
+        
+        inputParent: function (response, coid) {
+            const form = 'form' === response.tagName ? response : response.querySelector('form');
+            let input = form.querySelector('input[name=parent]');
+            
+            if (null == input && coid) {
                 input = this.create('input', {
                     'type' : 'hidden',
-                    'name' : 'parent',
-                    'id'   : 'comment-parent'
+                    'name' : 'parent'
                 });
 
                 form.appendChild(input);
             }
+            
+            if (coid) {
+                input.setAttribute('value', coid);
+            } else if (input) {
+                input.parentNode.removeChild(input);
+            }
+        },
+        
+        getChild: function (root, node) {
+            const parentNode = node.parentNode;
+            
+            if (parentNode === null) {
+                return null;
+            } else if (parentNode === root) {
+                return node;
+            } else {
+                return this.getChild(root, parentNode);
+            }
+        },
 
-            input.setAttribute('value', coid);
+        reply : function (htmlId, coid, btn) {
+            const response = this.dom('#{$this->respondId}'),
+                textarea = response.querySelector('textarea[name=text]'),
+                comment = this.dom('#' + htmlId),
+                child = this.getChild(comment, btn);
 
-            if (null == this.dom('comment-form-place-holder')) {
-                var holder = this.create('div', {
-                    'id' : 'comment-form-place-holder'
+            this.inputParent(response, coid);
+
+            if (this.dom('#{$this->respondId}-holder') === null) {
+                const holder = this.create('div', {
+                    'id' : '{$this->respondId}-holder'
                 });
 
                 response.parentNode.insertBefore(holder, response);
             }
+            
+            if (child) {
+                comment.insertBefore(response, child.nextSibling);
+            } else {
+                comment.appendChild(response);
+            }
 
-            comment.appendChild(response);
-            this.dom('cancel-comment-reply-link').style.display = '';
+            this.visiable(this.dom('#cancel-comment-reply-link'), true);
 
-            if (null != textarea && 'text' == textarea.name) {
+            if (null != textarea) {
                 textarea.focus();
             }
 
@@ -1082,25 +1114,23 @@ class Archive extends Contents
         },
 
         cancelReply : function () {
-            var response = this.dom('{$this->respondId}'),
-            holder = this.dom('comment-form-place-holder'), input = this.dom('comment-parent');
+            const response = this.dom('#{$this->respondId}'),
+                holder = this.dom('#{$this->respondId}-holder');
 
-            if (null != input) {
-                input.parentNode.removeChild(input);
-            }
+            this.inputParent(response, false);
 
-            if (null == holder) {
+            if (null === holder) {
                 return true;
             }
 
-            this.dom('cancel-comment-reply-link').style.display = 'none';
+            this.visiable(this.dom('#cancel-comment-reply-link'), false);
             holder.parentNode.insertBefore(response, holder);
             return false;
         }
     };
 })();
 </script>
-";
+EOF;
                 } else {
                     $header .= '<script src="' . $allows['commentReply'] . '" type="text/javascript"></script>';
                 }
@@ -1111,45 +1141,41 @@ class Archive extends Contents
         if ($this->options->commentsAntiSpam && $this->is('single')) {
             if ('' != $allows['antiSpam']) {
                 if (1 == $allows['antiSpam']) {
-                    $header .= "<script type=\"text/javascript\">
+                    $shuffled = Common::shuffleScriptVar($this->security->getToken($this->request->getRequestUrl()));
+                    $header .= <<<EOF
+<script type="text/javascript">
 (function () {
-    var event = document.addEventListener ? {
-        add: 'addEventListener',
-        triggers: ['scroll', 'mousemove', 'keyup', 'touchstart'],
-        load: 'DOMContentLoaded'
-    } : {
-        add: 'attachEvent',
-        triggers: ['onfocus', 'onmousemove', 'onkeyup', 'ontouchstart'],
-        load: 'onload'
-    }, added = false;
+    const events = ['scroll', 'mousemove', 'keyup', 'touchstart'];
+    let added = false;
 
-    document[event.add](event.load, function () {
-        var r = document.getElementById('{$this->respondId}'),
-            input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = '_';
-        input.value = " . Common::shuffleScriptVar($this->security->getToken($this->request->getRequestUrl())) . "
+    document.addEventListener('DOMContentLoaded', function () {
+        const response = document.querySelector('#{$this->respondId}');
 
-        if (null != r) {
-            var forms = r.getElementsByTagName('form');
-            if (forms.length > 0) {
+        if (null != response) {
+            const form = 'form' === response.tagName ? response : response.querySelector('form');
+            const input = document.createElement('input');
+            
+            input.type = 'hidden';
+            input.name = '_';
+            input.value = {$shuffled};
+ 
+            if (form) {
                 function append() {
                     if (!added) {
-                        forms[0].appendChild(input);
+                        form.appendChild(input);
                         added = true;
                     }
                 }
             
-                for (var i = 0; i < event.triggers.length; i ++) {
-                    var trigger = event.triggers[i];
-                    document[event.add](trigger, append);
-                    window[event.add](trigger, append);
+                for (const event of events) {
+                    window.addEventListener(event, append);
                 }
             }
         }
     });
 })();
-</script>";
+</script>
+EOF;
                 } else {
                     $header .= '<script src="' . $allows['antiSpam'] . '" type="text/javascript"></script>';
                 }
