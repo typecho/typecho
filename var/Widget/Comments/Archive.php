@@ -414,7 +414,7 @@ class Archive extends Comments
             if (!$plugged) {
                 echo '<a href="' . substr($this->permalink, 0, - strlen($this->theId) - 1) . '?replyTo=' . $this->coid .
                     '#' . $this->parameter->respondId . '" rel="nofollow" onclick="return TypechoComment.reply(\'' .
-                    $this->theId . '\', ' . $this->coid . ');">' . $word . '</a>';
+                    $this->theId . '\', ' . $this->coid . ', this);">' . $word . '</a>';
             }
         }
     }
