@@ -57,8 +57,8 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property-read Date $date
  * @property-read string $dateWord
  * @property-read string[] $directory
- * @property-read Metas $tags
- * @property-read Metas $categories
+ * @property-read array[] $tags
+ * @property-read array[] $categories
  * @property-read string $excerpt
  * @property-read string $plainExcerpt
  * @property-read string $summary
@@ -95,7 +95,7 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
             case 'directory':
                 return implode('/', array_map('urlencode', $this->directory));
             case 'category':
-                return urlencode($this->categories->slug);
+                return empty($this->categories) ? '' : urlencode($this->categories[0]['slug']);
             case 'year':
                 return $this->date->year;
             case 'month':
@@ -461,13 +461,11 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
      */
     public function category(string $split = ',', bool $link = true, ?string $default = null)
     {
-        $categories = $this->categories;
-
-        if ($categories->have()) {
+        if (!empty($this->categories)) {
             $result = [];
 
-            while ($categories->next()) {
-                $result[] = $link ? $categories->template('<a href="{permalink}">{name}</a>') : $categories->name;
+            foreach ($this->categories as $category) {
+                $result[] = $link ? "<a href=\"{$category['permalink']}\">{$category['name']}</a>" : $category['name'];
             }
 
             echo implode($split, $result);
@@ -513,13 +511,11 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
      */
     public function tags(string $split = ',', bool $link = true, ?string $default = null)
     {
-        $tags = $this->tags;
-
-        if ($tags->have()) {
+        if (!empty($this->tags)) {
             $result = [];
 
-            while ($tags->next()) {
-                $result[] = $link ? $tags->template('<a href="{permalink}">{name}</a>') : $tags->name;
+            foreach ($this->tags as $tag) {
+                $result[] = $link ? "<a href=\"{$tag['permalink']}\">{$tag['name']}</a>" : $tag['name'];
             }
 
             echo implode($split, $result);
@@ -658,32 +654,32 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
     {
         $directory = [];
 
-        $category = $this->categories;
-
-        if ($category->have()) {
-            $directory = Rows::alloc()->getAllParentsSlug($category->mid);
-            $directory[] = $category->slug;
+        if (!empty($this->categories)) {
+            $directory = Rows::alloc()->getAllParentsSlug($this->categories[0]['mid']);
+            $directory[] = $this->categories[0]['slug'];
         }
 
         return $directory;
     }
 
     /**
-     * @return Metas
+     * @return array
      */
-    protected function ___categories(): Metas
+    protected function ___categories(): array
     {
-        return CategoryRelated::allocWithAlias($this->cid, ['cid' => $this->cid]);
+        return CategoryRelated::allocWithAlias($this->cid, ['cid' => $this->cid])
+            ->toArray(['mid', 'name', 'slug', 'description', 'order', 'parent', 'count', 'permalink']);
     }
 
     /**
      * 将tags取出
      *
-     * @return Metas
+     * @return array
      */
-    protected function ___tags(): Metas
+    protected function ___tags(): array
     {
-        return TagRelated::allocWithAlias($this->cid, ['cid' => $this->cid]);
+        return TagRelated::allocWithAlias($this->cid, ['cid' => $this->cid])
+            ->toArray(['mid', 'name', 'slug', 'description', 'count', 'permalink']);
     }
 
     /**
