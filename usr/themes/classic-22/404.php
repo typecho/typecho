@@ -12,7 +12,7 @@
             <li>Доступ к текущей странице невозможен, возможно, у нее нет разрешения или она была удалена.</li>
             <li>現在のページにアクセスできない、権限がない、または削除された可能性があります。</li>
         </ul>
-        <p class="text-center"><a href="<?php $this->options->siteUrl(); ?>" role="button" class="secondary"><?php _e('回首页'); ?></a></p>
+        <p class="text-center"><a href="<?php $this->options->siteUrl(); ?>" role="button" class="outline"><?php _e('回首页'); ?></a></p>
     </div>
 </main>
 
