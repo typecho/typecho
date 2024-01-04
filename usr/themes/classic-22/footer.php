@@ -13,6 +13,9 @@
     </div>
 </footer>
 
+<?php if ($this->options->themeStyle == 'auto'): ?>
+<script src="<?php $this->options->themeUrl('static/js/theme-switcher.js'); ?>"></script>
+<?php endif; ?>
 <?php $this->footer(); ?>
 
 </body>
