@@ -3,6 +3,16 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 
 function themeConfig($form)
 {
+    $logoUrl = new \Typecho\Widget\Helper\Form\Element\Text(
+        'logoUrl',
+        null,
+        null,
+        _t('网站 Logo'),
+        _t('在这里填写图片 URL，网站将显示 Logo')
+    );
+
+    $form->addInput($logoUrl->addRule('url', _t('请填写正确的 URL 地址')));
+
     $themeStyle = new \Typecho\Widget\Helper\Form\Element\Radio(
         'themeStyle',
         array(

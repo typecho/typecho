@@ -2,7 +2,7 @@
 
 // Global Set
 :root {
-  --border-radius: 0.5rem;
+  --border-radius: .5rem;
 }
 
 body {
@@ -24,6 +24,10 @@ body {
 
   .site-navbar {
     background-color: #{$primary-600};
+  }
+
+  .comment-level-odd {
+    background-color: #{$grey-900};
   }
 }
 
@@ -89,21 +93,18 @@ h1, h2, h3, h4, h5 { line-height: 1.25; }
 
 // Layout
 .container-inner {
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 84rem;
-
   @if map-get($breakpoints, "lg") {
     @media (min-width: map-get($breakpoints, "lg")) {
-      padding-left: calc(var(--spacing) * 1.5);
-      padding-right: calc(var(--spacing) * 1.5);
+      padding-left: calc(var(--spacing) / 2);
+      padding-right: calc(var(--spacing) / 2);
     }
   }
 }
 
 .container-thin {
-  margin: 0 auto;
-  max-width: 46rem;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 40rem;
 }
 
 .d-flex {
@@ -128,12 +129,13 @@ h1, h2, h3, h4, h5 { line-height: 1.25; }
 
 // Header & Navbar
 .site-navbar {
-  padding-top: calc(var(--spacing) / 2);
-  padding-bottom: calc(var(--spacing) / 2);
+  padding-top: .25rem;
+  padding-bottom: .25rem;
   background-color: var(--primary);
 
   a {
-    color: rgba(255, 255, 255, 1.0);
+    color: var(--primary-inverse);
+    // color: rgba(255, 255, 255);
     // &:hover { text-decoration: underline; }
   }
 
@@ -147,7 +149,7 @@ h1, h2, h3, h4, h5 { line-height: 1.25; }
   }
 
   .desc {
-    color: rgba(255, 255, 255, .75);
+    color: rgba(255, 255, 255, .5);
     display: none;
     @if map-get($breakpoints, "sm") {
       @media (min-width: map-get($breakpoints, "sm")) {
@@ -178,11 +180,6 @@ h1, h2, h3, h4, h5 { line-height: 1.25; }
     padding: calc(var(--spacing) * .5);
   }
 
-  a {
-    margin: calc(var(--spacing) * -.5);
-    padding: calc(var(--spacing) * .5);
-  }
-
   form {
     margin-bottom: 0;
 
@@ -190,10 +187,11 @@ h1, h2, h3, h4, h5 { line-height: 1.25; }
       height: 50px;
       background-image: url("../img/search.svg");
       background-size: auto;
-      color: rgb(255,255,255);
+      background-color: inherit;
+      color: var(--primary-inverse);
 
       &:focus {
-        --form-element-focus-color: rgba(255,255,255,0.5);
+        --form-element-focus-color: rgba(255, 255, 255, .5);
       }
 
       &:not(:focus) {
@@ -202,6 +200,7 @@ h1, h2, h3, h4, h5 { line-height: 1.25; }
         width: 30px;
         padding-inline-start: 0;
         background-position: center center;
+        cursor: pointer;
       }
     }
   }
@@ -282,7 +281,7 @@ h1, h2, h3, h4, h5 { line-height: 1.25; }
 
 .post-next {
   border-top: 1px solid var(--muted-border-color);
-  padding: calc(var(--spacing) * 1.5) 0;
+  padding-top: calc(var(--spacing) * 1.5);
   margin: var(--block-spacing-vertical) 0;
 
   a {
@@ -307,11 +306,22 @@ h1, h2, h3, h4, h5 { line-height: 1.25; }
 // Comments
 .comment-list {
   list-style: none;
-  padding-left: calc(var(--spacing) * 4);
+  padding: 0;
+  // padding-left: calc(var(--spacing) * 4);
+}
+
+.comment-level-odd {
+  background-color: #{$grey-50};
+}
+.comment-level-even {
+  background-color: var(--background-color);
 }
 
 .comment-body {
   margin: calc(var(--spacing) * 1.5) 0;
+  padding: var(--spacing);
+  border: 1px solid var(--muted-border-color);
+  border-radius: var(--border-radius);
 }
 
 .comment-by-author > .comment-author::after {
@@ -325,22 +335,17 @@ h1, h2, h3, h4, h5 { line-height: 1.25; }
 }
 
 .comment-author {
-  position: relative;
+  display: inline-block;
 
   .avatar {
-    position: absolute;
-    width: calc(var(--spacing) * 3);
-    left: calc(var(--spacing) * -4);
-    border-radius: var(--border-radius);
+    margin-right: .25rem;
+    width: calc(var(--spacing) * 2);
+    border-radius: 48px;
   }
 
   cite {
     font-style: normal;
     font-weight: 700;
-  }
-
-  a {
-    color: var(--h5-color);
   }
 }
 
@@ -353,7 +358,17 @@ h1, h2, h3, h4, h5 { line-height: 1.25; }
 }
 
 .comment-meta {
-  margin-bottom: calc(var(--spacing) / 2);
+  display: inline-block;
+  color: var(--muted-color);
+  margin-left: calc(var(--spacing) / 4);
+  &::before {
+    content: "·";
+    margin-right: calc(var(--spacing) / 4);
+  }
+}
+
+.comment-content {
+  margin-top: var(--spacing);
 }
 
 .comment-reply:blank {
@@ -367,7 +382,11 @@ h1, h2, h3, h4, h5 { line-height: 1.25; }
 }
 
 .comment-children {
-  margin: calc(var(--spacing) * 1.5) 0;
+  margin-bottom: calc(var(--spacing) * -1);
+}
+
+.comment-by-author {
+  // background-color: var(--mark-background-color);
 }
 
 #response {
