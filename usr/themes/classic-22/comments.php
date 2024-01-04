@@ -6,8 +6,8 @@
 
         <?php $comments->listComments(array(
             'commentStatus' => _t('你的评论正等待审核'),
-            'avatarSize' => 120,
-            'defaultAvatar' => 'monsterid'
+            'avatarSize' => 64,
+            'defaultAvatar' => 'identicon'
         )); ?>
 
         <?php $comments->pageNav('&laquo; 前一页', '后一页 &raquo;'); ?>
