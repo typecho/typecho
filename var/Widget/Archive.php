@@ -187,6 +187,10 @@ class Archive extends Contents
 
         /** 用于判断是路由调用还是外部调用 */
         if (null == $parameter->type) {
+            if (!isset(Router::$current)) {
+                throw new WidgetException('Archive type is not set', 500);
+            }
+
             $parameter->type = Router::$current;
         } else {
             $this->invokeFromOutside = true;
