@@ -179,7 +179,11 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
         }
 
         /** 生成一个非空的缩略名 */
-        $slug = Common::slugName($slug, Common::slugName($title, $cid));
+        if ((!isset($slug) || strlen($slug) === 0) && preg_match_all("/\w+/", $title, $matches)) {
+            $slug = implode('-', $matches[0]);
+        }
+
+        $slug = Common::slugName($slug, $cid);
         $result = $slug;
 
         /** 对草稿的slug做特殊处理 */
