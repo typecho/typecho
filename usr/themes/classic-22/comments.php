@@ -32,7 +32,7 @@
                 <div class="grid">
                     <input type="text" placeholder="<?php _e('名字'); ?>" name="author" id="author" value="<?php $this->remember('author'); ?>" required/>
                     <input type="email" placeholder="<?php _e('Email'); ?>" name="mail" id="mail" value="<?php $this->remember('mail'); ?>"<?php if ($this->options->commentsRequireMail): ?> required<?php endif; ?> />
-                    <input type="url" placeholder="<?php _e('网站 http://'); ?><?php if (!($this->options->commentsRequireUrl)): ?><?php _e('（选填）'); ?><?php endif; ?>" name="url" id="url" placeholder="<?php _e('https://'); ?>" value="<?php $this->remember('url'); ?>"<?php if ($this->options->commentsRequireUrl): ?> required<?php endif; ?> />
+                    <input type="url" placeholder="<?php _e('网站'); ?><?php if (!$this->options->commentsRequireUrl): ?><?php _e('（选填）'); ?><?php endif; ?>" name="url" id="url" placeholder="<?php _e('https://'); ?>" value="<?php $this->remember('url'); ?>"<?php if ($this->options->commentsRequireUrl): ?> required<?php endif; ?> />
                 </div>
                 <?php endif; ?>
                 <button type="submit"><?php _e('提交评论'); ?></button>
