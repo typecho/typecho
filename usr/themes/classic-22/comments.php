@@ -10,7 +10,7 @@
             'defaultAvatar' => 'identicon'
         )); ?>
 
-        <?php $comments->pageNav('&laquo; 前一页', '后一页 &raquo;'); ?>
+        <?php $comments->pageNav(_t('前一页'), _t('后一页')); ?>
 
     <?php endif; ?>
 
@@ -23,7 +23,9 @@
             <h5 id="response"><?php _e('你的评论'); ?></h5>
 
             <form method="post" action="<?php $this->commentUrl() ?>" id="comment-form" role="form">
-                <textarea placeholder="<?php _e('评论内容...'); ?>" rows="4" cols="50" name="text" id="textarea" required><?php $this->remember('text'); ?></textarea>
+                <div class="grid">
+                    <textarea placeholder="<?php _e('评论内容...'); ?>" rows="4" cols="300" name="text" id="textarea" required><?php $this->remember('text'); ?></textarea>
+                </div>
                 <?php if ($this->user->hasLogin()): ?>
                 <p>
                     <?php _e('登录身份：'); ?><a href="<?php $this->options->profileUrl(); ?>"><?php $this->user->screenName(); ?></a><span class="mx-2 text-muted">&middot;</span><a href="<?php $this->options->logoutUrl(); ?>"><?php _e('退出'); ?></a>
