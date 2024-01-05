@@ -156,7 +156,7 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
 
         /** 更新缩略名 */
         if ($insertId > 0) {
-            $this->applySlug(!isset($rows['slug']) || strlen($rows['slug']) === 0 ? null : $rows['slug'], $insertId);
+            $this->applySlug(!isset($rows['slug']) || strlen($rows['slug']) === 0 ? null : $rows['slug'], $insertId, $insertStruct['title']);
         }
 
         return $insertId;
@@ -167,10 +167,11 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
      *
      * @param string|null $slug 缩略名
      * @param mixed $cid 内容id
+     * @param string $title 标题
      * @return string
      * @throws Exception
      */
-    public function applySlug(?string $slug, $cid): string
+    public function applySlug(?string $slug, $cid, string $title = ''): string
     {
         if ($cid instanceof Query) {
             $cid = $this->db->fetchObject($cid->select('cid')
@@ -178,6 +179,10 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
         }
 
         /** 生成一个非空的缩略名 */
+        if ((!isset($slug) || strlen($slug) === 0) && preg_match_all("/\w+/", $title, $matches)) {
+            $slug = implode('-', $matches[0]);
+        }
+
         $slug = Common::slugName($slug, $cid);
         $result = $slug;
 
@@ -185,10 +190,9 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
         $draft = $this->db->fetchObject($this->db->select('type', 'parent')
             ->from('table.contents')->where('cid = ?', $cid));
 
-        if ('_draft' == substr($draft->type, - 6) && $draft->parent) {
+        if (preg_match("/_draft$/", $draft->type) && $draft->parent) {
             $result = '@' . $result;
         }
-
 
         /** 判断是否在数据库中已经存在 */
         $count = 1;
