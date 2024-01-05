@@ -493,12 +493,12 @@ EOF;
          * @access public
          *
          * @param string|null $str 需要生成缩略名的字符串
-         * @param string|null $default 默认的缩略名
+         * @param string $default 默认的缩略名
          * @param integer $maxLength 缩略名最大长度
          *
-         * @return string|null
+         * @return string
          */
-        public static function slugName(?string $str, ?string $default = null, int $maxLength = 128): ?string
+        public static function slugName(?string $str, string $default = '', int $maxLength = 128): string
         {
             $str = trim($str ?? '');
 

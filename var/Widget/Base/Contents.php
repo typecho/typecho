@@ -178,22 +178,15 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
                 ->from('table.contents')->limit(1))->cid;
         }
 
-        if ($slug === null && $title !== '') {
-            $title = str_replace(' ', '-', trim($title));
-            if (preg_match("/^[\w_\-]+$/", $title) === 1) {
-                $slug = $title;
-            }
-        }
-
         /** 生成一个非空的缩略名 */
-        $slug = Common::slugName($slug, $cid);
+        $slug = Common::slugName($slug, Common::slugName($title, $cid));
         $result = $slug;
 
         /** 对草稿的slug做特殊处理 */
         $draft = $this->db->fetchObject($this->db->select('type', 'parent')
             ->from('table.contents')->where('cid = ?', $cid));
 
-        if ('_draft' == substr($draft->type, - 6) && $draft->parent) {
+        if (preg_match("/_draft$/", $draft->type) && $draft->parent) {
             $result = '@' . $result;
         }
 
