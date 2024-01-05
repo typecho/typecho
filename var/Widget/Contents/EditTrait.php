@@ -577,7 +577,7 @@ trait EditTrait
         $realId = 0;
 
         /** 是否是从草稿状态发布 */
-        $isDraftToPublish = preg_match("/_draft$/", $this->type);
+        $isDraftToPublish = !empty($this->type) ? preg_match("/_draft$/", $this->type) : false;
 
         $isBeforePublish = ('publish' == $this->status);
         $isAfterPublish = ('publish' == $contents['status']);

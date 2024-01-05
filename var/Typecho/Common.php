@@ -496,7 +496,7 @@ EOF;
          * @param string|null $default 默认的缩略名
          * @param integer $maxLength 缩略名最大长度
          *
-         * @return string
+         * @return string|null
          */
         public static function slugName(?string $str, ?string $default = null, int $maxLength = 128): ?string
         {
