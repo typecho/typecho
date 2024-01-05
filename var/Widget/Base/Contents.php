@@ -180,8 +180,7 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
 
         if ($slug === null && $title !== '') {
             $title = str_replace(' ', '-', trim($title));
-            $pattern = "/^[\w" . preg_quote('_-') . "]+$/";
-            if (preg_match($pattern, $title) === 1) {
+            if (preg_match("/^[\w_\-]+$/", $title) === 1) {
                 $slug = $title;
             }
         }
