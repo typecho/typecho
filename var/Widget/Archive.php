@@ -1661,7 +1661,12 @@ EOF;
         }
 
         /** 设置归档类型 */
-        [$this->archiveType] = explode('_', $this->type);
+        if ($this->parameter->preview && $this->type === 'revision') {
+            $parent = ContentsFrom::allocWithAlias($this->parent, ['cid' => $this->parent]);
+            $this->archiveType = $parent->type;
+        } else {
+            [$this->archiveType] = explode('_', $this->type);
+        }
 
         /** 设置归档缩略名 */
         $this->archiveSlug = ('post' == $this->archiveType || 'attachment' == $this->archiveType)
