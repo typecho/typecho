@@ -1,11 +1,10 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <!DOCTYPE html>
-<html lang="zh-Hans" data-theme="<?php $this->options->themeStyle(); ?>">
+<html lang="zh-Hans" data-theme="<?php $this->options->colorSchema(); ?>">
 <head>
     <meta charset="<?php $this->options->charset(); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php $this->archiveTitle('', '', ' | '); ?><?php $this->options->title(); ?><?php if ($this->is('index')): ?> | <?php $this->options->description() ?><?php endif; ?></title>
-
     <link rel="stylesheet" href="<?php $this->options->themeUrl('static/css/style.css'); ?>">
 
     <?php $this->header(); ?>
