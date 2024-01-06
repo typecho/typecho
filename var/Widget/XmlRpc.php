@@ -449,9 +449,9 @@ class XmlRpc extends Contents implements ActionInterface, Hook
     {
         /** 开始接受数据 */
         $input['name'] = $category['name'];
-        $input['slug'] = Common::slugName(empty($category['slug']) ? $category['name'] : $category['slug']);
+        $input['slug'] = Common::slugName(Common::strBy($category['slug'], $category['name']));
         $input['parent'] = $category['parent_id'] ?? ($category['parent'] ?? 0);
-        $input['description'] = $category['description'] ?? $category['name'];
+        $input['description'] = Common::strBy($category['description'], $category['name']);
 
         /** 调用已有组件 */
         $categoryWidget = CategoryEdit::alloc(null, $input, function (CategoryEdit $category) {

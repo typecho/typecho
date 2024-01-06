@@ -678,6 +678,18 @@ EOF;
         }
 
         /**
+         * 判断两个字符串是否为空并依次返回
+         *
+         * @param string|null $a
+         * @param string|null $b
+         * @return string|null
+         */
+        public static function strBy(?string $a, ?string $b = null): ?string
+        {
+            return isset($a) && $a !== '' ? $a : $b;
+        }
+
+        /**
          * 获取宽字符串长度函数
          *
          * @param string $str 需要获取长度的字符串
