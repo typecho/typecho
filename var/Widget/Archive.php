@@ -1661,19 +1661,11 @@ EOF;
         }
 
         /** 设置归档类型 */
-        [$this->archiveType] = explode('_', $this->type);
-
-        /** 特殊处理 revision */
-        if ('revision' == $this->archiveType) {
-            $parent = $this->db->fetchRow(
-                $this->select('type')
-                    ->where(
-                        'table.contents.cid = ?',
-                        $this->parent
-                    )
-                    ->limit(1)
-            );
-            $this->archiveType = $parent['type'];
+        if ($this->parameter->preview && $this->type === 'revision') {
+            $parent = ContentsFrom::allocWithAlias($this->parent, ['cid' => $this->parent]);
+            $this->archiveType = $parent->type;
+        } else {
+            [$this->archiveType] = explode('_', $this->type);
         }
 
         /** 设置归档缩略名 */
