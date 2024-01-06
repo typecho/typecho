@@ -132,7 +132,7 @@ class Edit extends Metas implements ActionInterface
         /** 取出数据 */
         $tag = $this->request->from('name', 'slug');
         $tag['type'] = 'tag';
-        $tag['slug'] = Common::slugName(Common::strBy($tag['slug'], $tag['name']));
+        $tag['slug'] = Common::slugName(Common::strBy($tag['slug'] ?? null, $tag['name']));
 
         /** 插入数据 */
         $tag['mid'] = $this->insert($tag);
@@ -254,7 +254,7 @@ class Edit extends Metas implements ActionInterface
         /** 取出数据 */
         $tag = $this->request->from('name', 'slug', 'mid');
         $tag['type'] = 'tag';
-        $tag['slug'] = Common::slugName(Common::strBy($tag['slug'], $tag['name']));
+        $tag['slug'] = Common::slugName(Common::strBy($tag['slug'] ?? null, $tag['name']));
 
         /** 更新数据 */
         $this->update($tag, $this->db->sql()->where('mid = ?', $this->request->filter('int')->get('mid')));
