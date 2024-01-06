@@ -1,12 +1,10 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <!DOCTYPE html>
-<html lang="zh-Hans" data-theme="<?php $this->options->themeStyle(); ?>">
-
+<html lang="zh-Hans" data-theme="<?php $this->options->colorSchema(); ?>">
 <head>
     <meta charset="<?php $this->options->charset(); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php $this->archiveTitle('', '', ' | '); ?><?php $this->options->title(); ?><?php if ($this->is('index')): ?> | <?php $this->options->description() ?><?php endif; ?></title>
-
     <link rel="stylesheet" href="<?php $this->options->themeUrl('static/css/style.css'); ?>">
 
     <?php $this->header(); ?>
@@ -30,7 +28,9 @@
 
             <ul>
                 <li>
-                    <label for="nav-toggler" class="nav-toggler-btn"><img src="<?php $this->options->themeUrl('static/img/menu.svg'); ?>" alt="Menu"></label>
+                    <label for="nav-toggler" class="nav-toggler-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="18" x2="21" y2="18" /></svg>
+                    </label>
                 </li>
             </ul>
         </nav>

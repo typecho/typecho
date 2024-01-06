@@ -42,7 +42,7 @@ $this->need('header.php');
         <span class="mx-2 text-muted">&middot;</span>
         <a href="#">Newer Posts &raquo;</a>
     </div> -->
-    <?php $this->pageNav('← ' . _t('前一页'), _t('后一页') . ' →'); ?>
+    <?php $this->pageNav(_t('前一页'), _t('后一页')); ?>
 </main>
 
 <?php $this->need('footer.php'); ?>

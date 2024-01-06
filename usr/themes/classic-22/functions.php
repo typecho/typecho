@@ -13,18 +13,29 @@ function themeConfig($form)
 
     $form->addInput($logoUrl->addRule('url', _t('请填写正确的 URL 地址')));
 
-    $themeStyle = new \Typecho\Widget\Helper\Form\Element\Radio(
-        'themeStyle',
+    $colorSchema = new \Typecho\Widget\Helper\Form\Element\Radio(
+        'colorSchema',
         array(
             'auto' => _t('自动'),
             'light' => _t('浅色'),
-            'dark' => _t('深色')
+            'dark' => _t('深色'),
+            'colorful' => _t('彩色'),
         ),
         'auto',
         _t('外观风格')
     );
 
-    $form->addInput($themeStyle);
+    $form->addInput($colorSchema);
+
+    // $primaryColor = new \Typecho\Widget\Helper\Form\Element\Text(
+    //     'primaryColor',
+    //     null,
+    //     null,
+    //     _t('主色调'),
+    //     _t('在这里填写颜色值，网站将使用该颜色作为主色调')
+    // );
+
+    // $form->addInput($primaryColor);
 }
 
 function postMeta(

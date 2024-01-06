@@ -13,12 +13,8 @@
         </article>
 
         <div class="grid post-next">
-            <div>
-                ← <?php $this->thePrev('%s', _t('没有了')); ?>
-            </div>
-            <div class="text-end">
-                <?php $this->theNext('%s', _t('没有了')); ?> →
-            </div>
+            <div class="prev"><?php $this->thePrev('%s', _t('没有了')); ?></div>
+            <div class="next text-end"><?php $this->theNext('%s', _t('没有了')); ?></div>
         </div>
 
         <?php $this->need('comments.php'); ?>
