@@ -1663,6 +1663,19 @@ EOF;
         /** 设置归档类型 */
         [$this->archiveType] = explode('_', $this->type);
 
+        /** 特殊处理 revision */
+        if ('revision' == $this->archiveType) {
+            $parent = $this->db->fetchRow(
+                $this->select('type')
+                    ->where(
+                        'table.contents.cid = ?',
+                        $this->parent
+                    )
+                    ->limit(1)
+            );
+            $this->archiveType = $parent['type'];
+        }
+
         /** 设置归档缩略名 */
         $this->archiveSlug = ('post' == $this->archiveType || 'attachment' == $this->archiveType)
             ? $this->cid : $this->slug;
