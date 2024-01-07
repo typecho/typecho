@@ -79,17 +79,16 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
         $insertStruct = [
             'cid'      => $rows['cid'],
             'created'  => empty($rows['created']) ? $this->options->time : $rows['created'],
-            'author'   => !isset($rows['author']) || strlen($rows['author']) === 0 ? null : $rows['author'],
+            'author'   => Common::strBy($rows['author'] ?? null),
             'authorId' => empty($rows['authorId']) ? 0 : $rows['authorId'],
             'ownerId'  => empty($rows['ownerId']) ? 0 : $rows['ownerId'],
-            'mail'     => !isset($rows['mail']) || strlen($rows['mail']) === 0 ? null : $rows['mail'],
-            'url'      => !isset($rows['url']) || strlen($rows['url']) === 0 ? null : $rows['url'],
-            'ip'       => !isset($rows['ip']) || strlen($rows['ip']) === 0 ? $this->request->getIp() : $rows['ip'],
-            'agent'    => !isset($rows['agent']) || strlen($rows['agent']) === 0
-                ? $this->request->getAgent() : $rows['agent'],
-            'text'     => !isset($rows['text']) || strlen($rows['text']) === 0 ? null : $rows['text'],
-            'type'     => empty($rows['type']) ? 'comment' : $rows['type'],
-            'status'   => empty($rows['status']) ? 'approved' : $rows['status'],
+            'mail'     => Common::strBy($rows['mail'] ?? null),
+            'url'      => Common::strBy($rows['url'] ?? null),
+            'ip'       => Common::strBy($rows['ip'] ?? null, $this->request->getIp()),
+            'agent'    => Common::strBy($rows['agent'] ?? null, $this->request->getAgent()),
+            'text'     => Common::strBy($rows['text'] ?? null),
+            'type'     => Common::strBy($rows['type'] ?? null, 'comment'),
+            'status'   => Common::strBy($rows['status'] ?? null, 'approved'),
             'parent'   => empty($rows['parent']) ? 0 : $rows['parent'],
         ];
 
@@ -137,11 +136,11 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
 
         /** 构建插入结构 */
         $preUpdateStruct = [
-            'author' => !isset($rows['author']) || strlen($rows['author']) === 0 ? null : $rows['author'],
-            'mail'   => !isset($rows['mail']) || strlen($rows['mail']) === 0 ? null : $rows['mail'],
-            'url'    => !isset($rows['url']) || strlen($rows['url']) === 0 ? null : $rows['url'],
-            'text'   => !isset($rows['text']) || strlen($rows['text']) === 0 ? null : $rows['text'],
-            'status' => empty($rows['status']) ? 'approved' : $rows['status'],
+            'author' => Common::strBy($rows['author'] ?? null),
+            'mail'   => Common::strBy($rows['mail'] ?? null),
+            'url'    => Common::strBy($rows['url'] ?? null),
+            'text'   => Common::strBy($rows['text'] ?? null),
+            'status' => Common::strBy($rows['status'] ?? null, 'approved'),
         ];
 
         $updateStruct = [];

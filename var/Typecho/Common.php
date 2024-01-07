@@ -493,12 +493,12 @@ EOF;
          * @access public
          *
          * @param string|null $str 需要生成缩略名的字符串
-         * @param string|null $default 默认的缩略名
+         * @param string $default 默认的缩略名
          * @param integer $maxLength 缩略名最大长度
          *
          * @return string
          */
-        public static function slugName(?string $str, ?string $default = null, int $maxLength = 128): ?string
+        public static function slugName(?string $str, string $default = '', int $maxLength = 128): string
         {
             $str = trim($str ?? '');
 
@@ -675,6 +675,18 @@ EOF;
             $str = mb_substr($str, $start, $tLength, 'UTF-8');
 
             return $length < $iLength ? ($str . $trim) : $str;
+        }
+
+        /**
+         * 判断两个字符串是否为空并依次返回
+         *
+         * @param string|null $a
+         * @param string|null $b
+         * @return string|null
+         */
+        public static function strBy(?string $a, ?string $b = null): ?string
+        {
+            return isset($a) && $a !== '' ? $a : $b;
         }
 
         /**

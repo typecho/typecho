@@ -425,19 +425,19 @@ h1, h2, h3, h4, h5 { line-height: 1.25; }
     color: inherit;
     pointer-events: none;
   }
-}
 
-.prev {
-  margin-right: auto;
-  & a::before {
-    content: "‹";
-    margin-right: .25rem;
+  .prev {
+    margin-right: auto;
+    & a::before {
+      content: "‹";
+      margin-right: .25rem;
+    }
   }
-}
-.next {
-  margin-left: auto;
-  & a::after {
-    content: "›";
-    margin-left: .25rem;
+  .next {
+    margin-left: auto;
+    & a::after {
+      content: "›";
+      margin-left: .25rem;
+    }
   }
 }

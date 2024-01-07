@@ -38,7 +38,7 @@ $(document).ready(function () {
         preview = $('<div id="wmd-preview" class="wmd-hidetab" />').insertAfter('.editor');
     let isFullScreen = false;
 
-    const options = {}, isMarkdown = <?php echo intval($content->isMarkdown || !$content->have()); ?>;
+    const options = {}, isMarkdown = <?php echo json_encode(!$content->have() || $content->isMarkdown); ?>;
 
     options.strings = {
         bold: '<?php _e('加粗'); ?> <strong> Ctrl+B',
