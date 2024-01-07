@@ -10,7 +10,7 @@
             'defaultAvatar' => 'identicon'
         )); ?>
 
-        <?php $comments->pageNav(_t('前一页'), _t('后一页')); ?>
+        <nav><?php $comments->pageNav(_t('前一页'), _t('后一页'), 3, '...', array('wrapTag' => 'ul', 'itemTag' => 'li')); ?></nav>
 
     <?php endif; ?>
 
