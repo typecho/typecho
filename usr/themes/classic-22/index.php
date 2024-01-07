@@ -25,24 +25,20 @@ $this->need('header.php');
             </h4>
         <?php endif; ?>
 
-    <?php while ($this->next()): ?>
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-            <?php postMeta($this); ?>
-            
-            <div class="entry-content fmt" itemprop="articleBody">
-                <?php $this->content(_t('阅读全文')); ?>
-            </div>
-        </article>
-        <hr class="post-separator">
-    <?php endwhile; ?>
+        <?php while ($this->next()): ?>
+            <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+                <?php postMeta($this); ?>
+                
+                <div class="entry-content fmt" itemprop="articleBody">
+                    <?php $this->content(_t('阅读全文')); ?>
+                </div>
+            </article>
+            <hr class="post-separator">
+        <?php endwhile; ?>
+
+        <nav><?php $this->pageNav(_t('前一页'), _t('后一页'), 2, '...', array('wrapTag' => 'ul', 'itemTag' => 'li')); ?></nav>
     </div>
 
-    <!-- <div class="text-center">
-        <a href="#">&laquo; Older Posts</a>
-        <span class="mx-2 text-muted">&middot;</span>
-        <a href="#">Newer Posts &raquo;</a>
-    </div> -->
-    <?php $this->pageNav(_t('前一页'), _t('后一页')); ?>
 </main>
 
 <?php $this->need('footer.php'); ?>
