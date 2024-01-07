@@ -79,16 +79,16 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
         $insertStruct = [
             'cid'      => $rows['cid'],
             'created'  => empty($rows['created']) ? $this->options->time : $rows['created'],
-            'author'   => Common::strBy($rows['author']),
+            'author'   => Common::strBy($rows['author'] ?? null),
             'authorId' => empty($rows['authorId']) ? 0 : $rows['authorId'],
             'ownerId'  => empty($rows['ownerId']) ? 0 : $rows['ownerId'],
-            'mail'     => Common::strBy($rows['mail']),
-            'url'      => Common::strBy($rows['url']),
-            'ip'       => Common::strBy($rows['ip'], $this->request->getIp()),
-            'agent'    => Common::strBy($rows['agent'], $this->request->getAgent()),
-            'text'     => Common::strBy($rows['text']),
-            'type'     => Common::strBy($rows['type'], 'comment'),
-            'status'   => Common::strBy($rows['status'], 'approved'),
+            'mail'     => Common::strBy($rows['mail'] ?? null),
+            'url'      => Common::strBy($rows['url'] ?? null),
+            'ip'       => Common::strBy($rows['ip'] ?? null, $this->request->getIp()),
+            'agent'    => Common::strBy($rows['agent'] ?? null, $this->request->getAgent()),
+            'text'     => Common::strBy($rows['text'] ?? null),
+            'type'     => Common::strBy($rows['type'] ?? null, 'comment'),
+            'status'   => Common::strBy($rows['status'] ?? null, 'approved'),
             'parent'   => empty($rows['parent']) ? 0 : $rows['parent'],
         ];
 
@@ -136,11 +136,11 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
 
         /** 构建插入结构 */
         $preUpdateStruct = [
-            'author' => Common::strBy($rows['author']),
-            'mail'   => Common::strBy($rows['mail']),
-            'url'    => Common::strBy($rows['url']),
-            'text'   => Common::strBy($rows['text']),
-            'status' => Common::strBy($rows['status'], 'approved'),
+            'author' => Common::strBy($rows['author'] ?? null),
+            'mail'   => Common::strBy($rows['mail'] ?? null),
+            'url'    => Common::strBy($rows['url'] ?? null),
+            'text'   => Common::strBy($rows['text'] ?? null),
+            'status' => Common::strBy($rows['status'] ?? null, 'approved'),
         ];
 
         $updateStruct = [];

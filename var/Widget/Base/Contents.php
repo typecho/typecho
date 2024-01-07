@@ -133,13 +133,13 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
                 ? null : htmlspecialchars($rows['title']),
             'created'      => empty($rows['created']) ? $this->options->time : $rows['created'],
             'modified'     => $this->options->time,
-            'text'         => Common::strBy($rows['text']),
+            'text'         => Common::strBy($rows['text'] ?? null),
             'order'        => empty($rows['order']) ? 0 : intval($rows['order']),
             'authorId'     => $rows['authorId'] ?? $this->user->uid,
-            'template'     => Common::strBy($rows['template']),
-            'type'         => Common::strBy($rows['type'], 'post'),
-            'status'       => Common::strBy($rows['status'], 'publish'),
-            'password'     => Common::strBy($rows['password']),
+            'template'     => Common::strBy($rows['template'] ?? null),
+            'type'         => Common::strBy($rows['type'] ?? null, 'post'),
+            'status'       => Common::strBy($rows['status'] ?? null, 'publish'),
+            'password'     => Common::strBy($rows['password'] ?? null),
             'commentsNum'  => empty($rows['commentsNum']) ? 0 : $rows['commentsNum'],
             'allowComment' => !empty($rows['allowComment']) && 1 == $rows['allowComment'] ? 1 : 0,
             'allowPing'    => !empty($rows['allowPing']) && 1 == $rows['allowPing'] ? 1 : 0,
@@ -156,7 +156,7 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
 
         /** 更新缩略名 */
         if ($insertId > 0) {
-            $this->applySlug(!isset($rows['slug']) || strlen($rows['slug']) === 0 ? null : $rows['slug'], $insertId, $insertStruct['title']);
+            $this->applySlug(Common::strBy($rows['slug'] ?? null), $insertId, $insertStruct['title']);
         }
 
         return $insertId;
@@ -230,11 +230,11 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
             'title'        => !isset($rows['title']) || strlen($rows['title']) === 0
                 ? null : htmlspecialchars($rows['title']),
             'order'        => empty($rows['order']) ? 0 : intval($rows['order']),
-            'text'         => Common::strBy($rows['text']),
-            'template'     => Common::strBy($rows['template']),
-            'type'         => Common::strBy($rows['type'], 'post'),
-            'status'       => Common::strBy($rows['status'], 'publish'),
-            'password'     => Common::strBy($rows['password']),
+            'text'         => Common::strBy($rows['text'] ?? null),
+            'template'     => Common::strBy($rows['template'] ?? null),
+            'type'         => Common::strBy($rows['type'] ?? null, 'post'),
+            'status'       => Common::strBy($rows['status'] ?? null, 'publish'),
+            'password'     => Common::strBy($rows['password'] ?? null),
             'allowComment' => !empty($rows['allowComment']) && 1 == $rows['allowComment'] ? 1 : 0,
             'allowPing'    => !empty($rows['allowPing']) && 1 == $rows['allowPing'] ? 1 : 0,
             'allowFeed'    => !empty($rows['allowFeed']) && 1 == $rows['allowFeed'] ? 1 : 0,
