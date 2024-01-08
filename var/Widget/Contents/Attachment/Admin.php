@@ -62,7 +62,7 @@ class Admin extends Contents
     protected function ___parentPost(): Config
     {
         return new Config($this->db->fetchRow(
-            $this->select()->where('table.contents.cid = ?', $this->parentId)->limit(1)
+            $this->select()->where('table.contents.cid = ?', $this->parent)->limit(1)
         ));
     }
 }
