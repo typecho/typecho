@@ -38,7 +38,7 @@ class Upload extends Contents implements ActionInterface
             return $result;
         }
 
-        return @unlink(__TYPECHO_ROOT_DIR__ . '/' . $content['attachment']->path);
+        return @unlink(__TYPECHO_ROOT_DIR__ . '/' . json_decode($content['text'])->path);
     }
 
     /**
