@@ -14,6 +14,7 @@ use Typecho\Widget;
 use Typecho\Widget\Exception as WidgetException;
 use Widget\Base\Comments;
 use Widget\Base\Contents;
+use Widget\Contents\Attachment\Unattached;
 use Widget\Contents\Page\Admin as PageAdmin;
 use Widget\Contents\Post\Admin as PostAdmin;
 use Widget\Contents\Attachment\Admin as AttachmentAdmin;
@@ -406,17 +407,16 @@ class XmlRpc extends Contents implements ActionInterface, Hook
         }
 
         /** 对未归档附件进行归档 */
-        $unattached = $this->db->fetchAll($this->select()->where('table.contents.type = ? AND
-        (table.contents.parent = 0 OR table.contents.parent IS NULL)', 'attachment'), [$this, 'filter']);
+        $unattached = Unattached::alloc();
 
-        if (!empty($unattached)) {
-            foreach ($unattached as $attach) {
-                if (false !== strpos($input['text'], $attach['attachment']->url)) {
+        if ($unattached->have()) {
+            while ($unattached->next()) {
+                if (false !== strpos($input['text'], $unattached->attachment->url)) {
                     if (!isset($input['attachment'])) {
                         $input['attachment'] = [];
                     }
 
-                    $input['attachment'][] = $attach['cid'];
+                    $input['attachment'][] = $unattached->cid;
                 }
             }
         }

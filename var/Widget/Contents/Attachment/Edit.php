@@ -313,7 +313,7 @@ class Edit extends Contents implements ActionInterface
 
             if ($this->isWriteable(clone $condition) && $this->delete($condition)) {
                 /** 删除文件 */
-                Upload::deleteHandle($row);
+                Upload::deleteHandle($this->toArray(['cid', 'attachment', 'parent']));
 
                 /** 删除评论 */
                 $this->db->query($this->db->delete('table.comments')
