@@ -19,7 +19,7 @@ function themeConfig($form)
             'auto' => _t('自动'),
             'light' => _t('浅色'),
             'dark' => _t('深色'),
-            'colorful' => _t('彩色'),
+            'customize' => _t('自定义（请在 theme.css 里设置）'),
         ),
         'auto',
         _t('外观风格')

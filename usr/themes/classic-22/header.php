@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php $this->archiveTitle('', '', ' | '); ?><?php $this->options->title(); ?><?php if ($this->is('index')): ?> | <?php $this->options->description() ?><?php endif; ?></title>
     <link rel="stylesheet" href="<?php $this->options->themeUrl('static/css/style.css'); ?>">
-
+    <?php if ($this->options->colorSchema == 'customize'): ?>
+    <link rel="stylesheet" href="<?php $this->options->themeUrl('theme.css'); ?>">
+    <?php endif; ?>
     <?php $this->header(); ?>
 </head>
 
