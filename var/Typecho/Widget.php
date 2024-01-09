@@ -305,28 +305,32 @@ abstract class Widget
 
     /**
      * @param string|array $column
-     * @param bool $current 是否只返回当前行
+     * @return array|mixed|null
+     */
+    public function toColumn($column)
+    {
+        if (is_array($column)) {
+            $item = [];
+            foreach ($column as $key) {
+                $item[$key] = $this->{$key};
+            }
+
+            return $item;
+        } else {
+            return $this->{$column};
+        }
+    }
+
+    /**
+     * @param string|array $column
      * @return array
      */
-    public function toArray($column, bool $current = false): array
+    public function toArray($column): array
     {
         $result = [];
 
-        while ($current || $this->next()) {
-            if (is_array($column)) {
-                $item = [];
-                foreach ($column as $key) {
-                    $item[$key] = $this->{$key};
-                }
-
-                $result[] = $item;
-            } else {
-                $result[] = $this->{$column};
-            }
-
-            if ($current) {
-                break;
-            }
+        while ($this->next()) {
+            $result[] = $this->toColumn($column);
         }
 
         return $result;

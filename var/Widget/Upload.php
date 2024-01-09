@@ -133,7 +133,7 @@ class Upload extends Contents implements ActionInterface
                     $file['name'] = urldecode($file['name']);
                 }
 
-                $result = self::modifyHandle($this->toArray(['cid', 'attachment', 'parent'], true), $file);
+                $result = self::modifyHandle($this->toColumn(['cid', 'attachment', 'parent']), $file);
 
                 if (false !== $result) {
                     self::pluginHandle()->call('beforeModify', $result);
