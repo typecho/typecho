@@ -114,7 +114,8 @@ class Upload extends Contents implements ActionInterface
                         'table.contents.cid = ?',
                         $this->request->filter('int')->get('cid')
                     )
-                    ->where('table.contents.type = ?', 'attachment'), [$this, 'push']
+                    ->where('table.contents.type = ?', 'attachment'),
+                    [$this, 'push']
                 );
 
                 if (!$this->have()) {
@@ -132,7 +133,7 @@ class Upload extends Contents implements ActionInterface
                     $file['name'] = urldecode($file['name']);
                 }
 
-                $result = self::modifyHandle($this->row, $file);
+                $result = self::modifyHandle($this->toColumn(['cid', 'attachment', 'parent']), $file);
 
                 if (false !== $result) {
                     self::pluginHandle()->call('beforeModify', $result);
@@ -341,7 +342,6 @@ class Upload extends Contents implements ActionInterface
                         'url' => $this->attachment->url,
                         'permalink' => $this->permalink
                     ]]);
-
                 }
             }
         }
