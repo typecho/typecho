@@ -305,6 +305,24 @@ abstract class Widget
 
     /**
      * @param string|array $column
+     * @return array|mixed|null
+     */
+    public function toColumn($column)
+    {
+        if (is_array($column)) {
+            $item = [];
+            foreach ($column as $key) {
+                $item[$key] = $this->{$key};
+            }
+
+            return $item;
+        } else {
+            return $this->{$column};
+        }
+    }
+
+    /**
+     * @param string|array $column
      * @return array
      */
     public function toArray($column): array
@@ -312,16 +330,7 @@ abstract class Widget
         $result = [];
 
         while ($this->next()) {
-            if (is_array($column)) {
-                $item = [];
-                foreach ($column as $key) {
-                    $item[$key] = $this->{$key};
-                }
-
-                $result[] = $item;
-            } else {
-                $result[] = $this->{$column};
-            }
+            $result[] = $this->toColumn($column);
         }
 
         return $result;
