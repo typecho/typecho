@@ -305,13 +305,14 @@ abstract class Widget
 
     /**
      * @param string|array $column
+     * @param bool $current 是否只返回当前行
      * @return array
      */
-    public function toArray($column): array
+    public function toArray($column, bool $current = false): array
     {
         $result = [];
 
-        while ($this->next()) {
+        while ($current || $this->next()) {
             if (is_array($column)) {
                 $item = [];
                 foreach ($column as $key) {
@@ -321,6 +322,10 @@ abstract class Widget
                 $result[] = $item;
             } else {
                 $result[] = $this->{$column};
+            }
+
+            if ($current) {
+                break;
             }
         }
 
