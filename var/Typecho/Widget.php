@@ -481,7 +481,14 @@ abstract class Widget
      */
     public function __set(string $name, $value)
     {
-        $this->row[$name] = $value;
+        $method = '___' . $name;
+        $key = '#' . $name;
+
+        if (isset($this->row[$key]) || method_exists($this, $method)) {
+            $this->row[$key] = $value;
+        } else {
+            $this->row[$name] = $value;
+        }
     }
 
     /**
