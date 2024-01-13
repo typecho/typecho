@@ -367,10 +367,7 @@ class Request
      */
     public function getContentType(): ?string
     {
-        return $this->getServer(
-            'CONTENT_TYPE',
-            $this->getServer('HTTP_CONTENT_TYPE')
-        );
+        return $this->getHeader('Content-Type');
     }
 
     /**
