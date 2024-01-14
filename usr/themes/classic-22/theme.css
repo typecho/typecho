@@ -4,8 +4,8 @@
  */
 
 [data-theme="customize"] {
-  /* --primary: #017FC0 !important;
-  --primary-hover: #02659A !important; */
+  --primary: #017FC0 !important;
+  --primary-hover: #02659A !important;
   --background-color: #fffbeb !important;
   --muted-border-color: rgba(0, 0, 0, .1) !important;
   --form-element-border-color: rgba(0, 0, 0, .2) !important;
