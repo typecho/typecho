@@ -7,21 +7,26 @@
 
 body {
   cursor: auto;
+  text-underline-offset: 0.2rem;
 }
 
 // Theme
 [data-theme="light"],
 :root:not([data-theme="dark"]) {
-  --primary: #{$primary-500};
-  --primary-hover: #{$primary-600};
   --muted-border-color: #{$grey-200};
   --level-odd-color: #{$grey-50};
 }
 
+@media only screen and (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --background-color: #{$grey-900};
+    --muted-border-color: #{$grey-700};
+    --level-odd-color: #{$grey-800};
+  }
+}
+
 [data-theme="dark"] {
   --background-color: #{$grey-900};
-  --primary: #{$primary-400};
-  --primary-hover: #{$primary-300};
   --muted-border-color: #{$grey-700};
   --level-odd-color: #{$grey-800};
 }
