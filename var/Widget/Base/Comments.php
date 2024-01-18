@@ -403,9 +403,7 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
      */
     protected function ___permalink(): string
     {
-        $isApproved = 'approved' === $this->status;
-
-        if ($this->options->commentsPageBreak && $isApproved) {
+        if ($this->options->commentsPageBreak && 'approved' === $this->status) {
             $coid = $this->coid;
             $parent = $this->parent;
 
@@ -453,7 +451,7 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
             ) . '#' . $this->theId;
         }
 
-        return ($isApproved ? $this->parentContent->permalink : '') . '#' . $this->theId;
+        return $this->parentContent->permalink . '#' . $this->theId;
     }
 
     /**

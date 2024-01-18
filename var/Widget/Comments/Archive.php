@@ -176,12 +176,11 @@ class Archive extends Comments
                 ($this->currentPage - 1) * $this->options->commentsPageSize,
                 $this->options->commentsPageSize
             );
-
-            /** 评论置位 */
-            $this->length = count($this->stack);
-            $this->row = $this->length > 0 ? current($this->stack) : [];
         }
 
+        /** 评论置位 */
+        $this->length = count($this->stack);
+        $this->row = $this->length > 0 ? current($this->stack) : [];
         reset($this->stack);
     }
 
