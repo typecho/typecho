@@ -151,4 +151,16 @@ class Admin extends Comments
         $cid = $this->request->is('cid') ? $this->request->filter('int')->get('cid') : $this->cid;
         return From::allocWithAlias($cid, ['cid' => $cid]);
     }
+
+    /**
+     * @return string
+     */
+    protected function ___permalink(): string
+    {
+        if ('approved' === $this->status) {
+            return parent::___permalink();
+        }
+
+        return '#' . $this->theId;
+    }
 }
