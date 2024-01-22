@@ -93,7 +93,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property int $commentsPostInterval
  * @property string $commentsHTMLTagAllowed
  * @property bool $allowRegister
- * @property bool $allowXmlRpc
+ * @property int $allowXmlRpc
  * @property int $postsListSize
  * @property bool $feedFullText
  * @property int $defaultCategory
