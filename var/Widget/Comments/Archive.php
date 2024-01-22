@@ -240,7 +240,10 @@ class Archive extends Comments
             }
 
             $template = array_merge($default, $config);
-            $query = Router::url('comment_page', $this, $this->options->index);
+            $query = Router::url('comment_page', [
+                'permalink' => $this->parameter->parentContent->path,
+                'commentPage' => '{commentPage}'
+            ], $this->options->index);
 
             self::pluginHandle()->trigger($hasNav)->call(
                 'pageNav',
@@ -465,21 +468,6 @@ class Archive extends Comments
     }
 
     /**
-     * 获取当前评论链接
-     *
-     * @return string
-     */
-    protected function ___permalink(): string
-    {
-        if ($this->options->commentsPageBreak) {
-            $pageRow = ['permalink' => $this->parentContent->path, 'commentPage' => $this->currentPage];
-            return Router::url('comment_page', $pageRow, $this->options->index) . '#' . $this->theId;
-        }
-
-        return $this->parentContent->permalink . '#' . $this->theId;
-    }
-
-    /**
      * 子评论
      *
      * @return array
@@ -498,6 +486,16 @@ class Archive extends Comments
     protected function ___isTopLevel(): bool
     {
         return $this->levels > $this->options->commentsMaxNestingLevels - 2;
+    }
+
+    /**
+     * 重载评论页码获取
+     *
+     * @return int
+     */
+    protected function ___commentPage(): int
+    {
+        return $this->currentPage;
     }
 
     /**

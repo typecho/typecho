@@ -110,6 +110,6 @@ abstract class PageNavigator
      */
     public function render()
     {
-        throw new Exception(get_class($this) . ':' . __METHOD__, 500);
+        throw new Exception('Method Not Implemented', 500);
     }
 }
