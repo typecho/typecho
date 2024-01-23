@@ -465,7 +465,7 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
             ) . '#' . $this->theId;
         }
 
-        return $this->parentContent->permalink. '#' . $this->theId;
+        return $this->parentContent->permalink . '#' . $this->theId;
     }
 
     /**

@@ -270,7 +270,11 @@ class Feedback extends Comments implements ActionInterface
         /** 评论完成接口 */
         self::pluginHandle()->call('finishComment', $this);
 
-        $this->response->redirect($this->permalink);
+        if ($this->parent > 0) {
+            $this->response->goBack('#' . $this->theId);
+        } else {
+            $this->response->redirect($this->permalink);
+        }
     }
 
     /**
