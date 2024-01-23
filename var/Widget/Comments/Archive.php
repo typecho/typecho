@@ -99,15 +99,12 @@ class Archive extends Comments
             return;
         }
 
-        $commentsAuthor = Cookie::get('__typecho_remember_author');
-        $commentsMail = Cookie::get('__typecho_remember_mail');
-        $select = $this->select()->where('table.comments.cid = ?', $this->parameter->parentId)
+        $waitingCommentId = intval(Cookie::get('__typecho_waiting_comment', 0));
+        $select = $this->select()->where('cid = ?', $this->parameter->parentId)
             ->where(
-                'table.comments.status = ? OR (table.comments.author = ?'
-                    . ' AND table.comments.mail = ? AND table.comments.status = ?)',
+                'status = ? OR (coid = ? AND status = ?)',
                 'approved',
-                $commentsAuthor,
-                $commentsMail,
+                $waitingCommentId,
                 'waiting'
             );
 

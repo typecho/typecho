@@ -405,7 +405,7 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
      */
     protected function ___commentPage(): int
     {
-        if ($this->options->commentsPageBreak && 'approved' === $this->status) {
+        if ($this->options->commentsPageBreak) {
             $coid = $this->coid;
             $parent = $this->parent;
 
@@ -422,7 +422,13 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
             }
 
             $select = $this->db->select('coid', 'parent')
-                ->from('table.comments')->where('cid = ? AND status = ?', $this->cid, 'approved')
+                ->from('table.comments')
+                ->where(
+                    'cid = ? AND (status = ? OR coid = ?)',
+                    $this->cid,
+                    'approved',
+                    $this->status === 'waiting' ? $this->coid : 0
+                )
                 ->where('coid ' . ('DESC' == $this->options->commentsOrder ? '>=' : '<=') . ' ?', $coid)
                 ->order('coid');
 
@@ -457,7 +463,7 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
      */
     protected function ___permalink(): string
     {
-        if ($this->options->commentsPageBreak && 'approved' === $this->status) {
+        if ($this->options->commentsPageBreak) {
             return Router::url(
                 'comment_page',
                 $this,
