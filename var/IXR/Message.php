@@ -60,6 +60,25 @@ class Message
         if (trim($this->message) == '') {
             return false;
         }
+
+        // remove the DOCTYPE, avoid using a regexp, so we can save memory
+        $count = 0;
+        while (true) {
+            // Fail if there is an endless loop
+            if ($count >= 10) {
+                return false;
+            }
+
+            $pos = strpos($this->message, '<!DOCTYPE');
+            if ($pos !== false) {
+                $this->message = substr($this->message, 0, $pos)
+                    . substr($this->message, strpos($this->message, '>', $pos) + 1);
+                $count ++;
+            } else {
+                break;
+            }
+        }
+
         $parser = xml_parser_create();
         // Set XML parser to take the case of tags in to account
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, false);
