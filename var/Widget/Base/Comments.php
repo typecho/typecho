@@ -427,7 +427,7 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
                     'cid = ? AND (status = ? OR coid = ?)',
                     $this->cid,
                     'approved',
-                    $this->status === 'waiting' ? $this->coid : 0
+                    $this->status !== 'approved' ? $this->coid : 0
                 )
                 ->where('coid ' . ('DESC' == $this->options->commentsOrder ? '>=' : '<=') . ' ?', $coid)
                 ->order('coid');

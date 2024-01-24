@@ -270,8 +270,8 @@ class Feedback extends Comments implements ActionInterface
         /** 评论完成接口 */
         self::pluginHandle()->call('finishComment', $this);
 
-        if ($this->status === 'waiting') {
-            Cookie::set('__typecho_waiting_comment', $commentId);
+        if ($this->status !== 'approved') {
+            Cookie::set('__typecho_unapproved_comment', $commentId);
         }
 
         $this->response->redirect($this->permalink);

@@ -99,13 +99,13 @@ class Archive extends Comments
             return;
         }
 
-        $waitingCommentId = intval(Cookie::get('__typecho_waiting_comment', 0));
+        $unapprovedCommentId = intval(Cookie::get('__typecho_unapproved_comment', 0));
         $select = $this->select()->where('cid = ?', $this->parameter->parentId)
             ->where(
-                'status = ? OR (coid = ? AND status = ?)',
+                'status = ? OR (coid = ? AND status <> ?)',
                 'approved',
-                $waitingCommentId,
-                'waiting'
+                $unapprovedCommentId,
+                'approved'
             );
 
         if ($this->options->commentsShowCommentOnly) {
@@ -359,7 +359,7 @@ class Archive extends Comments
                             $singleCommentOptions->afterDate();
                             ?></time>
                 </a>
-                <?php if ('waiting' == $this->status) { ?>
+                <?php if ('approved' !== $this->status) { ?>
                     <em class="comment-awaiting-moderation"><?php $singleCommentOptions->commentStatus(); ?></em>
                 <?php } ?>
             </div>
