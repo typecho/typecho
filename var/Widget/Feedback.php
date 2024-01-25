@@ -270,7 +270,11 @@ class Feedback extends Comments implements ActionInterface
         /** 评论完成接口 */
         self::pluginHandle()->call('finishComment', $this);
 
-        $this->response->goBack('#' . $this->theId);
+        if ($this->status !== 'approved') {
+            Cookie::set('__typecho_unapproved_comment', $commentId);
+        }
+
+        $this->response->redirect($this->permalink);
     }
 
     /**

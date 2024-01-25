@@ -99,16 +99,13 @@ class Archive extends Comments
             return;
         }
 
-        $commentsAuthor = Cookie::get('__typecho_remember_author');
-        $commentsMail = Cookie::get('__typecho_remember_mail');
-        $select = $this->select()->where('table.comments.cid = ?', $this->parameter->parentId)
+        $unapprovedCommentId = intval(Cookie::get('__typecho_unapproved_comment', 0));
+        $select = $this->select()->where('cid = ?', $this->parameter->parentId)
             ->where(
-                'table.comments.status = ? OR (table.comments.author = ?'
-                    . ' AND table.comments.mail = ? AND table.comments.status = ?)',
+                'status = ? OR (coid = ? AND status <> ?)',
                 'approved',
-                $commentsAuthor,
-                $commentsMail,
-                'waiting'
+                $unapprovedCommentId,
+                'approved'
             );
 
         if ($this->options->commentsShowCommentOnly) {
@@ -176,12 +173,11 @@ class Archive extends Comments
                 ($this->currentPage - 1) * $this->options->commentsPageSize,
                 $this->options->commentsPageSize
             );
-
-            /** 评论置位 */
-            $this->length = count($this->stack);
-            $this->row = $this->length > 0 ? current($this->stack) : [];
         }
 
+        /** 评论置位 */
+        $this->length = count($this->stack);
+        $this->row = $this->length > 0 ? current($this->stack) : [];
         reset($this->stack);
     }
 
@@ -241,7 +237,10 @@ class Archive extends Comments
             }
 
             $template = array_merge($default, $config);
-            $query = Router::url('comment_page', $this, $this->options->index);
+            $query = Router::url('comment_page', [
+                'permalink' => $this->parameter->parentContent->path,
+                'commentPage' => '{commentPage}'
+            ], $this->options->index);
 
             self::pluginHandle()->trigger($hasNav)->call(
                 'pageNav',
@@ -360,7 +359,7 @@ class Archive extends Comments
                             $singleCommentOptions->afterDate();
                             ?></time>
                 </a>
-                <?php if ('waiting' == $this->status) { ?>
+                <?php if ('approved' !== $this->status) { ?>
                     <em class="comment-awaiting-moderation"><?php $singleCommentOptions->commentStatus(); ?></em>
                 <?php } ?>
             </div>
@@ -466,21 +465,6 @@ class Archive extends Comments
     }
 
     /**
-     * 获取当前评论链接
-     *
-     * @return string
-     */
-    protected function ___permalink(): string
-    {
-        if ($this->options->commentsPageBreak) {
-            $pageRow = ['permalink' => $this->parentContent->path, 'commentPage' => $this->currentPage];
-            return Router::url('comment_page', $pageRow, $this->options->index) . '#' . $this->theId;
-        }
-
-        return $this->parentContent->permalink . '#' . $this->theId;
-    }
-
-    /**
      * 子评论
      *
      * @return array
@@ -499,6 +483,16 @@ class Archive extends Comments
     protected function ___isTopLevel(): bool
     {
         return $this->levels > $this->options->commentsMaxNestingLevels - 2;
+    }
+
+    /**
+     * 重载评论页码获取
+     *
+     * @return int
+     */
+    protected function ___commentPage(): int
+    {
+        return $this->currentPage;
     }
 
     /**

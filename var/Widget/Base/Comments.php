@@ -34,6 +34,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property string $type
  * @property string status
  * @property int $parent
+ * @property int $commentPage
  * @property Date $date
  * @property string $dateWord
  * @property string $theId
@@ -61,6 +62,8 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
         switch ($key) {
             case 'permalink':
                 return $this->parentContent->path;
+            case 'commentPage':
+                return $this->commentPage;
             default:
                 return '{' . $key . '}';
         }
@@ -396,14 +399,13 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
     }
 
     /**
-     * 获取当前评论链接
+     * 获取当前评论页码
      *
-     * @return string
-     * @throws Exception
+     * @return int
      */
-    protected function ___permalink(): string
+    protected function ___commentPage(): int
     {
-        if ($this->options->commentsPageBreak && 'approved' == $this->status) {
+        if ($this->options->commentsPageBreak) {
             $coid = $this->coid;
             $parent = $this->parent;
 
@@ -420,7 +422,13 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
             }
 
             $select = $this->db->select('coid', 'parent')
-                ->from('table.comments')->where('cid = ? AND status = ?', $this->cid, 'approved')
+                ->from('table.comments')
+                ->where(
+                    'cid = ? AND (status = ? OR coid = ?)',
+                    $this->cid,
+                    'approved',
+                    $this->status !== 'approved' ? $this->coid : 0
+                )
                 ->where('coid ' . ('DESC' == $this->options->commentsOrder ? '>=' : '<=') . ' ?', $coid)
                 ->order('coid');
 
@@ -441,12 +449,24 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
                 }
             }
 
-            $currentPage = ceil($total / $this->options->commentsPageSize);
+            return ceil($total / $this->options->commentsPageSize);
+        }
 
-            $pageRow = ['permalink' => $this->parentContent->path, 'commentPage' => $currentPage];
+        return 0;
+    }
+
+    /**
+     * 获取当前评论链接
+     *
+     * @return string
+     * @throws Exception
+     */
+    protected function ___permalink(): string
+    {
+        if ($this->options->commentsPageBreak) {
             return Router::url(
                 'comment_page',
-                $pageRow,
+                $this,
                 $this->options->index
             ) . '#' . $this->theId;
         }
