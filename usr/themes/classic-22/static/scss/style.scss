@@ -10,6 +10,11 @@ body {
   text-underline-offset: 0.2rem;
 }
 
+button {
+  display: inline-block;
+  width: auto;
+}
+
 // Theme
 [data-theme="light"],
 :root:not([data-theme="dark"]) {
@@ -315,10 +320,10 @@ h1, h2, h3, h4, h5 { line-height: 1.25; }
   content: "OP";
   margin-left: .25rem;
   color: var(--muted-color);
-  padding: 0 .375rem;
+  padding: 1px .375rem;
   border: 1px solid var(--muted-color);
   font-size: .75rem;
-  border-radius: var(--border-radius);
+  border-radius: 2rem;
 }
 
 .comment-author {
@@ -330,9 +335,11 @@ h1, h2, h3, h4, h5 { line-height: 1.25; }
     border-radius: 48px;
   }
 
-  cite {
+  cite,
+  cite a {
     font-style: normal;
     font-weight: 700;
+    color: var(--h5-color);
   }
 }
 
