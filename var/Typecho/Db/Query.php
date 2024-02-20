@@ -165,7 +165,7 @@ class Query
      */
     private function filterColumn(string $str): string
     {
-        $str = $str . ' 0';
+        $str .= ' 0';
         $length = strlen($str);
         $lastIsAlnum = false;
         $result = '';
