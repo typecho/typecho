@@ -114,14 +114,14 @@ class Archive extends Contents
     /**
      * 本页关键字
      *
-     * @var string
+     * @var string|null
      */
-    private string $archiveKeywords;
+    private ?string $archiveKeywords = null;
 
     /**
      * 本页描述
      *
-     * @var string
+     * @var string|null
      */
     private ?string $archiveDescription = null;
 
@@ -1023,7 +1023,7 @@ class Archive extends Contents
             $header .= '<meta name="twitter:title" property="og:title" itemprop="name" content="'
                 . htmlspecialchars($this->archiveTitle ?? $this->options->title) . '" />' . "\n";
             $header .= '<meta name="twitter:description" property="og:description" itemprop="description" content="'
-                . htmlspecialchars($this->archiveDescription ?? $this->options->description) . '" />' . "\n";
+                . htmlspecialchars($this->archiveDescription ?? ($this->options->description ?? '')) . '" />' . "\n";
             $header .= '<meta property="og:site_name" content="' . htmlspecialchars($this->options->title) . '" />' . "\n";
             $header .= '<meta name="twitter:card" content="summary" />' . "\n";
             $header .= '<meta name="twitter:domain" content="' . $this->options->siteDomain . '" />' . "\n";
