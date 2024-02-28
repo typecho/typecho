@@ -852,7 +852,8 @@ EOF;
             }
 
             if (!empty($mail)) {
-                $url .= md5(strtolower(trim($mail)));
+                // https://docs.gravatar.com/general/hash/  Replacing md5 with sha256
+                $url .= hash('sha256', strtolower(trim($mail)));
             }
 
             $url .= '?s=' . $size;
