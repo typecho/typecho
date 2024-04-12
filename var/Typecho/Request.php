@@ -669,21 +669,9 @@ class Request
         } elseif (0 === strpos($requestUri, dirname($baseUrl))) {
             // directory portion of $baseUrl matches
             $finalBaseUrl = rtrim(dirname($baseUrl), '/');
-        } elseif (!strpos($requestUri, basename($baseUrl))) {
-            // no match whatsoever; set it blank
-            $finalBaseUrl = '';
-        } elseif (
-            (strlen($requestUri) >= strlen($baseUrl))
-            && ((false !== ($pos = strpos($requestUri, $baseUrl))) && ($pos !== 0))
-        ) {
-            // If using mod_rewrite or ISAPI_Rewrite strip the script filename
-            // out of baseUrl. $pos !== 0 makes sure it is not matching a value
-            // from PATH_INFO or QUERY_STRING
-            $baseUrl = substr($requestUri, 0, $pos + strlen($baseUrl));
         } else {
-            // 找 $baseUrl 和 $requestUri 之间的共同部分
-            // 处理目录在二级目录下
-            // 并且定义了ROOT_URL不包含路径信息，此时baseUrl也不能包含路径信息
+            // when using url rewrite, the starting positions of $baseUrl and $requestUri may not match.
+            // In this case, find the common part of both as $finalBaseUrl.
             $arr1 = array_filter(explode("/", $baseUrl));
             $arr2 = array_filter(explode("/", $requestUri));
             $commonArr = array_intersect($arr1, $arr2);
