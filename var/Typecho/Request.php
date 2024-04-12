@@ -680,6 +680,14 @@ class Request
             // out of baseUrl. $pos !== 0 makes sure it is not matching a value
             // from PATH_INFO or QUERY_STRING
             $baseUrl = substr($requestUri, 0, $pos + strlen($baseUrl));
+        } else {
+            // 找 $baseUrl 和 $requestUri 之间的共同部分
+            // 处理目录在二级目录下
+            // 并且定义了ROOT_URL不包含路径信息，此时baseUrl也不能包含路径信息
+            $arr1 = array_filter(explode("/", $baseUrl));
+            $arr2 = array_filter(explode("/", $requestUri));
+            $commonArr = array_intersect($arr1, $arr2);
+            $finalBaseUrl = empty($commonArr) ? "" : '/' . reset($commonArr);
         }
 
         return ($this->baseUrl = (null === $finalBaseUrl) ? rtrim($baseUrl, '/') : $finalBaseUrl);
