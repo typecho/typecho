@@ -854,7 +854,7 @@ EOF;
             }
 
             if (!empty($mail)) {
-                $url .= md5(strtolower(trim($mail)));
+                $url .= hash('sha256', strtolower(trim($mail)));
             }
 
             $url .= '?s=' . $size;
