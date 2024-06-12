@@ -79,9 +79,9 @@ class Feed
      * 聚合副标题
      *
      * @access private
-     * @var string
+     * @var string|null
      */
-    private string $subTitle;
+    private ?string $subTitle;
 
     /**
      * 版本信息
