@@ -106,6 +106,9 @@ $(document).ready(function () {
             html = '<div class="summary">' + summary + '</div>'
                 + '<div class="details">' + details + '</div>';
         }
+        
+        // 给img追加loading="lazy"
+        html = html.replace(/<img([^>]+)>/gi, '<img loading="lazy"$1>');
 
         // 替换block
         html = html.replace(/<(iframe|embed)\s+([^>]*)>/ig, function (all, tag, src) {
