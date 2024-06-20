@@ -420,7 +420,7 @@ class HyperDown
         $text = preg_replace_callback(
             "/\\\(.)/u",
             function ($matches) {
-                $prefix = preg_match("/^[-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]$/", $matches[1]) ? '' : '\\';
+                $prefix = preg_match("/^[-\_\`\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]$/", $matches[1]) ? '' : '\\';
                 $escaped = htmlspecialchars($matches[1]);
                 $escaped = str_replace('$', '&dollar;', $escaped);
                 return $this->makeHolder($prefix . $escaped);
