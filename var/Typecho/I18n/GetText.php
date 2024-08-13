@@ -394,7 +394,8 @@ class GetText
             } else {
                 $header = $this->getTranslationString(0);
             }
-            if (preg_match("/plural\-forms: ([^\n]*)\n/i", $header, $regs)) {
+            
+            if (!is_null($header) && preg_match("/plural\-forms: ([^\n]*)\n/i", $header, $regs)) {
                 $expr = $regs[1];
             } else {
                 $expr = "nplurals=2; plural=n == 1 ? 0 : 1;";
