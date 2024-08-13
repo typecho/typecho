@@ -29,6 +29,11 @@ function themeConfig($form)
     $form->addInput($sidebarBlock->multiMode());
 }
 
+function themeSetup(\Widget\Themes\Edit $edit, \Typecho\Db $db)
+{
+    print '主题被启动';
+}
+
 function postMeta(
     \Widget\Archive $archive,
     string $metaType = 'archive'
