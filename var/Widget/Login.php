@@ -64,7 +64,7 @@ class Login extends Users implements ActionInterface
             $this->request->get('name'),
             $this->request->get('password'),
             false,
-            1 == $this->request->get('name') ? $expire : 0
+            $this->request->is('remember=1') ? $expire : 0
         );
 
         /** 比对密码 */
