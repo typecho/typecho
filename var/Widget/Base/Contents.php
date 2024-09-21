@@ -70,6 +70,9 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property-read string $commentUrl
  * @property-read string $trackbackUrl
  * @property-read string $responseUrl
+ * @property-read string $year
+ * @property-read string $month
+ * @property-read string $day
  */
 class Contents extends Base implements QueryInterface, RowFilterInterface, PrimaryKeyInterface, ParamsDelegateInterface
 {
@@ -922,5 +925,29 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
     protected function ___responseUrl(): string
     {
         return $this->permalink . '#' . $this->respondId;
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___year(): string
+    {
+        return $this->date->year;
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___month(): string
+    {
+        return $this->date->month;
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___day(): string
+    {
+        return $this->date->day;
     }
 }

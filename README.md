@@ -15,7 +15,7 @@ Typecho is released under the GNU General Public License 2.0.
 
 ## Requirements
 
-* PHP 7.2.0 or higher
+* PHP 7.4.0 or higher
 * Database (MySQL, SQLite, PostgreSQL)
   * MySQL 5.5.3 or higher
   * SQLite 3.7.11 or higher
