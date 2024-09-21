@@ -852,8 +852,8 @@ EOF;
             }
 
             if (!empty($mail)) {
-                // https://docs.gravatar.com/general/hash/  Replacing md5 with sha256
-                $url .= hash('sha256', strtolower(trim($mail)));
+                $algo = defined('__TYPECHO_GRAVATAR_HASH_ALGORITHM__') ? __TYPECHO_GRAVATAR_HASH_ALGORITHM__ : 'md5';
+                $url .= hash($algo, strtolower(trim($mail)));
             }
 
             $url .= '?s=' . $size;
