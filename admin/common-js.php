@@ -30,6 +30,10 @@
                         p.prependTo(document.body);
                     }
 
+                    if(document.body.clientWidth < 575) {
+                        offset = 0;
+                    }
+
                     function checkScroll () {
                         if ($(window).scrollTop() >= offset) {
                             p.css({
