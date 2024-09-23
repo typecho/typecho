@@ -61,9 +61,14 @@ class Mysql extends Pdo
             }
         }
 
+        $dsn = !empty($config->dsn)
+            ? $config->dsn
+            : (strpos($config->host, '/') !== false
+                ? "mysql:dbname={$config->database};unix_socket={$config->host}"
+                : "mysql:dbname={$config->database};host={$config->host};port={$config->port}");
+
         $pdo = new \PDO(
-            !empty($config->dsn)
-                ? $config->dsn : "mysql:dbname={$config->database};host={$config->host};port={$config->port}",
+            $dsn,
             $config->user,
             $config->password,
             $options
