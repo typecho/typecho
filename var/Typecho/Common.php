@@ -854,7 +854,7 @@ EOF;
             }
 
             if (!empty($mail)) {
-                $algo = defined('__TYPECHO_GRAVATAR_HASH_ALGORITHM__') ? __TYPECHO_GRAVATAR_HASH_ALGORITHM__ : 'md5';
+                $algo = defined('__TYPECHO_GRAVATAR_HASH_ALGORITHM__') ? __TYPECHO_GRAVATAR_HASH_ALGORITHM__ : 'sha256';
                 $url .= hash($algo, strtolower(trim($mail)));
             }
 
