@@ -11,3 +11,29 @@ $screen-phone: 576px;
 $screen-tablet:  768px;
 $screen-desktop: 992px;
 $screen-wide: 1200px;
+
+@function breakpoint($breakpoint) {
+  @if $breakpoint == 'phone' {
+    @return $screen-phone;
+  } @else if $breakpoint == 'tablet' {
+    @return $screen-tablet;
+  } @else if $breakpoint == 'desktop' {
+    @return $screen-desktop;
+  } @else if $breakpoint == 'wide' {
+    @return $screen-wide;
+  } @else {
+    @return $breakpoint;
+  }
+}
+
+@mixin screen($breakpoint, $type: min) {
+  @if $type == min {
+    @media (min-width: breakpoint($breakpoint)) {
+      @content;
+    }
+  } @else {
+    @media (max-width: breakpoint($breakpoint) - 1) {
+      @content;
+    }
+  }
+}

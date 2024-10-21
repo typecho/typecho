@@ -318,7 +318,7 @@
   #btn-cancel-preview { display: inline-block }
 }
 
-@media (max-width: $screen-phone - 1px) {
+@include screen(phone, max) {
   #wmd-spacer2,
   #wmd-olist-button,
   #wmd-ulist-button,

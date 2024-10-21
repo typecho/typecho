@@ -60,7 +60,7 @@
  * Tablet and up
  */
 
-@media (min-width: $screen-tablet) {
+@include screen(tablet) {
   .container {
     max-width: $screen-tablet - ($gutter-width * 2);
   }
@@ -99,7 +99,7 @@
  * Desktop and up
  */
 
-@media (min-width: $screen-desktop) {
+@include screen(desktop) {
   .container {
     max-width: $screen-desktop - ($gutter-width * 2);
   }
@@ -138,7 +138,7 @@
  * Widescreen and up
  */
 
-@media (min-width: $screen-wide) {
+@include screen(wide) {
   .container {
     max-width: $screen-wide - ($gutter-width * 2);
   }
@@ -178,21 +178,21 @@
  */
 
 // Hidden in mobile and down
-@media (max-width: $screen-phone - 1px) {
+@include screen(phone, max) {
   .kit-hidden-mb {
     display: none;
   }
 }
 
 // Hidden in tablet and down
-@media (max-width: $screen-tablet - 1px) {
+@include screen(tablet, max) {
   .kit-hidden-tb {
     display: none;
   }
 }
 
 // Hidden in descktop and down
-@media (max-width: $screen-desktop - 1px) {
+@include screen(desktop, max) {
   .kit-hidden {
     display: none;
   }

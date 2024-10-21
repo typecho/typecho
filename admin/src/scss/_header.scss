@@ -121,7 +121,7 @@ $color-nav-child-focus: #6DA1BB;
   }
 }
 
-@media (max-width: $screen-phone - 1px) {
+@include screen(phone, max) {
   @keyframes out {
     from {left: 0%;}
     to {left: -100%;}
