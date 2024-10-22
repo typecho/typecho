@@ -26,15 +26,19 @@
     }
 
     a {
-      display: block;
-      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       margin-right: -1px;
       border: 1px solid #D9D9D6;
       padding: 0 15px;
       height: 26px;
-      line-height: 26px;
       color: #666;
       box-sizing: border-box;
+
+      > * {
+        margin: 0 3px;
+      }
 
       &:hover {
         background-color: #E9E9E6;

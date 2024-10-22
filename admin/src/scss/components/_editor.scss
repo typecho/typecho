@@ -152,6 +152,24 @@
   button { margin-right: 10px; }
 }
 
+#wmd-editarea {
+  /* 拖动调整 textarea 大小 */
+  .resize {
+    display: block;
+    margin: 2px auto 0;
+    padding: 2px 0;
+    border: 1px solid #D9D9D6;
+    border-width: 1px 0;
+    width: 60px;
+    cursor: row-resize;
+    i {
+      display: block;
+      height: 1px;
+      background-color: #D9D9D6;
+    }
+  }
+}
+
 /* 预览 */
 #wmd-preview {
   background: #FFF;

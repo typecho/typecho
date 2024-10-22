@@ -72,7 +72,7 @@ while ($parents->next()) {
                     </p>
 
                     <?php include 'custom-fields.php'; ?>
-                    <p class="submit clearfix">
+                    <p class="submit">
                         <span class="left">
                             <button type="button" id="btn-cancel-preview" class="btn"><i
                                     class="i-caret-left"></i> <?php _e('取消预览'); ?></button>
@@ -95,7 +95,7 @@ while ($parents->next()) {
                     <?php \Typecho\Plugin::factory('admin/write-page.php')->call('content', $page); ?>
                 </div>
                 <div id="edit-secondary" class="col-mb-12 col-tb-3" role="complementary">
-                    <ul class="typecho-option-tabs clearfix">
+                    <ul class="typecho-option-tabs">
                         <li class="active w-50"><a href="#tab-advance"><?php _e('选项'); ?></a></li>
                         <li class="w-50"><a href="#tab-files" id="tab-files-btn"><?php _e('附件'); ?></a></li>
                     </ul>
@@ -110,7 +110,7 @@ while ($parents->next()) {
 
                         <section class="typecho-post-option">
                             <label for="order" class="typecho-label"><?php _e('页面顺序'); ?></label>
-                            <p><input type="text" id="order" name="order" value="<?php $page->order(); ?>"
+                            <p><input type="number" id="order" name="order" value="<?php $page->order(); ?>"
                                       class="w-100"/></p>
                             <p class="description"><?php _e('为你的自定义页面设定一个序列值以后, 能够使得它们按此值从小到大排列'); ?></p>
                         </section>
@@ -145,9 +145,9 @@ while ($parents->next()) {
 
                         <?php \Typecho\Plugin::factory('admin/write-page.php')->call('option', $page); ?>
 
-                        <button type="button" id="advance-panel-btn" class="btn btn-xs"><?php _e('高级选项'); ?> <i
-                                class="i-caret-down"></i></button>
-                        <div id="advance-panel">
+                        <details id="advance-panel">
+                            <summary class="btn btn-xs"><?php _e('高级选项'); ?> <i class="i-caret-down"></i></summary>
+
                             <section class="typecho-post-option visibility-option">
                                 <label for="visibility" class="typecho-label"><?php _e('公开度'); ?></label>
                                 <p>
@@ -176,7 +176,7 @@ while ($parents->next()) {
                             </section>
 
                             <?php \Typecho\Plugin::factory('admin/write-page.php')->call('advanceOption', $page); ?>
-                        </div>
+                        </details>
                         <?php if ($page->have()): ?>
                             <?php $modified = new \Typecho\Date($page->modified); ?>
                             <section class="typecho-post-option">

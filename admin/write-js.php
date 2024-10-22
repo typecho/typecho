@@ -145,7 +145,7 @@ $(document).ready(function() {
         idInput = $('input[name=cid]'),
         draft = $('input[name=draft]'),
         btnPreview = $('#btn-preview'),
-        autoSave = $('<span id="auto-save-message" class="left"></span>').prependTo('.submit');
+        autoSave = $('<span id="auto-save-message"></span>').prependTo('.left');
 
     let cid = idInput.val(),
         draftId = draft.length > 0 ? draft.val() : 0,
@@ -317,12 +317,6 @@ $(document).ready(function() {
         const activeTab = $(this).addClass('active').find('a').attr('href');
         $(activeTab).removeClass('hidden');
 
-        return false;
-    });
-
-    // 高级选项控制
-    $('#advance-panel-btn').click(function() {
-        $('#advance-panel').toggle();
         return false;
     });
 

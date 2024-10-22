@@ -56,7 +56,7 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
 
                     <?php include 'custom-fields.php'; ?>
 
-                    <p class="submit clearfix">
+                    <p class="submit">
                         <span class="left">
                             <button type="button" id="btn-cancel-preview" class="btn"><i
                                     class="i-caret-left"></i> <?php _e('取消预览'); ?></button>
@@ -80,7 +80,7 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
                 </div>
 
                 <div id="edit-secondary" class="col-mb-12 col-tb-3" role="complementary">
-                    <ul class="typecho-option-tabs clearfix">
+                    <ul class="typecho-option-tabs">
                         <li class="active w-50"><a href="#tab-advance"><?php _e('选项'); ?></a></li>
                         <li class="w-50"><a href="#tab-files" id="tab-files-btn"><?php _e('附件'); ?></a></li>
                     </ul>
@@ -119,9 +119,9 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
 
                         <?php \Typecho\Plugin::factory('admin/write-post.php')->call('option', $post); ?>
 
-                        <button type="button" id="advance-panel-btn" class="btn btn-xs"><?php _e('高级选项'); ?> <i
-                                class="i-caret-down"></i></button>
-                        <div id="advance-panel">
+                        <details id="advance-panel">
+                            <summary class="btn btn-xs"><?php _e('高级选项'); ?> <i class="i-caret-down"></i></summary>
+
                             <?php if ($user->pass('editor', true)): ?>
                                 <section class="typecho-post-option visibility-option">
                                     <label for="visibility" class="typecho-label"><?php _e('公开度'); ?></label>
@@ -172,7 +172,7 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
                             </section>
 
                             <?php \Typecho\Plugin::factory('admin/write-post.php')->call('advanceOption', $post); ?>
-                        </div><!-- end #advance-panel -->
+                        </details><!-- end #advance-panel -->
 
                         <?php if ($post->have()): ?>
                             <?php $modified = new \Typecho\Date($post->modified); ?>

@@ -3,10 +3,9 @@
 $fields = isset($post) ? $post->getFieldItems() : $page->getFieldItems();
 $defaultFields = isset($post) ? $post->getDefaultFieldItems() : $page->getDefaultFieldItems();
 ?>
-<section id="custom-field"
-         class="typecho-post-option<?php if (empty($defaultFields) && empty($fields)): ?> fold<?php endif; ?>">
-    <label id="custom-field-expand" class="typecho-label"><a href="##"><i
-                class="i-caret-right"></i> <?php _e('自定义字段'); ?></a></label>
+<details id="custom-field"
+         class="typecho-post-option" <?php if (!empty($defaultFields) || !empty($fields)): ?>open<?php endif; ?>>
+    <summary><?php _e('自定义字段'); ?></summary>
     <table class="typecho-list-table mono">
         <colgroup>
             <col width="20%"/>
@@ -77,8 +76,10 @@ $defaultFields = isset($post) ? $post->getDefaultFieldItems() : $page->getDefaul
             </tr>
         <?php endif; ?>
     </table>
-    <div class="description clearfix">
+    <div class="add">
         <button type="button" class="btn btn-xs operate-add"><?php _e('+添加字段'); ?></button>
-        <?php _e('自定义字段可以扩展你的模板功能, 使用方法参见 <a href="https://docs.typecho.org/help/custom-fields">帮助文档</a>'); ?>
+        <div class="description">
+            <?php _e('自定义字段可以扩展你的模板功能, 使用方法参见 <a href="https://docs.typecho.org/help/custom-fields">帮助文档</a>'); ?>
+        </div>
     </div>
-</section>
+</details>
