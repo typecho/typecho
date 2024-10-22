@@ -276,44 +276,37 @@ class Menu extends Base
      */
     public function output($class = 'focus', $childClass = 'focus')
     {
+        echo '<menu>';
+
         foreach ($this->menu as $key => $node) {
             if (!$node[1] || !$key) {
                 continue;
             }
 
-            echo "<ul class=\"root" . ($key == $this->currentParent ? ' ' . $class : null)
-                . "\"><li class=\"parent\"><a href=\"{$node[2]}\">{$node[0]}</a>"
-                . "</li><ul class=\"child\">";
-
-            $last = 0;
-            foreach ($node[3] as $inKey => $inNode) {
-                if (!$inNode[4]) {
-                    $last = $inKey;
-                }
-            }
+            echo "<li" . ($key == $this->currentParent ? " class=\"{$class}\"" : '')
+                . "><a href=\"{$node[2]}\">{$node[0]}</a>"
+                . "<menu>";
 
             foreach ($node[3] as $inKey => $inNode) {
                 if ($inNode[4]) {
                     continue;
                 }
 
-                $classes = [];
+                $focus = false;
                 if ($key == $this->currentParent && $inKey == $this->currentChild) {
-                    $classes[] = $childClass;
+                    $focus = true;
                 } elseif ($inNode[6]) {
                     continue;
                 }
 
-                if ($inKey == $last) {
-                    $classes[] = 'last';
-                }
-
-                echo "<li" . (!empty($classes) ? ' class="' . implode(' ', $classes) . '"' : null) . "><a href=\""
+                echo "<li" . ($focus ? " class=\"{$childClass}\"" : '') . "><a href=\""
                     . ($key == $this->currentParent && $inKey == $this->currentChild ? $this->currentUrl : $inNode[2])
                     . "\">{$inNode[0]}</a></li>";
             }
 
-            echo "</ul></ul>";
+            echo '</menu></li>';
         }
+
+        echo '</menu>';
     }
 }

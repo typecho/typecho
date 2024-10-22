@@ -13,9 +13,12 @@ $color-nav-child-focus: #6DA1BB;
 .typecho-head-nav {
   padding: 0 10px;
   background: $color-nav-bg;
-  position: relative;
+  position: sticky;
+  top: 0;
+  display: flex;
+  z-index: 100;
 
-  a, button.menu-bar {
+  a, .menu-bar summary {
     padding: 0 20px;
     height: 36px;
     line-height: 36px;
@@ -28,88 +31,96 @@ $color-nav-child-focus: #6DA1BB;
     }
   }
 
-  button.menu-bar {
+  .menu-bar {
     display: none;
   }
 
+  menu {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    background: $color-nav-bg;
+  }
+
   #typecho-nav-list {
-    float: left;
-
-    & > ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
+    & > menu {
+      display: flex;
       position: relative;
-      float: left;
 
-      &:first-child {
-        border-left: $border-nav;
-      }
+      & > li {
 
-      .parent {
-        a {
-          display: inline-block;
-          border-right: $border-nav;
-          background: $color-nav-bg;
+        &:first-child {
+          border-left: $border-nav;
         }
-      }
 
-      .child {
-        position: absolute;
-        list-style: none;
-        top: 36px;
-        display: none;
-        margin: 0;
-        padding: 0;
-        min-width: 160px; 
-        max-width: 240px;
-        background: $color-nav-btn-hover;
-        z-index: 250;
+        > a {
+          display: block;
+          border-right: $border-nav;
 
-        li {
-          &.return {
-            display: none;
-          }
+          &:hover, &:focus {
+            background: $color-nav-btn-hover;
 
-          a {
-            overflow: hidden;
-            text-overflow : ellipsis;
-            white-space: nowrap;
-            display: block;
-
-            &:hover,
-            &:focus {
-              background: $color-nav-bg;
+            & + menu {
+              display: flex;
             }
           }
+        }
 
-          &.focus a {
-            color: $color-nav-child-focus;
-            font-weight: bold;
+        &.focus > a {
+          background: $color-nav-btn-hover;
+          font-weight: bold;
+        }
+
+        &:hover > a {
+          background: $color-nav-btn-hover;
+        }
+
+        &:hover, &:focus-within, &:focus {
+          menu {
+            display: flex;
           }
         }
-      }
 
-      .parent a:hover,
-      &.focus .parent a,
-      &.root:hover .parent a {
-        background: $color-nav-btn-hover;
-      }
+        menu {
+          position: absolute;
+          top: 36px;
+          display: none;
+          flex-flow: column;
+          min-width: 160px;
+          max-width: 240px;
+          background: $color-nav-btn-hover;
+          z-index: 250;
 
-      &.focus .parent a {
-        font-weight: bold;
-      }
+          & > li {
+            a {
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              display: block;
 
-      &.root:hover .child, &.root.expanded .child {
-        display: block;
+              &:hover,
+              &:focus {
+                background: $color-nav-bg;
+              }
+            }
+
+            &.focus a {
+              color: $color-nav-child-focus;
+              font-weight: bold;
+            }
+          }
+        }
       }
     }
   }
 
   .operate {
-    float: right;
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+
     a {
-      display: inline-block;
+      display: block;
       margin-left: -1px;
       border: $border-nav;
       border-width: 0 1px;
@@ -119,98 +130,51 @@ $color-nav-child-focus: #6DA1BB;
       }
     }
   }
-}
 
-@include screen(phone, max) {
-  @keyframes out {
-    from {left: 0%;}
-    to {left: -100%;}
-  }
+  @include screen(phone, max) {
+    .menu-bar {
+      display: block;
 
-  @keyframes in {
-    from {left: -100%;}
-    to {left: 0%;}
-  }
+      summary {
+        cursor: pointer;
+        border: $border-nav;
+        border-width: 0 1px;
+      }
 
-  .typecho-head-nav {
-    padding: 0;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    z-index: 10;
-
-    #typecho-nav-list {
-      display: none;
-    }
-
-    .operate {
-      a:last-child {
-        border-right-width: 0;
+      &[open] ~ menu {
+        display: flex !important;
       }
     }
 
-    button.menu-bar {
-      display: inline-block;
-      border: none;
-      background: $color-nav-bg;
-      border-right: $border-nav;
-      
-      &.focus {
-        color: $color-nav-text-hover;
-  
-        & + #typecho-nav-list {
-          display: block;
-          float: none;
-          position: absolute;
-          bottom: 36px;
-          width: 100%;
-          
-          & > ul {
-            float: none;
-            border-bottom: $border-nav;
+    #typecho-nav-list {
+      position: relative;
+
+      & > menu {
+        display: none;
+        flex-flow: column;
+        position: absolute;
+        top: 36px;
+        min-width: 160px;
+        max-width: 240px;
+
+        & > li {
+          &:first-child {
+            border: none;
+          }
+
+          > a {
+            border: none;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            pointer-events: none;
+            cursor: default;
+          }
+
+          menu {
             position: static;
-
-            &:first-child {
-              border-left: none;
-            }
-            .parent {
-              a {
-                display: block;
-                border: none;
-                background: $color-nav-btn-hover;
-              }
-            }
-            .child {
-              position: absolute;
-              bottom: 0;
-              left: 100%;
-              top: auto;
-              z-index: 20;
-              width: 100%;
-              max-width: 100%;
-              min-width: auto;
-
-              li {
-                border-bottom: $border-nav;
-                &.return {
-                  display: block;
-                  text-align: center;
-                  font-size: 12px;
-
-                  a {
-                    color: $color-nav-text-mute;
-                  }
-                }
-              }
-            }
-          }
-
-          &.expanded {
-            animation: out .15s ease-out forwards;
-          }
-
-          &.noexpanded {
-            animation: in .15s ease-out forwards;
+            border: $border-nav;
+            border-width: 1px 0;
           }
         }
       }

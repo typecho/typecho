@@ -204,12 +204,17 @@ a.button:hover, a.balloon-button:hover {
   margin-bottom: 25px;
   padding: 0 0 35px;
   border-bottom: 1px solid #ECECEC;
+  display: flex;
+  flex-wrap: wrap;
+
   li {
-    float: left;
     margin-right: 1.5em;
-  }
-  .balloon {
-    margin-top: 2px;
+    display: flex;
+    align-items: center;
+
+    .balloon {
+      margin-left: 5px;
+    }
   }
 }
 

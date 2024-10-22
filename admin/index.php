@@ -14,7 +14,7 @@ $stat = \Widget\Stat::alloc();
                         $stat->myPublishedPostsNum, $stat->myPublishedCommentsNum, $stat->categoriesNum); ?>
                     <br><?php _e('点击下面的链接快速开始:'); ?></p>
 
-                <ul id="start-link" class="clearfix">
+                <ul id="start-link">
                     <?php if ($user->pass('contributor', true)): ?>
                         <li><a href="<?php $options->adminUrl('write-post.php'); ?>"><?php _e('撰写新文章'); ?></a></li>
                         <?php if ($user->pass('editor', true) && 'on' == $request->get('__typecho_all_comments') && $stat->waitingCommentsNum > 0): ?>

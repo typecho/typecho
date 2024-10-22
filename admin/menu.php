@@ -1,7 +1,9 @@
 <?php if (!defined('__TYPECHO_ADMIN__')) exit; ?>
-<div class="typecho-head-nav clearfix" role="navigation">
-    <button class="menu-bar"><?php _e('菜单'); ?></button>
+<header class="typecho-head-nav" role="navigation">
     <nav id="typecho-nav-list">
+        <details class="menu-bar">
+            <summary><?php _e('菜单'); ?></summary>
+        </details>
         <?php $menu->output(); ?>
     </nav>
     <div class="operate">
@@ -14,5 +16,5 @@
             class="exit" href="<?php $options->logoutUrl(); ?>"><?php _e('登出'); ?></a><a
             href="<?php $options->siteUrl(); ?>"><?php _e('网站'); ?></a>
     </div>
-</div>
+</header>
 
