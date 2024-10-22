@@ -133,12 +133,14 @@
     font-style: normal;
   }
 
-  tbody tr:hover td {
-    background-color: #F6F6F3;
-  }
+  tbody tr {
+    &:hover {
+      background-color: #F6F6F3;
+    }
 
-  tbody tr.checked td {
-    background-color: #FFF9E8;
+    &.checked {
+      background-color: #FFF9E8;
+    }
   }
 
   tr td .hidden-by-mouse {

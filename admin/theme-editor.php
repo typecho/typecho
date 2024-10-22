@@ -11,7 +11,7 @@ include 'menu.php';
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main" role="main">
             <div class="col-mb-12">
-                <ul class="typecho-option-tabs fix-tabs clearfix">
+                <ul class="typecho-option-tabs fix-tabs">
                     <li><a href="<?php $options->adminUrl('themes.php'); ?>"><?php _e('可以使用的外观'); ?></a></li>
                     <li class="current"><a href="<?php $options->adminUrl('theme-editor.php'); ?>">
                             <?php if ($options->theme == $files->theme): ?>

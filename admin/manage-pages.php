@@ -49,8 +49,8 @@ $pages = \Widget\Contents\Page\Admin::alloc();
                         <colgroup>
                             <col width="3%" class="kit-hidden-mb"/>
                             <col width="6%" class="kit-hidden-mb"/>
-                            <col width="30%"/>
-                            <col width="30%"/>
+                            <col width="42%"/>
+                            <col width="18%"/>
                             <col width="" class="kit-hidden-mb"/>
                             <col width="16%"/>
                         </colgroup>
