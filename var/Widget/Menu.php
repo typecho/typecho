@@ -276,8 +276,6 @@ class Menu extends Base
      */
     public function output($class = 'focus', $childClass = 'focus')
     {
-        echo '<menu>';
-
         foreach ($this->menu as $key => $node) {
             if (!$node[1] || !$key) {
                 continue;
@@ -306,7 +304,5 @@ class Menu extends Base
 
             echo '</menu></li>';
         }
-
-        echo '</menu>';
     }
 }

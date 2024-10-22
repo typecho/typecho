@@ -42,10 +42,13 @@ $color-nav-child-focus: #6DA1BB;
     background: $color-nav-bg;
   }
 
-  #typecho-nav-list {
+  nav {
+    width: 100%;
+
     & > menu {
       display: flex;
       position: relative;
+      width: 100%;
 
       & > li {
 
@@ -110,55 +113,58 @@ $color-nav-child-focus: #6DA1BB;
             }
           }
         }
-      }
-    }
-  }
 
-  .operate {
-    flex: 1;
-    display: flex;
-    justify-content: flex-end;
+        &.operate {
+          flex: 1;
+          display: flex;
+          justify-content: flex-end;
 
-    a {
-      display: block;
-      margin-left: -1px;
-      border: $border-nav;
-      border-width: 0 1px;
-      
-      &:hover {
-        background-color: $color-nav-btn-hover;
+          &:hover > a {
+            background: inherit;
+          }
+
+          a {
+            &:hover {
+              background-color: $color-nav-btn-hover;
+            }
+
+            &:first-child {
+              border-left: $border-nav;
+            }
+          }
+        }
       }
     }
   }
 
   @include screen(phone, max) {
+    padding: 0;
+    flex-flow: column;
+
     .menu-bar {
       display: block;
+      font-size: 14px;
 
       summary {
         cursor: pointer;
-        border: $border-nav;
-        border-width: 0 1px;
       }
 
-      &[open] ~ menu {
-        display: flex !important;
+      &[open] ~ nav {
+        display: block;
       }
     }
 
-    #typecho-nav-list {
-      position: relative;
+    nav {
+      overflow-y: auto;
+      max-height: calc(80vh - 36px);
+      width: 100vw;
+      display: none;
+      position: absolute;
+      top: 100%;
+      background: $color-nav-btn-hover;
 
       & > menu {
-        display: none;
         flex-flow: column;
-        position: absolute;
-        top: 36px;
-        left: -10px;
-        min-width: 160px;
-        max-width: 240px;
-        overflow-y: auto;
-        height: calc(100vh - 36px);
 
         & > li {
           &:first-child {
@@ -174,12 +180,15 @@ $color-nav-child-focus: #6DA1BB;
           }
 
           > a {
-            border: none;
+            border: none !important;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            pointer-events: none;
-            cursor: default;
+          }
+
+          &:not(.operate) > a {
+            pointer-events: auto;
+            cursor: pointer;
           }
 
           menu {
@@ -187,9 +196,27 @@ $color-nav-child-focus: #6DA1BB;
             border: $border-nav;
             border-width: 1px 0;
             display: flex;
+            min-width: auto;
+            max-width: 100vw;
+            width: 100vw;
+          }
+
+          &.operate {
+            flex-flow: column;
+            justify-content: flex-start;
+
+            a {
+              background: $color-nav-btn-hover;
+            }
           }
         }
       }
     }
+  }
+}
+
+@include screen(phone, max) {
+  body:has(.menu-bar[open]) {
+    position: fixed;
   }
 }
