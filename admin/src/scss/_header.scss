@@ -154,12 +154,23 @@ $color-nav-child-focus: #6DA1BB;
         flex-flow: column;
         position: absolute;
         top: 36px;
+        left: -10px;
         min-width: 160px;
         max-width: 240px;
+        overflow-y: auto;
+        height: calc(100vh - 36px);
 
         & > li {
           &:first-child {
             border: none;
+          }
+
+          &.focus > a {
+            background: $color-nav-bg;
+          }
+
+          &:hover > a {
+            background: $color-nav-bg;
           }
 
           > a {
@@ -175,6 +186,7 @@ $color-nav-child-focus: #6DA1BB;
             position: static;
             border: $border-nav;
             border-width: 1px 0;
+            display: flex;
           }
         }
       }
