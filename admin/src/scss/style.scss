@@ -268,6 +268,7 @@ a.button:hover, a.balloon-button:hover {
 * 标题
 */
 .typecho-page-title {
+  width: 100%;
   display: flex;
   align-items: center;
   margin: 25px 0 10px;
@@ -416,28 +417,6 @@ a.button:hover, a.balloon-button:hover {
   }
 }
 
-
-/**
-* 编辑模板
-*/
-.typecho-select-theme {
-  height: 25px;
-  line-height: 25px;
-  margin: 15px 0px;
-}
-
-.typecho-select-theme h5 {
-  color: #E47E00;
-  font-weight: bold;
-  float: left;
-  font-size: 14px;
-  width: 120px;
-  margin-right: 10px;
-}
-
-.typecho-select-theme select {
-  width: 150px;
-}
 
 /**
 * 编辑模板（编辑详情）
