@@ -1,4 +1,4 @@
-<?php if(!defined('__TYPECHO_ADMIN__')) exit; ?>
+<?php if (!defined('__TYPECHO_ADMIN__')) exit; ?>
 <div class="typecho-page-title">
     <h2><?php echo $menu->title; ?></h2>
     <?php

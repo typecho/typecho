@@ -68,6 +68,13 @@ class Menu extends Base
     private string $currentUrl;
 
     /**
+     * 当前菜单URL
+     *
+     * @var string
+     */
+    private string $currentMenuUrl;
+
+    /**
      * 执行函数,初始化菜单
      */
     public function execute()
@@ -171,6 +178,7 @@ class Menu extends Base
                 $orgHidden = $hidden;
 
                 // parse url
+                $menuUrl = $url;
                 $url = Common::url($url, $adminUrl);
 
                 // compare url
@@ -241,6 +249,7 @@ class Menu extends Base
                     $this->currentChild = $inKey;
                     $this->title = $title;
                     $this->addLink = $addLink ? Common::url($addLink, $adminUrl) : null;
+                    $this->currentMenuUrl = $menuUrl;
                 }
 
                 $children[$inKey] = [
@@ -269,6 +278,16 @@ class Menu extends Base
     public function getCurrentMenu(): ?array
     {
         return $this->currentParent > 0 ? $this->menu[$this->currentParent][3][$this->currentChild] : null;
+    }
+
+    /**
+     * 获取当前菜单URL
+     *
+     * @return string
+     */
+    public function getCurrentMenuUrl(): string
+    {
+        return $this->currentMenuUrl;
     }
 
     /**

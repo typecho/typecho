@@ -30,16 +30,6 @@
   display: flex;
   flex-wrap: wrap;
   width: 100vw;
-
-  > * {
-    display: flex;
-    width: 100%;
-    flex-wrap: wrap;
-
-    > * {
-      width: 100%;
-    }
-  }
 }
 
 .row [class*="col-"] {
