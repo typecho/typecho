@@ -144,26 +144,40 @@ $color-nav-child-focus: #6DA1BB;
     .menu-bar {
       display: block;
       font-size: 14px;
+      position: sticky;
+      top: 0;
+      background: $color-nav-bg;
+      z-index: 10;
 
       summary {
         cursor: pointer;
       }
 
-      &[open] ~ nav {
-        display: block;
+      &[open] {
+        summary {
+          border-bottom: $border-nav;
+        }
+
+        & ~ menu {
+          display: flex;
+        }
       }
     }
 
     nav {
       overflow-y: auto;
-      max-height: calc(80vh - 36px);
       width: 100vw;
-      display: none;
-      position: absolute;
-      top: 100%;
+      position: fixed;
+      top: 0;
       background: $color-nav-btn-hover;
 
+      &:has(.menu-bar[open]) {
+        width: 70vw;
+        height: 100%;
+      }
+
       & > menu {
+        display: none;
         flex-flow: column;
 
         & > li {
@@ -197,8 +211,7 @@ $color-nav-child-focus: #6DA1BB;
             border-width: 1px 0;
             display: flex;
             min-width: auto;
-            max-width: 100vw;
-            width: 100vw;
+            max-width: none;
           }
 
           &.operate {
@@ -216,7 +229,11 @@ $color-nav-child-focus: #6DA1BB;
 }
 
 @include screen(phone, max) {
-  body:has(.menu-bar[open]) {
-    position: fixed;
+  body {
+    padding-top: 36px;
+
+    &:has(.menu-bar[open]) {
+      overflow: hidden;
+    }
   }
 }

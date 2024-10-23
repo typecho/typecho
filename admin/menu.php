@@ -1,9 +1,9 @@
 <?php if (!defined('__TYPECHO_ADMIN__')) exit; ?>
 <header class="typecho-head-nav" role="navigation">
-    <details class="menu-bar">
-        <summary><?php _e('菜单'); ?></summary>
-    </details>
     <nav>
+        <details class="menu-bar">
+            <summary><?php _e('菜单'); ?></summary>
+        </details>
         <menu>
             <?php $menu->output(); ?>
             <li class="operate">
