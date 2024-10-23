@@ -12,6 +12,10 @@
   display: flex;
   margin: 1em 0;
 
+  & + .typecho-list-operate {
+    margin-top: 0;
+  }
+
   input, button, select {
     vertical-align: bottom;
   }
