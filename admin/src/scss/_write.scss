@@ -97,10 +97,6 @@
       }
     }
 
-    &.fold {
-      table, .description { display: none; }
-    }
-
     .add {
       display: flex;
       justify-content: space-between;
@@ -130,20 +126,42 @@
       }
     }
 
-    table {
-      margin-top: 10px;
-      border: none;
-    }
+    .fields {
+      list-style: none;
+      margin: 10px 0 0 0;
+      padding: 0;
 
-    td {
-      padding: 10px 5px;
-      font-size: .92857em;
-      border-bottom: 1px solid #F0F0EC;
-      vertical-align: top;
+      .field {
+        display: flex;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #F0F0EC;
+        margin-bottom: 10px;
 
-      label {
-        font-size: 1em;
-        font-weight: normal;
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .field-name {
+          display: flex;
+
+          input[name="fieldNames[]"] {
+            height: 27px;
+            width: 150px;
+            margin-right: 10px;
+          }
+        }
+
+        .field-value {
+          margin-left: 10px;
+          flex: 1;
+          display: flex;
+
+          textarea[name="fieldValues[]"] {
+            flex: 1;
+            margin-right: 10px;
+            resize: none;
+          }
+        }
       }
     }
 
