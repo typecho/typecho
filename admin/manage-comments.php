@@ -84,7 +84,7 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == \Ty
                     <table class="typecho-list-table">
                         <colgroup>
                             <col width="3%" class="kit-hidden-mb"/>
-                            <col width="6%" class="kit-hidden-mb" />
+                            <col width="6%" class="kit-hidden" />
                             <col width="20%"/>
                             <col width="71%"/>
                         </colgroup>
@@ -115,7 +115,7 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == \Ty
                             <td valign="top" class="kit-hidden-mb">
                                 <input type="checkbox" value="<?php $comments->coid(); ?>" name="coid[]"/>
                             </td>
-                            <td valign="top" class="kit-hidden-mb">
+                            <td valign="top" class="kit-hidden">
                                 <div class="comment-avatar">
                                     <?php if ('comment' == $comments->type): ?>
                                     <?php $comments->gravatar(40, null, true); ?>

@@ -82,34 +82,6 @@ a.button:hover, a.balloon-button:hover {
 @import "header";
 @import "footer";
 
-/** 顶部消息样式 by 70 */
-.popup {
-  display: none;
-  position: absolute;
-  top: 0;
-  left: 0;
-  margin: 0;
-  padding: 8px 0;
-  border: none;
-  width: 100%;
-  z-index: 10;
-  text-align: center;
-
-  border-radius: 0;
-}
-
-.popup ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  text-align: center;
-}
-
-.popup ul li {
-  display: inline-block;
-  margin-right: 10px;
-}
-
 /**
 * logo 的样式
 */

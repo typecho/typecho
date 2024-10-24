@@ -25,15 +25,9 @@
 
                     if (head.length > 0) {
                         p.insertAfter(head);
-                        offset = head.outerHeight();
                     } else {
                         p.prependTo(document.body);
                     }
-
-                    p.css({
-                        'position'  :   'sticky',
-                        'top'       :   offset
-                    });
 
                     p.slideDown(function () {
                         var t = $(this), color = '#C6D880';
