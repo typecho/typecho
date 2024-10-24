@@ -69,13 +69,15 @@ $color-nav-child-focus: #6DA1BB;
           }
         }
 
-        &.focus > a {
-          background: $color-nav-btn-hover;
-          font-weight: bold;
-        }
+        &:not(.operate) {
+          &.focus > a {
+            background: $color-nav-btn-hover;
+            font-weight: bold;
+          }
 
-        &:hover > a {
-          background: $color-nav-btn-hover;
+          &:hover > a {
+            background: $color-nav-btn-hover;
+          }
         }
 
         &:hover, &:focus-within, &:focus {
@@ -118,10 +120,6 @@ $color-nav-child-focus: #6DA1BB;
           flex: 1;
           display: flex;
           justify-content: flex-end;
-
-          &:hover > a {
-            background: inherit;
-          }
 
           a {
             &:hover {
@@ -185,14 +183,6 @@ $color-nav-child-focus: #6DA1BB;
             border: none;
           }
 
-          &.focus > a {
-            background: $color-nav-bg;
-          }
-
-          &:hover > a {
-            background: $color-nav-bg;
-          }
-
           > a {
             border: none !important;
             overflow: hidden;
@@ -200,9 +190,19 @@ $color-nav-child-focus: #6DA1BB;
             white-space: nowrap;
           }
 
-          &:not(.operate) > a {
-            pointer-events: auto;
-            cursor: pointer;
+          &:not(.operate) {
+            &.focus > a {
+              background: $color-nav-bg;
+            }
+
+            &:hover > a {
+              background: $color-nav-bg;
+            }
+
+            & > a {
+              pointer-events: auto;
+              cursor: pointer;
+            }
           }
 
           menu {
@@ -220,6 +220,10 @@ $color-nav-child-focus: #6DA1BB;
 
             a {
               background: $color-nav-btn-hover;
+
+              &:hover {
+                background: $color-nav-bg;
+              }
             }
           }
         }

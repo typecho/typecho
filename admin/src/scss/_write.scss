@@ -162,6 +162,15 @@
             resize: none;
           }
         }
+
+        @include screen(phone, max) {
+          flex-flow: column;
+
+          .field-value {
+            margin-left: 0;
+            margin-top: 10px;
+          }
+        }
       }
     }
 
