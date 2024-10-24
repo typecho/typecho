@@ -7,7 +7,7 @@ $stat = \Widget\Stat::alloc();
 $posts = \Widget\Contents\Post\Admin::alloc();
 $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\Cookie::get('__typecho_all_posts'));
 ?>
-<div class="main">
+<main class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main" role="main">
@@ -242,7 +242,7 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
             </div><!-- end .typecho-list -->
         </div><!-- end .typecho-page-main -->
     </div>
-</div>
+</main>
 
 <?php
 include 'copyright.php';

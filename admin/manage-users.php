@@ -5,7 +5,7 @@ include 'menu.php';
 
 $users = \Widget\Users\Admin::alloc();
 ?>
-<div class="main">
+<main class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main" role="main">
@@ -123,7 +123,7 @@ $users = \Widget\Users\Admin::alloc();
             </div><!-- end .typecho-list -->
         </div><!-- end .typecho-page-main -->
     </div>
-</div>
+</main>
 
 <?php
 include 'copyright.php';

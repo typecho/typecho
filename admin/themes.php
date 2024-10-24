@@ -4,7 +4,7 @@ include 'header.php';
 include 'menu.php';
 ?>
 
-<div class="main">
+<main class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <?php include 'theme-tabs.php'; ?>
@@ -64,7 +64,7 @@ include 'menu.php';
             </div>
         </div>
     </div>
-</div>
+</main>
 
 <?php
 include 'copyright.php';

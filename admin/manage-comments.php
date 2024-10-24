@@ -7,7 +7,7 @@ $stat = \Widget\Stat::alloc();
 $comments = \Widget\Comments\Admin::alloc();
 $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == \Typecho\Cookie::get('__typecho_all_comments'));
 ?>
-<div class="main">
+<main class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main" role="main">
@@ -209,7 +209,7 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == \Ty
             </div><!-- end .typecho-list -->
         </div><!-- end .typecho-page-main -->
     </div>
-</div>
+</main>
 <?php
 include 'copyright.php';
 include 'common-js.php';

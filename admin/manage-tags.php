@@ -6,7 +6,7 @@ include 'menu.php';
 \Widget\Metas\Tag\Admin::alloc()->to($tags);
 ?>
 
-<div class="main">
+<main class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main manage-metas">
@@ -66,7 +66,7 @@ include 'menu.php';
             </div>
         </div>
     </div>
-</div>
+</main>
 
 <?php
 include 'copyright.php';

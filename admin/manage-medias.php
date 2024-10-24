@@ -6,7 +6,7 @@ include 'menu.php';
 $stat = \Widget\Stat::alloc();
 $attachments = \Widget\Contents\Attachment\Admin::alloc();
 ?>
-<div class="main">
+<main class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main" role="main">
@@ -127,7 +127,7 @@ $attachments = \Widget\Contents\Attachment\Admin::alloc();
             </div>
         </div><!-- end .typecho-page-main -->
     </div>
-</div>
+</main>
 
 <?php
 include 'copyright.php';

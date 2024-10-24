@@ -6,7 +6,7 @@ include 'menu.php';
 \Widget\Themes\Files::alloc()->to($files);
 ?>
 
-<div class="main">
+<main class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <?php include 'theme-tabs.php'; ?>
@@ -38,7 +38,7 @@ include 'menu.php';
             </ul>
         </div>
     </div>
-</div>
+</main>
 
 <?php
 include 'copyright.php';

@@ -16,7 +16,7 @@ while ($parents->next()) {
     $parentPages[$parents->cid] = str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;', $parents->levels) . $parents->title;
 }
 ?>
-<div class="main">
+<main class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <form class="row typecho-page-main typecho-post-area" action="<?php $security->index('/action/contents-page-edit'); ?>" method="post" name="write_page">
@@ -196,7 +196,7 @@ while ($parents->next()) {
             </div>
         </form>
     </div>
-</div>
+</main>
 
 <?php
 include 'copyright.php';

@@ -10,7 +10,7 @@ $actionUrl = $security->getTokenUrl(
 $backupFiles = \Widget\Backup::alloc()->listFiles();
 ?>
 
-<div class="main">
+<main class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main" role="main">
@@ -79,7 +79,7 @@ $backupFiles = \Widget\Backup::alloc()->listFiles();
             </div>
         </div>
     </div>
-</div>
+</main>
 
 <?php
 include 'copyright.php';

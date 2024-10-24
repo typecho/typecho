@@ -5,7 +5,7 @@ include 'menu.php';
 
 $stat = \Widget\Stat::alloc();
 ?>
-<div class="main">
+<main class="main">
     <div class="container typecho-dashboard">
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main">
@@ -102,7 +102,7 @@ $stat = \Widget\Stat::alloc();
             </div>
         </div>
     </div>
-</div>
+</main>
 
 <?php
 include 'copyright.php';
