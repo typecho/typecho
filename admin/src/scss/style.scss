@@ -78,6 +78,7 @@ a.button:hover, a.balloon-button:hover {
 @import "tabs";
 @import "tags";
 @import "write";
+@import "options";
 
 @import "header";
 @import "footer";
@@ -94,48 +95,6 @@ a.button:hover, a.balloon-button:hover {
 .loading {
   padding-left: 20px !important;
   background: transparent url(../img/ajax-loader.gif) no-repeat left center;
-}
-
-
-/**
-* 典型配置选项
-*/
-.typecho-option {
-  list-style: none;
-  margin: 1em 0;
-  padding: 0;
-
-  &-submit li {
-    border-bottom: none;
-  }
-
-  label {
-    &.typecho-label {
-      display: block;
-      margin-bottom: .5em;
-      font-weight: bold;
-    }
-
-    &.required:after {
-      content: " *";
-      color: #B94A48;
-    }
-  }
-
-  span {
-    margin-right: 15px;
-  }
-
-  .description {
-    margin: .5em 0 0;
-    color: #999;
-    font-size: .92857em;
-  }
-
-  input.file {
-    width: 100%;
-    margin: .7em 0;
-  }
 }
 
 .front-archive {
@@ -218,23 +177,28 @@ a.button:hover, a.balloon-button:hover {
   display: table;
   margin: 0 auto;
   height: 100%;
-}
-.typecho-login {
-  display: table-cell;
-  padding: 30px 0 100px;
-  width: 280px;
-  text-align: center;
-  vertical-align: middle;
-  h1 {
-    margin: 0 0 1em; 
+
+  .typecho-login {
+    display: table-cell;
+    padding: 30px 0 100px;
+    width: 280px;
+    text-align: center;
+    vertical-align: middle;
+
+    h1 {
+      margin: 0 0 1em;
+    }
+
+    .more-link {
+      margin-top: 2em;
+      color: #CCC;
+
+      a {
+        margin: 0 3px;
+      }
+    }
   }
 }
-
-.typecho-login .more-link {
-  margin-top: 2em;
-  color: #CCC;
-}
-.typecho-login .more-link a { margin: 0 3px; }
 
 /**
 * 标题
@@ -273,13 +237,14 @@ a.button:hover, a.balloon-button:hover {
 * 主页主体
 */
 .typecho-dashboard {
-}
-.typecho-dashboard ul {
-  list-style: none;
-  padding: 0;
-}
-.typecho-dashboard li {
-  margin-bottom: 5px;
+  ul {
+    list-style: none;
+    padding: 0;
+
+    li {
+      margin-bottom: 5px;
+    }
+  }
 }
 
 /**
@@ -335,57 +300,23 @@ a.button:hover, a.balloon-button:hover {
   display: none;
 }
 
-
 /**
 * 模板列表
 */
 .typecho-theme-list {
-}
+  img {
+    margin: 1em 0;
+    max-width: 100%;
+    max-height: 240px;
+  }
 
-.typecho-theme-list .theme-item {
-}
+  cite {
+    font-style: normal;
+    color: #999;
+  }
 
-.typecho-theme-list td {
-}
-
-.typecho-theme-list img {
-  margin: 1em 0;
-  max-width: 100%;
-  max-height: 240px;
-}
-
-.typecho-theme-list cite {
-  font-style: normal;
-  color: #999;
-}
-
-.typecho-theme-list tbody tr.current td {
-  background-color: #FFF9E8;
-}
-
-
-/**
-* 后台配置项
-*/
-
-.typecho-page-main .typecho-option input.text {
-  width: 100%;
-}
-
-.typecho-page-main .typecho-option input.num {
-  width: 40px;
-}
-
-.typecho-page-main .typecho-option textarea {
-  width: 100%;
-  height: 100px;
-}
-
-.typecho-page-main .typecho-option .multiline {
-  display: block;
-  margin: .3em 0;
-  &.hidden {
-    display: none;
+  tbody tr.current td {
+    background-color: #FFF9E8;
   }
 }
 
@@ -394,27 +325,30 @@ a.button:hover, a.balloon-button:hover {
 * 编辑模板（编辑详情）
 */
 
-.typecho-edit-theme ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
+.typecho-edit-theme {
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
 
-.typecho-edit-theme li {
-  padding: 3px 10px;
-}
+    li {
+      padding: 3px 10px;
+    }
+  }
 
-.typecho-edit-theme .current {
-  background-color: #E6E6E3;
-}
-.typecho-edit-theme .current a {
-  color: #444;
-}
+  .current {
+    background-color: #E6E6E3;
 
-.typecho-edit-theme textarea {
-  font-size: .92857em;
-  line-height: 1.2;
-  height: 500px;
+    a {
+      color: #444;
+    }
+  }
+
+  textarea {
+    font-size: .92857em;
+    line-height: 1.2;
+    height: 500px;
+  }
 }
 
 .typecho-attachment-photo {

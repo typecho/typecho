@@ -195,7 +195,7 @@ class Reading extends Permalink
         $form->addInput($frontPage->multiMode());
 
         /** 文章列表数目 */
-        $postsListSize = new Form\Element\Text(
+        $postsListSize = new Form\Element\Number(
             'postsListSize',
             null,
             $this->options->postsListSize,
@@ -206,7 +206,7 @@ class Reading extends Permalink
         $form->addInput($postsListSize->addRule('isInteger', _t('请填入一个数字')));
 
         /** 每页文章数目 */
-        $pageSize = new Form\Element\Text(
+        $pageSize = new Form\Element\Number(
             'pageSize',
             null,
             $this->options->pageSize,
