@@ -150,8 +150,8 @@ class Discussion extends Options implements ActionInterface
             'commentsMarkdown'        => _t('在评论中使用 Markdown 语法'),
             'commentsShowUrl'         => _t('评论者名称显示时自动加上其个人主页链接'),
             'commentsUrlNofollow'     => _t('对评论者个人主页链接使用 <a href="https://en.wikipedia.org/wiki/Nofollow">nofollow 属性</a>'),
-            'commentsAvatar'          => _t('启用 <a href="https://gravatar.com">Gravatar</a> 头像服务, 最高显示评级为 %s 的头像',
-                '</label><select id="commentsShow-commentsAvatarRating" name="commentsAvatarRating">
+            'commentsAvatar'          => _t('启用 <a href="https://gravatar.com">Gravatar</a> 头像服务，最高显示评级为 %s 的头像',
+                '</label><select id="commentsShow-commentsAvatarRating" name="commentsAvatarRating" class="text-s">
             <option value="G"' . ('G' == $this->options->commentsAvatarRating ? ' selected="true"' : '') . '>' . _t('G - 普通') . '</option>
             <option value="PG"' . ('PG' == $this->options->commentsAvatarRating ? ' selected="true"' : '') . '>' . _t('PG - 13岁以上') . '</option>
             <option value="R"' . ('R' == $this->options->commentsAvatarRating ? ' selected="true"' : '') . '>' . _t('R - 17岁以上成人') . '</option>
@@ -160,14 +160,14 @@ class Discussion extends Options implements ActionInterface
             'commentsPageBreak'       => _t('启用分页, 并且每页显示 %s 篇评论, 在列出时将 %s 作为默认显示',
                 '</label><input type="text" value="' . $this->options->commentsPageSize
                 . '" class="text num text-s" id="commentsShow-commentsPageSize" name="commentsPageSize" /><label for="commentsShow-commentsPageSize">',
-                '</label><select id="commentsShow-commentsPageDisplay" name="commentsPageDisplay">
+                '</label><select id="commentsShow-commentsPageDisplay" name="commentsPageDisplay" class="text-s">
             <option value="first"' . ('first' == $this->options->commentsPageDisplay ? ' selected="true"' : '') . '>' . _t('第一页') . '</option>
             <option value="last"' . ('last' == $this->options->commentsPageDisplay ? ' selected="true"' : '') . '>' . _t('最后一页') . '</option></select>'
                 . '<label for="commentsShow-commentsPageDisplay">'),
             'commentsThreaded'        => _t('启用评论回复, 以 %s 层作为每个评论最多的回复层数',
                     '</label><input name="commentsMaxNestingLevels" type="text" class="text num text-s" value="' . $this->options->commentsMaxNestingLevels . '" id="commentsShow-commentsMaxNestingLevels" />
             <label for="commentsShow-commentsMaxNestingLevels">') . '</label></span><span class="multiline">'
-                . _t('将 %s 的评论显示在前面', '<select id="commentsShow-commentsOrder" name="commentsOrder">
+                . _t('将 %s 的评论显示在前面', '<select id="commentsShow-commentsOrder" name="commentsOrder" class="text-s">
             <option value="DESC"' . ('DESC' == $this->options->commentsOrder ? ' selected="true"' : '') . '>' . _t('较新的') . '</option>
             <option value="ASC"' . ('ASC' == $this->options->commentsOrder ? ' selected="true"' : '') . '>' . _t('较旧的') . '</option></select><label for="commentsShow-commentsOrder">')
         ];
@@ -266,7 +266,7 @@ class Discussion extends Options implements ActionInterface
         );
         $form->addInput($commentsPost->multiMode());
 
-        /** 允许使用的HTML标签和属性 */
+        /** 允许使用的 HTML 标签和属性 */
         $commentsHTMLTagAllowed = new Form\Element\Textarea(
             'commentsHTMLTagAllowed',
             null,

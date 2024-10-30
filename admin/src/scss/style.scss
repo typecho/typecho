@@ -16,13 +16,17 @@
 
 @import "vars";
 
+*, :after, :before {
+  box-sizing: border-box;
+}
+
 html {
   height: 100%;
 }
 
 body {
   font-family: var(--te-body-font-family);
-  background: #F6F6F3;
+  background: var(--te-gray-100);
   color: var(--te-body-color);
   font-size: var(--te-body-font-size);
   line-height: 1.5;
@@ -70,14 +74,6 @@ a.button:hover, a.balloon-button:hover {
   color: #FFF;
   text-decoration: none;
 }
-
-@import "forms";
-@import "buttons";
-@import "messages";
-@import "pagenavi";
-
-@import "header";
-@import "footer";
 
 /** 顶部消息样式 by 70 */
 .popup {
@@ -127,7 +123,7 @@ a.button:hover, a.balloon-button:hover {
 */
 .typecho-option {
   list-style: none;
-  margin: 1em 0;
+  margin: 0 0 16px;
   padding: 0;
 
   &-submit li {
@@ -137,7 +133,7 @@ a.button:hover, a.balloon-button:hover {
   label {
     &.typecho-label {
       display: block;
-      margin-bottom: .5em;
+      margin-bottom: 8px;
       font-weight: bold;
     }
 
@@ -152,9 +148,9 @@ a.button:hover, a.balloon-button:hover {
   }
 
   .description {
-    margin: .5em 0 0;
-    color: #999;
-    font-size: .92857em;
+    margin: 4px 0 0;
+    color: var(--te-secondary);
+    font-size: 12px;
   }
 
   input.file {
@@ -193,7 +189,6 @@ a.button:hover, a.balloon-button:hover {
     color: #444;
     font-size: 2em;
     font-style: normal;
-    font-family: Georgia, serif;
   }
 }
 
@@ -260,10 +255,11 @@ a.button:hover, a.balloon-button:hover {
 * 标题
 */
 .typecho-page-title {
+  margin: 24px 0 16px;
 }
 .typecho-page-title h2 {
-  margin: 25px 0 10px;
-  font-size: 1.28571em;
+  margin: 0;
+  font-size: 20px;
 }
 .typecho-page-title h2 a {
   margin-left: 10px;
@@ -569,7 +565,7 @@ a.operate-reply {
 
 .typecho-page-main .typecho-option .multiline {
   display: block;
-  margin: .3em 0;
+  margin: 2px 0;
   &.hidden {
     display: none;
   }
@@ -921,7 +917,9 @@ background: #FFF1A8;
 /**
 * 导入扩展样式
 */
-
+@import "header";
+@import "footer";
+@import "pagenavi";
 @import "icons";
 @import "components";
-@import "hidden";
+@import "utilities";

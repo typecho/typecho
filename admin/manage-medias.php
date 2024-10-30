@@ -76,8 +76,8 @@ $attachments = \Widget\Contents\Attachment\Admin::alloc();
                                                 class="balloon-button size-<?php echo \Typecho\Common::splitByCount($attachments->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $attachments->commentsNum(); ?></a>
                                         </td>
                                         <td>
-                                            <span><?php echo $mime; ?></span>
                                             <a href="<?php $options->adminUrl('media.php?cid=' . $attachments->cid); ?>"><?php $attachments->title(); ?></a>
+                                            <em class="status"><?php echo $mime; ?></em>
                                             <a href="<?php $attachments->permalink(); ?>"
                                                title="<?php _e('浏览 %s', $attachments->title); ?>"><i
                                                     class="i-exlink"></i></a>
