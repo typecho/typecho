@@ -43,7 +43,7 @@
   color: #444;
 }
 #ui-datepicker-div .ui-datepicker-current-day a {
-  background-color: #467B96 !important;
+  background-color: var(--te-primary) !important;
   color: #FFF;
 }
 #ui-datepicker-div .ui-timepicker-div {
@@ -64,7 +64,7 @@
   z-index: 2;
   width: 10px;
   height: 16px;
-  background-color: #467B96;
+  background-color: var(--te-primary);
 }
 
 #ui-datepicker-div .ui-datepicker-buttonpane {

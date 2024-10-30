@@ -4,11 +4,11 @@
 
 input[type=text], input[type=url], input[type=password], input[type=email],
 textarea {
-  background: #FFF;
+  color: var(--te-body-color);
   border: 1px solid #D9D9D6;
   padding: 7px;
 
-  border-radius: 2px;
+  border-radius: var(--te-border-radius);
 
   box-sizing: border-box;
 
@@ -53,4 +53,5 @@ input, textarea {
 select {
   border: 1px solid #CCC;
   height: 28px;
+  border-radius: var(--te-border-radius);
 }

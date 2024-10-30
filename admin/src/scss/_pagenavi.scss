@@ -22,7 +22,7 @@
 .typecho-pager a {
   display: block;
   padding: 0 10px;
-  border-radius: 2px;
+  border-radius: var(--te-border-radius);
 }
 
 .typecho-pager a:hover {

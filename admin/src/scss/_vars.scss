@@ -1,13 +1,35 @@
 //
 // Config
 //
+
+// Grid
 $columns: 12;
 $column-width: 100% / $columns;
-$gutter-width: 20px;
+$gutter-width: 24px;
 
 
 // Break point
 $screen-phone: 576px;
-$screen-tablet:  768px;
+$screen-tablet: 768px;
 $screen-desktop: 992px;
 $screen-wide: 1200px;
+
+
+:root {
+  --te-primary: #007FA3;
+  --te-secondary: #6c757d;
+  --te-success: #198754;
+  --te-info: #0dcaf0;
+  --te-warning: #ffc107;
+  --te-danger: #dc3545;
+  --te-light: #f8f9fa;
+  --te-dark: #212529;
+
+  --te-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --te-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --te-body-font-family: var(--te-font-sans-serif);
+  --te-body-font-size: 87.5%;
+  --te-body-color: var(--te-dark);
+
+  --te-border-radius: 4px;
+}

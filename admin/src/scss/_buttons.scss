@@ -8,7 +8,7 @@
   background-color: $color;
   cursor: pointer;
 
-  border-radius: 2px;
+  border-radius: var(--te-border-radius);
   // @include transition-property(background-color);
 
   &:hover {
@@ -52,7 +52,7 @@
 }
 
 .primary {
-  @include button(#467B96);
+  @include button(#007FA3);
   color: #FFF;
 }
 

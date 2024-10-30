@@ -13,7 +13,7 @@ ul.token-input-list {
   background-color: #FFF;
   clear: left;
 
-  border-radius: 2px;
+  border-radius: var(--te-border-radius);
 
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -101,6 +101,6 @@ div.token-input-dropdown ul li em {
 }
 
 div.token-input-dropdown ul li.token-input-selected-dropdown-item {
-  background-color: #467B96;
+  background-color: var(--te-primary);
   color: #FFF;
 }

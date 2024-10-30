@@ -14,20 +14,22 @@
 * Typecho 全局样式
 */
 
+@import "vars";
+
 html {
   height: 100%;
 }
 
 body {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: var(--te-body-font-family);
   background: #F6F6F3;
-  color: #444;
-  font-size: 87.5%;
+  color: var(--te-body-color);
+  font-size: var(--te-body-font-size);
   line-height: 1.5;
 }
 
 a {
-  color: #467B96;
+  color: var(--te-primary);
   text-decoration: none;
   &:hover {
     color: #499BC3;
@@ -35,8 +37,8 @@ a {
   }
 }
 
-code, pre, .mono { 
-  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+code, pre, tt, .mono { 
+  font-family: var(--te-font-monospace);
 }
 
 .p { margin: 1em 0; }
@@ -56,7 +58,7 @@ a.balloon-button {
   text-align: center;
   text-decoration: none;
   
-  /** 修正ie中文不对齐 */
+  /** 修正 ie 中文不对齐 */
   zoom:1;
   
   border-radius: 30px;
@@ -69,7 +71,6 @@ a.button:hover, a.balloon-button:hover {
   text-decoration: none;
 }
 
-@import "vars";
 @import "forms";
 @import "buttons";
 @import "messages";
@@ -269,8 +270,7 @@ a.button:hover, a.balloon-button:hover {
   padding: 3px 8px;
   background: #E9E9E6;
   font-size: .8em;
-
-  border-radius: 2px;
+  border-radius: var(--te-border-radius);
 }
 .typecho-page-title h2 a:hover {
   text-decoration: none;
@@ -329,10 +329,10 @@ a.button:hover, a.balloon-button:hover {
 .typecho-option-tabs li {
   float: left;
   &:first-child a {
-    border-radius: 2px 0 0 2px;
+    border-radius: var(--te-border-radius) 0 0 var(--te-border-radius);
   }
   &:last-child a {
-    border-radius: 0 2px 2px 0;
+    border-radius: 0 var(--te-border-radius) var(--te-border-radius) 0;
   }
 }
 
@@ -720,7 +720,7 @@ a.operate-reply {
       display: block;
       color: #444;
       &:hover {
-        color: #467B96;
+        color: var(--te-primary);
         text-decoration: none;
       }
     }
@@ -758,7 +758,7 @@ background: #FFF1A8;
   max-height: 240px;
   overflow: auto;
   background-color: #FFF;
-  border-radius: 2px;
+  border-radius: var(--te-border-radius);
 }
 .category-option li {
   margin: 3px 0;

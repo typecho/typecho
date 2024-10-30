@@ -63,7 +63,7 @@ $(document).ready(function () {
         ulist: '<?php _e('普通列表'); ?> <ul> Ctrl+U',
         litem: '<?php _e('列表项目'); ?>',
 
-        heading: '<?php _e('标题'); ?> <h1>/<h2> Ctrl+H',
+        heading: '<?php _e('标题'); ?> <h2> Ctrl+H',
         headingexample: '<?php _e('标题文字'); ?>',
 
         hr: '<?php _e('分割线'); ?> <hr> Ctrl+R',
@@ -107,7 +107,7 @@ $(document).ready(function () {
                 + '<div class="details">' + details + '</div>';
         }
 
-        // 替换block
+        // 替换 block
         html = html.replace(/<(iframe|embed)\s+([^>]*)>/ig, function (all, tag, src) {
             if (src[src.length - 1] === '/') {
                 src = src.substring(0, src.length - 1);

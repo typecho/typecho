@@ -61,8 +61,8 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
                         <span class="right">
                             <input type="hidden" name="do" value="publish" />
                             <input type="hidden" name="cid" value="<?php $post->cid(); ?>"/>
-                            <button type="button" id="btn-preview" class="btn"><i
-                                    class="i-exlink"></i> <?php _e('预览文章'); ?></button>
+                            <button type="button" id="btn-preview" class="btn"><?php _e('预览文章'); ?> <i
+                            class="i-exlink"></i></button>
                             <button type="submit" name="do" value="save" id="btn-save"
                                     class="btn"><?php _e('保存草稿'); ?></button>
                             <button type="submit" name="do" value="publish" class="btn primary"
@@ -86,7 +86,7 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
                     <div id="tab-advance" class="tab-content">
                         <section class="typecho-post-option" role="application">
                             <label for="date" class="typecho-label"><?php _e('发布日期'); ?></label>
-                            <p><input class="typecho-date w-100" type="text" name="date" id="date" autocomplete="off"
+                            <p><input class="typecho-date w-100" type="text" name="date" id="date" placeholder="____-__-__ __:__" autocomplete="off"
                                       value="<?php $post->have() && $post->created > 0 ? $post->date('Y-m-d H:i') : ''; ?>"/>
                             </p>
                         </section>
