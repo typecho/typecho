@@ -114,7 +114,8 @@ a.button:hover, a.balloon-button:hover {
 */
 .loading {
   padding-left: 20px !important;
-  background: transparent url(../img/ajax-loader.gif) no-repeat left center;
+  background: transparent url(../img/ajax-loader.svg) no-repeat left center;
+  background-size: 16px;
 }
 
 
@@ -208,7 +209,7 @@ a.button:hover, a.balloon-button:hover {
 }
 
 .latest-link {
-  background: var(--te-white);
+  background-color: var(--te-white);
   padding: 16px;
   border: 1px solid var(--te-border-color);
   border-radius: var(--te-border-radius);
