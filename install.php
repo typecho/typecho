@@ -722,7 +722,7 @@ function install_step_1()
                     </ul>
 
                     <p class="submit">
-                        <button class="btn primary" type="submit"><?php _e('我准备好了, 开始下一步 &raquo;'); ?></button>
+                        <button class="btn btn-primary" type="submit"><?php _e('我准备好了, 开始下一步 &raquo;'); ?></button>
                         <input type="hidden" name="step" value="1">
 
                         <?php if (count($langs) > 1) : ?>
@@ -839,7 +839,7 @@ function install_step_2()
 
                 <ul class="typecho-option typecho-option-submit">
                     <li>
-                        <button id="confirm" type="submit" class="btn primary"><?php _e('确认, 开始安装 &raquo;'); ?></button>
+                        <button id="confirm" type="submit" class="btn btn-primary"><?php _e('确认, 开始安装 &raquo;'); ?></button>
                         <input type="hidden" name="step" value="2">
                     </li>
                 </ul>
@@ -857,7 +857,7 @@ function install_step_2()
 
                 btn.html('<?php _e('创建完毕, 继续安装 &raquo;'); ?>')
                     .attr('type', 'button')
-                    .addClass('btn btn-s primary');
+                    .addClass('btn btn-sm btn-primary');
 
                 btn.click(function () {
                     next.val('config');
@@ -881,7 +881,7 @@ function install_step_2()
 
                 btn.html(word)
                     .attr('type', 'button')
-                    .addClass('btn btn-s primary')
+                    .addClass('btn btn-sm primary')
                     .click(function () {
                         next.val(key);
                         form.trigger('submit');
@@ -1234,7 +1234,7 @@ function install_step_3()
                 </ul>
                 <ul class="typecho-option typecho-option-submit">
                     <li>
-                        <button type="submit" class="btn primary"><?php _e('继续安装 &raquo;'); ?></button>
+                        <button type="submit" class="btn btn-primary"><?php _e('继续安装 &raquo;'); ?></button>
                         <input type="hidden" name="step" value="3">
                     </li>
                 </ul>

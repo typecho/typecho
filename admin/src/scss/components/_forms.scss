@@ -25,12 +25,12 @@ textarea {
     background: var(--te-gray-200);
   }
 
-  &.text-s {
+  &.form-sm {
     font-size: 13px;
     padding: 3px 6px;
   }
 
-  &.text-l {
+  &.form-lg {
     padding: 7px 14px;
     font-size: 16px;
   }
@@ -47,7 +47,7 @@ select {
   padding: 0 6px;
   border-radius: var(--te-border-radius);
 
-  &.text-s {
+  &.form-sm {
     font-size: 13px;
     height: 27.5px;
   }

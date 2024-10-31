@@ -59,7 +59,7 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                             <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox"
                                                                                    class="typecho-table-select-all"/></label>
                             <div class="btn-group btn-drop">
-                                <button class="btn dropdown-toggle btn-s" type="button"><i
+                                <button class="btn dropdown-toggle btn-sm" type="button"><i
                                         class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i
                                         class="i-caret-down"></i></button>
                                 <ul class="dropdown-menu">
@@ -90,7 +90,7 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                                         (isset($request->status) ? 'status=' . $request->filter('encode')->status : '') .
                                         (isset($request->uid) ? (isset($request->status) ? '&' : '') . 'uid=' . $request->filter('encode')->uid : '') : '')); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
                             <?php endif; ?>
-                            <input type="text" class="text-s" placeholder="<?php _e('请输入关键字'); ?>"
+                            <input type="text" class="form-sm" placeholder="<?php _e('请输入关键字'); ?>"
                                    value="<?php echo $request->filter('html')->keywords; ?>" name="keywords"/>
                             <select name="category">
                                 <option value=""><?php _e('所有分类'); ?></option>
@@ -100,7 +100,7 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                                         value="<?php $category->mid(); ?>"<?php if ($request->get('category') == $category->mid): ?> selected="true"<?php endif; ?>><?php $category->name(); ?></option>
                                 <?php endwhile; ?>
                             </select>
-                            <button type="submit" class="btn btn-s"><?php _e('筛选'); ?></button>
+                            <button type="submit" class="btn btn-sm"><?php _e('筛选'); ?></button>
                             <?php if (isset($request->uid)): ?>
                                 <input type="hidden" value="<?php echo $request->filter('html')->uid; ?>"
                                        name="uid"/>
@@ -211,7 +211,7 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                             <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox"
                                                                                    class="typecho-table-select-all"/></label>
                             <div class="btn-group btn-drop">
-                                <button class="btn dropdown-toggle btn-s" type="button"><i
+                                <button class="btn dropdown-toggle btn-sm" type="button"><i
                                         class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i
                                         class="i-caret-down"></i></button>
                                 <ul class="dropdown-menu">

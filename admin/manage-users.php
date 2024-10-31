@@ -16,7 +16,7 @@ $users = \Widget\Users\Admin::alloc();
                             <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox"
                                                                                    class="typecho-table-select-all"/></label>
                             <div class="btn-group btn-drop">
-                                <button class="btn dropdown-toggle btn-s" type="button"><i
+                                <button class="btn dropdown-toggle btn-sm" type="button"><i
                                         class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i
                                         class="i-caret-down"></i></button>
                                 <ul class="dropdown-menu">
@@ -30,9 +30,9 @@ $users = \Widget\Users\Admin::alloc();
                             <?php if ('' != $request->keywords): ?>
                                 <a href="<?php $options->adminUrl('manage-users.php'); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
                             <?php endif; ?>
-                            <input type="text" class="text-s" placeholder="<?php _e('请输入关键字'); ?>"
+                            <input type="text" class="form-sm" placeholder="<?php _e('请输入关键字'); ?>"
                                    value="<?php echo $request->filter('html')->keywords; ?>" name="keywords"/>
-                            <button type="submit" class="btn btn-s"><?php _e('筛选'); ?></button>
+                            <button type="submit" class="btn btn-sm"><?php _e('筛选'); ?></button>
                         </div>
                     </form>
                 </div><!-- end .typecho-list-operate -->
@@ -109,7 +109,7 @@ $users = \Widget\Users\Admin::alloc();
                             <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox"
                                                                                    class="typecho-table-select-all"/></label>
                             <div class="btn-group btn-drop">
-                                <button class="btn dropdown-toggle btn-s" type="button"><i
+                                <button class="btn dropdown-toggle btn-sm" type="button"><i
                                         class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i
                                         class="i-caret-down"></i></button>
                                 <ul class="dropdown-menu">

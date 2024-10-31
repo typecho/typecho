@@ -278,7 +278,7 @@ class General extends Options implements ActionInterface
             '@doc@'   => _t('常用档案文件') . ' <code>(txt doc docx xls xlsx ppt pptx zip rar pdf)</code>',
             '@other@' => _t(
                 '其他格式 %s',
-                ' <input type="text" class="w-50 text-s mono" name="attachmentTypesOther" value="'
+                ' <input type="text" class="w-50 form-sm mono" name="attachmentTypesOther" value="'
                 . htmlspecialchars($attachmentTypesOtherValue) . '" />'
             ),
         ];
@@ -294,7 +294,7 @@ class General extends Options implements ActionInterface
 
         /** 提交按钮 */
         $submit = new Form\Element\Submit('submit', null, _t('保存设置'));
-        $submit->input->setAttribute('class', 'btn primary');
+        $submit->input->setAttribute('class', 'btn btn-primary');
         $form->addItem($submit);
 
         return $form;

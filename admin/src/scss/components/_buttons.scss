@@ -3,34 +3,38 @@
 * Buttons
 */
 
-@mixin button($color) {
-  border: none;
-  background-color: $color;
-  cursor: pointer;
-
-  border-radius: var(--te-border-radius);
-  // @include transition-property(background-color);
-
-  &:hover {
-    transition-duration: .4s;
-    background-color: darken($color, 6%);
-  }
-  &:active, &.active {
-    background-color: darken($color, 8%);
-  }
-  &:disabled {
-    background-color: lighten($color, 6%);
-    cursor: default;
-  }
+button,
+input[type=button],
+input[type=submit],
+input[type=reset],
+.btn {
+  line-height: 1.5;
 }
 
+// @mixin button($color) {
+//   background-color: $color;
+// }
+
 .btn {
-  @include button(#E9E9E6);
+  background-color: var(--te-gray-300);
+
+  border: 1px solid transparent;
+  cursor: pointer;
+  border-radius: var(--te-border-radius);
+
+  &:hover {
+    filter: brightness(105%);
+  }
+  &:active, &.active {
+    filter: brightness(95%);
+  }
+  &:disabled {
+    filter: brightness(90%);
+  }
 
   display: inline-block;
-  padding: 0 12px;
-  height: 32px;
-  color: #666;
+  padding: 6px 12px;
+  color: var(--te-secondary);
   vertical-align: middle;
   zoom: 1;
 
@@ -44,16 +48,18 @@
   height: 25px;
   font-size: 13px;
 }
-.btn-s { height: 28px; }
-.btn-l {
-  height: 40px;
-  font-size: 1.14286em;
-  font-weight: bold;
+.btn-sm {
+  font-size: 13px;
+  padding: 3px 6px;
+}
+.btn-lg {
+  padding: 7px 14px;
+  font-size: 16px;
 }
 
-.primary {
-  @include button(#007FA3);
-  color: #FFF;
+.btn-primary {
+  background-color: var(--te-primary);
+  color: var(--te-white);
 }
 
 .btn-group {
@@ -61,8 +67,8 @@
 }
 
 .btn-warn {
-  @include button(#B94A48);
-  color: #FFF;
+  background-color: var(--te-danger);
+  color: var(--te-white);
 }
 
 .btn-link,

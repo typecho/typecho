@@ -171,7 +171,7 @@ class Edit extends Users implements ActionInterface
 
         /** 提交按钮 */
         $submit = new Form\Element\Submit();
-        $submit->input->setAttribute('class', 'btn primary');
+        $submit->input->setAttribute('class', 'btn btn-primary');
         $form->addItem($submit);
 
         if ($this->request->is('uid')) {
@@ -260,9 +260,9 @@ class Edit extends Users implements ActionInterface
     }
 
     /**
-     * 获取页面偏移的URL Query
+     * 获取页面偏移的 URL Query
      *
-     * @param integer $uid 用户id
+     * @param integer $uid 用户 id
      * @return string
      * @throws \Typecho\Db\Exception
      */

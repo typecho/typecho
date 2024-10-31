@@ -161,7 +161,7 @@ else
              *
              * delimiting it with "Q" on both sides. For example, the source
              *
-             * > In Chinese, the smurfs are called 藍精靈, meaning "blue spirits".
+             * > In Chinese, the smurfs are called 藍精靈，meaning "blue spirits".
              *
              * turns into
              *
@@ -2783,7 +2783,7 @@ else
             // The ok button
             var okButton = doc.createElement("button");
             okButton.type = "button";
-            okButton.className = "btn btn-s primary";
+            okButton.className = "btn btn-sm btn-primary";
             okButton.onclick = function () { return close(false); };
             okButton.innerHTML = ok;
             /*
@@ -2796,7 +2796,7 @@ else
             // The cancel button
             var cancelButton = doc.createElement("button");
             cancelButton.type = "button";
-            cancelButton.className = "btn btn-s";
+            cancelButton.className = "btn btn-sm";
             cancelButton.onclick = function () { return close(true); };
             cancelButton.innerHTML = cancel;
             /*
@@ -2943,7 +2943,7 @@ else
             // The ok button
             var okButton = doc.createElement("button");
             okButton.type = "button";
-            okButton.className = "btn btn-s primary";
+            okButton.className = "btn btn-sm btn-primary";
             okButton.onclick = function () { return close(false); };
             okButton.innerHTML = ok;
             /*
@@ -2956,7 +2956,7 @@ else
             // The cancel button
             var cancelButton = doc.createElement("button");
             cancelButton.type = "button";
-            cancelButton.className = "btn btn-s";
+            cancelButton.className = "btn btn-sm";
             cancelButton.onclick = function () { return close(true); };
             cancelButton.innerHTML = cancel;
             /*

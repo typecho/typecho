@@ -193,7 +193,7 @@ class Edit extends Metas implements ActionInterface
 
         /** 提交按钮 */
         $submit = new Form\Element\Submit();
-        $submit->input->setAttribute('class', 'btn primary');
+        $submit->input->setAttribute('class', 'btn btn-primary');
         $form->addItem($submit);
 
         if ($this->request->is('mid') && 'insert' != $action) {
@@ -370,7 +370,7 @@ class Edit extends Metas implements ActionInterface
      */
     public function clearTags()
     {
-        // 取出count为0的标签
+        // 取出 count 为 0 的标签
         $tags = array_column($this->db->fetchAll($this->select('mid')
             ->where('type = ? AND count = ?', 'tags', 0)), 'mid');
 
@@ -388,7 +388,7 @@ class Edit extends Metas implements ActionInterface
     }
 
     /**
-     * 入口函数,绑定事件
+     * 入口函数，绑定事件
      *
      * @access public
      * @return void

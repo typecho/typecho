@@ -83,7 +83,7 @@ class Config extends BaseOptions
         }
 
         $submit = new Submit(null, null, _t('保存设置'));
-        $submit->input->setAttribute('class', 'btn primary');
+        $submit->input->setAttribute('class', 'btn btn-primary');
         $form->addItem($submit);
         return $form;
     }

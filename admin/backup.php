@@ -23,7 +23,7 @@ $backupFiles = \Widget\Backup::alloc()->listFiles();
                         <li><?php _e('如果您的数据量过大, 为了避免操作超时, 建议您直接使用数据库提供的备份工具备份数据'); ?></li>
                         <li><strong class="warning"><?php _e('为了缩小备份文件体积, 建议您在备份前删除不必要的数据'); ?></strong></li>
                     </ul>
-                    <p><button class="btn primary" type="submit"><?php _e('开始备份 &raquo;'); ?></button></p>
+                    <p><button class="btn btn-primary" type="submit"><?php _e('开始备份 &raquo;'); ?></button></p>
                         <input tabindex="1" type="hidden" name="do" value="export">
                     </form>
                 </div>
@@ -44,7 +44,7 @@ $backupFiles = \Widget\Backup::alloc()->listFiles();
                     </ul>
                     <ul class="typecho-option typecho-option-submit">
                         <li>
-                            <button tabindex="4" type="submit" class="btn primary"><?php _e('上传并恢复 &raquo;'); ?></button>
+                            <button tabindex="4" type="submit" class="btn btn-primary"><?php _e('上传并恢复 &raquo;'); ?></button>
                             <input type="hidden" name="do" value="import">
                         </li>
                     </ul>
@@ -71,7 +71,7 @@ $backupFiles = \Widget\Backup::alloc()->listFiles();
                     <?php endif; ?>
                     <ul class="typecho-option typecho-option-submit">
                         <li>
-                            <button tabindex="7" type="submit" class="btn primary"><?php _e('选择并恢复 &raquo;'); ?></button>
+                            <button tabindex="7" type="submit" class="btn btn-primary"><?php _e('选择并恢复 &raquo;'); ?></button>
                             <input type="hidden" name="do" value="import">
                         </li>
                     </ul>

@@ -118,12 +118,11 @@ $(document).ready(function() {
             'display'   :   'block',
             'visibility':   'hidden',
             'height'    :   slug.height(),
-            'padding'   :   '0 2px',
             'margin'    :   0
         }).insertAfter(slug.wrap(wrap).css({
             'left'      :   0,
             'top'       :   0,
-            'minWidth'  :   '5px',
+            'minWidth'  :   '4px',
             'position'  :   'absolute',
             'width'     :   '100%'
         }));

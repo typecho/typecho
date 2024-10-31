@@ -124,7 +124,7 @@ class Reading extends Permalink
             . ($this->options->frontArchive && 'recent' != $frontPageType ? ' checked' : '') . ' />
 <label for="frontArchive">' . _t(
                 '同时将文章列表页路径更改为 %s',
-                '<input type="text" name="archivePattern" class="w-20 text-s mono" value="'
+                '<input type="text" name="archivePattern" class="w-20 form-sm mono" value="'
                 . htmlspecialchars($this->decodeRule($this->options->routingTable['archive']['url'])) . '" />'
             )
             . '</label>';
@@ -135,7 +135,7 @@ class Reading extends Permalink
             ->where('status = ?', 'publish')->where('created < ?', $this->options->time));
 
         if (!empty($pages)) {
-            $pagesSelect = '<select name="frontPagePage" id="frontPage-frontPagePage" class="text-s">';
+            $pagesSelect = '<select name="frontPagePage" id="frontPage-frontPagePage" class="form-sm">';
             foreach ($pages as $page) {
                 $selected = '';
                 if ('page' == $frontPageType && $page['cid'] == $frontPageValue) {
@@ -229,7 +229,7 @@ class Reading extends Permalink
 
         /** 提交按钮 */
         $submit = new Form\Element\Submit('submit', null, _t('保存设置'));
-        $submit->input->setAttribute('class', 'btn primary');
+        $submit->input->setAttribute('class', 'btn btn-primary');
         $form->addItem($submit);
 
         return $form;

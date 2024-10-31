@@ -37,7 +37,7 @@ while ($parents->next()) {
                     <p class="title">
                         <label for="title" class="sr-only"><?php _e('标题'); ?></label>
                         <input type="text" id="title" name="title" autocomplete="off" value="<?php $page->title(); ?>"
-                               placeholder="<?php _e('标题'); ?>" class="text-l title"/>
+                               placeholder="<?php _e('标题'); ?>" class="form-lg title"/>
                     </p>
                     <?php $permalink = \Typecho\Common::url($options->routingTable['page']['url'], $options->index);
                     [$scheme, $permalink] = explode(':', $permalink, 2);
@@ -77,7 +77,7 @@ while ($parents->next()) {
                                     class="i-exlink"></i> <?php _e('预览页面'); ?></button>
                             <button type="submit" name="do" value="save" id="btn-save"
                                     class="btn"><?php _e('保存草稿'); ?></button>
-                            <button type="submit" name="do" value="publish" class="btn primary"
+                            <button type="submit" name="do" value="publish" class="btn btn-primary"
                                     id="btn-submit"><?php _e('发布页面'); ?></button>
                             <?php if ($options->markdown && (!$page->have() || $page->isMarkdown)): ?>
                                 <input type="hidden" name="markdown" value="1"/>
