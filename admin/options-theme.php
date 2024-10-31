@@ -18,7 +18,7 @@ include 'menu.php';
                             href="<?php $options->adminUrl('options-theme.php'); ?>"><?php _e('设置外观'); ?></a></li>
                 </ul>
             </div>
-            <div class="col-mb-12 col-tb-8 col-tb-offset-2" role="form">
+            <div class="col-mb-12 col-tb-8" role="form">
                 <?php \Widget\Themes\Config::alloc()->config()->render(); ?>
             </div>
         </div>

@@ -26,17 +26,17 @@ html {
 
 body {
   font-family: var(--te-body-font-family);
-  background: var(--te-gray-100);
+  background: #fafaf8;
   color: var(--te-body-color);
   font-size: var(--te-body-font-size);
   line-height: 1.5;
 }
 
 a {
-  color: var(--te-primary);
+  color: var(--te-link-color);
   text-decoration: none;
   &:hover {
-    color: #499BC3;
+    color: var(--te-link-hover-color);
     text-decoration: underline;
   }
 }
@@ -123,7 +123,6 @@ a.button:hover, a.balloon-button:hover {
 */
 .typecho-option {
   list-style: none;
-  margin: 0 0 16px;
   padding: 0;
 
   &-submit li {
@@ -144,7 +143,7 @@ a.button:hover, a.balloon-button:hover {
   }
 
   span {
-    margin-right: 15px;
+    margin-right: 8px;
   }
 
   .description {
@@ -160,13 +159,19 @@ a.button:hover, a.balloon-button:hover {
 }
 
 .front-archive {
-  padding-left: 1.5em;
+  padding-left: 16px;
 }
 
 .profile-avatar {
-  width: 220px;
-  height: 220px;
-  border-radius: 10px;
+  width: 160px;
+  height: 160px;
+  border-radius: var(--te-border-radius);
+}
+
+.profile-name small {
+  display: block;
+  color: var(--te-secondary);
+  font-weight: normal;
 }
 
 /** 增加配置面板内部的错误样式 by 70 */
@@ -183,22 +188,19 @@ a.button:hover, a.balloon-button:hover {
 }
 
 .welcome-board {
-  color: #999;
-  font-size: 1.15em;
-  em {
-    color: #444;
+  margin-bottom: 32px;
+  color: var(--te-secondary);
+  font-size: 16px;
+  strong {
+    color: var(--te-body-color);
     font-size: 2em;
-    font-style: normal;
   }
 }
 
 #start-link {
-  margin-bottom: 25px;
-  padding: 0 0 35px;
-  border-bottom: 1px solid #ECECEC;
   li {
-    float: left;
-    margin-right: 1.5em;
+    display: inline-block;
+    margin-right: 16px;
   }
   .balloon {
     margin-top: 2px;
@@ -206,19 +208,23 @@ a.button:hover, a.balloon-button:hover {
 }
 
 .latest-link {
+  background: var(--te-white);
+  padding: 16px;
+  border: 1px solid var(--te-border-color);
+  border-radius: var(--te-border-radius);
+
+  h3 {
+    margin: 0;
+  }
   li {
+    margin: 1em 0;
     white-space: nowrap;
     overflow: hidden; 
     text-overflow: ellipsis;
   }
   span {
-    display: inline-block;
-    margin-right: 4px;
-    padding-right: 8px;
-    border-right: 1px solid #ECECEC;
-    width: 37px;
-    text-align: right;
-    color: #999;
+    display: block;
+    color: var(--te-secondary);
   }
 }
 
@@ -255,11 +261,11 @@ a.button:hover, a.balloon-button:hover {
 * 标题
 */
 .typecho-page-title {
-  margin: 24px 0 16px;
+  margin: 24px 0 10px;
 }
 .typecho-page-title h2 {
   margin: 0;
-  font-size: 20px;
+  font-size: 24px;
 }
 .typecho-page-title h2 a {
   margin-left: 10px;
@@ -285,9 +291,6 @@ a.button:hover, a.balloon-button:hover {
 .typecho-dashboard ul {
   list-style: none;
   padding: 0;
-}
-.typecho-dashboard li {
-  margin-bottom: 5px;
 }
 
 
@@ -401,11 +404,11 @@ a.operate-reply {
 .typecho-list-table-title {
   margin: 1em 0;
   color: #999;
-  text-align: center;
 }
 .typecho-table-wrap {
-  padding: 30px;
-  background: #FFF;
+  padding: 16px;
+  background: var(--te-white);
+  border-radius: var(--te-border-radius);
 }
 .typecho-list-table {
   width: 100%;
@@ -413,7 +416,7 @@ a.operate-reply {
   table-layout: fixed;
 
   &.deactivate {
-    color: #999;
+    color: var(--te-secondary);
   }
 
   .right {
@@ -421,14 +424,13 @@ a.operate-reply {
   }
 
   th {
-    padding: 0 10px 10px;
-    border-bottom: 2px solid #F0F0EC;
+    padding: 10px;
     text-align: left;
   }
 
   td {
     padding: 10px;
-    border-top: 1px solid #F0F0EC;
+    border-top: 1px solid var(--te-gray-200);
     word-break: break-all;
 
     pre {
@@ -437,9 +439,9 @@ a.operate-reply {
   }
 
   .status {
-    margin-left: 5px;
-    color: #999;
-    font-size: .92857em;
+    margin-left: 4px;
+    color: var(--te-secondary);
+    font-size: 12px;
     font-style: normal;
   }
 
@@ -550,17 +552,8 @@ a.operate-reply {
 * 后台配置项
 */
 
-.typecho-page-main .typecho-option input.text {
-  width: 100%;
-}
-
 .typecho-page-main .typecho-option input.num {
   width: 40px;
-}
-
-.typecho-page-main .typecho-option textarea {
-  width: 100%;
-  height: 100px;
 }
 
 .typecho-page-main .typecho-option .multiline {
@@ -665,14 +658,9 @@ a.operate-reply {
   background: #fff;
 }
 
-.typecho-post-area input.title {
-  font-size: 1.17em;
-  font-weight: bold;
-}
 .typecho-post-area .url-slug {
-  margin-top: -0.5em;
-  color: #AAA;
-  font-size: .92857em;
+  color: var(--te-secondary);
+  font-size: 13px;
   word-break: break-word;
 }
 .typecho-post-area #slug {

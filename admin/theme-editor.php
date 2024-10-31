@@ -31,7 +31,7 @@ include 'menu.php';
                     <form method="post" name="theme" id="theme"
                           action="<?php $security->index('/action/themes-edit'); ?>">
                         <label for="content" class="sr-only"><?php _e('编辑源码'); ?></label>
-                        <textarea name="content" id="content" class="w-100 mono"
+                        <textarea name="content" id="content" class="mono"
                                   <?php if (!$files->currentIsWriteable()): ?>readonly<?php endif; ?>><?php echo $files->currentContent(); ?></textarea>
                         <p class="typecho-option typecho-option-submit">
                             <?php if ($files->currentIsWriteable()): ?>

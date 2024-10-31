@@ -147,7 +147,6 @@ class General extends Options implements ActionInterface
 
         /** 站点名称 */
         $title = new Form\Element\Text('title', null, $this->options->title, _t('站点名称'), _t('站点的名称将显示在网页的标题处.'));
-        $title->input->setAttribute('class', 'w-100');
         $form->addInput($title->addRule('required', _t('请填写站点名称'))
             ->addRule('xssCheck', _t('请不要在站点名称中使用特殊字符')));
 
@@ -162,7 +161,7 @@ class General extends Options implements ActionInterface
                     '' : '</p><p class="message notice mono">'
                     . _t('当前地址 <strong>%s</strong> 与上述设定值不一致', $this->options->rootUrl))
             );
-            $siteUrl->input->setAttribute('class', 'w-100 mono');
+            $siteUrl->input->setAttribute('class', 'mono');
             $form->addInput($siteUrl->addRule('required', _t('请填写站点地址'))
                 ->addRule('url', _t('请填写一个合法的URL地址')));
         }

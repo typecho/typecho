@@ -78,11 +78,11 @@
   height: 16px;
 }
 
-%i-24 {
+%i-32 {
   @extend %i-base;
-  background-size: 24px auto;
-  width: 24px;
-  height: 24px;
+  background-size: 32px auto;
+  width: 32px;
+  height: 32px;
 }
 
 .i-delete {
@@ -103,13 +103,13 @@
 // 大号上传按钮
 
 .i-upload {
-  @extend %i-24;
-  background-position-y: -24px * 3;
+  @extend %i-32;
+  background-position-y: -32px * 3;
 }
 
 .i-upload-active {
-  @extend %i-24;
-  background-position-y: -24px * 4;
+  @extend %i-32;
+  background-position-y: -32px * 4;
 }
 
 // 小箭头
@@ -199,9 +199,9 @@
     opacity: .2;
   }
 }
-.i-logo-s {
-  width: 26px;
-  height: 26px;
-  background-size: auto 26px;
-}
+// .i-logo-s {
+//   width: 26px;
+//   height: 26px;
+//   background-size: auto 26px;
+// }
 

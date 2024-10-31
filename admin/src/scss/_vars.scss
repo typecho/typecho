@@ -24,6 +24,8 @@ $screen-wide: 1200px;
   --te-danger: #dc3545;
   --te-light: #f8f9fa;
   --te-dark: #212529;
+  --te-white: #fff;
+  --te-black: #000;
   --te-gray-100: #f8f9fa;
   --te-gray-200: #e9ecef;
   --te-gray-300: #dee2e6;
@@ -33,6 +35,9 @@ $screen-wide: 1200px;
   --te-gray-700: #495057;
   --te-gray-800: #343a40;
   --te-gray-900: #212529;
+
+  --te-link-color: var(--te-primary);
+  --te-link-hover-color: #006682;
 
   --te-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --te-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;

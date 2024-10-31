@@ -124,7 +124,7 @@ class Reading extends Permalink
             . ($this->options->frontArchive && 'recent' != $frontPageType ? ' checked' : '') . ' />
 <label for="frontArchive">' . _t(
                 '同时将文章列表页路径更改为 %s',
-                '<input type="text" name="archivePattern" class="w-20 mono" value="'
+                '<input type="text" name="archivePattern" class="w-20 text-s mono" value="'
                 . htmlspecialchars($this->decodeRule($this->options->routingTable['archive']['url'])) . '" />'
             )
             . '</label>';

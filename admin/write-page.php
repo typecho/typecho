@@ -37,7 +37,7 @@ while ($parents->next()) {
                     <p class="title">
                         <label for="title" class="sr-only"><?php _e('标题'); ?></label>
                         <input type="text" id="title" name="title" autocomplete="off" value="<?php $page->title(); ?>"
-                               placeholder="<?php _e('标题'); ?>" class="w-100 text title"/>
+                               placeholder="<?php _e('标题'); ?>" class="text-l title"/>
                     </p>
                     <?php $permalink = \Typecho\Common::url($options->routingTable['page']['url'], $options->index);
                     [$scheme, $permalink] = explode(':', $permalink, 2);
@@ -61,7 +61,7 @@ while ($parents->next()) {
                     <p>
                         <label for="text" class="sr-only"><?php _e('页面内容'); ?></label>
                         <textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text"
-                                  name="text" class="w-100 mono"><?php echo htmlspecialchars($page->text); ?></textarea>
+                                  name="text" class="mono"><?php echo htmlspecialchars($page->text); ?></textarea>
                     </p>
 
                     <?php include 'custom-fields.php'; ?>
@@ -96,15 +96,14 @@ while ($parents->next()) {
                     <div id="tab-advance" class="tab-content">
                         <section class="typecho-post-option" role="application">
                             <label for="date" class="typecho-label"><?php _e('发布日期'); ?></label>
-                            <p><input class="typecho-date w-100" type="text" name="date" id="date" autocomplete="off"
+                            <p><input class="typecho-date" type="text" name="date" id="date" autocomplete="off"
                                       value="<?php $page->have() && $page->created > 0 ? $page->date('Y-m-d H:i') : ''; ?>"/>
                             </p>
                         </section>
 
                         <section class="typecho-post-option">
                             <label for="order" class="typecho-label"><?php _e('页面顺序'); ?></label>
-                            <p><input type="text" id="order" name="order" value="<?php $page->order(); ?>"
-                                      class="w-100"/></p>
+                            <p><input type="text" id="order" name="order" value="<?php $page->order(); ?>"/></p>
                             <p class="description"><?php _e('为你的自定义页面设定一个序列值以后, 能够使得它们按此值从小到大排列'); ?></p>
                         </section>
 

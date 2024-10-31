@@ -66,7 +66,7 @@ class Profile extends Users implements ActionInterface
             ['0' => _t('关闭'), '1' => _t('打开')],
             $this->options->xmlrpcMarkdown,
             _t('在 XMLRPC 接口中使用 Markdown 语法'),
-            _t('对于完全支持 <a href="https://daringfireball.net/projects/markdown/">Markdown</a> 语法写作的离线编辑器, 打开此选项后将避免内容被转换为 HTML.')
+            _t('对于完全支持 <a href="https://daringfireball.net/projects/markdown/">Markdown</a> 语法写作的离线编辑器，打开此选项后将避免内容被转换为 HTML.')
         );
         $form->addInput($xmlrpcMarkdown);
 
@@ -219,15 +219,18 @@ class Profile extends Users implements ActionInterface
         /** 用户昵称 */
         $screenName = new Form\Element\Text('screenName', null, null, _t('昵称'), _t('用户昵称可以与用户名不同, 用于前台显示.')
             . '<br />' . _t('如果你将此项留空, 将默认使用用户名.'));
+        $screenName->input->setAttribute('class', 'w-60');
         $form->addInput($screenName);
 
         /** 个人主页地址 */
         $url = new Form\Element\Url('url', null, null, _t('个人主页地址'), _t('此用户的个人主页地址, 请用 <code>https://</code> 开头.'));
+        $url->input->setAttribute('class', 'w-60');
         $form->addInput($url);
 
         /** 电子邮箱地址 */
         $mail = new Form\Element\Text('mail', null, null, _t('邮件地址') . ' *', _t('电子邮箱地址将作为此用户的主要联系方式.')
             . '<br />' . _t('请不要与系统中现有的电子邮箱地址重复.'));
+        $mail->input->setAttribute('class', 'w-60');
         $form->addInput($mail);
 
         /** 用户动作 */

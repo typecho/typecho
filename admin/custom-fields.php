@@ -26,7 +26,7 @@ $defaultFields = isset($post) ? $post->getDefaultFieldItems() : $page->getDefaul
                 <td>
                     <label for="fieldname" class="sr-only"><?php _e('字段名称'); ?></label>
                     <input type="text" name="fieldNames[]" value="<?php echo htmlspecialchars($field['name']); ?>"
-                           id="fieldname" pattern="^[_a-zA-Z][_a-zA-Z0-9]*$" oninput="this.reportValidity()" class="text-s w-100">
+                           id="fieldname" pattern="^[_a-zA-Z][_a-zA-Z0-9]*$" oninput="this.reportValidity()" class="text-s">
                 </td>
                 <td>
                     <label for="fieldtype" class="sr-only"><?php _e('字段类型'); ?></label>
@@ -43,7 +43,7 @@ $defaultFields = isset($post) ? $post->getDefaultFieldItems() : $page->getDefaul
                 </td>
                 <td>
                     <label for="fieldvalue" class="sr-only"><?php _e('字段值'); ?></label>
-                    <textarea name="fieldValues[]" id="fieldvalue" class="text-s w-100"
+                    <textarea name="fieldValues[]" id="fieldvalue" class="text-s"
                               rows="2"><?php echo htmlspecialchars($field[($field['type'] == 'json' ? 'str' : $field['type']) . '_value']); ?></textarea>
                 </td>
                 <td>
@@ -56,7 +56,7 @@ $defaultFields = isset($post) ? $post->getDefaultFieldItems() : $page->getDefaul
                 <td>
                     <label for="fieldname" class="sr-only"><?php _e('字段名称'); ?></label>
                     <input type="text" name="fieldNames[]" placeholder="<?php _e('字段名称'); ?>" id="fieldname"
-                           class="text-s w-100" pattern="^[_a-zA-Z][_a-zA-Z0-9]*$" oninput="this.reportValidity()">
+                           class="text-s" pattern="^[_a-zA-Z][_a-zA-Z0-9]*$" oninput="this.reportValidity()">
                 </td>
                 <td>
                     <label for="fieldtype" class="sr-only"><?php _e('字段类型'); ?></label>
@@ -69,7 +69,7 @@ $defaultFields = isset($post) ? $post->getDefaultFieldItems() : $page->getDefaul
                 <td>
                     <label for="fieldvalue" class="sr-only"><?php _e('字段值'); ?></label>
                     <textarea name="fieldValues[]" placeholder="<?php _e('字段值'); ?>" id="fieldvalue"
-                              class="text-s w-100" rows="2"></textarea>
+                              class="text-s" rows="2"></textarea>
                 </td>
                 <td>
                     <button type="button" class="btn btn-xs"><?php _e('删除'); ?></button>

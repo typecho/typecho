@@ -19,6 +19,7 @@ textarea {
   padding: 6px 12px;
   border-radius: var(--te-border-radius);
   line-height: 1.5;
+  width: 100%;
 
   &:disabled, &:read-only {
     background: var(--te-gray-200);
@@ -51,14 +52,3 @@ select {
     height: 27.5px;
   }
 }
-
-.w-10 { width: 10%; }
-.w-20 { width: 20%; }
-.w-30 { width: 30%; }
-.w-40 { width: 40%; }
-.w-50 { width: 50%; }
-.w-60 { width: 60%; }
-.w-70 { width: 70%; }
-.w-80 { width: 80%; }
-.w-90 { width: 90%; }
-.w-100 { width: 100%; }

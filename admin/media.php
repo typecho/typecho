@@ -24,7 +24,7 @@ include 'menu.php';
                 </p>
 
                 <p>
-                    <input id="attachment-url" type="text" class="mono w-100"
+                    <input id="attachment-url" type="text" class="mono"
                            value="<?php $attachment->attachment->url(); ?>" readonly/>
                 </p>
 

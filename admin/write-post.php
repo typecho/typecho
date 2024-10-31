@@ -26,7 +26,7 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
                     <p class="title">
                         <label for="title" class="sr-only"><?php _e('标题'); ?></label>
                         <input type="text" id="title" name="title" autocomplete="off" value="<?php $post->title(); ?>"
-                               placeholder="<?php _e('标题'); ?>" class="w-100 text title"/>
+                               placeholder="<?php _e('标题'); ?>" class="text-l title"/>
                     </p>
                     <?php $permalink = \Typecho\Common::url($options->routingTable['post']['url'], $options->index);
                     [$scheme, $permalink] = explode(':', $permalink, 2);
@@ -48,7 +48,7 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
                     <p>
                         <label for="text" class="sr-only"><?php _e('文章内容'); ?></label>
                         <textarea style="height: <?php $options->editorSize(); ?>px" autocomplete="off" id="text"
-                                  name="text" class="w-100 mono"><?php echo htmlspecialchars($post->text); ?></textarea>
+                                  name="text" class="mono"><?php echo htmlspecialchars($post->text); ?></textarea>
                     </p>
 
                     <?php include 'custom-fields.php'; ?>
@@ -86,7 +86,7 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
                     <div id="tab-advance" class="tab-content">
                         <section class="typecho-post-option" role="application">
                             <label for="date" class="typecho-label"><?php _e('发布日期'); ?></label>
-                            <p><input class="typecho-date w-100" type="text" name="date" id="date" placeholder="____-__-__ __:__" autocomplete="off"
+                            <p><input class="typecho-date" type="text" name="date" id="date" placeholder="____-__-__ __:__" autocomplete="off"
                                       value="<?php $post->have() && $post->created > 0 ? $post->date('Y-m-d H:i') : ''; ?>"/>
                             </p>
                         </section>
@@ -111,7 +111,7 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
                         <section class="typecho-post-option">
                             <label for="token-input-tags" class="typecho-label"><?php _e('标签'); ?></label>
                             <p><input id="tags" name="tags" type="text" value="<?php $post->have() ? $post->tags(',', false) : ''; ?>"
-                                      class="w-100 text"/></p>
+                                      class="text"/></p>
                         </section>
 
                         <?php \Typecho\Plugin::factory('admin/write-post.php')->call('option', $post); ?>
@@ -140,7 +140,7 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
                                     </p>
                                     <p id="post-password"<?php if (strlen($post->password ?? '') == 0): ?> class="hidden"<?php endif; ?>>
                                         <label for="protect-pwd" class="sr-only">内容密码</label>
-                                        <input type="text" name="password" id="protect-pwd" class="text-s"
+                                        <input type="text" name="password" id="protect-pwd"
                                                value="<?php $post->password(); ?>" size="16"
                                                placeholder="<?php _e('内容密码'); ?>" autocomplete="off"/>
                                     </p>
@@ -164,7 +164,7 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
 
                             <section class="typecho-post-option">
                                 <label for="trackback" class="typecho-label"><?php _e('引用通告'); ?></label>
-                                <p><textarea id="trackback" class="w-100 mono" name="trackback" rows="2"></textarea></p>
+                                <p><textarea id="trackback" class="mono" name="trackback" rows="2"></textarea></p>
                                 <p class="description"><?php _e('每一行一个引用地址, 用回车隔开'); ?></p>
                             </section>
 
