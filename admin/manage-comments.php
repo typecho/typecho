@@ -175,7 +175,7 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == \Ty
                         <?php endwhile; ?>
                         <?php else: ?>
                         <tr>
-                            <td colspan="4"><h6 class="typecho-list-table-title"><?php _e('没有评论') ?></h6></td>
+                            <td colspan="4"><?php _e('没有评论') ?></td>
                         </tr>
                         <?php endif; ?>
                         </tbody>

@@ -119,8 +119,7 @@ $pages = \Widget\Contents\Page\Admin::alloc();
                                 <?php endwhile; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="6"><h6 class="typecho-list-table-title"><?php _e('没有任何页面'); ?></h6>
-                                    </td>
+                                    <td colspan="6"><?php _e('没有任何页面'); ?></td>
                                 </tr>
                             <?php endif; ?>
                             </tbody>

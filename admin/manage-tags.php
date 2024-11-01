@@ -52,7 +52,7 @@ include 'menu.php';
                                 </li>
                             <?php endwhile; ?>
                         <?php else: ?>
-                            <h6 class="typecho-list-table-title"><?php _e('没有任何标签'); ?></h6>
+                            <?php _e('没有任何标签'); ?>
                         <?php endif; ?>
                     </ul>
                     <input type="hidden" name="do" value="delete"/>

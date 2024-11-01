@@ -97,8 +97,7 @@ $attachments = \Widget\Contents\Attachment\Admin::alloc();
                                 <?php endwhile; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="6"><h6 class="typecho-list-table-title"><?php _e('没有任何文件'); ?></h6>
-                                    </td>
+                                    <td colspan="6"><?php _e('没有任何文件'); ?></td>
                                 </tr>
                             <?php endif; ?>
                             </tbody>

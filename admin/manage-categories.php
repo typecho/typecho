@@ -102,8 +102,7 @@ include 'menu.php';
                                 <?php endwhile; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="6"><h6 class="typecho-list-table-title"><?php _e('没有任何分类'); ?></h6>
-                                    </td>
+                                    <td colspan="6"><?php _e('没有任何分类'); ?></td>
                                 </tr>
                             <?php endif; ?>
                             </tbody>

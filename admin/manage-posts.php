@@ -196,8 +196,7 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                                 <?php endwhile; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="6"><h6 class="typecho-list-table-title"><?php _e('没有任何文章'); ?></h6>
-                                    </td>
+                                    <td colspan="6"><?php _e('没有任何文章'); ?></td>
                                 </tr>
                             <?php endif; ?>
                             </tbody>
