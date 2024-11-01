@@ -17,23 +17,23 @@
 .container {
   margin-left: auto;
   margin-right: auto;
-  padding-left: $gutter-width / 2;
-  padding-right: $gutter-width / 2;
+  padding-left: calc($gutter-width / 2);
+  padding-right: calc($gutter-width / 2);
   @extend %box-sizing;
 }
 
 // Column group
 .row {
-  margin-right: $gutter-width / -2;
-  margin-left: $gutter-width / -2;
+  margin-right: calc($gutter-width / -2);
+  margin-left: calc($gutter-width / -2);
   @extend .clearfix;
 }
 
 .row [class*="col-"] {
   float: left;
   min-height: 1px;
-  padding-right: $gutter-width / 2;
-  padding-left: $gutter-width / 2;
+  padding-right: calc($gutter-width / 2);
+  padding-left: calc($gutter-width / 2);
   @extend %box-sizing;
 }
 
@@ -49,7 +49,7 @@
 
 @for $index from 1 through $columns {
   .col-mb-#{$index} {
-    width: $column-width * $index;
+    width: calc($column-width * $index);
   }
 }
 
@@ -60,34 +60,34 @@
 
 @media (min-width: $screen-tablet) {
   .container {
-    max-width: $screen-tablet - ($gutter-width * 2);
+    max-width: calc($screen-tablet - ($gutter-width * 2));
   }
 
   // Colunms
   @for $index from 1 through $columns {
     .col-tb-#{$index} {
-      width: $column-width * $index;
+      width: calc($column-width * $index);
     }
   }
 
   // Offset
   @for $index from 0 through $columns {
     .col-tb-offset-#{$index} {
-      margin-left: $column-width * $index;
+      margin-left: calc($column-width * $index);
     }
   }
 
   // Pull
   @for $index from 0 through $columns {
     .col-tb-pull-#{$index} {
-      right: $column-width * $index;
+      right: calc($column-width * $index);
     }
   }
 
   // Push
   @for $index from 0 through $columns {
     .col-tb-push-#{$index} {
-      left: $column-width * $index;
+      left: calc($column-width * $index);
     }
   }
 }
@@ -99,34 +99,34 @@
 
 @media (min-width: $screen-desktop) {
   .container {
-    max-width: $screen-desktop - ($gutter-width * 2);
+    max-width: calc($screen-desktop - ($gutter-width * 2));
   }
 
   // Colunms
   @for $index from 1 through $columns {
     .col-#{$index} {
-      width: $column-width * $index;
+      width: calc($column-width * $index);
     }
   }
 
   // Offset
   @for $index from 0 through $columns {
     .col-offset-#{$index} {
-      margin-left: $column-width * $index;
+      margin-left: calc($column-width * $index);
     }
   }
 
   // Pull
   @for $index from 0 through $columns {
     .col-pull-#{$index} {
-      right: $column-width * $index;
+      right: calc($column-width * $index);
     }
   }
 
   // Push
   @for $index from 0 through $columns {
     .col-push-#{$index} {
-      left: $column-width * $index;
+      left: calc($column-width * $index);
     }
   }
 }
@@ -138,34 +138,34 @@
 
 @media (min-width: $screen-wide) {
   .container {
-    max-width: $screen-wide - ($gutter-width * 2);
+    max-width: calc($screen-wide - ($gutter-width * 2));
   }
 
   // Colunms
   @for $index from 1 through $columns {
     .col-wd-#{$index} {
-      width: $column-width * $index;
+      width: calc($column-width * $index);
     }
   }
 
   // Offset
   @for $index from 0 through $columns {
     .col-wd-offset-#{$index} {
-      margin-left: $column-width * $index;
+      margin-left: calc($column-width * $index);
     }
   }
 
   // Pull
   @for $index from 0 through $columns {
     .col-wd-pull-#{$index} {
-      right: $column-width * $index;
+      right: calc($column-width * $index);
     }
   }
 
   // Push
   @for $index from 0 through $columns {
     .col-wd-push-#{$index} {
-      left: $column-width * $index;
+      left: calc($column-width * $index);
     }
   }
 }
@@ -176,21 +176,21 @@
  */
 
 // Hidden in mobile and down
-@media (max-width: $screen-phone - 1px) {
+@media (max-width: calc($screen-phone - 1px)) {
   .kit-hidden-mb {
     display: none;
   }
 }
 
 // Hidden in tablet and down
-@media (max-width: $screen-tablet - 1px) {
+@media (max-width: calc($screen-tablet - 1px)) {
   .kit-hidden-tb {
     display: none;
   }
 }
 
 // Hidden in descktop and down
-@media (max-width: $screen-desktop - 1px) {
+@media (max-width: calc($screen-desktop - 1px)) {
   .kit-hidden {
     display: none;
   }

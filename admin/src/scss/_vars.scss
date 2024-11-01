@@ -4,7 +4,7 @@
 
 // Grid
 $columns: 12 !default;
-$column-width: 100% / $columns !default;
+$column-width: calc(100% / $columns) !default;
 $gutter-width: 20px !default;
 
 
