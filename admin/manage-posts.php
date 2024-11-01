@@ -12,17 +12,7 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main" role="main">
             <div class="col-mb-12 typecho-list">
-                <div class="clearfix">
-                    <ul class="typecho-option-tabs right">
-                        <?php if ($user->pass('editor', true) && !isset($request->uid)): ?>
-                            <li class="<?php if ($isAllPosts): ?> current<?php endif; ?>"><a
-                                    href="<?php echo $request->makeUriByRequest('__typecho_all_posts=on&page=1'); ?>"><?php _e('所有'); ?></a>
-                            </li>
-                            <li class="<?php if (!$isAllPosts): ?> current<?php endif; ?>"><a
-                                    href="<?php echo $request->makeUriByRequest('__typecho_all_posts=off&page=1'); ?>"><?php _e('我的'); ?></a>
-                            </li>
-                        <?php endif; ?>
-                    </ul>
+                <div class="d-flex justify-content-between">
                     <ul class="typecho-option-tabs">
                         <li<?php if (!isset($request->status) || 'all' == $request->get('status')): ?> class="current"<?php endif; ?>>
                             <a href="<?php $options->adminUrl('manage-posts.php'
@@ -51,9 +41,19 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                                 <?php endif; ?>
                             </a></li>
                     </ul>
+                    <ul class="typecho-option-tabs">
+                        <?php if ($user->pass('editor', true) && !isset($request->uid)): ?>
+                            <li class="<?php if ($isAllPosts): ?> current<?php endif; ?>"><a
+                                    href="<?php echo $request->makeUriByRequest('__typecho_all_posts=on&page=1'); ?>"><?php _e('所有'); ?></a>
+                            </li>
+                            <li class="<?php if (!$isAllPosts): ?> current<?php endif; ?>"><a
+                                    href="<?php echo $request->makeUriByRequest('__typecho_all_posts=off&page=1'); ?>"><?php _e('我的'); ?></a>
+                            </li>
+                        <?php endif; ?>
+                    </ul>
                 </div>
 
-                <div class="typecho-list-operate clearfix">
+                <div class="typecho-list-operate">
                     <form method="get">
                         <div class="operate">
                             <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox"
@@ -85,7 +85,7 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                         </div>
                         <div class="search" role="search">
                             <?php if ('' != $request->keywords || '' != $request->category): ?>
-                                <a href="<?php $options->adminUrl('manage-posts.php'
+                                <a class="btn btn-sm btn-link" href="<?php $options->adminUrl('manage-posts.php'
                                     . (isset($request->status) || isset($request->uid) ? '?' .
                                         (isset($request->status) ? 'status=' . $request->filter('encode')->status : '') .
                                         (isset($request->uid) ? (isset($request->status) ? '&' : '') . 'uid=' . $request->filter('encode')->uid : '') : '')); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
@@ -117,12 +117,12 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                     <div class="typecho-table-wrap">
                         <table class="typecho-list-table">
                             <colgroup>
-                                <col width="20" class="kit-hidden-mb"/>
-                                <col width="6%" class="kit-hidden-mb"/>
+                                <col width="35" class="kit-hidden-mb"/>
+                                <col width="35" class="kit-hidden-mb"/>
                                 <col width="45%"/>
                                 <col width="" class="kit-hidden-mb"/>
                                 <col width="18%" class="kit-hidden-mb"/>
-                                <col width="16%"/>
+                                <col width="15%"/>
                             </colgroup>
                             <thead>
                             <tr>
@@ -142,7 +142,7 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                                                                          name="cid[]"/></td>
                                         <td class="kit-hidden-mb"><a
                                                 href="<?php $options->adminUrl('manage-comments.php?cid=' . ($posts->parentId ? $posts->parentId : $posts->cid)); ?>"
-                                                class="balloon-button size-<?php echo \Typecho\Common::splitByCount($posts->commentsNum, 1, 10, 20, 50, 100); ?>"
+                                                class="balloon size-<?php echo \Typecho\Common::splitByCount($posts->commentsNum, 1, 10, 20, 50, 100); ?>"
                                                 title="<?php $posts->commentsNum(); ?> <?php _e('评论'); ?>"><?php $posts->commentsNum(); ?></a>
                                         </td>
                                         <td>
@@ -205,7 +205,7 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                     </div>
                 </form><!-- end .operate-form -->
 
-                <div class="typecho-list-operate clearfix">
+                <div class="typecho-list-operate">
                     <form method="get">
                         <div class="operate">
                             <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox"

@@ -12,13 +12,7 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == \Ty
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main" role="main">
             <div class="col-mb-12 typecho-list">
-                <div class="clearfix">
-                    <ul class="typecho-option-tabs right">
-                    <?php if($user->pass('editor', true) && !isset($request->cid)): ?>
-                        <li class="<?php if($isAllComments): ?> current<?php endif; ?>"><a href="<?php echo $request->makeUriByRequest('__typecho_all_comments=on'); ?>"><?php _e('所有'); ?></a></li>
-                        <li class="<?php if(!$isAllComments): ?> current<?php endif; ?>"><a href="<?php echo $request->makeUriByRequest('__typecho_all_comments=off'); ?>"><?php _e('我的'); ?></a></li>
-                    <?php endif; ?>
-                    </ul>
+                <div class="d-flex justify-content-between">
                     <ul class="typecho-option-tabs">
                         <li<?php if(!isset($request->status) || 'approved' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php'
                         . (isset($request->cid) ? '?cid=' . $request->filter('encode')->cid : '')); ?>"><?php _e('已通过'); ?></a></li>
@@ -43,9 +37,15 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == \Ty
                         <?php endif; ?>
                         </a></li>
                     </ul>
+                    <ul class="typecho-option-tabs">
+                    <?php if($user->pass('editor', true) && !isset($request->cid)): ?>
+                        <li class="<?php if($isAllComments): ?> current<?php endif; ?>"><a href="<?php echo $request->makeUriByRequest('__typecho_all_comments=on'); ?>"><?php _e('所有'); ?></a></li>
+                        <li class="<?php if(!$isAllComments): ?> current<?php endif; ?>"><a href="<?php echo $request->makeUriByRequest('__typecho_all_comments=off'); ?>"><?php _e('我的'); ?></a></li>
+                    <?php endif; ?>
+                    </ul>
                 </div>
             
-                <div class="typecho-list-operate clearfix">
+                <div class="typecho-list-operate">
                     <form method="get">
                         <div class="operate">
                             <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox" class="typecho-table-select-all" /></label>
@@ -57,14 +57,14 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == \Ty
                                 <li><a href="<?php $security->index('/action/comments-edit?do=spam'); ?>"><?php _e('标记垃圾'); ?></a></li>
                                 <li><a lang="<?php _e('你确认要删除这些评论吗?'); ?>" href="<?php $security->index('/action/comments-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
                             </ul>
+                            </div>
                             <?php if('spam' == $request->get('status')): ?>
                                 <button lang="<?php _e('你确认要删除所有垃圾评论吗?'); ?>" class="btn btn-sm btn-danger btn-operate" href="<?php $security->index('/action/comments-edit?do=delete-spam'); ?>"><?php _e('删除所有垃圾评论'); ?></button>
                             <?php endif; ?>
-                            </div>
                         </div>
                         <div class="search" role="search">
                             <?php if ('' != $request->keywords || '' != $request->category): ?>
-                            <a href="<?php $options->adminUrl('manage-comments.php' 
+                            <a class="btn btn-sm btn-link" href="<?php $options->adminUrl('manage-comments.php' 
                             . (isset($request->status) || isset($request->cid) ? '?' .
                             (isset($request->status) ? 'status=' . $request->filter('encode')->status : '') .
                             (isset($request->cid) ? (isset($request->status) ? '&' : '') . 'cid=' . $request->filter('encode')->cid : '') : '')); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
@@ -85,7 +85,7 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == \Ty
                 <div class="typecho-table-wrap">
                     <table class="typecho-list-table">
                         <colgroup>
-                            <col width="3%" class="kit-hidden-mb"/>
+                            <col width="35" class="kit-hidden-mb"/>
                             <col width="6%" class="kit-hidden-mb" />
                             <col width="20%"/>
                             <col width="71%"/>
@@ -187,7 +187,7 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == \Ty
                 <?php endif; ?>
                 </form><!-- end .operate-form -->
 
-                <div class="typecho-list-operate clearfix">
+                <div class="typecho-list-operate">
                     <form method="get">
                         <div class="operate">
                             <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox" class="typecho-table-select-all" /></label>
@@ -199,10 +199,10 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == \Ty
                                 <li><a href="<?php $security->index('/action/comments-edit?do=spam'); ?>"><?php _e('标记垃圾'); ?></a></li>
                                 <li><a lang="<?php _e('你确认要删除这些评论吗?'); ?>" href="<?php $security->index('/action/comments-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
                             </ul>
+                            </div>
                             <?php if('spam' == $request->get('status')): ?>
                                 <button lang="<?php _e('你确认要删除所有垃圾评论吗?'); ?>" class="btn btn-sm btn-danger btn-operate" href="<?php $security->index('/action/comments-edit?do=delete-spam'); ?>"><?php _e('删除所有垃圾评论'); ?></button>
                             <?php endif; ?>
-                            </div>
                         </div>
                         <?php if($comments->have()): ?>
                         <ul class="typecho-pager">

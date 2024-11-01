@@ -10,7 +10,7 @@ $users = \Widget\Users\Admin::alloc();
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main" role="main">
             <div class="col-mb-12 typecho-list">
-                <div class="typecho-list-operate clearfix">
+                <div class="typecho-list-operate">
                     <form method="get">
                         <div class="operate">
                             <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox"
@@ -28,7 +28,7 @@ $users = \Widget\Users\Admin::alloc();
                         </div>
                         <div class="search" role="search">
                             <?php if ('' != $request->keywords): ?>
-                                <a href="<?php $options->adminUrl('manage-users.php'); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
+                                <a class="btn btn-sm btn-link" href="<?php $options->adminUrl('manage-users.php'); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
                             <?php endif; ?>
                             <input type="text" class="form-sm" placeholder="<?php _e('请输入关键字'); ?>"
                                    value="<?php echo $request->filter('html')->keywords; ?>" name="keywords"/>
@@ -41,8 +41,8 @@ $users = \Widget\Users\Admin::alloc();
                     <div class="typecho-table-wrap">
                         <table class="typecho-list-table">
                             <colgroup>
-                                <col width="20" class="kit-hidden-mb"/>
-                                <col width="6%" class="kit-hidden-mb"/>
+                                <col width="35" class="kit-hidden-mb"/>
+                                <col width="35" class="kit-hidden-mb"/>
                                 <col width="30%"/>
                                 <col width="" class="kit-hidden-mb"/>
                                 <col width="25%" class="kit-hidden-mb"/>
@@ -65,7 +65,7 @@ $users = \Widget\Users\Admin::alloc();
                                                                      name="uid[]"/></td>
                                     <td class="kit-hidden-mb"><a
                                             href="<?php $options->adminUrl('manage-posts.php?__typecho_all_posts=off&uid=' . $users->uid); ?>"
-                                            class="balloon-button left size-<?php echo \Typecho\Common::splitByCount($users->postsNum, 1, 10, 20, 50, 100); ?>"><?php $users->postsNum(); ?></a>
+                                            class="balloon left size-<?php echo \Typecho\Common::splitByCount($users->postsNum, 1, 10, 20, 50, 100); ?>"><?php $users->postsNum(); ?></a>
                                     </td>
                                     <td>
                                         <a href="<?php $options->adminUrl('user.php?uid=' . $users->uid); ?>"><?php $users->name(); ?></a>
@@ -103,7 +103,7 @@ $users = \Widget\Users\Admin::alloc();
                     </div><!-- end .typecho-table-wrap -->
                 </form><!-- end .operate-form -->
 
-                <div class="typecho-list-operate clearfix">
+                <div class="typecho-list-operate">
                     <form method="get">
                         <div class="operate">
                             <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox"

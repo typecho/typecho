@@ -30,7 +30,7 @@ $defaultFields = isset($post) ? $post->getDefaultFieldItems() : $page->getDefaul
                 </td>
                 <td>
                     <label for="fieldtype" class="sr-only"><?php _e('字段类型'); ?></label>
-                    <select name="fieldTypes[]" id="fieldtype">
+                    <select name="fieldTypes[]" id="fieldtype" class="form-sm">
                         <option
                             value="str"<?php if ('str' == $field['type']): ?> selected<?php endif; ?>><?php _e('字符'); ?></option>
                         <option
@@ -60,7 +60,7 @@ $defaultFields = isset($post) ? $post->getDefaultFieldItems() : $page->getDefaul
                 </td>
                 <td>
                     <label for="fieldtype" class="sr-only"><?php _e('字段类型'); ?></label>
-                    <select name="fieldTypes[]" id="fieldtype">
+                    <select name="fieldTypes[]" id="fieldtype" class="form-sm">
                         <option value="str"><?php _e('字符'); ?></option>
                         <option value="int"><?php _e('整数'); ?></option>
                         <option value="float"><?php _e('小数'); ?></option>
@@ -77,8 +77,8 @@ $defaultFields = isset($post) ? $post->getDefaultFieldItems() : $page->getDefaul
             </tr>
         <?php endif; ?>
     </table>
-    <div class="description clearfix">
-        <button type="button" class="btn btn-sm operate-add"><?php _e('+添加字段'); ?></button>
-        <?php _e('自定义字段可以扩展你的模板功能, 使用方法参见 <a href="https://docs.typecho.org/help/custom-fields">帮助文档</a>'); ?>
+    <div class="description d-flex align-items-center justify-content-between">
+        <button type="button" class="btn btn-sm operate-add"><?php _e('+ 添加字段'); ?></button>
+        <small><?php _e('自定义字段可以扩展你的模板功能, 使用方法参见 <a href="https://docs.typecho.org/help/custom-fields">帮助文档</a>'); ?></small>
     </div>
 </section>

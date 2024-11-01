@@ -17,13 +17,20 @@ input[type=reset],
 
 .btn {
   background-color: var(--te-gray-200);
-
   border: 1px solid transparent;
   cursor: pointer;
   border-radius: var(--te-border-radius);
+  flex-shrink: 0;
+
+  display: inline-block;
+  padding: 6px 12px;
+  color: var(--te-gray-700);
+  zoom: 1;
 
   &:hover {
     background-color: var(--te-gray-300);
+    color: var(--te-gray-700);
+    text-decoration: none;
   }
   &:active, &.active {
     background-color: var(--te-gray-400);
@@ -32,12 +39,6 @@ input[type=reset],
     pointer-events: none;
     opacity: 0.65;
   }
-
-  display: inline-block;
-  padding: 6px 12px;
-  color: var(--te-gray-700);
-  vertical-align: middle;
-  zoom: 1;
 }
 
 .btn-sm {
@@ -55,6 +56,7 @@ input[type=reset],
 
   &:hover {
     background-color: var(--te-primary-600);
+    color: var(--te-white);
   }
   &:active, &.active {
     background-color: var(--te-primary-700);
@@ -67,20 +69,40 @@ input[type=reset],
 
   &:hover {
     background-color: var(--te-danger-600);
+    color: var(--te-white);
   }
   &:active, &.active {
     background-color: var(--te-danger-700);
   }
 }
 
-.btn-link,
+.btn-link {
+  color: var(--te-link-color);
+  background-color: transparent;
+}
+
 .btn-link:hover,
 .btn-link:focus,
 .btn-link:active,
 .btn-link.active {
-  color: var(--te-link-color);
+  color: var(--te-link-hover-color);
   background-color: transparent;
 }
+
+.btn-outline-primary {
+  background-color: transparent;
+  color: var(--te-primary);
+  border-color: var(--te-primary);
+
+  &:hover {
+    color: var(--te-white);
+    background-color: var(--te-primary);
+  }
+  &:active, &.active {
+    background-color: var(--te-primary);
+  }
+}
+
 
 /* 下拉菜单 */
 .btn-drop {

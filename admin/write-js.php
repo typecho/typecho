@@ -141,7 +141,7 @@ $(document).ready(function() {
         idInput = $('input[name=cid]'),
         draft = $('input[name=draft]'),
         btnPreview = $('#btn-preview'),
-        autoSave = $('<span id="auto-save-message" class="left"></span>').prependTo('.submit');
+        autoSave = $('<span id="auto-save-message"></span>').prependTo('.submit');
 
     let cid = idInput.val(),
         draftId = draft.length > 0 ? draft.val() : 0,

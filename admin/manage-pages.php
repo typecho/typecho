@@ -11,7 +11,7 @@ $pages = \Widget\Contents\Page\Admin::alloc();
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main" role="main">
             <div class="col-mb-12 typecho-list">
-                <div class="typecho-list-operate clearfix">
+                <div class="typecho-list-operate">
                     <form method="get">
                         <div class="operate">
                             <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox"
@@ -37,7 +37,7 @@ $pages = \Widget\Contents\Page\Admin::alloc();
                         <div class="search" role="search">
                             <?php $pages->backLink(); ?>
                             <?php if ('' != $request->keywords): ?>
-                                <a href="<?php $options->adminUrl('manage-pages.php'); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
+                                <a class="btn btn-sm btn-link" href="<?php $options->adminUrl('manage-pages.php'); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
                             <?php endif; ?>
                             <input type="text" class="form-sm" placeholder="<?php _e('请输入关键字'); ?>"
                                    value="<?php echo $request->filter('html')->keywords; ?>" name="keywords"/>
@@ -50,12 +50,12 @@ $pages = \Widget\Contents\Page\Admin::alloc();
                     <div class="typecho-table-wrap">
                         <table class="typecho-list-table">
                             <colgroup>
-                                <col width="20" class="kit-hidden-mb"/>
-                                <col width="6%" class="kit-hidden-mb"/>
+                                <col width="35" class="kit-hidden-mb"/>
+                                <col width="35" class="kit-hidden-mb"/>
                                 <col width="30%"/>
                                 <col width="30%"/>
                                 <col width="" class="kit-hidden-mb"/>
-                                <col width="16%"/>
+                                <col width="15%"/>
                             </colgroup>
                             <thead>
                             <tr class="nodrag">
@@ -75,7 +75,7 @@ $pages = \Widget\Contents\Page\Admin::alloc();
                                                                          name="cid[]"/></td>
                                         <td class="kit-hidden-mb"><a
                                                 href="<?php $options->adminUrl('manage-comments.php?cid=' . $pages->cid); ?>"
-                                                class="balloon-button size-<?php echo \Typecho\Common::splitByCount($pages->commentsNum, 1, 10, 20, 50, 100); ?>"
+                                                class="balloon size-<?php echo \Typecho\Common::splitByCount($pages->commentsNum, 1, 10, 20, 50, 100); ?>"
                                                 title="<?php $pages->commentsNum(); ?> <?php _e('评论'); ?>"><?php $pages->commentsNum(); ?></a>
                                         </td>
                                         <td>

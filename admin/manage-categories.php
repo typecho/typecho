@@ -14,7 +14,7 @@ include 'menu.php';
             <div class="col-mb-12" role="main">
 
                 <form method="post" name="manage_categories" class="operate-form">
-                    <div class="typecho-list-operate clearfix">
+                    <div class="typecho-list-operate">
                         <div class="operate">
                             <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox"
                                                                                    class="typecho-table-select-all"/></label>
@@ -32,7 +32,7 @@ include 'menu.php';
                                     <li class="multiline">
                                         <button type="button" class="btn merge btn-sm"
                                                 rel="<?php $security->index('/action/metas-category-edit?do=merge'); ?>"><?php _e('合并到'); ?></button>
-                                        <select name="merge">
+                                        <select name="merge" class="form-sm">
                                             <?php $categories->parse('<option value="{mid}">{name}</option>'); ?>
                                         </select>
                                     </li>
@@ -47,7 +47,7 @@ include 'menu.php';
                     <div class="typecho-table-wrap">
                         <table class="typecho-list-table">
                             <colgroup>
-                                <col width="20" class="kit-hidden-mb"/>
+                                <col width="30" class="kit-hidden-mb"/>
                                 <col width=""/>
                                 <col width="15%" class="kit-hidden-mb"/>
                                 <col width="25%"/>
@@ -95,7 +95,7 @@ include 'menu.php';
                                             <?php endif; ?>
                                         </td>
                                         <td class="kit-hidden-mb"><a
-                                                class="balloon-button left size-<?php echo \Typecho\Common::splitByCount($categories->count, 1, 10, 20, 50, 100); ?>"
+                                                class="balloon left size-<?php echo \Typecho\Common::splitByCount($categories->count, 1, 10, 20, 50, 100); ?>"
                                                 href="<?php $options->adminUrl('manage-posts.php?category=' . $categories->mid); ?>"><?php $categories->count(); ?></a>
                                         </td>
                                     </tr>

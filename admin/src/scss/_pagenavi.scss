@@ -4,33 +4,32 @@
 
 .typecho-pager {
   list-style: none;
-  float: right;
+  display: flex;
   margin: 0;
   padding: 0;
-  line-height: 1;
   text-align: center;
   zoom: 1;
+  font-size: 13px;
 }
 
 .typecho-pager li {
-  display: inline-block;
-  margin: 0 3px;
-  height: 28px;
-  line-height: 28px;
+  margin: 0 1px;
 }
 
 .typecho-pager a {
   display: block;
-  padding: 0 10px;
+  padding: 3px 6px;
+  border: 1px solid transparent;
   border-radius: var(--te-border-radius);
+  min-width: 24px;
 }
 
 .typecho-pager a:hover {
   text-decoration: none;
-  background: #E9E9E6;
+  background: var(--te-gray-200);
 }
 
 .typecho-pager li.current a {
-  background: #E9E9E6;
-  color: #444;
+  background-color: var(--te-gray-200);
+  color: var(--te-gray-700);
 }

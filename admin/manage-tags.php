@@ -14,7 +14,7 @@ include 'menu.php';
             <div class="col-mb-12 col-tb-8" role="main">
 
                 <form method="post" name="manage_tags" class="operate-form">
-                    <div class="typecho-list-operate clearfix">
+                    <div class="typecho-list-operate">
                         <div class="operate">
                             <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox"
                                                                                    class="typecho-table-select-all"/></label>

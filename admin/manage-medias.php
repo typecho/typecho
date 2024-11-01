@@ -12,7 +12,7 @@ $attachments = \Widget\Contents\Attachment\Admin::alloc();
         <div class="row typecho-page-main" role="main">
             <div class="col-mb-12">
 
-                <div class="typecho-list-operate clearfix">
+                <div class="typecho-list-operate">
                     <form method="get">
                         <div class="operate">
                             <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox"
@@ -26,14 +26,14 @@ $attachments = \Widget\Contents\Attachment\Admin::alloc();
                                            href="<?php $security->index('/action/contents-attachment-edit?do=delete'); ?>"><?php _e('删除'); ?></a>
                                     </li>
                                 </ul>
-                                <button class="btn btn-sm btn-danger btn-operate"
-                                        href="<?php $security->index('/action/contents-attachment-edit?do=clear'); ?>"
-                                        lang="<?php _e('您确认要清理未归档的文件吗?'); ?>"><?php _e('清理未归档文件'); ?></button>
                             </div>
+                            <button class="btn btn-sm btn-danger btn-operate"
+                                    href="<?php $security->index('/action/contents-attachment-edit?do=clear'); ?>"
+                                    lang="<?php _e('您确认要清理未归档的文件吗?'); ?>"><?php _e('清理未归档文件'); ?></button>
                         </div>
                         <div class="search" role="search">
                             <?php if ('' != $request->keywords): ?>
-                                <a href="<?php $options->adminUrl('manage-medias.php'); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
+                                <a class="btn btn-sm btn-link" href="<?php $options->adminUrl('manage-medias.php'); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
                             <?php endif; ?>
                             <input type="text" class="form-sm" placeholder="<?php _e('请输入关键字'); ?>"
                                    value="<?php echo $request->filter('html')->keywords; ?>"<?php if ('' == $request->keywords): ?> onclick="value='';name='keywords';" <?php else: ?> name="keywords"<?php endif; ?>/>
@@ -75,7 +75,7 @@ $attachments = \Widget\Contents\Attachment\Admin::alloc();
                                                                          name="cid[]"/></td>
                                         <td class="kit-hidden-mb"><a
                                                 href="<?php $options->adminUrl('manage-comments.php?cid=' . $attachments->cid); ?>"
-                                                class="balloon-button size-<?php echo \Typecho\Common::splitByCount($attachments->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $attachments->commentsNum(); ?></a>
+                                                class="balloon size-<?php echo \Typecho\Common::splitByCount($attachments->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $attachments->commentsNum(); ?></a>
                                         </td>
                                         <td>
                                             <a href="<?php $options->adminUrl('media.php?cid=' . $attachments->cid); ?>"><?php $attachments->title(); ?></a>
@@ -106,7 +106,7 @@ $attachments = \Widget\Contents\Attachment\Admin::alloc();
                     </div><!-- end .typecho-table-wrap -->
                 </form><!-- end .operate-form -->
 
-                <div class="typecho-list-operate clearfix">
+                <div class="typecho-list-operate">
                     <form method="get">
                         <div class="operate">
                             <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox"

@@ -4,7 +4,7 @@
     <nav id="typecho-nav-list">
         <?php $menu->output(); ?>
     </nav>
-    <div class="operate">
+    <div class="nav-operate">
         <?php \Typecho\Plugin::factory('admin/menu.php')->call('navBar'); ?><a title="<?php
         if ($user->logged > 0) {
             $logged = new \Typecho\Date($user->logged);

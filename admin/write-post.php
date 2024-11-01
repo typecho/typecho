@@ -53,19 +53,19 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
 
                     <?php include 'custom-fields.php'; ?>
 
-                    <p class="submit clearfix">
+                    <p class="submit d-flex justify-content-between">
                         <span class="left">
                             <button type="button" id="btn-cancel-preview" class="btn"><i
                                     class="i-caret-left"></i> <?php _e('取消预览'); ?></button>
                         </span>
-                        <span class="right">
+                        <span class="right d-flex align-items-center">
                             <input type="hidden" name="do" value="publish" />
                             <input type="hidden" name="cid" value="<?php $post->cid(); ?>"/>
-                            <button type="button" id="btn-preview" class="btn"><?php _e('预览文章'); ?> <i
+                            <button type="button" id="btn-preview" class="btn ms-2"><?php _e('预览文章'); ?> <i
                             class="i-exlink"></i></button>
                             <button type="submit" name="do" value="save" id="btn-save"
-                                    class="btn"><?php _e('保存草稿'); ?></button>
-                            <button type="submit" name="do" value="publish" class="btn btn-primary"
+                                    class="btn ms-2"><?php _e('保存草稿'); ?></button>
+                            <button type="submit" name="do" value="publish" class="btn btn-primary ms-2"
                                     id="btn-submit"><?php _e('发布文章'); ?></button>
                             <?php if ($options->markdown && (!$post->have() || $post->isMarkdown)): ?>
                                 <input type="hidden" name="markdown" value="1"/>
@@ -77,12 +77,10 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
                 </div>
 
                 <div id="edit-secondary" class="col-mb-12 col-tb-3" role="complementary">
-                    <div class="clearfix">
-                        <ul class="typecho-option-tabs w-100">
-                            <li class="active w-50"><a href="#tab-advance"><?php _e('选项'); ?></a></li>
-                            <li class="w-50"><a href="#tab-files" id="tab-files-btn"><?php _e('附件'); ?></a></li>
-                        </ul>
-                    </div>
+                    <ul class="typecho-option-tabs">
+                        <li class="active w-50"><a href="#tab-advance"><?php _e('选项'); ?></a></li>
+                        <li class="w-50"><a href="#tab-files" id="tab-files-btn"><?php _e('附件'); ?></a></li>
+                    </ul>
 
 
                     <div id="tab-advance" class="tab-content">

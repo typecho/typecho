@@ -51,29 +51,29 @@ code, pre, tt, .mono {
   height: 100%;
 }
 
-a.balloon-button {
-  display: inline-block;
-  padding: 0 6px;
-  min-width: 12px;
-  height: 18px;
-  line-height: 18px;
-  background: #D8E7EE;
-  font-size: .85714em;
-  text-align: center;
-  text-decoration: none;
+// a.balloon-button {
+//   display: inline-block;
+//   padding: 0 6px;
+//   min-width: 12px;
+//   height: 18px;
+//   line-height: 18px;
+//   background: #D8E7EE;
+//   font-size: .85714em;
+//   text-align: center;
+//   text-decoration: none;
   
-  /** 修正 ie 中文不对齐 */
-  zoom:1;
+//   /** 修正 ie 中文不对齐 */
+//   zoom:1;
   
-  border-radius: 30px;
-  white-space: nowrap;
-}
+//   border-radius: 30px;
+//   white-space: nowrap;
+// }
 
-a.button:hover, a.balloon-button:hover {
-  background-color: #A5CADC;
-  color: #FFF;
-  text-decoration: none;
-}
+// a.button:hover, a.balloon-button:hover {
+//   background-color: #A5CADC;
+//   color: #FFF;
+//   text-decoration: none;
+// }
 
 /** 顶部消息样式 by 70 */
 .popup {
@@ -203,9 +203,6 @@ a.button:hover, a.balloon-button:hover {
     display: inline-block;
     margin-right: 16px;
   }
-  .balloon {
-    margin-top: 2px;
-  }
 }
 
 .latest-link {
@@ -269,14 +266,14 @@ a.button:hover, a.balloon-button:hover {
   font-size: 24px;
 }
 .typecho-page-title h2 a {
-  margin-left: 10px;
-  padding: 3px 8px;
-  background: #E9E9E6;
-  font-size: .8em;
-  border-radius: var(--te-border-radius);
-}
-.typecho-page-title h2 a:hover {
+  display: inline-block;
+  padding: 1px 12px;
+  border: 1px solid var(--te-primary);
+  margin-left: 16px;
+  font-size: 14px;
   text-decoration: none;
+  border-radius: 50px;
+  vertical-align: text-top;
 }
 
 /**
@@ -302,16 +299,10 @@ a.button:hover, a.balloon-button:hover {
   list-style: none;
   border-radius: var(--te-border-radius);
   padding: 0;
-  float: left;
-
-  &.right {
-    float: right;
-  }
+  display: flex;
 }
 
 .typecho-option-tabs li {
-  float: left;
-
   &:first-child a {
     border-top-left-radius: var(--te-border-radius);
     border-bottom-left-radius: var(--te-border-radius);
@@ -320,7 +311,6 @@ a.button:hover, a.balloon-button:hover {
     border-top-right-radius: var(--te-border-radius);
     border-bottom-right-radius: var(--te-border-radius);
   }
-
   &:not(:first-child) {
     margin-left: -1px;
   }
@@ -354,32 +344,21 @@ a.button:hover, a.balloon-button:hover {
 /**
 * 列表页选项
 */
-.typecho-list .typecho-pager {
-}
 
 .typecho-list-operate {
   margin: 1em 0;
 }
-
-.typecho-list-operate input,
-.typecho-list-operate button,
-.typecho-list-operate select {
-  vertical-align: bottom;
+.typecho-list-operate form {
+  // margin: 1em 0;
+  display: flex;
+  justify-content: space-between;
 }
 
-.typecho-list-operate input[type="checkbox"] {
-  vertical-align: text-top;
-}
-
-@media (min-width: $screen-phone) {
-  .typecho-list-operate {
-    .operate {
-      float: left;
-    }
-    .search {
-      float: right;
-    }
-  }
+.operate,
+.search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .typecho-list-operate span.operate-delete, a.operate-delete,
@@ -395,10 +374,6 @@ a.operate-reply {
   color: #545c30;
 }
 
-.typecho-list-operate a:hover {
-  text-decoration: none;
-}
-
 /**
 * 列表表格
 */
@@ -409,7 +384,8 @@ a.operate-reply {
 }
 .typecho-table-wrap {
   padding: 16px;
-  background: var(--te-white);
+  background-color: var(--te-white);
+  border: 1px solid var(--te-border-color);
   border-radius: var(--te-border-radius);
 }
 .typecho-list-table {
@@ -465,7 +441,7 @@ a.operate-reply {
 }
 
 .warning {
-  color: #B94A48;
+  color: var(--te-danger);
 }
 
 
@@ -537,7 +513,7 @@ a.operate-reply {
 .typecho-theme-list img {
   margin: 1em 0;
   max-width: 100%;
-  max-height: 240px;
+  max-height: 180px;
 }
 
 .typecho-theme-list cite {
@@ -639,20 +615,13 @@ a.operate-reply {
   font-size: .92857em;
 }
 
-.typecho-post-area .submit .right button {
-  margin-left: 5px;
-}
+// .typecho-post-area .right {
+//   float: right;
+// }
 
-.typecho-post-area .right {
-  float: right;
-}
-
-.typecho-post-area .left {
-  float: left;
-}
-
-.typecho-post-area input.text {
-}
+// .typecho-post-area .left {
+//   float: left;
+// }
 
 .typecho-post-area .out-date {
   border: 1px solid #D3DBB3;
@@ -681,29 +650,22 @@ a.operate-reply {
 
 #custom-field {
   margin: 1em 0;
-  padding: 10px 15px;
-  background: #FFF;
+  padding: 16px;
+  background: var(--te-white);
+  border: 1px solid var(--te-border-color);
+  border-radius: var(--te-border-radius);
   &.fold {
     table, .description { display: none; }
   }
 
   .description {
     margin-top: 10px;
-    text-align: right;
-    button {
-      float: left;
-    }
-  }
-
-  p.description {
-    text-align: left;
   }
 
   .typecho-label {
     margin: 0;
     a {
-      display: block;
-      color: #444;
+      color: var(--te-body-color);
       &:hover {
         color: var(--te-primary);
         text-decoration: none;
@@ -711,19 +673,11 @@ a.operate-reply {
     }
   }
   table {
-    margin-top: 10px;
+    margin-top: 16px;
   }
   td {
-    padding: 10px 5px;
-    font-size: .92857em;
-    border-bottom: 1px solid #F0F0EC;
     vertical-align: top;
-    label {
-      font-size: 1em;
-      font-weight: normal;
-    }
   }
-  select { height: 27px; }
 }
 
 .typecho-post-area .is-draft {
@@ -731,9 +685,7 @@ background: #FFF1A8;
 }
 
 .typecho-post-option .description {
-  margin-top: -0.5em;
-  color: #999;
-  font-size: .92857em;
+  color: var(--te-secondary);
 }
 
 .category-option ul {
@@ -763,8 +715,10 @@ background: #FFF1A8;
 .typecho-page-main ul.tag-list {
   list-style: none;
   margin: 0;
-  padding: 20px;
-  background-color: #FFF;
+  padding: 16px;
+  background-color: var(--te-white);
+  border: 1px solid var(--te-border-color);
+  border-radius: var(--te-border-radius);
 }
 
 .typecho-page-main ul.tag-list li {
@@ -861,16 +815,16 @@ background: #FFF1A8;
 /* 拖动调整 textarea 大小 */
 .resize {
   display: block;
-  margin: 2px auto 0;
+  margin: 0 auto;
   padding: 2px 0;
-  border: 1px solid #D9D9D6;
+  border: 1px solid var(--te-border-color);
   border-width: 1px 0;
   width: 60px;
   cursor: row-resize;
   i {
     display: block;
     height: 1px;
-    background-color: #D9D9D6;
+    background-color: var(--te-border-color);
   }
 }
 

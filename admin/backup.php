@@ -31,12 +31,10 @@ $backupFiles = \Widget\Backup::alloc()->listFiles();
 
             <div id="backup-secondary" class="col-mb-12 col-tb-4" role="form">
                 <h3><?php _e('恢复数据'); ?></h3>
-                <div class="clearfix">
-                    <ul class="typecho-option-tabs w-100">
-                        <li class="active w-50"><a href="#from-upload"><?php _e('上传'); ?></a></li>
-                        <li class="w-50"><a href="#from-server"><?php _e('从服务器'); ?></a></li>
-                    </ul>
-                </div>
+                <ul class="typecho-option-tabs">
+                    <li class="active w-50"><a href="#from-upload"><?php _e('上传'); ?></a></li>
+                    <li class="w-50"><a href="#from-server"><?php _e('从服务器'); ?></a></li>
+                </ul>
 
                 <form action="<?php echo $actionUrl; ?>" id="from-upload" class="tab-content" method="post" enctype="multipart/form-data">
                     <ul class="typecho-option">

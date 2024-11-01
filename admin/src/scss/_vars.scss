@@ -3,17 +3,16 @@
 //
 
 // Grid
-$columns: 12;
-$column-width: 100% / $columns;
-$gutter-width: 20px;
+$columns: 12 !default;
+$column-width: 100% / $columns !default;
+$gutter-width: 20px !default;
 
 
 // Break point
-$screen-phone: 576px;
-$screen-tablet: 768px;
-$screen-desktop: 992px;
-$screen-wide: 1200px;
-
+$screen-phone: 576px !default;
+$screen-tablet: 768px !default;
+$screen-desktop: 992px !default;
+$screen-wide: 1200px !default;
 
 :root {
   --te-primary: #007FA3;
