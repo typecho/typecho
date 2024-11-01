@@ -49,7 +49,7 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == \Ty
                     <form method="get">
                         <div class="operate">
                             <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox" class="typecho-table-select-all" /></label>
-                            <div class="btn-group btn-drop">
+                            <div class="btn-drop">
                             <button class="btn dropdown-toggle btn-sm" type="button"><i class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i class="i-caret-down"></i></button>
                             <ul class="dropdown-menu">
                                 <li><a href="<?php $security->index('/action/comments-edit?do=approved'); ?>"><?php _e('通过'); ?></a></li>
@@ -58,7 +58,7 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == \Ty
                                 <li><a lang="<?php _e('你确认要删除这些评论吗?'); ?>" href="<?php $security->index('/action/comments-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
                             </ul>
                             <?php if('spam' == $request->get('status')): ?>
-                                <button lang="<?php _e('你确认要删除所有垃圾评论吗?'); ?>" class="btn btn-sm btn-warn btn-operate" href="<?php $security->index('/action/comments-edit?do=delete-spam'); ?>"><?php _e('删除所有垃圾评论'); ?></button>
+                                <button lang="<?php _e('你确认要删除所有垃圾评论吗?'); ?>" class="btn btn-sm btn-danger btn-operate" href="<?php $security->index('/action/comments-edit?do=delete-spam'); ?>"><?php _e('删除所有垃圾评论'); ?></button>
                             <?php endif; ?>
                             </div>
                         </div>
@@ -191,7 +191,7 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == \Ty
                     <form method="get">
                         <div class="operate">
                             <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox" class="typecho-table-select-all" /></label>
-                            <div class="btn-group btn-drop">
+                            <div class="btn-drop">
                             <button class="btn dropdown-toggle btn-sm" type="button"><i class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i class="i-caret-down"></i></button>
                             <ul class="dropdown-menu">
                                 <li><a href="<?php $security->index('/action/comments-edit?do=approved'); ?>"><?php _e('通过'); ?></a></li>
@@ -200,7 +200,7 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == \Ty
                                 <li><a lang="<?php _e('你确认要删除这些评论吗?'); ?>" href="<?php $security->index('/action/comments-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
                             </ul>
                             <?php if('spam' == $request->get('status')): ?>
-                                <button lang="<?php _e('你确认要删除所有垃圾评论吗?'); ?>" class="btn btn-sm btn-warn btn-operate" href="<?php $security->index('/action/comments-edit?do=delete-spam'); ?>"><?php _e('删除所有垃圾评论'); ?></button>
+                                <button lang="<?php _e('你确认要删除所有垃圾评论吗?'); ?>" class="btn btn-sm btn-danger btn-operate" href="<?php $security->index('/action/comments-edit?do=delete-spam'); ?>"><?php _e('删除所有垃圾评论'); ?></button>
                             <?php endif; ?>
                             </div>
                         </div>

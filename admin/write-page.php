@@ -137,7 +137,7 @@ while ($parents->next()) {
 
                         <?php \Typecho\Plugin::factory('admin/write-page.php')->call('option', $page); ?>
 
-                        <button type="button" id="advance-panel-btn" class="btn btn-xs"><?php _e('高级选项'); ?> <i
+                        <button type="button" id="advance-panel-btn" class="btn btn-sm"><?php _e('高级选项'); ?> <i
                                 class="i-caret-down"></i></button>
                         <div id="advance-panel">
                             <section class="typecho-post-option visibility-option">

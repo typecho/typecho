@@ -16,7 +16,7 @@ $pages = \Widget\Contents\Page\Admin::alloc();
                         <div class="operate">
                             <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox"
                                                                                    class="typecho-table-select-all"/></label>
-                            <div class="btn-group btn-drop">
+                            <div class="btn-drop">
                                 <button class="btn dropdown-toggle btn-sm" type="button"><i
                                         class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i
                                         class="i-caret-down"></i></button>

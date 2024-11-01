@@ -14,7 +14,7 @@ $(document).ready(function () {
     });
 
     function attachDeleteEvent (el) {
-        $('button.btn-xs', el).click(function () {
+        $('button.btn-sm', el).click(function () {
             if (confirm('<?php _e('确认要删除此字段吗?'); ?>')) {
                 $(this).parents('tr').fadeOut(function () {
                     $(this).remove();
@@ -37,7 +37,7 @@ $(document).ready(function () {
                 + '<option value="float"><?php _e('小数'); ?></option>'
                 + '</select></td>'
                 + '<td><textarea name="fieldValues[]" placeholder="<?php _e('字段值'); ?>" class="form-sm" rows="2"></textarea></td>'
-                + '<td><button type="button" class="btn btn-xs"><?php _e('删除'); ?></button></td></tr>',
+                + '<td><button type="button" class="btn btn-sm"><?php _e('删除'); ?></button></td></tr>',
             el = $(html).hide().appendTo('#custom-field table tbody').fadeIn();
 
         attachDeleteEvent(el);

@@ -17,27 +17,48 @@ $screen-wide: 1200px;
 
 :root {
   --te-primary: #007FA3;
-  --te-secondary: #6c757d;
+  --te-secondary: var(--te-gray-600);
   --te-success: #198754;
   --te-info: #0dcaf0;
   --te-warning: #ffc107;
   --te-danger: #dc3545;
-  --te-light: #f8f9fa;
-  --te-dark: #212529;
+  --te-light: var(--te-gray-100);
+  --te-dark: var(--te-gray-900);
   --te-white: #fff;
   --te-black: #000;
-  --te-gray-100: #f8f9fa;
-  --te-gray-200: #e9ecef;
-  --te-gray-300: #dee2e6;
-  --te-gray-400: #ced4da;
-  --te-gray-500: #adb5bd;
-  --te-gray-600: #6c757d;
-  --te-gray-700: #495057;
-  --te-gray-800: #343a40;
-  --te-gray-900: #212529;
+
+  --te-primary-100: #e6f3f7;
+  --te-primary-200: #b3dbe7;
+  --te-primary-300: #80c3d7;
+  --te-primary-400: #4dabc7;
+  --te-primary-500: var(--te-primary);
+  --te-primary-600: #006682;
+  --te-primary-700: #004C62;
+  --te-primary-800: #003341;
+  --te-primary-900: #001921;
+  
+  --te-gray-100: #fafaf8;
+  --te-gray-200: #e9e9e7;
+  --te-gray-300: #d8d8d6;
+  --te-gray-400: #c7c7c5;
+  --te-gray-500: #b6b6b4;
+  --te-gray-600: #959593;
+  --te-gray-700: #747472;
+  --te-gray-800: #535351;
+  --te-gray-900: #323230;
+
+  --te-danger-100: #f8d7da;
+  --te-danger-200: #f1aeb5;
+  --te-danger-300: #ea868f;
+  --te-danger-400: #e35d6a;
+  --te-danger-500: var(--te-danger);
+  --te-danger-600: #b02a37;
+  --te-danger-700: #842029;
+  --te-danger-800: #58151c;
+  --te-danger-900: #2c0b0e;
 
   --te-link-color: var(--te-primary);
-  --te-link-hover-color: #006682;
+  --te-link-hover-color: var(--te-primary-600);
 
   --te-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --te-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;

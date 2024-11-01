@@ -17,7 +17,7 @@ $attachments = \Widget\Contents\Attachment\Admin::alloc();
                         <div class="operate">
                             <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox"
                                                                                    class="typecho-table-select-all"/></label>
-                            <div class="btn-group btn-drop">
+                            <div class="btn-drop">
                                 <button class="btn dropdown-toggle btn-sm" type="button"><i
                                         class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i
                                         class="i-caret-down"></i></button>
@@ -26,7 +26,7 @@ $attachments = \Widget\Contents\Attachment\Admin::alloc();
                                            href="<?php $security->index('/action/contents-attachment-edit?do=delete'); ?>"><?php _e('删除'); ?></a>
                                     </li>
                                 </ul>
-                                <button class="btn btn-sm btn-warn btn-operate"
+                                <button class="btn btn-sm btn-danger btn-operate"
                                         href="<?php $security->index('/action/contents-attachment-edit?do=clear'); ?>"
                                         lang="<?php _e('您确认要清理未归档的文件吗?'); ?>"><?php _e('清理未归档文件'); ?></button>
                             </div>
@@ -46,18 +46,20 @@ $attachments = \Widget\Contents\Attachment\Admin::alloc();
                     <div class="typecho-table-wrap">
                         <table class="typecho-list-table draggable">
                             <colgroup>
-                                <col width="20" class="kit-hidden-mb"/>
-                                <col width="6%" class="kit-hidden-mb"/>
+                                <col width="35" class="kit-hidden-mb"/>
+                                <col width="55" class="kit-hidden-mb"/>
                                 <col width="30%"/>
-                                <col width="" class="kit-hidden-mb"/>
+                                <col width="10%" class="kit-hidden-mb"/>
+                                <col width="10%" class="kit-hidden-mb"/>
                                 <col width="30%" class="kit-hidden-mb"/>
-                                <col width="16%"/>
+                                <col width="15%"/>
                             </colgroup>
                             <thead>
                             <tr>
                                 <th class="kit-hidden-mb"></th>
                                 <th class="kit-hidden-mb"></th>
                                 <th><?php _e('文件名'); ?></th>
+                                <th class="kit-hidden-mb"><?php _e('类型'); ?></th>
                                 <th class="kit-hidden-mb"><?php _e('上传者'); ?></th>
                                 <th class="kit-hidden-mb"><?php _e('所属文章'); ?></th>
                                 <th><?php _e('发布日期'); ?></th>
@@ -77,11 +79,11 @@ $attachments = \Widget\Contents\Attachment\Admin::alloc();
                                         </td>
                                         <td>
                                             <a href="<?php $options->adminUrl('media.php?cid=' . $attachments->cid); ?>"><?php $attachments->title(); ?></a>
-                                            <em class="status"><?php echo $mime; ?></em>
                                             <a href="<?php $attachments->permalink(); ?>"
                                                title="<?php _e('浏览 %s', $attachments->title); ?>"><i
                                                     class="i-exlink"></i></a>
                                         </td>
+                                        <td class="kit-hidden-mb"><?php echo $mime; ?></td>
                                         <td class="kit-hidden-mb"><?php $attachments->author(); ?></td>
                                         <td class="kit-hidden-mb">
                                             <?php if ($attachments->parentPost->cid): ?>
@@ -109,7 +111,7 @@ $attachments = \Widget\Contents\Attachment\Admin::alloc();
                         <div class="operate">
                             <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox"
                                                                                    class="typecho-table-select-all"/></label>
-                            <div class="btn-group btn-drop">
+                            <div class="btn-drop">
                                 <button class="btn dropdown-toggle btn-sm" type="button"><i
                                         class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i
                                         class="i-caret-down"></i></button>
@@ -119,7 +121,7 @@ $attachments = \Widget\Contents\Attachment\Admin::alloc();
                                     </li>
                                 </ul>
                             </div>
-                            <button class="btn btn-sm btn-warn btn-operate"
+                            <button class="btn btn-sm btn-danger btn-operate"
                                     href="<?php $security->index('/action/contents-attachment-edit?do=clear'); ?>"
                                     lang="<?php _e('您确认要清理未归档的文件吗?'); ?>"><?php _e('清理未归档文件'); ?></button>
                         </div>

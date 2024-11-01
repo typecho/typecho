@@ -263,8 +263,8 @@ $(document).ready(function () {
         initMarkdown();
     } else {
         const notice = $('<div class="message notice"><?php _e('这篇文章不是由Markdown语法创建的, 继续使用Markdown编辑它吗?'); ?> '
-            + '<button class="btn btn-xs btn-primary yes"><?php _e('是'); ?></button> ' 
-            + '<button class="btn btn-xs no"><?php _e('否'); ?></button></div>')
+            + '<button class="btn btn-primary yes"><?php _e('是'); ?></button> ' 
+            + '<button class="btn no"><?php _e('否'); ?></button></div>')
             .hide().insertBefore(textarea).slideDown();
 
         $('.yes', notice).click(function () {

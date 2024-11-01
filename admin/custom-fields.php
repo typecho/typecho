@@ -47,7 +47,7 @@ $defaultFields = isset($post) ? $post->getDefaultFieldItems() : $page->getDefaul
                               rows="2"><?php echo htmlspecialchars($field[($field['type'] == 'json' ? 'str' : $field['type']) . '_value']); ?></textarea>
                 </td>
                 <td>
-                    <button type="button" class="btn btn-xs"><?php _e('删除'); ?></button>
+                    <button type="button" class="btn btn-sm"><?php _e('删除'); ?></button>
                 </td>
             </tr>
         <?php endforeach; ?>
@@ -72,13 +72,13 @@ $defaultFields = isset($post) ? $post->getDefaultFieldItems() : $page->getDefaul
                               class="form-sm" rows="2"></textarea>
                 </td>
                 <td>
-                    <button type="button" class="btn btn-xs"><?php _e('删除'); ?></button>
+                    <button type="button" class="btn btn-sm"><?php _e('删除'); ?></button>
                 </td>
             </tr>
         <?php endif; ?>
     </table>
     <div class="description clearfix">
-        <button type="button" class="btn btn-xs operate-add"><?php _e('+添加字段'); ?></button>
+        <button type="button" class="btn btn-sm operate-add"><?php _e('+添加字段'); ?></button>
         <?php _e('自定义字段可以扩展你的模板功能, 使用方法参见 <a href="https://docs.typecho.org/help/custom-fields">帮助文档</a>'); ?>
     </div>
 </section>

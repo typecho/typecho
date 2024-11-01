@@ -2783,7 +2783,7 @@ else
             // The ok button
             var okButton = doc.createElement("button");
             okButton.type = "button";
-            okButton.className = "btn btn-sm btn-primary";
+            okButton.className = "btn btn-primary";
             okButton.onclick = function () { return close(false); };
             okButton.innerHTML = ok;
             /*
@@ -2796,7 +2796,7 @@ else
             // The cancel button
             var cancelButton = doc.createElement("button");
             cancelButton.type = "button";
-            cancelButton.className = "btn btn-sm";
+            cancelButton.className = "btn";
             cancelButton.onclick = function () { return close(true); };
             cancelButton.innerHTML = cancel;
             /*
@@ -2943,7 +2943,7 @@ else
             // The ok button
             var okButton = doc.createElement("button");
             okButton.type = "button";
-            okButton.className = "btn btn-sm btn-primary";
+            okButton.className = "btn btn-primary";
             okButton.onclick = function () { return close(false); };
             okButton.innerHTML = ok;
             /*
@@ -2956,7 +2956,7 @@ else
             // The cancel button
             var cancelButton = doc.createElement("button");
             cancelButton.type = "button";
-            cancelButton.className = "btn btn-sm";
+            cancelButton.className = "btn";
             cancelButton.onclick = function () { return close(true); };
             cancelButton.innerHTML = cancel;
             /*

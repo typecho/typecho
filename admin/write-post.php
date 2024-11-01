@@ -116,7 +116,7 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
 
                         <?php \Typecho\Plugin::factory('admin/write-post.php')->call('option', $post); ?>
 
-                        <button type="button" id="advance-panel-btn" class="btn btn-xs"><?php _e('高级选项'); ?> <i
+                        <button type="button" id="advance-panel-btn" class="btn btn-sm"><?php _e('高级选项'); ?> <i
                                 class="i-caret-down"></i></button>
                         <div id="advance-panel">
                             <?php if ($user->pass('editor', true)): ?>

@@ -58,7 +58,7 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                         <div class="operate">
                             <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox"
                                                                                    class="typecho-table-select-all"/></label>
-                            <div class="btn-group btn-drop">
+                            <div class="btn-drop">
                                 <button class="btn dropdown-toggle btn-sm" type="button"><i
                                         class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i
                                         class="i-caret-down"></i></button>
@@ -92,7 +92,7 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                             <?php endif; ?>
                             <input type="text" class="form-sm" placeholder="<?php _e('请输入关键字'); ?>"
                                    value="<?php echo $request->filter('html')->keywords; ?>" name="keywords"/>
-                            <select name="category">
+                            <select name="category" class="form-sm">
                                 <option value=""><?php _e('所有分类'); ?></option>
                                 <?php \Widget\Metas\Category\Rows::alloc()->to($category); ?>
                                 <?php while ($category->next()): ?>
@@ -210,7 +210,7 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                         <div class="operate">
                             <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox"
                                                                                    class="typecho-table-select-all"/></label>
-                            <div class="btn-group btn-drop">
+                            <div class="btn-drop">
                                 <button class="btn dropdown-toggle btn-sm" type="button"><i
                                         class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i
                                         class="i-caret-down"></i></button>
