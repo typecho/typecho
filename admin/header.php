@@ -4,18 +4,17 @@ if (!defined('__TYPECHO_ADMIN__')) {
 }
 
 $header = '<link rel="stylesheet" href="' . $options->adminStaticUrl('css', 'normalize.css', true) . '">
-<link rel="stylesheet" href="' . $options->adminStaticUrl('css', 'grid.css', true) . '">
 <link rel="stylesheet" href="' . $options->adminStaticUrl('css', 'style.css', true) . '">';
 
 /** 注册一个初始化插件 */
 $header = \Typecho\Plugin::factory('admin/header.php')->call('header', $header);
 
-?><!DOCTYPE HTML>
-<html>
+?><!DOCTYPE html>
+<html lang="<?php $options->lang(); ?>">
     <head>
         <meta charset="<?php $options->charset(); ?>">
         <meta name="renderer" content="webkit">
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
         <title><?php _e('%s - %s - Powered by Typecho', $menu->title, $options->title); ?></title>
         <meta name="robots" content="noindex, nofollow">
         <?php echo $header; ?>
