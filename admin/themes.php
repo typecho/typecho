@@ -9,16 +9,18 @@ include 'menu.php';
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main" role="main">
             <div class="col-mb-12">
-                <ul class="typecho-option-tabs clearfix">
-                    <li class="current"><a href="<?php $options->adminUrl('themes.php'); ?>"><?php _e('可以使用的外观'); ?></a>
-                    </li>
-                    <?php if (\Widget\Themes\Files::isWriteable()): ?>
-                        <li><a href="<?php $options->adminUrl('theme-editor.php'); ?>"><?php _e('编辑当前外观'); ?></a></li>
-                    <?php endif; ?>
-                    <?php if (\Widget\Themes\Config::isExists()): ?>
-                        <li><a href="<?php $options->adminUrl('options-theme.php'); ?>"><?php _e('设置外观'); ?></a></li>
-                    <?php endif; ?>
-                </ul>
+                <div class="clearfix">
+                    <ul class="typecho-option-tabs">
+                        <li class="current"><a href="<?php $options->adminUrl('themes.php'); ?>"><?php _e('可以使用的外观'); ?></a>
+                        </li>
+                        <?php if (\Widget\Themes\Files::isWriteable()): ?>
+                            <li><a href="<?php $options->adminUrl('theme-editor.php'); ?>"><?php _e('编辑当前外观'); ?></a></li>
+                        <?php endif; ?>
+                        <?php if (\Widget\Themes\Config::isExists()): ?>
+                            <li><a href="<?php $options->adminUrl('options-theme.php'); ?>"><?php _e('设置外观'); ?></a></li>
+                        <?php endif; ?>
+                    </ul>
+                </div>
 
                 <div class="typecho-table-wrap">
                     <table class="typecho-list-table typecho-theme-list">

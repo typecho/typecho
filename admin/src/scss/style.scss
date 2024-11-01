@@ -300,45 +300,50 @@ a.button:hover, a.balloon-button:hover {
 */
 .typecho-option-tabs {
   list-style: none;
+  border-radius: var(--te-border-radius);
   padding: 0;
-  font-size: 13px;
-  text-align: center;
-}
+  float: left;
 
-.typecho-option-tabs a {
-  display: block;
-  margin-right: -1px;
-  border: 1px solid #D9D9D6;
-  padding: 0 15px;
-  height: 26px;
-  line-height: 26px;
-  color: #666;
-  box-sizing: border-box;
-  
-}
-.typecho-option-tabs a:hover {
-  background-color: #E9E9E6;
-  color: #666;
-  text-decoration: none;
+  &.right {
+    float: right;
+  }
 }
 
 .typecho-option-tabs li {
   float: left;
+
   &:first-child a {
-    border-radius: var(--te-border-radius) 0 0 var(--te-border-radius);
+    border-top-left-radius: var(--te-border-radius);
+    border-bottom-left-radius: var(--te-border-radius);
   }
   &:last-child a {
-    border-radius: 0 var(--te-border-radius) var(--te-border-radius) 0;
+    border-top-right-radius: var(--te-border-radius);
+    border-bottom-right-radius: var(--te-border-radius);
+  }
+
+  &:not(:first-child) {
+    margin-left: -1px;
   }
 }
 
-.typecho-option-tabs.right {
-  float: right;
+.typecho-option-tabs a {
+  display: block;
+  border: 1px solid var(--te-gray-300);
+  padding: 3px 12px;
+  font-size: 13px;
+  background-color: transparent;
+  color: var(--te-gray-700);
+  text-decoration: none;
+  text-align: center;
+}
+
+.typecho-option-tabs a:hover {
+  background-color: var(--te-gray-200);
 }
 
 .typecho-option-tabs li.current a,
 .typecho-option-tabs li.active a {
-  background-color: #E9E9E6;
+  background-color: var(--te-gray-200);
 }
 
 

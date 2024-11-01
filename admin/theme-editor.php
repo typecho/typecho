@@ -11,19 +11,21 @@ include 'menu.php';
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main" role="main">
             <div class="col-mb-12">
-                <ul class="typecho-option-tabs clearfix">
-                    <li><a href="<?php $options->adminUrl('themes.php'); ?>"><?php _e('可以使用的外观'); ?></a></li>
-                    <li class="current"><a href="<?php $options->adminUrl('theme-editor.php'); ?>">
-                            <?php if ($options->theme == $files->theme): ?>
-                                <?php _e('编辑当前外观'); ?>
-                            <?php else: ?>
-                                <?php _e('编辑%s外观', ' <cite>' . $files->theme . '</cite> '); ?>
-                            <?php endif; ?>
-                        </a></li>
-                    <?php if (\Widget\Themes\Config::isExists()): ?>
-                        <li><a href="<?php $options->adminUrl('options-theme.php'); ?>"><?php _e('设置外观'); ?></a></li>
-                    <?php endif; ?>
-                </ul>
+                <div class="clearfix">
+                    <ul class="typecho-option-tabs">
+                        <li><a href="<?php $options->adminUrl('themes.php'); ?>"><?php _e('可以使用的外观'); ?></a></li>
+                        <li class="current"><a href="<?php $options->adminUrl('theme-editor.php'); ?>">
+                                <?php if ($options->theme == $files->theme): ?>
+                                    <?php _e('编辑当前外观'); ?>
+                                <?php else: ?>
+                                    <?php _e('编辑%s外观', ' <cite>' . $files->theme . '</cite> '); ?>
+                                <?php endif; ?>
+                            </a></li>
+                        <?php if (\Widget\Themes\Config::isExists()): ?>
+                            <li><a href="<?php $options->adminUrl('options-theme.php'); ?>"><?php _e('设置外观'); ?></a></li>
+                        <?php endif; ?>
+                    </ul>
+                </div>
             </div>
 
             <div class="typecho-edit-theme">

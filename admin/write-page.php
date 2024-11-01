@@ -88,10 +88,12 @@ while ($parents->next()) {
                     <?php \Typecho\Plugin::factory('admin/write-page.php')->call('content', $page); ?>
                 </div>
                 <div id="edit-secondary" class="col-mb-12 col-tb-3" role="complementary">
-                    <ul class="typecho-option-tabs clearfix">
-                        <li class="active w-50"><a href="#tab-advance"><?php _e('选项'); ?></a></li>
-                        <li class="w-50"><a href="#tab-files" id="tab-files-btn"><?php _e('附件'); ?></a></li>
-                    </ul>
+                    <div class="clearfix">
+                        <ul class="typecho-option-tabs w-100">
+                            <li class="active w-50"><a href="#tab-advance"><?php _e('选项'); ?></a></li>
+                            <li class="w-50"><a href="#tab-files" id="tab-files-btn"><?php _e('附件'); ?></a></li>
+                        </ul>
+                    </div>
 
                     <div id="tab-advance" class="tab-content">
                         <section class="typecho-post-option" role="application">

@@ -34,6 +34,14 @@
 .w-90 { width: 90% !important; }
 .w-100 { width: 100% !important; }
 
+
+.list-inline {
+  padding: 0;
+  list-style: none;
+
+  .list-inline-item { display: inline-block; }
+}
+
 /*
 * Hide from both screenreaders and browsers: h5bp.com/u
 */

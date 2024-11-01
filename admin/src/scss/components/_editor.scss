@@ -92,12 +92,13 @@ $initial-y: 0;
   left: 50%;
   margin-top: -95px;
   margin-left: -200px;
-  padding: 20px;
+  padding: 16px;
   width: 360px;
-  background: #F6F6F3;
+  background: var(--te-white);
+  border-radius: var(--te-border-radius);
 
-  p { margin: 0 0 5px; }
-  form { margin-top: 8px; }
+  p { margin: 0 0 8px; }
+  form { margin-top: 16px; }
   input[type="text"] {
     margin-bottom: 8px;
     width: 100%;
