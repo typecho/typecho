@@ -93,7 +93,7 @@ include 'common-js.php';
             });
 
             <?php if (isset($request->mid)): ?>
-            $('.typecho-mini-panel').effect('highlight', '#AACB36');
+            $('.typecho-mini-panel').effect('highlight', '#d1e7dd');
             <?php endif; ?>
         });
     })();

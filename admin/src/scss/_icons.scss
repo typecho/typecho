@@ -33,17 +33,20 @@
 
 .i-exlink {
   @extend %i-16;
-  background-position-y: -16px * 2;
+  background-position-y: calc(-16px * 2);
 }
-
 .i-upload {
   @extend %i-32;
-  background-position-y: -32px * 3;
+  background-position-y: calc(-32px * 3);
 }
 
 .i-upload-active {
   @extend %i-32;
-  background-position-y: -32px * 4;
+  background-position-y: calc(-32px * 4);
+}
+
+a i[class*="i-"]:hover {
+  opacity: .75;
 }
 
 // 小箭头
@@ -85,4 +88,3 @@
 //   height: 26px;
 //   background-size: auto 26px;
 // }
-

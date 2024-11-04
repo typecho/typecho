@@ -723,36 +723,34 @@ background: #FFF1A8;
   padding: 16px;
   background-color: var(--te-white);
   border: 1px solid var(--te-border-color);
-  border-radius: var(--te-border-radius);
 }
 
 .typecho-page-main ul.tag-list li {
   display: inline-block;
-  margin: 0 0 5px 0;
-  padding: 5px 5px 5px 10px;
+  margin: 0 0 3px 0;
+  padding: 5px 4px 5px 0;
+  border-radius: var(--te-border-radius);
   cursor: pointer;
+
+  &:hover {
+    background-color: var(--te-gray-200);
+  }
+
+  &.size-5 { font-size: 1em; }
+  &.size-10 { font-size: 1.2em; }
+  &.size-20 { font-size: 1.4em; }
+  &.size-30 { font-size: 1.6em; }
+  &.size-0 { font-size: 1.8em; }
+
+  input { visibility: hidden; }
+  &.checked {
+    background-color: var(--te-yellow-100);
+    input { visibility: visible; }
+  }
+
+  .tag-edit-link { visibility: hidden; }
+  &:hover .tag-edit-link { visibility: visible; }
 }
-.typecho-page-main ul.tag-list li:hover {
-  background-color: #E9E9E6;
-}
-
-.typecho-page-main ul.tag-list li input {
-  display: none;
-}
-
-
-.typecho-page-main ul.tag-list li.checked {
-  background-color: #FFFBCC;
-}
-
-.typecho-page-main ul.tag-list li.size-5 { font-size: 1em; }
-.typecho-page-main ul.tag-list li.size-10 { font-size: 1.2em; }
-.typecho-page-main ul.tag-list li.size-20 { font-size: 1.4em; }
-.typecho-page-main ul.tag-list li.size-30 { font-size: 1.6em; }
-.typecho-page-main ul.tag-list li.size-0 { font-size: 1.8em; }
-
-.typecho-page-main .tag-edit-link { visibility: hidden; }
-.typecho-page-main li:hover .tag-edit-link { visibility: visible; }
 
 .typecho-attachment-photo {
   border: 1px solid #E6E6E3;
@@ -768,7 +766,7 @@ background: #FFF1A8;
   background-color: var(--te-white);
   color: var(--te-secondary);
   &.drag {
-    background-color: #FFFBCC;
+    background-color: var(--te-yellow-100);
   }
 }
 
@@ -834,10 +832,10 @@ background: #FFF1A8;
 
 /* 拖动排序 */
 .tDnD_whileDrag {
-  background-color: #FFFBCC;
+  background-color: var(--te-yellow-100);
 }
 
-@media (max-width: $screen-phone - 1px) {
+@media (max-width: calc($screen-phone - 1px)) {
   .typecho-list-operate {
     .search {
       margin-top: 10px;

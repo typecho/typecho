@@ -115,7 +115,7 @@ $(document).ready(function() {
             li = $('<li>' + fileError + '<br />' + word + '</li>').appendTo('#file-list');
         }
 
-        li.effect('highlight', {color : '#FBC2C4'}, 2000, function () {
+        li.effect('highlight', {color : '#f1aeb5'}, 2000, function () {
             $(this).remove();
         });
     }
