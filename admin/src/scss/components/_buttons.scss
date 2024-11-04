@@ -68,11 +68,11 @@ input[type=reset],
   color: var(--te-white);
 
   &:hover {
-    background-color: var(--te-danger-600);
+    background-color: var(--te-red-600);
     color: var(--te-white);
   }
   &:active, &.active {
-    background-color: var(--te-danger-700);
+    background-color: var(--te-red-700);
   }
 }
 

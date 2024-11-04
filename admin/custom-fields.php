@@ -79,6 +79,6 @@ $defaultFields = isset($post) ? $post->getDefaultFieldItems() : $page->getDefaul
     </table>
     <div class="description d-flex align-items-center justify-content-between">
         <button type="button" class="btn btn-sm operate-add"><?php _e('+ 添加字段'); ?></button>
-        <small><?php _e('自定义字段可以扩展你的模板功能, 使用方法参见 <a href="https://docs.typecho.org/help/custom-fields">帮助文档</a>'); ?></small>
+        <span><?php _e('自定义字段可以扩展你的模板功能, 使用方法参见 <a href="https://docs.typecho.org/help/custom-fields">帮助文档</a>'); ?></span>
     </div>
 </section>

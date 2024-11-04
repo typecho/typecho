@@ -65,7 +65,7 @@ while ($parents->next()) {
                     </p>
 
                     <?php include 'custom-fields.php'; ?>
-                    <p class="submit d-flex justify-content-between">
+                    <p class="submit d-flex justify-content-between align-items-center">
                         <span class="left">
                             <button type="button" id="btn-cancel-preview" class="btn"><i
                                     class="i-caret-left"></i> <?php _e('取消预览'); ?></button>

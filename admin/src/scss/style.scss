@@ -9,13 +9,18 @@
 * @version 0.9
 */
 
+@import "vars";
+@import "grid";
+@import "header";
+@import "footer";
+@import "pagenavi";
+@import "icons";
+@import "components";
+@import "utilities";
 
 /**
 * Typecho 全局样式
 */
-
-@import "vars";
-@import "grid";
 
 *, :after, :before {
   box-sizing: border-box;
@@ -83,12 +88,10 @@ code, pre, tt, .mono {
   top: 0;
   left: 0;
   margin: 0;
-  padding: 8px 0;
   border: none;
   width: 100%;
   z-index: 10;
   text-align: center;
-
   border-radius: 0;
 }
 
@@ -362,17 +365,19 @@ code, pre, tt, .mono {
   gap: 8px;
 }
 
+a.operate-approved {
+  color: var(--te-success);
+}
+a.operate-waiting {
+  color: var(--te-info);
+}
+a.operate-spam {
+  color: var(--te-warning);
+}
+
 .typecho-list-operate span.operate-delete, a.operate-delete,
 .typecho-list-operate span.operate-button-delete, a.operate-button-delete {
-  color: #B94A48;
-}
-
-a.operate-edit {
-  color: #007700;
-}
-
-a.operate-reply {
-  color: #545c30;
+  color: var(--te-danger);
 }
 
 /**
@@ -424,11 +429,11 @@ a.operate-reply {
   }
 
   tbody tr:hover td {
-    background-color: #F6F6F3;
+    background-color: var(--te-gray-100);
   }
 
   tbody tr.checked td {
-    background-color: #FFF9E8;
+    background-color: var(--te-yellow-100);
   }
 
   tr td .hidden-by-mouse {
@@ -448,39 +453,42 @@ a.operate-reply {
 /**
 * 评论管理
 */
-
-.comment-reply-content {
-  position: relative;
-  margin: 1em 0;
-  padding: 0 1em;
-  border: 1px solid transparent;
-  background-color: #F0F0EC;
-}
-.comment-reply-content:after {
-  position: absolute;
-  right: 1em;
-  border: 8px solid #F0F0EC;
-  border-color: #F0F0EC #F0F0EC transparent transparent;
-  content: " ";
-}
-
-.comment-meta span,
-.comment-date {
-  font-size: .92857em;
-  color: #999;
-}
-
-.comment-action a, .comment-action span { margin-right: 4px; }
-
 .comment-edit label {
   display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
 }
 
 .comment-content img {
   max-width: 100%;
 }
 
-@media (max-width: $screen-phone - 1px) {
+.comment-reply-content {
+  position: relative;
+  margin: 1em 0;
+  padding: 0 1em;
+  border: 1px solid transparent;
+  background-color: var(--te-primary-100);
+  border-radius: var(--te-border-radius);
+}
+
+.comment-meta span,
+.comment-date {
+  color: var(--te-secondary);
+}
+.comment-avatar img {
+  border-radius: var(--te-border-radius);
+}
+
+.comment-action {
+  color: var(--te-secondary);
+}
+.comment-action a,
+.comment-action span {
+  margin-right: 4px;
+}
+
+@media (max-width: calc($screen-phone - 1px)) {
   .comment-edit {
     display: flex;
     flex-direction: column;
@@ -596,46 +604,32 @@ a.operate-reply {
 * 编写页面
 */
 
-.typecho-post-area .edit-draft-notice {
-  color: #999;
-  font-size: .92857em;
-}
-.typecho-post-area .edit-draft-notice a { color: #B94A48; }
+.typecho-post-area {
+  .edit-draft-notice,
+  #auto-save-message,
+  .url-slug {
+    font-size: 13px;
+    color: var(--te-secondary);
+  }
 
-.typecho-post-area #auto-save-message {
-  display: block;
-  margin-top: 0.5em;
-  color: #999;
-  font-size: .92857em;
-}
+  .edit-draft-notice a { color: var(--te-danger); }
 
-// .typecho-post-area .right {
-//   float: right;
-// }
+  .out-date {
+    border: 1px solid #D3DBB3;
+    padding: 3px;
+    background: #fff;
+  }
 
-// .typecho-post-area .left {
-//   float: left;
-// }
+  .url-slug {
+    word-break: break-word;
+  }
 
-.typecho-post-area .out-date {
-  border: 1px solid #D3DBB3;
-  padding: 3px;
-  background: #fff;
-}
-
-.typecho-post-area .url-slug {
-  color: var(--te-secondary);
-  font-size: 13px;
-  word-break: break-word;
-}
-.typecho-post-area #slug {
-  padding: 0;
-  border: none;
-  background: #FFFBCC;
-}
-
-.typecho-post-area #text {
-  resize: none;
+  #slug {
+    padding: 0;
+    border: none;
+    background: var(--te-yellow-100);
+    border-radius: 0;
+  }
 }
 
 #advance-panel {
@@ -866,13 +860,3 @@ background: #FFF1A8;
     height: 110px;
   }
 }
-
-/**
-* 导入扩展样式
-*/
-@import "header";
-@import "footer";
-@import "pagenavi";
-@import "icons";
-@import "components";
-@import "utilities";

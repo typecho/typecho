@@ -266,8 +266,8 @@ $(document).ready(function () {
         } else {
             var form = $('<form method="post" action="'
                 + t.attr('rel') + '" class="comment-reply">'
-                + '<p><label for="text" class="sr-only"><?php _e('内容'); ?></label><textarea id="text" name="text" class="w-90 mono" rows="3"></textarea></p>'
-                + '<p><button type="submit" class="btn btn-sm btn-primary"><?php _e('回复'); ?></button> <button type="button" class="btn btn-sm cancel"><?php _e('取消'); ?></button></p>'
+                + '<p><label for="text" class="sr-only"><?php _e('内容'); ?></label><textarea id="text" name="text" class="w-100 mono" rows="3"></textarea></p>'
+                + '<p><button type="submit" class="btn btn-primary"><?php _e('回复'); ?></button><button type="button" class="btn ms-2 cancel"><?php _e('取消'); ?></button></p>'
                 + '</form>').insertBefore($('.comment-action', td));
 
             $('.cancel', form).click(function () {
@@ -303,17 +303,17 @@ $(document).ready(function () {
         var edit = $('<tr class="comment-edit"><td> </td>'
                         + '<td colspan="2" valign="top"><form method="post" action="'
                         + t.attr('rel') + '" class="comment-edit-info">'
-                        + '<p><label for="' + id + '-author"><?php _e('用户名'); ?></label><input class="form-sm" id="'
+                        + '<p><label for="' + id + '-author"><?php _e('用户名'); ?></label><input id="'
                         + id + '-author" name="author" type="text"></p>'
                         + '<p><label for="' + id + '-mail"><?php _e('电子邮箱'); ?></label>'
-                        + '<input class="form-sm" type="email" name="mail" id="' + id + '-mail"></p>'
+                        + '<input type="email" name="mail" id="' + id + '-mail"></p>'
                         + '<p><label for="' + id + '-url"><?php _e('个人主页'); ?></label>'
-                        + '<input class="form-sm" type="text" name="url" id="' + id + '-url"></p></form></td>'
+                        + '<input type="text" name="url" id="' + id + '-url"></p></form></td>'
                         + '<td valign="top"><form method="post" action="'
                         + t.attr('rel') + '" class="comment-edit-content"><p><label for="' + id + '-text"><?php _e('内容'); ?></label>'
-                        + '<textarea name="text" id="' + id + '-text" rows="6" class="w-90 mono"></textarea></p>'
-                        + '<p><button type="submit" class="btn btn-sm btn-primary"><?php _e('提交'); ?></button> '
-                        + '<button type="button" class="btn btn-sm cancel"><?php _e('取消'); ?></button></p></form></td></tr>')
+                        + '<textarea name="text" id="' + id + '-text" rows="6" class="w-100 mono"></textarea></p>'
+                        + '<p><button type="submit" class="btn btn-primary"><?php _e('提交'); ?></button>'
+                        + '<button type="button" class="btn cancel ms-2"><?php _e('取消'); ?></button></p></form></td></tr>')
                         .data('id', id).data('comment', comment).insertAfter(tr);
 
         $('input[name=author]', edit).val(comment.author);
