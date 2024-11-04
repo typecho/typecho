@@ -20,14 +20,14 @@
     vertical-align: middle;
     border-radius: var(--te-border-radius);
     &:hover {
-      background-color: #E9E9E6;
+      background-color: var(--te-gray-200);
     }
     &.wmd-spacer {
       height: 20px;
       margin: 0 10px 0 6px;
       padding: 0;
       width: 1px;
-      background: #E9E9E6;
+      background: var(--te-border-color);
       cursor: default;
     }
     span {
@@ -122,22 +122,17 @@ $initial-y: 0;
   img { max-width: 100%; }
   code, pre {
     padding: 2px 4px;
-    background: #DDD;
-    font-size: 14px;
+    background: var(--te-gray-200);
   }
-  code { color: #C13; }
   pre {
     padding: 1em;
     code {
       padding: 0;
-      color: #444;
     }
   }
   blockquote {
-    margin: 1em 1.5em;
-    padding-left: 1.5em;
-    border-left: 4px solid #E9E9E6;
-    color: #777;
+    padding-left: 1em;
+    border-left: 4px solid var(--te-gray-200);
   }
   hr {
     margin: 2em auto;
@@ -237,8 +232,7 @@ $initial-y: 0;
     border-bottom: 1px solid var(--te-border-color);
   }
   #upload-panel {
-    -webkit-box-shadow: 0 4px 16px rgba(0,0,0,0.225);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.225);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);;
     border-style: solid;
   }
 
@@ -246,7 +240,7 @@ $initial-y: 0;
   #tab-files {
     position: absolute;
     top: 52px;
-    right: 0;
+    right: 20px;
     width: 280px;
     z-index: 1001;
 
@@ -268,7 +262,7 @@ $initial-y: 0;
 }
 
 .preview {
-  .submit { width: 100%; background: #FFFFDD }
+  .submit { width: 100%; background: #fff }
   #wmd-button-bar, #wmd-preview, #text, #upload-panel, #tab-files, #btn-preview, #btn-fullscreen-upload, #auto-save-message { display: none }
   .preview-frame { width: 100%; border: 0; padding: 0; margin: 0;
     background: #fff; z-index: 999; position: absolute; top: 53px; left: 0 }

@@ -2,21 +2,20 @@
 * 后台头部导航
 */
 
-$border-nav: 1px solid #383D45;
-$color-nav-bg: #292D33;
-$color-nav-text-normal: #BBB;
-$color-nav-text-mute: #777;
-$color-nav-text-hover: #FFF;
-$color-nav-btn-hover: #202328;
-$color-nav-child-focus: #6DA1BB;
+$border-nav: 1px solid rgba(255, 255, 255, .05);
+$color-nav-bg: var(--te-primary-900);
+$color-nav-text-normal: var(--te-primary-200);
+$color-nav-text-mute: var(--te-secondary);
+$color-nav-text-hover: var(--te-white);
+$color-nav-btn-hover: var(--te-primary-800);
+$color-nav-child-focus: var(--te-primary-400);
 
 .typecho-head-nav {
-  padding: 0 10px;
   background: $color-nav-bg;
   position: relative;
 
   a, button.menu-bar {
-    padding: 0 20px;
+    padding: 0 16px;
     height: 36px;
     line-height: 36px;
     color: $color-nav-text-normal;
@@ -85,7 +84,6 @@ $color-nav-child-focus: #6DA1BB;
 
           &.focus a {
             color: $color-nav-child-focus;
-            font-weight: bold;
           }
         }
       }
@@ -96,7 +94,6 @@ $color-nav-child-focus: #6DA1BB;
         background: $color-nav-btn-hover;
       }
 
-      &.focus .parent a {
         font-weight: bold;
       }
 

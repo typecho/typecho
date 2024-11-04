@@ -57,30 +57,6 @@ code, pre, tt, .mono {
   height: 100%;
 }
 
-// a.balloon-button {
-//   display: inline-block;
-//   padding: 0 6px;
-//   min-width: 12px;
-//   height: 18px;
-//   line-height: 18px;
-//   background: #D8E7EE;
-//   font-size: .85714em;
-//   text-align: center;
-//   text-decoration: none;
-  
-//   /** 修正 ie 中文不对齐 */
-//   zoom:1;
-  
-//   border-radius: 30px;
-//   white-space: nowrap;
-// }
-
-// a.button:hover, a.balloon-button:hover {
-//   background-color: #A5CADC;
-//   color: #FFF;
-//   text-decoration: none;
-// }
-
 /** 顶部消息样式 by 70 */
 .popup {
   display: none;
@@ -105,12 +81,6 @@ code, pre, tt, .mono {
 .popup ul li {
   display: inline-block;
   margin-right: 10px;
-}
-
-/**
-* logo 的样式
-*/
-.logo {
 }
 
 /**
@@ -143,7 +113,7 @@ code, pre, tt, .mono {
 
     &.required:after {
       content: " *";
-      color: #B94A48;
+      color: var(--te-danger);
     }
   }
 
@@ -189,7 +159,7 @@ code, pre, tt, .mono {
 #typecho-welcome {
   margin: 1em 0;
   padding: 1em 2em;
-  background-color: #E9E9E6;
+  background-color: var(--te-gray-200);
 }
 
 .welcome-board {
@@ -211,6 +181,7 @@ code, pre, tt, .mono {
 
 .latest-link {
   background-color: var(--te-white);
+  margin-bottom: 16px;
   padding: 16px;
   border: 1px solid var(--te-border-color);
   border-radius: var(--te-border-radius);
@@ -255,7 +226,7 @@ code, pre, tt, .mono {
 
 .typecho-login .more-link {
   margin-top: 2em;
-  color: #CCC;
+  color: var(--te-secondary);
 }
 .typecho-login .more-link a { margin: 0 3px; }
 
@@ -288,8 +259,6 @@ code, pre, tt, .mono {
 /**
 * 主页主体
 */
-.typecho-dashboard {
-}
 .typecho-dashboard ul {
   list-style: none;
   padding: 0;
@@ -340,11 +309,6 @@ code, pre, tt, .mono {
   background-color: var(--te-gray-200);
 }
 
-
-/**
-* 表格列表页
-*/
-
 /**
 * 列表页选项
 */
@@ -374,9 +338,8 @@ a.operate-waiting {
 a.operate-spam {
   color: var(--te-warning);
 }
-
-.typecho-list-operate span.operate-delete, a.operate-delete,
-.typecho-list-operate span.operate-button-delete, a.operate-button-delete {
+span.operate-delete,
+a.operate-delete {
   color: var(--te-danger);
 }
 
@@ -510,27 +473,20 @@ a.operate-spam {
 * 模板列表
 */
 .typecho-theme-list {
-}
-
-.typecho-theme-list .theme-item {
-}
-
-.typecho-theme-list td {
-}
-
-.typecho-theme-list img {
-  margin: 1em 0;
-  max-width: 100%;
-  max-height: 180px;
-}
-
-.typecho-theme-list cite {
-  font-style: normal;
-  color: #999;
-}
-
-.typecho-theme-list tbody tr.current td {
-  background-color: #FFF9E8;
+  img {
+    max-width: 100%;
+    max-height: 126px;
+  }
+  h3 {
+    margin-bottom: 8px;
+  }
+  cite {
+    font-style: normal;
+    color: var(--te-secondary);
+  }
+  tr.current td {
+    background-color: var(--te-primary-100) !important;
+  }
 }
 
 
@@ -762,22 +718,23 @@ background: #FFF1A8;
 * Upload
 */
 #upload-panel {
-  border: 1px dashed var(--te-border-color);
+  border: 1px solid var(--te-border-color);
   background-color: var(--te-white);
   color: var(--te-secondary);
+  border-radius: var(--te-border-radius);
   &.drag {
     background-color: var(--te-yellow-100);
   }
 }
 
 .upload-area {
-  padding: 15px;
+  padding: 16px;
   text-align: center;
 }
 
 #file-list {
   list-style: none;
-  margin: 0 10px;
+  margin: 0;
   padding: 0;
   max-height: 450px;
   overflow: auto;
@@ -789,8 +746,8 @@ background: #FFF1A8;
     text-overflow: ellipsis;
   }
   li {
-    padding: 8px 0;
-    border-top: 1px dashed #D9D9D6;
+    padding: 8px 16px;
+    border-top: 1px dashed var(--te-border-color);
   }
   .insert {
     display: block;
