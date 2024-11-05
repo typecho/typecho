@@ -34,6 +34,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property string $type
  * @property string status
  * @property int $parent
+ * @property int $commentPage
  * @property Date $date
  * @property string $dateWord
  * @property string $theId
@@ -61,6 +62,8 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
         switch ($key) {
             case 'permalink':
                 return $this->parentContent->path;
+            case 'commentPage':
+                return $this->commentPage;
             default:
                 return '{' . $key . '}';
         }
@@ -79,17 +82,16 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
         $insertStruct = [
             'cid'      => $rows['cid'],
             'created'  => empty($rows['created']) ? $this->options->time : $rows['created'],
-            'author'   => !isset($rows['author']) || strlen($rows['author']) === 0 ? null : $rows['author'],
+            'author'   => Common::strBy($rows['author'] ?? null),
             'authorId' => empty($rows['authorId']) ? 0 : $rows['authorId'],
             'ownerId'  => empty($rows['ownerId']) ? 0 : $rows['ownerId'],
-            'mail'     => !isset($rows['mail']) || strlen($rows['mail']) === 0 ? null : $rows['mail'],
-            'url'      => !isset($rows['url']) || strlen($rows['url']) === 0 ? null : $rows['url'],
-            'ip'       => !isset($rows['ip']) || strlen($rows['ip']) === 0 ? $this->request->getIp() : $rows['ip'],
-            'agent'    => !isset($rows['agent']) || strlen($rows['agent']) === 0
-                ? $this->request->getAgent() : $rows['agent'],
-            'text'     => !isset($rows['text']) || strlen($rows['text']) === 0 ? null : $rows['text'],
-            'type'     => empty($rows['type']) ? 'comment' : $rows['type'],
-            'status'   => empty($rows['status']) ? 'approved' : $rows['status'],
+            'mail'     => Common::strBy($rows['mail'] ?? null),
+            'url'      => Common::strBy($rows['url'] ?? null),
+            'ip'       => Common::strBy($rows['ip'] ?? null, $this->request->getIp()),
+            'agent'    => Common::strBy($rows['agent'] ?? null, $this->request->getAgent()),
+            'text'     => Common::strBy($rows['text'] ?? null),
+            'type'     => Common::strBy($rows['type'] ?? null, 'comment'),
+            'status'   => Common::strBy($rows['status'] ?? null, 'approved'),
             'parent'   => empty($rows['parent']) ? 0 : $rows['parent'],
         ];
 
@@ -137,11 +139,11 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
 
         /** 构建插入结构 */
         $preUpdateStruct = [
-            'author' => !isset($rows['author']) || strlen($rows['author']) === 0 ? null : $rows['author'],
-            'mail'   => !isset($rows['mail']) || strlen($rows['mail']) === 0 ? null : $rows['mail'],
-            'url'    => !isset($rows['url']) || strlen($rows['url']) === 0 ? null : $rows['url'],
-            'text'   => !isset($rows['text']) || strlen($rows['text']) === 0 ? null : $rows['text'],
-            'status' => empty($rows['status']) ? 'approved' : $rows['status'],
+            'author' => Common::strBy($rows['author'] ?? null),
+            'mail'   => Common::strBy($rows['mail'] ?? null),
+            'url'    => Common::strBy($rows['url'] ?? null),
+            'text'   => Common::strBy($rows['text'] ?? null),
+            'status' => Common::strBy($rows['status'] ?? null, 'approved'),
         ];
 
         $updateStruct = [];
@@ -397,14 +399,13 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
     }
 
     /**
-     * 获取当前评论链接
+     * 获取当前评论页码
      *
-     * @return string
-     * @throws Exception
+     * @return int
      */
-    protected function ___permalink(): string
+    protected function ___commentPage(): int
     {
-        if ($this->options->commentsPageBreak && 'approved' == $this->status) {
+        if ($this->options->commentsPageBreak) {
             $coid = $this->coid;
             $parent = $this->parent;
 
@@ -421,7 +422,13 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
             }
 
             $select = $this->db->select('coid', 'parent')
-                ->from('table.comments')->where('cid = ? AND status = ?', $this->cid, 'approved')
+                ->from('table.comments')
+                ->where(
+                    'cid = ? AND (status = ? OR coid = ?)',
+                    $this->cid,
+                    'approved',
+                    $this->status !== 'approved' ? $this->coid : 0
+                )
                 ->where('coid ' . ('DESC' == $this->options->commentsOrder ? '>=' : '<=') . ' ?', $coid)
                 ->order('coid');
 
@@ -442,12 +449,24 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
                 }
             }
 
-            $currentPage = ceil($total / $this->options->commentsPageSize);
+            return ceil($total / $this->options->commentsPageSize);
+        }
 
-            $pageRow = ['permalink' => $this->parentContent->path, 'commentPage' => $currentPage];
+        return 0;
+    }
+
+    /**
+     * 获取当前评论链接
+     *
+     * @return string
+     * @throws Exception
+     */
+    protected function ___permalink(): string
+    {
+        if ($this->options->commentsPageBreak) {
             return Router::url(
                 'comment_page',
-                $pageRow,
+                $this,
                 $this->options->index
             ) . '#' . $this->theId;
         }

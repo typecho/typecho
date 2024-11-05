@@ -57,8 +57,8 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property-read Date $date
  * @property-read string $dateWord
  * @property-read string[] $directory
- * @property-read Metas $tags
- * @property-read Metas $categories
+ * @property-read array[] $tags
+ * @property-read array[] $categories
  * @property-read string $excerpt
  * @property-read string $plainExcerpt
  * @property-read string $summary
@@ -70,6 +70,9 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property-read string $commentUrl
  * @property-read string $trackbackUrl
  * @property-read string $responseUrl
+ * @property-read string $year
+ * @property-read string $month
+ * @property-read string $day
  */
 class Contents extends Base implements QueryInterface, RowFilterInterface, PrimaryKeyInterface, ParamsDelegateInterface
 {
@@ -95,7 +98,7 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
             case 'directory':
                 return implode('/', array_map('urlencode', $this->directory));
             case 'category':
-                return urlencode($this->categories->slug);
+                return empty($this->categories) ? '' : urlencode($this->categories[0]['slug']);
             case 'year':
                 return $this->date->year;
             case 'month':
@@ -131,15 +134,15 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
         $insertStruct = [
             'title'        => !isset($rows['title']) || strlen($rows['title']) === 0
                 ? null : htmlspecialchars($rows['title']),
-            'created'      => !isset($rows['created']) ? $this->options->time : $rows['created'],
+            'created'      => empty($rows['created']) ? $this->options->time : $rows['created'],
             'modified'     => $this->options->time,
-            'text'         => !isset($rows['text']) || strlen($rows['text']) === 0 ? null : $rows['text'],
+            'text'         => Common::strBy($rows['text'] ?? null),
             'order'        => empty($rows['order']) ? 0 : intval($rows['order']),
             'authorId'     => $rows['authorId'] ?? $this->user->uid,
-            'template'     => empty($rows['template']) ? null : $rows['template'],
-            'type'         => empty($rows['type']) ? 'post' : $rows['type'],
-            'status'       => empty($rows['status']) ? 'publish' : $rows['status'],
-            'password'     => !isset($rows['password']) || strlen($rows['password']) === 0 ? null : $rows['password'],
+            'template'     => Common::strBy($rows['template'] ?? null),
+            'type'         => Common::strBy($rows['type'] ?? null, 'post'),
+            'status'       => Common::strBy($rows['status'] ?? null, 'publish'),
+            'password'     => Common::strBy($rows['password'] ?? null),
             'commentsNum'  => empty($rows['commentsNum']) ? 0 : $rows['commentsNum'],
             'allowComment' => !empty($rows['allowComment']) && 1 == $rows['allowComment'] ? 1 : 0,
             'allowPing'    => !empty($rows['allowPing']) && 1 == $rows['allowPing'] ? 1 : 0,
@@ -156,7 +159,7 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
 
         /** 更新缩略名 */
         if ($insertId > 0) {
-            $this->applySlug(!isset($rows['slug']) || strlen($rows['slug']) === 0 ? null : $rows['slug'], $insertId);
+            $this->applySlug(Common::strBy($rows['slug'] ?? null), $insertId, $insertStruct['title']);
         }
 
         return $insertId;
@@ -167,10 +170,11 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
      *
      * @param string|null $slug 缩略名
      * @param mixed $cid 内容id
+     * @param string $title 标题
      * @return string
      * @throws Exception
      */
-    public function applySlug(?string $slug, $cid): string
+    public function applySlug(?string $slug, $cid, string $title = ''): string
     {
         if ($cid instanceof Query) {
             $cid = $this->db->fetchObject($cid->select('cid')
@@ -178,6 +182,10 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
         }
 
         /** 生成一个非空的缩略名 */
+        if ((!isset($slug) || strlen($slug) === 0) && preg_match_all("/\w+/", $title, $matches)) {
+            $slug = implode('-', $matches[0]);
+        }
+
         $slug = Common::slugName($slug, $cid);
         $result = $slug;
 
@@ -185,10 +193,9 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
         $draft = $this->db->fetchObject($this->db->select('type', 'parent')
             ->from('table.contents')->where('cid = ?', $cid));
 
-        if ('_draft' == substr($draft->type, - 6) && $draft->parent) {
+        if (preg_match("/_draft$/", $draft->type) && $draft->parent) {
             $result = '@' . $result;
         }
-
 
         /** 判断是否在数据库中已经存在 */
         $count = 1;
@@ -226,11 +233,11 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
             'title'        => !isset($rows['title']) || strlen($rows['title']) === 0
                 ? null : htmlspecialchars($rows['title']),
             'order'        => empty($rows['order']) ? 0 : intval($rows['order']),
-            'text'         => !isset($rows['text']) || strlen($rows['text']) === 0 ? null : $rows['text'],
-            'template'     => empty($rows['template']) ? null : $rows['template'],
-            'type'         => empty($rows['type']) ? 'post' : $rows['type'],
-            'status'       => empty($rows['status']) ? 'publish' : $rows['status'],
-            'password'     => empty($rows['password']) ? null : $rows['password'],
+            'text'         => Common::strBy($rows['text'] ?? null),
+            'template'     => Common::strBy($rows['template'] ?? null),
+            'type'         => Common::strBy($rows['type'] ?? null, 'post'),
+            'status'       => Common::strBy($rows['status'] ?? null, 'publish'),
+            'password'     => Common::strBy($rows['password'] ?? null),
             'allowComment' => !empty($rows['allowComment']) && 1 == $rows['allowComment'] ? 1 : 0,
             'allowPing'    => !empty($rows['allowPing']) && 1 == $rows['allowPing'] ? 1 : 0,
             'allowFeed'    => !empty($rows['allowFeed']) && 1 == $rows['allowFeed'] ? 1 : 0,
@@ -461,13 +468,11 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
      */
     public function category(string $split = ',', bool $link = true, ?string $default = null)
     {
-        $categories = $this->categories;
-
-        if ($categories->have()) {
+        if (!empty($this->categories)) {
             $result = [];
 
-            while ($categories->next()) {
-                $result[] = $link ? $categories->template('<a href="{permalink}">{name}</a>') : $categories->name;
+            foreach ($this->categories as $category) {
+                $result[] = $link ? "<a href=\"{$category['permalink']}\">{$category['name']}</a>" : $category['name'];
             }
 
             echo implode($split, $result);
@@ -513,13 +518,11 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
      */
     public function tags(string $split = ',', bool $link = true, ?string $default = null)
     {
-        $tags = $this->tags;
-
-        if ($tags->have()) {
+        if (!empty($this->tags)) {
             $result = [];
 
-            while ($tags->next()) {
-                $result[] = $link ? $tags->template('<a href="{permalink}">{name}</a>') : $tags->name;
+            foreach ($this->tags as $tag) {
+                $result[] = $link ? "<a href=\"{$tag['permalink']}\">{$tag['name']}</a>" : $tag['name'];
             }
 
             echo implode($split, $result);
@@ -658,32 +661,32 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
     {
         $directory = [];
 
-        $category = $this->categories;
-
-        if ($category->have()) {
-            $directory = Rows::alloc()->getAllParentsSlug($category->mid);
-            $directory[] = $category->slug;
+        if (!empty($this->categories)) {
+            $directory = Rows::alloc()->getAllParentsSlug($this->categories[0]['mid']);
+            $directory[] = $this->categories[0]['slug'];
         }
 
         return $directory;
     }
 
     /**
-     * @return Metas
+     * @return array
      */
-    protected function ___categories(): Metas
+    protected function ___categories(): array
     {
-        return CategoryRelated::allocWithAlias($this->cid, ['cid' => $this->cid]);
+        return CategoryRelated::allocWithAlias($this->cid, ['cid' => $this->cid])
+            ->toArray(['mid', 'name', 'slug', 'description', 'order', 'parent', 'count', 'permalink']);
     }
 
     /**
      * 将tags取出
      *
-     * @return Metas
+     * @return array
      */
-    protected function ___tags(): Metas
+    protected function ___tags(): array
     {
-        return TagRelated::allocWithAlias($this->cid, ['cid' => $this->cid]);
+        return TagRelated::allocWithAlias($this->cid, ['cid' => $this->cid])
+            ->toArray(['mid', 'name', 'slug', 'description', 'count', 'permalink']);
     }
 
     /**
@@ -922,5 +925,29 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
     protected function ___responseUrl(): string
     {
         return $this->permalink . '#' . $this->respondId;
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___year(): string
+    {
+        return $this->date->year;
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___month(): string
+    {
+        return $this->date->month;
+    }
+
+    /**
+     * @return string
+     */
+    protected function ___day(): string
+    {
+        return $this->date->day;
     }
 }

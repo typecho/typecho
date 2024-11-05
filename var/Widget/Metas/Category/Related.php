@@ -33,6 +33,6 @@ class Related extends Metas
             return $orderA <=> $orderB;
         });
 
-        $this->stack = $this->getRows($ids);
+        $this->pushAll($this->getRows($ids));
     }
 }

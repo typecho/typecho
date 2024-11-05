@@ -12,14 +12,12 @@
             </div>
         </article>
 
-        <div class="grid post-next">
-            <div>
-                ← <?php $this->thePrev('%s', _t('没有了')); ?>
-            </div>
-            <div class="text-end">
-                <?php $this->theNext('%s', _t('没有了')); ?> →
-            </div>
-        </div>
+        <nav class="post-nav">
+            <ul class="page-navigator">
+                <li class="prev"><?php $this->thePrev('%s', _t('没有了')); ?></li>
+                <li class="next"><?php $this->theNext('%s', _t('没有了')); ?></li>
+            </ul>
+        </nav>
 
         <?php $this->need('comments.php'); ?>
     </div>

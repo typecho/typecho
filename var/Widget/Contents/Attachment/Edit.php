@@ -95,7 +95,7 @@ class Edit extends Contents implements ActionInterface
 
         /** 取出数据 */
         $input = $this->request->from('name', 'slug', 'description');
-        $input['slug'] = Common::slugName(empty($input['slug']) ? $input['name'] : $input['slug']);
+        $input['slug'] = Common::slugName(Common::strBy($input['slug'] ?? null, $input['name']));
 
         $attachment['title'] = $input['name'];
         $attachment['slug'] = $input['slug'];
@@ -313,7 +313,7 @@ class Edit extends Contents implements ActionInterface
 
             if ($this->isWriteable(clone $condition) && $this->delete($condition)) {
                 /** 删除文件 */
-                Upload::deleteHandle($row);
+                Upload::deleteHandle($this->toColumn(['cid', 'attachment', 'parent']));
 
                 /** 删除评论 */
                 $this->db->query($this->db->delete('table.comments')

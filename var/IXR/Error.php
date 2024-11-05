@@ -29,9 +29,9 @@ class Error
      * 构造函数
      *
      * @param integer $code 错误代码
-     * @param string|null $message 错误消息
+     * @param string $message 错误消息
      */
-    public function __construct(int $code, ?string $message)
+    public function __construct(int $code, string $message)
     {
         $this->code = $code;
         $this->message = $message;

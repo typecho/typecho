@@ -79,6 +79,9 @@ $(document).ready(function() {
             prePopulate     :   tagsPre,
 
             onResult        :   function (result, query, val) {
+                // remove special chars
+                val = val.replace(/<|>|&|"|'/g, '');
+
                 if (!query) {
                     return result;
                 }

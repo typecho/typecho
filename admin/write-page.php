@@ -44,7 +44,14 @@ while ($parents->next()) {
                     $permalink = ltrim($permalink, '/');
                     $permalink = preg_replace("/\[([_a-z0-9-]+)[^\]]*\]/i", "{\\1}", $permalink);
                     if ($page->have()) {
-                        $permalink = str_replace('{cid}', $page->cid, $permalink);
+                        $permalink = preg_replace_callback(
+                            "/\{(cid)\}/i",
+                            function ($matches) use ($page) {
+                                $key = $matches[1];
+                                return $page->getRouterParam($key);
+                            },
+                            $permalink
+                        );
                     }
                     $input = '<input type="text" id="slug" name="slug" autocomplete="off" value="' . htmlspecialchars($page->slug ?? '') . '" class="mono" />';
                     ?>

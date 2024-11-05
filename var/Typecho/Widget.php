@@ -305,6 +305,24 @@ abstract class Widget
 
     /**
      * @param string|array $column
+     * @return array|mixed|null
+     */
+    public function toColumn($column)
+    {
+        if (is_array($column)) {
+            $item = [];
+            foreach ($column as $key) {
+                $item[$key] = $this->{$key};
+            }
+
+            return $item;
+        } else {
+            return $this->{$column};
+        }
+    }
+
+    /**
+     * @param string|array $column
      * @return array
      */
     public function toArray($column): array
@@ -312,16 +330,7 @@ abstract class Widget
         $result = [];
 
         while ($this->next()) {
-            if (is_array($column)) {
-                $item = [];
-                foreach ($column as $key) {
-                    $item[$key] = $this->{$key};
-                }
-
-                $result[] = $item;
-            } else {
-                $result[] = $this->{$column};
-            }
+            $result[] = $this->toColumn($column);
         }
 
         return $result;
@@ -363,6 +372,18 @@ abstract class Widget
 
         $this->stack[] = $value;
         return $value;
+    }
+
+    /**
+     * 将所有行的值压入堆栈
+     *
+     * @param array $values 所有行的值
+     */
+    public function pushAll(array $values)
+    {
+        foreach ($values as $value) {
+            $this->push($value);
+        }
     }
 
     /**
@@ -460,7 +481,14 @@ abstract class Widget
      */
     public function __set(string $name, $value)
     {
-        $this->row[$name] = $value;
+        $method = '___' . $name;
+        $key = '#' . $name;
+
+        if (isset($this->row[$key]) || method_exists($this, $method)) {
+            $this->row[$key] = $value;
+        } else {
+            $this->row[$name] = $value;
+        }
     }
 
     /**
@@ -471,7 +499,10 @@ abstract class Widget
      */
     public function __isSet(string $name)
     {
-        return isset($this->row[$name]);
+        $method = '___' . $name;
+        $key = '#' . $name;
+
+        return isset($this->row[$key]) || method_exists($this, $method) || isset($this->row[$name]);
     }
 
     /**

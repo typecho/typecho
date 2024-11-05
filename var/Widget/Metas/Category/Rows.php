@@ -32,7 +32,7 @@ class Rows extends Metas
      */
     public function execute()
     {
-        $this->stack = $this->getRows($this->orders, $this->parameter->ignore);
+        $this->pushAll($this->getRows($this->orders, $this->parameter->ignore));
     }
 
     /**

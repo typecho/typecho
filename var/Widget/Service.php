@@ -39,9 +39,9 @@ class Service extends BaseOptions implements ActionInterface
         /** 验证权限 */
         $data = $this->request->get('@json');
         $token = $data['token'] ?? '';
-        $permalink = $data['permalink'];
-        $title = $data['title'];
-        $excerpt = $data['excerpt'];
+        $permalink = $data['permalink'] ?? '';
+        $title = $data['title'] ?? '';
+        $excerpt = $data['excerpt'] ?? '';
 
         $response = ['trackback' => [], 'pingback' => []];
 

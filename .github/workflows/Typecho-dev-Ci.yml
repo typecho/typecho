@@ -19,7 +19,7 @@ jobs:
         php: ['7.4', '8.0', '8.1', '8.2']
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
     - name: Setup PHP only
       uses: shivammathur/setup-php@v2
       with:
@@ -30,12 +30,12 @@ jobs:
   build:
     name: Typecho Build
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, 'skip ci') && github.event_name != 'pull_request' }}
+    if: ${{ !contains(github.event.head_commit.message, 'skip ci') && github.event_name != 'pull_request' && github.repository == 'typecho/typecho' }}
     needs:
         - php
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
     - name: Build
       run: |
         mkdir build

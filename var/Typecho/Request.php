@@ -367,10 +367,7 @@ class Request
      */
     public function getContentType(): ?string
     {
-        return $this->getServer(
-            'CONTENT_TYPE',
-            $this->getServer('HTTP_CONTENT_TYPE')
-        );
+        return $this->getHeader('Content-Type');
     }
 
     /**
@@ -420,8 +417,14 @@ class Request
      */
     public function getHeader(string $key, ?string $default = null): ?string
     {
-        $key = 'HTTP_' . strtoupper(str_replace('-', '_', $key));
-        return $this->getServer($key, $default);
+        $key = strtoupper(str_replace('-', '_', $key));
+        
+        // Content-Type 和 Content-Length 这两个 header 还需要从不带 HTTP_ 的 key 尝试获取
+        if (in_array($key, ['CONTENT_TYPE', 'CONTENT_LENGTH'])) {
+            $default = $this->getServer($key, $default);
+        }
+
+        return $this->getServer('HTTP_' . $key, $default);
     }
 
     /**

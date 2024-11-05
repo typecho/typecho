@@ -44,17 +44,17 @@ class Admin extends Contents
         $this->parameter->setDefault('ignoreRequest=0');
 
         if ($this->parameter->ignoreRequest) {
-            $this->stack = $this->getRows($this->orders, $this->parameter->ignore);
+            $this->pushAll($this->getRows($this->orders, $this->parameter->ignore));
         } elseif ($this->request->is('keywords')) {
             $select = $this->select('table.contents.cid')
                 ->where('table.contents.type = ? OR table.contents.type = ?', 'page', 'page_draft');
             $this->searchQuery($select);
 
             $ids = array_column($this->db->fetchAll($select), 'cid');
-            $this->stack = $this->getRows($ids);
+            $this->pushAll($this->getRows($ids));
         } else {
             $this->parentId = $this->request->filter('int')->get('parent', 0);
-            $this->stack = $this->getRows($this->getChildIds($this->parentId));
+            $this->pushAll($this->getRows($this->getChildIds($this->parentId)));
         }
     }
 

@@ -14,6 +14,7 @@ use Typecho\Widget;
 use Typecho\Widget\Exception as WidgetException;
 use Widget\Base\Comments;
 use Widget\Base\Contents;
+use Widget\Contents\Attachment\Unattached;
 use Widget\Contents\Page\Admin as PageAdmin;
 use Widget\Contents\Post\Admin as PostAdmin;
 use Widget\Contents\Attachment\Admin as AttachmentAdmin;
@@ -406,17 +407,16 @@ class XmlRpc extends Contents implements ActionInterface, Hook
         }
 
         /** 对未归档附件进行归档 */
-        $unattached = $this->db->fetchAll($this->select()->where('table.contents.type = ? AND
-        (table.contents.parent = 0 OR table.contents.parent IS NULL)', 'attachment'), [$this, 'filter']);
+        $unattached = Unattached::alloc();
 
-        if (!empty($unattached)) {
-            foreach ($unattached as $attach) {
-                if (false !== strpos($input['text'], $attach['attachment']->url)) {
+        if ($unattached->have()) {
+            while ($unattached->next()) {
+                if (false !== strpos($input['text'], $unattached->attachment->url)) {
                     if (!isset($input['attachment'])) {
                         $input['attachment'] = [];
                     }
 
-                    $input['attachment'][] = $attach['cid'];
+                    $input['attachment'][] = $unattached->cid;
                 }
             }
         }
@@ -449,9 +449,9 @@ class XmlRpc extends Contents implements ActionInterface, Hook
     {
         /** 开始接受数据 */
         $input['name'] = $category['name'];
-        $input['slug'] = Common::slugName(empty($category['slug']) ? $category['name'] : $category['slug']);
+        $input['slug'] = Common::slugName(Common::strBy($category['slug'] ?? null, $category['name']));
         $input['parent'] = $category['parent_id'] ?? ($category['parent'] ?? 0);
-        $input['description'] = $category['description'] ?? $category['name'];
+        $input['description'] = Common::strBy($category['description'] ?? null, $category['name']);
 
         /** 调用已有组件 */
         $categoryWidget = CategoryEdit::alloc(null, $input, function (CategoryEdit $category) {
@@ -576,7 +576,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
         while ($pages->next()) {
             $pageStructs[] = [
                 'dateCreated'      => new Date($this->options->timezone + $pages->created),
-                'date_created_gmt' => new Date($this->options->timezone + $pages->created),
+                'date_created_gmt' => new Date($pages->created),
                 'page_id'          => $pages->cid,
                 'page_title'       => $pages->title,
                 'page_parent_id'   => '0',
@@ -945,7 +945,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
         }
 
         return [
-            'date_created_gmt' => new Date($this->options->timezone + $comment->created),
+            'date_created_gmt' => new Date($comment->created),
             'user_id'          => $comment->authorId,
             'comment_id'       => $comment->coid,
             'parent'           => $comment->parent,
@@ -999,7 +999,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
 
         while ($comments->next()) {
             $commentsStruct[] = [
-                'date_created_gmt' => new Date($this->options->timezone + $comments->created),
+                'date_created_gmt' => new Date($comments->created),
                 'user_id'          => $comments->authorId,
                 'comment_id'       => $comments->coid,
                 'parent'           => $comments->parent,
@@ -1174,7 +1174,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
         while ($attachments->next()) {
             $attachmentsStruct[] = [
                 'attachment_id'    => $attachments->cid,
-                'date_created_gmt' => new Date($this->options->timezone + $attachments->created),
+                'date_created_gmt' => new Date($attachments->created),
                 'parent'           => $attachments->parent,
                 'link'             => $attachments->attachment->url,
                 'title'            => $attachments->title,
@@ -1205,7 +1205,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
 
         return [
             'attachment_id'    => $attachment->cid,
-            'date_created_gmt' => new Date($this->options->timezone + $attachment->created),
+            'date_created_gmt' => new Date($attachment->created),
             'parent'           => $attachment->parent,
             'link'             => $attachment->attachment->url,
             'title'            => $attachment->title,
@@ -1417,7 +1417,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
                 'userid'           => $posts->authorId,
                 'postid'           => $posts->cid,
                 'title'            => $posts->title,
-                'date_created_gmt' => new Date($this->options->timezone + $posts->created)
+                'date_created_gmt' => new Date($posts->created)
             ];
         }
 
