@@ -232,7 +232,7 @@ $initial-y: 0;
     border-bottom: 1px solid var(--te-border-color);
   }
   #upload-panel {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);;
+    box-shadow: var(--te-box-shadow);
     border-style: solid;
   }
 

@@ -1,5 +1,5 @@
 <?php if (!defined('__TYPECHO_ADMIN__')) exit; ?>
-<div class="typecho-head-nav clearfix" role="navigation">
+<div class="typecho-head-nav d-flex justify-content-between" role="navigation">
     <button class="menu-bar"><?php _e('菜单'); ?></button>
     <nav id="typecho-nav-list">
         <?php $menu->output(); ?>

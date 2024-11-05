@@ -68,7 +68,7 @@ class Menu extends Base
     private string $currentUrl;
 
     /**
-     * 执行函数,初始化菜单
+     * 执行函数，初始化菜单
      */
     public function execute()
     {
@@ -167,7 +167,7 @@ class Menu extends Base
                 $hidden = $childNode[4] ?? false;
                 $addLink = $childNode[5] ?? null;
 
-                // 保存最原始的hidden信息
+                // 保存最原始的 hidden 信息
                 $orgHidden = $hidden;
 
                 // parse url
@@ -283,7 +283,7 @@ class Menu extends Base
 
             echo "<ul class=\"root" . ($key == $this->currentParent ? ' ' . $class : null)
                 . "\"><li class=\"parent\"><a href=\"{$node[2]}\">{$node[0]}</a>"
-                . "</li><ul class=\"child\">";
+                . "</li><li><ul class=\"child\">";
 
             $last = 0;
             foreach ($node[3] as $inKey => $inNode) {
@@ -313,7 +313,7 @@ class Menu extends Base
                     . "\">{$inNode[0]}</a></li>";
             }
 
-            echo "</ul></ul>";
+            echo "</ul></li></ul>";
         }
     }
 }

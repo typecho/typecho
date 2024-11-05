@@ -34,7 +34,6 @@
 .w-90 { width: 90% !important; }
 .w-100 { width: 100% !important; }
 
-
 .list-inline {
   padding: 0;
   list-style: none;
@@ -42,15 +41,24 @@
   .list-inline-item { display: inline-block; }
 }
 
+// Flexbox utilities
 .d-flex {
   display: flex;
 }
+
 .align-items-center {
   align-items: center;
 }
+
 .justify-content-between {
   justify-content: space-between;
 }
+
+// Shadow utilities
+.shadow { box-shadow: var(--te-box-shadow); }
+.shadow-sm { box-shadow: var(--te-box-shadow-sm); }
+.shadow-lg { box-shadow: var(--te-box-shadow-lg); }
+.shadow-inset { box-shadow: var(--te-box-shadow-inset); }
 
 /*
 * Hide from both screenreaders and browsers: h5bp.com/u

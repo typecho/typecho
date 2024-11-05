@@ -2,27 +2,29 @@
 * 后台头部导航
 */
 
-$border-nav: 1px solid rgba(255, 255, 255, .05);
-$color-nav-bg: var(--te-primary-900);
-$color-nav-text-normal: var(--te-primary-200);
-$color-nav-text-mute: var(--te-secondary);
-$color-nav-text-hover: var(--te-white);
-$color-nav-btn-hover: var(--te-primary-800);
-$color-nav-child-focus: var(--te-primary-400);
+:root {
+  --te-nav-border-color: 1px solid rgba(255, 255, 255, .05);
+  --te-nav-bg-color: var(--te-primary-900);
+  --te-nav-link-color: var(--te-primary-200);
+  --te-nav-link-hover-color: var(--te-white);
+  --te-nav-link-hover-bg-color: var(--te-primary-800);
+  --te-nav-active-bg-color: var(--te-primary-500);
+}
 
 .typecho-head-nav {
-  background: $color-nav-bg;
+  background: var(--te-nav-bg-color);
   position: relative;
 
   a, button.menu-bar {
     padding: 0 16px;
     height: 36px;
     line-height: 36px;
-    color: $color-nav-text-normal;
+    color: var(--te-nav-link-color);
 
     &:focus,
     &:hover {
-      color: $color-nav-text-hover;
+      background: var(--te-nav-link-hover-bg-color);
+      color: var(--te-nav-link-hover-color);
       text-decoration: none;
     }
   }
@@ -32,38 +34,27 @@ $color-nav-child-focus: var(--te-primary-400);
   }
 
   #typecho-nav-list {
-    float: left;
-
-    & > ul {
+    display: flex;
+    ul {
       list-style: none;
       margin: 0;
       padding: 0;
       position: relative;
-      float: left;
 
-      &:first-child {
-        border-left: $border-nav;
-      }
-
-      .parent {
-        a {
-          display: inline-block;
-          border-right: $border-nav;
-          background: $color-nav-bg;
-        }
+      .parent a {
+        display: inline-block;
       }
 
       .child {
         position: absolute;
-        list-style: none;
-        top: 36px;
         display: none;
-        margin: 0;
-        padding: 0;
         min-width: 160px; 
         max-width: 240px;
-        background: $color-nav-btn-hover;
+        background: var(--te-nav-link-hover-bg-color);
         z-index: 250;
+        border-radius: 0 0 var(--te-border-radius) var(--te-border-radius);
+        box-shadow: var(--te-box-shadow);
+        overflow: hidden;
 
         li {
           &.return {
@@ -71,62 +62,58 @@ $color-nav-child-focus: var(--te-primary-400);
           }
 
           a {
+            display: block;
             overflow: hidden;
             text-overflow : ellipsis;
             white-space: nowrap;
-            display: block;
 
             &:hover,
             &:focus {
-              background: $color-nav-bg;
+              background: var(--te-primary-700);
             }
           }
 
           &.focus a {
-            color: $color-nav-child-focus;
+            background: var(--te-nav-active-bg-color);
+            color: var(--te-nav-link-hover-color);
           }
         }
       }
 
-      .parent a:hover,
       &.focus .parent a,
-      &.root:hover .parent a {
-        background: $color-nav-btn-hover;
+      &.root:hover .parent a,
+      &.root:focus-within .parent a {
+        background: var(--te-nav-link-hover-bg-color);
       }
 
-        font-weight: bold;
-      }
-
-      &.root:hover .child, &.root.expanded .child {
+      &.root:hover .child,
+      &.root.expanded .child {
         display: block;
       }
     }
   }
 
   .nav-operate {
-    float: right;
     a {
       display: inline-block;
-      margin-left: -1px;
-      border: $border-nav;
-      border-width: 0 1px;
       
       &:hover {
-        background-color: $color-nav-btn-hover;
+        background-color: var(--te-nav-link-hover-bg-color);
       }
     }
   }
 }
 
-@media (max-width: $screen-phone - 1px) {
+
+@media (max-width: calc($screen-phone - 1px)) {
   @keyframes out {
-    from {left: 0%;}
-    to {left: -100%;}
+    from { left: 0%; }
+    to { left: -100%; }
   }
 
   @keyframes in {
-    from {left: -100%;}
-    to {left: 0%;}
+    from { left: -100%; }
+    to { left: 0%; }
   }
 
   .typecho-head-nav {
@@ -140,20 +127,13 @@ $color-nav-child-focus: var(--te-primary-400);
       display: none;
     }
 
-    .operate {
-      a:last-child {
-        border-right-width: 0;
-      }
-    }
-
     button.menu-bar {
       display: inline-block;
+      background: transparent;
       border: none;
-      background: $color-nav-bg;
-      border-right: $border-nav;
       
       &.focus {
-        color: $color-nav-text-hover;
+        color: var(--te-nav-link-hover-color);
   
         & + #typecho-nav-list {
           display: block;
@@ -163,20 +143,15 @@ $color-nav-child-focus: var(--te-primary-400);
           width: 100%;
           
           & > ul {
-            float: none;
-            border-bottom: $border-nav;
+            background: var(--te-nav-link-hover-bg-color);
+            border-bottom: var(--te-nav-border-color);
             position: static;
 
-            &:first-child {
-              border-left: none;
+            .parent a {
+              display: block;
+              background: var(--te-nav-link-hover-bg-color);
             }
-            .parent {
-              a {
-                display: block;
-                border: none;
-                background: $color-nav-btn-hover;
-              }
-            }
+            
             .child {
               position: absolute;
               bottom: 0;
@@ -186,17 +161,13 @@ $color-nav-child-focus: var(--te-primary-400);
               width: 100%;
               max-width: 100%;
               min-width: auto;
+              border-radius: 0;
 
               li {
-                border-bottom: $border-nav;
+                border-bottom: var(--te-nav-border-color);
                 &.return {
                   display: block;
                   text-align: center;
-                  font-size: 12px;
-
-                  a {
-                    color: $color-nav-text-mute;
-                  }
                 }
               }
             }
@@ -211,6 +182,12 @@ $color-nav-child-focus: var(--te-primary-400);
           }
         }
       }
+    }
+
+
+    .focus .parent a {
+      background: var(--te-nav-active-bg-color) !important;
+      color: var(--te-nav-link-hover-color);
     }
   }
 }
