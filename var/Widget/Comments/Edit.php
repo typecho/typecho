@@ -353,7 +353,7 @@ class Edit extends Comments implements ActionInterface
             ];
 
             /** 评论插件接口 */
-            self::pluginHandle()->call('comment', $comment, $this);
+            $comment = self::pluginHandle()->call('comment', $comment, $this);
 
             /** 回复评论 */
             $commentId = $this->insert($comment);
