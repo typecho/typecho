@@ -20,7 +20,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
 class Ajax extends BaseOptions implements ActionInterface
 {
     /**
-     * 针对rewrite验证的请求返回
+     * 针对 rewrite 验证的请求返回
      *
      * @access public
      * @return void
@@ -106,7 +106,7 @@ class Ajax extends BaseOptions implements ActionInterface
                     $data[] = [
                         'title' => $matches[1][$key],
                         'link'  => $matches[2][$key],
-                        'date'  => date('n.j', strtotime($matches[3][$key]))
+                        'date'  => date('F j, Y', strtotime($matches[3][$key]))
                     ];
 
                     if ($key > 8) {

@@ -92,7 +92,7 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                         <?php endif; ?>
                         <input type="text" class="form-sm" placeholder="<?php _e('请输入关键字'); ?>"
                                value="<?php echo $request->filter('html')->keywords; ?>" name="keywords"/>
-                        <select name="category">
+                        <select name="category" class="form-sm">
                             <option value=""><?php _e('所有分类'); ?></option>
                             <?php \Widget\Metas\Category\Rows::alloc()->to($category); ?>
                             <?php while ($category->next()): ?>

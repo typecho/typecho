@@ -124,7 +124,7 @@ class Reading extends Permalink
             . ($this->options->frontArchive && 'recent' != $frontPageType ? ' checked' : '') . ' />
 <label for="frontArchive">' . _t(
                 '同时将文章列表页路径更改为 %s',
-                '<input type="text" name="archivePattern" class="w-20 mono" value="'
+                '<input type="text" name="archivePattern" class="form-sm w-20 mono" value="'
                 . htmlspecialchars($this->decodeRule($this->options->routingTable['archive']['url'])) . '" />'
             )
             . '</label>';
@@ -135,7 +135,7 @@ class Reading extends Permalink
             ->where('status = ?', 'publish')->where('created < ?', $this->options->time));
 
         if (!empty($pages)) {
-            $pagesSelect = '<select name="frontPagePage" id="frontPage-frontPagePage">';
+            $pagesSelect = '<select name="frontPagePage" id="frontPage-frontPagePage" class="form-sm">';
             foreach ($pages as $page) {
                 $selected = '';
                 if ('page' == $frontPageType && $page['cid'] == $frontPageValue) {
@@ -216,7 +216,7 @@ class Reading extends Permalink
         $pageSize->input->setAttribute('class', 'w-20');
         $form->addInput($pageSize->addRule('isInteger', _t('请填入一个数字')));
 
-        /** FEED全文输出 */
+        /** FEED 全文输出 */
         $feedFullText = new Form\Element\Radio(
             'feedFullText',
             ['0' => _t('仅输出摘要'), '1' => _t('全文输出')],

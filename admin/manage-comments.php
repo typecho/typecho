@@ -58,7 +58,7 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == \Ty
                             <li><a lang="<?php _e('你确认要删除这些评论吗?'); ?>" href="<?php $security->index('/action/comments-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
                         </ul>
                         <?php if('spam' == $request->get('status')): ?>
-                            <button lang="<?php _e('你确认要删除所有垃圾评论吗?'); ?>" class="btn btn-sm btn-warn btn-operate" href="<?php $security->index('/action/comments-edit?do=delete-spam'); ?>"><?php _e('删除所有垃圾评论'); ?></button>
+                            <button lang="<?php _e('你确认要删除所有垃圾评论吗?'); ?>" class="btn btn-sm btn-danger btn-operate" href="<?php $security->index('/action/comments-edit?do=delete-spam'); ?>"><?php _e('删除所有垃圾评论'); ?></button>
                         <?php endif; ?>
                         </div>
                     </div>
@@ -196,7 +196,7 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == \Ty
                             <li><a lang="<?php _e('你确认要删除这些评论吗?'); ?>" href="<?php $security->index('/action/comments-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
                         </ul>
                         <?php if('spam' == $request->get('status')): ?>
-                            <button lang="<?php _e('你确认要删除所有垃圾评论吗?'); ?>" class="btn btn-sm btn-warn btn-operate" href="<?php $security->index('/action/comments-edit?do=delete-spam'); ?>"><?php _e('删除所有垃圾评论'); ?></button>
+                            <button lang="<?php _e('你确认要删除所有垃圾评论吗?'); ?>" class="btn btn-sm btn-danger btn-operate" href="<?php $security->index('/action/comments-edit?do=delete-spam'); ?>"><?php _e('删除所有垃圾评论'); ?></button>
                         <?php endif; ?>
                         </div>
                     </div>

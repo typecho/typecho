@@ -25,7 +25,7 @@ $attachments = \Widget\Contents\Attachment\Admin::alloc();
                                        href="<?php $security->index('/action/contents-attachment-edit?do=delete'); ?>"><?php _e('删除'); ?></a>
                                 </li>
                             </ul>
-                            <button class="btn btn-warn btn-sm btn-operate"
+                            <button class="btn btn-danger btn-sm btn-operate"
                                     href="<?php $security->index('/action/contents-attachment-edit?do=clear'); ?>"
                                     lang="<?php _e('您确认要清理未归档的文件吗?'); ?>"><?php _e('清理未归档文件'); ?></button>
                         </div>
@@ -113,7 +113,7 @@ $attachments = \Widget\Contents\Attachment\Admin::alloc();
                                 </li>
                             </ul>
                         </div>
-                        <button class="btn btn-warn btn-sm btn-operate"
+                        <button class="btn btn-danger btn-sm btn-operate"
                                 href="<?php $security->index('/action/contents-attachment-edit?do=clear'); ?>"
                                 lang="<?php _e('您确认要清理未归档的文件吗?'); ?>"><?php _e('清理未归档文件'); ?></button>
                     </div>

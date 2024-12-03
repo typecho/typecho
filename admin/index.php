@@ -10,7 +10,7 @@ $stat = \Widget\Stat::alloc();
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main">
             <div class="col-mb-12 welcome-board" role="main">
-                <p><?php _e('目前有 <em>%s</em> 篇文章, 并有 <em>%s</em> 条关于你的评论在 <em>%s</em> 个分类中.',
+                <p><?php _e('目前有 <strong>%s</strong> 篇文章, 并有 <strong>%s</strong> 条关于你的评论在 <strong>%s</strong> 个分类中.',
                         $stat->myPublishedPostsNum, $stat->myPublishedCommentsNum, $stat->categoriesNum); ?>
                     <br><?php _e('点击下面的链接快速开始:'); ?></p>
 
@@ -46,20 +46,19 @@ $stat = \Widget\Stat::alloc();
                             </li>
                         <?php endif; ?>
                     <?php endif; ?>
-                    <!--<li><a href="<?php $options->adminUrl('profile.php'); ?>"><?php _e('更新我的资料'); ?></a></li>-->
                 </ul>
             </div>
 
             <div class="col-mb-12 col-tb-4" role="complementary">
                 <section class="latest-link">
                     <h3><?php _e('最近发布的文章'); ?></h3>
-                    <?php \Widget\Contents\Post\Recent::alloc('pageSize=10')->to($posts); ?>
+                    <?php \Widget\Contents\Post\Recent::alloc('pageSize=6')->to($posts); ?>
                     <ul>
                         <?php if ($posts->have()): ?>
                             <?php while ($posts->next()): ?>
                                 <li>
-                                    <span><?php $posts->date('n.j'); ?></span>
                                     <a href="<?php $posts->permalink(); ?>" class="title"><?php $posts->title(); ?></a>
+                                    <span><?php $posts->date(); ?></span>
                                 </li>
                             <?php endwhile; ?>
                         <?php else: ?>
@@ -73,14 +72,14 @@ $stat = \Widget\Stat::alloc();
                 <section class="latest-link">
                     <h3><?php _e('最近得到的回复'); ?></h3>
                     <ul>
-                        <?php \Widget\Comments\Recent::alloc('pageSize=10')->to($comments); ?>
+                        <?php \Widget\Comments\Recent::alloc('pageSize=6')->to($comments); ?>
                         <?php if ($comments->have()): ?>
                             <?php while ($comments->next()): ?>
                                 <li>
-                                    <span><?php $comments->date('n.j'); ?></span>
                                     <a href="<?php $comments->permalink(); ?>"
                                        class="title"><?php $comments->author(false); ?></a>:
-                                    <?php $comments->excerpt(35, '...'); ?>
+                                    <?php $comments->excerpt(50, '...'); ?>
+                                    <span><?php $comments->date(); ?></span>
                                 </li>
                             <?php endwhile; ?>
                         <?php else: ?>
@@ -120,10 +119,11 @@ include 'common-js.php';
         } else {
             html = '';
             $.get('<?php $options->index('/action/ajax?do=feed'); ?>', function (o) {
+                o = o.slice(0, 6);
                 for (var i = 0; i < o.length; i++) {
                     var item = o[i];
-                    html += '<li><span>' + item.date + '</span> <a href="' + item.link + '" target="_blank">' + item.title
-                        + '</a></li>';
+                    html += '<li><a href="' + item.link + '" target="_blank">' + item.title
+                        + '</a><span>' + item.date + '</span></li>';
                 }
 
                 ul.html(html);

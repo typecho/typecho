@@ -101,6 +101,10 @@ input[type=reset],
   &:active, &.active {
     background-color: var(--te-primary);
   }
+
+  &:focus {
+    outline-color: var(--te-primary);
+  }
 }
 
 
