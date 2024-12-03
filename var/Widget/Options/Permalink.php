@@ -258,7 +258,7 @@ RewriteRule . {$basePath}index.php [L]
             $customPatternValue = $this->decodeRule($postPatternValue);
         }
         $patterns['custom'] = _t('个性化定义') .
-            ' <input type="text" class="w-50 text-s mono" name="customPattern" value="' . $customPatternValue . '" />';
+            ' <input type="text" class="w-50 form-sm mono" name="customPattern" value="' . $customPatternValue . '" />';
 
         $postPattern = new Form\Element\Radio(
             'postPattern',
@@ -300,7 +300,7 @@ RewriteRule . {$basePath}index.php [L]
 
         /** 提交按钮 */
         $submit = new Form\Element\Submit('submit', null, _t('保存设置'));
-        $submit->input->setAttribute('class', 'btn primary');
+        $submit->input->setAttribute('class', 'btn btn-primary');
         $form->addItem($submit);
 
         return $form;

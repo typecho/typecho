@@ -19,7 +19,7 @@ include 'menu.php';
                             <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox"
                                                                                    class="typecho-table-select-all"/></label>
                             <div class="btn-group btn-drop">
-                                <button class="btn dropdown-toggle btn-s" type="button"><i
+                                <button class="btn dropdown-toggle btn-sm" type="button"><i
                                         class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i
                                         class="i-caret-down"></i></button>
                                 <ul class="dropdown-menu">
@@ -30,9 +30,9 @@ include 'menu.php';
                                            href="<?php $security->index('/action/metas-tag-edit?do=refresh'); ?>"><?php _e('刷新'); ?></a>
                                     </li>
                                     <li class="multiline">
-                                        <button type="button" class="btn btn-s merge"
+                                        <button type="button" class="btn btn-sm merge"
                                                 rel="<?php $security->index('/action/metas-tag-edit?do=merge'); ?>"><?php _e('合并到'); ?></button>
-                                        <input type="text" name="merge" class="text-s"/>
+                                        <input type="text" name="merge" class="form-sm"/>
                                     </li>
                                 </ul>
                             </div>

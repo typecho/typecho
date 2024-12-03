@@ -40,7 +40,7 @@
     }
 
     &:has(input[type="checkbox"]:checked) {
-      background-color: #FFFBCC;
+      background-color: var(--te-yellow-100);
     }
 
     &.size-5 {

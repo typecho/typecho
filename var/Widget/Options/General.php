@@ -274,12 +274,12 @@ class General extends Options implements ActionInterface
         }
 
         $attachmentTypesOptions = [
-            '@image@' => _t('图片文件') . ' <code>(gif jpg jpeg png tiff bmp webp avif)</code>',
-            '@media@' => _t('多媒体文件') . ' <code>(mp3 mp4 mov wmv wma rmvb rm avi flv ogg oga ogv)</code>',
-            '@doc@'   => _t('常用档案文件') . ' <code>(txt doc docx xls xlsx ppt pptx zip rar pdf)</code>',
+            '@image@' => _t('图片文件') . ' <code>(gif, jpg, jpeg, png, tiff, bmp, webp, avif)</code>',
+            '@media@' => _t('多媒体文件') . ' <code>(mp3, mp4, mov, wmv, wma, rmvb, rm, avi, flv, ogg, oga, ogv)</code>',
+            '@doc@'   => _t('常用档案文件') . ' <code>(txt, doc, docx, xls, xlsx, ppt, pptx, zip, rar, pdf)</code>',
             '@other@' => _t(
                 '其他格式 %s',
-                ' <input type="text" class="w-50 text-s mono" name="attachmentTypesOther" value="'
+                ' <input type="text" class="w-50 form-sm mono" name="attachmentTypesOther" value="'
                 . htmlspecialchars($attachmentTypesOtherValue) . '" />'
             ),
         ];
@@ -295,7 +295,7 @@ class General extends Options implements ActionInterface
 
         /** 提交按钮 */
         $submit = new Form\Element\Submit('submit', null, _t('保存设置'));
-        $submit->input->setAttribute('class', 'btn primary');
+        $submit->input->setAttribute('class', 'btn btn-primary');
         $form->addItem($submit);
 
         return $form;

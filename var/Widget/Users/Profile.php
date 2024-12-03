@@ -109,7 +109,7 @@ class Profile extends Users implements ActionInterface
 
         /** 提交按钮 */
         $submit = new Form\Element\Submit('submit', null, _t('保存设置'));
-        $submit->input->setAttribute('class', 'btn primary');
+        $submit->input->setAttribute('class', 'btn btn-primary');
         $form->addItem($submit);
 
         return $form;
@@ -173,7 +173,7 @@ class Profile extends Users implements ActionInterface
         $form->addItem(new Form\Element\Hidden('do', null, 'personal'));
         $form->addItem(new Form\Element\Hidden('plugin', null, $pluginName));
         $submit = new Form\Element\Submit('submit', null, _t('保存设置'));
-        $submit->input->setAttribute('class', 'btn primary');
+        $submit->input->setAttribute('class', 'btn btn-primary');
         $form->addItem($submit);
         return $form;
     }
@@ -236,7 +236,7 @@ class Profile extends Users implements ActionInterface
 
         /** 提交按钮 */
         $submit = new Form\Element\Submit('submit', null, _t('更新我的档案'));
-        $submit->input->setAttribute('class', 'btn primary');
+        $submit->input->setAttribute('class', 'btn btn-primary');
         $form->addItem($submit);
 
         $screenName->value($this->user->screenName);
@@ -351,7 +351,7 @@ class Profile extends Users implements ActionInterface
 
         /** 提交按钮 */
         $submit = new Form\Element\Submit('submit', null, _t('更新密码'));
-        $submit->input->setAttribute('class', 'btn primary');
+        $submit->input->setAttribute('class', 'btn btn-primary');
         $form->addItem($submit);
 
         $password->addRule('required', _t('必须填写密码'));

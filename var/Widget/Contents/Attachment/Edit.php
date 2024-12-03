@@ -173,7 +173,7 @@ class Edit extends Contents implements ActionInterface
 
         /** 提交按钮 */
         $submit = new Form\Element\Submit(null, null, _t('提交修改'));
-        $submit->input->setAttribute('class', 'btn primary');
+        $submit->input->setAttribute('class', 'btn btn-primary');
         $delete = new Layout('a', [
             'href'  => $this->security->getIndex('/action/contents-attachment-edit?do=delete&cid=' . $this->cid),
             'class' => 'operate-delete',

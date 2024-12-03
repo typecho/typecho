@@ -83,7 +83,7 @@ while ($parents->next()) {
                                 class="i-exlink"></i> <?php _e('预览页面'); ?></button>
                         <button type="submit" name="do" value="save" id="btn-save"
                                 class="btn"><?php _e('保存草稿'); ?></button>
-                        <button type="submit" name="do" value="publish" class="btn primary"
+                        <button type="submit" name="do" value="publish" class="btn btn-primary"
                                 id="btn-submit"><?php _e('发布页面'); ?></button>
                         <?php if ($options->markdown && (!$page->have() || $page->isMarkdown)): ?>
                             <input type="hidden" name="markdown" value="1"/>
@@ -145,7 +145,7 @@ while ($parents->next()) {
                     <?php \Typecho\Plugin::factory('admin/write-page.php')->call('option', $page); ?>
 
                     <details id="advance-panel">
-                        <summary class="btn btn-xs"><?php _e('高级选项'); ?> <i class="i-caret-down"></i></summary>
+                        <summary class="btn btn-sm"><?php _e('高级选项'); ?> <i class="i-caret-down"></i></summary>
 
                         <section class="typecho-post-option visibility-option">
                             <label for="visibility" class="typecho-label"><?php _e('公开度'); ?></label>

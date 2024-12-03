@@ -67,7 +67,7 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
                                 class="i-exlink"></i> <?php _e('预览文章'); ?></button>
                         <button type="submit" name="do" value="save" id="btn-save"
                                 class="btn"><?php _e('保存草稿'); ?></button>
-                        <button type="submit" name="do" value="publish" class="btn primary"
+                        <button type="submit" name="do" value="publish" class="btn btn-primary"
                                 id="btn-submit"><?php _e('发布文章'); ?></button>
                         <?php if ($options->markdown && (!$post->have() || $post->isMarkdown)): ?>
                             <input type="hidden" name="markdown" value="1"/>
@@ -119,7 +119,7 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
                     <?php \Typecho\Plugin::factory('admin/write-post.php')->call('option', $post); ?>
 
                     <details id="advance-panel">
-                        <summary class="btn btn-xs"><?php _e('高级选项'); ?> <i class="i-caret-down"></i></summary>
+                        <summary class="btn btn-sm"><?php _e('高级选项'); ?> <i class="i-caret-down"></i></summary>
 
                         <?php if ($user->pass('editor', true)): ?>
                             <section class="typecho-post-option visibility-option">
@@ -142,7 +142,7 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
                                 </p>
                                 <p id="post-password"<?php if (strlen($post->password ?? '') == 0): ?> class="hidden"<?php endif; ?>>
                                     <label for="protect-pwd" class="sr-only">内容密码</label>
-                                    <input type="text" name="password" id="protect-pwd" class="text-s"
+                                    <input type="text" name="password" id="protect-pwd" class="form-sm"
                                            value="<?php $post->password(); ?>" size="16"
                                            placeholder="<?php _e('内容密码'); ?>" autocomplete="off"/>
                                 </p>

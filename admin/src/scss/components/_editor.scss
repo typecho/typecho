@@ -5,104 +5,53 @@
   margin-bottom: -0.5em;
 }
 
-@import "editor/*.png";
-@include all-editor-sprites(true);
+.wmd-button-row {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  height: 26px;
+  line-height: 1;
 
-@mixin editor-button($name) {
-  &#wmd-#{$name}-button span {
-    @include editor-sprite(editor-#{$name})
+  li {
+    display: inline-block;
+    margin-right: 4px;
+    padding: 3px;
+    cursor: pointer;
+    vertical-align: middle;
+    border-radius: var(--te-border-radius);
+    &:hover {
+      background-color: var(--te-gray-200);
+    }
+    &.wmd-spacer {
+      height: 20px;
+      margin: 0 10px 0 6px;
+      padding: 0;
+      width: 1px;
+      background: var(--te-border-color);
+      cursor: default;
+    }
+    span {
+      background: url(../img/editor.svg) no-repeat;
+      display: block;
+      width: 20px;
+      height: 20px;
+    }
   }
+}
+
+$wmd-button: bold, italic, link, quote, code, image, olist, ulist, heading, hr, more, undo, redo, fullscreen, exit-fullscreen;
+$initial-y: 0;
+
+@each $name in $wmd-button {
+  #wmd-#{$name}-button span {
+    background-position-y: $initial-y;
+  }
+  $initial-y: $initial-y - 20px;
 }
 
 #wmd-button-bar {
   display: flex;
   align-items: center;
-
-  @media
-  (-webkit-min-device-pixel-ratio: 2),
-  (min-resolution: 192dpi) {
-    @import "editor/*@2x.png";
-    @include all-editor-sprites();
-
-    @mixin editor-button-2x($name) {
-      &#wmd-#{$name}-button span {
-        @include editor-sprite(editor-#{$name})
-      }
-    }
-
-    .wmd-button-row {
-      li {
-        @include editor-button-2x(bold);
-        @include editor-button-2x(italic);
-        @include editor-button-2x(link);
-        @include editor-button-2x(quote);
-        @include editor-button-2x(code);
-        @include editor-button-2x(image);
-        @include editor-button-2x(olist);
-        @include editor-button-2x(ulist);
-        @include editor-button-2x(heading);
-        @include editor-button-2x(hr);
-        @include editor-button-2x(more);
-        @include editor-button-2x(undo);
-        @include editor-button-2x(redo);
-        @include editor-button-2x(fullscreen);
-        @include editor-button-2x(exit-fullscreen);
-      }
-    }
-  }
-
-  .wmd-button-row {
-    flex: 1;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    height: 26px;
-    line-height: 1;
-
-    li {
-      display: inline-block;
-      margin-right: 4px;
-      padding: 3px;
-      cursor: pointer;
-      vertical-align: middle;
-      border-radius: 2px;
-
-      &:hover {
-        background-color: #E9E9E6;
-      }
-
-      &.wmd-spacer {
-        height: 20px;
-        margin: 0 10px 0 6px;
-        padding: 0;
-        width: 1px;
-        background: #E9E9E6;
-        cursor: default;
-      }
-
-      span {
-        display: block;
-        width: 20px;
-        height: 20px;
-      }
-
-      @include editor-button(bold);
-      @include editor-button(italic);
-      @include editor-button(link);
-      @include editor-button(quote);
-      @include editor-button(code);
-      @include editor-button(image);
-      @include editor-button(olist);
-      @include editor-button(ulist);
-      @include editor-button(heading);
-      @include editor-button(hr);
-      @include editor-button(more);
-      @include editor-button(undo);
-      @include editor-button(redo);
-      @include editor-button(fullscreen);
-      @include editor-button(exit-fullscreen);
-    }
-  }
 
   // 撰写预览切换 tab
   .wmd-edittab {
@@ -112,8 +61,8 @@
       display: inline-block;
       padding: 0 8px;
       margin-left: 5px;
-      height: 20px;
-      line-height: 20px;
+      height: 26px;
+      line-height: 26px;
 
       &:hover {
         text-decoration: none;

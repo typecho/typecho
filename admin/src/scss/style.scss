@@ -9,34 +9,51 @@
 * @version 0.9
 */
 
+@import "vars";
+@import "icons";
+@import "components";
+@import "utilities";
+
+@import "table";
+@import "tabs";
+@import "tags";
+@import "write";
+@import "options";
+@import "pagenavi";
+@import "header";
+@import "footer";
 
 /**
 * Typecho 全局样式
 */
+
+*, :after, :before {
+  box-sizing: border-box;
+}
 
 html {
   height: 100%;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei, sans-serif;
-  background: #F6F6F3;
-  color: #444;
-  font-size: 87.5%;
+  font-family: var(--te-body-font-family);
+  background: #fafaf8;
+  color: var(--te-body-color);
+  font-size: var(--te-body-font-size);
   line-height: 1.5;
 }
 
 a {
-  color: #467B96;
+  color: var(--te-link-color);
   text-decoration: none;
   &:hover {
-    color: #499BC3;
+    color: var(--te-link-hover-color);
     text-decoration: underline;
   }
 }
 
-code, pre, .mono { 
-  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+code, pre, tt, .mono { 
+  font-family: var(--te-font-monospace);
 }
 
 .p { margin: 1em 0; }
@@ -56,7 +73,7 @@ a.balloon-button {
   text-align: center;
   text-decoration: none;
   
-  /** 修正ie中文不对齐 */
+  /** 修正 ie 中文不对齐 */
   zoom:1;
   
   border-radius: 30px;
@@ -69,46 +86,14 @@ a.button:hover, a.balloon-button:hover {
   text-decoration: none;
 }
 
-@import "vars";
-@import "forms";
-@import "buttons";
-@import "messages";
-@import "pagenavi";
-@import "table";
-@import "tabs";
-@import "tags";
-@import "write";
-@import "options";
-
-@import "header";
-@import "footer";
-
-/**
-* logo 的样式
-*/
-.logo {
-}
-
 /**
 * 载入状态
 */
 .loading {
   padding-left: 20px !important;
-  background: transparent url(../img/ajax-loader.gif) no-repeat left center;
+  background: transparent url(../img/ajax-loader.svg) no-repeat left center;
+  background-size: 16px;
 }
-
-.front-archive {
-  padding-left: 1.5em;
-}
-
-.profile-avatar {
-  width: 220px;
-  height: 220px;
-  border-radius: 10px;
-}
-
-/** 增加配置面板内部的错误样式 by 70 */
-
 
 /**
 * 欢迎界面
@@ -117,52 +102,46 @@ a.button:hover, a.balloon-button:hover {
 #typecho-welcome {
   margin: 1em 0;
   padding: 1em 2em;
-  background-color: #E9E9E6;
+  background-color: var(--te-gray-200);
+  border-radius: var(--te-border-radius);
 }
 
 .welcome-board {
-  color: #999;
-  font-size: 1.15em;
-  em {
-    color: #444;
+  margin-bottom: 32px;
+  color: var(--te-secondary);
+  font-size: 16px;
+  strong {
+    color: var(--te-body-color);
     font-size: 2em;
-    font-style: normal;
-    font-family: Georgia, serif;
   }
 }
 
 #start-link {
-  margin-bottom: 25px;
-  padding: 0 0 35px;
-  border-bottom: 1px solid #ECECEC;
-  display: flex;
-  flex-wrap: wrap;
-
   li {
-    margin-right: 1.5em;
-    display: flex;
-    align-items: center;
-
-    .balloon {
-      margin-left: 5px;
-    }
+    display: inline-block;
+    margin-right: 16px;
   }
 }
 
 .latest-link {
+  background-color: var(--te-white);
+  margin-bottom: 16px;
+  padding: 16px;
+  border: 1px solid var(--te-border-color);
+  border-radius: var(--te-border-radius);
+
+  h3 {
+    margin: 0;
+  }
   li {
+    margin: 1em 0;
     white-space: nowrap;
     overflow: hidden; 
     text-overflow: ellipsis;
   }
   span {
-    display: inline-block;
-    margin-right: 4px;
-    padding-right: 8px;
-    border-right: 1px solid #ECECEC;
-    width: 37px;
-    text-align: right;
-    color: #999;
+    display: block;
+    color: var(--te-secondary);
   }
 }
 
@@ -177,25 +156,25 @@ a.button:hover, a.balloon-button:hover {
   display: table;
   margin: 0 auto;
   height: 100%;
+}
 
-  .typecho-login {
-    display: table-cell;
-    padding: 30px 0 100px;
-    width: 280px;
-    text-align: center;
-    vertical-align: middle;
+.typecho-login {
+  display: table-cell;
+  padding: 30px 0 100px;
+  width: 280px;
+  text-align: center;
+  vertical-align: middle;
 
-    h1 {
-      margin: 0 0 1em;
-    }
+  h1 {
+    margin: 0 0 1em;
+  }
 
-    .more-link {
-      margin-top: 2em;
-      color: #CCC;
+  .more-link {
+    margin-top: 2em;
+    color: var(--te-secondary);
 
-      a {
-        margin: 0 3px;
-      }
+    a {
+      margin: 0 3px;
     }
   }
 }
@@ -207,24 +186,22 @@ a.button:hover, a.balloon-button:hover {
   width: 100%;
   display: flex;
   align-items: center;
-  margin: 25px 0 10px;
+  margin: 24px 0 10px;
 
   h2 {
     margin: 0;
-    font-size: 1.28571em;
+    font-size: 24px;
   }
 
   a {
-    padding: 3px 8px;
-    margin-left: 8px;
-    background: #E9E9E6;
-    font-size: .8em;
-    font-weight: bold;
-    border-radius: 2px;
-
-    &:hover {
-      text-decoration: none;
-    }
+    display: inline-block;
+    padding: 1px 12px;
+    border: 1px solid var(--te-primary);
+    margin-left: 16px;
+    font-size: 14px;
+    text-decoration: none;
+    border-radius: 50px;
+    vertical-align: text-top;
   }
 }
 
@@ -236,50 +213,49 @@ a.button:hover, a.balloon-button:hover {
 /**
 * 主页主体
 */
-.typecho-dashboard {
-  ul {
-    list-style: none;
-    padding: 0;
-
-    li {
-      margin-bottom: 5px;
-    }
-  }
+.typecho-dashboard ul {
+  list-style: none;
+  padding: 0;
 }
 
 /**
 * 评论管理
 */
+.comment-edit label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.comment-content img {
+  max-width: 100%;
+}
 
 .comment-reply-content {
   position: relative;
   margin: 1em 0;
   padding: 0 1em;
   border: 1px solid transparent;
-  background-color: #F0F0EC;
-}
-.comment-reply-content:after {
-  position: absolute;
-  right: 1em;
-  border: 8px solid #F0F0EC;
-  border-color: #F0F0EC #F0F0EC transparent transparent;
-  content: " ";
+  background-color: var(--te-primary-100);
+  border-radius: var(--te-border-radius);
 }
 
 .comment-meta span,
 .comment-date {
-  font-size: .92857em;
-  color: #999;
+  color: var(--te-secondary);
 }
 
-.comment-action a, .comment-action span { margin-right: 4px; }
-
-.comment-edit label {
-  display: block;
+.comment-avatar img {
+  border-radius: var(--te-border-radius);
 }
 
-.comment-content img {
-  max-width: 100%;
+.comment-action {
+  color: var(--te-secondary);
+}
+
+.comment-action a,
+.comment-action span {
+  margin-right: 4px;
 }
 
 @include screen(phone, max) {
@@ -305,18 +281,21 @@ a.button:hover, a.balloon-button:hover {
 */
 .typecho-theme-list {
   img {
-    margin: 1em 0;
     max-width: 100%;
-    max-height: 240px;
+    max-height: 126px;
+  }
+
+  h3 {
+    margin-bottom: 8px;
   }
 
   cite {
     font-style: normal;
-    color: #999;
+    color: var(--te-secondary);
   }
 
   tbody tr.current td {
-    background-color: #FFF9E8;
+    background-color: var(--te-primary-100) !important;
   }
 }
 
@@ -361,17 +340,17 @@ a.button:hover, a.balloon-button:hover {
 * Upload
 */
 #upload-panel {
-  border: 1px dashed #D9D9D6;
-  background-color: #FFF;
-  color: #999;
-  font-size: .92857em;
+  border: 1px solid var(--te-border-color);
+  background-color: var(--te-white);
+  color: var(--te-secondary);
+  border-radius: var(--te-border-radius);
   &.drag {
-    background-color: #FFFBCC;
+    background-color: var(--te-yellow-100);
   }
 }
 
 .upload-area {
-  padding: 15px;
+  padding: 16px;
   text-align: center;
 }
 
@@ -390,7 +369,7 @@ a.button:hover, a.balloon-button:hover {
   }
   li {
     padding: 8px 0;
-    border-top: 1px dashed #D9D9D6;
+    border-top: 1px dashed var(--te-border-color);
   }
   .insert {
     display: block;
@@ -416,7 +395,7 @@ a.button:hover, a.balloon-button:hover {
 
 /* 拖动排序 */
 .tDnD_whileDrag {
-  background-color: #FFFBCC;
+  background-color: var(--te-yellow-100);
 }
 
 @include screen(phone, max) {
@@ -431,11 +410,3 @@ a.button:hover, a.balloon-button:hover {
     height: 110px;
   }
 }
-
-/**
-* 导入扩展样式
-*/
-
-@import "icons";
-@import "components";
-@import "hidden";

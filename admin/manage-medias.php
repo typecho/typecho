@@ -17,7 +17,7 @@ $attachments = \Widget\Contents\Attachment\Admin::alloc();
                         <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox"
                                                                                class="typecho-table-select-all"/></label>
                         <div class="btn-group btn-drop">
-                            <button class="btn dropdown-toggle btn-s" type="button"><i
+                            <button class="btn dropdown-toggle btn-sm" type="button"><i
                                     class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i
                                     class="i-caret-down"></i></button>
                             <ul class="dropdown-menu">
@@ -25,7 +25,7 @@ $attachments = \Widget\Contents\Attachment\Admin::alloc();
                                        href="<?php $security->index('/action/contents-attachment-edit?do=delete'); ?>"><?php _e('删除'); ?></a>
                                 </li>
                             </ul>
-                            <button class="btn btn-s btn-warn btn-operate"
+                            <button class="btn btn-warn btn-sm btn-operate"
                                     href="<?php $security->index('/action/contents-attachment-edit?do=clear'); ?>"
                                     lang="<?php _e('您确认要清理未归档的文件吗?'); ?>"><?php _e('清理未归档文件'); ?></button>
                         </div>
@@ -34,9 +34,9 @@ $attachments = \Widget\Contents\Attachment\Admin::alloc();
                         <?php if ('' != $request->keywords): ?>
                             <a href="<?php $options->adminUrl('manage-medias.php'); ?>"><?php _e('&laquo; 取消筛选'); ?></a>
                         <?php endif; ?>
-                        <input type="text" class="text-s" placeholder="<?php _e('请输入关键字'); ?>"
+                        <input type="text" class="form-sm" placeholder="<?php _e('请输入关键字'); ?>"
                                value="<?php echo $request->filter('html')->keywords; ?>"<?php if ('' == $request->keywords): ?> onclick="value='';name='keywords';" <?php else: ?> name="keywords"<?php endif; ?>/>
-                        <button type="submit" class="btn btn-s"><?php _e('筛选'); ?></button>
+                        <button type="submit" class="btn btn-sm"><?php _e('筛选'); ?></button>
                     </div>
                 </form>
 
@@ -104,7 +104,7 @@ $attachments = \Widget\Contents\Attachment\Admin::alloc();
                         <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox"
                                                                                class="typecho-table-select-all"/></label>
                         <div class="btn-group btn-drop">
-                            <button class="btn dropdown-toggle btn-s" type="button"><i
+                            <button class="btn dropdown-toggle btn-sm" type="button"><i
                                     class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i
                                     class="i-caret-down"></i></button>
                             <ul class="dropdown-menu">
@@ -113,7 +113,7 @@ $attachments = \Widget\Contents\Attachment\Admin::alloc();
                                 </li>
                             </ul>
                         </div>
-                        <button class="btn btn-s btn-warn btn-operate"
+                        <button class="btn btn-warn btn-sm btn-operate"
                                 href="<?php $security->index('/action/contents-attachment-edit?do=clear'); ?>"
                                 lang="<?php _e('您确认要清理未归档的文件吗?'); ?>"><?php _e('清理未归档文件'); ?></button>
                     </div>

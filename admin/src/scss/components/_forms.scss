@@ -1,0 +1,54 @@
+/**
+* Forms
+*/
+
+input[type=text],
+input[type=url],
+input[type=password],
+input[type=email],
+input[type=date],
+input[type=datetime-local],
+input[type=month],
+input[type=search],
+input[type=number],
+input[type=tel],
+input[type=time],
+textarea {
+  color: var(--te-body-color);
+  border: 1px solid var(--te-border-color);
+  padding: 6px 12px;
+  border-radius: var(--te-border-radius);
+  line-height: 1.5;
+  width: 100%;
+
+  &:disabled, &:read-only {
+    background: var(--te-gray-200);
+  }
+
+  &.form-sm {
+    font-size: 13px;
+    padding: 3px 6px;
+  }
+
+  &.form-lg {
+    padding: 7px 14px;
+    font-size: 16px;
+  }
+}
+
+textarea {
+  resize: vertical;
+}
+
+select {
+  border: 1px solid var(--te-border-color);
+  line-height: 1.5;
+  height: 35px;
+  padding: 0 6px;
+  border-radius: var(--te-border-radius);
+
+  &.form-sm {
+    font-size: 13px;
+    height: 27.5px;
+  }
+}

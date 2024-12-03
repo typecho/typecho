@@ -107,7 +107,7 @@ $(document).ready(function () {
                 + '<div class="details">' + details + '</div>';
         }
 
-        // 替换block
+        // 替换 block
         html = html.replace(/<(iframe|embed)\s+([^>]*)>/ig, function (all, tag, src) {
             if (src[src.length - 1] === '/') {
                 src = src.substring(0, src.length - 1);
@@ -263,8 +263,8 @@ $(document).ready(function () {
         initMarkdown();
     } else {
         const notice = $('<div class="message notice"><?php _e('这篇文章不是由Markdown语法创建的, 继续使用Markdown编辑它吗?'); ?> '
-            + '<button class="btn btn-xs primary yes"><?php _e('是'); ?></button> ' 
-            + '<button class="btn btn-xs no"><?php _e('否'); ?></button></div>')
+            + '<button class="btn btn-primary btn-sm yes"><?php _e('是'); ?></button> ' 
+            + '<button class="btn btn-sm no"><?php _e('否'); ?></button></div>')
             .hide().insertBefore(textarea).slideDown();
 
         $('.yes', notice).click(function () {

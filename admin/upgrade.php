@@ -22,7 +22,7 @@ include 'menu.php';
                             </li>
                         </ul>
                         <p>
-                            <button class="btn primary" type="submit"><?php _e('完成升级 &raquo;'); ?></button>
+                            <button class="btn btn-primary" type="submit"><?php _e('完成升级 &raquo;'); ?></button>
                         </p>
                     </form>
                 </div>

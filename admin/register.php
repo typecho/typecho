@@ -19,14 +19,14 @@ include 'header.php';
         <form action="<?php $options->registerAction(); ?>" method="post" name="register" role="form">
             <p>
                 <label for="name" class="sr-only"><?php _e('用户名'); ?></label>
-                <input type="text" id="name" name="name" placeholder="<?php _e('用户名'); ?>" value="<?php echo $rememberName; ?>" class="text-l w-100" autofocus />
+                <input type="text" id="name" name="name" placeholder="<?php _e('用户名'); ?>" value="<?php echo $rememberName; ?>" class="form-lg w-100" autofocus />
             </p>
             <p>
                 <label for="mail" class="sr-only"><?php _e('Email'); ?></label>
-                <input type="email" id="mail" name="mail" placeholder="<?php _e('Email'); ?>" value="<?php echo $rememberMail; ?>" class="text-l w-100" />
+                <input type="email" id="mail" name="mail" placeholder="<?php _e('Email'); ?>" value="<?php echo $rememberMail; ?>" class="form-lg w-100" />
             </p>
             <p class="submit">
-                <button type="submit" class="btn btn-l w-100 primary"><?php _e('注册'); ?></button>
+                <button type="submit" class="btn btn-primary btn-lg w-100"><?php _e('注册'); ?></button>
             </p>
         </form>
         

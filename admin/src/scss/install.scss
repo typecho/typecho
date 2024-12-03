@@ -29,8 +29,7 @@ details {
 
   form > & {
     display: none;
-    padding: 20px;
-    border-radius: 5px;
+    border-radius: var(--te-border-radius);
   }
 
   textarea {

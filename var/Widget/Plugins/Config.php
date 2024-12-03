@@ -106,7 +106,7 @@ class Config extends Options
         }
 
         $submit = new Form\Element\Submit(null, null, _t('保存设置'));
-        $submit->input->setAttribute('class', 'btn primary');
+        $submit->input->setAttribute('class', 'btn btn-primary');
         $form->addItem($submit);
         return $form;
     }

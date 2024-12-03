@@ -1,74 +1,11 @@
 /**
  * icons
  */
-@import "icons/*.png";
-@include all-icons-sprites(true);
-
-@media
-(-webkit-min-device-pixel-ratio: 2),
-(min-resolution: 192dpi) {
-  @import "icons/*@2x.png";
-  @include all-icons-sprites();
-
-  @mixin icon-style($type, $name) {
-    .#{$type}-#{$name} {
-      @if $type == i {
-        @include icons-sprite(icon-#{$name});
-      } @else {
-        @include icons-sprite(#{mime}-#{$name});
-      }
-    }
-  }
-
-  @include icon-style(i, edit);
-  @include icon-style(i, delete);
-  @include icon-style(i, upload);
-  @include icon-style(i, upload-active);
-  @include icon-style(i, exlink);
-  @include icon-style(mime, office);
-  @include icon-style(mime, text);
-  @include icon-style(mime, image);
-  @include icon-style(mime, html);
-  @include icon-style(mime, archive);
-  @include icon-style(mime, application);
-  @include icon-style(mime, audio);
-  @include icon-style(mime, script);
-  @include icon-style(mime, video);
-  @include icon-style(mime, unknow);
-}
-
-/*
-@mixin sprite-background($name) {
-  // background-image: sprite-url($sprites);
-  // background-position: sprite-position($sprites, $name);
-  @include icons-sprite($name);
-  // background-repeat: no-repeat;
-  // display: block;
-  // height: image-height(sprite-file($sprites, $name));
-  // width: image-width(sprite-file($sprites, $name));
-  @media 
-  (-webkit-min-device-pixel-ratio: 2), 
-  (min-resolution: 192dpi) {
-    @include icons-2x-sprite($name);
-    // Workaround for https://gist.github.com/2140082
-    //@if (sprite-position($sprites, $name) != sprite-position($sprites-retina, $name)) {
-    //  $ypos: round(nth(sprite-position($sprites-retina, $name), 2) / 2);
-    //  background-position: 0 $ypos;
-    //}
-    // Hard coded width of the normal sprite image. There must be a smarter way to do this.
-    // @include background-size(auto 256px);
-    // background-image: sprite-url($sprites-retina);
-  }
-}
- */
-
-%i-base {
+ %i-base {
   display: inline-block;
-  vertical-align: text-bottom;
+  vertical-align: middle;
   text-indent: -9999em;
-  &:hover {
-    opacity: 0.75;
-  }
+  background: url("../img/icons.svg") no-repeat;
 }
 
 %i-16 {
@@ -77,110 +14,59 @@
   height: 16px;
 }
 
-%i-24 {
+%i-32 {
   @extend %i-base;
-  width: 24px;
-  height: 24px;
+  background-size: 32px auto;
+  width: 32px;
+  height: 32px;
+}
+
+.i-delete {
+  @extend %i-16;
+  background-position-y: 0;
 }
 
 .i-edit {
   @extend %i-16;
-  @include icons-sprite(icon-edit);
+  background-position-y: -16px;
 }
-.i-delete {
+
+.i-exlink {
   @extend %i-16;
-  @include icons-sprite(icon-delete);
+  background-position-y: calc(-16px * 2);
 }
-
-
-// 大号上传按钮
-
 .i-upload {
-  @extend %i-24;
-  @include icons-sprite(icon-upload);
+  @extend %i-32;
+  background-position-y: calc(-32px * 3);
 }
 
 .i-upload-active {
-  @extend %i-24;
-  @include icons-sprite(icon-upload-active);
+  @extend %i-32;
+  background-position-y: calc(-32px * 4);
+}
+
+a i[class*="i-"]:hover {
+  opacity: .75;
 }
 
 // 小箭头
 .i-caret-up, .i-caret-down, .i-caret-left, .i-caret-right {
   display: inline-block;
   border-style: solid;
-  border-color: transparent transparent #BBB transparent;
+  border-color: transparent transparent var(--te-secondary) transparent;
   border-width: 3px 4px 5px;
 }
 .i-caret-down {
-  border-color: #BBB transparent transparent transparent;
+  border-color: var(--te-secondary) transparent transparent transparent;
   border-width: 5px 4px 3px;
 }
 .i-caret-left {
-  border-color: transparent #BBB transparent transparent;
+  border-color: transparent var(--te-secondary) transparent transparent;
   border-width: 4px 5px 4px 3px;
 }
 .i-caret-right {
-  border-color: transparent transparent transparent #BBB;
+  border-color: transparent transparent transparent var(--te-secondary);
   border-width: 4px 3px 4px 5px;
-}
-
-.i-exlink {
-  @extend %i-16;
-  @include icons-sprite(icon-exlink);
-}
-
-
-/* 文件类型图标 */
-
-.mime-office {
-  @extend %i-16;
-  @include icons-sprite(mime-office);
-}
-
-.mime-text {
-  @extend %i-16;
-  @include icons-sprite(mime-text);
-}
-
-.mime-image {
-  @extend %i-16;
-  @include icons-sprite(mime-image);
-}
-
-.mime-html {
-  @extend %i-16;
-  @include icons-sprite(mime-html);
-}
-
-.mime-archive {
-  @extend %i-16;
-  @include icons-sprite(mime-archive);
-}
-
-.mime-application {
-  @extend %i-16;
-  @include icons-sprite(mime-application);
-}
-
-.mime-audio {
-  @extend %i-16;
-  @include icons-sprite(mime-audio);
-}
-
-.mime-script {
-  @extend %i-16;
-  @include icons-sprite(mime-script);
-}
-
-.mime-video {
-  @extend %i-16;
-  @include icons-sprite(mime-video);
-}
-
-.mime-unknow {
-  @extend %i-16;
-  @include icons-sprite(mime-unknow);
 }
 
 
@@ -197,9 +83,8 @@
     opacity: .2;
   }
 }
-.i-logo-s {
-  width: 26px;
-  height: 26px;
-  background-size: auto 26px;
-}
-
+// .i-logo-s {
+//   width: 26px;
+//   height: 26px;
+//   background-size: auto 26px;
+// }

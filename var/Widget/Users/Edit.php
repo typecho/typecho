@@ -171,7 +171,7 @@ class Edit extends Users implements ActionInterface
 
         /** 提交按钮 */
         $submit = new Form\Element\Submit();
-        $submit->input->setAttribute('class', 'btn primary');
+        $submit->input->setAttribute('class', 'btn btn-primary');
         $form->addItem($submit);
 
         if ($this->request->is('uid')) {
