@@ -3,52 +3,65 @@
 * 提示信息框
 */
 .message {
-  padding: 8px 10px;
-  border-radius: 2px;
-}
+  padding: 8px 16px;
+  border-radius: var(--te-border-radius);
 
-.message a {
-  font-weight: bold;
-  text-decoration: underline;
+  a {
+    font-weight: bold;
+  }
 }
 
 .error {
-  background: #FBE3E4;
-  color: #8A1F11;
+  background: var(--te-red-100);
+  color: var(--te-red-700);
+
+  a { color: var(--te-red-700); }
 }
-.error a { color: #8A1F11; }
 
 .notice {
-  background: #FFF6BF;
-  color: #8A6D3B;
+  background: var(--te-yellow-100);
+  color: var(--te-yellow-700);
+
+  a { color: var(--te-yellow-700); }
 }
-.notice a { color: #8A6D3B; }
 
 .success {
-  background: #E6EFC2;
-  color: #264409;
+  background: var(--te-green-100);
+  color: var(--te-green-700);
+
+  a { color: var(--te-green-700); }
 }
-.success a { color: #264409; }
 
 .warning {
-  color: #B94A48;
+  color: var(--te-danger);
 }
 
 
-// 气泡
+/**
+* 气泡提示
+*/
 .balloon {
   display: inline-block;
   padding: 0 4px;
-  min-width: 10px;
-  height: 14px;
-  line-height: 14px;
-  background: #B9B9B6;
-  vertical-align: text-top;
+  min-width: 20px;
+  height: 16px;
+  line-height: 16px;
+  background-color: var(--te-gray-700);
   text-align: center;
   font-size: 12px;
-  color: #FFF;
+  color: var(--te-white);
 
-  border-radius: 20px;
+  border-radius: 100px;
+}
+
+a.balloon {
+  background-color: var(--te-primary-100);
+  color: var(--te-primary);
+  &:hover {
+    background-color: var(--te-primary-500);
+    color: var(--te-white);
+    text-decoration: none;
+  }
 }
 
 /** 顶部消息样式 by 70 */
@@ -56,7 +69,7 @@
   display: none;
   position: sticky;
   margin: 0;
-  padding: 8px 0;
+  padding: 8px;
   border: none;
   width: 100%;
   z-index: 10;

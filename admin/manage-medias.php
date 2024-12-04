@@ -43,18 +43,20 @@ $attachments = \Widget\Contents\Attachment\Admin::alloc();
                 <form method="post" name="manage_medias" class="operate-form">
                     <table class="typecho-list-table draggable">
                         <colgroup>
-                            <col width="3%" class="kit-hidden-mb"/>
-                            <col width="6%" class="kit-hidden-mb"/>
+                            <col width="35" class="kit-hidden-mb"/>
+                            <col width="55" class="kit-hidden-mb"/>
                             <col width="30%"/>
-                            <col width="" class="kit-hidden-mb"/>
+                            <col width="10%" class="kit-hidden-mb"/>
+                            <col width="10%" class="kit-hidden-mb"/>
                             <col width="30%" class="kit-hidden-mb"/>
-                            <col width="16%"/>
+                            <col width="15%"/>
                         </colgroup>
                         <thead>
                         <tr>
                             <th class="kit-hidden-mb"></th>
                             <th class="kit-hidden-mb"></th>
                             <th><?php _e('文件名'); ?></th>
+                            <th class="kit-hidden-mb"><?php _e('类型'); ?></th>
                             <th class="kit-hidden-mb"><?php _e('上传者'); ?></th>
                             <th class="kit-hidden-mb"><?php _e('所属文章'); ?></th>
                             <th><?php _e('发布日期'); ?></th>
@@ -70,15 +72,15 @@ $attachments = \Widget\Contents\Attachment\Admin::alloc();
                                                                      name="cid[]"/></td>
                                     <td class="kit-hidden-mb"><a
                                             href="<?php $options->adminUrl('manage-comments.php?cid=' . $attachments->cid); ?>"
-                                            class="balloon-button size-<?php echo \Typecho\Common::splitByCount($attachments->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $attachments->commentsNum(); ?></a>
+                                            class="balloon size-<?php echo \Typecho\Common::splitByCount($attachments->commentsNum, 1, 10, 20, 50, 100); ?>"><?php $attachments->commentsNum(); ?></a>
                                     </td>
                                     <td>
-                                        <i class="mime-<?php echo $mime; ?>"></i>
                                         <a href="<?php $options->adminUrl('media.php?cid=' . $attachments->cid); ?>"><?php $attachments->title(); ?></a>
                                         <a href="<?php $attachments->permalink(); ?>"
                                            title="<?php _e('浏览 %s', $attachments->title); ?>"><i
                                                 class="i-exlink"></i></a>
                                     </td>
+                                    <td class="kit-hidden-mb"><?php echo $mime; ?></td>
                                     <td class="kit-hidden-mb"><?php $attachments->author(); ?></td>
                                     <td class="kit-hidden-mb">
                                         <?php if ($attachments->parentPost->cid): ?>

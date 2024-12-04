@@ -62,29 +62,6 @@ code, pre, tt, .mono {
   height: 100%;
 }
 
-a.balloon-button {
-  display: inline-block;
-  padding: 0 6px;
-  min-width: 12px;
-  height: 18px;
-  line-height: 18px;
-  background: #D8E7EE;
-  font-size: .85714em;
-  text-align: center;
-  text-decoration: none;
-  
-  /** 修正 ie 中文不对齐 */
-  zoom:1;
-  
-  border-radius: 30px;
-  white-space: nowrap;
-}
-
-a.button:hover, a.balloon-button:hover {
-  background-color: #A5CADC;
-  color: #FFF;
-  text-decoration: none;
-}
 
 /**
 * 载入状态
@@ -191,17 +168,6 @@ a.button:hover, a.balloon-button:hover {
   h2 {
     margin: 0;
     font-size: 24px;
-  }
-
-  a {
-    display: inline-block;
-    padding: 1px 12px;
-    border: 1px solid var(--te-primary);
-    margin-left: 16px;
-    font-size: 14px;
-    text-decoration: none;
-    border-radius: 50px;
-    vertical-align: text-top;
   }
 }
 

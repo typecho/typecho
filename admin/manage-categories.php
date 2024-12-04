@@ -46,12 +46,12 @@ include 'menu.php';
 
                     <table class="typecho-list-table">
                         <colgroup>
-                            <col width="3%" class="kit-hidden-mb"/>
+                            <col width="30" class="kit-hidden-mb"/>
                             <col width=""/>
                             <col width="15%" class="kit-hidden-mb"/>
-                            <col width="20%"/>
+                            <col width="25%"/>
                             <col width="15%"/>
-                            <col width="15%" class="kit-hidden-mb"/>
+                            <col width="10%" class="kit-hidden-mb"/>
                         </colgroup>
                         <thead>
                         <tr class="nodrag">
@@ -94,7 +94,7 @@ include 'menu.php';
                                         <?php endif; ?>
                                     </td>
                                     <td class="kit-hidden-mb"><a
-                                            class="balloon-button left size-<?php echo \Typecho\Common::splitByCount($categories->count, 1, 10, 20, 50, 100); ?>"
+                                            class="balloon left size-<?php echo \Typecho\Common::splitByCount($categories->count, 1, 10, 20, 50, 100); ?>"
                                             href="<?php $options->adminUrl('manage-posts.php?category=' . $categories->mid); ?>"><?php $categories->count(); ?></a>
                                     </td>
                                 </tr>

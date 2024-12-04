@@ -42,7 +42,7 @@ input[type=reset],
 }
 
 .btn-sm {
-  padding: 3px 6px;
+  padding: 3px 7px;
   font-size: 13px;
   border-radius: var(--te-border-radius-sm);
 }
@@ -63,6 +63,11 @@ input[type=reset],
   &:active, &.active {
     background-color: var(--te-primary-700);
   }
+}
+
+.btn-outline-primary {
+  background-color: transparent;
+  border-color: var(--te-primary);
 }
 
 .btn-danger {

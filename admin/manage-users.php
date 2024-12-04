@@ -38,8 +38,8 @@ $users = \Widget\Users\Admin::alloc();
                 <form method="post" name="manage_users" class="operate-form">
                     <table class="typecho-list-table">
                         <colgroup>
-                            <col width="3%" class="kit-hidden-mb"/>
-                            <col width="6%" class="kit-hidden-mb"/>
+                            <col width="35" class="kit-hidden-mb"/>
+                            <col width="35" class="kit-hidden-mb"/>
                             <col width="30%"/>
                             <col width="" class="kit-hidden-mb"/>
                             <col width="25%" class="kit-hidden-mb"/>
@@ -62,7 +62,7 @@ $users = \Widget\Users\Admin::alloc();
                                                                  name="uid[]"/></td>
                                 <td class="kit-hidden-mb"><a
                                         href="<?php $options->adminUrl('manage-posts.php?__typecho_all_posts=off&uid=' . $users->uid); ?>"
-                                        class="balloon-button left size-<?php echo \Typecho\Common::splitByCount($users->postsNum, 1, 10, 20, 50, 100); ?>"><?php $users->postsNum(); ?></a>
+                                        class="balloon left size-<?php echo \Typecho\Common::splitByCount($users->postsNum, 1, 10, 20, 50, 100); ?>"><?php $users->postsNum(); ?></a>
                                 </td>
                                 <td>
                                     <a href="<?php $options->adminUrl('user.php?uid=' . $users->uid); ?>"><?php $users->name(); ?></a>

@@ -83,7 +83,7 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == \Ty
                 <form method="post" name="manage_comments" class="operate-form">
                     <table class="typecho-list-table">
                         <colgroup>
-                            <col width="3%" class="kit-hidden-mb"/>
+                            <col width="35" class="kit-hidden-mb"/>
                             <col width="6%" class="kit-hidden" />
                             <col width="20%"/>
                             <col width="71%"/>

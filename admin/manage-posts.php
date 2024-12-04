@@ -115,12 +115,12 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                 <form method="post" name="manage_posts" class="operate-form">
                     <table class="typecho-list-table">
                         <colgroup>
-                            <col width="3%" class="kit-hidden-mb"/>
-                            <col width="6%" class="kit-hidden-mb"/>
+                            <col width="35" class="kit-hidden-mb"/>
+                            <col width="35" class="kit-hidden-mb"/>
                             <col width="45%"/>
                             <col width="" class="kit-hidden-mb"/>
                             <col width="18%" class="kit-hidden-mb"/>
-                            <col width="16%"/>
+                            <col width="15%"/>
                         </colgroup>
                         <thead>
                         <tr>
@@ -140,11 +140,11 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                                                                      name="cid[]"/></td>
                                     <td class="kit-hidden-mb"><a
                                             href="<?php $options->adminUrl('manage-comments.php?cid=' . ($posts->parentId ? $posts->parentId : $posts->cid)); ?>"
-                                            class="balloon-button size-<?php echo \Typecho\Common::splitByCount($posts->commentsNum, 1, 10, 20, 50, 100); ?>"
+                                            class="balloon size-<?php echo \Typecho\Common::splitByCount($posts->commentsNum, 1, 10, 20, 50, 100); ?>"
                                             title="<?php $posts->commentsNum(); ?> <?php _e('评论'); ?>"><?php $posts->commentsNum(); ?></a>
                                     </td>
                                     <td>
-                                        <a href="<?php $options->adminUrl('write-post.php?cid=' . $posts->cid); ?>"><?php $posts->title(); ?></a>
+                                        <a href="<?php $options->adminUrl('write-post.php?cid=' . $posts->cid); ?>" <?php _e('编辑 %s', htmlspecialchars($posts->title)); ?>><?php $posts->title(); ?></a>
                                         <?php
                                         if ('post_draft' == $posts->type) {
                                             echo '<em class="status">' . _t('草稿') . '</em>';
@@ -162,9 +162,6 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                                             echo '<em class="status">' . _t('密码保护') . '</em>';
                                         }
                                         ?>
-                                        <a href="<?php $options->adminUrl('write-post.php?cid=' . $posts->cid); ?>"
-                                           title="<?php _e('编辑 %s', htmlspecialchars($posts->title)); ?>"><i
-                                                class="i-edit"></i></a>
                                         <?php if ('post_draft' != $posts->type): ?>
                                             <a href="<?php $posts->permalink(); ?>"
                                                title="<?php _e('浏览 %s', htmlspecialchars($posts->title)); ?>"><i

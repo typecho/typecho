@@ -8,7 +8,7 @@
     font-size: .92857em;
 
     a {
-      color: #B94A48;
+      color: var(--te-danger);
     }
   }
 
@@ -60,10 +60,10 @@
   }
 
   #slug {
-    padding: 2px;
+    padding: 0 2px;
     border: none;
     background: var(--te-yellow-100);
-    color: #666;
+    border-radius: 0;
   }
 
   #text {

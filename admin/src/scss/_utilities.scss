@@ -23,6 +23,11 @@
 .p-2 { padding: 8px; }
 .p-3 { padding: 16px; }
 
+.px-0 { padding-left: 0; padding-right: 0; }
+.px-1 { padding-left: 4px; padding-right: 4px; }
+.px-2 { padding-left: 8px; padding-right: 8px; }
+.px-3 { padding-left: 16px; padding-right: 16px; }
+
 .w-10 { width: 10% !important; }
 .w-20 { width: 20% !important; }
 .w-30 { width: 30% !important; }
@@ -59,6 +64,13 @@
 .shadow-sm { box-shadow: var(--te-box-shadow-sm); }
 .shadow-lg { box-shadow: var(--te-box-shadow-lg); }
 .shadow-inset { box-shadow: var(--te-box-shadow-inset); }
+
+
+// Radius utilities
+.rounded-1 { border-radius: var(--te-border-radius-sm); }
+.rounded-2, .rounded { border-radius: var(--te-border-radius); }
+.rounded-3 { border-radius: var(--te-border-radius-lg); }
+.rounded-pill { border-radius: var(--te-border-radius-pill); }
 
 /*
 * Hide from both screenreaders and browsers: h5bp.com/u

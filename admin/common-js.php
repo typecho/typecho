@@ -30,12 +30,12 @@
                     }
 
                     p.slideDown(function () {
-                        var t = $(this), color = '#C6D880';
+                        var t = $(this), color = '#a3cfbb';
                         
                         if (t.hasClass('error')) {
-                            color = '#FBC2C4';
+                            color = '#f1aeb5';
                         } else if (t.hasClass('notice')) {
-                            color = '#FFD324';
+                            color = '#ffe5a0';
                         }
 
                         t.effect('highlight', {color : color})

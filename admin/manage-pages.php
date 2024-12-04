@@ -47,12 +47,12 @@ $pages = \Widget\Contents\Page\Admin::alloc();
                 <form method="post" name="manage_pages" class="operate-form">
                     <table class="typecho-list-table">
                         <colgroup>
-                            <col width="3%" class="kit-hidden-mb"/>
-                            <col width="6%" class="kit-hidden-mb"/>
-                            <col width="42%"/>
-                            <col width="18%"/>
+                            <col width="35" class="kit-hidden-mb"/>
+                            <col width="35" class="kit-hidden-mb"/>
+                            <col width="30%"/>
+                            <col width="30%"/>
                             <col width="" class="kit-hidden-mb"/>
-                            <col width="16%"/>
+                            <col width="15%"/>
                         </colgroup>
                         <thead>
                         <tr class="nodrag">
@@ -72,11 +72,11 @@ $pages = \Widget\Contents\Page\Admin::alloc();
                                                                      name="cid[]"/></td>
                                     <td class="kit-hidden-mb"><a
                                             href="<?php $options->adminUrl('manage-comments.php?cid=' . $pages->cid); ?>"
-                                            class="balloon-button size-<?php echo \Typecho\Common::splitByCount($pages->commentsNum, 1, 10, 20, 50, 100); ?>"
+                                            class="balloon size-<?php echo \Typecho\Common::splitByCount($pages->commentsNum, 1, 10, 20, 50, 100); ?>"
                                             title="<?php $pages->commentsNum(); ?> <?php _e('评论'); ?>"><?php $pages->commentsNum(); ?></a>
                                     </td>
                                     <td>
-                                        <a href="<?php $options->adminUrl('write-page.php?cid=' . $pages->cid); ?>"><?php $pages->title(); ?></a>
+                                        <a href="<?php $options->adminUrl('write-page.php?cid=' . $pages->cid); ?>" title="<?php _e('编辑 %s', htmlspecialchars($pages->title)); ?>"><?php $pages->title(); ?></a>
                                         <?php
                                         if ('page_draft' == $pages->type) {
                                             echo '<em class="status">' . _t('草稿') . '</em>';
@@ -88,9 +88,6 @@ $pages = \Widget\Contents\Page\Admin::alloc();
                                             echo '<em class="status">' . _t('隐藏') . '</em>';
                                         }
                                         ?>
-                                        <a href="<?php $options->adminUrl('write-page.php?cid=' . $pages->cid); ?>"
-                                           title="<?php _e('编辑 %s', htmlspecialchars($pages->title)); ?>"><i
-                                                class="i-edit"></i></a>
                                         <?php if ('page_draft' != $pages->type): ?>
                                             <a href="<?php $pages->permalink(); ?>"
                                                title="<?php _e('浏览 %s', htmlspecialchars($pages->title)); ?>"><i

@@ -19,7 +19,7 @@
 
     &.required:after {
       content: " *";
-      color: #B94A48;
+      color: var(--te-danger);
     }
   }
 
