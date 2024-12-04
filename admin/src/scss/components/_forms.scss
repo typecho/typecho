@@ -33,11 +33,13 @@ input.text {
   &.form-sm {
     font-size: 13px;
     padding: 3px 6px;
+    border-radius: var(--te-border-radius-sm);
   }
 
   &.form-lg {
     padding: 7px 14px;
     font-size: 16px;
+    border-radius: var(--te-border-radius-lg);
   }
 }
 
@@ -62,5 +64,6 @@ select {
   &.form-sm {
     font-size: 13px;
     height: 27.5px;
+    border-radius: var(--te-border-radius-sm);
   }
 }

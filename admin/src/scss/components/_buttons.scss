@@ -44,10 +44,12 @@ input[type=reset],
 .btn-sm {
   padding: 3px 6px;
   font-size: 13px;
+  border-radius: var(--te-border-radius-sm);
 }
 .btn-lg {
   padding: 7px 14px;
   font-size: 16px;
+  border-radius: var(--te-border-radius-lg);
 }
 
 .btn-primary {

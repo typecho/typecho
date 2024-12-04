@@ -203,6 +203,7 @@ class Reading extends Permalink
             _t('此数目用于指定显示在侧边栏中的文章列表数目.')
         );
         $postsListSize->input->setAttribute('class', 'w-20');
+        $postsListSize->input->setAttribute('min', '0');
         $form->addInput($postsListSize->addRule('isInteger', _t('请填入一个数字')));
 
         /** 每页文章数目 */
@@ -214,6 +215,7 @@ class Reading extends Permalink
             _t('此数目用于指定文章归档输出时每页显示的文章数目.')
         );
         $pageSize->input->setAttribute('class', 'w-20');
+        $pageSize->input->setAttribute('min', '0');
         $form->addInput($pageSize->addRule('isInteger', _t('请填入一个数字')));
 
         /** FEED 全文输出 */

@@ -120,7 +120,9 @@ $screen-wide: 1200px;
   --te-body-color: var(--te-dark);
 
   --te-border-color: var(--te-gray-300);
-  --te-border-radius: 4px;
+  --te-border-radius-sm: 4px;
+  --te-border-radius: 6px;
+  --te-border-radius-lg: 8px;
 
   --te-box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
   --te-box-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.075);
