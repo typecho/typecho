@@ -9,7 +9,7 @@ include 'menu.php';
         <?php include 'page-title.php'; ?>
         <?php include 'theme-tabs.php'; ?>
         <div class="row typecho-page-main" role="main">
-            <div class="col-mb-12">
+            <div class="col">
                 <table class="typecho-list-table typecho-theme-list">
                     <colgroup>
                         <col width="35%"/>
@@ -40,7 +40,7 @@ include 'menu.php';
                             <td valign="top"><img src="<?php $themes->screen(); ?>"
                                                   alt="<?php $themes->name(); ?>"/></td>
                             <td valign="top">
-                                <h3><?php '' != $themes->title ? $themes->title() : $themes->name(); ?></h3>
+                                <h6><?php '' != $themes->title ? $themes->title() : $themes->name(); ?></h6>
                                 <cite>
                                     <?php if ($themes->author): ?><?php _e('作者'); ?>: <?php if ($themes->homepage): ?><a href="<?php $themes->homepage() ?>"><?php endif; ?><?php $themes->author(); ?><?php if ($themes->homepage): ?></a><?php endif; ?> &nbsp;&nbsp;<?php endif; ?>
                                     <?php if ($themes->version): ?><?php _e('版本'); ?>: <?php $themes->version() ?><?php endif; ?>

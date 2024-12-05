@@ -41,14 +41,10 @@
     }
   }
 
-  input.title {
-    font-size: 1.25rem;
-    font-weight: bold;
-  }
-
   .url-slug {
     color: var(--te-secondary);
     word-break: break-word;
+    font-size: .8125rem;
   }
 
   #slug {

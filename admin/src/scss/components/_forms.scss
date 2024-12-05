@@ -15,11 +15,11 @@ input[type=tel],
 input[type=time],
 textarea,
 input.text {
+  display: block;
   color: var(--te-body-color);
   border: 1px solid var(--te-border-color);
   padding: 6px 12px;
   border-radius: var(--te-border-radius);
-  line-height: 1.5;
   width: 100%;
 
   &:disabled, &:read-only {

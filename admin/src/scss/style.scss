@@ -23,43 +23,10 @@
 @import "header";
 @import "footer";
 
-/**
-* Typecho 全局样式
-*/
-
-*, :after, :before {
-  box-sizing: border-box;
-}
-
-html {
-  height: 100%;
-}
-
-body {
-  font-family: var(--te-body-font-family);
-  background: #fafaf8;
-  color: var(--te-body-color);
-  font-size: var(--te-body-font-size);
-  line-height: 1.5;
-}
-
-a {
-  color: var(--te-link-color);
-  text-decoration: none;
-  &:hover {
-    color: var(--te-link-hover-color);
-    text-decoration: underline;
+@media (min-width: 1400px) {
+  .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+      max-width: 1140px;
   }
-}
-
-code, pre, tt, .mono { 
-  font-family: var(--te-font-monospace);
-}
-
-.p { margin: 1rem 0; }
-
-.body-100 {
-  height: 100%;
 }
 
 
@@ -84,19 +51,12 @@ code, pre, tt, .mono {
 }
 
 .welcome-board {
-  margin-bottom: 32px;
+  margin-bottom: 2rem;
   color: var(--te-secondary);
-  font-size: 16px;
+  font-size: 1rem;
   strong {
     color: var(--te-body-color);
     font-size: 2rem;
-  }
-}
-
-#start-link {
-  li {
-    display: inline-block;
-    margin-right: 16px;
   }
 }
 
@@ -160,14 +120,13 @@ code, pre, tt, .mono {
 * 标题
 */
 .typecho-page-title {
-  width: 100%;
   display: flex;
   align-items: center;
-  margin: 24px 0 10px;
+  margin: 1.5rem 0 1rem;
 
   h2 {
     margin: 0;
-    font-size: 24px;
+    font-size: 1.5rem;
   }
 }
 
@@ -370,7 +329,7 @@ code, pre, tt, .mono {
   }
 
   .profile-avatar {
-    width: 110px;
-    height: 110px;
+    width: 128px;
+    height: 128px;
   }
 }

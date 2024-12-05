@@ -21,10 +21,17 @@
       content: " *";
       color: var(--te-danger);
     }
+    &:not([class]) {
+      display: inline;
+      input,
+      ~ input {
+        display: inline;
+      }
+    }
   }
 
   span {
-    margin-right: 15px;
+    margin-right: 1rem;
   }
 
   .description {
@@ -38,16 +45,16 @@
     margin: .5rem 0;
   }
 
-  input.text {
-    width: 100%;
-  }
+  // input.text {
+    // width: 100%;
+  // }
 
   input.num {
     width: 60px;
   }
 
   textarea {
-    width: 100%;
+    // width: 100%;
     height: 100px;
   }
 

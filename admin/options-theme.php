@@ -9,7 +9,7 @@ include 'menu.php';
         <?php include 'page-title.php'; ?>
         <?php include 'theme-tabs.php'; ?>
         <div class="row typecho-page-main" role="main">
-            <div class="col-mb-12  col-tb-8" role="form">
+            <div class="col-lg-8" role="form">
                 <?php \Widget\Themes\Config::alloc()->config()->render(); ?>
             </div>
         </div>

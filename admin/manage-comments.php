@@ -11,7 +11,7 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == \Ty
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main" role="main">
-            <div class="col-mb-12 typecho-list">
+            <div class="col typecho-list">
                 <div class="typecho-list-operate">
                     <ul class="typecho-option-tabs">
                         <li<?php if(!isset($request->status) || 'approved' == $request->get('status')): ?> class="current"<?php endif; ?>><a href="<?php $options->adminUrl('manage-comments.php'

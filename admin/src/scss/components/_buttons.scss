@@ -3,18 +3,6 @@
 * Buttons
 */
 
-button,
-input[type=button],
-input[type=submit],
-input[type=reset],
-.btn {
-  line-height: 1.5;
-}
-
-// @mixin button($color) {
-//   background-color: $color;
-// }
-
 .btn {
   background-color: var(--te-gray-200);
   border: 1px solid transparent;

@@ -20,7 +20,7 @@ while ($parents->next()) {
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <form class="row typecho-page-main typecho-post-area" action="<?php $security->index('/action/contents-page-edit'); ?>" method="post" name="write_page">
-            <div class="col-mb-12 col-tb-9" role="main">
+            <div class="col-lg-9" role="main">
                 <?php if ($page->draft): ?>
                     <?php if ($page->draft['cid'] != $page->cid): ?>
                         <?php $pageModifyDate = new \Typecho\Date($page->draft['modified']); ?>
@@ -36,7 +36,7 @@ while ($parents->next()) {
                 <p class="title">
                     <label for="title" class="sr-only"><?php _e('标题'); ?></label>
                     <input type="text" id="title" name="title" autocomplete="off" value="<?php $page->title(); ?>"
-                           placeholder="<?php _e('标题'); ?>" class="w-100 text title"/>
+                           placeholder="<?php _e('标题'); ?>" class="w-100 text title form-lg"/>
                 </p>
                 <?php $permalink = \Typecho\Common::url($options->routingTable['page']['url'], $options->index);
                 [$scheme, $permalink] = explode(':', $permalink, 2);
@@ -93,7 +93,7 @@ while ($parents->next()) {
 
                 <?php \Typecho\Plugin::factory('admin/write-page.php')->call('content', $page); ?>
             </div>
-            <div id="edit-secondary" class="col-mb-12 col-tb-3" role="complementary">
+            <div id="edit-secondary" class="col-lg-3" role="complementary">
                 <ul class="typecho-option-tabs">
                     <li class="active w-50"><a href="#tab-advance"><?php _e('选项'); ?></a></li>
                     <li class="w-50"><a href="#tab-files" id="tab-files-btn"><?php _e('附件'); ?></a></li>

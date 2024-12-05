@@ -14,7 +14,7 @@ $backupFiles = \Widget\Backup::alloc()->listFiles();
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main" role="main">
-            <div class="col-mb-12 col-tb-8">
+            <div class="col-lg-8">
                 <div id="typecho-welcome">
                     <form action="<?php echo $actionUrl; ?>" method="post">
                     <h3><?php _e('备份您的数据'); ?></h3>
@@ -29,7 +29,7 @@ $backupFiles = \Widget\Backup::alloc()->listFiles();
                 </div>
             </div>
 
-            <div id="backup-secondary" class="col-mb-12 col-tb-4" role="form">
+            <div id="backup-secondary" class="col-lg-4" role="form">
                 <h3><?php _e('恢复数据'); ?></h3>
                 <ul class="typecho-option-tabs">
                     <li class="active w-50"><a href="#from-upload"><?php _e('上传'); ?></a></li>

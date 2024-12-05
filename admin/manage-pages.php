@@ -10,7 +10,7 @@ $pages = \Widget\Contents\Page\Admin::alloc();
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main" role="main">
-            <div class="col-mb-12 typecho-list">
+            <div class="col typecho-list">
                 <form method="get" class="typecho-list-operate">
                     <div class="operate">
                         <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox"

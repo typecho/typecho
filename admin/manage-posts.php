@@ -11,7 +11,7 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main" role="main">
-            <div class="col-mb-12 typecho-list">
+            <div class="col typecho-list">
                 <div class="typecho-list-operate">
                     <ul class="typecho-option-tabs">
                         <li<?php if (!isset($request->status) || 'all' == $request->get('status')): ?> class="current"<?php endif; ?>>

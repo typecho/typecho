@@ -8,7 +8,7 @@ include 'menu.php';
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main" role="form">
-            <div class="col-mb-12 col-tb-6 col-tb-offset-3">
+            <div class="col-lg-8">
                 <?php \Widget\Users\Edit::alloc()->form()->render(); ?>
             </div>
         </div>

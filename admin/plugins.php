@@ -7,10 +7,10 @@ include 'menu.php';
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main" role="main">
-            <div class="col-mb-12 typecho-list">
+            <div class="col typecho-list">
                 <?php \Widget\Plugins\Rows::allocWithAlias('activated', 'activated=1')->to($activatedPlugins); ?>
                 <?php if ($activatedPlugins->have() || !empty($activatedPlugins->activatedPlugins)): ?>
-                    <h4 class="typecho-list-table-title"><?php _e('启用的插件'); ?></h4>
+                    <h4 class="typecho-list-table-title fs-6"><?php _e('启用的插件'); ?></h4>
                     <table class="typecho-list-table">
                         <colgroup>
                             <col width="25%"/>
@@ -75,7 +75,7 @@ include 'menu.php';
 
                 <?php \Widget\Plugins\Rows::allocWithAlias('unactivated', 'activated=0')->to($deactivatedPlugins); ?>
                 <?php if ($deactivatedPlugins->have() || !$activatedPlugins->have()): ?>
-                    <h4 class="typecho-list-table-title"><?php _e('禁用的插件'); ?></h4>
+                    <h4 class="typecho-list-table-title fs-6"><?php _e('禁用的插件'); ?></h4>
                     <table class="typecho-list-table deactivate">
                         <colgroup>
                             <col width="25%"/>

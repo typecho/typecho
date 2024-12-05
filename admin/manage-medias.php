@@ -10,7 +10,7 @@ $attachments = \Widget\Contents\Attachment\Admin::alloc();
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main" role="main">
-            <div class="col-mb-12">
+            <div class="col">
 
                 <form method="get" class="typecho-list-operate">
                     <div class="operate">

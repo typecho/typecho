@@ -10,7 +10,7 @@ include 'menu.php';
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main">
-            <div class="col-mb-12 col-tb-8" role="main">
+            <div class="col-lg-8" role="main">
                 <?php if ($attachment->attachment->isImage): ?>
                     <p><img src="<?php $attachment->attachment->url(); ?>"
                             alt="<?php $attachment->attachment->name(); ?>" class="typecho-attachment-photo"/></p>
@@ -35,7 +35,7 @@ include 'menu.php';
                     <ul id="file-list"></ul>
                 </div>
             </div>
-            <div class="col-mb-12 col-tb-4 edit-media" role="form">
+            <div class="col-lg-4 edit-media" role="form">
                 <?php $attachment->form()->render(); ?>
             </div>
         </div>

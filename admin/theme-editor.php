@@ -11,7 +11,7 @@ include 'menu.php';
         <?php include 'page-title.php'; ?>
         <?php include 'theme-tabs.php'; ?>
         <div class="row typecho-page-main typecho-edit-theme" role="main">
-            <div class="col-mb-12 col-tb-8 col-9 content">
+            <div class="col-lg-10 content">
                 <form method="post" name="theme" id="theme"
                       action="<?php $security->index('/action/themes-edit'); ?>">
                     <label for="content" class="sr-only"><?php _e('编辑源码'); ?></label>
@@ -28,14 +28,16 @@ include 'menu.php';
                     </p>
                 </form>
             </div>
-            <ul class="col-mb-12 col-tb-4 col-3">
-                <li><strong>模板文件</strong></li>
-                <?php while ($files->next()): ?>
-                    <li<?php if ($files->current): ?> class="current"<?php endif; ?>>
-                        <a href="<?php $options->adminUrl('theme-editor.php?theme=' . $files->currentTheme() . '&file=' . $files->file); ?>"><?php $files->file(); ?></a>
-                    </li>
-                <?php endwhile; ?>
-            </ul>
+            <div class="col-lg-2">
+                <ul>
+                    <li><strong>模板文件</strong></li>
+                    <?php while ($files->next()): ?>
+                        <li<?php if ($files->current): ?> class="current"<?php endif; ?>>
+                            <a href="<?php $options->adminUrl('theme-editor.php?theme=' . $files->currentTheme() . '&file=' . $files->file); ?>"><?php $files->file(); ?></a>
+                        </li>
+                    <?php endwhile; ?>
+                </ul>
+            </div>
         </div>
     </div>
 </main>

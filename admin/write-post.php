@@ -9,7 +9,7 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <form class="row typecho-page-main typecho-post-area" action="<?php $security->index('/action/contents-post-edit'); ?>" method="post" name="write_post">
-            <div class="col-mb-12 col-tb-9" role="main">
+            <div class="col-lg-9" role="main">
                 <?php if ($post->draft): ?>
                     <?php if ($post->draft['cid'] != $post->cid): ?>
                         <?php $postModifyDate = new \Typecho\Date($post->draft['modified']); ?>
@@ -25,7 +25,7 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
                 <p class="title">
                     <label for="title" class="sr-only"><?php _e('标题'); ?></label>
                     <input type="text" id="title" name="title" autocomplete="off" value="<?php $post->title(); ?>"
-                           placeholder="<?php _e('标题'); ?>" class="w-100 text title"/>
+                           placeholder="<?php _e('标题'); ?>" class="w-100 text title form-lg"/>
                 </p>
                 <?php $permalink = \Typecho\Common::url($options->routingTable['post']['url'], $options->index);
                 [$scheme, $permalink] = explode(':', $permalink, 2);
@@ -78,7 +78,7 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
                 <?php \Typecho\Plugin::factory('admin/write-post.php')->call('content', $post); ?>
             </div>
 
-            <div id="edit-secondary" class="col-mb-12 col-tb-3" role="complementary">
+            <div id="edit-secondary" class="col-lg-3" role="complementary">
                 <ul class="typecho-option-tabs">
                     <li class="active w-50"><a href="#tab-advance"><?php _e('选项'); ?></a></li>
                     <li class="w-50"><a href="#tab-files" id="tab-files-btn"><?php _e('附件'); ?></a></li>

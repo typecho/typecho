@@ -11,7 +11,7 @@ include 'menu.php';
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main manage-metas">
 
-            <div class="col-mb-12 col-tb-8" role="main">
+            <div class="col-lg-8" role="main">
 
                 <form method="post" name="manage_tags" class="operate-form">
                     <div class="typecho-list-operate">
@@ -61,7 +61,7 @@ include 'menu.php';
                 </form>
 
             </div>
-            <div class="col-mb-12 col-tb-4" role="form">
+            <div class="col-lg-4" role="form">
                 <?php \Widget\Metas\Tag\Edit::alloc()->form()->render(); ?>
             </div>
         </div>

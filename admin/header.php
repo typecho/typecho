@@ -3,7 +3,7 @@ if (!defined('__TYPECHO_ADMIN__')) {
     exit;
 }
 
-$header = '<link rel="stylesheet" href="' . $options->adminStaticUrl('css', 'normalize.css', true) . '">
+$header = '<link rel="stylesheet" href="' . $options->adminStaticUrl('css', 'reboot.css', true) . '">
 <link rel="stylesheet" href="' . $options->adminStaticUrl('css', 'grid.css', true) . '">
 <link rel="stylesheet" href="' . $options->adminStaticUrl('css', 'style.css', true) . '">';
 

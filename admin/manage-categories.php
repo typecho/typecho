@@ -11,7 +11,7 @@ include 'menu.php';
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main manage-metas">
 
-            <div class="col-mb-12" role="main">
+            <div class="col" role="main">
 
                 <form method="post" name="manage_categories" class="operate-form">
                     <div class="typecho-list-operate">
