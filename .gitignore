@@ -23,6 +23,7 @@
 .smbdelete*
 *.sublime*
 .sass-cache
+*.css.map
 config.rb
 prepros.config
 config.inc.*
