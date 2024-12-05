@@ -4,7 +4,7 @@ $fields = isset($post) ? $post->getFieldItems() : $page->getFieldItems();
 $defaultFields = isset($post) ? $post->getDefaultFieldItems() : $page->getDefaultFieldItems();
 ?>
 <details id="custom-field"
-         class="typecho-post-option" <?php if (!empty($defaultFields) || !empty($fields)): ?>open<?php endif; ?>>
+         class="typecho-option" <?php if (!empty($defaultFields) || !empty($fields)): ?>open<?php endif; ?>>
     <summary><?php _e('自定义字段'); ?></summary>
     <ul class="fields mono">
         <?php foreach ($defaultFields as $field): ?>

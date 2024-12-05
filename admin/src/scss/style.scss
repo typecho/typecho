@@ -263,6 +263,7 @@
 * Upload
 */
 #upload-panel {
+  margin: 1rem 0;
   border: 1px solid var(--te-border-color);
   background-color: var(--te-white);
   color: var(--te-secondary);
@@ -273,7 +274,7 @@
 }
 
 .upload-area {
-  padding: 16px;
+  padding: 1rem;
   text-align: center;
 }
 

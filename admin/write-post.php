@@ -86,14 +86,14 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
 
 
                 <div id="tab-advance" class="tab-content">
-                    <section class="typecho-post-option" role="application">
+                    <section class="typecho-option" role="application">
                         <label for="date" class="typecho-label"><?php _e('发布日期'); ?></label>
                         <p><input class="typecho-date w-100" type="text" name="date" id="date" autocomplete="off"
                                   value="<?php $post->have() && $post->created > 0 ? $post->date('Y-m-d H:i') : ''; ?>"/>
                         </p>
                     </section>
 
-                    <section class="typecho-post-option category-option">
+                    <section class="typecho-option category-option">
                         <label class="typecho-label"><?php _e('分类'); ?></label>
                         <?php \Widget\Metas\Category\Rows::alloc()->to($category); ?>
                         <ul>
@@ -110,7 +110,7 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
                         </ul>
                     </section>
 
-                    <section class="typecho-post-option">
+                    <section class="typecho-option">
                         <label for="token-input-tags" class="typecho-label"><?php _e('标签'); ?></label>
                         <p><input id="tags" name="tags" type="text" value="<?php $post->have() ? $post->tags(',', false) : ''; ?>"
                                   class="w-100 text"/></p>
@@ -122,7 +122,7 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
                         <summary class="btn btn-sm"><?php _e('高级选项'); ?> <i class="i-caret-down"></i></summary>
 
                         <?php if ($user->pass('editor', true)): ?>
-                            <section class="typecho-post-option visibility-option">
+                            <section class="typecho-option visibility-option">
                                 <label for="visibility" class="typecho-label"><?php _e('公开度'); ?></label>
                                 <p>
                                     <select id="visibility" name="visibility">
@@ -142,14 +142,14 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
                                 </p>
                                 <p id="post-password"<?php if (strlen($post->password ?? '') == 0): ?> class="hidden"<?php endif; ?>>
                                     <label for="protect-pwd" class="sr-only">内容密码</label>
-                                    <input type="text" name="password" id="protect-pwd" class="form-sm"
+                                    <input type="text" name="password" id="protect-pwd"
                                            value="<?php $post->password(); ?>" size="16"
                                            placeholder="<?php _e('内容密码'); ?>" autocomplete="off"/>
                                 </p>
                             </section>
                         <?php endif; ?>
 
-                        <section class="typecho-post-option allow-option">
+                        <section class="typecho-option allow-option">
                             <label class="typecho-label"><?php _e('权限控制'); ?></label>
                             <ul>
                                 <li><input id="allowComment" name="allowComment" type="checkbox" value="1"
@@ -164,9 +164,9 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
                             </ul>
                         </section>
 
-                        <section class="typecho-post-option">
+                        <section class="typecho-option">
                             <label for="trackback" class="typecho-label"><?php _e('引用通告'); ?></label>
-                            <p><textarea id="trackback" class="w-100 mono" name="trackback" rows="2"></textarea></p>
+                            <textarea id="trackback" class="w-100 mono" name="trackback" rows="2"></textarea>
                             <p class="description"><?php _e('每一行一个引用地址, 用回车隔开'); ?></p>
                         </section>
 
@@ -175,7 +175,7 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
 
                     <?php if ($post->have()): ?>
                         <?php $modified = new \Typecho\Date($post->modified); ?>
-                        <section class="typecho-post-option">
+                        <section class="typecho-option">
                             <p class="description">
                                 <br>&mdash;<br>
                                 <?php _e('本文由 <a href="%s">%s</a> 撰写',

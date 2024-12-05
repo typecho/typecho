@@ -61,6 +61,10 @@ select {
   padding: 0 6px;
   border-radius: var(--te-border-radius);
 
+  &:focus {
+    outline-color: var(--te-primary);
+  }
+
   &.form-sm {
     font-size: 13px;
     height: 27.5px;

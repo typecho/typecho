@@ -100,21 +100,21 @@ while ($parents->next()) {
                 </ul>
 
                 <div id="tab-advance" class="tab-content">
-                    <section class="typecho-post-option" role="application">
+                    <section class="typecho-option" role="application">
                         <label for="date" class="typecho-label"><?php _e('发布日期'); ?></label>
                         <p><input class="typecho-date w-100" type="text" name="date" id="date" autocomplete="off"
                                   value="<?php $page->have() && $page->created > 0 ? $page->date('Y-m-d H:i') : ''; ?>"/>
                         </p>
                     </section>
 
-                    <section class="typecho-post-option">
+                    <section class="typecho-option">
                         <label for="order" class="typecho-label"><?php _e('页面顺序'); ?></label>
                         <p><input type="number" id="order" name="order" value="<?php $page->order(); ?>"
                                   class="w-100"/></p>
                         <p class="description"><?php _e('为你的自定义页面设定一个序列值以后, 能够使得它们按此值从小到大排列'); ?></p>
                     </section>
 
-                    <section class="typecho-post-option">
+                    <section class="typecho-option">
                         <label for="template" class="typecho-label"><?php _e('自定义模板'); ?></label>
                         <p>
                             <select name="template" id="template">
@@ -129,7 +129,7 @@ while ($parents->next()) {
                         <p class="description"><?php _e('如果你为此页面选择了一个自定义模板, 系统将按照你选择的模板文件展现它'); ?></p>
                     </section>
 
-                    <section class="typecho-post-option">
+                    <section class="typecho-option">
                         <label for="parent" class="typecho-label"><?php _e('父级页面'); ?></label>
                         <p>
                             <select name="parent" id="parent">
@@ -147,7 +147,7 @@ while ($parents->next()) {
                     <details id="advance-panel">
                         <summary class="btn btn-sm"><?php _e('高级选项'); ?> <i class="i-caret-down"></i></summary>
 
-                        <section class="typecho-post-option visibility-option">
+                        <section class="typecho-option visibility-option">
                             <label for="visibility" class="typecho-label"><?php _e('公开度'); ?></label>
                             <p>
                                 <select id="visibility" name="visibility">
@@ -159,7 +159,7 @@ while ($parents->next()) {
                             </p>
                         </section>
 
-                        <section class="typecho-post-option allow-option">
+                        <section class="typecho-option allow-option">
                             <label class="typecho-label"><?php _e('权限控制'); ?></label>
                             <ul>
                                 <li><input id="allowComment" name="allowComment" type="checkbox" value="1"
@@ -178,7 +178,7 @@ while ($parents->next()) {
                     </details>
                     <?php if ($page->have()): ?>
                         <?php $modified = new \Typecho\Date($page->modified); ?>
-                        <section class="typecho-post-option">
+                        <section class="typecho-option">
                             <p class="description">
                                 <br>&mdash;<br>
                                 <?php _e('本页面由 <a href="%s">%s</a> 创建',

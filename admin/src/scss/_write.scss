@@ -7,11 +7,11 @@
     color: var(--te-danger);
   }
 
-  .typecho-label {
-    display: block;
-    margin: 1rem 0 -0.5rem;
-    font-weight: bold;
-  }
+  // .typecho-label {
+  //   display: block;
+  //   margin: 1rem 0 -0.5rem;
+  //   font-weight: bold;
+  // }
 
   .submit {
     display: flex;
@@ -58,10 +58,6 @@
     resize: none;
   }
 
-  .description {
-    margin-top: -0.5rem;
-  }
-
   /**
    * 自定义字段
    */
@@ -94,23 +90,23 @@
       }
     }
 
-    p.description {
-      text-align: left;
-    }
+    // p.description {
+    //   text-align: left;
+    // }
 
-    .typecho-label {
-      margin: 0;
+    // .typecho-label {
+    //   margin: 0;
 
-      a {
-        display: block;
-        color: #444;
+    //   a {
+    //     display: block;
+    //     color: #444;
 
-        &:hover {
-          color: #467B96;
-          text-decoration: none;
-        }
-      }
-    }
+    //     &:hover {
+    //       color: #467B96;
+    //       text-decoration: none;
+    //     }
+    //   }
+    // }
 
     .fields {
       list-style: none;
@@ -167,7 +163,6 @@
    * 侧边栏
    */
   #edit-secondary {
-    margin-top: 1rem;
 
     .category-option ul {
       list-style: none;
