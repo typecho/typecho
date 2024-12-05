@@ -51,7 +51,7 @@ class Rows extends Widget
                     if ($screen) {
                         $info['screen'] = $options->themeUrl(basename(current($screen)), $info['name']);
                     } else {
-                        $info['screen'] = Common::url('noscreen.png', $options->adminStaticUrl('img'));
+                        $info['screen'] = Common::url('noscreen.svg', $options->adminStaticUrl('img'));
                     }
 
                     $result[$key] = $info;

@@ -8,7 +8,7 @@
 
 .typecho-list-operate {
   display: flex;
-  margin: 1rem 0;
+  margin: 0 0 1rem;
 
   & + .typecho-list-operate {
     margin-top: 0;
@@ -98,12 +98,13 @@
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  background: #FFF;
   table-layout: fixed;
-  border: 30px solid #FFF;
+  border: 1px solid var(--te-border-color);
+  background-color: var(--te-white);
+  border-radius: var(--te-border-radius);
 
   &.deactivate {
-    color: #999;
+    color: var(--te-secondary);
   }
 
   .right {
@@ -111,14 +112,13 @@
   }
 
   th {
-    padding: 0 10px 10px;
-    border-bottom: 1px solid #F0F0EC;
+    padding: .75rem 1rem;
     text-align: left;
   }
 
   td {
-    padding: 10px;
-    border-top: 1px solid #F0F0EC;
+    padding: .75rem 1rem;
+    border-top: 1px solid var(--te-gray-200);
     word-break: break-all;
 
     pre {
@@ -126,24 +126,24 @@
     }
 
     &.none {
-      color: #999;
+      color: var(--te-secondary);
       text-align: center;
     }
   }
 
   .status {
-    margin-left: 5px;
-    color: #999;
+    margin-left: .25rem;
+    color: var(--te-secondary);
     font-style: normal;
   }
 
   tbody tr {
     &:hover {
-      background-color: #F6F6F3;
+      background-color: var(--te-gray-100);
     }
 
     &:has(input[type="checkbox"]:checked) {
-      background-color: #FFF9E8;
+      background-color: var(--te-yellow-100);
     }
   }
 
@@ -159,17 +159,7 @@
     display: block;
   }
 
-  @include screen(phone, max) {
-    & {
-      border-width: 10px;
-
-      th {
-        padding: 0 5px 5px;
-      }
-
-      td {
-        padding: 5px;
-      }
-    }
+  img {
+    border: 1px solid var(--te-gray-200)
   }
 }

@@ -9,7 +9,7 @@ $stat = \Widget\Stat::alloc();
     <div class="container typecho-dashboard">
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main">
-            <div class="welcome-board col-12" role="main">
+            <div class="welcome-board col-12 fs-6 mb-4" role="main">
                 <p><?php _e('目前有 <strong>%s</strong> 篇文章, 并有 <strong>%s</strong> 条关于你的评论在 <strong>%s</strong> 个分类中.',
                         $stat->myPublishedPostsNum, $stat->myPublishedCommentsNum, $stat->categoriesNum); ?>
                     <br><?php _e('点击下面的链接快速开始:'); ?></p>

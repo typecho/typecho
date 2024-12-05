@@ -158,7 +158,7 @@ namespace Typecho {
     });
 
     /**
-     * Typecho公用方法
+     * Typecho 公用方法
      *
      * @category typecho
      * @package Common
@@ -242,7 +242,7 @@ namespace Typecho {
                 $message = 'Server Error';
             }
 
-            /** 设置http code */
+            /** 设置 http code */
             if (is_numeric($code) && $code > 200) {
                 Response::getInstance()->setStatus($code);
             }
@@ -334,7 +334,7 @@ EOF;
         }
 
         /**
-         * 根据count数目来输出字符
+         * 根据 count 数目来输出字符
          * <code>
          * echo splitByCount(20, 10, 20, 30, 40, 50);
          * </code>
@@ -355,12 +355,12 @@ EOF;
         }
 
         /**
-         * 自闭合html修复函数
-         * 使用方法:
+         * 自闭合 html 修复函数
+         * 使用方法：
          * <code>
-         * $input = '这是一段被截断的html文本<a href="#"';
+         * $input = '这是一段被截断的 html 文本<a href="#"';
          * echo Common::fixHtml($input);
-         * //output: 这是一段被截断的html文本
+         * //output: 这是一段被截断的 html 文本
          * </code>
          *
          * @param string|null $string 需要修复处理的字符串
@@ -381,7 +381,7 @@ EOF;
                 $string = substr($string, 0, $startPos);
             }
 
-            //非自闭合html标签列表
+            //非自闭合 html 标签列表
             preg_match_all("/<([_0-9a-zA-Z-:]+)\s*([^>]*)>/is", $string, $startTags);
             preg_match_all("/<\/([_0-9a-zA-Z-:]+)>/is", $string, $closeTags);
 
@@ -418,8 +418,8 @@ EOF;
         }
 
         /**
-         * 去掉字符串中的html标签
-         * 使用方法:
+         * 去掉字符串中的 html 标签
+         * 使用方法：
          * <code>
          * $input = '<a href="http://test/test.php" title="example">hello</a>';
          * $output = Common::stripTags($input, <a href="">);
@@ -428,7 +428,7 @@ EOF;
          * </code>
          *
          * @param string|null $html 需要处理的字符串
-         * @param string|null $allowableTags 需要忽略的html标签
+         * @param string|null $allowableTags 需要忽略的 html 标签
          * @return string
          */
         public static function stripTags(?string $html, ?string $allowableTags = null): string
@@ -528,15 +528,15 @@ EOF;
         }
 
         /**
-         * 将url中的非法字符串
+         * 将 url 中的非法字符串
          *
-         * @param string $url 需要过滤的url
+         * @param string $url 需要过滤的 url
          *
          * @return string
          */
         public static function safeUrl($url)
         {
-            //~ 针对location的xss过滤, 因为其特殊性无法使用removeXSS函数
+            //~ 针对 location 的 xss 过滤，因为其特殊性无法使用 removeXSS 函数
             //~ fix issue 66
             $params = parse_url(str_replace(["\r", "\n", "\t", ' '], '', $url));
 
@@ -559,7 +559,7 @@ EOF;
         }
 
         /**
-         * 根据parse_url的结果重新组合url
+         * 根据 parse_url 的结果重新组合 url
          *
          * @param array $params 解析后的参数
          *
@@ -578,7 +578,7 @@ EOF;
         }
 
         /**
-         * 处理XSS跨站攻击的过滤函数
+         * 处理 XSS 跨站攻击的过滤函数
          *
          * @param string|null $val 需要处理的字符串
          * @return string
@@ -703,7 +703,7 @@ EOF;
         }
 
         /**
-         * 判断hash值是否相等
+         * 判断 hash 值是否相等
          *
          * @access public
          *
@@ -727,11 +727,11 @@ EOF;
         }
 
         /**
-         * 对字符串进行hash加密
+         * 对字符串进行 hash 加密
          *
          * @access public
          *
-         * @param string|null $string 需要hash的字符串
+         * @param string|null $string 需要 hash 的字符串
          * @param string|null $salt 扰码
          *
          * @return string
@@ -756,7 +756,7 @@ EOF;
 
             /** 判断扰码长度 */
             if (strlen($salt) != 9) {
-                /** 如果不是9直接返回 */
+                /** 如果不是 9 直接返回 */
                 return '';
             }
 
@@ -796,7 +796,7 @@ EOF;
         }
 
         /**
-         * 创建一个会过期的Token
+         * 创建一个会过期的 Token
          *
          * @param $secret
          * @return string
@@ -807,7 +807,7 @@ EOF;
         }
 
         /**
-         * 在时间范围内验证token
+         * 在时间范围内验证 token
          *
          * @param $token
          * @param $secret
@@ -829,7 +829,7 @@ EOF;
         }
 
         /**
-         * 获取gravatar头像地址
+         * 获取 gravatar 头像地址
          *
          * @param string|null $mail
          * @param int $size
@@ -871,7 +871,7 @@ EOF;
         }
 
         /**
-         * 给javascript赋值加入扰码设计
+         * 给 javascript 赋值加入扰码设计
          *
          * @param string $value
          *
@@ -1009,7 +1009,7 @@ EOF;
             $inet = inet_pton($address);
 
             if (false === $inet) {
-                // 有可能是ipv6的地址
+                // 有可能是 ipv6 的地址
                 $records = dns_get_record($host, DNS_AAAA);
 
                 if (empty($records)) {
@@ -1393,11 +1393,11 @@ EOF;
         }
 
         /**
-         * 寻找匹配的mime图标
+         * 寻找匹配的 mime 图标
          *
          * @access public
          *
-         * @param string $mime mime类型
+         * @param string $mime mime 类型
          *
          * @return string
          */
@@ -1495,7 +1495,7 @@ EOF;
         }
 
         /**
-         * IDN转UTF8
+         * IDN 转 UTF8
          *
          * @param string $url
          * @return string

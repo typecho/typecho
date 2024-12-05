@@ -3,7 +3,7 @@
 */
 .typecho-option {
   list-style: none;
-  margin: 1rem 0;
+  margin: 0 0 1rem;
   padding: 0;
 
   &-submit li {
@@ -39,15 +39,6 @@
     color: var(--te-secondary);
     font-size: .8125rem;
   }
-
-  input.file {
-    width: 100%;
-    margin: .5rem 0;
-  }
-
-  // input.text {
-    // width: 100%;
-  // }
 
   input.num {
     width: 60px;

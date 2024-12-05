@@ -17,21 +17,23 @@ $backupFiles = \Widget\Backup::alloc()->listFiles();
             <div class="col-lg-8">
                 <div id="typecho-welcome">
                     <form action="<?php echo $actionUrl; ?>" method="post">
-                    <h3><?php _e('备份您的数据'); ?></h3>
+                    <h3 class="fs-5"><?php _e('备份您的数据'); ?></h3>
                     <ul>
                         <li><?php _e('此备份操作仅包含<strong>内容数据</strong>, 并不会涉及任何<strong>设置信息</strong>'); ?></li>
                         <li><?php _e('如果您的数据量过大, 为了避免操作超时, 建议您直接使用数据库提供的备份工具备份数据'); ?></li>
                         <li><strong class="warning"><?php _e('为了缩小备份文件体积, 建议您在备份前删除不必要的数据'); ?></strong></li>
                     </ul>
-                    <p><button class="btn btn-primary" type="submit"><?php _e('开始备份 &raquo;'); ?></button></p>
-                        <input tabindex="1" type="hidden" name="do" value="export">
+                    <div>
+                        <button class="btn btn-primary" type="submit"><?php _e('开始备份 &raquo;'); ?></button>
+                    </div>
+                    <input tabindex="1" type="hidden" name="do" value="export">
                     </form>
                 </div>
             </div>
 
             <div id="backup-secondary" class="col-lg-4" role="form">
-                <h3><?php _e('恢复数据'); ?></h3>
-                <ul class="typecho-option-tabs">
+                <h3 class="fs-5"><?php _e('恢复数据'); ?></h3>
+                <ul class="typecho-option-tabs mb-3">
                     <li class="active w-50"><a href="#from-upload"><?php _e('上传'); ?></a></li>
                     <li class="w-50"><a href="#from-server"><?php _e('从服务器'); ?></a></li>
                 </ul>
@@ -54,7 +56,7 @@ $backupFiles = \Widget\Backup::alloc()->listFiles();
                     <?php if (empty($backupFiles)): ?>
                     <ul class="typecho-option">
                         <li>
-                            <p class="description"><?php _e('将备份文件手动上传至服务器的 %s 目录下后, 这里会出现文件选项', __TYPECHO_BACKUP_DIR__); ?></p>
+                            <p><?php _e('将备份文件手动上传至服务器的 %s 目录下后, 这里会出现文件选项', __TYPECHO_BACKUP_DIR__); ?></p>
                         </li>
                     </ul>
                     <?php else: ?>

@@ -166,15 +166,15 @@
 
     .category-option ul {
       list-style: none;
-      border: 1px solid #D9D9D6;
+      border: 1px solid var(--te-border-color);
       padding: 6px 12px;
       max-height: 240px;
       overflow: auto;
-      background-color: #FFF;
-      border-radius: 2px;
+      background-color: var(--te-white);
+      border-radius: var(--te-border-radius);
 
       li {
-        margin: 3px 0;
+        margin: .25rem 0;
       }
     }
 

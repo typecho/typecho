@@ -12,7 +12,7 @@ include 'menu.php';
             <div class="col">
                 <table class="typecho-list-table typecho-theme-list">
                     <colgroup>
-                        <col width="35%"/>
+                        <col width="25%"/>
                         <col/>
                     </colgroup>
 
@@ -38,14 +38,15 @@ include 'menu.php';
                         <tr id="theme-<?php $themes->name(); ?>"
                             class="<?php if ($themes->activated && !$options->missingTheme): ?>current<?php endif; ?>">
                             <td valign="top"><img src="<?php $themes->screen(); ?>"
-                                                  alt="<?php $themes->name(); ?>"/></td>
+                                                  alt="<?php $themes->name(); ?>"
+                                                  class="rounded" /></td>
                             <td valign="top">
                                 <h6><?php '' != $themes->title ? $themes->title() : $themes->name(); ?></h6>
                                 <cite>
                                     <?php if ($themes->author): ?><?php _e('作者'); ?>: <?php if ($themes->homepage): ?><a href="<?php $themes->homepage() ?>"><?php endif; ?><?php $themes->author(); ?><?php if ($themes->homepage): ?></a><?php endif; ?> &nbsp;&nbsp;<?php endif; ?>
                                     <?php if ($themes->version): ?><?php _e('版本'); ?>: <?php $themes->version() ?><?php endif; ?>
                                 </cite>
-                                <p><?php echo nl2br($themes->description); ?></p>
+                                <p class="mt-2"><?php echo nl2br($themes->description); ?></p>
                                 <?php if ($options->theme != $themes->name || $options->missingTheme): ?>
                                     <p>
                                         <?php if (\Widget\Themes\Files::isWriteable()): ?>
