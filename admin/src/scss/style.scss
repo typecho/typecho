@@ -56,7 +56,7 @@ code, pre, tt, .mono {
   font-family: var(--te-font-monospace);
 }
 
-.p { margin: 1em 0; }
+.p { margin: 1rem 0; }
 
 .body-100 {
   height: 100%;
@@ -77,8 +77,8 @@ code, pre, tt, .mono {
 */
 
 #typecho-welcome {
-  margin: 1em 0;
-  padding: 1em 2em;
+  margin: 1rem 0;
+  padding: 1rem 2rem;
   background-color: var(--te-gray-200);
   border-radius: var(--te-border-radius);
 }
@@ -89,7 +89,7 @@ code, pre, tt, .mono {
   font-size: 16px;
   strong {
     color: var(--te-body-color);
-    font-size: 2em;
+    font-size: 2rem;
   }
 }
 
@@ -111,7 +111,7 @@ code, pre, tt, .mono {
     margin: 0;
   }
   li {
-    margin: 1em 0;
+    margin: 1rem 0;
     white-space: nowrap;
     overflow: hidden; 
     text-overflow: ellipsis;
@@ -143,11 +143,11 @@ code, pre, tt, .mono {
   vertical-align: middle;
 
   h1 {
-    margin: 0 0 1em;
+    margin: 0 0 1rem;
   }
 
   .more-link {
-    margin-top: 2em;
+    margin-top: 2rem;
     color: var(--te-secondary);
 
     a {
@@ -199,8 +199,8 @@ code, pre, tt, .mono {
 
 .comment-reply-content {
   position: relative;
-  margin: 1em 0;
-  padding: 0 1em;
+  margin: 1rem 0;
+  padding: 0 1rem;
   border: 1px solid transparent;
   background-color: var(--te-primary-100);
   border-radius: var(--te-border-radius);
@@ -290,14 +290,12 @@ code, pre, tt, .mono {
   }
 
   textarea {
-    font-size: .92857em;
-    line-height: 1.2;
     height: 500px;
   }
 }
 
 .typecho-attachment-photo {
-  border: 1px solid #E6E6E3;
+  border: 1px solid var(--te-border-color);
   max-width: 100%;
 }
 

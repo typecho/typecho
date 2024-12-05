@@ -3,7 +3,7 @@
 */
 .typecho-option {
   list-style: none;
-  margin: 1em 0;
+  margin: 1rem 0;
   padding: 0;
 
   &-submit li {
@@ -13,7 +13,7 @@
   label {
     &.typecho-label {
       display: block;
-      margin-bottom: .5em;
+      margin-bottom: .5rem;
       font-weight: bold;
     }
 
@@ -28,14 +28,14 @@
   }
 
   .description {
-    margin: .5em 0 0;
-    color: #999;
-    font-size: .92857em;
+    margin: .25rem 0 0;
+    color: var(--te-secondary);
+    font-size: .8125rem;
   }
 
   input.file {
     width: 100%;
-    margin: .7em 0;
+    margin: .5rem 0;
   }
 
   input.text {
@@ -53,7 +53,7 @@
 
   .multiline {
     display: block;
-    margin: .3em 0;
+    margin: .25rem 0;
     &.hidden {
       display: none;
     }

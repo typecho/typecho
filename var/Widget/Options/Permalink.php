@@ -28,7 +28,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
 class Permalink extends Options implements ActionInterface
 {
     /**
-     * 检查pagePattern里是否含有必要参数
+     * 检查 pagePattern 里是否含有必要参数
      *
      * @param mixed $value
      * @return bool
@@ -41,7 +41,7 @@ class Permalink extends Options implements ActionInterface
     }
 
     /**
-     * 检查categoryPattern里是否含有必要参数
+     * 检查 categoryPattern 里是否含有必要参数
      *
      * @param mixed $value
      * @return bool
@@ -54,9 +54,9 @@ class Permalink extends Options implements ActionInterface
     }
 
     /**
-     * 检测是否可以rewrite
+     * 检测是否可以 rewrite
      *
-     * @param string $value 是否打开rewrite
+     * @param string $value 是否打开 rewrite
      * @return bool
      */
     public function checkRewrite(string $value): bool
@@ -86,7 +86,7 @@ RewriteRule ^(.*)$ {$basePath}index.php/$1 [L]
 
             try {
                 if ($client) {
-                    /** 发送一个rewrite地址请求 */
+                    /** 发送一个 rewrite 地址请求 */
                     $client->setData(['do' => 'remoteCallback'])
                         ->setHeader('User-Agent', $this->options->generator)
                         ->setHeader('X-Requested-With', 'XMLHttpRequest')
@@ -100,7 +100,7 @@ RewriteRule ^(.*)$ {$basePath}index.php/$1 [L]
                 if (false !== $hasWrote) {
                     @unlink(__TYPECHO_ROOT_DIR__ . '/.htaccess');
 
-                    //增强兼容性,使用wordpress的redirect式rewrite规则,虽然效率有点地下,但是对fastcgi模式兼容性较好
+                    //增强兼容性，使用 wordpress 的 redirect 式 rewrite 规则，虽然效率有点地下，但是对 fastcgi 模式兼容性较好
                     $hasWrote = file_put_contents(__TYPECHO_ROOT_DIR__ . '/.htaccess', "<IfModule mod_rewrite.c>
 RewriteEngine On
 RewriteBase {$basePath}
@@ -113,7 +113,7 @@ RewriteRule . {$basePath}index.php [L]
                     $client = Client::get();
 
                     if ($client) {
-                        /** 发送一个rewrite地址请求 */
+                        /** 发送一个 rewrite 地址请求 */
                         $client->setData(['do' => 'remoteCallback'])
                             ->setHeader('User-Agent', $this->options->generator)
                             ->setHeader('X-Requested-With', 'XMLHttpRequest')
@@ -159,7 +159,7 @@ RewriteRule . {$basePath}index.php [L]
 
         $patternValid = $this->checkRule($postPattern);
 
-        /** 解析url pattern */
+        /** 解析 url pattern */
         if ('custom' == $postPattern) {
             $postPattern = '/' . ltrim($this->encodeRule($customPattern), '/');
         }
@@ -216,7 +216,7 @@ RewriteRule . {$basePath}index.php [L]
             if (!$this->options->rewrite && !$this->request->is('enableRewriteAnyway=1')) {
                 $errorStr = _t('重写功能检测失败, 请检查你的服务器设置');
 
-                /** 如果是apache服务器, 可能存在无法写入.htaccess文件的现象 */
+                /** 如果是 apache 服务器，可能存在无法写入.htaccess 文件的现象 */
                 if (
                     strpos(php_sapi_name(), 'apache') !== false
                     && !file_exists(__TYPECHO_ROOT_DIR__ . '/.htaccess')
@@ -238,7 +238,7 @@ RewriteRule . {$basePath}index.php [L]
         $patterns = [
             '/archives/[cid:digital]/'                                        => _t('默认风格')
                 . ' <code>/archives/{cid}/</code>',
-            '/archives/[slug].html'                                           => _t('wordpress风格')
+            '/archives/[slug].html'                                           => _t('WordPress 风格')
                 . ' <code>/archives/{slug}.html</code>',
             '/[year:digital:4]/[month:digital:2]/[day:digital:2]/[slug].html' => _t('按日期归档')
                 . ' <code>/{year}/{month}/{day}/{slug}.html</code>',

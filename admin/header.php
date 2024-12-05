@@ -10,12 +10,12 @@ $header = '<link rel="stylesheet" href="' . $options->adminStaticUrl('css', 'nor
 /** 注册一个初始化插件 */
 $header = \Typecho\Plugin::factory('admin/header.php')->call('header', $header);
 
-?><!DOCTYPE HTML>
+?><!doctype html>
 <html>
     <head>
         <meta charset="<?php $options->charset(); ?>">
         <meta name="renderer" content="webkit">
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title><?php _e('%s - %s - Powered by Typecho', $menu->title, $options->title); ?></title>
         <meta name="robots" content="noindex, nofollow">
         <?php echo $header; ?>

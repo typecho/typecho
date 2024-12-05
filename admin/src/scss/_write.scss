@@ -4,17 +4,12 @@
 
 .typecho-post-area {
   .edit-draft-notice {
-    color: #999;
-    font-size: .92857em;
-
-    a {
-      color: var(--te-danger);
-    }
+    color: var(--te-danger);
   }
 
   .typecho-label {
     display: block;
-    margin: 1em 0 -0.5em;
+    margin: 1rem 0 -0.5rem;
     font-weight: bold;
   }
 
@@ -23,8 +18,7 @@
     justify-content: space-between;
 
     #auto-save-message {
-      color: #999;
-      font-size: .92857em;
+      color: var(--te-secondary);
     }
 
     .left {
@@ -48,14 +42,12 @@
   }
 
   input.title {
-    font-size: 1.17em;
+    font-size: 1.25rem;
     font-weight: bold;
   }
 
   .url-slug {
-    margin-top: -0.5em;
-    color: #AAA;
-    font-size: .92857em;
+    color: var(--te-secondary);
     word-break: break-word;
   }
 
@@ -71,16 +63,14 @@
   }
 
   .description {
-    margin-top: -0.5em;
-    color: #999;
-    font-size: .92857em;
+    margin-top: -0.5rem;
   }
 
   /**
    * 自定义字段
    */
   #custom-field {
-    margin: 1em 0;
+    margin: 1rem 0;
     padding: 10px 15px;
     background: #FFF;
 
@@ -181,7 +171,7 @@
    * 侧边栏
    */
   #edit-secondary {
-    margin-top: 1em;
+    margin-top: 1rem;
 
     .category-option ul {
       list-style: none;

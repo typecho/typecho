@@ -79,8 +79,8 @@ while ($parents->next()) {
                     <span class="right">
                         <input type="hidden" name="do" value="publish" />
                         <input type="hidden" name="cid" value="<?php $page->cid(); ?>"/>
-                        <button type="button" id="btn-preview" class="btn"><i
-                                class="i-exlink"></i> <?php _e('预览页面'); ?></button>
+                        <button type="button" id="btn-preview" class="btn"><?php _e('预览页面'); ?> <i
+                        class="i-exlink"></i></button>
                         <button type="submit" name="do" value="save" id="btn-save"
                                 class="btn"><?php _e('保存草稿'); ?></button>
                         <button type="submit" name="do" value="publish" class="btn btn-primary"

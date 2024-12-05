@@ -4,7 +4,7 @@
  %i-base {
   display: inline-block;
   vertical-align: middle;
-  text-indent: -9999em;
+  text-indent: -9999rem;
   background: url("../img/icons.svg") no-repeat;
 }
 
@@ -76,7 +76,7 @@ a i[class*="i-"]:hover {
   height: 40px;
   display: inline-block;
   background: url("../img/typecho-logo.svg") no-repeat;
-  text-indent: -9999em;
+  text-indent: -9999rem;
   background-size: auto 40px;
   opacity: .15;
   &:hover {

@@ -2,7 +2,7 @@
 * Editor
 */
 .editor {
-  margin-bottom: -0.5em;
+  margin-bottom: -0.5rem;
 }
 
 .wmd-button-row {
@@ -52,11 +52,10 @@ $initial-y: 0;
 #wmd-button-bar {
   display: flex;
   align-items: center;
+  justify-content: space-between;
 
   // 撰写预览切换 tab
   .wmd-edittab {
-    font-size: .92857em;
-
     a {
       display: inline-block;
       padding: 0 8px;
@@ -132,7 +131,7 @@ $initial-y: 0;
 /* 预览 */
 #wmd-preview {
   background: #FFF;
-  margin: 1em 0;
+  margin: 1rem 0;
   padding: 0 15px;
   word-wrap: break-word;
   overflow: auto;
@@ -145,30 +144,29 @@ $initial-y: 0;
   }
   code { color: #C13; }
   pre {
-    padding: 1em;
+    padding: 1rem;
     code {
       padding: 0;
       color: #444;
     }
   }
   blockquote {
-    margin: 1em 1.5em;
-    padding-left: 1.5em;
+    margin: 1rem 1.5rem;
+    padding-left: 1.5rem;
     border-left: 4px solid #E9E9E6;
     color: #777;
   }
   hr {
-    margin: 2em auto;
+    margin: 2rem auto;
     width: 100px;
     border: 1px solid #E9E9E6;
     border-width: 2px 0 0 0;
   }
   .summary:after {
     display: block;
-    margin: 2em 0;
+    margin: 2rem 0;
     background: #FFF9E8;
     color: darken(#FFF9E8, 55%);
-    font-size: .85714em;
     text-align: center;
     content: "- more -";
   }
