@@ -2,31 +2,34 @@
 * 后台头部导航
 */
 
-$border-nav: 1px solid #383D45;
-$color-nav-bg: #292D33;
-$color-nav-text-normal: #BBB;
-$color-nav-text-mute: #777;
-$color-nav-text-hover: #FFF;
-$color-nav-btn-hover: #202328;
-$color-nav-child-focus: #6DA1BB;
+:root {
+  --te-nav-border-color: 1px solid rgba(255, 255, 255, .05);
+  --te-nav-bg-color: var(--te-primary-900);
+  --te-nav-link-color: var(--te-primary-200);
+  --te-nav-link-hover-color: var(--te-white);
+  --te-nav-dropdown-bg-color: var(--te-primary-800);
+  --te-nav-dropdown-hover-bg-color: var(--te-primary-700);
+  --te-nav-active-bg-color: var(--te-primary-500);
+}
 
 .typecho-head-nav {
-  padding: 0 10px;
-  background: $color-nav-bg;
+  background: var(--te-nav-bg-color);
   position: sticky;
   top: 0;
   display: flex;
   z-index: 100;
+  padding: 0 .5rem;
 
   a, .menu-bar summary {
     padding: 0 20px;
     height: 36px;
     line-height: 36px;
-    color: $color-nav-text-normal;
+    color: var(--te-nav-link-color);
 
     &:focus,
     &:hover {
-      color: $color-nav-text-hover;
+      background: var(--te-nav-dropdown-bg-color);
+      color: var(--te-nav-link-hover-color);
       text-decoration: none;
     }
   }
@@ -39,7 +42,7 @@ $color-nav-child-focus: #6DA1BB;
     margin: 0;
     padding: 0;
     list-style: none;
-    background: $color-nav-bg;
+    background: var(--te-nav-bg-color);
   }
 
   nav {
@@ -52,16 +55,11 @@ $color-nav-child-focus: #6DA1BB;
 
       & > li {
 
-        &:first-child {
-          border-left: $border-nav;
-        }
-
         > a {
           display: block;
-          border-right: $border-nav;
 
           &:hover, &:focus {
-            background: $color-nav-btn-hover;
+            background: var(--te-nav-dropdown-bg-color);
 
             & + menu {
               display: flex;
@@ -71,12 +69,12 @@ $color-nav-child-focus: #6DA1BB;
 
         &:not(.operate) {
           &.focus > a {
-            background: $color-nav-btn-hover;
+            background: var(--te-nav-dropdown-bg-color);
             font-weight: bold;
           }
 
           &:hover > a {
-            background: $color-nav-btn-hover;
+            background: var(--te-nav-dropdown-bg-color);
           }
         }
 
@@ -93,8 +91,11 @@ $color-nav-child-focus: #6DA1BB;
           flex-flow: column;
           min-width: 160px;
           max-width: 240px;
-          background: $color-nav-btn-hover;
+          background: var(--te-nav-dropdown-bg-color);
           z-index: 250;
+          border-radius: 0 0 var(--te-border-radius) var(--te-border-radius);
+          box-shadow: var(--te-box-shadow);
+          overflow: hidden;
 
           & > li {
             a {
@@ -105,12 +106,13 @@ $color-nav-child-focus: #6DA1BB;
 
               &:hover,
               &:focus {
-                background: $color-nav-bg;
+                background: var(--te-nav-dropdown-hover-bg-color);
               }
             }
 
             &.focus a {
-              color: $color-nav-child-focus;
+              background-color: var(--te-nav-active-bg-color);
+              color: var(--te-nav-link-hover-color);
               font-weight: bold;
             }
           }
@@ -123,11 +125,7 @@ $color-nav-child-focus: #6DA1BB;
 
           a {
             &:hover {
-              background-color: $color-nav-btn-hover;
-            }
-
-            &:first-child {
-              border-left: $border-nav;
+              background-color: var(--te-nav-dropdown-bg-color);
             }
           }
         }
@@ -144,7 +142,7 @@ $color-nav-child-focus: #6DA1BB;
       font-size: 14px;
       position: sticky;
       top: 0;
-      background: $color-nav-bg;
+      background: var(--te-nav-bg-color);
       z-index: 10;
 
       summary {
@@ -153,7 +151,7 @@ $color-nav-child-focus: #6DA1BB;
 
       &[open] {
         summary {
-          border-bottom: $border-nav;
+          border-bottom: var(--te-nav-border-color);
         }
 
         & ~ menu {
@@ -167,7 +165,7 @@ $color-nav-child-focus: #6DA1BB;
       width: 100vw;
       position: fixed;
       top: 0;
-      background: $color-nav-btn-hover;
+      background: var(--te-nav-dropdown-bg-color);
 
       &:has(.menu-bar[open]) {
         width: 70vw;
@@ -191,27 +189,29 @@ $color-nav-child-focus: #6DA1BB;
           }
 
           &:not(.operate) {
-            &.focus > a {
-              background: $color-nav-bg;
-            }
+            // &.focus > a {
+            //   background: var(--te-nav-active-bg-color);
+            // }
 
-            &:hover > a {
-              background: $color-nav-bg;
-            }
+            // &:hover > a {
+            //   background: var(--te-nav-active-bg-color);
+            // }
 
             & > a {
               pointer-events: auto;
               cursor: pointer;
+              background: var(--te-nav-bg-color) !important;
             }
           }
 
           menu {
             position: static;
-            border: $border-nav;
+            border: var(--te-nav-border-color);
             border-width: 1px 0;
             display: flex;
             min-width: auto;
             max-width: none;
+            border-radius: 0;
           }
 
           &.operate {
@@ -219,10 +219,10 @@ $color-nav-child-focus: #6DA1BB;
             justify-content: flex-start;
 
             a {
-              background: $color-nav-btn-hover;
+              background: var(--te-nav-dropdown-bg-color);
 
               &:hover {
-                background: $color-nav-bg;
+                background: var(--te-nav-active-bg-color);
               }
             }
           }

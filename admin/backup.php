@@ -15,7 +15,7 @@ $backupFiles = \Widget\Backup::alloc()->listFiles();
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main" role="main">
             <div class="col-12">
-                <div class="bg-white border rounded p-3 mb-4">
+                <div class="bg-white border rounded p-3 mb-3">
                     <form action="<?php echo $actionUrl; ?>" method="post">
                     <h3 class="fs-6"><?php _e('备份您的数据'); ?></h3>
                     <ul>

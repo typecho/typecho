@@ -49,7 +49,7 @@ $stat = \Widget\Stat::alloc();
                 </ul>
             </div>
 
-            <div class="col-lg-4" role="complementary">
+            <div class="col-lg-4 mb-3" role="complementary">
                 <section class="latest-link">
                     <h3 class="fs-6"><?php _e('最近发布的文章'); ?></h3>
                     <?php \Widget\Contents\Post\Recent::alloc('pageSize=6')->to($posts); ?>
@@ -68,7 +68,7 @@ $stat = \Widget\Stat::alloc();
                 </section>
             </div>
 
-            <div class="col-lg-4" role="complementary">
+            <div class="col-lg-4 mb-3" role="complementary">
                 <section class="latest-link">
                     <h3 class="fs-6"><?php _e('最近得到的回复'); ?></h3>
                     <ul>

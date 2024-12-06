@@ -118,6 +118,8 @@
   background: var(--te-white);
   min-width: 100px;
   display: none;
+  border-radius: var(--te-border-radius);
+  overflow: hidden;
 
   li {
     white-space: nowrap;
