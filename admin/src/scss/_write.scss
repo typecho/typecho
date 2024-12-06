@@ -5,13 +5,9 @@
 .typecho-post-area {
   .edit-draft-notice {
     color: var(--te-danger);
+    display: block;
+    margin-bottom: .5rem;
   }
-
-  // .typecho-label {
-  //   display: block;
-  //   margin: 1rem 0 -0.5rem;
-  //   font-weight: bold;
-  // }
 
   .submit {
     display: flex;
@@ -26,7 +22,7 @@
       align-items: center;
 
       > * {
-        margin-right: 8px;
+        margin-right: .5rem;
       }
     }
 
@@ -36,7 +32,7 @@
       justify-content: flex-end;
 
       > * {
-        margin-left: 8px;
+        margin-left: .5rem;
       }
     }
   }
@@ -50,8 +46,11 @@
   #slug {
     padding: 0 2px;
     border: none;
-    background: var(--te-yellow-100);
+    background: var(--te-gray-200);
     border-radius: 0;
+    ~ pre {
+      font-size: 1em;
+    }
   }
 
   #text {
@@ -63,20 +62,13 @@
    */
   #custom-field {
     margin: 1rem 0;
-    padding: 10px 15px;
-    background: #FFF;
+    padding: 1rem;
+    background: var(--te-white);
+    border: 1px solid var(--te-border-color);
+    border-radius: var(--te-border-radius);
 
     summary {
       font-weight: bold;
-      cursor: pointer;
-
-      &:hover {
-        color: #467B96;
-      }
-
-      &::marker {
-        color: #BBB;
-      }
     }
 
     .add {
@@ -141,7 +133,7 @@
           textarea[name="fieldValues[]"] {
             flex: 1;
             margin-right: 10px;
-            resize: none;
+            height: 50px;
           }
         }
 

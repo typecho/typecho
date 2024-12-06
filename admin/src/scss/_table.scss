@@ -41,7 +41,7 @@
     }
 
     > * {
-      margin-right: 5px;
+      margin-right: .5rem;
     }
   }
 
@@ -53,7 +53,7 @@
     justify-content: flex-end;
 
     &.search > * {
-      margin-left: 5px;
+      margin-left: .5rem;
     }
   }
 
@@ -73,24 +73,25 @@
   }
 }
 
-.operate-delete, .operate-button-delete {
-  color: var(--te-danger);
+a.operate-approved {
+  color: var(--te-success);
+}
+a.operate-waiting {
+  color: var(--te-info);
+}
+a.operate-spam {
+  color: var(--te-warning);
+}
+a.operate-delete {
+  color: var(--te-danger) !important;
 }
 
-.operate-edit {
-  color: #007700;
-}
-
-.operate-reply {
-  color: #545c30;
-}
 
 /**
 * 列表表格
 */
 /** 增加表格标题 by 70 */
 .typecho-list-table-title {
-  margin: 1rem 0;
   text-align: center;
 }
 
@@ -99,9 +100,11 @@
   border-collapse: separate;
   border-spacing: 0;
   table-layout: fixed;
+  margin-bottom: 1rem;
   border: 1px solid var(--te-border-color);
   background-color: var(--te-white);
   border-radius: var(--te-border-radius);
+  overflow: hidden;
 
   &.deactivate {
     color: var(--te-secondary);

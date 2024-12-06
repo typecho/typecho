@@ -7,11 +7,9 @@ if ($user->hasLogin()) {
 $rememberName = htmlspecialchars(\Typecho\Cookie::get('__typecho_remember_name', ''));
 \Typecho\Cookie::delete('__typecho_remember_name');
 
-$bodyClass = 'body-100';
-
 include 'header.php';
 ?>
-<div class="typecho-login-wrap">
+<div class="typecho-login-wrap d-flex align-items-center justify-content-center">
     <div class="typecho-login">
         <h1><a href="https://typecho.org" class="i-logo">Typecho</a></h1>
         <form action="<?php $options->loginAction(); ?>" method="post" name="login" role="form">
@@ -34,13 +32,13 @@ include 'header.php';
             </p>
         </form>
         
-        <p class="more-link">
+        <div class="more-link">
             <a href="<?php $options->siteUrl(); ?>"><?php _e('返回首页'); ?></a>
             <?php if($options->allowRegister): ?>
             &bull;
             <a href="<?php $options->registerUrl(); ?>"><?php _e('用户注册'); ?></a>
             <?php endif; ?>
-        </p>
+        </div>
     </div>
 </div>
 <?php 

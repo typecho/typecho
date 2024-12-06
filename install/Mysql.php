@@ -32,7 +32,7 @@
 </ul>
 
 <details>
-    <summary>
+    <summary class="mb-3">
         <strong><?php _e('高级选项'); ?></strong>
     </summary>
     <ul class="typecho-option">

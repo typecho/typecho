@@ -5,34 +5,37 @@
 .tag-list {
   list-style: none;
   margin: 0;
-  padding: 20px;
-  background-color: #FFF;
+  padding: 1rem;
+  background-color: var(--te-white);
+  border: 1px solid var(--te-border-color);
+  border-radius: var(--te-border-radius);
   display: flex;
   flex-wrap: wrap;
 
   .none {
-    color: #999;
+    color: var(--te-secondary);
     width: 100%;
     margin: 0;
     text-align: center;
   }
 
   &.typecho-list-notable li {
-    margin: 0 5px 5px 0;
-    padding: 5px 5px 5px 10px;
+    margin: 0 .25rem .25rem 0;
+    padding: .25rem .25rem .25rem .5rem;
+    border-radius: var(--te-border-radius);
     cursor: pointer;
     display: flex;
     align-items: center;
 
     .tag-edit-link {
-      margin-left: 3px;
+      margin-left: .25rem;
       visibility: hidden;
       display: flex;
       align-items: center;
     }
 
     &:hover {
-      background-color: #E9E9E6;
+      background-color: var(--te-gray-100);
 
       .tag-edit-link {
         visibility: visible;
@@ -41,29 +44,20 @@
 
     &:has(input[type="checkbox"]:checked) {
       background-color: var(--te-yellow-100);
+      input[type="checkbox"] {
+        visibility: visible;
+      }
     }
 
-    &.size-5 {
-    }
+    &.size-5 { font-size: 1em; }
+    &.size-10 { font-size: 1.2em; }
+    &.size-20 { font-size: 1.4em; }
+    &.size-30 { font-size: 1.6em; }
+    &.size-0 { font-size: 1.8em; }
 
-    &.size-10 {
-      font-size: 1.2rem;
-    }
-
-    &.size-20 {
-      font-size: 1.4rem;
-    }
-
-    &.size-30 {
-      font-size: 1.6rem;
-    }
-
-    &.size-0 {
-      font-size: 1.8rem;
-    }
-
-    input {
-      display: none;
+    input[type="checkbox"] {
+      visibility: hidden;
+      margin-right: .25rem;
     }
   }
 }

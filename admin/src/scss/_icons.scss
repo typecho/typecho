@@ -4,7 +4,7 @@
  %i-base {
   display: inline-block;
   vertical-align: middle;
-  text-indent: -9999rem;
+  text-indent: -9999em;
   background: url("../img/icons.svg") no-repeat;
 }
 
@@ -53,19 +53,19 @@ a i[class*="i-"]:hover {
 .i-caret-up, .i-caret-down, .i-caret-left, .i-caret-right {
   display: inline-block;
   border-style: solid;
-  border-color: transparent transparent var(--te-secondary) transparent;
+  border-color: transparent transparent var(--te-gray-700) transparent;
   border-width: 3px 4px 5px;
 }
 .i-caret-down {
-  border-color: var(--te-secondary) transparent transparent transparent;
+  border-color: var(--te-gray-700) transparent transparent transparent;
   border-width: 5px 4px 3px;
 }
 .i-caret-left {
-  border-color: transparent var(--te-secondary) transparent transparent;
+  border-color: transparent var(--te-gray-700) transparent transparent;
   border-width: 4px 5px 4px 3px;
 }
 .i-caret-right {
-  border-color: transparent transparent transparent var(--te-secondary);
+  border-color: transparent transparent transparent var(--te-gray-700);
   border-width: 4px 3px 4px 5px;
 }
 
@@ -78,13 +78,13 @@ a i[class*="i-"]:hover {
   background: url("../img/typecho-logo.svg") no-repeat;
   text-indent: -9999rem;
   background-size: auto 40px;
-  opacity: .15;
+  opacity: .5;
   &:hover {
-    opacity: .2;
+    opacity: 1;
   }
 }
-// .i-logo-s {
-//   width: 26px;
-//   height: 26px;
-//   background-size: auto 26px;
-// }
+.i-logo-s {
+  width: 84.5px;
+  height: 20px;
+  background-size: auto 20px;
+}

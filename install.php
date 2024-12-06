@@ -576,7 +576,7 @@ function install_js_support()
 {
     ?>
     <div id="success" class="row typecho-page-main hidden">
-        <div class="col-mb-12 col-tb-8 col-tb-offset-2">
+        <div class="col-12">
             <div class="typecho-page-title">
                 <h2><?php _e('安装成功'); ?></h2>
             </div>
@@ -702,17 +702,17 @@ function install_step_1()
     $lang = install_get_lang();
     ?>
     <div class="row typecho-page-main">
-        <div class="col-mb-12 col-tb-8 col-tb-offset-2">
+        <div class="col-12">
             <div class="typecho-page-title">
                 <h2><?php _e('欢迎使用 Typecho'); ?></h2>
             </div>
             <div id="typecho-welcome">
                 <form autocomplete="off" method="post" action="install.php">
-                    <h3><?php _e('安装说明'); ?></h3>
+                    <h3 class="fs-5"><?php _e('安装说明'); ?></h3>
                     <p class="warning">
                         <strong><?php _e('本安装程序将自动检测服务器环境是否符合最低配置需求. 如果不符合, 将在上方出现提示信息, 请按照提示信息检查您的主机配置. 如果服务器环境符合要求, 将在下方出现 "开始下一步" 的按钮, 点击此按钮即可一步完成安装.'); ?></strong>
                     </p>
-                    <h3><?php _e('许可及协议'); ?></h3>
+                    <h3 class="fs-5"><?php _e('许可及协议'); ?></h3>
                     <ul>
                         <li><?php _e('Typecho 基于 <a href="https://www.gnu.org/copyleft/gpl.html">GPL</a> 协议发布, 我们允许用户在 GPL 协议许可的范围内使用, 拷贝, 修改和分发此程序.'); ?>
                             <?php _e('在GPL许可的范围内, 您可以自由地将其用于商业以及非商业用途.'); ?></li>
@@ -721,7 +721,7 @@ function install_step_1()
                             <?php _e('对于贡献突出者, 他的名字将出现在贡献者名单中.'); ?></li>
                     </ul>
 
-                    <p class="submit">
+                    <p class="submit mb-0">
                         <button class="btn btn-primary" type="submit"><?php _e('我准备好了, 开始下一步 &raquo;'); ?></button>
                         <input type="hidden" name="step" value="1">
 
@@ -808,7 +808,7 @@ function install_step_2()
     }
     ?>
     <div class="row typecho-page-main">
-        <div class="col-mb-12 col-tb-8 col-tb-offset-2">
+        <div class="col-12">
             <div class="typecho-page-title">
                 <h2><?php _e('初始化配置'); ?></h2>
             </div>
@@ -1199,7 +1199,7 @@ function install_step_3()
     $options = \Widget\Options::alloc();
     ?>
     <div class="row typecho-page-main">
-        <div class="col-mb-12 col-tb-8 col-tb-offset-2">
+        <div class="col-12">
             <div class="typecho-page-title">
                 <h2><?php _e('创建您的管理员帐号'); ?></h2>
             </div>
@@ -1480,14 +1480,14 @@ function install_dispatch()
     <meta charset="<?php _e('UTF-8'); ?>" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title><?php _e('Typecho 安装程序'); ?></title>
-    <link rel="stylesheet" type="text/css" href="<?php $options->adminStaticUrl('css', 'normalize.css') ?>" />
+    <link rel="stylesheet" type="text/css" href="<?php $options->adminStaticUrl('css', 'reboot.css') ?>" />
     <link rel="stylesheet" type="text/css" href="<?php $options->adminStaticUrl('css', 'grid.css') ?>" />
     <link rel="stylesheet" type="text/css" href="<?php $options->adminStaticUrl('css', 'style.css') ?>" />
     <link rel="stylesheet" type="text/css" href="<?php $options->adminStaticUrl('css', 'install.css') ?>" />
     <script src="<?php $options->adminStaticUrl('js', 'jquery.js'); ?>"></script>
 </head>
 <body>
-    <div class="body container">
+    <div class="container">
         <h1><a href="https://typecho.org" target="_blank" class="i-logo">Typecho</a></h1>
         <?php $method(); ?>
     </div>

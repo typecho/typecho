@@ -30,7 +30,7 @@
     }
   }
 
-  span {
+  span:not([class]) {
     margin-right: 1rem;
   }
 

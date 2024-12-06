@@ -190,9 +190,9 @@ class Edit extends Contents implements ActionInterface
     }
 
     /**
-     * 获取页面偏移的URL Query
+     * 获取页面偏移的 URL Query
      *
-     * @param integer $cid 文件id
+     * @param integer $cid 文件 id
      * @param string|null $status 状态
      * @return string
      * @throws \Typecho\Db\Exception|Exception

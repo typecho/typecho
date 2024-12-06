@@ -14,10 +14,10 @@ $backupFiles = \Widget\Backup::alloc()->listFiles();
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main" role="main">
-            <div class="col-lg-8">
-                <div id="typecho-welcome">
+            <div class="col-12">
+                <div class="bg-white border rounded p-3 mb-4">
                     <form action="<?php echo $actionUrl; ?>" method="post">
-                    <h3 class="fs-5"><?php _e('备份您的数据'); ?></h3>
+                    <h3 class="fs-6"><?php _e('备份您的数据'); ?></h3>
                     <ul>
                         <li><?php _e('此备份操作仅包含<strong>内容数据</strong>, 并不会涉及任何<strong>设置信息</strong>'); ?></li>
                         <li><?php _e('如果您的数据量过大, 为了避免操作超时, 建议您直接使用数据库提供的备份工具备份数据'); ?></li>
@@ -31,11 +31,12 @@ $backupFiles = \Widget\Backup::alloc()->listFiles();
                 </div>
             </div>
 
-            <div id="backup-secondary" class="col-lg-4" role="form">
-                <h3 class="fs-5"><?php _e('恢复数据'); ?></h3>
+            <div class="col-12">
+                <div id="backup-secondary" class="bg-white border rounded p-3" role="form">
+                <h3 class="fs-6"><?php _e('恢复数据'); ?></h3>
                 <ul class="typecho-option-tabs mb-3">
-                    <li class="active w-50"><a href="#from-upload"><?php _e('上传'); ?></a></li>
-                    <li class="w-50"><a href="#from-server"><?php _e('从服务器'); ?></a></li>
+                    <li class="active"><a href="#from-upload"><?php _e('上传'); ?></a></li>
+                    <li class=""><a href="#from-server"><?php _e('从服务器'); ?></a></li>
                 </ul>
 
                 <form action="<?php echo $actionUrl; ?>" id="from-upload" class="tab-content" method="post" enctype="multipart/form-data">
@@ -44,7 +45,7 @@ $backupFiles = \Widget\Backup::alloc()->listFiles();
                             <input tabindex="2" id="backup-upload-file" name="file" type="file" class="file">
                         </li>
                     </ul>
-                    <ul class="typecho-option typecho-option-submit">
+                    <ul class="typecho-option typecho-option-submit mb-0">
                         <li>
                             <button tabindex="4" type="submit" class="btn btn-primary"><?php _e('上传并恢复 &raquo;'); ?></button>
                             <input type="hidden" name="do" value="import">
@@ -71,13 +72,14 @@ $backupFiles = \Widget\Backup::alloc()->listFiles();
                         </li>
                     </ul>
                     <?php endif; ?>
-                    <ul class="typecho-option typecho-option-submit">
+                    <ul class="typecho-option typecho-option-submit mb-0">
                         <li>
                             <button tabindex="7" type="submit" class="btn btn-primary"><?php _e('选择并恢复 &raquo;'); ?></button>
                             <input type="hidden" name="do" value="import">
                         </li>
                     </ul>
                 </form>
+                </div>
             </div>
         </div>
     </div>

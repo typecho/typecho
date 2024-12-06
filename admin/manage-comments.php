@@ -57,10 +57,10 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == \Ty
                             <li><a href="<?php $security->index('/action/comments-edit?do=spam'); ?>"><?php _e('标记垃圾'); ?></a></li>
                             <li><a lang="<?php _e('你确认要删除这些评论吗?'); ?>" href="<?php $security->index('/action/comments-edit?do=delete'); ?>"><?php _e('删除'); ?></a></li>
                         </ul>
+                        </div>
                         <?php if('spam' == $request->get('status')): ?>
                             <button lang="<?php _e('你确认要删除所有垃圾评论吗?'); ?>" class="btn btn-sm btn-danger btn-operate" href="<?php $security->index('/action/comments-edit?do=delete-spam'); ?>"><?php _e('删除所有垃圾评论'); ?></button>
                         <?php endif; ?>
-                        </div>
                     </div>
                     <div class="search" role="search">
                         <?php if ('' != $request->keywords || '' != $request->category): ?>
@@ -83,7 +83,7 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == \Ty
                 <form method="post" name="manage_comments" class="operate-form">
                     <table class="typecho-list-table">
                         <colgroup>
-                            <col width="35" class="kit-hidden-mb"/>
+                            <col width="45" class="kit-hidden-mb"/>
                             <col width="6%" class="kit-hidden" />
                             <col width="20%"/>
                             <col width="71%"/>
@@ -261,8 +261,8 @@ $(document).ready(function () {
         } else {
             var form = $('<form method="post" action="'
                 + t.attr('rel') + '" class="comment-reply">'
-                + '<p><label for="text" class="sr-only"><?php _e('内容'); ?></label><textarea id="text" name="text" class="w-90 mono" rows="3"></textarea></p>'
-                + '<p><button type="submit" class="btn btn-primary btn-sm"><?php _e('回复'); ?></button> <button type="button" class="btn btn-sm cancel"><?php _e('取消'); ?></button></p>'
+                + '<p><label for="text" class="sr-only"><?php _e('内容'); ?></label><textarea id="text" name="text" class="w-90 mono form-sm" rows="3"></textarea></p>'
+                + '<p><button type="submit" class="btn btn-primary btn-sm"><?php _e('回复'); ?></button><button type="button" class="btn btn-sm cancel ms-2"><?php _e('取消'); ?></button></p>'
                 + '</form>').insertBefore($('.comment-action', td));
 
             $('.cancel', form).click(function () {
@@ -306,9 +306,9 @@ $(document).ready(function () {
                         + '<input class="form-sm w-100" type="text" name="url" id="' + id + '-url"></p></form></td>'
                         + '<td valign="top"><form method="post" action="'
                         + t.attr('rel') + '" class="comment-edit-content"><p><label for="' + id + '-text"><?php _e('内容'); ?></label>'
-                        + '<textarea name="text" id="' + id + '-text" rows="6" class="w-90 mono"></textarea></p>'
-                        + '<p><button type="submit" class="btn btn-primary btn-sm"><?php _e('提交'); ?></button> '
-                        + '<button type="button" class="btn btn-sm cancel"><?php _e('取消'); ?></button></p></form></td></tr>')
+                        + '<textarea name="text" id="' + id + '-text" rows="6" class="w-90 mono form-sm"></textarea></p>'
+                        + '<p><button type="submit" class="btn btn-primary btn-sm"><?php _e('提交'); ?></button>'
+                        + '<button type="button" class="btn btn-sm cancel ms-2"><?php _e('取消'); ?></button></p></form></td></tr>')
                         .data('id', id).data('comment', comment).insertAfter(tr);
 
         $('input[name=author]', edit).val(comment.author);

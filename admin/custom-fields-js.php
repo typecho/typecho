@@ -20,7 +20,7 @@ $(document).ready(function () {
 
     $('#custom-field button.operate-add').click(function () {
         var html = '<li class="field"><div class="field-name"><input type="text" name="fieldNames[]" placeholder="<?php _e('字段名称'); ?>" pattern="^[_a-zA-Z][_a-zA-Z0-9]*$" oninput="this.reportValidity()" class="form-sm w-100">'
-                + '<select name="fieldTypes[]" id="">'
+                + '<select name="fieldTypes[]" id="" class="form-sm">'
                 + '<option value="str"><?php _e('字符'); ?></option>'
                 + '<option value="int"><?php _e('整数'); ?></option>'
                 + '<option value="float"><?php _e('小数'); ?></option>'

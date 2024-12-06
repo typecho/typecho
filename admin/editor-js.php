@@ -140,8 +140,8 @@ $(document).ready(function () {
     <?php \Typecho\Plugin::factory('admin/editor-js.php')->call('markdownEditor', $content); ?>
 
     let th = textarea.height(), ph = preview.height();
-    const uploadBtn = $('<button type="button" id="btn-fullscreen-upload" class="btn btn-link">'
-            + '<i class="i-upload"><?php _e('附件'); ?></i></button>')
+    const uploadBtn = $('<button type="button" id="btn-fullscreen-upload" class="btn btn-link" title="<?php _e('附件'); ?>">'
+            + '<i class="i-upload"></i></button>')
             .prependTo('.submit .right')
             .click(function() {
                 $('a', $('.typecho-option-tabs li').not('.active')).trigger('click');

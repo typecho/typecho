@@ -38,8 +38,8 @@ $users = \Widget\Users\Admin::alloc();
                 <form method="post" name="manage_users" class="operate-form">
                     <table class="typecho-list-table">
                         <colgroup>
-                            <col width="35" class="kit-hidden-mb"/>
-                            <col width="35" class="kit-hidden-mb"/>
+                            <col width="45" class="kit-hidden-mb"/>
+                            <col width="65" class="kit-hidden-mb"/>
                             <col width="30%"/>
                             <col width="" class="kit-hidden-mb"/>
                             <col width="25%" class="kit-hidden-mb"/>

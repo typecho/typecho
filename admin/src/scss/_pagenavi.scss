@@ -9,29 +9,28 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  line-height: 1;
   text-align: center;
   zoom: 1;
 
   li {
-    margin: 0 3px;
-    height: 28px;
-    line-height: 28px;
+    margin-left: 0.125rem;
 
     a {
       display: block;
-      padding: 0 10px;
-      border-radius: 2px;
+      padding: 3px 7px;
+      font-size: 13px;
+      border: 1px solid transparent;
+      border-radius: var(--te-border-radius-sm);
 
       &:hover {
         text-decoration: none;
-        background: #E9E9E6;
+        background: var(--te-gray-200);
       }
     }
 
     &.current a {
-      background: #E9E9E6;
-      color: #444;
+      background: var(--te-gray-200);
+      color: var(--te-gray-700);
     }
   }
 }

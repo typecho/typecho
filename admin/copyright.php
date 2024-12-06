@@ -2,7 +2,9 @@
 <footer class="typecho-foot" role="contentinfo">
     <div class="copyright">
         <a href="https://typecho.org" class="i-logo-s">Typecho</a>
-        <p><?php _e('由 <a href="https://typecho.org">%s</a> 强力驱动, 版本 %s', $options->software, $options->version); ?></p>
+        <div class="my-1">
+            <?php _e('由 <a href="https://typecho.org">%s</a> 强力驱动, 版本 %s', $options->software, $options->version); ?>
+        </div>
     </div>
     <nav class="resource">
         <a href="https://docs.typecho.org"><?php _e('帮助文档'); ?></a> &bull;

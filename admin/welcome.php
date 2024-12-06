@@ -7,11 +7,11 @@ include 'menu.php';
 <main class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
-        <div class="row typecho-page-main" role="main">
-            <div class="col-mb-12">
+        <div class="typecho-page-main" role="main">
+            <div class="">
                 <div id="typecho-welcome" class="message">
                     <form action="<?php $options->adminUrl(); ?>" method="get">
-                    <h3><?php _e('欢迎您使用 "%s" 管理后台: ', $options->title); ?></h3>
+                    <h3 class="fs-5"><?php _e('欢迎您使用 "%s" 管理后台: ', $options->title); ?></h3>
                     <ol>
                         <li><a class="operate-delete" href="<?php $options->adminUrl('profile.php#change-password'); ?>"><?php _e('强烈建议更改你的默认密码'); ?></a></li>
                         <?php if($user->pass('contributor', true)): ?>
@@ -21,7 +21,9 @@ include 'menu.php';
                         <li><a href="<?php $options->siteUrl(); ?>"><?php _e('查看网站'); ?></a></li>
                         <?php endif; ?>
                     </ol>
-                    <p><button type="submit" class="btn btn-primary"><?php _e('让我直接开始使用吧 &raquo;'); ?></button></p>
+                    <p class="mb-0">
+                        <button type="submit" class="btn btn-primary"><?php _e('让我直接开始使用吧 &raquo;'); ?></button>
+                    </p>
                     </form>
                 </div>
             </div>

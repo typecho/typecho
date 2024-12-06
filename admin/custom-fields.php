@@ -21,7 +21,7 @@ $defaultFields = isset($post) ? $post->getDefaultFieldItems() : $page->getDefaul
                     <input type="text" name="fieldNames[]" value="<?php echo htmlspecialchars($field['name']); ?>"
                            id="fieldname" pattern="^[_a-zA-Z][_a-zA-Z0-9]*$" oninput="this.reportValidity()" class="form-sm w-100">
                     <label for="fieldtype" class="sr-only"><?php _e('字段类型'); ?></label>
-                    <select name="fieldTypes[]" id="fieldtype">
+                    <select name="fieldTypes[]" id="fieldtype" class="form-sm">
                         <option
                             value="str"<?php if ('str' == $field['type']): ?> selected<?php endif; ?>><?php _e('字符'); ?></option>
                         <option
@@ -47,7 +47,7 @@ $defaultFields = isset($post) ? $post->getDefaultFieldItems() : $page->getDefaul
                     <input type="text" name="fieldNames[]" placeholder="<?php _e('字段名称'); ?>" id="fieldname"
                            class="form-sm w-100" pattern="^[_a-zA-Z][_a-zA-Z0-9]*$" oninput="this.reportValidity()">
                     <label for="fieldtype" class="sr-only"><?php _e('字段类型'); ?></label>
-                    <select name="fieldTypes[]" id="fieldtype">
+                    <select name="fieldTypes[]" id="fieldtype" class="form-sm">
                         <option value="str"><?php _e('字符'); ?></option>
                         <option value="int"><?php _e('整数'); ?></option>
                         <option value="float"><?php _e('小数'); ?></option>

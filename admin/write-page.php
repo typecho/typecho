@@ -54,7 +54,7 @@ while ($parents->next()) {
                 }
                 $input = '<input type="text" id="slug" name="slug" autocomplete="off" value="' . htmlspecialchars($page->slug ?? '') . '" class="mono" />';
                 ?>
-                <p class="mono url-slug">
+                <p class="mono url-slug d-flex">
                     <label for="slug" class="sr-only"><?php _e('网址缩略名'); ?></label>
                     <?php echo preg_replace_callback("/\{(slug|directory)\}/i", function ($matches) use ($input) {
                         if ($matches[1] == 'slug') {
@@ -94,7 +94,7 @@ while ($parents->next()) {
                 <?php \Typecho\Plugin::factory('admin/write-page.php')->call('content', $page); ?>
             </div>
             <div id="edit-secondary" class="col-lg-3" role="complementary">
-                <ul class="typecho-option-tabs">
+                <ul class="typecho-option-tabs mb-3">
                     <li class="active w-50"><a href="#tab-advance"><?php _e('选项'); ?></a></li>
                     <li class="w-50"><a href="#tab-files" id="tab-files-btn"><?php _e('附件'); ?></a></li>
                 </ul>
@@ -109,23 +109,21 @@ while ($parents->next()) {
 
                     <section class="typecho-option">
                         <label for="order" class="typecho-label"><?php _e('页面顺序'); ?></label>
-                        <p><input type="number" id="order" name="order" value="<?php $page->order(); ?>"
-                                  class="w-100"/></p>
+                        <input type="number" id="order" name="order" value="<?php $page->order(); ?>"
+                                  class="w-100"/>
                         <p class="description"><?php _e('为你的自定义页面设定一个序列值以后, 能够使得它们按此值从小到大排列'); ?></p>
                     </section>
 
                     <section class="typecho-option">
                         <label for="template" class="typecho-label"><?php _e('自定义模板'); ?></label>
-                        <p>
-                            <select name="template" id="template">
-                                <option value=""><?php _e('不选择'); ?></option>
-                                <?php $templates = $page->getTemplates();
-                                foreach ($templates as $template => $name): ?>
-                                    <option
-                                        value="<?php echo $template; ?>"<?php if ($template == $page->template): ?> selected="true"<?php endif; ?>><?php echo $name; ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </p>
+                        <select name="template" id="template">
+                            <option value=""><?php _e('不选择'); ?></option>
+                            <?php $templates = $page->getTemplates();
+                            foreach ($templates as $template => $name): ?>
+                                <option
+                                    value="<?php echo $template; ?>"<?php if ($template == $page->template): ?> selected="true"<?php endif; ?>><?php echo $name; ?></option>
+                            <?php endforeach; ?>
+                        </select>
                         <p class="description"><?php _e('如果你为此页面选择了一个自定义模板, 系统将按照你选择的模板文件展现它'); ?></p>
                     </section>
 
@@ -145,7 +143,7 @@ while ($parents->next()) {
                     <?php \Typecho\Plugin::factory('admin/write-page.php')->call('option', $page); ?>
 
                     <details id="advance-panel">
-                        <summary class="btn btn-sm"><?php _e('高级选项'); ?> <i class="i-caret-down"></i></summary>
+                        <summary class="btn btn-sm mb-3"><?php _e('高级选项'); ?> <i class="i-caret-down"></i></summary>
 
                         <section class="typecho-option visibility-option">
                             <label for="visibility" class="typecho-label"><?php _e('公开度'); ?></label>

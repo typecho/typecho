@@ -115,8 +115,8 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                 <form method="post" name="manage_posts" class="operate-form">
                     <table class="typecho-list-table">
                         <colgroup>
-                            <col width="35" class="kit-hidden-mb"/>
-                            <col width="35" class="kit-hidden-mb"/>
+                            <col width="45" class="kit-hidden-mb"/>
+                            <col width="65" class="kit-hidden-mb"/>
                             <col width="45%"/>
                             <col width="" class="kit-hidden-mb"/>
                             <col width="18%" class="kit-hidden-mb"/>
@@ -233,6 +233,10 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                     <?php if ($posts->have()): ?>
                         <ul class="typecho-pager">
                             <?php $posts->pageNav(); ?>
+                            <li><a href="##">2</a></li>
+                            <li><a href="##">3</a></li>
+                            <li><a href="##">4</a></li>
+                            <li><a href="##">5</a></li>
                         </ul>
                     <?php endif; ?>
                 </form>

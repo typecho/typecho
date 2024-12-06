@@ -43,7 +43,7 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
                 }
                 $input = '<input type="text" id="slug" name="slug" autocomplete="off" value="' . htmlspecialchars($post->slug ?? '') . '" class="mono" />';
                 ?>
-                <p class="mono url-slug">
+                <p class="mono url-slug d-flex">
                     <label for="slug" class="sr-only"><?php _e('网址缩略名'); ?></label>
                     <?php echo preg_replace("/\{slug\}/i", $input, $permalink); ?>
                 </p>
@@ -79,7 +79,7 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
             </div>
 
             <div id="edit-secondary" class="col-lg-3" role="complementary">
-                <ul class="typecho-option-tabs">
+                <ul class="typecho-option-tabs mb-3">
                     <li class="active w-50"><a href="#tab-advance"><?php _e('选项'); ?></a></li>
                     <li class="w-50"><a href="#tab-files" id="tab-files-btn"><?php _e('附件'); ?></a></li>
                 </ul>
@@ -119,7 +119,7 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
                     <?php \Typecho\Plugin::factory('admin/write-post.php')->call('option', $post); ?>
 
                     <details id="advance-panel">
-                        <summary class="btn btn-sm"><?php _e('高级选项'); ?> <i class="i-caret-down"></i></summary>
+                        <summary class="btn btn-sm mb-3"><?php _e('高级选项'); ?> <i class="i-caret-down"></i></summary>
 
                         <?php if ($user->pass('editor', true)): ?>
                             <section class="typecho-option visibility-option">
