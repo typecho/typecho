@@ -967,7 +967,7 @@ class Archive extends Contents
             $allows = array_merge($allows, $rules);
         }
 
-        $allows = self::pluginHandle()->call('headerOptions', $allows, $this);
+        $allows = self::pluginHandle()->filter('headerOptions', $allows, $this);
         $title = (empty($this->archiveTitle) ? '' : $this->archiveTitle . ' &raquo; ') . $this->options->title;
 
         $header = $this->is('single') ? '<link rel="canonical" href="' . $this->archiveUrl . '" />' . "\n" : '';

@@ -255,7 +255,7 @@ class Feedback extends Comments implements ActionInterface
 
         /** 生成过滤器 */
         try {
-            $comment = self::pluginHandle()->call('comment', $comment, $this->content);
+            $comment = self::pluginHandle()->filter('comment', $comment, $this->content);
         } catch (\Typecho\Exception $e) {
             Cookie::set('__typecho_remember_text', $comment['text']);
             throw $e;
@@ -341,7 +341,7 @@ class Feedback extends Comments implements ActionInterface
         }
 
         /** 生成过滤器 */
-        $trackback = self::pluginHandle()->call('trackback', $trackback, $this->content);
+        $trackback = self::pluginHandle()->filter('trackback', $trackback, $this->content);
 
         /** 添加引用 */
         $this->insert($trackback);

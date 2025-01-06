@@ -436,18 +436,39 @@ class Plugin
     public function call(string $component, ...$args)
     {
         $component = $this->handle . ':' . $component;
-        $last = count($args);
-        $args[$last] = $last > 0 ? $args[0] : false;
+        $return = null;
 
         if (isset(self::$plugin['handles'][$component])) {
-            $args[$last] = null;
             $this->signal = true;
             foreach (self::$plugin['handles'][$component] as $callback) {
-                $args[$last] = call_user_func_array($callback, $args);
+                $return = call_user_func_array($callback, $args);
             }
         }
 
-        return $args[$last];
+        return $return;
+    }
+
+    /**
+     * 过滤处理函数
+     *
+     * @param string $component 当前组件
+     * @param array $args 参数
+     * @return mixed
+     */
+    public function filter(string $component, ...$args)
+    {
+        $component = $this->handle . ':' . $component;
+        $return = count($args) > 0 ? $args[0] : null;
+
+        if (isset(self::$plugin['handles'][$component])) {
+            $args[0] = $return;
+            $this->signal = true;
+            foreach (self::$plugin['handles'][$component] as $callback) {
+                $return = call_user_func_array($callback, $args);
+            }
+        }
+
+        return $return;
     }
 
     /**

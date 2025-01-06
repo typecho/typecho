@@ -64,7 +64,7 @@ class Users extends Base implements QueryInterface, RowFilterInterface, PrimaryK
      */
     public function filter(array $row): array
     {
-        return Users::pluginHandle()->call('filter', $row, $this);
+        return Users::pluginHandle()->filter('filter', $row, $this);
     }
 
     /**
