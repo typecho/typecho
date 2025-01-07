@@ -435,19 +435,47 @@ class Plugin
      */
     public function call(string $component, ...$args)
     {
-        $component = $this->handle . ':' . $component;
-        $last = count($args);
-        $args[$last] = $last > 0 ? $args[0] : false;
+        $componentKey = $this->handle . ':' . $component;
 
-        if (isset(self::$plugin['handles'][$component])) {
-            $args[$last] = null;
-            $this->signal = true;
-            foreach (self::$plugin['handles'][$component] as $callback) {
-                $args[$last] = call_user_func_array($callback, $args);
-            }
+        if (!isset(self::$plugin['handles'][$componentKey])) {
+            return null;
         }
 
-        return $args[$last];
+        $return = null;
+        $this->signal = true;
+
+        foreach (self::$plugin['handles'][$componentKey] as $callback) {
+            $return = call_user_func_array($callback, $args);
+        }
+
+        return $return;
+    }
+
+    /**
+     * 过滤处理函数
+     *
+     * @param string $component 当前组件
+     * @param mixed $value 值
+     * @param array $args 参数
+     * @return mixed
+     */
+    public function filter(string $component, $value, ...$args)
+    {
+        $componentKey = $this->handle . ':' . $component;
+
+        if (!isset(self::$plugin['handles'][$componentKey])) {
+            return $value;
+        }
+
+        $result = $value;
+        $this->signal = true;
+
+        foreach (self::$plugin['handles'][$componentKey] as $callback) {
+            $currentArgs = array_merge([$result], $args, [$result]);
+            $result = call_user_func_array($callback, $currentArgs);
+        }
+
+        return $result;
     }
 
     /**

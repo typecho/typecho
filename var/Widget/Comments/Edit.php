@@ -300,7 +300,7 @@ class Edit extends Comments implements ActionInterface
             }
 
             /** 评论插件接口 */
-            $comment = self::pluginHandle()->call('edit', $comment, $this);
+            $comment = self::pluginHandle()->filter('edit', $comment, $this);
 
             /** 更新评论 */
             $this->update($comment, $this->db->sql()->where('coid = ?', $coid));

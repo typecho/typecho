@@ -359,7 +359,7 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
         $row['password'] = $row['password'] ?? '';
         $row['date'] = new Date($row['created']);
 
-        return Contents::pluginHandle()->call('filter', $row, $this);
+        return Contents::pluginHandle()->filter('filter', $row, $this);
     }
 
     /**
@@ -404,7 +404,7 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
      */
     public function title(int $length = 0, string $trim = '...')
     {
-        $title = Contents::pluginHandle()->trigger($plugged)->call('title', $this->title, $this);
+        $title = Contents::pluginHandle()->trigger($plugged)->filter('title', $this->title, $this);
         if (!$plugged) {
             echo $length > 0 ? Common::subStr($this->title, 0, $length, $trim) : $this->title;
         } else {
@@ -772,10 +772,10 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
             return $this->text;
         }
 
-        $content = Contents::pluginHandle()->call('excerpt', $this->content, $this);
+        $content = Contents::pluginHandle()->filter('excerpt', $this->content, $this);
         [$excerpt] = explode('<!--more-->', $content);
 
-        return Common::fixHtml(Contents::pluginHandle()->call('excerptEx', $excerpt, $this));
+        return Common::fixHtml(Contents::pluginHandle()->filter('excerptEx', $excerpt, $this));
     }
 
     /**
@@ -798,7 +798,7 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
      */
     protected function markdown(?string $text): ?string
     {
-        $html = Contents::pluginHandle()->trigger($parsed)->call('markdown', $text);
+        $html = Contents::pluginHandle()->trigger($parsed)->filter('markdown', $text);
 
         if (!$parsed) {
             $html = Markdown::convert($text);
@@ -815,7 +815,7 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
      */
     protected function autoP(?string $text): ?string
     {
-        $html = Contents::pluginHandle()->trigger($parsed)->call('autoP', $text);
+        $html = Contents::pluginHandle()->trigger($parsed)->filter('autoP', $text);
 
         if (!$parsed && $text) {
             static $parser;
@@ -841,14 +841,14 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
             return $this->text;
         }
 
-        $content = Contents::pluginHandle()->trigger($plugged)->call('content', $this->text, $this);
+        $content = Contents::pluginHandle()->trigger($plugged)->filter('content', $this->text, $this);
 
         if (!$plugged) {
             $content = $this->isMarkdown ? $this->markdown($content)
                 : $this->autoP($content);
         }
 
-        return Contents::pluginHandle()->call('contentEx', $content, $this);
+        return Contents::pluginHandle()->filter('contentEx', $content, $this);
     }
 
     /**

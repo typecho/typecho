@@ -339,7 +339,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
 
         $input['text'] = !empty($content['mt_text_more']) ? $content['description']
             . "\n<!--more-->\n" . $content['mt_text_more'] : $content['description'];
-        $input['text'] = self::pluginHandle()->call('textFilter', $input['text'], $this);
+        $input['text'] = self::pluginHandle()->filter('textFilter', $input['text'], $this);
 
         $input['password'] = $content["wp_password"] ?? null;
         $input['order'] = $content["wp_page_order"] ?? null;
@@ -1719,7 +1719,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
                         ];
 
                         /** 加入plugin */
-                        $pingback = self::pluginHandle()->call('pingback', $pingback, $post);
+                        $pingback = self::pluginHandle()->filter('pingback', $pingback, $post);
 
                         /** 执行插入*/
                         $insertId = Comments::alloc()->insert($pingback);
