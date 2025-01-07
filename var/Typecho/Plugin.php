@@ -435,14 +435,17 @@ class Plugin
      */
     public function call(string $component, ...$args)
     {
-        $component = $this->handle . ':' . $component;
-        $return = null;
+        $componentKey = $this->handle . ':' . $component;
 
-        if (isset(self::$plugin['handles'][$component])) {
-            $this->signal = true;
-            foreach (self::$plugin['handles'][$component] as $callback) {
-                $return = call_user_func_array($callback, $args);
-            }
+        if (!isset(self::$plugin['handles'][$componentKey])) {
+            return null;
+        }
+
+        $return = null;
+        $this->signal = true;
+
+        foreach (self::$plugin['handles'][$componentKey] as $callback) {
+            $return = call_user_func_array($callback, $args);
         }
 
         return $return;
@@ -452,23 +455,27 @@ class Plugin
      * 过滤处理函数
      *
      * @param string $component 当前组件
+     * @param mixed $value 值
      * @param array $args 参数
      * @return mixed
      */
-    public function filter(string $component, ...$args)
+    public function filter(string $component, $value, ...$args)
     {
-        $component = $this->handle . ':' . $component;
-        $return = count($args) > 0 ? $args[0] : null;
+        $componentKey = $this->handle . ':' . $component;
 
-        if (isset(self::$plugin['handles'][$component])) {
-            $args[0] = $return;
-            $this->signal = true;
-            foreach (self::$plugin['handles'][$component] as $callback) {
-                $return = call_user_func_array($callback, $args);
-            }
+        if (!isset(self::$plugin['handles'][$componentKey])) {
+            return $value;
         }
 
-        return $return;
+        $result = $value;
+        $this->signal = true;
+
+        foreach (self::$plugin['handles'][$component] as $callback) {
+            $currentArgs = array_merge([$result], $args, [$result]);
+            $result = call_user_func_array($callback, $currentArgs);
+        }
+
+        return $result;
     }
 
     /**
