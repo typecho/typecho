@@ -470,7 +470,7 @@ class Plugin
         $result = $value;
         $this->signal = true;
 
-        foreach (self::$plugin['handles'][$component] as $callback) {
+        foreach (self::$plugin['handles'][$componentKey] as $callback) {
             $currentArgs = array_merge([$result], $args, [$result]);
             $result = call_user_func_array($callback, $currentArgs);
         }
