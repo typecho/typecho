@@ -289,6 +289,15 @@ class Archive extends Contents
     }
 
     /**
+     * @deprecated 1.3.0
+     * @return string|null
+     */
+    public function getDescription(): ?string
+    {
+        return $this->getArchiveDescription();
+    }
+
+    /**
      * @param string $archiveDescription the $description to set
      */
     public function setArchiveDescription(string $archiveDescription)
@@ -302,6 +311,15 @@ class Archive extends Contents
     public function getArchiveKeywords(): ?string
     {
         return $this->archiveKeywords;
+    }
+
+    /**
+     * @deprecated 1.3.0
+     * @return string|null
+     */
+    public function getKeywords(): ?string
+    {
+        return $this->getArchiveKeywords();
     }
 
     /**
@@ -321,6 +339,15 @@ class Archive extends Contents
     }
 
     /**
+     * @deprecated 1.3.0
+     * @return string
+     */
+    public function getFeedAtomUrl(): string
+    {
+        return $this->getArchiveFeedAtomUrl();
+    }
+
+    /**
      * @param string $archiveFeedAtomUrl the $feedAtomUrl to set
      */
     public function setArchiveFeedAtomUrl(string $archiveFeedAtomUrl)
@@ -337,6 +364,15 @@ class Archive extends Contents
     }
 
     /**
+     * @deprecated 1.3.0
+     * @return string
+     */
+    public function getFeedRssUrl(): string
+    {
+        return $this->getArchiveFeedRssUrl();
+    }
+
+    /**
      * @param string $archiveFeedRssUrl the $feedRssUrl to set
      */
     public function setArchiveFeedRssUrl(string $archiveFeedRssUrl)
@@ -350,6 +386,15 @@ class Archive extends Contents
     public function getArchiveFeedUrl(): string
     {
         return $this->archiveFeedUrl;
+    }
+
+    /**
+     * @deprecated 1.3.0
+     * @return string
+     */
+    public function getFeedUrl(): string
+    {
+        return $this->getArchiveFeedUrl();
     }
 
     /**
