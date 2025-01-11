@@ -1745,22 +1745,32 @@ EOF;
             ->where('type = ?', 'category')
             ->limit(1);
 
+        $alias = 'category';
+
         if ($this->request->is('mid')) {
-            $categorySelect->where('mid = ?', $this->request->filter('int')->get('mid'));
+            $mid = $this->request->filter('int')->get('mid');
+            $categorySelect->where('mid = ?', $mid);
+            $alias .= ':' . $mid;
         }
 
         if ($this->request->is('slug')) {
-            $categorySelect->where('slug = ?', $this->request->get('slug'));
+            $slug = $this->request->get('slug');
+            $categorySelect->where('slug = ?', $slug);
+            $alias .= ':' . $slug;
         }
 
         if ($this->request->is('directory')) {
             $directory = explode('/', $this->request->get('directory'));
-            $categorySelect->where('slug = ?', $directory[count($directory) - 1]);
+            $slug = $directory[count($directory) - 1];
+            $categorySelect->where('slug = ?', $slug);
+            $alias .= ':' . $slug;
         }
 
-        $category = MetasFrom::allocWithAlias('category:' . $this->cid, [
+        $category = MetasFrom::allocWithAlias($alias, [
             'query' => $categorySelect
         ]);
+
+        var_dump($category->mid);
 
         if (!$category->have()) {
             throw new WidgetException(_t('分类不存在'), 404);
@@ -1825,16 +1835,22 @@ EOF;
         $tagSelect = $this->db->select()->from('table.metas')
             ->where('type = ?', 'tag')->limit(1);
 
+        $alias = 'tag';
+
         if ($this->request->is('mid')) {
-            $tagSelect->where('mid = ?', $this->request->filter('int')->get('mid'));
+            $mid = $this->request->filter('int')->get('mid');
+            $tagSelect->where('mid = ?', $mid);
+            $alias .= ':' . $mid;
         }
 
         if ($this->request->is('slug')) {
-            $tagSelect->where('slug = ?', $this->request->get('slug'));
+            $slug = $this->request->get('slug');
+            $tagSelect->where('slug = ?', $slug);
+            $alias .= ':' . $slug;
         }
 
         /** 如果是标签 */
-        $tag = MetasFrom::allocWithAlias('tag:' . $this->cid, [
+        $tag = MetasFrom::allocWithAlias($alias, [
             'query' => $tagSelect
         ]);
 
