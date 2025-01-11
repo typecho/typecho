@@ -670,6 +670,14 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
     }
 
     /**
+     * @return string
+     */
+    protected function ___category(): string
+    {
+        return empty($this->categories) ? '' : $this->categories[0]['slug'];
+    }
+
+    /**
      * @return array
      */
     protected function ___categories(): array

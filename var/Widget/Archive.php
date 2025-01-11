@@ -289,6 +289,15 @@ class Archive extends Contents
     }
 
     /**
+     * @deprecated 1.3.0
+     * @return string|null
+     */
+    public function getDescription(): ?string
+    {
+        return $this->getArchiveDescription();
+    }
+
+    /**
      * @param string $archiveDescription the $description to set
      */
     public function setArchiveDescription(string $archiveDescription)
@@ -302,6 +311,15 @@ class Archive extends Contents
     public function getArchiveKeywords(): ?string
     {
         return $this->archiveKeywords;
+    }
+
+    /**
+     * @deprecated 1.3.0
+     * @return string|null
+     */
+    public function getKeywords(): ?string
+    {
+        return $this->getArchiveKeywords();
     }
 
     /**
@@ -321,6 +339,15 @@ class Archive extends Contents
     }
 
     /**
+     * @deprecated 1.3.0
+     * @return string
+     */
+    public function getFeedAtomUrl(): string
+    {
+        return $this->getArchiveFeedAtomUrl();
+    }
+
+    /**
      * @param string $archiveFeedAtomUrl the $feedAtomUrl to set
      */
     public function setArchiveFeedAtomUrl(string $archiveFeedAtomUrl)
@@ -337,6 +364,15 @@ class Archive extends Contents
     }
 
     /**
+     * @deprecated 1.3.0
+     * @return string
+     */
+    public function getFeedRssUrl(): string
+    {
+        return $this->getArchiveFeedRssUrl();
+    }
+
+    /**
      * @param string $archiveFeedRssUrl the $feedRssUrl to set
      */
     public function setArchiveFeedRssUrl(string $archiveFeedRssUrl)
@@ -350,6 +386,15 @@ class Archive extends Contents
     public function getArchiveFeedUrl(): string
     {
         return $this->archiveFeedUrl;
+    }
+
+    /**
+     * @deprecated 1.3.0
+     * @return string
+     */
+    public function getFeedUrl(): string
+    {
+        return $this->getArchiveFeedUrl();
     }
 
     /**
@@ -1700,22 +1745,32 @@ EOF;
             ->where('type = ?', 'category')
             ->limit(1);
 
+        $alias = 'category';
+
         if ($this->request->is('mid')) {
-            $categorySelect->where('mid = ?', $this->request->filter('int')->get('mid'));
+            $mid = $this->request->filter('int')->get('mid');
+            $categorySelect->where('mid = ?', $mid);
+            $alias .= ':' . $mid;
         }
 
         if ($this->request->is('slug')) {
-            $categorySelect->where('slug = ?', $this->request->get('slug'));
+            $slug = $this->request->get('slug');
+            $categorySelect->where('slug = ?', $slug);
+            $alias .= ':' . $slug;
         }
 
         if ($this->request->is('directory')) {
             $directory = explode('/', $this->request->get('directory'));
-            $categorySelect->where('slug = ?', $directory[count($directory) - 1]);
+            $slug = $directory[count($directory) - 1];
+            $categorySelect->where('slug = ?', $slug);
+            $alias .= ':' . $slug;
         }
 
-        $category = MetasFrom::allocWithAlias('category:' . $this->cid, [
+        $category = MetasFrom::allocWithAlias($alias, [
             'query' => $categorySelect
         ]);
+
+        var_dump($category->mid);
 
         if (!$category->have()) {
             throw new WidgetException(_t('分类不存在'), 404);
@@ -1780,16 +1835,22 @@ EOF;
         $tagSelect = $this->db->select()->from('table.metas')
             ->where('type = ?', 'tag')->limit(1);
 
+        $alias = 'tag';
+
         if ($this->request->is('mid')) {
-            $tagSelect->where('mid = ?', $this->request->filter('int')->get('mid'));
+            $mid = $this->request->filter('int')->get('mid');
+            $tagSelect->where('mid = ?', $mid);
+            $alias .= ':' . $mid;
         }
 
         if ($this->request->is('slug')) {
-            $tagSelect->where('slug = ?', $this->request->get('slug'));
+            $slug = $this->request->get('slug');
+            $tagSelect->where('slug = ?', $slug);
+            $alias .= ':' . $slug;
         }
 
         /** 如果是标签 */
-        $tag = MetasFrom::allocWithAlias('tag:' . $this->cid, [
+        $tag = MetasFrom::allocWithAlias($alias, [
             'query' => $tagSelect
         ]);
 
