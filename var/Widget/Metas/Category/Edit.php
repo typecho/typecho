@@ -55,29 +55,6 @@ class Edit extends Metas implements ActionInterface
     }
 
     /**
-     * 判断分类名称是否存在
-     *
-     * @param string $name 分类名称
-     * @return boolean
-     * @throws Exception
-     */
-    public function nameExists(string $name): bool
-    {
-        $select = $this->db->select()
-            ->from('table.metas')
-            ->where('type = ?', 'category')
-            ->where('name = ?', $name)
-            ->limit(1);
-
-        if ($this->request->is('mid')) {
-            $select->where('mid <> ?', $this->request->get('mid'));
-        }
-
-        $category = $this->db->fetchRow($select);
-        return !$category;
-    }
-
-    /**
      * 判断分类名转换到缩略名后是否合法
      *
      * @param string $name 分类名
@@ -255,7 +232,6 @@ class Edit extends Metas implements ActionInterface
         /** 给表单增加规则 */
         if ('insert' == $action || 'update' == $action) {
             $name->addRule('required', _t('必须填写分类名称'));
-            $name->addRule([$this, 'nameExists'], _t('分类名称已经存在'));
             $name->addRule([$this, 'nameToSlug'], _t('分类名称无法被转换为缩略名'));
             $name->addRule('xssCheck', _t('请不要在分类名称中使用特殊字符'));
             $slug->addRule([$this, 'slugExists'], _t('缩略名已经存在'));
