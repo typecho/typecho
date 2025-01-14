@@ -377,7 +377,7 @@ class Request
      * @param string|null $default
      * @return string|null
      */
-    public function getServer(string $name, string $default = null): ?string
+    public function getServer(string $name, ?string $default = null): ?string
     {
         return $_SERVER[$name] ?? $default;
     }
