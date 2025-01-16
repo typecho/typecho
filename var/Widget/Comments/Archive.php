@@ -98,11 +98,9 @@ class Archive extends Comments
         if (!$this->parameter->parentId) {
             return;
         }
-        
-        Typecho_Widget::widget('Widget_User')->to($user);
 
-        $commentsAuthor = $user->hasLogin() ? $user->screenName : Cookie::get('__typecho_remember_author');
-        $commentsMail = $user->hasLogin() ? $user->mail : Cookie::get('__typecho_remember_mail');
+        $commentsAuthor = $this->user->hasLogin() ? $this->user->screenName : Cookie::get('__typecho_remember_author');
+        $commentsMail = $this->user->hasLogin() ? $this->user->mail : Cookie::get('__typecho_remember_mail');
         $select = $this->select()->where('table.comments.cid = ?', $this->parameter->parentId)
             ->where(
                 'table.comments.status = ? OR (table.comments.author = ?'
