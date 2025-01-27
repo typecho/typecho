@@ -125,7 +125,7 @@ class Feedback extends Comments implements ActionInterface
                         $latestComment && ($this->options->time - $latestComment['created'] > 0 &&
                             $this->options->time - $latestComment['created'] < $this->options->commentsPostInterval)
                     ) {
-                        throw new Exception(_t('对不起, 您的发言过于频繁, 请稍侯再次发布.'), 403);
+                        throw new Exception(_t('对不起, 您的发言过于频繁, 请稍候再次发布.'), 403);
                     }
                 }
             }
