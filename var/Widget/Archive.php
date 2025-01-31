@@ -1770,8 +1770,6 @@ EOF;
             'query' => $categorySelect
         ]);
 
-        var_dump($category->mid);
-
         if (!$category->have()) {
             throw new WidgetException(_t('分类不存在'), 404);
         }
