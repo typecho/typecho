@@ -8,6 +8,7 @@ use Typecho\Db\Exception;
 use Typecho\Validate;
 use Utils\PasswordHash;
 use Widget\Base\Users;
+use Widget\Users\EditTrait;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -22,6 +23,8 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  */
 class Register extends Users implements ActionInterface
 {
+    use EditTrait;
+
     /**
      * 初始化函数
      *
