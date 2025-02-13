@@ -56,6 +56,7 @@ class Edit extends Metas implements ActionInterface
 
     /**
      * 判断分类名称是否存在
+     * fix #1843 将重复性判断限制在同一父分类下
      *
      * @param string $name 分类名称
      * @return boolean
@@ -72,6 +73,9 @@ class Edit extends Metas implements ActionInterface
         if ($this->request->is('mid')) {
             $select->where('mid <> ?', $this->request->get('mid'));
         }
+
+        // 只在同一父分类下判断重复性
+        $select->where('parent = ?', $this->request->filter('int')->get('parent', 0));
 
         $category = $this->db->fetchRow($select);
         return !$category;

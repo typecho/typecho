@@ -2882,8 +2882,8 @@ else
                 text = text.replace(/^http:\/\/(https?|ftp):\/\//, '$1://');
 
                 // fix issue #552
-                if (!/^(?:https?|ftp):\/\//.test(text) && !/^[_a-z0-9-]+:/i.test(text))
-                    text = 'http://' + text;
+                // if (!/^(?:https?|ftp):\/\//.test(text) && !/^[_a-z0-9-]+:/i.test(text))
+                //    text = 'http://' + text;
             }
 
             dialog.parentNode.removeChild(dialog);
