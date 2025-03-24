@@ -125,7 +125,7 @@ class Feedback extends Comments implements ActionInterface
                         $latestComment && ($this->options->time - $latestComment['created'] > 0 &&
                             $this->options->time - $latestComment['created'] < $this->options->commentsPostInterval)
                     ) {
-                        throw new Exception(_t('对不起, 您的发言过于频繁, 请稍侯再次发布.'), 403);
+                        throw new Exception(_t('对不起, 您的发言过于频繁, 请稍候再次发布.'), 403);
                     }
                 }
             }
@@ -255,7 +255,7 @@ class Feedback extends Comments implements ActionInterface
 
         /** 生成过滤器 */
         try {
-            $comment = self::pluginHandle()->call('comment', $comment, $this->content);
+            $comment = self::pluginHandle()->filter('comment', $comment, $this->content);
         } catch (\Typecho\Exception $e) {
             Cookie::set('__typecho_remember_text', $comment['text']);
             throw $e;
@@ -341,7 +341,7 @@ class Feedback extends Comments implements ActionInterface
         }
 
         /** 生成过滤器 */
-        $trackback = self::pluginHandle()->call('trackback', $trackback, $this->content);
+        $trackback = self::pluginHandle()->filter('trackback', $trackback, $this->content);
 
         /** 添加引用 */
         $this->insert($trackback);

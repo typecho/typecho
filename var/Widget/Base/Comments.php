@@ -244,7 +244,7 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
         $row['text'] = $row['text'] ?? '';
 
         $row['date'] = new Date($row['created']);
-        return Comments::pluginHandle()->call('filter', $row, $this);
+        return Comments::pluginHandle()->filter('filter', $row, $this);
     }
 
     /**
@@ -346,7 +346,7 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
      */
     public function markdown(?string $text): ?string
     {
-        $html = Comments::pluginHandle()->trigger($parsed)->call('markdown', $text);
+        $html = Comments::pluginHandle()->trigger($parsed)->filter('markdown', $text);
 
         if (!$parsed) {
             $html = Markdown::convert($text);
@@ -363,7 +363,7 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
      */
     public function autoP(?string $text): ?string
     {
-        $html = Comments::pluginHandle()->trigger($parsed)->call('autoP', $text);
+        $html = Comments::pluginHandle()->trigger($parsed)->filter('autoP', $text);
 
         if (!$parsed) {
             static $parser;
@@ -483,13 +483,13 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
     {
         $text = $this->parentContent->hidden ? _t('内容被隐藏') : $this->text;
 
-        $text = Comments::pluginHandle()->trigger($plugged)->call('content', $text, $this);
+        $text = Comments::pluginHandle()->trigger($plugged)->filter('content', $text, $this);
         if (!$plugged) {
             $text = $this->options->commentsMarkdown ? $this->markdown($text)
                 : $this->autoP($text);
         }
 
-        $text = Comments::pluginHandle()->call('contentEx', $text, $this);
+        $text = Comments::pluginHandle()->filter('contentEx', $text, $this);
         return Common::stripTags($text, '<p><br>' . $this->options->commentsHTMLTagAllowed);
     }
 

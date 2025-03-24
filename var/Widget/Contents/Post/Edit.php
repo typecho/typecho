@@ -63,7 +63,7 @@ class Edit extends Contents implements ActionInterface
             $contents['text'] = '<!--markdown-->' . $contents['text'];
         }
 
-        $contents = self::pluginHandle()->call('write', $contents, $this);
+        $contents = self::pluginHandle()->filter('write', $contents, $this);
 
         if ($this->request->is('do=publish')) {
             /** 重新发布已经存在的文章 */

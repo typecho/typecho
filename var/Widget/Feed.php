@@ -41,7 +41,7 @@ class Feed extends Contents
      */
     public function execute()
     {
-        $feedPath = $this->request->get('feed');
+        $feedPath = $this->request->get('feed', '/');
         $feedType = FeedGenerator::RSS2;
         $feedContentType = 'application/rss+xml';
         $currentFeedUrl = $this->options->feedUrl;

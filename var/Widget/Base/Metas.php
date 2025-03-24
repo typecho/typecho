@@ -93,7 +93,7 @@ class Metas extends Base implements QueryInterface, RowFilterInterface, PrimaryK
      */
     public function filter(array $row): array
     {
-        return Metas::pluginHandle()->call('filter', $row, $this);
+        return Metas::pluginHandle()->filter('filter', $row, $this);
     }
 
     /**

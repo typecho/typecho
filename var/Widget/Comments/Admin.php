@@ -61,7 +61,7 @@ class Admin extends Comments
         $content = $this->parentContent;
 
         if ($content) {
-            return _t('%s的评论', $content['title']);
+            return _t('%s的评论', $content->title);
         }
 
         throw new Exception(_t('内容不存在'), 404);

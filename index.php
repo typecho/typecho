@@ -17,10 +17,10 @@ if (!defined('__TYPECHO_ROOT_DIR__') && !@include_once 'config.inc.php') {
 \Widget\Init::alloc();
 
 /** 注册一个初始化插件 */
-\Typecho\Plugin::factory('index.php')->begin();
+\Typecho\Plugin::factory('index.php')->call('begin');
 
 /** 开始路由分发 */
 \Typecho\Router::dispatch();
 
 /** 注册一个结束插件 */
-\Typecho\Plugin::factory('index.php')->end();
+\Typecho\Plugin::factory('index.php')->call('end');
