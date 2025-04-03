@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - 'typecho/usr/themes'  # 确保包含你的当前分支
   workflow_dispatch:  # 允许手动触发
 
 jobs:
@@ -27,12 +26,13 @@ jobs:
       run: |
         echo "Current working directory:"
         pwd
+        echo "Git branch: ${{ github.ref }}"
         echo "Listing root directory contents:"
         ls -la
         if [ -f "Joe.zip" ]; then
           echo "Joe.zip found, proceeding with unzip..."
           mkdir -p usr/themes
-          unzip -o "Joe.zip" -d usr/themes || { echo "Unzip failed"; exit 1; }
+          unzip -o "Joe.zip" -d usr/themes || { echo "Unzip failed: $?"; cat unzip_error.log 2>/dev/null; exit 1; }
           echo "Unzip completed, listing usr/themes directory:"
           ls -la usr/themes
           if [ -d "usr/themes/Joe" ]; then
@@ -67,9 +67,11 @@ jobs:
     - name: Commit changes
       run: |
         if [ -d "usr/themes" ] && [ "$(ls -A usr/themes)" ]; then
-          git config --global user.name "Your Name"
-          git config --global user.email "your.email@example.com"
+          git config --global user.name "aw168"
+          git config --global user.email "aw168888888@gmail.com"
           git add usr/themes
           git commit -m "Add unzipped Joe theme files" || echo "No changes to commit"
-          git push
+          git push origin master || { echo "Git push failed: $?"; exit 1; }
+        else
+          echo "No changes to commit, usr/themes is empty or missing"
         fi
