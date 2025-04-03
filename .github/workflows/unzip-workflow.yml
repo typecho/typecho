@@ -1,4 +1,4 @@
-# .github/workflows/unzip_joe.yml (或者你喜欢的文件名)
+# .github/workflows/unzip_joe.yml
 
 name: Unzip Joe.zip to themes
 
@@ -31,7 +31,7 @@ jobs:
             exit 1 # 如果文件不存在，则失败退出
           fi
 
-- name: Commit and push changes
+      - name: Commit and push changes
         run: |
           git config --global user.name 'GitHub Actions Bot'
           git config --global user.email 'actions@github.com'
