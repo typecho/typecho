@@ -5,7 +5,7 @@ name: Unzip Joe.zip to themes
 on:
   push:
     branches:
-      - master  # 触发分支改为 master
+      - main  # 触发分支改为 master
 
 jobs:
   unzip_file:
