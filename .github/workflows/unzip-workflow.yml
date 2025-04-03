@@ -3,7 +3,7 @@ name: Unzip Joe Theme
 on:
   push:
     branches:
-      - main  # 替换为你的默认分支名称，例如 master 或 typecho/usr/themes
+      - master  # 替换为你的默认分支名称，例如 master 或 typecho/usr/themes
     paths:
       - 'Joe.zip'  # 仅在 Joe.zip 发生变化时触发
 
