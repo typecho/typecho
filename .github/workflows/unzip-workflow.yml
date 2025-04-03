@@ -15,23 +15,34 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y unzip
 
-    - name: Unzip Joe.zip to usr/themes
+    - name: Debug and Unzip Joe.zip to themes
       run: |
+        echo "Checking root directory contents:"
+        ls -la
         if [ -f Joe.zip ]; then
-          sudo mkdir -p usr/themes
-          sudo unzip Joe.zip -d usr/themes
-          echo "Joe.zip has been successfully unzipped to usr/themes"
+          mkdir -p themes
+          unzip -o Joe.zip -d themes
+          echo "Unzipped contents to themes directory"
+          echo "Listing themes directory:"
+          ls -la themes
+          if [ -d themes/Joe ]; then
+            echo "Moving contents from themes/Joe to themes/"
+            mv themes/Joe/* themes/ || true
+            rmdir themes/Joe || true
+            echo "Moved contents, listing themes again:"
+            ls -la themes
+          fi
         else
-          echo "Joe.zip not found in the root directory"
+          echo "Error: Joe.zip not found in the root directory"
           exit 1
         fi
 
     - name: Verify extraction
       run: |
-        if [ -d usr/themes ]; then
-          echo "Directory usr/themes exists and contains:"
-          ls -la usr/themes
+        if [ -d themes ]; then
+          echo "themes directory exists and contains:"
+          ls -la themes
         else
-          echo "Failed to create or find usr/themes directory"
+          echo "Error: Failed to create or find themes directory"
           exit 1
         fi
