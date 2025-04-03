@@ -1,9 +1,11 @@
-name: Unzip Joe.zip
+# .github/workflows/unzip_joe.yml (或者你喜欢的文件名)
+
+name: Unzip Joe.zip to themes
 
 on:
   push:
     branches:
-      - main # 或者您的主要分支名称
+      - master  # 触发分支改为 master
 
 jobs:
   unzip_file:
@@ -11,20 +13,36 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3 # 或者更新的版本，如 @v4
 
       - name: Create target directory
         run: |
-          mkdir -p typecho/usr/themes/
+          # 创建目标目录改为 usr/themes/
+          mkdir -p usr/themes/
 
       - name: Unzip Joe.zip
         run: |
-          unzip Joe.zip -d typecho/usr/themes/
+          # 检查 Joe.zip 是否存在
+          if [ -f Joe.zip ]; then
+            # 解压到目标目录 usr/themes/
+            unzip Joe.zip -d usr/themes/
+          else
+            echo "Error: Joe.zip not found in repository root."
+            exit 1 # 如果文件不存在，则失败退出
+          fi
 
       - name: Commit and push changes
         run: |
           git config --global user.name 'GitHub Actions Bot'
           git config --global user.email 'actions@github.com'
-          git add typecho/usr/themes/* # 添加解压后的文件
-          git commit -m "Auto-unzip Joe.zip to themes directory"
-          git push origin ${{ github.ref_name }}
+          # 检查 usr/themes/ 目录下是否有文件变动
+          if [[ -n $(git status --porcelain usr/themes/) ]]; then
+            # 添加 usr/themes/ 目录下的文件
+            git add usr/themes/*
+            # 提交信息包含 [skip ci] 防止无限循环
+            git commit -m "Auto-unzip Joe.zip to usr/themes/ [skip ci]"
+            # 推送到当前触发的分支 (master)
+            git push origin ${{ github.ref_name }}
+          else
+            echo "No changes to commit in usr/themes/ directory."
+          fi
