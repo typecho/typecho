@@ -32,7 +32,7 @@ jobs:
 
       - name: Check extracted files
         run: |
-          echo "Checking contents of usr/themes:"
+          echo "Checking contents of usr/themes after unzip:"
           ls -R $GITHUB_WORKSPACE/usr/themes || echo "No files extracted!"
         shell: bash
 
@@ -45,6 +45,10 @@ jobs:
           fi
           echo "Final contents of usr/themes:"
           ls -R $GITHUB_WORKSPACE/usr/themes
+        shell: bash
+
+      - name: Set correct permissions (if needed)
+        run: chmod -R 755 $GITHUB_WORKSPACE/usr/themes
         shell: bash
 
       - name: Commit and push changes
