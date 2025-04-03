@@ -31,7 +31,7 @@ jobs:
         if [ -f "Joe.zip" ]; then
           echo "Joe.zip found, size: $(stat -c%s Joe.zip) bytes"
           mkdir -p usr/themes
-          unzip -o "Joe.zip" -d usr/themes -v > unzip_output.log 2> unzip_error.log || { echo "Unzip failed, error: $(cat unzip_error.log)"; exit 1; }
+          unzip -o "Joe.zip" -d usr/themes > unzip_output.log 2> unzip_error.log || { echo "Unzip failed, error: $(cat unzip_error.log)"; exit 1; }
           echo "Unzip completed, listing usr/themes directory:"
           ls -la usr/themes
           if [ -d "usr/themes/Joe" ]; then
