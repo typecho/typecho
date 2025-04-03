@@ -12,37 +12,47 @@ jobs:
 
     - name: Set up environment
       run: |
-        sudo apt-get update
+        sudo apt-get update -qq
         sudo apt-get install -y unzip
+        echo "Environment setup complete"
 
     - name: Debug and Unzip Joe.zip to themes
       run: |
-        echo "Checking root directory contents:"
+        echo "Current working directory:"
+        pwd
+        echo "Listing root directory contents:"
         ls -la
-        if [ -f Joe.zip ]; then
+        if [ -f "Joe.zip" ]; then
+          echo "Joe.zip found, proceeding with unzip..."
           mkdir -p themes
-          unzip -o Joe.zip -d themes
-          echo "Unzipped contents to themes directory"
-          echo "Listing themes directory:"
+          unzip -o "Joe.zip" -d themes || { echo "Unzip failed"; exit 1; }
+          echo "Unzip completed, listing themes directory:"
           ls -la themes
-          if [ -d themes/Joe ]; then
-            echo "Moving contents from themes/Joe to themes/"
-            mv themes/Joe/* themes/ || true
-            rmdir themes/Joe || true
+          if [ -d "themes/Joe" ]; then
+            echo "Nested Joe directory found, moving contents..."
+            mv "themes/Joe/"* "themes/" 2>/dev/null || echo "No files to move or move failed"
+            rmdir "themes/Joe" 2>/dev/null || echo "Failed to remove Joe directory"
             echo "Moved contents, listing themes again:"
             ls -la themes
           fi
         else
           echo "Error: Joe.zip not found in the root directory"
+          ls -la  # 再次列出文件，确认
           exit 1
         fi
 
     - name: Verify extraction
       run: |
-        if [ -d themes ]; then
+        if [ -d "themes" ]; then
           echo "themes directory exists and contains:"
           ls -la themes
+          if [ "$(ls -A themes)" ]; then
+            echo "Verification successful: themes directory is not empty"
+          else
+            echo "Error: themes directory is empty"
+            exit 1
+          fi
         else
-          echo "Error: Failed to create or find themes directory"
+          echo "Error: themes directory does not exist"
           exit 1
         fi
