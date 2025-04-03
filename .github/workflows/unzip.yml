@@ -15,6 +15,17 @@ jobs:
         run: ls -l $GITHUB_WORKSPACE
         shell: bash
 
+      - name: Show contents of Joe.zip before extraction
+        run: |
+          if [ -f "$GITHUB_WORKSPACE/Joe.zip" ]; then
+            echo "Joe.zip found, listing contents:"
+            unzip -l "$GITHUB_WORKSPACE/Joe.zip"
+          else
+            echo "Error: Joe.zip not found!"
+            exit 1
+          fi
+        shell: bash
+
       - name: Create target directory
         run: mkdir -p $GITHUB_WORKSPACE/usr/themes
         shell: bash
@@ -40,7 +51,7 @@ jobs:
         run: |
           if [ -d "$GITHUB_WORKSPACE/usr/themes/Joe" ]; then
             echo "Moving files from usr/themes/Joe/ to usr/themes/"
-            mv $GITHUB_WORKSPACE/usr/themes/Joe/* $GITHUB_WORKSPACE/usr/themes/
+            mv $GITHUB_WORKSPACE/usr/themes/Joe/* $GITHUB_WORKSPACE/usr/themes/ || echo "Nothing to move!"
             rm -rf $GITHUB_WORKSPACE/usr/themes/Joe  # 删除空目录
           fi
           echo "Final contents of usr/themes:"
