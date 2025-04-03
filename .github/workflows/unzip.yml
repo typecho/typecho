@@ -2,7 +2,7 @@ name: Unzip and Move Files
 on: [push]
 
 permissions:
-  contents: write  # Allow write access to the repository
+  contents: write  # 允许写入仓库
 
 jobs:
   unzip:
@@ -11,10 +11,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: List repository files (debugging)
+        run: ls -l
+        shell: bash
+
       - name: Unzip file
         run: |
-          ls -l  # List files to verify Joe.zip exists
-          unzip Joe.zip -d usr/themes
+          if [ -f "Joe.zip" ]; then
+            unzip Joe.zip -d usr/themes
+          else
+            echo "Joe.zip not found!"
+            exit 1
+          fi
         shell: bash
 
       - name: Commit and push changes
