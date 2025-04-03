@@ -68,8 +68,8 @@ jobs:
     - name: Commit changes
       run: |
         if [ -d "usr/themes" ] && [ "$(ls -A usr/themes)" ]; then
-          git config --global user.name "Your Name"
-          git config --global user.email "your.email@example.com"
+          git config --global user.name "aw168"
+          git config --global user.email "aw168888888@gmail.com"
           git add usr/themes
           git commit -m "Add unzipped Joe theme files" || echo "No changes to commit"
           git push
