@@ -27,7 +27,7 @@ $db->addServer(array (
   'charset' => 'utf8mb4',
   'database' => 'test',
   'engine' => 'InnoDB',
-  'sslCa' => '/isrgrootx1.pem',
+  'sslCa' => 'isrgrootx1.pem',
   'sslVerify' => true,
 ), \Typecho\Db::READ | \Typecho\Db::WRITE);
 \Typecho\Db::set($db);
