@@ -1,6 +1,9 @@
 name: Unzip and Move Files
 on: [push]
 
+permissions:
+  contents: write  # 允许工作流提交更改
+
 jobs:
   unzip:
     runs-on: ubuntu-latest
@@ -8,17 +11,31 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: List repository files (debugging)
+        run: ls -l
+        shell: bash
+
+      - name: Create target directory
+        run: mkdir -p usr/themes
+        shell: bash
+
       - name: Unzip file
         run: |
-          unzip Joe.zip -d usr/themes
+          if [ -f "$GITHUB_WORKSPACE/Joe.zip" ]; then
+            unzip -o "$GITHUB_WORKSPACE/Joe.zip" -d "$GITHUB_WORKSPACE/usr/themes"
+            ls -l "$GITHUB_WORKSPACE/usr/themes"  # 确认文件已解压
+          else
+            echo "Joe.zip not found!"
+            exit 1
+          fi
         shell: bash
 
       - name: Commit and push changes
         run: |
-          git config --global user.name "Your Name"
-          git config --global user.email "your.email@example.com"
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
           git add .
-          git commit -m "Unzip archive to usr/themes"
+          git diff --quiet || git commit -m "Unzip archive to usr/themes"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
