@@ -1,6 +1,11 @@
 name: Unzip Joe Theme
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main  # 替换为你的默认分支名称，例如 master 或 typecho/usr/themes
+    paths:
+      - 'Joe.zip'  # 仅在 Joe.zip 发生变化时触发
 
 jobs:
   unzip:
@@ -9,6 +14,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+      with:
+        ref: ${{ github.ref }}  # 确保使用推送的分支
 
     - name: Set up environment
       run: |
@@ -16,7 +23,7 @@ jobs:
         sudo apt-get install -y unzip
         echo "Environment setup complete"
 
-    - name: Debug and Unzip Joe.zip to themes
+    - name: Debug and Unzip Joe.zip to usr/themes
       run: |
         echo "Current working directory:"
         pwd
@@ -24,16 +31,16 @@ jobs:
         ls -la
         if [ -f "Joe.zip" ]; then
           echo "Joe.zip found, proceeding with unzip..."
-          mkdir -p themes
-          unzip -o "Joe.zip" -d themes || { echo "Unzip failed"; exit 1; }
-          echo "Unzip completed, listing themes directory:"
-          ls -la themes
-          if [ -d "themes/Joe" ]; then
+          mkdir -p usr/themes
+          unzip -o "Joe.zip" -d usr/themes || { echo "Unzip failed"; exit 1; }
+          echo "Unzip completed, listing usr/themes directory:"
+          ls -la usr/themes
+          if [ -d "usr/themes/Joe" ]; then
             echo "Nested Joe directory found, moving contents..."
-            mv "themes/Joe/"* "themes/" 2>/dev/null || echo "No files to move or move failed"
-            rmdir "themes/Joe" 2>/dev/null || echo "Failed to remove Joe directory"
-            echo "Moved contents, listing themes again:"
-            ls -la themes
+            mv "usr/themes/Joe/"* "usr/themes/" 2>/dev/null || echo "No files to move or move failed"
+            rmdir "usr/themes/Joe" 2>/dev/null || echo "Failed to remove Joe directory"
+            echo "Moved contents, listing usr/themes again:"
+            ls -la usr/themes
           fi
         else
           echo "Error: Joe.zip not found in the root directory"
@@ -43,16 +50,26 @@ jobs:
 
     - name: Verify extraction
       run: |
-        if [ -d "themes" ]; then
-          echo "themes directory exists and contains:"
-          ls -la themes
-          if [ "$(ls -A themes)" ]; then
-            echo "Verification successful: themes directory is not empty"
+        if [ -d "usr/themes" ]; then
+          echo "usr/themes directory exists and contains:"
+          ls -la usr/themes
+          if [ "$(ls -A usr/themes)" ]; then
+            echo "Verification successful: usr/themes directory is not empty"
           else
-            echo "Error: themes directory is empty"
+            echo "Error: usr/themes directory is empty"
             exit 1
           fi
         else
-          echo "Error: themes directory does not exist"
+          echo "Error: usr/themes directory does not exist"
           exit 1
+        fi
+
+    - name: Commit changes
+      run: |
+        if [ -d "usr/themes" ] && [ "$(ls -A usr/themes)" ]; then
+          git config --global user.name "Your Name"
+          git config --global user.email "your.email@example.com"
+          git add usr/themes
+          git commit -m "Add unzipped Joe theme files" || echo "No changes to commit"
+          git push
         fi
