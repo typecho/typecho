@@ -1,0 +1,37 @@
+name: Unzip Joe Theme
+
+on: [push, pull_request]
+
+jobs:
+  unzip:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up environment
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y unzip
+
+    - name: Unzip Joe.zip to usr/themes
+      run: |
+        if [ -f Joe.zip ]; then
+          sudo mkdir -p usr/themes
+          sudo unzip Joe.zip -d usr/themes
+          echo "Joe.zip has been successfully unzipped to usr/themes"
+        else
+          echo "Joe.zip not found in the root directory"
+          exit 1
+        fi
+
+    - name: Verify extraction
+      run: |
+        if [ -d usr/themes ]; then
+          echo "Directory usr/themes exists and contains:"
+          ls -la usr/themes
+        else
+          echo "Failed to create or find usr/themes directory"
+          exit 1
+        fi
