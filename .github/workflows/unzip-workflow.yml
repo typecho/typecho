@@ -3,9 +3,10 @@ name: Unzip Joe Theme
 on:
   push:
     branches:
-      - master  # 替换为你的默认分支名称，例如 master 或 typecho/usr/themes
+      - master  # 改为你的默认分支 master
     paths:
-      - 'Joe.zip'  # 仅在 Joe.zip 发生变化时触发
+      - 'Joe.zip'  # 仅在 Joe.zip 更改时触发
+  workflow_dispatch:  # 允许手动触发
 
 jobs:
   unzip:
@@ -15,7 +16,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
       with:
-        ref: ${{ github.ref }}  # 确保使用推送的分支
+        ref: ${{ github.ref }}
 
     - name: Set up environment
       run: |
@@ -44,7 +45,7 @@ jobs:
           fi
         else
           echo "Error: Joe.zip not found in the root directory"
-          ls -la  # 再次列出文件，确认
+          ls -la
           exit 1
         fi
 
