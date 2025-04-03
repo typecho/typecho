@@ -4,9 +4,7 @@ on:
   push:
     branches:
       - master
-      - 'typecho/usr/themes'  # 添加你的当前分支
-    paths:
-      - 'Joe.zip'  # 仅在 Joe.zip 更改时触发
+      - 'typecho/usr/themes'  # 确保包含你的当前分支
   workflow_dispatch:  # 允许手动触发
 
 jobs:
@@ -69,8 +67,8 @@ jobs:
     - name: Commit changes
       run: |
         if [ -d "usr/themes" ] && [ "$(ls -A usr/themes)" ]; then
-          git config --global user.name "aw168"
-          git config --global user.email "aw168888888@gmail.com"
+          git config --global user.name "Your Name"
+          git config --global user.email "your.email@example.com"
           git add usr/themes
           git commit -m "Add unzipped Joe theme files" || echo "No changes to commit"
           git push
