@@ -205,14 +205,14 @@ function install_get_default_routers(): array
         'comment_page'       =>
             [
                 'url'    => '[permalink:string]/comment-page-[commentPage:digital]',
-                'widget' => '\Widget\CommentPage',
-                'action' => 'action',
+                'widget' => '\Widget\Archive',
+                'action' => 'render',
             ],
         'feed'               =>
             [
                 'url'    => '/feed[feed:string:0]',
-                'widget' => '\Widget\Feed',
-                'action' => 'render',
+                'widget' => '\Widget\Archive',
+                'action' => 'feed',
             ],
         'feedback'           =>
             [
@@ -241,16 +241,7 @@ function install_get_default_options(): array
     if (empty($options)) {
         $options = [
             'theme' => 'default',
-            'theme:default' => json_encode([
-                'logoUrl' => '',
-                'sidebarBlock' => [
-                    'ShowRecentPosts',
-                    'ShowRecentComments',
-                    'ShowCategory',
-                    'ShowArchive',
-                    'ShowOther'
-                ]
-            ]),
+            'theme:default' => 'a:2:{s:7:"logoUrl";N;s:12:"sidebarBlock";a:5:{i:0;s:15:"ShowRecentPosts";i:1;s:18:"ShowRecentComments";i:2;s:12:"ShowCategory";i:3;s:11:"ShowArchive";i:4;s:9:"ShowOther";}}',
             'timezone' => '28800',
             'lang' => install_get_lang(),
             'charset' => 'UTF-8',
@@ -265,7 +256,7 @@ function install_get_default_options(): array
             'frontArchive' => 0,
             'commentsRequireMail' => 1,
             'commentsWhitelist' => 0,
-            'commentsRequireUrl' => 0,
+            'commentsRequireURL' => 0,
             'commentsRequireModeration' => 0,
             'plugins' => 'a:0:{}',
             'commentDateFormat' => 'F jS, Y \a\t h:i a',
@@ -303,9 +294,9 @@ function install_get_default_options(): array
             'commentsAvatar' => 1,
             'commentsAvatarRating' => 'G',
             'commentsAntiSpam' => 1,
-            'routingTable' => json_encode(install_get_default_routers()),
-            'actionTable' => json_encode([]),
-            'panelTable' => json_encode([]),
+            'routingTable' => serialize(install_get_default_routers()),
+            'actionTable' => 'a:0:{}',
+            'panelTable' => 'a:0:{}',
             'attachmentTypes' => '@image@',
             'secret' => \Typecho\Common::randString(32, true),
             'installed' => 0,
@@ -768,7 +759,7 @@ function install_step_1_perform()
     $realUploadDir = \Typecho\Common::url($uploadDir, __TYPECHO_ROOT_DIR__);
     $writeable = true;
     if (is_dir($realUploadDir)) {
-        if (!is_writable($realUploadDir) || !is_readable($realUploadDir)) {
+        if (!is_writeable($realUploadDir) || !is_readable($realUploadDir)) {
             if (!@chmod($realUploadDir, 0755)) {
                 $writeable = false;
             }
@@ -777,10 +768,6 @@ function install_step_1_perform()
         if (!@mkdir($realUploadDir, 0755)) {
             $writeable = false;
         }
-    }
-
-    if (!$writeable) {
-        $errors[] = _t('上传目录无法写入, 请手动将安装目录下的 %s 目录的权限设置为可写然后继续升级', $uploadDir);
     }
 
     if (empty($errors)) {
@@ -935,7 +922,7 @@ function install_step_2_perform()
             'dbDatabase' => null,
             'dbEngine' => 'InnoDB',
             'dbSslCa' => null,
-            'dbSslVerify' => 'off',
+            'dbSslVerify' => 'on',
         ],
         'Pgsql' => [
             'dbHost' => 'localhost',
@@ -944,7 +931,6 @@ function install_step_2_perform()
             'dbPassword' => null,
             'dbCharset' => 'utf8',
             'dbDatabase' => null,
-            'dbSslVerify' => 'off',
         ],
         'SQLite' => [
             'dbFile' => __TYPECHO_ROOT_DIR__ . '/usr/' . uniqid() . '.db'
@@ -966,7 +952,7 @@ function install_step_2_perform()
             'dbAdapter' => $request->getServer('TYPECHO_DB_ADAPTER', install_get_current_db_driver()),
             'dbNext' => $request->getServer('TYPECHO_DB_NEXT', 'none'),
             'dbSslCa' => $request->getServer('TYPECHO_DB_SSL_CA'),
-            'dbSslVerify' => $request->getServer('TYPECHO_DB_SSL_VERIFY', 'off'),
+            'dbSslVerify' => $request->getServer('TYPECHO_DB_SSL_VERIFY', 'on'),
         ];
     } else {
         $config = $request->from([
@@ -1034,7 +1020,6 @@ function install_step_2_perform()
                 ->addRule('dbCharset', 'required', _t('确认您的配置'))
                 ->addRule('dbCharset', 'enum', _t('确认您的配置'), ['utf8'])
                 ->addRule('dbDatabase', 'required', _t('确认您的配置'))
-                ->addRule('dbSslVerify', 'enum', _t('确认您的配置'), ['on', 'off'])
                 ->run($config);
             break;
         case 'SQLite':
@@ -1069,7 +1054,7 @@ function install_step_2_perform()
 
     // bool ssl verify
     if (isset($dbConfig['sslVerify'])) {
-        $dbConfig['sslVerify'] = $dbConfig['sslVerify'] == 'on' || !empty($dbConfig['sslCa']);
+        $dbConfig['sslVerify'] = $dbConfig['sslVerify'] == 'on';
     }
 
     if (isset($dbConfig['file']) && preg_match("/^[a-z0-9]+\.[a-z0-9]{2,}$/i", $dbConfig['file'])) {
@@ -1366,7 +1351,7 @@ function install_step_3_perform()
                 'url' => 'https://typecho.org',
                 'ip' => '127.0.0.1',
                 'agent' => $options->generator,
-                'text' => _t('欢迎加入 Typecho 大家族'),
+                'text' => '欢迎加入 Typecho 大家族',
                 'type' => 'comment',
                 'status' => 'approved',
                 'parent' => 0
