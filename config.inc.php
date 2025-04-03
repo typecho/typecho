@@ -21,13 +21,13 @@ require_once __TYPECHO_ROOT_DIR__ . '/var/Typecho/Common.php';
 $db = new \Typecho\Db('Pdo_Mysql', 'typecho_');
 $db->addServer(array (
   'host' => 'gateway01.us-west-2.prod.aws.tidbcloud.com',
-  'port' => 4000,
+  'port' => 4000, // 确认端口
   'user' => 'PH9ufSQDJqga23S.root',
   'password' => 'BrzPqan99JSQ6QcU',
   'charset' => 'utf8mb4',
   'database' => 'test',
   'engine' => 'InnoDB',
-  'sslCa' => 'isrgrootx1.pem',
+  'sslCa' => __TYPECHO_ROOT_DIR__ . '/isrgrootx1.pem', // 完整路径
   'sslVerify' => true,
 ), \Typecho\Db::READ | \Typecho\Db::WRITE);
 \Typecho\Db::set($db);
