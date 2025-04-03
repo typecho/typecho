@@ -22,18 +22,29 @@ jobs:
       - name: Unzip file
         run: |
           if [ -f "Joe.zip" ]; then
+            echo "Joe.zip found, extracting..."
             unzip -o "Joe.zip" -d "usr/themes"
-            echo "Unzip completed."
           else
             echo "Joe.zip not found!"
             exit 1
           fi
         shell: bash
 
-      - name: Verify extracted files
+      - name: Check extracted files
         run: |
-          echo "Checking usr/themes contents..."
-          ls -R usr/themes || echo "No files found in usr/themes!"
+          echo "Checking contents of usr/themes:"
+          ls -R usr/themes || echo "No files extracted!"
+        shell: bash
+
+      - name: Move files if inside a subdirectory
+        run: |
+          if [ -d "usr/themes/Joe" ]; then
+            echo "Moving files from usr/themes/Joe/ to usr/themes/"
+            mv usr/themes/Joe/* usr/themes/
+            rm -rf usr/themes/Joe  # 删除空目录
+          fi
+          echo "Final contents of usr/themes:"
+          ls -R usr/themes
         shell: bash
 
       - name: Commit and push changes
