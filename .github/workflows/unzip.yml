@@ -2,7 +2,7 @@ name: Unzip and Move Files
 on: [push]
 
 permissions:
-  contents: write  # 允许工作流提交更改
+  contents: write  # 允许 GitHub Actions 写入仓库
 
 jobs:
   unzip:
@@ -21,13 +21,19 @@ jobs:
 
       - name: Unzip file
         run: |
-          if [ -f "$GITHUB_WORKSPACE/Joe.zip" ]; then
-            unzip -o "$GITHUB_WORKSPACE/Joe.zip" -d "$GITHUB_WORKSPACE/usr/themes"
-            ls -l "$GITHUB_WORKSPACE/usr/themes"  # 确认文件已解压
+          if [ -f "Joe.zip" ]; then
+            unzip -o "Joe.zip" -d "usr/themes"
+            echo "Unzip completed."
           else
             echo "Joe.zip not found!"
             exit 1
           fi
+        shell: bash
+
+      - name: Verify extracted files
+        run: |
+          echo "Checking usr/themes contents..."
+          ls -R usr/themes || echo "No files found in usr/themes!"
         shell: bash
 
       - name: Commit and push changes
