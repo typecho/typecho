@@ -2,7 +2,7 @@ name: Unzip and Move Files
 on: [push]
 
 permissions:
-  contents: write  # 允许 GitHub Actions 写入仓库
+  contents: write  # 允许 GitHub Actions 提交更改
 
 jobs:
   unzip:
@@ -11,21 +11,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: List repository files (debugging)
-        run: ls -l
+      - name: List repository files before unzip (debugging)
+        run: ls -l $GITHUB_WORKSPACE
         shell: bash
 
       - name: Create target directory
-        run: mkdir -p usr/themes
+        run: mkdir -p $GITHUB_WORKSPACE/usr/themes
         shell: bash
 
       - name: Unzip file
         run: |
-          if [ -f "Joe.zip" ]; then
+          if [ -f "$GITHUB_WORKSPACE/Joe.zip" ]; then
             echo "Joe.zip found, extracting..."
-            unzip -o "Joe.zip" -d "usr/themes"
+            unzip -o "$GITHUB_WORKSPACE/Joe.zip" -d "$GITHUB_WORKSPACE/usr/themes"
           else
-            echo "Joe.zip not found!"
+            echo "Error: Joe.zip not found!"
             exit 1
           fi
         shell: bash
@@ -33,18 +33,18 @@ jobs:
       - name: Check extracted files
         run: |
           echo "Checking contents of usr/themes:"
-          ls -R usr/themes || echo "No files extracted!"
+          ls -R $GITHUB_WORKSPACE/usr/themes || echo "No files extracted!"
         shell: bash
 
       - name: Move files if inside a subdirectory
         run: |
-          if [ -d "usr/themes/Joe" ]; then
+          if [ -d "$GITHUB_WORKSPACE/usr/themes/Joe" ]; then
             echo "Moving files from usr/themes/Joe/ to usr/themes/"
-            mv usr/themes/Joe/* usr/themes/
-            rm -rf usr/themes/Joe  # 删除空目录
+            mv $GITHUB_WORKSPACE/usr/themes/Joe/* $GITHUB_WORKSPACE/usr/themes/
+            rm -rf $GITHUB_WORKSPACE/usr/themes/Joe  # 删除空目录
           fi
           echo "Final contents of usr/themes:"
-          ls -R usr/themes
+          ls -R $GITHUB_WORKSPACE/usr/themes
         shell: bash
 
       - name: Commit and push changes
