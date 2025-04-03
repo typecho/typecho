@@ -1,76 +1,30 @@
-name: Unzip Joe Theme
+name: Unzip Joe.zip
 
 on:
   push:
     branches:
-      - master
-  workflow_dispatch:  # 允许手动触发
+      - main # 或者您的主要分支名称
 
 jobs:
-  unzip:
+  unzip_file:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-      with:
-        ref: ${{ github.ref }}
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Set up environment
-      run: |
-        sudo apt-get update -qq
-        sudo apt-get install -y unzip
-        echo "Environment setup complete"
+      - name: Create target directory
+        run: |
+          mkdir -p typecho/usr/themes/
 
-    - name: Debug and Unzip Joe.zip to usr/themes
-      run: |
-        echo "Current working directory: $(pwd)"
-        echo "Git branch: ${{ github.ref }}"
-        echo "Listing root directory contents:"
-        ls -la
-        if [ -f "Joe.zip" ]; then
-          echo "Joe.zip found, size: $(stat -c%s Joe.zip) bytes"
-          mkdir -p usr/themes
-          unzip -o "Joe.zip" -d usr/themes > unzip_output.log 2> unzip_error.log || { echo "Unzip failed, error: $(cat unzip_error.log)"; exit 1; }
-          echo "Unzip completed, listing usr/themes directory:"
-          ls -la usr/themes
-          if [ -d "usr/themes/Joe" ]; then
-            echo "Nested Joe directory found, moving contents..."
-            mv "usr/themes/Joe/"* "usr/themes/" 2>/dev/null || echo "No files to move or move failed"
-            rmdir "usr/themes/Joe" 2>/dev/null || echo "Failed to remove Joe directory"
-            echo "Moved contents, listing usr/themes again:"
-            ls -la usr/themes
-          fi
-        else
-          echo "Error: Joe.zip not found in the root directory"
-          ls -la
-          exit 1
-        fi
+      - name: Unzip Joe.zip
+        run: |
+          unzip Joe.zip -d typecho/usr/themes/
 
-    - name: Verify extraction
-      run: |
-        if [ -d "usr/themes" ]; then
-          echo "usr/themes directory exists and contains:"
-          ls -la usr/themes
-          if [ "$(ls -A usr/themes)" ]; then
-            echo "Verification successful: usr/themes directory is not empty"
-          else
-            echo "Error: usr/themes directory is empty"
-            exit 1
-          fi
-        else
-          echo "Error: usr/themes directory does not exist"
-          exit 1
-        fi
-
-    - name: Commit changes
-      run: |
-        if [ -d "usr/themes" ] && [ "$(ls -A usr/themes)" ]; then
-          git config --global user.name "Your Name"
-          git config --global user.email "your.email@example.com"
-          git add usr/themes
-          git commit -m "Add unzipped Joe theme files" || echo "No changes to commit"
-          git push origin master || { echo "Git push failed, error: $?"; exit 1; }
-        else
-          echo "No changes to commit, usr/themes is empty or missing"
-        fi
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'GitHub Actions Bot'
+          git config --global user.email 'actions@github.com'
+          git add typecho/usr/themes/* # 添加解压后的文件
+          git commit -m "Auto-unzip Joe.zip to themes directory"
+          git push origin ${{ github.ref_name }}
