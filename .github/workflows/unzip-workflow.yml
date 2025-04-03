@@ -31,15 +31,20 @@ jobs:
             exit 1 # 如果文件不存在，则失败退出
           fi
 
-      - name: Commit and push changes
+- name: Commit and push changes
         run: |
           git config --global user.name 'GitHub Actions Bot'
           git config --global user.email 'actions@github.com'
-          # 检查 usr/themes/ 目录下是否有文件变动
-          if [[ -n $(git status --porcelain usr/themes/) ]]; then
-            # 添加 usr/themes/ 目录下的文件
-            git add usr/themes/*
-            # 提交信息包含 [skip ci] 防止无限循环
+          
+          # 添加 usr/themes/ 目录下的所有变动（包括新文件和新目录）到暂存区
+          git add usr/themes/
+          
+          # 检查是否有文件被暂存（即是否有实际变动）
+          # git diff --staged --quiet 会在有暂存变动时返回 1，没有变动时返回 0
+          # '!' 将返回值反转，所以 '! cmd' 在 cmd 返回 1 时为真
+          if ! git diff --staged --quiet; then
+            echo "Changes detected in usr/themes/. Committing..."
+            # 提交暂存的变动，并在信息中加入 [skip ci] 防止无限循环
             git commit -m "Auto-unzip Joe.zip to usr/themes/ [skip ci]"
             # 推送到当前触发的分支 (master)
             git push origin ${{ github.ref_name }}
