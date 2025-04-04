@@ -611,7 +611,7 @@ class Options extends Base
             Router::url(
                 'do',
                 ['action' => 'login', 'widget' => 'Login'],
-                Common::url('index.php', $this->rootUrl)
+                $this->index
             )
         );
     }
