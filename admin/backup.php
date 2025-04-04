@@ -4,8 +4,7 @@ include 'header.php';
 include 'menu.php';
 
 $actionUrl = $security->getTokenUrl(
-    \Typecho\Router::url('do', array('action' => 'backup', 'widget' => 'Backup'),
-        \Typecho\Common::url('index.php', $options->rootUrl)));
+    \Typecho\Router::url('do', array('action' => 'backup', 'widget' => 'Backup'),$options->index));
 
 $backupFiles = \Widget\Backup::alloc()->listFiles();
 ?>
