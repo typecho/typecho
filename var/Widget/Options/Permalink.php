@@ -199,7 +199,7 @@ RewriteRule . {$basePath}index.php [L]
     public function form(): Form
     {
         /** 构建表格 */
-        $form = new Form($this->security->getRootUrl('index.php/action/options-permalink'), Form::POST_METHOD);
+        $form = new Form($this->security->getIndex('/action/options-permalink'), Form::POST_METHOD);
 
         if (!defined('__TYPECHO_REWRITE__')) {
             /** 是否使用地址重写功能 */
