@@ -11,8 +11,7 @@ include 'menu.php';
             <div class="col-mb-12">
                 <div id="typecho-welcome">
                     <form action="<?php echo $security->getTokenUrl(
-                        \Typecho\Router::url('do', ['action' => 'upgrade', 'widget' => 'Upgrade'],
-                            \Typecho\Common::url('index.php', $options->rootUrl))); ?>" method="post">
+                        \Typecho\Router::url('do', ['action' => 'upgrade', 'widget' => 'Upgrade'],$options->index)); ?>" method="post">
                         <h3><?php _e('检测到新版本!'); ?></h3>
                         <ul>
                             <li><?php _e('您已经更新了系统程序, 我们还需要执行一些后续步骤来完成升级'); ?></li>
