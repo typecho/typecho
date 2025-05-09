@@ -215,6 +215,18 @@ class Validate
     }
 
     /**
+     * 正则表达式验证
+     *
+     * @param string $str
+     * @param string $pattern
+     * @return bool
+     */
+    public static function regexp(string $str, string $pattern): bool
+    {
+        return preg_match($pattern, $str) === 1;
+    }
+
+    /**
      * 增加验证规则
      *
      * @access public
