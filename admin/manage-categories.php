@@ -6,7 +6,7 @@ include 'menu.php';
 \Widget\Metas\Category\Admin::alloc()->to($categories);
 ?>
 
-<div class="main">
+<main class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main manage-metas">
@@ -14,7 +14,7 @@ include 'menu.php';
             <div class="col-mb-12" role="main">
 
                 <form method="post" name="manage_categories" class="operate-form">
-                    <div class="typecho-list-operate clearfix">
+                    <div class="typecho-list-operate">
                         <div class="operate">
                             <label><i class="sr-only"><?php _e('全选'); ?></i><input type="checkbox"
                                                                                    class="typecho-table-select-all"/></label>
@@ -44,77 +44,74 @@ include 'menu.php';
                         </div>
                     </div>
 
-                    <div class="typecho-table-wrap">
-                        <table class="typecho-list-table">
-                            <colgroup>
-                                <col width="20" class="kit-hidden-mb"/>
-                                <col width=""/>
-                                <col width="15%" class="kit-hidden-mb"/>
-                                <col width="25%"/>
-                                <col width="15%"/>
-                                <col width="10%" class="kit-hidden-mb"/>
-                            </colgroup>
-                            <thead>
-                            <tr class="nodrag">
-                                <th class="kit-hidden-mb"></th>
-                                <th><?php _e('名称'); ?></th>
-                                <th><?php _e('子分类'); ?></th>
-                                <th class="kit-hidden-mb"><?php _e('缩略名'); ?></th>
-                                <th></th>
-                                <th class="kit-hidden-mb"><?php _e('文章数'); ?></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?php if ($categories->have()): ?>
-                                <?php while ($categories->next()): ?>
-                                    <tr id="mid-<?php $categories->theId(); ?>">
-                                        <td class="kit-hidden-mb"><input type="checkbox"
-                                                                         value="<?php $categories->mid(); ?>"
-                                                                         name="mid[]"/></td>
-                                        <td>
-                                            <a href="<?php $options->adminUrl('category.php?mid=' . $categories->mid); ?>"><?php $categories->name(); ?></a>
-                                            <a href="<?php $categories->permalink(); ?>"
-                                               title="<?php _e('浏览 %s', $categories->name); ?>"><i class="i-exlink"></i></a>
-                                        </td>
-                                        <td>
+                    <table class="typecho-list-table">
+                        <colgroup>
+                            <col width="3%" class="kit-hidden-mb"/>
+                            <col width=""/>
+                            <col width="15%" class="kit-hidden-mb"/>
+                            <col width="20%"/>
+                            <col width="15%"/>
+                            <col width="15%" class="kit-hidden-mb"/>
+                        </colgroup>
+                        <thead>
+                        <tr class="nodrag">
+                            <th class="kit-hidden-mb"></th>
+                            <th><?php _e('名称'); ?></th>
+                            <th><?php _e('子分类'); ?></th>
+                            <th class="kit-hidden-mb"><?php _e('缩略名'); ?></th>
+                            <th></th>
+                            <th class="kit-hidden-mb"><?php _e('文章数'); ?></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php if ($categories->have()): ?>
+                            <?php while ($categories->next()): ?>
+                                <tr id="mid-<?php $categories->theId(); ?>">
+                                    <td class="kit-hidden-mb"><input type="checkbox"
+                                                                     value="<?php $categories->mid(); ?>"
+                                                                     name="mid[]"/></td>
+                                    <td>
+                                        <a href="<?php $options->adminUrl('category.php?mid=' . $categories->mid); ?>"><?php $categories->name(); ?></a>
+                                        <a href="<?php $categories->permalink(); ?>"
+                                           title="<?php _e('浏览 %s', $categories->name); ?>"><i class="i-exlink"></i></a>
+                                    </td>
+                                    <td>
 
-                                            <?php if (count($categories->children) > 0): ?>
-                                                <a href="<?php $options->adminUrl('manage-categories.php?parent=' . $categories->mid); ?>"><?php echo _n('一个分类', '%d个分类', count($categories->children)); ?></a>
-                                            <?php else: ?>
-                                                <a href="<?php $options->adminUrl('category.php?parent=' . $categories->mid); ?>"><?php echo _e('新增'); ?></a>
-                                            <?php endif; ?>
-                                        </td>
-                                        <td class="kit-hidden-mb"><?php $categories->slug(); ?></td>
-                                        <td>
-                                            <?php if ($options->defaultCategory == $categories->mid): ?>
-                                                <?php _e('默认'); ?>
-                                            <?php else: ?>
-                                                <a class="hidden-by-mouse"
-                                                   href="<?php $security->index('/action/metas-category-edit?do=default&mid=' . $categories->mid); ?>"
-                                                   title="<?php _e('设为默认'); ?>"><?php _e('默认'); ?></a>
-                                            <?php endif; ?>
-                                        </td>
-                                        <td class="kit-hidden-mb"><a
-                                                class="balloon-button left size-<?php echo \Typecho\Common::splitByCount($categories->count, 1, 10, 20, 50, 100); ?>"
-                                                href="<?php $options->adminUrl('manage-posts.php?category=' . $categories->mid); ?>"><?php $categories->count(); ?></a>
-                                        </td>
-                                    </tr>
-                                <?php endwhile; ?>
-                            <?php else: ?>
-                                <tr>
-                                    <td colspan="6"><h6 class="typecho-list-table-title"><?php _e('没有任何分类'); ?></h6>
+                                        <?php if (count($categories->children) > 0): ?>
+                                            <a href="<?php $options->adminUrl('manage-categories.php?parent=' . $categories->mid); ?>"><?php echo _n('一个分类', '%d个分类', count($categories->children)); ?></a>
+                                        <?php else: ?>
+                                            <a href="<?php $options->adminUrl('category.php?parent=' . $categories->mid); ?>"><?php echo _e('新增'); ?></a>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="kit-hidden-mb"><?php $categories->slug(); ?></td>
+                                    <td>
+                                        <?php if ($options->defaultCategory == $categories->mid): ?>
+                                            <?php _e('默认'); ?>
+                                        <?php else: ?>
+                                            <a class="hidden-by-mouse"
+                                               href="<?php $security->index('/action/metas-category-edit?do=default&mid=' . $categories->mid); ?>"
+                                               title="<?php _e('设为默认'); ?>"><?php _e('默认'); ?></a>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="kit-hidden-mb"><a
+                                            class="balloon-button left size-<?php echo \Typecho\Common::splitByCount($categories->count, 1, 10, 20, 50, 100); ?>"
+                                            href="<?php $options->adminUrl('manage-posts.php?category=' . $categories->mid); ?>"><?php $categories->count(); ?></a>
                                     </td>
                                 </tr>
-                            <?php endif; ?>
-                            </tbody>
-                        </table>
-                    </div>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="6" class="none"><?php _e('没有任何分类'); ?></td>
+                            </tr>
+                        <?php endif; ?>
+                        </tbody>
+                    </table>
                 </form>
 
             </div>
         </div>
     </div>
-</div>
+</main>
 
 <?php
 include 'copyright.php';

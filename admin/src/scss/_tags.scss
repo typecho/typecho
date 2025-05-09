@@ -1,0 +1,70 @@
+/**
+* 标签列表
+*/
+
+.tag-list {
+  list-style: none;
+  margin: 0;
+  padding: 20px;
+  background-color: #FFF;
+  display: flex;
+  flex-wrap: wrap;
+
+  .none {
+    color: #999;
+    width: 100%;
+    margin: 0;
+    text-align: center;
+  }
+
+  &.typecho-list-notable li {
+    margin: 0 5px 5px 0;
+    padding: 5px 5px 5px 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+
+    .tag-edit-link {
+      margin-left: 3px;
+      visibility: hidden;
+      display: flex;
+      align-items: center;
+    }
+
+    &:hover {
+      background-color: #E9E9E6;
+
+      .tag-edit-link {
+        visibility: visible;
+      }
+    }
+
+    &:has(input[type="checkbox"]:checked) {
+      background-color: #FFFBCC;
+    }
+
+    &.size-5 {
+      font-size: 1em;
+    }
+
+    &.size-10 {
+      font-size: 1.2em;
+    }
+
+    &.size-20 {
+      font-size: 1.4em;
+    }
+
+    &.size-30 {
+      font-size: 1.6em;
+    }
+
+    &.size-0 {
+      font-size: 1.8em;
+    }
+
+    input {
+      display: none;
+    }
+  }
+}

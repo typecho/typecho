@@ -1,19 +1,16 @@
 /*
- * Bento Grid System
+ * Bento Grid System (Flexbox Version)
  * Source: https://github.com/fenbox/bento
- * Version: 1.2.8
- * Update: 2013.11.25
+ * Version: 2.0.0
+ * Update: 2024.10.23
  */
 
-
 @import "vars";
-
 
 // Mixins
 %box-sizing {
   box-sizing: border-box;
 }
-
 
 // Container
 .container {
@@ -22,189 +19,161 @@
   padding-left: $gutter-width / 2;
   padding-right: $gutter-width / 2;
   @extend %box-sizing;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 // Column group
 .row {
   margin-right: $gutter-width / -2;
   margin-left: $gutter-width / -2;
-  @extend .clearfix;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100vw;
 }
 
 .row [class*="col-"] {
-  float: left;
-  min-height: 1px;
   padding-right: $gutter-width / 2;
   padding-left: $gutter-width / 2;
+  min-height: 1px;
+  flex-grow: 1;
   @extend %box-sizing;
 }
 
+// Flex order replaces push and pull functionality
 .row [class*="-push-"],
 .row [class*="-pull-"] {
   position: relative;
 }
 
-
-/*
- * Mobile and up
- */
-
+// Use flex-grow to simulate columns in mobile
 @for $index from 1 through $columns {
   .col-mb-#{$index} {
-    width: $column-width * $index;
+    flex: 0 0 $column-width * $index;
+    max-width: $column-width * $index;
   }
 }
 
-
-/*
- * Tablet and up
- */
-
-@media (min-width: $screen-tablet) {
+// Tablet and up
+@include screen(tablet) {
   .container {
     max-width: $screen-tablet - ($gutter-width * 2);
   }
 
-  // Colunms
   @for $index from 1 through $columns {
     .col-tb-#{$index} {
-      width: $column-width * $index;
+      flex: 0 0 $column-width * $index;
+      max-width: $column-width * $index;
     }
   }
 
-  // Offset
   @for $index from 0 through $columns {
     .col-tb-offset-#{$index} {
       margin-left: $column-width * $index;
     }
   }
 
-  // Pull
   @for $index from 0 through $columns {
     .col-tb-pull-#{$index} {
-      right: $column-width * $index;
+      order: -$index;
     }
   }
 
-  // Push
   @for $index from 0 through $columns {
     .col-tb-push-#{$index} {
-      left: $column-width * $index;
+      order: $index;
     }
   }
 }
 
-
-/*
- * Desktop and up
- */
-
-@media (min-width: $screen-desktop) {
+// Desktop and up
+@include screen(desktop) {
   .container {
     max-width: $screen-desktop - ($gutter-width * 2);
   }
 
-  // Colunms
   @for $index from 1 through $columns {
     .col-#{$index} {
-      width: $column-width * $index;
+      flex: 0 0 $column-width * $index;
+      max-width: $column-width * $index;
     }
   }
 
-  // Offset
   @for $index from 0 through $columns {
     .col-offset-#{$index} {
       margin-left: $column-width * $index;
     }
   }
 
-  // Pull
   @for $index from 0 through $columns {
     .col-pull-#{$index} {
-      right: $column-width * $index;
+      order: -$index;
     }
   }
 
-  // Push
   @for $index from 0 through $columns {
     .col-push-#{$index} {
-      left: $column-width * $index;
+      order: $index;
     }
   }
 }
 
-
-/*
- * Widescreen and up
- */
-
-@media (min-width: $screen-wide) {
+// Widescreen and up
+@include screen(wide) {
   .container {
     max-width: $screen-wide - ($gutter-width * 2);
   }
 
-  // Colunms
   @for $index from 1 through $columns {
     .col-wd-#{$index} {
-      width: $column-width * $index;
+      flex: 0 0 $column-width * $index;
+      max-width: $column-width * $index;
     }
   }
 
-  // Offset
   @for $index from 0 through $columns {
     .col-wd-offset-#{$index} {
       margin-left: $column-width * $index;
     }
   }
 
-  // Pull
   @for $index from 0 through $columns {
     .col-wd-pull-#{$index} {
-      right: $column-width * $index;
+      order: -$index;
     }
   }
 
-  // Push
   @for $index from 0 through $columns {
     .col-wd-push-#{$index} {
-      left: $column-width * $index;
+      order: $index;
     }
   }
 }
 
-
-/*
- * Responsive kit
- */
-
-// Hidden in mobile and down
-@media (max-width: $screen-phone - 1px) {
+// Responsive kit
+@include screen(phone, max) {
   .kit-hidden-mb {
     display: none;
   }
 }
 
-// Hidden in tablet and down
-@media (max-width: $screen-tablet - 1px) {
+@include screen(tablet, max) {
   .kit-hidden-tb {
     display: none;
   }
 }
 
-// Hidden in descktop and down
-@media (max-width: $screen-desktop - 1px) {
+@include screen(desktop, max) {
   .kit-hidden {
     display: none;
   }
 }
 
-
-/*
- * Clearfix
- */
+// Clearfix
 .clearfix {
   zoom: 1;
-  &:before, &:after {
+  &:before,
+  &:after {
     content: " ";
     display: table;
   }

@@ -378,7 +378,7 @@ function scrollableEditor(el, preview) {
 
     // 表格选择插件
     $.fn.tableSelectable = function (options) {
-        var table = this, s = $.extend({
+        const table = this, s = $.extend({
             checkEl     :   null,
             rowEl       :   null,
             selectAllEl :   null,
@@ -386,19 +386,13 @@ function scrollableEditor(el, preview) {
         }, options);
 
         function clickRow (t) {
-            var t = $(t), check = $(s.checkEl, t), checked = check.prop('checked');
+            const check = $(s.checkEl, t), checked = check.prop('checked');
 
             if (!check.length) {
                 return;
             }
 
             check.prop('checked', !checked);
-            
-            if (checked) {
-                t.removeClass('checked');
-            } else {
-                t.addClass('checked');
-            }
         }
 
         $(s.rowEl, this).each(function () {
@@ -406,9 +400,9 @@ function scrollableEditor(el, preview) {
                 clickRow($(this).parents(s.rowEl));
             });
         }).click(function (e) {
-            var target = $(e.toElement ? e.toElement : e.target),
+            const target = $(e.toElement ? e.toElement : e.target),
                 tagName = target.prop('tagName').toLowerCase();
-            
+
             if ($.inArray(tagName, ['input', 'textarea', 'a', 'button', 'i']) >= 0
                 && 'checkbox' != target.attr('type')) {
                 e.stopPropagation();
@@ -418,27 +412,15 @@ function scrollableEditor(el, preview) {
         });
 
         $(s.selectAllEl).click(function () {
-            var t = $(this), checked = t.prop('checked');
-            
-            if (checked) {
-                $(s.rowEl, table).each(function () {
-                    var t = $(this), el = $(s.checkEl, this).prop('checked', true);
-                    if (el.length > 0) {
-                        t.addClass('checked');
-                    }
-                });
-            } else {
-                $(s.rowEl, table).each(function () {
-                    var t = $(this), el = $(s.checkEl, this).prop('checked', false);
-                    if (el.length > 0) {
-                        t.removeClass('checked');
-                    }
-                });
-            }
+            const t = $(this), checked = t.prop('checked');
+
+            $(s.rowEl, table).each(function () {
+                $(s.checkEl, this).prop('checked', !!checked);
+            });
         });
 
         $(s.actionEl).click(function () {
-            var t = $(this), lang = t.attr('lang');
+            const t = $(this), lang = t.attr('lang');
 
             if (!lang || confirm(lang)) {
                 table.parents('form').attr('action', t.attr('href')).submit();

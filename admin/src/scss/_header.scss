@@ -13,9 +13,12 @@ $color-nav-child-focus: #6DA1BB;
 .typecho-head-nav {
   padding: 0 10px;
   background: $color-nav-bg;
-  position: relative;
+  position: sticky;
+  top: 0;
+  display: flex;
+  z-index: 100;
 
-  a, button.menu-bar {
+  a, .menu-bar summary {
     padding: 0 20px;
     height: 36px;
     line-height: 36px;
@@ -28,192 +31,213 @@ $color-nav-child-focus: #6DA1BB;
     }
   }
 
-  button.menu-bar {
+  .menu-bar {
     display: none;
   }
 
-  #typecho-nav-list {
-    float: left;
+  menu {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    background: $color-nav-bg;
+  }
 
-    & > ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
+  nav {
+    width: 100%;
+
+    & > menu {
+      display: flex;
       position: relative;
-      float: left;
+      width: 100%;
 
-      &:first-child {
-        border-left: $border-nav;
-      }
+      & > li {
 
-      .parent {
-        a {
-          display: inline-block;
-          border-right: $border-nav;
-          background: $color-nav-bg;
+        &:first-child {
+          border-left: $border-nav;
         }
-      }
 
-      .child {
-        position: absolute;
-        list-style: none;
-        top: 36px;
-        display: none;
-        margin: 0;
-        padding: 0;
-        min-width: 160px; 
-        max-width: 240px;
-        background: $color-nav-btn-hover;
-        z-index: 250;
+        > a {
+          display: block;
+          border-right: $border-nav;
 
-        li {
-          &.return {
-            display: none;
-          }
+          &:hover, &:focus {
+            background: $color-nav-btn-hover;
 
-          a {
-            overflow: hidden;
-            text-overflow : ellipsis;
-            white-space: nowrap;
-            display: block;
-
-            &:hover,
-            &:focus {
-              background: $color-nav-bg;
+            & + menu {
+              display: flex;
             }
           }
+        }
 
-          &.focus a {
-            color: $color-nav-child-focus;
+        &:not(.operate) {
+          &.focus > a {
+            background: $color-nav-btn-hover;
             font-weight: bold;
           }
+
+          &:hover > a {
+            background: $color-nav-btn-hover;
+          }
         }
-      }
 
-      .parent a:hover,
-      &.focus .parent a,
-      &.root:hover .parent a {
-        background: $color-nav-btn-hover;
-      }
+        &:hover, &:focus-within, &:focus {
+          menu {
+            display: flex;
+          }
+        }
 
-      &.focus .parent a {
-        font-weight: bold;
-      }
+        menu {
+          position: absolute;
+          top: 36px;
+          display: none;
+          flex-flow: column;
+          min-width: 160px;
+          max-width: 240px;
+          background: $color-nav-btn-hover;
+          z-index: 250;
 
-      &.root:hover .child, &.root.expanded .child {
-        display: block;
+          & > li {
+            a {
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              display: block;
+
+              &:hover,
+              &:focus {
+                background: $color-nav-bg;
+              }
+            }
+
+            &.focus a {
+              color: $color-nav-child-focus;
+              font-weight: bold;
+            }
+          }
+        }
+
+        &.operate {
+          flex: 1;
+          display: flex;
+          justify-content: flex-end;
+
+          a {
+            &:hover {
+              background-color: $color-nav-btn-hover;
+            }
+
+            &:first-child {
+              border-left: $border-nav;
+            }
+          }
+        }
       }
     }
   }
 
-  .operate {
-    float: right;
-    a {
-      display: inline-block;
-      margin-left: -1px;
-      border: $border-nav;
-      border-width: 0 1px;
-      
-      &:hover {
-        background-color: $color-nav-btn-hover;
+  @include screen(phone, max) {
+    padding: 0;
+    flex-flow: column;
+
+    .menu-bar {
+      display: block;
+      font-size: 14px;
+      position: sticky;
+      top: 0;
+      background: $color-nav-bg;
+      z-index: 10;
+
+      summary {
+        cursor: pointer;
+      }
+
+      &[open] {
+        summary {
+          border-bottom: $border-nav;
+        }
+
+        & ~ menu {
+          display: flex;
+        }
+      }
+    }
+
+    nav {
+      overflow-y: auto;
+      width: 100vw;
+      position: fixed;
+      top: 0;
+      background: $color-nav-btn-hover;
+
+      &:has(.menu-bar[open]) {
+        width: 70vw;
+        height: 100%;
+      }
+
+      & > menu {
+        display: none;
+        flex-flow: column;
+
+        & > li {
+          &:first-child {
+            border: none;
+          }
+
+          > a {
+            border: none !important;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+
+          &:not(.operate) {
+            &.focus > a {
+              background: $color-nav-bg;
+            }
+
+            &:hover > a {
+              background: $color-nav-bg;
+            }
+
+            & > a {
+              pointer-events: auto;
+              cursor: pointer;
+            }
+          }
+
+          menu {
+            position: static;
+            border: $border-nav;
+            border-width: 1px 0;
+            display: flex;
+            min-width: auto;
+            max-width: none;
+          }
+
+          &.operate {
+            flex-flow: column;
+            justify-content: flex-start;
+
+            a {
+              background: $color-nav-btn-hover;
+
+              &:hover {
+                background: $color-nav-bg;
+              }
+            }
+          }
+        }
       }
     }
   }
 }
 
-@media (max-width: $screen-phone - 1px) {
-  @keyframes out {
-    from {left: 0%;}
-    to {left: -100%;}
-  }
+@include screen(phone, max) {
+  body {
+    padding-top: 36px;
 
-  @keyframes in {
-    from {left: -100%;}
-    to {left: 0%;}
-  }
-
-  .typecho-head-nav {
-    padding: 0;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    z-index: 10;
-
-    #typecho-nav-list {
-      display: none;
-    }
-
-    .operate {
-      a:last-child {
-        border-right-width: 0;
-      }
-    }
-
-    button.menu-bar {
-      display: inline-block;
-      border: none;
-      background: $color-nav-bg;
-      border-right: $border-nav;
-      
-      &.focus {
-        color: $color-nav-text-hover;
-  
-        & + #typecho-nav-list {
-          display: block;
-          float: none;
-          position: absolute;
-          bottom: 36px;
-          width: 100%;
-          
-          & > ul {
-            float: none;
-            border-bottom: $border-nav;
-            position: static;
-
-            &:first-child {
-              border-left: none;
-            }
-            .parent {
-              a {
-                display: block;
-                border: none;
-                background: $color-nav-btn-hover;
-              }
-            }
-            .child {
-              position: absolute;
-              bottom: 0;
-              left: 100%;
-              top: auto;
-              z-index: 20;
-              width: 100%;
-              max-width: 100%;
-              min-width: auto;
-
-              li {
-                border-bottom: $border-nav;
-                &.return {
-                  display: block;
-                  text-align: center;
-                  font-size: 12px;
-
-                  a {
-                    color: $color-nav-text-mute;
-                  }
-                }
-              }
-            }
-          }
-
-          &.expanded {
-            animation: out .15s ease-out forwards;
-          }
-
-          &.noexpanded {
-            animation: in .15s ease-out forwards;
-          }
-        }
-      }
+    &:has(.menu-bar[open]) {
+      overflow: hidden;
     }
   }
 }

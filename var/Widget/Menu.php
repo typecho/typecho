@@ -68,6 +68,13 @@ class Menu extends Base
     private string $currentUrl;
 
     /**
+     * 当前菜单URL
+     *
+     * @var string
+     */
+    private string $currentMenuUrl;
+
+    /**
      * 执行函数,初始化菜单
      */
     public function execute()
@@ -171,6 +178,7 @@ class Menu extends Base
                 $orgHidden = $hidden;
 
                 // parse url
+                $menuUrl = $url;
                 $url = Common::url($url, $adminUrl);
 
                 // compare url
@@ -241,6 +249,7 @@ class Menu extends Base
                     $this->currentChild = $inKey;
                     $this->title = $title;
                     $this->addLink = $addLink ? Common::url($addLink, $adminUrl) : null;
+                    $this->currentMenuUrl = $menuUrl;
                 }
 
                 $children[$inKey] = [
@@ -272,6 +281,16 @@ class Menu extends Base
     }
 
     /**
+     * 获取当前菜单URL
+     *
+     * @return string
+     */
+    public function getCurrentMenuUrl(): string
+    {
+        return $this->currentMenuUrl;
+    }
+
+    /**
      * 输出父级菜单
      */
     public function output($class = 'focus', $childClass = 'focus')
@@ -281,39 +300,28 @@ class Menu extends Base
                 continue;
             }
 
-            echo "<ul class=\"root" . ($key == $this->currentParent ? ' ' . $class : null)
-                . "\"><li class=\"parent\"><a href=\"{$node[2]}\">{$node[0]}</a>"
-                . "</li><ul class=\"child\">";
-
-            $last = 0;
-            foreach ($node[3] as $inKey => $inNode) {
-                if (!$inNode[4]) {
-                    $last = $inKey;
-                }
-            }
+            echo "<li" . ($key == $this->currentParent ? " class=\"{$class}\"" : '')
+                . "><a href=\"{$node[2]}\">{$node[0]}</a>"
+                . "<menu>";
 
             foreach ($node[3] as $inKey => $inNode) {
                 if ($inNode[4]) {
                     continue;
                 }
 
-                $classes = [];
+                $focus = false;
                 if ($key == $this->currentParent && $inKey == $this->currentChild) {
-                    $classes[] = $childClass;
+                    $focus = true;
                 } elseif ($inNode[6]) {
                     continue;
                 }
 
-                if ($inKey == $last) {
-                    $classes[] = 'last';
-                }
-
-                echo "<li" . (!empty($classes) ? ' class="' . implode(' ', $classes) . '"' : null) . "><a href=\""
+                echo "<li" . ($focus ? " class=\"{$childClass}\"" : '') . "><a href=\""
                     . ($key == $this->currentParent && $inKey == $this->currentChild ? $this->currentUrl : $inNode[2])
                     . "\">{$inNode[0]}</a></li>";
             }
 
-            echo "</ul></ul>";
+            echo '</menu></li>';
         }
     }
 }

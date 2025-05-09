@@ -1,0 +1,50 @@
+/**
+* 标签页
+*/
+.typecho-option-tabs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 13px;
+  display: flex;
+
+  &.fix-tabs {
+    margin: 1em 0;
+  }
+
+  li {
+    &:first-child a {
+      border-radius: 2px 0 0 2px;
+    }
+
+    &:last-child a {
+      border-radius: 0 2px 2px 0;
+    }
+
+    &.current a, &.active a {
+      background-color: #E9E9E6;
+    }
+
+    a {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: -1px;
+      border: 1px solid #D9D9D6;
+      padding: 0 15px;
+      height: 26px;
+      color: #666;
+      box-sizing: border-box;
+
+      > * {
+        margin: 0 3px;
+      }
+
+      &:hover {
+        background-color: #E9E9E6;
+        color: #666;
+        text-decoration: none;
+      }
+    }
+  }
+}

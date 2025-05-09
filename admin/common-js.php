@@ -25,30 +25,9 @@
 
                     if (head.length > 0) {
                         p.insertAfter(head);
-                        offset = head.outerHeight();
                     } else {
                         p.prependTo(document.body);
                     }
-
-                    function checkScroll () {
-                        if ($(window).scrollTop() >= offset) {
-                            p.css({
-                                'position'  :   'fixed',
-                                'top'       :   0
-                            });
-                        } else {
-                            p.css({
-                                'position'  :   'absolute',
-                                'top'       :   offset
-                            });
-                        }
-                    }
-
-                    $(window).scroll(function () {
-                        checkScroll();
-                    });
-
-                    checkScroll();
 
                     p.slideDown(function () {
                         var t = $(this), color = '#C6D880';
@@ -74,50 +53,6 @@
                     $.cookie(prefix + '__typecho_notice_highlight', null, {path : path, domain: domain, secure: secure});
                 }
             })();
-
-
-            // 导航菜单 tab 聚焦时展开下拉菜单
-            const menuBar = $('.menu-bar').click(function () {
-                const nav = $(this).next('#typecho-nav-list');
-                if (!$(this).toggleClass('focus').hasClass('focus')) {
-                    nav.removeClass('expanded noexpanded');
-                }
-            });
-
-            $('.main, .typecho-foot').on('click touchstart', function () {
-                if (menuBar.hasClass('focus')) {
-                    menuBar.trigger('click');
-                }
-            });
-
-            $('#typecho-nav-list ul.root').each(function () {
-                const ul = $(this), nav = ul.parent();
-                let focused = false;
-
-                ul.on('click touchend', '.parent a', function (e) {
-                    nav.removeClass('noexpanded').addClass('expanded');
-                    if ($(window).width() < 576 && e.type == 'click') {
-                        return false;
-                    }
-                }).find('.child')
-                .append($('<li class="return"><a><?php _e('返回'); ?></a></li>').click(function () {
-                    nav.removeClass('expanded').addClass('noexpanded');
-                    return false;
-                }));
-
-                $('a', ul).focus(function () {
-                    ul.addClass('expanded');
-                    focused = true;
-                }).blur(function () {
-                    focused = false;
-
-                    setTimeout(function () {
-                        if (!focused) {
-                            ul.removeClass('expanded');
-                        }
-                    });
-                });
-            });
 
             if ($('.typecho-login').length == 0) {
                 $('a').each(function () {

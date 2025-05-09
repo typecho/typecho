@@ -14,110 +14,120 @@
   }
 }
 
-@media 
-(-webkit-min-device-pixel-ratio: 2), 
-(min-resolution: 192dpi) {
-  @import "editor/*@2x.png";
-  @include all-editor-sprites();
+#wmd-button-bar {
+  display: flex;
+  align-items: center;
 
-  @mixin editor-button-2x($name) {
-    &#wmd-#{$name}-button span {
-      @include editor-sprite(editor-#{$name})
+  @media
+  (-webkit-min-device-pixel-ratio: 2),
+  (min-resolution: 192dpi) {
+    @import "editor/*@2x.png";
+    @include all-editor-sprites();
+
+    @mixin editor-button-2x($name) {
+      &#wmd-#{$name}-button span {
+        @include editor-sprite(editor-#{$name})
+      }
+    }
+
+    .wmd-button-row {
+      li {
+        @include editor-button-2x(bold);
+        @include editor-button-2x(italic);
+        @include editor-button-2x(link);
+        @include editor-button-2x(quote);
+        @include editor-button-2x(code);
+        @include editor-button-2x(image);
+        @include editor-button-2x(olist);
+        @include editor-button-2x(ulist);
+        @include editor-button-2x(heading);
+        @include editor-button-2x(hr);
+        @include editor-button-2x(more);
+        @include editor-button-2x(undo);
+        @include editor-button-2x(redo);
+        @include editor-button-2x(fullscreen);
+        @include editor-button-2x(exit-fullscreen);
+      }
     }
   }
-  
+
   .wmd-button-row {
+    flex: 1;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    height: 26px;
+    line-height: 1;
+
     li {
-      @include editor-button-2x(bold);
-      @include editor-button-2x(italic);
-      @include editor-button-2x(link);
-      @include editor-button-2x(quote);
-      @include editor-button-2x(code);
-      @include editor-button-2x(image);
-      @include editor-button-2x(olist);
-      @include editor-button-2x(ulist);
-      @include editor-button-2x(heading);
-      @include editor-button-2x(hr);
-      @include editor-button-2x(more);
-      @include editor-button-2x(undo);
-      @include editor-button-2x(redo);
-      @include editor-button-2x(fullscreen);
-      @include editor-button-2x(exit-fullscreen);
+      display: inline-block;
+      margin-right: 4px;
+      padding: 3px;
+      cursor: pointer;
+      vertical-align: middle;
+      border-radius: 2px;
+
+      &:hover {
+        background-color: #E9E9E6;
+      }
+
+      &.wmd-spacer {
+        height: 20px;
+        margin: 0 10px 0 6px;
+        padding: 0;
+        width: 1px;
+        background: #E9E9E6;
+        cursor: default;
+      }
+
+      span {
+        display: block;
+        width: 20px;
+        height: 20px;
+      }
+
+      @include editor-button(bold);
+      @include editor-button(italic);
+      @include editor-button(link);
+      @include editor-button(quote);
+      @include editor-button(code);
+      @include editor-button(image);
+      @include editor-button(olist);
+      @include editor-button(ulist);
+      @include editor-button(heading);
+      @include editor-button(hr);
+      @include editor-button(more);
+      @include editor-button(undo);
+      @include editor-button(redo);
+      @include editor-button(fullscreen);
+      @include editor-button(exit-fullscreen);
     }
   }
-}
 
-.wmd-button-row {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  height: 26px;
-  line-height: 1;
+  // 撰写预览切换 tab
+  .wmd-edittab {
+    font-size: .92857em;
 
-  li {
-    display: inline-block;
-    margin-right: 4px;
-    padding: 3px;
-    cursor: pointer;
-    vertical-align: middle;
-    border-radius: 2px;
-    &:hover {
-      background-color: #E9E9E6;
-    }
-    &.wmd-spacer {
+    a {
+      display: inline-block;
+      padding: 0 8px;
+      margin-left: 5px;
       height: 20px;
-      margin: 0 10px 0 6px;
-      padding: 0;
-      width: 1px;
-      background: #E9E9E6;
-      cursor: default;
-    }
-    span {
-      display: block;
-      width: 20px;
-      height: 20px;
-    }
+      line-height: 20px;
 
-    @include editor-button(bold);
-    @include editor-button(italic);
-    @include editor-button(link);
-    @include editor-button(quote);
-    @include editor-button(code);
-    @include editor-button(image);
-    @include editor-button(olist);
-    @include editor-button(ulist);
-    @include editor-button(heading);
-    @include editor-button(hr);
-    @include editor-button(more);
-    @include editor-button(undo);
-    @include editor-button(redo);
-    @include editor-button(fullscreen);
-    @include editor-button(exit-fullscreen);
+      &:hover {
+        text-decoration: none;
+      }
+
+      &.active {
+        background: #E9E9E6;
+        color: #999;
+      }
+    }
   }
 }
 
 #btn-cancel-preview { display: none }
-
-// 撰写预览切换 tab
-.wmd-edittab {
-  float: right;
-  margin-top: 3px;
-  font-size: .92857em;
-  a {
-    display: inline-block;
-    padding: 0 8px;
-    margin-left: 5px;
-    height: 20px;
-    line-height: 20px;
-    &:hover {
-      text-decoration: none;
-    }
-    &.active {
-      background: #E9E9E6;
-      color: #999;
-    }
-  }
-}
 
 // 控制被隐藏的 tab，全屏时显示
 .wmd-hidetab {
@@ -150,6 +160,24 @@
     width: 100%;
   }
   button { margin-right: 10px; }
+}
+
+#wmd-editarea {
+  /* 拖动调整 textarea 大小 */
+  .resize {
+    display: block;
+    margin: 2px auto 0;
+    padding: 2px 0;
+    border: 1px solid #D9D9D6;
+    border-width: 1px 0;
+    width: 60px;
+    cursor: row-resize;
+    i {
+      display: block;
+      height: 1px;
+      background-color: #D9D9D6;
+    }
+  }
 }
 
 /* 预览 */
@@ -318,7 +346,7 @@
   #btn-cancel-preview { display: inline-block }
 }
 
-@media (max-width: $screen-phone - 1px) {
+@include screen(phone, max) {
   #wmd-spacer2,
   #wmd-olist-button,
   #wmd-ulist-button,

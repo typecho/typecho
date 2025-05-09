@@ -10,7 +10,7 @@ $actionUrl = $security->getTokenUrl(
 $backupFiles = \Widget\Backup::alloc()->listFiles();
 ?>
 
-<div class="main">
+<main class="main">
     <div class="body container">
         <?php include 'page-title.php'; ?>
         <div class="row typecho-page-main" role="main">
@@ -31,7 +31,7 @@ $backupFiles = \Widget\Backup::alloc()->listFiles();
 
             <div id="backup-secondary" class="col-mb-12 col-tb-4" role="form">
                 <h3><?php _e('恢复数据'); ?></h3>
-                <ul class="typecho-option-tabs clearfix">
+                <ul class="typecho-option-tabs">
                     <li class="active w-50"><a href="#from-upload"><?php _e('上传'); ?></a></li>
                     <li class="w-50"><a href="#from-server"><?php _e('从服务器'); ?></a></li>
                 </ul>
@@ -79,7 +79,7 @@ $backupFiles = \Widget\Backup::alloc()->listFiles();
             </div>
         </div>
     </div>
-</div>
+</main>
 
 <?php
 include 'copyright.php';

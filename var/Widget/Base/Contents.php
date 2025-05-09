@@ -193,7 +193,7 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
         $draft = $this->db->fetchObject($this->db->select('type', 'parent')
             ->from('table.contents')->where('cid = ?', $cid));
 
-        if (preg_match("/_draft$/", $draft->type) && $draft->parent) {
+        if ('revision' === $draft->type && $draft->parent) {
             $result = '@' . $result;
         }
 
