@@ -228,7 +228,7 @@ class Edit extends Metas implements ActionInterface
         $submit->input->setAttribute('class', 'btn primary');
         $form->addItem($submit);
 
-        if (isset($this->request->mid) && 'insert' != $action) {
+        if ($this->request->is('mid') && 'insert' != $action) {
             /** 更新模式 */
             $meta = $this->db->fetchRow($this->select()
                 ->where('mid = ?', $this->request->mid)
