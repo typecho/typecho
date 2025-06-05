@@ -184,7 +184,7 @@ class Response
      * @param string|null $suffix 附加地址
      * @param string|null $default 默认来路
      */
-    public function goBack(string $suffix = null, string $default = null)
+    public function goBack(?string $suffix = null, ?string $default = null)
     {
         //获取来源
         $referer = $this->request->getReferer();
