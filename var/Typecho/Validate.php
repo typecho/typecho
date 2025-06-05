@@ -334,6 +334,6 @@ class Validate
      */
     public function required(): bool
     {
-        return !empty($this->data[$this->key]);
+        return array_key_exists($this->key, $this->data);
     }
 }
