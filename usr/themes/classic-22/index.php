@@ -14,7 +14,7 @@ $this->need('header.php');
 
 <main class="container">
     <div class="container-thin">
-        <?php if (!($this->is('index')) and !($this->is('post'))): ?>
+        <?php if (!($this->is('index')) && !($this->is('post'))): ?>
             <h6 class="text-center text-muted">
                 <?php $this->archiveTitle([
                     'category' => _t('分类 %s 下的文章'),

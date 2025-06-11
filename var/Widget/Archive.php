@@ -1015,7 +1015,7 @@ class Archive extends Contents
         $allows = self::pluginHandle()->filter('headerOptions', $allows, $this);
         $title = (empty($this->archiveTitle) ? '' : $this->archiveTitle . ' &raquo; ') . $this->options->title;
 
-        $header = $this->is('single') ? '<link rel="canonical" href="' . $this->archiveUrl . '" />' . "\n" : '';
+        $header = ($this->is('single') && !$this->is('index')) ? '<link rel="canonical" href="' . $this->archiveUrl . '" />' . "\n" : '';
 
         if (!empty($allows['pingback']) && 2 == $this->options->allowXmlRpc) {
             $header .= '<link rel="pingback" href="' . $allows['pingback'] . '" />' . "\n";
