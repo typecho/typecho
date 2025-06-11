@@ -452,7 +452,7 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
                     }
                 }
 
-                $allow &= ($this->row['allow' . ucfirst($permission)] == 1) and !$this->hidden;
+                $allow &= ($this->row['allow' . ucfirst($permission)] == 1) && !$this->hidden;
             }
         }
 
