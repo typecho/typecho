@@ -583,7 +583,7 @@
 
       parseBlockTable(block, key, line, state, lines) {
         var align, aligns, head, j, len, matches, row, rows;
-        if (!!(matches = line.match(/^((?:(?:(?:\||\+)(?:[ :]*\-+[ :]*)(?:\||\+))|(?:(?:[ :]*\-+[ :]*)(?:\||\+)(?:[ :]*\-+[ :]*))|(?:(?:[ :]*\-+[ :]*)(?:\||\+))|(?:(?:\||\+)(?:[ :]*\-+[ :]*)))+)$/))) {
+        if (!!(matches = line.match(/^\s*(\|?[ :]*-+[ :]*(?:\|[ :]*-+[ :]*)*\|?)\s*$/))) {
           if (this.isBlock('table')) {
             block[3][0].push(block[3][2]);
             block[3][2] += 1;

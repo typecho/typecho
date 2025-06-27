@@ -1036,7 +1036,7 @@ class HyperDown
      */
     private function parseBlockTable(?array $block, int $key, string $line, ?array &$state, array $lines): bool
     {
-        if (preg_match("/^((?:(?:(?:\||\+)(?:[ :]*\-+[ :]*)(?:\||\+))|(?:(?:[ :]*\-+[ :]*)(?:\||\+)(?:[ :]*\-+[ :]*))|(?:(?:[ :]*\-+[ :]*)(?:\||\+))|(?:(?:\||\+)(?:[ :]*\-+[ :]*)))+)$/", $line, $matches)) {
+        if (preg_match("/^\s*(\|?[ :]*-+[ :]*(?:\|[ :]*-+[ :]*)*\|?)\s*$/", $line, $matches)) {
             if ($this->isBlock('table')) {
                 $block[3][0][] = $block[3][2];
                 $block[3][2] ++;
