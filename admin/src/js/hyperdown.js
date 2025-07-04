@@ -583,44 +583,46 @@
 
       parseBlockTable(block, key, line, state, lines) {
         var align, aligns, head, j, len, matches, row, rows;
-        if (!!(matches = line.match(/^\s*(\|?[ :]*-+[ :]*(?:\|[ :]*-+[ :]*)*\|?)\s*$/))) {
-          if (this.isBlock('table')) {
-            block[3][0].push(block[3][2]);
-            block[3][2] += 1;
-            this.setBlock(key, block[3]);
-          } else {
-            head = 0;
-            if ((block == null) || block[0] !== 'normal' || lines[block[2]].match(/^\s*$/)) {
-              this.startBlock('table', key);
+        if (!!(matches = line.match(/^\s*(\|?[ :]*-{2,}[ :]*(?:[\|\+][ :]*-{2,}[ :]*)*\|?)\s*$/))) {
+          if (matches[1].indexOf('|') >= 0 || matches[1].indexOf('+') >= 0) {
+            if (this.isBlock('table')) {
+              block[3][0].push(block[3][2]);
+              block[3][2] += 1;
+              this.setBlock(key, block[3]);
             } else {
-              head = 1;
-              this.backBlock(1, 'table');
-            }
-            if (matches[1][0] === '|') {
-              matches[1] = matches[1].substring(1);
-              if (matches[1][matches[1].length - 1] === '|') {
-                matches[1] = matches[1].substring(0, matches[1].length - 1);
+              head = 0;
+              if ((block == null) || block[0] !== 'normal' || lines[block[2]].match(/^\s*$/)) {
+                this.startBlock('table', key);
+              } else {
+                head = 1;
+                this.backBlock(1, 'table');
               }
-            }
-            rows = matches[1].split(/\+|\|/);
-            aligns = [];
-            for (j = 0, len = rows.length; j < len; j++) {
-              row = rows[j];
-              align = 'none';
-              if (!!(matches = row.match(/^\s*(:?)\-+(:?)\s*$/))) {
-                if (!!matches[1] && !!matches[2]) {
-                  align = 'center';
-                } else if (!!matches[1]) {
-                  align = 'left';
-                } else if (!!matches[2]) {
-                  align = 'right';
+              if (matches[1][0] === '|') {
+                matches[1] = matches[1].substring(1);
+                if (matches[1][matches[1].length - 1] === '|') {
+                  matches[1] = matches[1].substring(0, matches[1].length - 1);
                 }
               }
-              aligns.push(align);
+              rows = matches[1].split(/\+|\|/);
+              aligns = [];
+              for (j = 0, len = rows.length; j < len; j++) {
+                row = rows[j];
+                align = 'none';
+                if (!!(matches = row.match(/^\s*(:?)\-+(:?)\s*$/))) {
+                  if (!!matches[1] && !!matches[2]) {
+                    align = 'center';
+                  } else if (!!matches[1]) {
+                    align = 'left';
+                  } else if (!!matches[2]) {
+                    align = 'right';
+                  }
+                }
+                aligns.push(align);
+              }
+              this.setBlock(key, [[head], aligns, head + 1]);
             }
-            this.setBlock(key, [[head], aligns, head + 1]);
+            return false;
           }
-          return false;
         }
         return true;
       }
@@ -649,7 +651,7 @@
       }
 
       parseBlockShr(block, key, line) {
-        if (!!(line.match(/^(\* *){3,}\s*$/))) {
+        if (!!(line.match(/^\*{3,}\s*$/))) {
           this.startBlock('hr', key).endBlock();
           return false;
         }
@@ -657,7 +659,7 @@
       }
 
       parseBlockDhr(block, key, line) {
-        if (!!(line.match(/^(- *){3,}\s*$/))) {
+        if (!!(line.match(/^-{3,}\s*$/))) {
           this.startBlock('hr', key).endBlock();
           return false;
         }

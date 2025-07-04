@@ -143,7 +143,7 @@ class HyperDown
         $this->_id = 0;
 
         usort($this->blockParsers, function ($a, $b) {
-            return $a[1] < $b[1] ? - 1 : 1;
+            return $a[1] < $b[1] ? -1 : 1;
         });
 
         foreach ($this->blockParsers as $parser) {
@@ -197,7 +197,7 @@ class HyperDown
     public function makeHolder(string $str): string
     {
         $key = "\r" . $this->_uniqid . $this->_id . "\r";
-        $this->_id ++;
+        $this->_id++;
         $this->_holders[$key] = $str;
 
         return $key;
@@ -234,7 +234,7 @@ class HyperDown
                 }
 
                 $html .= "<li id=\"fn-{$index}\">{$val}</li>";
-                $index ++;
+                $index++;
             }
 
             $html .= '</ol></div>';
@@ -288,7 +288,7 @@ class HyperDown
         $deep = 0;
         while (strpos($text, "\r") !== false && $deep < 10) {
             $text = str_replace(array_keys($this->_holders), array_values($this->_holders), $text);
-            $deep ++;
+            $deep++;
         }
 
         if ($clearHolders) {
@@ -304,7 +304,7 @@ class HyperDown
      *
      * @return string
      */
-    private function markLine(int $start, int $end = - 1): string
+    private function markLine(int $start, int $end = -1): string
     {
         if ($this->_line) {
             $end = $end < 0 ? $start : $end;
@@ -323,10 +323,10 @@ class HyperDown
      */
     private function markLines(array $lines, int $start): array
     {
-        $i = - 1;
+        $i = -1;
 
         return $this->_line ? array_map(function ($line) use ($start, &$i) {
-            $i ++;
+            $i++;
             return $this->markLine($start + $i) . $line;
         }, $lines) : $lines;
     }
@@ -389,9 +389,10 @@ class HyperDown
     private function parseInline(
         string $text,
         string $whiteList = '',
-        bool $clearHolders = true,
-        bool $enableAutoLink = true
-    ): string {
+        bool   $clearHolders = true,
+        bool   $enableAutoLink = true
+    ): string
+    {
         $text = $this->call('beforeParseInline', $text);
 
         // code
@@ -515,7 +516,7 @@ class HyperDown
 
         // link
         $text = preg_replace_callback(
-            "/\[((?:[^\]]|\\\\\]|\\\\\[)+?)\]\(((?:[^\)]|\\\\\)|\\\\\()+?)\)/",
+            "/\[([^\]]*(?:\\\\.[^\]]*)*)\]\(([^)]*(?:\\\\.[^)]*)*)\)/",
             function ($matches) {
                 $escaped = $this->parseInline(
                     $this->escapeBracket($matches[1]), '', false, false
@@ -666,7 +667,7 @@ class HyperDown
         $lines = explode("\n", $text);
         $this->_blocks = [];
         $this->_current = 'normal';
-        $this->_pos = - 1;
+        $this->_pos = -1;
 
         $state = [
             'special' => implode("|", array_keys($this->_specialWhiteList)),
@@ -723,7 +724,7 @@ class HyperDown
                 $this->setBlock($key);
                 return false;
             } elseif (preg_match("/^(\s*)$/", $line) && $state['empty'] == 0) {
-                $state['empty'] ++;
+                $state['empty']++;
                 $this->setBlock($key);
                 return false;
             }
@@ -1036,53 +1037,54 @@ class HyperDown
      */
     private function parseBlockTable(?array $block, int $key, string $line, ?array &$state, array $lines): bool
     {
-        if (preg_match("/^\s*(\|?[ :]*-+[ :]*(?:\|[ :]*-+[ :]*)*\|?)\s*$/", $line, $matches)) {
-            if ($this->isBlock('table')) {
-                $block[3][0][] = $block[3][2];
-                $block[3][2] ++;
-                $this->setBlock($key, $block[3]);
-            } else {
-                $head = 0;
-
-                if (empty($block) ||
-                    $block[0] != 'normal' ||
-                    preg_match("/^\s*$/", $lines[$block[2]])) {
-                    $this->startBlock('table', $key);
+        if (preg_match("/^\s*(\|?[ :]*-{2,}[ :]*(?:[\|\+][ :]*-{2,}[ :]*)*\|?)\s*$/", $line, $matches)) {
+            if (strpos($matches[1], '|') !== false || strpos($matches[1], '+') !== false) {
+                if ($this->isBlock('table')) {
+                    $block[3][0][] = $block[3][2];
+                    $block[3][2]++;
+                    $this->setBlock($key, $block[3]);
                 } else {
-                    $head = 1;
-                    $this->backBlock(1, 'table');
-                }
+                    $head = 0;
 
-                if ($matches[1][0] == '|') {
-                    $matches[1] = substr($matches[1], 1);
-
-                    if ($matches[1][strlen($matches[1]) - 1] == '|') {
-                        $matches[1] = substr($matches[1], 0, - 1);
+                    if (empty($block) ||
+                        $block[0] != 'normal' ||
+                        preg_match("/^\s*$/", $lines[$block[2]])) {
+                        $this->startBlock('table', $key);
+                    } else {
+                        $head = 1;
+                        $this->backBlock(1, 'table');
                     }
-                }
 
-                $rows = preg_split("/(\+|\|)/", $matches[1]);
-                $aligns = [];
-                foreach ($rows as $row) {
-                    $align = 'none';
+                    if ($matches[1][0] == '|') {
+                        $matches[1] = substr($matches[1], 1);
 
-                    if (preg_match("/^\s*(:?)\-+(:?)\s*$/", $row, $matches)) {
-                        if (!empty($matches[1]) && !empty($matches[2])) {
-                            $align = 'center';
-                        } elseif (!empty($matches[1])) {
-                            $align = 'left';
-                        } elseif (!empty($matches[2])) {
-                            $align = 'right';
+                        if ($matches[1][strlen($matches[1]) - 1] == '|') {
+                            $matches[1] = substr($matches[1], 0, -1);
                         }
                     }
 
-                    $aligns[] = $align;
+                    $rows = preg_split("/(\+|\|)/", $matches[1]);
+                    $aligns = [];
+                    foreach ($rows as $row) {
+                        $align = 'none';
+
+                        if (preg_match("/^\s*(:?)\-+(:?)\s*$/", $row, $matches)) {
+                            if (!empty($matches[1]) && !empty($matches[2])) {
+                                $align = 'center';
+                            } elseif (!empty($matches[1])) {
+                                $align = 'left';
+                            } elseif (!empty($matches[2])) {
+                                $align = 'right';
+                            }
+                        }
+
+                        $aligns[] = $align;
+                    }
+
+                    $this->setBlock($key, [[$head], $aligns, $head + 1]);
                 }
-
-                $this->setBlock($key, [[$head], $aligns, $head + 1]);
+                return false;
             }
-
-            return false;
         }
 
         return true;
@@ -1144,7 +1146,7 @@ class HyperDown
      */
     private function parseBlockShr(?array $block, int $key, string $line): bool
     {
-        if (preg_match("/^(\* *){3,}\s*$/", $line)) {
+        if (preg_match("/^\*{3,}\s*$/", $line)) {
             $this->startBlock('hr', $key)
                 ->endBlock();
 
@@ -1163,7 +1165,7 @@ class HyperDown
      */
     private function parseBlockDhr(?array $block, int $key, string $line): bool
     {
-        if (preg_match("/^(- *){3,}\s*$/", $line)) {
+        if (preg_match("/^-{3,}\s*$/", $line)) {
             $this->startBlock('hr', $key)
                 ->endBlock();
 
@@ -1192,7 +1194,7 @@ class HyperDown
             }
         } elseif ($this->isBlock('table')) {
             if (false !== strpos($line, '|')) {
-                $block[3][2] ++;
+                $block[3][2]++;
                 $this->setBlock($key, $block[3]);
             } else {
                 $this->startBlock('normal', $key);
@@ -1270,7 +1272,7 @@ class HyperDown
             }
 
             if (!$moved) {
-                $key ++;
+                $key++;
             }
         }
 
@@ -1312,7 +1314,7 @@ class HyperDown
             }
 
             return htmlspecialchars($line);
-        }, array_slice($lines, 1, - 1));
+        }, array_slice($lines, 1, -1));
         $str = implode("\n", $this->markLines($lines, $start + 1));
 
         return $isEmpty ? '' :
@@ -1365,7 +1367,7 @@ class HyperDown
      */
     private function parseShtml(array $lines, $value, int $start): string
     {
-        return trim(implode("\n", $this->markLines(array_slice($lines, 1, - 1), $start + 1)));
+        return trim(implode("\n", $this->markLines(array_slice($lines, 1, -1), $start + 1)));
     }
 
     /**
@@ -1508,7 +1510,7 @@ class HyperDown
                 $line = substr($line, 1);
 
                 if ($line[strlen($line) - 1] == '|') {
-                    $line = substr($line, 0, - 1);
+                    $line = substr($line, 0, -1);
                 }
             }
 
@@ -1521,16 +1523,16 @@ class HyperDown
                 }
             }, explode('|', $line));
             $columns = [];
-            $last = - 1;
+            $last = -1;
 
             foreach ($rows as $row) {
                 if (strlen($row) > 0) {
-                    $last ++;
+                    $last++;
                     $columns[$last] = [
                         isset($columns[$last]) ? $columns[$last][0] + 1 : 1, $row
                     ];
                 } elseif (isset($columns[$last])) {
-                    $columns[$last][0] ++;
+                    $columns[$last][0]++;
                 } else {
                     $columns[0] = [1, $row];
                 }
@@ -1730,7 +1732,7 @@ class HyperDown
      */
     private function startBlock($type, $start, $value = null): HyperDown
     {
-        $this->_pos ++;
+        $this->_pos++;
         $this->_current = $type;
 
         $this->_blocks[$this->_pos] = [$type, $start, $start, $value];
@@ -1813,7 +1815,7 @@ class HyperDown
         $this->_blocks[$this->_pos][2] = $last - $step;
 
         if ($this->_blocks[$this->_pos][1] <= $this->_blocks[$this->_pos][2]) {
-            $this->_pos ++;
+            $this->_pos++;
         }
 
         $this->_current = $type;
@@ -1840,7 +1842,7 @@ class HyperDown
         $this->_blocks[$this->_pos - 1] = $prev;
         $this->_current = $prev[0];
         unset($this->_blocks[$this->_pos]);
-        $this->_pos --;
+        $this->_pos--;
 
         return $this;
     }
