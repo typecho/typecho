@@ -18,13 +18,13 @@
                     secure = <?php echo json_encode(\Typecho\Cookie::getSecure()); ?>;
 
                 if (!!cookies.notice && 'success|notice|error'.indexOf(cookies.noticeType) >= 0) {
-                    var head = $('.typecho-head-nav'),
+                    var mian = $('.main'),
                         p = $('<div class="message popup ' + cookies.noticeType + '">'
                         + '<ul><li>' + $.parseJSON(cookies.notice).join('</li><li>') 
                         + '</li></ul></div>'), offset = 0;
 
-                    if (head.length > 0) {
-                        p.insertAfter(head);
+                    if (mian.length > 0) {
+                        p.prependTo(mian);
                     } else {
                         p.prependTo(document.body);
                     }
