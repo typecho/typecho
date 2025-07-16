@@ -5,6 +5,7 @@ namespace Widget;
 use Typecho\Common;
 use Typecho\Cookie;
 use Typecho\Db\Exception as DbException;
+use Typecho\Validate;
 use Typecho\Widget;
 use Utils\PasswordHash;
 use Widget\Base\Users;
@@ -150,10 +151,12 @@ class User extends Users
             return $result;
         }
 
+        $isEmail = Validate::email($name);
+
         /** 开始验证用户 **/
         $user = $this->db->fetchRow($this->db->select()
             ->from('table.users')
-            ->where((strpos($name, '@') ? 'mail' : 'name') . ' = ?', $name)
+            ->where(($isEmail ? 'mail' : 'name') . ' = ?', $name)
             ->limit(1));
 
         if (empty($user)) {
