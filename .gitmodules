@@ -1,0 +1,3 @@
+[submodule "usr/plugins/TeStore"]
+	path = usr/plugins/TeStore
+	url = https://github.com/jzwalk/TeStore/
