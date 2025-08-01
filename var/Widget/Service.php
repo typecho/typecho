@@ -77,7 +77,7 @@ class Service extends BaseOptions implements ActionInterface
                     $url = Common::buildUrl($urlPart);
                 }
 
-                if ($permalinkPart['host'] == $urlPart['host'] && $permalinkPart['path'] == $urlPart['path']) {
+                if ($permalinkPart['host'] == $urlPart['host']) {
                     continue;
                 }
 
