@@ -54,7 +54,7 @@ function postMeta(
             <?php if ($metaType == 'archive'): ?>
                 <li itemprop="interactionCount">
                     <a itemprop="discussionUrl"
-                       href="<?php $archive->permalink() ?>#comments"><?php $archive->commentsNum('评论', '1 条评论', '%d 条评论'); ?></a>
+                       href="<?php $archive->permalink() ?>#comments"><?php $archive->commentsNum(_t('暂无评论'), _t('1 条评论'), _t('%d 条评论')); ?></a>
                 </li>
             <?php endif; ?>
         </ul>
