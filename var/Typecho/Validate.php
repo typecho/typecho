@@ -272,7 +272,7 @@ class Validate
      *
      * @return    array
      */
-    public function run(array $data, array $rules = null): array
+    public function run(array $data, ?array $rules = null): array
     {
         $result = [];
         $this->data = $data;
@@ -336,6 +336,6 @@ class Validate
     {
         return array_key_exists($this->key, $this->data) &&
             (is_array($this->data[$this->key]) ? 0 < count($this->data[$this->key])
-                : 0 < strlen($this->data[$this->key]));
+                : 0 < strlen($this->data[$this->key] ?? ''));
     }
 }
