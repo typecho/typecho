@@ -102,6 +102,20 @@ function themeConfig($form)
         'githubImageProxy', NULL, 'https://get.2sb.org/', _t('Github 图床加速源'), _t('例如 https://get.2sb.org/ ，末尾保留 / ，留空则不加速；会在文章缩略图/列表中作为前缀拼接字段值')
     );
     $form->addInput($githubImageProxy);
+
+    // 自动切换主题的时间配置（夜晚开始/白天开始）
+    $autoThemeNightStart = new \Typecho\Widget\Helper\Form\Element\Text(
+        'autoThemeNightStart', NULL, '18:00', _t('自动切换主题-夜晚开始时间'), _t('格式 HH:MM，默认 18:00；夜晚开始到次日白天开始为深色模式'));
+    $form->addInput($autoThemeNightStart);
+
+    $autoThemeDayStart = new \Typecho\Widget\Helper\Form\Element\Text(
+        'autoThemeDayStart', NULL, '06:00', _t('自动切换主题-白天开始时间'), _t('格式 HH:MM，默认 06:00；白天开始到夜晚开始为浅色模式'));
+    $form->addInput($autoThemeDayStart);
+
+    // 浮动提示显示时长（毫秒）
+    $toastDuration = new \Typecho\Widget\Helper\Form\Element\Text(
+        'toastDuration', NULL, '3000', _t('浮动提示显示时长'), _t('单位：毫秒，默认 3000ms'));
+    $form->addInput($toastDuration);
 }
 
 // 获取主题配置项的便捷函数

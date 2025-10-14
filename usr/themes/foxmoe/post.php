@@ -10,10 +10,16 @@
                     <?php $prefix = foxmoe_opt('githubImageProxy', ''); ?>
                     <img src="<?php echo $prefix . ltrim($this->fields->thumbnail, '/'); ?>" alt="<?php $this->title(); ?>" class="post-img">
                     <div class="post-category"><?php $this->category(',', false); ?></div>
+                    <button class="layout-toggle" type="button" aria-label="切换布局" title="切换布局">
+                        <img class="layout-toggle-icon" src="<?php $this->options->themeUrl('img/expand.svg'); ?>" alt="toggle layout">
+                    </button>
                 </div>
                 <?php else: ?>
                 <div class="post-hero post-noimage">
                     <div class="post-category"><?php $this->category(',', false); ?></div>
+                    <button class="layout-toggle" type="button" aria-label="切换布局" title="切换布局">
+                        <img class="layout-toggle-icon" src="<?php $this->options->themeUrl('img/expand.svg'); ?>" alt="toggle layout">
+                    </button>
                 </div>
                 <?php endif; ?>
                 <!-- 文章头部信息 -->

@@ -3,11 +3,10 @@
    ============================ */
 
 /* 头部导航 */
-.header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-height); background-color: var(--card-color-glass); border-bottom: 1px solid var(--border-color); -webkit-backdrop-filter: blur(50px) saturate(100%); backdrop-filter: blur(50px) saturate(100%); z-index: 1000; transition: background-color var(--transition-normal), box-shadow var(--transition-normal), border-color var(--transition-normal), transform var(--transition-normal); }
+.header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-height); background-color: var(--card-color-glass); border-bottom: 1px solid var(--border-color); -webkit-backdrop-filter: blur(10px) saturate(100%); backdrop-filter: blur(10px) saturate(100%); z-index: 1000; transition: background-color var(--transition-normal), box-shadow var(--transition-normal), border-color var(--transition-normal), transform var(--transition-normal); }
 
 .header.is-overlay { background: transparent; border-bottom-color: transparent; box-shadow: none; }
 .dark-theme .header.is-overlay { background: transparent; }
-
 
 .navbar { height: 100%; }
 
@@ -85,6 +84,21 @@
 .main-container { margin-top: var(--header-height); min-height: calc(100vh - var(--header-height)); }
 .content-wrapper { max-width: var(--container-max-width); margin: 0 auto; padding: var(--space-12) var(--space-6); display: grid; grid-template-columns: 1fr var(--sidebar-width); gap: var(--space-12); }
 .main-content { min-width: 0; }
+
+/* 页面头部右上角布局切换按钮（桌面端） */
+.page-header { position: relative; }
+.layout-toggle { position: absolute; top: 0; right: 0; width: 36px; height: 36px; border: none; background: none; display: inline-flex; align-items: center; justify-content: center; padding: 0; margin: 0; border-radius: var(--radius-md); cursor: var(--cursor-pointer); opacity: 0; transform: translateY(-4px); transition: opacity .18s ease, transform .18s ease, background-color var(--transition-fast); z-index: 2; }
+.layout-toggle:hover { background: var(--surface-color); }
+.layout-toggle:active { transform: translateY(-4px) scale(.96); }
+.page-header:hover .layout-toggle { opacity: 1; transform: translateY(0); }
+.layout-toggle-icon { width: 20px; height: 20px; display: block; }
+@media (max-width: 768px){ .layout-toggle { display:none; } }
+
+/* 快速动画：切换为整页宽度 */
+.content-wrapper { transition: grid-template-columns .2s cubic-bezier(.16,1,.3,1), gap .2s cubic-bezier(.16,1,.3,1); }
+.content-wrapper > .sidebar { transition: opacity .18s ease; }
+.content-wrapper.no-sidebar { grid-template-columns: 1fr 0px; }
+.content-wrapper.no-sidebar > .sidebar { opacity: 0; pointer-events: none; }
 
 /* 侧栏 */
 .sidebar { padding: var(--space-2); }

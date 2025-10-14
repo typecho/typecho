@@ -59,7 +59,7 @@ body::before {
   border-radius: 50%;
   background-color: rgba(0, 0, 0, 0.16);
   transform: translate3d(-9999px, -9999px, 0);
-  z-index: -1;
+  z-index: 999;
   pointer-events: none;
   will-change: transform;
 }

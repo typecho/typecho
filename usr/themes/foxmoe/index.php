@@ -4,7 +4,7 @@
  *
  * @package Foxmoe
  * @author Foxmoe TOP
- * @version 1.2
+ * @version 1.3
  * @link https://foxmoe.top
  */
 
@@ -14,7 +14,7 @@ $this->need('header.php');
 <main class="main-container">
     <section class="hero-banner" id="home">
         <div class="hero-background">
-            <img src="" data-src="https://www.dmoe.cc/random.php" referrerpolicy="no-referrer" alt="Hero" class="hero-bg-img lazy-hero" decoding="async" loading="lazy">
+            <img src="" data-src="https://www.dmoe.cc/random.php" referrerpolicy="no-referrer" alt="Hero" class="hero-bg-img lazy-hero" decoding="async" loading="lazy" fetchpriority="low">
         </div>
         <div class="hero-content">
             <div class="hero-text">

@@ -12,9 +12,12 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
   <div class="content-wrapper">
     <div class="main-content">
       <section class="posts-list-section">
-        <h2 class="section-title">归档</h2>
-
         <div class="archive-container card">
+          <h2 class="section-title">归档
+            <button class="layout-toggle" type="button" aria-label="切换布局" title="切换布局" style="float:right;">
+              <img class="layout-toggle-icon" src="<?php $this->options->themeUrl('img/expand.svg'); ?>" alt="toggle layout">
+            </button>
+          </h2>
 <?php
 // ---------------- 参数读取 ----------------
 $nowYear = (int)date('Y');

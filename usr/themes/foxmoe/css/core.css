@@ -19,7 +19,7 @@
   --dark-bg: #1a1a1a;
   --dark-surface: #242424;
   --dark-card: #2d2d2d;
-  --dark-card-glass: rgba(45, 45, 45, 0.9);
+  --dark-card-glass: rgba(45, 45, 45, 0.5);
   --dark-text-primary: #ffffff;
   --dark-text-secondary: #a0a0a0;
   --dark-border: #404040;
@@ -108,7 +108,7 @@
   /* 布局 */
   --container-max-width: 1200px;
   --sidebar-width: 320px;
-  --header-height: 64px;
+  --header-height: 58px;
 }
 
 /* 深色主题变量覆盖 */

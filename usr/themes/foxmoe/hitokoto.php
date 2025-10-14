@@ -5,6 +5,7 @@
  */
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: public, max-age=300');
+header('Link: https://v1.hitokoto.cn; rel="preconnect"');
 
 // 自举 Typecho
 if (!defined('__TYPECHO_ROOT_DIR__')) {

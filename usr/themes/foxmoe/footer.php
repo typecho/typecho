@@ -44,9 +44,10 @@
     <div class="footer-bottom">
         <div class="footer-info">
             <p>&copy; <?php echo date('Y'); ?> <?php $this->options->title(); ?>. All rights reserved.</p>
-            <p><a href="https://github.com/FoxMoe/foxmoe-blog" target=="_blank">Foxmoe Blog Engine 1.2</a> Based on <a href="https://typecho.org" target="_blank">Typecho</a></p>
+            <p><a href="https://github.com/FoxMoe/foxmoe-blog" target=="_blank">Foxmoe Blog Engine 1.3</a> Based on <a href="https://typecho.org" target="_blank">Typecho</a></p>
             <p>网站运行时间: <span id="runtime">0天0小时0分钟</span></p>
             <!-- <p>ICP备案号: <a href="https://beian.miit.gov.cn/" target="_blank">京ICP备XXXXXXXX号</a></p> -->
+            <!-- <p><img src="https://list.mczfw.cn/mc/mc.foxmoe.top.png" lazy /></p> -->
              <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PNRHLLB2"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -54,6 +55,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
     </div>
 </footer>
+<div class="toast-container" aria-live="polite" aria-atomic="true"></div>
 <div class="fab-container">
     <button class="fab back-to-top" title="返回顶部">
         <span class="material-icons">keyboard_arrow_up</span>
@@ -62,6 +64,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <span class="material-icons">settings</span>
     </button>
     <div class="fab-actions">
+        <button class="fab action-fab auto-theme" title="自动切换主题">
+            <span class="material-icons">brightness_auto</span>
+        </button>
         <button class="fab action-fab theme-toggle" title="切换主题">
             <span class="material-icons">dark_mode</span>
         </button>
@@ -72,7 +77,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 
 <?php $this->footer(); ?>
-<script src="<?php $this->options->themeUrl('js/jquery-3.7.1.min.js'); ?>" defer></script>
+<script src="<?php $this->options->themeUrl('js/jquery-3.7.1.min.js'); ?>" defer fetchpriority="high"></script>
 <script src="<?php $this->options->themeUrl('js/jquery.pjax.min.js'); ?>" defer></script>
 <script src="<?php $this->options->themeUrl('js/components.js'); ?>" defer></script>
 <script src="<?php $this->options->themeUrl('js/main.js'); ?>" defer></script>

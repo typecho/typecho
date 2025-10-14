@@ -1,3 +1,10 @@
+<?php
+/**
+ * GAL模板
+ *
+ * @package custom
+ */
+?>
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <?php $this->need('header.php'); ?>
 
@@ -8,18 +15,17 @@
                 <!-- 页面头部信息 -->
                 <header class="page-header">
                     <h1 class="page-title" itemprop="name headline"><?php $this->title(); ?></h1>
-                    <!-- 桌面端右上角布局切换按钮 -->
                     <button class="layout-toggle" type="button" aria-label="切换布局" title="切换布局">
                         <img class="layout-toggle-icon" src="<?php $this->options->themeUrl('img/expand.svg'); ?>" alt="toggle layout">
                     </button>
-                    <div class="page-meta">
+                    <!-- <div class="page-meta">
                         <div class="meta-item">
                             <span class="material-icons">schedule</span>
                             <time datetime="<?php $this->date('c'); ?>" itemprop="datePublished">
                                 最后更新：<?php $this->date('Y年m月d日'); ?>
                             </time>
                         </div>
-                    </div>
+                    </div> -->
                 </header>
 
                 <!-- 页面内容 -->

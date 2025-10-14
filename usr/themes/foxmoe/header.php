@@ -55,6 +55,12 @@
           return a.href.replace(/css\/(?:core|layout|normalize|style)\.css.*$/, '');
         } catch(e) { return ''; }
       })();
+      // 主题运行参数（由主题设置注入）
+      window.THEME_OPTS = {
+        autoThemeNightStart: <?php echo json_encode(foxmoe_opt('autoThemeNightStart', '18:00')); ?>,
+        autoThemeDayStart: <?php echo json_encode(foxmoe_opt('autoThemeDayStart', '06:00')); ?>,
+        toastDuration: <?php echo json_encode(intval(foxmoe_opt('toastDuration', '3000'))); ?>
+      };
     </script>
 <!-- Clarity tracking code for https://foxmoe.top/ -->
 <script type="text/javascript">
@@ -134,21 +140,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <?php $this->need('sidebar.php'); ?>
     </aside>
 
-    <script>
-    // 顶栏滚动与首页大图叠加效果
-    (function(){
-      var header = document.querySelector('.header');
-      if(!header) return;
-      var hasHero = !!document.querySelector('.hero-banner');
-      if(hasHero){ header.classList.add('is-overlay'); }
-      function onScroll(){
-        if(window.scrollY > 10){ header.classList.add('scrolled'); }
-        else { header.classList.remove('scrolled'); }
-      }
-      onScroll();
-      window.addEventListener('scroll', onScroll, {passive:true});
-    })();
-    </script>
 
     <script>
     (function(){

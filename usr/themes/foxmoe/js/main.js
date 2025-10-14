@@ -12,7 +12,11 @@ const App = {
         this.initRuntimeCounter();
         this.initPjax();
         this.initMarkdown();
+        this.initTables();
         this.initCardClick();
+        this.initLayoutToggle();
+        this.initToasts();
+        this.initAutoTheme();
     },
 
     initHightight(){
@@ -40,6 +44,59 @@ Prism.highlightAll(true,null);}
         // };
         // renderMarkdown();
         // $(document).on('pjax:complete', renderMarkdown);
+    },
+
+    // 包裹文章与页面正文中的表格，添加底部同步滚动条
+    initTables() {
+        const wrapTables = ($root) => {
+            const $scopes = $root && $root.length ? $root : $('.post-content, .page-content');
+            $scopes.each(function () {
+                const $scope = $(this);
+                // 避免重复包裹
+                $scope.find('table').each(function () {
+                    const $table = $(this);
+                    if ($table.closest('.table-scroll-wrap').length) return;
+
+                    // 创建结构：wrap > scroll(top) + bottom-scroll
+                    const $wrap = $('<div class="table-scroll-wrap"></div>');
+                    const $scrollTop = $('<div class="table-scroll"></div>');
+                    const $scrollBottom = $('<div class="table-bottom-scroll"><div class="table-bottom-scroll-content"></div></div>');
+
+                    // 插入到 DOM
+                    $table.before($wrap);
+                    $scrollTop.append($table);
+                    $wrap.append($scrollTop).append($scrollBottom);
+
+                    // 同步宽度：根据表格实际滚动宽度设置底部 placeholder 宽度
+                    const syncWidths = () => {
+                        const el = $scrollTop.get(0);
+                        const scrollWidth = el.scrollWidth;
+                        $scrollBottom.find('.table-bottom-scroll-content').width(scrollWidth);
+                    };
+                    syncWidths();
+
+                    // 绑定双向同步滚动
+                    let syncing = false;
+                    $scrollTop.on('scroll', function () {
+                        if (syncing) return; syncing = true;
+                        $scrollBottom.scrollLeft(this.scrollLeft);
+                        syncing = false;
+                    });
+                    $scrollBottom.on('scroll', function () {
+                        if (syncing) return; syncing = true;
+                        $scrollTop.scrollLeft(this.scrollLeft);
+                        syncing = false;
+                    });
+
+                    // 监听窗口变化，更新宽度
+                    $(window).on('resize', $.throttle(100, syncWidths));
+                });
+            });
+        };
+
+        wrapTables();
+        // PJAX 后重新包裹
+        $(document).on('pjax:end', () => wrapTables($('.post-content, .page-content')));
     },
 
     initCardClick() {
@@ -146,6 +203,9 @@ Prism.highlightAll(true,null);}
 
             App.setTheme(newTheme);
             localStorage.setItem('theme', newTheme);
+            // 手动切换主题时，关闭自动切换
+            try { localStorage.setItem('autoTheme', 'off'); } catch(e) {}
+            App.toast('已关闭自动切换主题');
         });
 
         // 字体大小切换
@@ -159,6 +219,118 @@ Prism.highlightAll(true,null);}
             fontSizeIndex = (fontSizeIndex + 1) % fontSizes.length;
             this.setFontSize(fontSizes[fontSizeIndex]);
             localStorage.setItem('fontSize', fontSizes[fontSizeIndex]);
+        });
+    },
+
+    // 浮动提示系统
+    initToasts() {
+        if (this._toastInited) return; this._toastInited = true;
+        const container = document.querySelector('.toast-container');
+        if (!container) return;
+            const show = (text, ms) => {
+            const defaultMs = (window.THEME_OPTS && window.THEME_OPTS.toastDuration) || 3000;
+            ms = ms || defaultMs;
+            const el = document.createElement('div');
+            el.className = 'toast';
+            el.innerHTML = '<div class="toast-text"></div><div class="toast-slider"></div>';
+            el.querySelector('.toast-text').textContent = text;
+            container.appendChild(el);
+            // 动画：入场（确保初始样式生效后再加 show）
+            // 强制一次回流，避免同帧添加导致无过渡
+            void el.offsetWidth;
+            requestAnimationFrame(() => { el.classList.add('show'); });
+            // 定时隐藏
+            const hideTimer = setTimeout(() => {
+                el.classList.remove('show');
+                el.classList.add('hide');
+                // 读取 CSS 里的过渡时长，保证等到淡出完成再移除
+                const cs = getComputedStyle(el);
+                const parseDur = (s) => {
+                    if (!s) return 0;
+                    return s.split(',').map(v=>v.trim()).map(v=> v.endsWith('ms') ? parseFloat(v) : parseFloat(v)*1000).reduce((a,b)=>Math.max(a,b),0);
+                };
+                const fadeMs = Math.max(parseDur(cs.transitionDuration), parseDur(cs.transitionDelay));
+                const rmDelay = (isFinite(fadeMs) && fadeMs>0) ? fadeMs + 50 : 300;
+                setTimeout(() => { el.remove(); }, rmDelay);
+            }, ms);
+            return () => { clearTimeout(hideTimer); if (el.parentNode) el.parentNode.removeChild(el); };
+        };
+        this.toast = show;
+        // PJAX 后容器仍然存在，无需重建
+    },
+
+    // 自动切换主题（白天/夜晚）
+    initAutoTheme() {
+        const isNight = () => {
+            const now = new Date();
+            const parseHM = (s, fallback) => {
+                if (!s || !/^\d{1,2}:\d{2}$/.test(s)) return fallback;
+                const [hh, mm] = s.split(':').map(n=>parseInt(n,10));
+                return {hh, mm};
+            };
+            const ns = (window.THEME_OPTS && window.THEME_OPTS.autoThemeNightStart) || '18:00';
+            const ds = (window.THEME_OPTS && window.THEME_OPTS.autoThemeDayStart) || '06:00';
+            const n = parseHM(ns, {hh:18, mm:0});
+            const d = parseHM(ds, {hh:6, mm:0});
+            const minutes = now.getHours()*60 + now.getMinutes();
+            const nightMin = n.hh*60 + n.mm;
+            const dayMin = d.hh*60 + d.mm;
+            if (nightMin > dayMin) {
+                // 夜晚跨越午夜： [nightMin, 1440) ∪ [0, dayMin)
+                return (minutes >= nightMin || minutes < dayMin);
+            } else {
+                // 夜晚在白天之后（少见配置），则 [nightMin, dayMin)
+                return (minutes >= nightMin && minutes < dayMin);
+            }
+        };
+
+        const applyAuto = () => {
+            const mode = isNight() ? 'dark' : 'light';
+            const current = localStorage.getItem('theme') || 'light';
+            if (current !== mode) {
+                this.setTheme(mode);
+                localStorage.setItem('theme', mode);
+            }
+        };
+
+        const val = (localStorage.getItem('autoTheme') || 'on');
+        if (val === 'on') { applyAuto(); }
+
+        // 周期性检查，避免长时间停留不变更
+        if (this._autoThemeTimer) clearInterval(this._autoThemeTimer);
+        this._autoThemeTimer = setInterval(() => {
+            if ((localStorage.getItem('autoTheme') || 'on') === 'on') applyAuto();
+        }, 5 * 60 * 1000);
+
+        // 首次访问提示
+        try {
+            if (!localStorage.getItem('visited')) {
+                localStorage.setItem('visited', '1');
+                if (val === 'on') {
+                    this.toast && this.toast('已开启自动切换主题');
+                }
+            }
+        } catch (e) {}
+
+        // FAB 按钮绑定
+        $(document).off('click.autoTheme').on('click.autoTheme', '.fab-actions .auto-theme', (e) => {
+            e.preventDefault();
+            const cur = (localStorage.getItem('autoTheme') || 'on') === 'on';
+            const next = !cur;
+            localStorage.setItem('autoTheme', next ? 'on' : 'off');
+            if (next) { applyAuto(); }
+            this.toast && this.toast(next ? '开启自动切换主题' : '关闭自动切换主题');
+        });
+
+        // 字体大小按钮提示
+        $(document).off('click.fontSizeToast').on('click.fontSizeToast', '.fab-actions .font-size', (e) => {
+            this.toast && this.toast('已切换字体大小');
+        });
+
+        // 手动切换主题后的提示（在 initTheme 中已关闭自动切换）
+        $(document).off('click.themeToggleToast').on('click.themeToggleToast', '.fab-actions .theme-toggle', (e) => {
+            const t = (localStorage.getItem('theme') || 'light') === 'dark' ? '深色模式' : '浅色模式';
+            this.toast && this.toast('已切换为' + t);
         });
     },
 
@@ -176,7 +348,7 @@ Prism.highlightAll(true,null);}
             return;
         }
 
-        console.log(`%cFoxmoe Blog Engine v1.1 %cMade with %c❤ %c!`, 'color: magenta;','color: white;','color: red;','color: white;');
+        console.log(`%cFoxmoe Blog Engine v1.3 %cMade with %c❤ %c!`, 'color: magenta;','color: white;','color: red;','color: white;');
 
         $(document).pjax(
             'a[href]:not([target="_blank"]):not([href^="#"]):not([href^="mailto:"]):not([href^="tel:"]):not([href^="javascript:"])',
@@ -432,6 +604,72 @@ Prism.highlightAll(true,null);}
             if (linkPath === currentPath) {
                 $(this).addClass('active');
             }
+        });
+    },
+
+    // 页面布局切换：隐藏/显示侧边栏，扩充主内容
+    initLayoutToggle() {
+        const applyState = (isNoSidebar) => {
+            const $wrap = $('.content-wrapper');
+            if (!$wrap.length) return;
+            $wrap.toggleClass('no-sidebar', !!isNoSidebar);
+        };
+
+        const swapIcon = (btn, state) => {
+            try {
+                const $img = $(btn).find('.layout-toggle-icon');
+                const base = window.THEME_URL || '';
+                $img.attr('src', base + (state ? 'img/shrink.svg' : 'img/expand.svg'));
+            } catch (e) {}
+        };
+
+        const isHome = () => !!document.querySelector('.hero-banner');
+
+        const bind = () => {
+            $(document).off('click.layoutToggle').on('click.layoutToggle', '.layout-toggle', function () {
+                const wrap = document.querySelector('.content-wrapper');
+                if (!wrap) return;
+                const now = !wrap.classList.contains('no-sidebar');
+                wrap.classList.toggle('no-sidebar', now);
+                swapIcon(this, now);
+                // 可选：保存状态（仅桌面端）
+                if (window.matchMedia('(min-width: 769px)').matches) {
+                    try { localStorage.setItem('layoutNoSidebar', String(now)); } catch (e) {}
+                }
+            });
+        };
+
+        // 初始应用上次状态（桌面端）
+        let saved = null;
+        try { saved = localStorage.getItem('layoutNoSidebar'); } catch (e) { saved = null; }
+        const initial = saved === 'true';
+        if (window.matchMedia('(min-width: 769px)').matches) {
+            // 首页不允许隐藏侧边栏
+            if (isHome()) {
+                applyState(false);
+            } else {
+                applyState(initial);
+            }
+        }
+        // 设置初始图标
+        $('.layout-toggle').each(function(){ swapIcon(this, initial && !isHome()); });
+
+        bind();
+        // PJAX 后重绑并恢复图标/状态
+        $(document).on('pjax:end', function () {
+            let saved2 = null;
+            try { saved2 = localStorage.getItem('layoutNoSidebar'); } catch (e) { saved2 = null; }
+            const state = saved2 === 'true';
+            if (window.matchMedia('(min-width: 769px)').matches) {
+                if (isHome()) {
+                    applyState(false);
+                    $('.layout-toggle').each(function(){ swapIcon(this, false); });
+                } else {
+                    applyState(state);
+                    $('.layout-toggle').each(function(){ swapIcon(this, state); });
+                }
+            }
+            bind();
         });
     },
 };

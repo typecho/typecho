@@ -158,6 +158,23 @@
   min-width: 0;
 }
 
+/* ============================
+  浮动提示（Toast）
+  ============================ */
+.toast-container { position: fixed; top: calc(var(--header-height) + 12px); right: 16px; display: flex; flex-direction: column-reverse; gap: 10px; z-index: 1600; pointer-events: none; }
+.toast { background: var(--card-color); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: var(--radius-xl); box-shadow: var(--shadow-sm); padding: 10px 14px 12px 14px; min-width: 220px; max-width: 360px; position: relative; overflow: hidden; opacity: 0; transform: translateY(-6px); transition: opacity 1.2s ease, transform 1.2s ease; pointer-events: auto; will-change: opacity, transform; }
+.toast::after { content: ''; position: absolute; bottom: 0; left: 0; height: 2px; width: 100%; background: var(--border-color); }
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast.hide { opacity: 0; transform: translateY(-6px); }
+.toast .toast-text { font-size: var(--font-size-sm); line-height: 1.5; }
+.toast .toast-slider { position: absolute; bottom: 0; left: 0; height: 2px; width: 100%; background: var(--primary-500); transform-origin: left center; will-change: transform; z-index: 1; }
+.dark-theme .toast .toast-slider { background: var(--primary-300); }
+
+/* 使用 CSS 动画驱动进度，从左向右缩短 */
+/* 静态进度条（不做动画） */
+.toast .toast-slider { transform: none; width: 100%; }
+@media (max-width: 600px){ .toast-container { left: 12px; right: 12px; } .toast { max-width: none; } }
+
 .recommend-title {
   font-size: var(--font-size-sm);
   font-weight: 500;
@@ -382,8 +399,8 @@
 }
 
 .fab {
-  width: 56px;
-  height: 56px;
+  width: 46px;
+  height: 46px;
   display: flex;
   align-items: center;
   justify-content: center;
