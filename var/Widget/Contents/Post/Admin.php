@@ -106,6 +106,10 @@ class Admin extends Contents
 
         $result = $this->db->fetchAll($select);
 
+        // Early return if no posts found to avoid unnecessary queries
+        if (empty($result)) {
+            return;
+        }
         /* 所有的内容id */
         $cid = array_column($result, 'cid');
 
@@ -137,6 +141,7 @@ class Admin extends Contents
                 $item['#revision'] = null;
             }
         }
+        unset($item);
 
         array_map([$this, 'push'], $result);
     }
