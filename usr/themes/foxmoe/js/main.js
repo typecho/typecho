@@ -19,55 +19,38 @@ const App = {
         this.initAutoTheme();
     },
 
-    initHightight(){
+    initHightight() {
         console.log("highlight");
         if (typeof Prism !== 'undefined') {
-var pres = document.getElementsByTagName('pre');
-                for (var i = 0; i < pres.length; i++){
-                    if (pres[i].getElementsByTagName('code').length > 0)
-                        pres[i].className  = 'line-numbers';}
-Prism.highlightAll(true,null);}
+            var pres = document.getElementsByTagName('pre');
+            for (var i = 0; i < pres.length; i++) {
+                if (pres[i].getElementsByTagName('code').length > 0)
+                    pres[i].className = 'line-numbers';
+            }
+            Prism.highlightAll(true, null);
+        }
     },
 
     initMarkdown() {
-        // const renderMarkdown = () => {
-        //     if (typeof editormd !== "undefined" && document.getElementById("content")) {
-        //         editormd.markdownToHTML("content", {
-        //             htmlDecode: "style,script,iframe",
-        //             emoji: true,
-        //             taskList: true,
-        //             tex: true,
-        //             flowChart: true,
-        //             sequenceDiagram: true,
-        //         });
-        //     }
-        // };
-        // renderMarkdown();
-        // $(document).on('pjax:complete', renderMarkdown);
     },
 
-    // 包裹文章与页面正文中的表格，添加底部同步滚动条
     initTables() {
         const wrapTables = ($root) => {
             const $scopes = $root && $root.length ? $root : $('.post-content, .page-content');
             $scopes.each(function () {
                 const $scope = $(this);
-                // 避免重复包裹
                 $scope.find('table').each(function () {
                     const $table = $(this);
                     if ($table.closest('.table-scroll-wrap').length) return;
 
-                    // 创建结构：wrap > scroll(top) + bottom-scroll
                     const $wrap = $('<div class="table-scroll-wrap"></div>');
                     const $scrollTop = $('<div class="table-scroll"></div>');
                     const $scrollBottom = $('<div class="table-bottom-scroll"><div class="table-bottom-scroll-content"></div></div>');
 
-                    // 插入到 DOM
                     $table.before($wrap);
                     $scrollTop.append($table);
                     $wrap.append($scrollTop).append($scrollBottom);
 
-                    // 同步宽度：根据表格实际滚动宽度设置底部 placeholder 宽度
                     const syncWidths = () => {
                         const el = $scrollTop.get(0);
                         const scrollWidth = el.scrollWidth;
@@ -75,7 +58,6 @@ Prism.highlightAll(true,null);}
                     };
                     syncWidths();
 
-                    // 绑定双向同步滚动
                     let syncing = false;
                     $scrollTop.on('scroll', function () {
                         if (syncing) return; syncing = true;
@@ -88,14 +70,12 @@ Prism.highlightAll(true,null);}
                         syncing = false;
                     });
 
-                    // 监听窗口变化，更新宽度
                     $(window).on('resize', $.throttle(100, syncWidths));
                 });
             });
         };
 
         wrapTables();
-        // PJAX 后重新包裹
         $(document).on('pjax:end', () => wrapTables($('.post-content, .page-content')));
     },
 
@@ -103,7 +83,7 @@ Prism.highlightAll(true,null);}
         const handleCardClick = (e) => {
             const card = e.target.closest('.post-card');
             if (!card || e.target.closest('a')) return;
-            
+
             const url = card.getAttribute('data-url');
             if (url) {
                 if (window.Pjax) {
@@ -124,7 +104,7 @@ Prism.highlightAll(true,null);}
         const $navLinks = $('.nav-link');
         let lastScrollTop = 0;
         let ticking = false;
-        const skipLegacyMenu = !!window.__NEW_HEADER_NAV; // 新版导航
+        const skipLegacyMenu = !!window.__NEW_HEADER_NAV;
 
         const updateHeader = () => {
             const scrollTop = $(window).scrollTop();
@@ -151,7 +131,7 @@ Prism.highlightAll(true,null);}
             }
         });
 
-        if(!skipLegacyMenu){
+        if (!skipLegacyMenu) {
             $mobileMenuBtn.on('click', () => {
                 $navMenu.toggleClass('active');
                 const icon = $mobileMenuBtn.find('.material-icons').text();
@@ -190,7 +170,6 @@ Prism.highlightAll(true,null);}
         const savedTheme = localStorage.getItem('theme') || 'light';
         const savedFontSize = localStorage.getItem('fontSize') || 'normal';
 
-        // 应用保存的主题
         this.setTheme(savedTheme);
         this.setFontSize(savedFontSize);
 
@@ -203,12 +182,10 @@ Prism.highlightAll(true,null);}
 
             App.setTheme(newTheme);
             localStorage.setItem('theme', newTheme);
-            // 手动切换主题时，关闭自动切换
-            try { localStorage.setItem('autoTheme', 'off'); } catch(e) {}
+            try { localStorage.setItem('autoTheme', 'off'); } catch (e) { }
             App.toast('已关闭自动切换主题');
         });
 
-        // 字体大小切换
         let fontSizeIndex = ['small', 'normal', 'large'].indexOf(savedFontSize);
         const fontSizes = ['small', 'normal', 'large'];
 
@@ -222,12 +199,11 @@ Prism.highlightAll(true,null);}
         });
     },
 
-    // 浮动提示系统
     initToasts() {
         if (this._toastInited) return; this._toastInited = true;
         const container = document.querySelector('.toast-container');
         if (!container) return;
-            const show = (text, ms) => {
+        const show = (text, ms) => {
             const defaultMs = (window.THEME_OPTS && window.THEME_OPTS.toastDuration) || 3000;
             ms = ms || defaultMs;
             const el = document.createElement('div');
@@ -235,51 +211,43 @@ Prism.highlightAll(true,null);}
             el.innerHTML = '<div class="toast-text"></div><div class="toast-slider"></div>';
             el.querySelector('.toast-text').textContent = text;
             container.appendChild(el);
-            // 动画：入场（确保初始样式生效后再加 show）
-            // 强制一次回流，避免同帧添加导致无过渡
             void el.offsetWidth;
             requestAnimationFrame(() => { el.classList.add('show'); });
-            // 定时隐藏
             const hideTimer = setTimeout(() => {
                 el.classList.remove('show');
                 el.classList.add('hide');
-                // 读取 CSS 里的过渡时长，保证等到淡出完成再移除
                 const cs = getComputedStyle(el);
                 const parseDur = (s) => {
                     if (!s) return 0;
-                    return s.split(',').map(v=>v.trim()).map(v=> v.endsWith('ms') ? parseFloat(v) : parseFloat(v)*1000).reduce((a,b)=>Math.max(a,b),0);
+                    return s.split(',').map(v => v.trim()).map(v => v.endsWith('ms') ? parseFloat(v) : parseFloat(v) * 1000).reduce((a, b) => Math.max(a, b), 0);
                 };
                 const fadeMs = Math.max(parseDur(cs.transitionDuration), parseDur(cs.transitionDelay));
-                const rmDelay = (isFinite(fadeMs) && fadeMs>0) ? fadeMs + 50 : 300;
+                const rmDelay = (isFinite(fadeMs) && fadeMs > 0) ? fadeMs + 50 : 300;
                 setTimeout(() => { el.remove(); }, rmDelay);
             }, ms);
             return () => { clearTimeout(hideTimer); if (el.parentNode) el.parentNode.removeChild(el); };
         };
         this.toast = show;
-        // PJAX 后容器仍然存在，无需重建
     },
 
-    // 自动切换主题（白天/夜晚）
     initAutoTheme() {
         const isNight = () => {
             const now = new Date();
             const parseHM = (s, fallback) => {
                 if (!s || !/^\d{1,2}:\d{2}$/.test(s)) return fallback;
-                const [hh, mm] = s.split(':').map(n=>parseInt(n,10));
-                return {hh, mm};
+                const [hh, mm] = s.split(':').map(n => parseInt(n, 10));
+                return { hh, mm };
             };
             const ns = (window.THEME_OPTS && window.THEME_OPTS.autoThemeNightStart) || '18:00';
             const ds = (window.THEME_OPTS && window.THEME_OPTS.autoThemeDayStart) || '06:00';
-            const n = parseHM(ns, {hh:18, mm:0});
-            const d = parseHM(ds, {hh:6, mm:0});
-            const minutes = now.getHours()*60 + now.getMinutes();
-            const nightMin = n.hh*60 + n.mm;
-            const dayMin = d.hh*60 + d.mm;
+            const n = parseHM(ns, { hh: 18, mm: 0 });
+            const d = parseHM(ds, { hh: 6, mm: 0 });
+            const minutes = now.getHours() * 60 + now.getMinutes();
+            const nightMin = n.hh * 60 + n.mm;
+            const dayMin = d.hh * 60 + d.mm;
             if (nightMin > dayMin) {
-                // 夜晚跨越午夜： [nightMin, 1440) ∪ [0, dayMin)
                 return (minutes >= nightMin || minutes < dayMin);
             } else {
-                // 夜晚在白天之后（少见配置），则 [nightMin, dayMin)
                 return (minutes >= nightMin && minutes < dayMin);
             }
         };
@@ -296,13 +264,11 @@ Prism.highlightAll(true,null);}
         const val = (localStorage.getItem('autoTheme') || 'on');
         if (val === 'on') { applyAuto(); }
 
-        // 周期性检查，避免长时间停留不变更
         if (this._autoThemeTimer) clearInterval(this._autoThemeTimer);
         this._autoThemeTimer = setInterval(() => {
             if ((localStorage.getItem('autoTheme') || 'on') === 'on') applyAuto();
         }, 5 * 60 * 1000);
 
-        // 首次访问提示
         try {
             if (!localStorage.getItem('visited')) {
                 localStorage.setItem('visited', '1');
@@ -310,9 +276,8 @@ Prism.highlightAll(true,null);}
                     this.toast && this.toast('已开启自动切换主题');
                 }
             }
-        } catch (e) {}
+        } catch (e) { }
 
-        // FAB 按钮绑定
         $(document).off('click.autoTheme').on('click.autoTheme', '.fab-actions .auto-theme', (e) => {
             e.preventDefault();
             const cur = (localStorage.getItem('autoTheme') || 'on') === 'on';
@@ -322,12 +287,10 @@ Prism.highlightAll(true,null);}
             this.toast && this.toast(next ? '开启自动切换主题' : '关闭自动切换主题');
         });
 
-        // 字体大小按钮提示
         $(document).off('click.fontSizeToast').on('click.fontSizeToast', '.fab-actions .font-size', (e) => {
             this.toast && this.toast('已切换字体大小');
         });
 
-        // 手动切换主题后的提示（在 initTheme 中已关闭自动切换）
         $(document).off('click.themeToggleToast').on('click.themeToggleToast', '.fab-actions .theme-toggle', (e) => {
             const t = (localStorage.getItem('theme') || 'light') === 'dark' ? '深色模式' : '浅色模式';
             this.toast && this.toast('已切换为' + t);
@@ -335,7 +298,6 @@ Prism.highlightAll(true,null);}
     },
 
     initPjax() {
-        // 加载条
         let $loadingBar = $('.page-loading-bar');
         if ($loadingBar.length === 0) {
             $loadingBar = $('<div class="page-loading-bar"></div>');
@@ -343,12 +305,12 @@ Prism.highlightAll(true,null);}
         }
 
         this.ensureArchiveCss();
-
+        this.ensureGalListRender();
         if (!$.support.pjax) {
             return;
         }
 
-        console.log(`%cFoxmoe Blog Engine v1.3 %cMade with %c❤ %c!`, 'color: magenta;','color: white;','color: red;','color: white;');
+        console.log(`%cFoxmoe Blog Engine v1.4 %cMade with %c❤ %c!`, 'color: magenta;', 'color: white;', 'color: red;', 'color: white;');
 
         $(document).pjax(
             'a[href]:not([target="_blank"]):not([href^="#"]):not([href^="mailto:"]):not([href^="tel:"]):not([href^="javascript:"])',
@@ -369,16 +331,15 @@ Prism.highlightAll(true,null);}
             App.updateActiveNav();
             $(window).trigger('scroll');
 
-            // 归档CSS
             this.ensureArchiveCss();
 
-            // PJAX 后重新初始化运行时计时器
             this.initRuntimeCounter();
             this.initMarkdown();
             this.initHightight();
             this.initCardClick();
 
-            // 重新初始化 tooltip
+            this.ensureGalListRender();
+
             if (window.Components && typeof Components.initTooltips === 'function') {
                 Components.initTooltips();
             }
@@ -395,7 +356,6 @@ Prism.highlightAll(true,null);}
 
     ensureArchiveCss() {
         try {
-            // 判断页面是否含有归档容器
             if (document.querySelector('.archive-container')) {
                 var loaded = !!document.querySelector('link[data-archive-css="1"]');
                 if (!loaded) {
@@ -411,12 +371,26 @@ Prism.highlightAll(true,null);}
         }
     },
 
+    ensureGalListRender() {
+        try {
+            if (document.getElementById('gal-list')) {
+                if (typeof initGameList === 'function') {
+                    try { initGameList(); } catch (e) { console.error('initGameList threw', e); }
+                } else {
+                    console.warn('initGameList is not defined; make sure js/gal-list.js is loaded');
+                    location.reload(true);
+                }
+            }
+        } catch (e) {
+            console.error('initGameList on pjax:end failed', e);
+        }
+    },
+
     setTheme(theme) {
         const $root = $('html');
         const $body = $('body');
         const $themeIcon = $('.theme-toggle .material-icons');
 
-        // 过渡类
         $root.addClass('theme-animating');
         clearTimeout(this._themeAnimatingTimer);
         this._themeAnimatingTimer = setTimeout(() => {
@@ -426,7 +400,6 @@ Prism.highlightAll(true,null);}
         $root.removeClass('light-theme dark-theme');
         $body.removeClass('light-theme dark-theme');
 
-        // data-theme
         if (theme === 'dark') {
             $root.addClass('dark-theme');
             $body.addClass('dark-theme');
@@ -435,7 +408,6 @@ Prism.highlightAll(true,null);}
             $root.attr('data-theme', 'light');
         }
 
-        // 更新图标
         setTimeout(() => {
             if ($themeIcon.length) {
                 $themeIcon.text(theme === 'light' ? 'dark_mode' : 'light_mode');
@@ -572,13 +544,11 @@ Prism.highlightAll(true,null);}
             el.textContent = `${days}天${hours}小时${minutes}分钟`;
         };
 
-        // 避免重复定时器
         if (this._runtimeTimer) clearInterval(this._runtimeTimer);
         updateRuntime();
         this._runtimeTimer = setInterval(updateRuntime, 60000);
     },
 
-    // 解析 YYYY-MM-DD 或 YYYY-MM-DD HH:MM[:SS]
     parseRuntimeStart(str) {
         if (!str || typeof str !== 'string') return null;
         const s = str.trim();
@@ -595,7 +565,6 @@ Prism.highlightAll(true,null);}
     },
 
     updateActiveNav() {
-        // 更新导航菜单的激活状态
         const currentPath = window.location.pathname;
         $('.nav-link').removeClass('active');
 
@@ -607,7 +576,6 @@ Prism.highlightAll(true,null);}
         });
     },
 
-    // 页面布局切换：隐藏/显示侧边栏，扩充主内容
     initLayoutToggle() {
         const applyState = (isNoSidebar) => {
             const $wrap = $('.content-wrapper');
@@ -620,7 +588,7 @@ Prism.highlightAll(true,null);}
                 const $img = $(btn).find('.layout-toggle-icon');
                 const base = window.THEME_URL || '';
                 $img.attr('src', base + (state ? 'img/shrink.svg' : 'img/expand.svg'));
-            } catch (e) {}
+            } catch (e) { }
         };
 
         const isHome = () => !!document.querySelector('.hero-banner');
@@ -632,49 +600,48 @@ Prism.highlightAll(true,null);}
                 const now = !wrap.classList.contains('no-sidebar');
                 wrap.classList.toggle('no-sidebar', now);
                 swapIcon(this, now);
-                // 可选：保存状态（仅桌面端）
                 if (window.matchMedia('(min-width: 769px)').matches) {
-                    try { localStorage.setItem('layoutNoSidebar', String(now)); } catch (e) {}
+                    try { localStorage.setItem('layoutNoSidebar', String(now)); } catch (e) { }
                 }
             });
         };
 
-        // 初始应用上次状态（桌面端）
-        let saved = null;
-        try { saved = localStorage.getItem('layoutNoSidebar'); } catch (e) { saved = null; }
-        const initial = saved === 'true';
-        if (window.matchMedia('(min-width: 769px)').matches) {
-            // 首页不允许隐藏侧边栏
-            if (isHome()) {
-                applyState(false);
-            } else {
-                applyState(initial);
-            }
-        }
-        // 设置初始图标
-        $('.layout-toggle').each(function(){ swapIcon(this, initial && !isHome()); });
+        const enforceNoSidebar = () => !!document.querySelector('.content-wrapper.always-no-sidebar');
 
-        bind();
-        // PJAX 后重绑并恢复图标/状态
-        $(document).on('pjax:end', function () {
-            let saved2 = null;
-            try { saved2 = localStorage.getItem('layoutNoSidebar'); } catch (e) { saved2 = null; }
-            const state = saved2 === 'true';
+        const initForPage = () => {
+            const forced = enforceNoSidebar();
+            const $toggleBtns = $('.layout-toggle');
+            if (forced) {
+                applyState(true);
+                $toggleBtns.each(function () { $(this).addClass('layout-toggle-disabled').attr('aria-hidden', 'true').hide(); });
+                return;
+            } else {
+                $toggleBtns.each(function () { $(this).removeClass('layout-toggle-disabled').removeAttr('aria-hidden').show(); });
+            }
+
+            let saved = null;
+            try { saved = localStorage.getItem('layoutNoSidebar'); } catch (e) { saved = null; }
+            const initial = saved === 'true';
             if (window.matchMedia('(min-width: 769px)').matches) {
                 if (isHome()) {
                     applyState(false);
-                    $('.layout-toggle').each(function(){ swapIcon(this, false); });
                 } else {
-                    applyState(state);
-                    $('.layout-toggle').each(function(){ swapIcon(this, state); });
+                    applyState(initial);
                 }
             }
+            $('.layout-toggle').each(function () { swapIcon(this, initial && !isHome()); });
+
             bind();
+        };
+
+        initForPage();
+
+        $(document).on('pjax:end', function () {
+            initForPage();
         });
     },
 };
 
-// 保留工具函数
 $.throttle = function (delay, fn) {
     let timeoutID = null;
     let lastExec = 0;

@@ -1,4 +1,5 @@
-<?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
+<?php if (!defined('__TYPECHO_ROOT_DIR__'))
+    exit; ?>
 <div id="comments" class="comments-container">
     <?php $this->comments()->to($comments); ?>
     <?php if ($comments->have()): ?>
@@ -53,33 +54,35 @@
                         </div>
                     </div>
                 <?php else: ?>
+                    <p class="comment-form-subtitle">想要<a href="https://foxmoe.top/console">注册一个Foxmoe通行证</a>?</p>
                     <div class="form-row">
                         <div class="form-group">
                             <label for="author" class="form-label required">
                                 <span class="material-icons">person</span>
                                 称呼 *
                             </label>
-                            <input type="text" name="author" id="author" class="form-input"
-                                   placeholder="请输入您的昵称"
-                                   value="<?php $this->remember('author'); ?>" required/>
+                            <input type="text" name="author" id="author" class="form-input" placeholder="请输入您的昵称"
+                                value="<?php $this->remember('author'); ?>" required />
                         </div>
                         <div class="form-group">
-                            <label for="mail" class="form-label<?php if ($this->options->commentsRequireMail): ?> required<?php endif; ?>">
+                            <label for="mail"
+                                class="form-label<?php if ($this->options->commentsRequireMail): ?> required<?php endif; ?>">
                                 <span class="material-icons">email</span>
                                 邮箱<?php if ($this->options->commentsRequireMail): ?> *<?php endif; ?>
                             </label>
-                            <input type="email" name="mail" id="mail" class="form-input"
-                                   placeholder="your@email.com"
-                                   value="<?php $this->remember('mail'); ?>"<?php if ($this->options->commentsRequireMail): ?> required<?php endif; ?> />
+                            <input type="email" name="mail" id="mail" class="form-input" placeholder="your@email.com"
+                                value="<?php $this->remember('mail'); ?>" <?php if ($this->options->commentsRequireMail): ?>
+                                    required<?php endif; ?> />
                         </div>
                         <div class="form-group">
-                            <label for="url" class="form-label<?php if ($this->options->commentsRequireURL): ?> required<?php endif; ?>">
+                            <label for="url"
+                                class="form-label<?php if ($this->options->commentsRequireURL): ?> required<?php endif; ?>">
                                 <span class="material-icons">link</span>
                                 网站<?php if ($this->options->commentsRequireURL): ?> *<?php endif; ?>
                             </label>
-                            <input type="url" name="url" id="url" class="form-input"
-                                   placeholder="https://your-website.com"
-                                   value="<?php $this->remember('url'); ?>"<?php if ($this->options->commentsRequireURL): ?> required<?php endif; ?> />
+                            <input type="url" name="url" id="url" class="form-input" placeholder="https://your-website.com"
+                                value="<?php $this->remember('url'); ?>" <?php if ($this->options->commentsRequireURL): ?>
+                                    required<?php endif; ?> />
                         </div>
                     </div>
                 <?php endif; ?>
@@ -89,9 +92,8 @@
                         <span class="material-icons">chat</span>
                         评论内容 *
                     </label>
-                    <textarea rows="6" cols="50" name="text" id="textarea" class="form-textarea"
-                              placeholder="写下您的评论..."
-                              required><?php $this->remember('text'); ?></textarea>
+                    <textarea rows="6" cols="50" name="text" id="textarea" class="form-textarea" placeholder="写下您的评论..."
+                        required><?php $this->remember('text'); ?></textarea>
                 </div>
 
                 <div class="form-actions">

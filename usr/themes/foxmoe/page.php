@@ -1,4 +1,5 @@
-<?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
+<?php if (!defined('__TYPECHO_ROOT_DIR__'))
+    exit; ?>
 <?php $this->need('header.php'); ?>
 
 <main class="main-container">
@@ -10,7 +11,8 @@
                     <h1 class="page-title" itemprop="name headline"><?php $this->title(); ?></h1>
                     <!-- 桌面端右上角布局切换按钮 -->
                     <button class="layout-toggle" type="button" aria-label="切换布局" title="切换布局">
-                        <img class="layout-toggle-icon" src="<?php $this->options->themeUrl('img/expand.svg'); ?>" alt="toggle layout">
+                        <img class="layout-toggle-icon" src="<?php $this->options->themeUrl('img/expand.svg'); ?>"
+                            alt="toggle layout">
                     </button>
                     <div class="page-meta">
                         <div class="meta-item">
@@ -30,9 +32,9 @@
 
             <!-- 评论区域（如果页面开启评论） -->
             <?php if ($this->allow('comment')): ?>
-            <section class="comments-section glass-effect" id="comments">
-                <?php $this->need('comments.php'); ?>
-            </section>
+                <section class="comments-section glass-effect" id="comments">
+                    <?php $this->need('comments.php'); ?>
+                </section>
             <?php endif; ?>
         </div>
 

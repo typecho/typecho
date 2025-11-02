@@ -126,12 +126,3 @@ body { animation: pageLoadFadeIn 0.3s ease-out; }
   display: inline-block;
   font-size: var(--font-size-sm);
 }
-
-/* 无障碍：用户偏好减少动效时，尽量关闭动画/过渡 */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    transition: none !important;
-    animation: none !important;
-    scroll-behavior: auto !important;
-  }
-}

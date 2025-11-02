@@ -416,6 +416,3 @@ html {
     transition-duration: 0.01ms !important;
   }
 }
-
-/* 清理：背景移动相关规则已迁移到 bg-motion.css */
-/* 删除 body::before 和相关 @keyframes ps-bg-*、ps-mask-*、测试动画等，避免覆盖 */

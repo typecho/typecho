@@ -22,44 +22,46 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
 }
 
 $defaultUrl = 'https://v1.hitokoto.cn/?encode=json';
-$defaultUA  = 'FoxmoeTheme/1.1 (+https://foxmoe.top)';
+$defaultUA = 'FoxmoeTheme/1.1 (+https://foxmoe.top)';
 if (class_exists('Helper')) {
     $opt = Helper::options();
     $remoteUrl = isset($opt->hitokotoRemote) && $opt->hitokotoRemote ? $opt->hitokotoRemote : $defaultUrl;
-    $ua        = isset($opt->hitokotoUA) && $opt->hitokotoUA ? $opt->hitokotoUA : $defaultUA;
+    $ua = isset($opt->hitokotoUA) && $opt->hitokotoUA ? $opt->hitokotoUA : $defaultUA;
 } else {
     $remoteUrl = $defaultUrl;
-    $ua        = $defaultUA;
+    $ua = $defaultUA;
 }
 
-$timeout   = 3;
+$timeout = 3;
 
-function foxmoe_fetch($url, $ua, $timeout) {
+function foxmoe_fetch($url, $ua, $timeout)
+{
     // 优先 cURL
     if (function_exists('curl_init')) {
         $ch = curl_init($url);
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_MAXREDIRS      => 3,
+            CURLOPT_MAXREDIRS => 3,
             CURLOPT_CONNECTTIMEOUT => $timeout,
-            CURLOPT_TIMEOUT        => $timeout,
-            CURLOPT_USERAGENT      => $ua,
+            CURLOPT_TIMEOUT => $timeout,
+            CURLOPT_USERAGENT => $ua,
             CURLOPT_SSL_VERIFYPEER => true,
             CURLOPT_SSL_VERIFYHOST => 2,
         ]);
-        $data   = curl_exec($ch);
-        $errNo  = curl_errno($ch);
+        $data = curl_exec($ch);
+        $errNo = curl_errno($ch);
         $status = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
         curl_close($ch);
-        if ($errNo || $status >= 400 || !$data) return false;
+        if ($errNo || $status >= 400 || !$data)
+            return false;
         return $data;
     }
 
     $ctx = stream_context_create([
         'http' => [
             'timeout' => $timeout,
-            'header'  => "User-Agent: $ua\r\n"
+            'header' => "User-Agent: $ua\r\n"
         ]
     ]);
     $data = @file_get_contents($url, false, $ctx);
@@ -71,11 +73,11 @@ if ($data) {
     $json = json_decode($data, true);
     if (is_array($json) && isset($json['hitokoto'])) {
         echo json_encode($json, JSON_UNESCAPED_UNICODE);
-        exit;    
+        exit;
     }
 }
 http_response_code(502);
 echo json_encode([
     'hitokoto' => 'HAVE FUN!',
-    'error'    => 1
+    'error' => 1
 ], JSON_UNESCAPED_UNICODE);

@@ -1,26 +1,32 @@
-<?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
+<?php if (!defined('__TYPECHO_ROOT_DIR__'))
+    exit; ?>
 <?php $this->need('header.php'); ?>
 
 <main class="main-container">
     <div class="content-wrapper">
         <div class="main-content">
-            <article class="post-detail<?php if ($this->fields->thumbnail) echo ' has-hero'; ?>" itemscope itemtype="http://schema.org/BlogPosting">
+            <article class="post-detail<?php if ($this->fields->thumbnail)
+                echo ' has-hero'; ?>" itemscope
+                itemtype="http://schema.org/BlogPosting">
                 <?php if ($this->fields->thumbnail): ?>
-                <div class="post-hero post-image">
-                    <?php $prefix = foxmoe_opt('githubImageProxy', ''); ?>
-                    <img src="<?php echo $prefix . ltrim($this->fields->thumbnail, '/'); ?>" alt="<?php $this->title(); ?>" class="post-img">
-                    <div class="post-category"><?php $this->category(',', false); ?></div>
-                    <button class="layout-toggle" type="button" aria-label="切换布局" title="切换布局">
-                        <img class="layout-toggle-icon" src="<?php $this->options->themeUrl('img/expand.svg'); ?>" alt="toggle layout">
-                    </button>
-                </div>
+                    <div class="post-hero post-image">
+                        <?php $prefix = foxmoe_opt('githubImageProxy', ''); ?>
+                        <img src="<?php echo $prefix . ltrim($this->fields->thumbnail, '/'); ?>"
+                            alt="<?php $this->title(); ?>" class="post-img">
+                        <div class="post-category"><?php $this->category(',', false); ?></div>
+                        <button class="layout-toggle" type="button" aria-label="切换布局" title="切换布局">
+                            <img class="layout-toggle-icon" src="<?php $this->options->themeUrl('img/expand.svg'); ?>"
+                                alt="toggle layout">
+                        </button>
+                    </div>
                 <?php else: ?>
-                <div class="post-hero post-noimage">
-                    <div class="post-category"><?php $this->category(',', false); ?></div>
-                    <button class="layout-toggle" type="button" aria-label="切换布局" title="切换布局">
-                        <img class="layout-toggle-icon" src="<?php $this->options->themeUrl('img/expand.svg'); ?>" alt="toggle layout">
-                    </button>
-                </div>
+                    <div class="post-hero post-noimage">
+                        <div class="post-category"><?php $this->category(',', false); ?></div>
+                        <button class="layout-toggle" type="button" aria-label="切换布局" title="切换布局">
+                            <img class="layout-toggle-icon" src="<?php $this->options->themeUrl('img/expand.svg'); ?>"
+                                alt="toggle layout">
+                        </button>
+                    </div>
                 <?php endif; ?>
                 <!-- 文章头部信息 -->
                 <header class="post-header">
@@ -34,12 +40,14 @@
                         <div class="meta-item">
                             <span class="material-icons">person</span>
                             <span itemprop="author" itemscope itemtype="http://schema.org/Person">
-                                <a itemprop="name" href="<?php $this->author->permalink(); ?>" rel="author"><?php $this->author(); ?></a>
+                                <a itemprop="name" href="<?php $this->author->permalink(); ?>"
+                                    rel="author"><?php $this->author(); ?></a>
                             </span>
                         </div>
                         <div class="meta-item">
                             <span class="material-icons">schedule</span>
-                            <time datetime="<?php $this->date('c'); ?>" itemprop="datePublished"><?php $this->date('Y年m月d日'); ?></time>
+                            <time datetime="<?php $this->date('c'); ?>"
+                                itemprop="datePublished"><?php $this->date('Y年m月d日'); ?></time>
                         </div>
                         <div class="meta-item">
                             <span class="material-icons">visibility</span>
@@ -59,15 +67,15 @@
 
                 <!-- 文章标签 -->
                 <?php if ($this->tags): ?>
-                <div class="post-tags">
-                    <span class="tags-label">
-                        <span class="material-icons">local_offer</span>
-                        <span>标签：</span>
-                    </span>
-                    <div class="tags-list">
-                        <?php $this->tags(',', true, '默认标签'); ?>
+                    <div class="post-tags">
+                        <span class="tags-label">
+                            <span class="material-icons">local_offer</span>
+                            <span>标签：</span>
+                        </span>
+                        <div class="tags-list">
+                            <?php $this->tags(',', true, '默认标签'); ?>
+                        </div>
                     </div>
-                </div>
                 <?php endif; ?>
 
                 <!-- 文章导航 -->

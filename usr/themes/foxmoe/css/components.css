@@ -125,7 +125,21 @@
   background: #ea4335;
 }
 
-/* 推荐阅读（无缩略图版） */
+/* 访问人数统计 */
+.enter-count-title {
+  height: 32px;
+}
+
+.enter-count-digits{
+  display: flex;
+  justify-content: right;
+}
+
+.enter-count-digit {
+  height: 28px;
+}
+
+/* 推荐阅读 */
 .recommend-item { display: flex; gap: var(--space-3); padding: var(--space-3); border-radius: var(--radius-lg); transition: all var(--transition-fast); cursor: var(--cursor-pointer); }
 .recommend-item:hover { background: var(--surface-color); }
 .recommend-content { flex: 1; min-width: 0; }
@@ -170,8 +184,6 @@
 .toast .toast-slider { position: absolute; bottom: 0; left: 0; height: 2px; width: 100%; background: var(--primary-500); transform-origin: left center; will-change: transform; z-index: 1; }
 .dark-theme .toast .toast-slider { background: var(--primary-300); }
 
-/* 使用 CSS 动画驱动进度，从左向右缩短 */
-/* 静态进度条（不做动画） */
 .toast .toast-slider { transform: none; width: 100%; }
 @media (max-width: 600px){ .toast-container { left: 12px; right: 12px; } .toast { max-width: none; } }
 
@@ -319,6 +331,10 @@
 .comment-post {
   font-size: 12px;
   color: var(--text-secondary);
+}
+
+.slim-padding > .page-detail {
+  padding: var(--space-2);
 }
 
 .pagination {
@@ -497,10 +513,6 @@
 .fab-container.active .main-fab .material-icons {
   transform: rotate(45deg);
 }
-
-/* 废弃：原全宽顶栏下拉搜索容器，已被 layout.css 中的新弹出搜索面板取代 */
-/* 移除临时 search-container-legacy 回滚 */
-/* 其余 input / button 样式仍被新搜索面板复用，无需修改 */
 
 .search-overlay {
   position: fixed;

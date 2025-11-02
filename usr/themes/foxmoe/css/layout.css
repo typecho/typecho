@@ -82,7 +82,7 @@
 
 /* 主体布局 */
 .main-container { margin-top: var(--header-height); min-height: calc(100vh - var(--header-height)); }
-.content-wrapper { max-width: var(--container-max-width); margin: 0 auto; padding: var(--space-12) var(--space-6); display: grid; grid-template-columns: 1fr var(--sidebar-width); gap: var(--space-12); }
+.content-wrapper { max-width: var(--container-max-width); margin: 0 auto; padding: var(--space-12) var(--space-6); display: grid; grid-template-columns: 1fr var(--sidebar-width); gap: var(--space-4); }
 .main-content { min-width: 0; }
 
 /* 页面头部右上角布局切换按钮（桌面端） */
@@ -101,7 +101,7 @@
 .content-wrapper.no-sidebar > .sidebar { opacity: 0; pointer-events: none; }
 
 /* 侧栏 */
-.sidebar { padding: var(--space-2); }
+.sidebar { padding: 0 var(--space-2); }
 
 /* 页脚 */
 .footer { background: var(--card-color); border-top: 1px solid var(--border-color); box-shadow: 0 -2px 8px rgba(0,0,0,0.04); margin-top: var(--space-16); }
@@ -161,7 +161,7 @@
   .nav-menu.active { display: flex; }
   .header-search { display: none; }
   .mobile-menu-btn { display: flex; }
-  .content-wrapper { grid-template-columns: 1fr; gap: var(--space-6); padding: var(--space-8) var(--space-4); }
+  .content-wrapper { grid-template-columns: 1fr; gap: 0; padding: var(--space-2) var(--space-1); }
   /* 仅隐藏主布局中的侧栏，不隐藏移动抽屉内的 */
   .content-wrapper > .sidebar { display: none !important; }
   .mobile-sidebar .sidebar { display: block !important; }
