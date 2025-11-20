@@ -1064,9 +1064,10 @@ function install_step_2_perform()
 
     // intval port number
     if (isset($dbConfig['port'])) {
-        $dbConfig['port'] = intval($dbConfig['port']);
         if (strpos($dbConfig['host'], '/') !== false && $type == 'Mysql') {
             $dbConfig['port'] = null;
+        } else {
+            $dbConfig['port'] = intval($dbConfig['port']);
         }
     }
 
