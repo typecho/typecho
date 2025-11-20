@@ -153,8 +153,15 @@ class User extends Users
         /** 开始验证用户 **/
         $user = $this->db->fetchRow($this->db->select()
             ->from('table.users')
-            ->where((strpos($name, '@') ? 'mail' : 'name') . ' = ?', $name)
+            ->where('name = ?', $name)
             ->limit(1));
+
+        if (empty($user) && strpos($name, '@') !== false) {
+            $user = $this->db->fetchRow($this->db->select()
+                ->from('table.users')
+                ->where('mail = ?', $name)
+                ->limit(1));
+        }
 
         if (empty($user)) {
             return false;
