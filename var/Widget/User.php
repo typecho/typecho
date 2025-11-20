@@ -156,7 +156,7 @@ class User extends Users
             ->where('name = ?', $name)
             ->limit(1));
 
-        if (empty($user) && strpos($name, '@')) {
+        if (empty($user) && strpos($name, '@') !== false) {
             $user = $this->db->fetchRow($this->db->select()
                 ->from('table.users')
                 ->where('mail = ?', $name)
