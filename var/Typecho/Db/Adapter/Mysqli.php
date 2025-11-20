@@ -122,7 +122,7 @@ class Mysqli implements Adapter
         ?string $table = null
     ) {
         try {
-            if ($resource = @$this->dbLink->query($query)) {
+            if ($resource = $this->dbLink->query($query)) {
                 return $resource;
             }
         } catch (mysqli_sql_exception $e) {
