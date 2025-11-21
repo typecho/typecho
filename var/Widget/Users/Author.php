@@ -29,7 +29,8 @@ class Author extends Users
     {
         if (isset($this->parameter->uid)) {
             $this->db->fetchRow($this->select()
-                ->where('uid = ?', $this->parameter->uid), [$this, 'push']);
+                ->where('uid = ?', $this->parameter->uid)
+                ->limit(1), [$this, 'push']);
         }
     }
 }
