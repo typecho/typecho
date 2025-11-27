@@ -4,7 +4,7 @@ include 'common.php';
 if ($user->hasLogin()) {
     $response->redirect($options->adminUrl);
 }
-$rememberName = htmlspecialchars(\Typecho\Cookie::get('__typecho_remember_name', ''));
+$rememberName = htmlspecialchars((string) (\Typecho\Cookie::get('__typecho_remember_name') ?? ''), ENT_QUOTES);
 \Typecho\Cookie::delete('__typecho_remember_name');
 
 $bodyClass = 'body-100';
