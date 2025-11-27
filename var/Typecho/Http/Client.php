@@ -337,13 +337,11 @@ class Client
         $response = curl_exec($ch);
         if (false === $response) {
             $error = curl_error($ch);
-            curl_close($ch);
             throw new Exception($error, 500);
         }
 
         $this->responseStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $this->responseBody = $response;
-        curl_close($ch);
     }
 
     /**
