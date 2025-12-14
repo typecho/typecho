@@ -37,7 +37,7 @@ include 'menu.php';
                     <?php while ($themes->next()): ?>
                         <tr id="theme-<?php $themes->name(); ?>"
                             class="<?php if ($themes->activated && !$options->missingTheme): ?>current<?php endif; ?>">
-                            <td valign="top"><img src="<?php $themes->screen(); ?>"
+                            <td valign="top"><img src="<?php $themes->screen(); ?>" loading="lazy"
                                                   alt="<?php $themes->name(); ?>"/></td>
                             <td valign="top">
                                 <h3><?php '' != $themes->title ? $themes->title() : $themes->name(); ?></h3>
