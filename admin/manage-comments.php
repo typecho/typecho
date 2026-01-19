@@ -337,26 +337,13 @@ $(document).ready(function () {
                 }
             });
 
-            // Escape HTML special characters to prevent XSS
-            function escapeHtml(text) {
-                if (text === null || text === undefined || text === '') return '';
-                var map = {
-                    '&': '&amp;',
-                    '<': '&lt;',
-                    '>': '&gt;',
-                    '"': '&quot;',
-                    "'": '&#039;'
-                };
-                return String(text).replace(/[&<>"']/g, function(m) { return map[m]; });
-            }
-            
             var unsafeHTML = '<strong class="comment-author">'
-                + (comment.url ? '<a target="_blank" href="' + escapeHtml(comment.url) + '">'
-                + escapeHtml(comment.author) + '</a>' : escapeHtml(comment.author)) + '</strong>'
+                + (comment.url ? '<a target="_blank" href="' + comment.url + '">'
+                + comment.author + '</a>' : comment.author) + '</strong>'
                 + ('comment' != comment.type ? '<small><?php _e('引用'); ?></small>' : '')
-                + (comment.mail ? '<br /><span><a href="mailto:' + escapeHtml(comment.mail) + '">'
-                + escapeHtml(comment.mail) + '</a></span>' : '')
-                + (comment.ip ? '<br /><span>' + escapeHtml(comment.ip) + '</span>' : '');
+                + (comment.mail ? '<br /><span><a href="mailto:' + comment.mail + '">'
+                + comment.mail + '</a></span>' : '')
+                + (comment.ip ? '<br /><span>' + comment.ip + '</span>' : '');
 
             var html = DOMPurify.sanitize(unsafeHTML, {USE_PROFILES: {html: true}});
             var content = DOMPurify.sanitize(comment.text, {USE_PROFILES: {html: true}});
