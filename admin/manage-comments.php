@@ -352,11 +352,11 @@ $(document).ready(function () {
             
             var unsafeHTML = '<strong class="comment-author">'
                 + (comment.url ? '<a target="_blank" href="' + escapeHtml(comment.url) + '">'
-                + comment.author + '</a>' : comment.author) + '</strong>'
+                + escapeHtml(comment.author) + '</a>' : escapeHtml(comment.author)) + '</strong>'
                 + ('comment' != comment.type ? '<small><?php _e('引用'); ?></small>' : '')
                 + (comment.mail ? '<br /><span><a href="mailto:' + escapeHtml(comment.mail) + '">'
-                + comment.mail + '</a></span>' : '')
-                + (comment.ip ? '<br /><span>' + comment.ip + '</span>' : '');
+                + escapeHtml(comment.mail) + '</a></span>' : '')
+                + (comment.ip ? '<br /><span>' + escapeHtml(comment.ip) + '</span>' : '');
 
             var html = DOMPurify.sanitize(unsafeHTML, {USE_PROFILES: {html: true}});
             var content = DOMPurify.sanitize(comment.text, {USE_PROFILES: {html: true}});
