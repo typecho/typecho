@@ -337,11 +337,23 @@ $(document).ready(function () {
                 }
             });
 
+            // Escape HTML special characters to prevent XSS
+            function escapeHtml(text) {
+                var map = {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#039;'
+                };
+                return String(text).replace(/[&<>"']/g, function(m) { return map[m]; });
+            }
+            
             var unsafeHTML = '<strong class="comment-author">'
-                + (comment.url ? '<a target="_blank" href="' + comment.url + '">'
+                + (comment.url ? '<a target="_blank" href="' + escapeHtml(comment.url) + '">'
                 + comment.author + '</a>' : comment.author) + '</strong>'
                 + ('comment' != comment.type ? '<small><?php _e('引用'); ?></small>' : '')
-                + (comment.mail ? '<br /><span><a href="mailto:' + comment.mail + '">'
+                + (comment.mail ? '<br /><span><a href="mailto:' + escapeHtml(comment.mail) + '">'
                 + comment.mail + '</a></span>' : '')
                 + (comment.ip ? '<br /><span>' + comment.ip + '</span>' : '');
 
