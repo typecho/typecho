@@ -339,6 +339,7 @@ $(document).ready(function () {
 
             // Escape HTML special characters to prevent XSS
             function escapeHtml(text) {
+                if (text == null || text === '') return '';
                 var map = {
                     '&': '&amp;',
                     '<': '&lt;',
