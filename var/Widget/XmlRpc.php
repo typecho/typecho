@@ -1753,7 +1753,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
             throw new Exception(_t('请求的地址不存在'), 404);
         }
 
-        if (isset($this->request->rsd)) {
+        if ($this->request->get('rsd') !== null) {
             echo
             <<<EOF
 <?xml version="1.0" encoding="{$this->options->charset}"?>
@@ -1771,7 +1771,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
     </service>
 </rsd>
 EOF;
-        } elseif (isset($this->request->wlw)) {
+        } elseif ($this->request->get('wlw') !== null) {
             echo
             <<<EOF
 <?xml version="1.0" encoding="{$this->options->charset}"?>
