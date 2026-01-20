@@ -29,6 +29,13 @@ function themeConfig($form)
     $form->addInput($sidebarBlock->multiMode());
 }
 
+function themeSetup(\Widget\Themes\Edit $edit)
+{
+    print '主题被启动';
+    /** 修改表结构增加自定义摘要和自定义关键字 */
+    $db = Typecho\Db::get();
+}
+
 function postMeta(
     \Widget\Archive $archive,
     string $metaType = 'archive'
