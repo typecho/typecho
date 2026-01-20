@@ -110,6 +110,7 @@
 
     p.description {
       text-align: left;
+      margin-top: 5px;
     }
 
     .typecho-label {
@@ -143,6 +144,7 @@
 
         .field-name {
           display: flex;
+          flex: 0 0 20%;
 
           input[name="fieldNames[]"] {
             height: 27px;
