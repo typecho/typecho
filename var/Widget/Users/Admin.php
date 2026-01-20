@@ -59,7 +59,8 @@ class Admin extends Users
         /** 过滤标题 */
         if (null != ($keywords = $this->request->get('keywords'))) {
             $select->where(
-                'name LIKE ? OR screenName LIKE ?',
+                'name LIKE ? OR screenName LIKE ? OR mail LIKE ?',
+                '%' . Common::filterSearchQuery($keywords) . '%',
                 '%' . Common::filterSearchQuery($keywords) . '%',
                 '%' . Common::filterSearchQuery($keywords) . '%'
             );
