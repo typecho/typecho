@@ -538,7 +538,7 @@ EOF;
         {
             //~ 针对location的xss过滤, 因为其特殊性无法使用removeXSS函数
             //~ fix issue 66
-            $params = parse_url(str_replace(["\r", "\n", "\t", ' '], '', $url));
+            $params = parse_url(str_replace(["\r", "\n", "\t", ' '], '', urldecode($url)));
 
             /** 禁止非法的协议跳转 */
             if (isset($params['scheme'])) {
