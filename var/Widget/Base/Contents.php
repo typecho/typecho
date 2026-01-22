@@ -593,7 +593,7 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
     protected function ___hidden(): bool
     {
         if (
-            strlen($this->password) > 0 &&
+            !empty($this->password) > 0 &&
             $this->password !== Cookie::get('protectPassword_' . $this->cid) &&
             $this->authorId != $this->user->uid &&
             !$this->user->pass('editor', true)
