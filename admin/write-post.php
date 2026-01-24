@@ -101,8 +101,7 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
                             <?php while ($category->next()): ?>
                                 <li><?php echo str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;', $category->levels); ?><input
                                         type="checkbox" id="category-<?php $category->mid(); ?>"
-                                        value="<?php $category->mid(); ?>" name="category[]"
-                                        <?php if (in_array($category->mid, $categories)): ?>checked="true"<?php endif; ?>/>
+                                        value="<?php $category->mid(); ?>" name="category[]"/>
                                     <label
                                         for="category-<?php $category->mid(); ?>"><?php $category->name(); ?></label>
                                 </li>
