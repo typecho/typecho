@@ -62,6 +62,11 @@ class Upgrade
                     ->limit(100)
             );
 
+            $rowCount = count($rows);
+            if ($rowCount > 0) {
+                $lastId = $rows[$rowCount - 1]['cid'];
+            }
+
             foreach ($rows as $row) {
                 if (strpos($row['text'], 'a:') !== 0) {
                     continue;
@@ -73,10 +78,8 @@ class Upgrade
                         ->rows(['text' => json_encode($value)])
                         ->where('cid = ?', $row['cid']));
                 }
-
-                $lastId = $row['cid'];
             }
-        } while (count($rows) === 100);
+        } while ($rowCount === 100);
 
         $rows = $db->fetchAll($db->select()->from('table.options'));
 
