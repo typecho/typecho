@@ -7,7 +7,7 @@
                 <img src="<?php $this->options->themeUrl('image/logo/640_64.png'); ?>" alt="Foxmoe Logo" class="logo">
                 <div class="logo-text">
                     <h3><?php $this->options->title(); ?></h3>
-                    <p><?php $this->options->description(); ?></p>
+                    <p>快乐是第一生产力，拒绝内卷式学习!</p>
                 </div>
             </div>
         </div>
@@ -25,7 +25,7 @@
                 <div class="link-group">
                     <h4>快速链接</h4>
                     <ul>
-                        <li><a href="https://pan.foxmoe.top" target="_blank">灯狐苑网盘</a></li>
+                        <li><a href="https://dl.foxmoe.top" target="_blank">灯狐苑网盘</a></li>
                         <li><a href="https://img.foxmoe.top" target="_blank">灯狐苑图床</a></li>
                         <li><a href="/rss.xml">RSS</a></li>
                         <li><a href="/sitemap.xml">网站地图</a></li>
@@ -48,12 +48,12 @@
             <p>
                 <a href="https://icp.gov.moe/?keyword=20259233" target="_blank">萌ICP备20259233号</a>
                 <a href="https://icp.hentioe.dev/sites/20255198" target="_blank">喵ICP备20255198号</a>
-                <a href="https://icp.redcha.cn/beian/ICP-2025110215.html"><img src="https://icp.redcha.cn/static/picture/icplogoi.png" style="height: 20px;">茶ICP备2025110215号</a>
+                <a href="https://icp.redcha.cn/beian/ICP-2025110215.html"><img src="https://icp.redcha.cn/static/picture/icplogoi.png" style="height: 20px;" alt="redcha">茶ICP备2025110215号</a>
                 <a href="https://icp.ekucat.com/beian/2025102333.html" title="KUCAT盟2025102333号" target="_blank"><img
                         style="height:20px;margin-bottom:5px;"
-                        src="https://icp.ekucat.com/images/icologo.png">KUCAT盟2025102333号</a>
+                        src="https://icp.ekucat.com/images/icologo.png" alt="ekucat">KUCAT盟2025102333号</a>
             </p>
-            <p><a href="https://github.com/FoxMoe/foxmoe-blog" target=="_blank">Foxmoe Blog Engine 1.4</a> Based on <a
+            <p><a href="https://github.com/FoxMoe/foxmoe-blog" target=="_blank">Foxmoe Blog Engine 1.5</a> Based on <a
                     href="https://typecho.org" target="_blank">Typecho</a>
             </p>
             <p>Protected by <a
@@ -63,17 +63,17 @@
             <div style="display: flex;justify-items: center;justify-content: center;align-items: baseline;">
                 <!-- 不算子 -->
                 <a href="https://www.busuanzi.cc/count.php?search=foxmoe.top" title="不蒜子统计" target="_blank">
-                    <img style="width:85px;height:25px;" src="https://www.busuanzi.cc/static/images/bsz-tongji.png">
+                    <img style="width:85px;height:25px;" src="https://www.busuanzi.cc/static/images/bsz-tongji.png" alt="busuanzi">
                 </a>
                 <!-- MySSL SSL -->
                 <a href="https://myssl.com/foxmoe.top?from=mysslid"><img
-                        src="https://static.myssl.com/res/images/myssl-id1.png" alt=""
+                        src="https://static.myssl.com/res/images/myssl-id1.png" alt="MySSL"
                         style="max-height:50px;display:block;margin:0 auto"></a>
 
                 <!-- Trust SSL -->
                 <a onclick="window.open('https://www.trustssl.cc/trust.php?sn=Zm94bW9lLnRvcA==','Trust SSL安全签章','height=1000,width=560')"
                     title="Trust SSL安全认证签章" target="_blank">
-                    <img src="https://static.coolcdn.cn/images/TrustSSL.png" style="width:100px;height:36px;">
+                    <img src="https://static.coolcdn.cn/images/TrustSSL.png" style="width:100px;height:36px;" alt="TrustSSL">
                 </a>
 
             </div>

@@ -1,3 +1,19 @@
+@font-face {
+  font-family: 'GenSenRounded';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/GenSenRoundedJP-R.woff2') format('woff2');
+  unicode-range: U+4E00-9FA5,U+0025-00F0;
+}
+@font-face {
+  font-family: 'allseto';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/cjkFonts-allseto-v1.11-2.woff2') format('woff2');
+  unicode-range: U+4E00-9FA5,U+0025-00F0;
+}
 
 @font-face {
   font-family: 'Inter Local';
@@ -36,5 +52,5 @@
 }
 
 :root {
-  --font-sans: 'Inter Local', 'Inter', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-sans: 'GenSenRounded','Inter Local', 'Inter', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }

@@ -310,7 +310,7 @@ const App = {
             return;
         }
 
-        console.log(`%cFoxmoe Blog Engine v1.4 %cMade with %c❤ %c!`, 'color: magenta;', 'color: white;', 'color: red;', 'color: white;');
+        console.log(`%cFoxmoe Blog Engine v1.5 %cMade with %c❤ %c!`, 'color: magenta;', 'color: white;', 'color: red;', 'color: white;');
 
         $(document).pjax(
             'a[href]:not([target="_blank"]):not([href^="#"]):not([href^="mailto:"]):not([href^="tel:"]):not([href^="javascript:"])',

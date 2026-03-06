@@ -9,6 +9,7 @@
     exit; ?>
 
 <?php $this->need('header.php'); ?>
+  <link rel="stylesheet" href="<?php $this->options->themeUrl('css/gallist.css'); ?>">
 
 <?php $this->need('r18confirm.php'); ?>
 <script src="https://cdn.jsdelivr.net/npm/showdown@1.9.1/dist/showdown.min.js"></script>

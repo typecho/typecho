@@ -52,13 +52,13 @@
   --cursor-default: var(--light-cursor-default);
 
   /* 字体 */
-  --font-sans: 'Inter Local', 'Inter', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-sans: 'GenSenRounded','Inter Local', 'Inter', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --font-size-base: 16px;
   --font-size-sm: 14px;
   --font-size-lg: 18px;
   --font-size-xl: 20px;
   --font-size-2xl: 24px;
-  --font-size-3xl: 30px;
+  --font-size-3xl: 28px;
 
   /* 间距 */
   --space-1: 0.25rem;

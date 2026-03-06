@@ -87,15 +87,17 @@
                         <?php $this->theNext('<div class="nav-link"><span class="nav-direction">下一篇</span><span class="nav-title">%s</span></div>', '<div class="nav-link disabled"><span class="nav-direction">下一篇</span><span class="nav-title">没有了</span></div>'); ?>
                     </div>
                 </nav>
+                
+                </div>
             </article>
-
+                    <?php $this->need('sidebar.php'); ?>
             <!-- 评论区域 -->
             <section class="comments-section" id="comments">
                 <?php $this->need('comments.php'); ?>
             </section>
         </div>
 
-        <?php $this->need('sidebar.php'); ?>
+
     </div>
 </main>
 

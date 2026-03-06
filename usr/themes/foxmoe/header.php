@@ -30,9 +30,6 @@
   } elseif ($this->is('category')) {
     $description = $this->getDescription();
   }
-  if (!empty($description)) {
-    echo '<meta name="description" content="' . htmlspecialchars($description) . '" />' . "\n";
-  }
   ?>
 
   <link rel="stylesheet" href="<?php $this->options->themeUrl('css/normalize.css'); ?>">
@@ -44,8 +41,7 @@
   <link rel="stylesheet" href="<?php $this->options->themeUrl('css/comments.css'); ?>">
   <link rel="stylesheet" href="<?php $this->options->themeUrl('css/utilities.css'); ?>">
   <link rel="stylesheet" href="<?php $this->options->themeUrl('css/bg-motion.css'); ?>">
-  <link rel="stylesheet" href="<?php $this->options->themeUrl('css/gallist.css'); ?>">
-  <link rel="icon" type="image/x-icon" href="<?php $this->options->themeUrl('favicon.ico'); ?>">
+  <link rel="icon" type="image/x-icon" href="https://foxmoe.top/favicon.ico">
   <?php $this->header(); ?>
   <script>
     // 模块化 CSS
@@ -81,6 +77,13 @@
 
     gtag('config', 'G-9X6VT5G4FZ');
   </script>
+  <!-- Google Ads -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7165680876656117"
+     crossorigin="anonymous"></script>
+  <!-- auto ads-->
+<script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+</script>
   <!-- Google Tag Manager -->
   <script>(function (w, d, s, l, i) {
       w[l] = w[l] || []; w[l].push({
@@ -101,7 +104,9 @@
     crossorigin>
 </head>
 <body<?php if (!empty($this->options->runtimeStart)): ?>
-    data-runtime-start="<?php echo htmlspecialchars($this->options->runtimeStart, ENT_QUOTES); ?>" <?php endif; ?>>
+    data-runtime-start="<?php echo htmlspecialchars($this->options->runtimeStart, ENT_QUOTES); ?>" <?php endif; ?>><amp-auto-ads type="adsense"
+        data-ad-client="ca-pub-7165680876656117"></amp-auto-ads>
+  <!--google amp auto ads-->
   <header class="header">
     <nav class="navbar">
       <div class="nav-container">
@@ -259,5 +264,4 @@
     })();
   </script>
   </body>
-
 </html>

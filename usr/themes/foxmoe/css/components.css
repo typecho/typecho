@@ -211,7 +211,7 @@
   gap: var(--space-2);
 }
 
-.tag {
+.tag-custom {
   background: var(--surface-color);
   color: var(--text-secondary);
   padding: var(--space-1) var(--space-3);
@@ -225,7 +225,7 @@
   overflow: hidden;
 }
 
-.tag::before {
+.tag-custom::before {
   content: '';
   position: absolute;
   top: 0;
@@ -236,14 +236,14 @@
   transition: left 0.5s;
 }
 
-.tag:hover {
+.tag-custom:hover {
   background: var(--primary-500);
   color: white;
   transform: translateY(-2px) scale(1.02);
   box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
 }
 
-.tag:hover::before {
+.tag-custom:hover::before {
   left: 100%;
 }
 

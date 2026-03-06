@@ -64,7 +64,7 @@
 .post-content h1, .page-content h1 { font-size: var(--font-size-3xl); }
 .post-content h2, .page-content h2 { font-size: var(--font-size-2xl); }
 .post-content h3, .page-content h3 { font-size: var(--font-size-xl); }
-.post-content p, .page-content p { margin-bottom: var(--space-1); }
+.post-content p, .page-content p { margin-bottom: var(--space-4); }
 .post-content img, .page-content img { max-width: min(100%, 860px); height: auto; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); display: block; margin-left: auto; margin-right: auto; }
 
 /* 图片外层为 figure 的场景 */
@@ -74,9 +74,11 @@
 /* 图片被链接包裹时，保证整体也能水平居中（现代浏览器支持 :has） */
 .post-content a:has(> img), .page-content a:has(> img) { display: block; width: fit-content; max-width: min(100%, 860px); margin-left: auto; margin-right: auto; }
 .post-content blockquote, .page-content blockquote { border-left: 4px solid var(--primary-500); background: var(--surface-color); margin: var(--space-6) 0;padding: var(--space-2) var(--space-4); border-radius: 0 var(--radius-lg) var(--radius-lg) 0; color: var(--text-primary); }
-.post-content code, .page-content code { background: var(--surface-color); border-radius: var(--radius-sm); font-family: 'Monaco', 'Consolas', monospace; font-size: 0.9em; color: var(--primary-700); }
+.post-content code, .page-content code { background: var(--surface-color); border-radius: var(--radius-sm); font-family: 'Monaco', 'Consolas', monospace; font-size: 0.9em; color: var(--primary-500); padding: 2px 6px; word-wrap:break-word; }
+[data-theme="dark"]
+.post-content code, .page-content code {color: var(--primary-300);}
 .post-content pre, .page-content pre { background: var(--surface-color); border-radius: var(--radius-lg); overflow-x: auto; margin: var(--space-6) 0; border: 3px dashed var(--border-color); }
-.post-content pre code, .page-content pre code { background: none; padding: 0; color: var(--primary-500); }
+.post-content pre code, .page-content pre code { background: none; padding: 0; color: var(--primary-50); }
 .post-content ul, .post-content ol, .page-content ul, .page-content ol { margin: var(--space-4) 0; padding-left: var(--space-6); }
 .post-content li, .page-content li { margin-bottom: var(--space-2); }
 
@@ -202,6 +204,7 @@
   .post-detail.has-hero .post-tags,
   .post-detail.has-hero .post-navigation,
   .post-detail.has-hero .comments-section { padding-left: var(--space-4); padding-right: var(--space-4); }
+  .post-detail, .page-detail { padding: var(--space-1); }
 }
 
 /* 文章头图上的布局切换按钮（桌面端出现，悬停淡入） */

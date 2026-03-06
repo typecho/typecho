@@ -70,7 +70,7 @@
 	<div id="r18-confirm-box">
 		<div class="row" id="r18-title">
 			<span class="icon" aria-hidden="true">⚠️</span>
-			<span class="warn-text">警告：准入禁止</span>、
+			<span class="warn-text">警告：准入禁止</span>
 		</div>
 		<div class="row" id="r18-desc">请确认你已年满18周岁，且理解该内容可能会引发不适。请遵守当地法律法规。</div>
 		<div class="row buttons">
