@@ -442,10 +442,10 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
             if ('edit' == $permission) {
                 $allow &= ($this->user->pass('editor', true) || $this->authorId == $this->user->uid);
             } else {
-                /** 对自动关闭反馈功能的支持 */
+                /** 对自动关闭反馈功能的支持（独立页面类型不受此限制） */
                 if (
                     ('ping' == $permission || 'comment' == $permission) && $this->options->commentsPostTimeout > 0 &&
-                    $this->options->commentsAutoClose
+                    $this->options->commentsAutoClose && $this->type !== 'page'
                 ) {
                     if ($this->options->time - $this->created > $this->options->commentsPostTimeout) {
                         return false;
