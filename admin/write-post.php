@@ -97,7 +97,7 @@ $post = \Widget\Contents\Post\Edit::alloc()->prepare();
                         <label class="typecho-label"><?php _e('分类'); ?></label>
                         <?php \Widget\Metas\Category\Rows::alloc()->to($category); ?>
                         <ul>
-                            <?php $categories = array_column($post->categories, 'mid'); ?>
+                            <?php $categories = $post->have() ? array_column($post->categories, 'mid') : []; ?>
                             <?php while ($category->next()): ?>
                                 <li><?php echo str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;', $category->levels); ?><input
                                         type="checkbox" id="category-<?php $category->mid(); ?>"
