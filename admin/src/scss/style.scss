@@ -409,15 +409,11 @@ a.button:hover, a.balloon-button:hover {
 }
 
 
-/**
-* 附件管理
-*/
+/* 附件管理 */
 .edit-media button { margin-right: 6px; }
 
 /* 拖动排序 */
-.tDnD_whileDrag {
-  background-color: #FFFBCC;
-}
+.tDnD_whileDrag { background-color: #FFFBCC; }
 
 @include screen(phone, max) {
   .typecho-option-submit {
@@ -432,10 +428,10 @@ a.button:hover, a.balloon-button:hover {
   }
 }
 
-/**
-* 导入扩展样式
-*/
+/* 导入深色模式 */
+@import "darkcolor";
 
+/* 导入扩展样式 */
 @import "icons";
 @import "components";
 @import "hidden";

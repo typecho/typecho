@@ -1,0 +1,113 @@
+/**
+ * 深色模式
+ */
+@media (prefers-color-scheme: dark) {
+    /* 基础颜色 */
+    body { background: #1a1a1a; color: #e0e0e0; }
+    a { color: #6db3d3; }
+    a:hover { color: #8ecae6; }
+
+    /* 表单元素 */
+    input[type=text], input[type=url], input[type=password], 
+    input[type=email], input[type=number], textarea {
+        background: #2d2d2d; border-color: #444; color: #e0e0e0;
+    }
+    input[type=text]:disabled, input[type=text]:read-only, 
+    input[type=url]:disabled, input[type=url]:read-only, 
+    input[type=password]:disabled, input[type=password]:read-only, 
+    input[type=email]:disabled, input[type=email]:read-only, 
+    input[type=number]:disabled, input[type=number]:read-only, 
+    textarea:disabled, textarea:read-only {
+        background: #252525;
+    }
+    select { border-color: #444; background: #2d2d2d; color: #e0e0e0; }
+
+    /* 按钮 */
+    .btn, #ui-datepicker-div .ui-datepicker-current, 
+    #ui-datepicker-div .ui-datepicker-close {
+        background-color: #3d3d3d; color: #e0e0e0;
+    }
+    .btn:hover, #ui-datepicker-div .ui-datepicker-current:hover, 
+    #ui-datepicker-div .ui-datepicker-close:hover {
+        background-color: #4d4d4d;
+    }
+    .btn:active, .btn.active { background-color: #555; }
+    .btn:disabled { background-color: #2d2d2d; color: #666; }
+    .primary { background-color: #4a8fb5; }
+    .primary:hover { background-color: #5a9fc5; }
+    .primary:active, .primary.active { background-color: #3a7fa5; }
+
+    /* 下拉菜单与消息提示 */
+    .dropdown-menu { border-color: #444; background: #2d2d2d; }
+    .dropdown-menu a { color: #e0e0e0; }
+    .dropdown-menu a:hover { background: #3d3d3d; }
+    .message { background: #2d2d2d; }
+    .error { background: #4a2020; color: #ff9999; }
+    .error a { color: #ff9999; }
+    .notice { background: #4a4020; color: #ffd666; }
+    .notice a { color: #ffd666; }
+    .success { background: #2a4020; color: #99cc66; }
+    .success a { color: #99cc66; }
+    .warning { color: #ff6666; }
+
+    /* 表格与列表 */
+    .typecho-pager li a:hover { background: #3d3d3d; }
+    .typecho-pager li.current a { background: #3d3d3d; color: #e0e0e0; }
+    .typecho-list-table { background: #252525; border-color: #252525; }
+    .typecho-list-table th { border-bottom-color: #444; }
+    .typecho-list-table td { border-top-color: #444; }
+    .typecho-list-table td.none, .typecho-list-table .status { color: #888; }
+    .typecho-theme-list tbody tr.current td { background-color: #747474; }
+    .typecho-list-table tbody tr:hover { background-color: #2d2d2d; }
+    .typecho-list-table tbody tr:has(input[type="checkbox"]:checked) { background-color: #3d3520; }
+    
+    /* 选项卡 */
+    .typecho-option-tabs li a { border-color: #444; color: #e0e0e0; }
+    .typecho-option-tabs li.current a, .typecho-option-tabs li.active a,
+    .typecho-option-tabs li a:hover { background-color: #3d3d3d; color: #e0e0e0; }
+
+    /* 文章编辑与标签 */
+    .tag-list { background-color: #252525; }
+    .tag-list .none { color: #888; }
+    .tag-list.typecho-list-notable li:hover { background-color: #3d3d3d; }
+    .tag-list.typecho-list-notable li:has(input[type="checkbox"]:checked) { background-color: #4a4020; }
+    .typecho-post-area .url-slug, .typecho-post-area .description { color: #888; }
+    .typecho-post-area #slug { background: #4a4020; color: #e0e0e0; }
+    .typecho-post-area #custom-field { background: #252525; }
+    .typecho-post-area #custom-field summary:hover { color: #6db3d3; }
+    .typecho-post-area #custom-field .fields .field { border-bottom-color: #444; }
+
+    /* 布局与仪表盘 */
+    .typecho-foot { color: #888; }
+    .typecho-foot .resource { color: #555; }
+    #typecho-welcome { background-color: #2d2d2d; }
+    .welcome-board { color: #888; }
+    .welcome-board em { color: #e0e0e0; }
+    .comment-reply-content { background-color: #3d3d3d; }
+    .comment-reply-content:after { border-color: #3d3d3d #3d3d3d transparent transparent; }
+    #upload-panel { border-color: #444; background-color: #252525; color: #888; }
+    #upload-panel.drag { background-color: #4a4020; }
+
+    /* 编辑器 (WMD) */
+    #wmd-preview { background: #252525; }
+    #wmd-preview code, #wmd-preview pre { background: #3d3d3d; }
+    #wmd-preview code { color: #ff9999; }
+    #wmd-preview pre code { color: #e0e0e0; }
+    #wmd-preview blockquote { border-left-color: #444; color: #aaa; }
+    #wmd-preview hr { border-color: #444; }
+    .wmd-prompt-dialog { background: #2d2d2d; color: #e0e0e0; }
+    #wmd-button-bar .wmd-button-row li:hover { background-color: #3d3d3d; }
+    #wmd-button-bar .wmd-edittab a.active { background: #3d3d3d; color: #888; }
+    
+    /* 全屏模式 */
+    .fullscreen #wmd-button-bar, .fullscreen #text, 
+    .fullscreen #wmd-preview, .fullscreen .submit { background: #1a1a1a; }
+    .fullscreen #wmd-preview { background: #252525; }
+
+    /* 日历插件与其他组件 */
+    #ui-datepicker-div { border-color: #444; background: #2d2d2d; color: #e0e0e0; }
+    #ui-datepicker-div .ui-datepicker-calendar a { background-color: #3d3d3d; color: #e0e0e0; }
+    ul.token-input-list { border-color: #444; background-color: #2d2d2d; }
+    li.token-input-token { background-color: #3d3d3d; color: #e0e0e0; }
+    div.token-input-dropdown { background-color: #2d2d2d; border-color: #444; }
+}
