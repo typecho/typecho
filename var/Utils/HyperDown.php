@@ -506,7 +506,7 @@ class HyperDown
                 $escaped = htmlspecialchars($this->escapeBracket($matches[1]));
 
                 $result = isset($this->_definitions[$matches[2]]) ?
-                    "<img src=\"{$this->_definitions[$matches[2]]}\" alt=\"{$escaped}\" title=\"{$escaped}\">"
+                    "<img src=\"{$this->cleanUrl($this->_definitions[$matches[2]])}\" alt=\"{$escaped}\" title=\"{$escaped}\">"
                     : $escaped;
 
                 return $this->makeHolder($result);
@@ -536,10 +536,12 @@ class HyperDown
                 $escaped = $this->parseInline(
                     $this->escapeBracket($matches[1]), '', false
                 );
-                $result = isset($this->_definitions[$matches[2]]) ?
-                    "<a href=\"{$this->_definitions[$matches[2]]}\">{$escaped}</a>"
-                    : $escaped;
-
+                $result = $escaped;
+                if (isset($this->_definitions[$matches[2]])) {
+                    [$url, $title] = $this->cleanUrl($this->_definitions[$matches[2]], true);
+                    $title = empty($title) ? '' : " title=\"{$title}\"";
+                    $result = "<a href=\"{$url}\"{$title}>{$escaped}</a>";
+                }
                 return $this->makeHolder($result);
             },
             $text
@@ -992,7 +994,7 @@ class HyperDown
     private function parseBlockDefinition(?array $block, int $key, string $line): bool
     {
         if (preg_match("/^\s*\[((?:[^\]]|\\]|\\[)+?)\]:\s*(.+)$/", $line, $matches)) {
-            $this->_definitions[$matches[1]] = $this->cleanUrl($matches[2]);
+            $this->_definitions[$matches[1]] = $matches[2];
             $this->startBlock('definition', $key)
                 ->endBlock();
 
