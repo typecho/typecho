@@ -95,21 +95,21 @@ class Archive extends Contents
      *
      * @var string
      */
-    private string $archiveFeedUrl;
+    private string $archiveFeedUrl = '';
 
     /**
      * RSS 1.0聚合地址
      *
      * @var string
      */
-    private string $archiveFeedRssUrl;
+    private string $archiveFeedRssUrl = '';
 
     /**
      * ATOM 聚合地址
      *
      * @var string
      */
-    private string $archiveFeedAtomUrl;
+    private string $archiveFeedAtomUrl = '';
 
     /**
      * 本页关键字
