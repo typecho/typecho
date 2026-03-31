@@ -574,7 +574,8 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
                 '</form>';
         }
 
-        return $this->isMarkdown ? substr($this->row['text'], 15) : $this->row['text'];
+        $text = $this->row['text'] ?? '';
+		return $this->isMarkdown ? substr($text, 15) : $text;
     }
 
     /**
