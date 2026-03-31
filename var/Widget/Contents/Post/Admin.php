@@ -104,6 +104,45 @@ class Admin extends Contents
         $select->order('table.contents.cid', Db::SORT_DESC)
             ->page($this->currentPage, $this->parameter->pageSize);
 
-        $this->db->fetchAll($select, [$this, 'push']);
+        $result = $this->db->fetchAll($select);
+
+        // Early return if no posts found to avoid unnecessary queries
+        if (empty($result)) {
+            return;
+        }
+        /* 所有的内容id */
+        $cid = array_column($result, 'cid');
+
+        /* 批量获取修订版 */
+        $select = $this->select('parent', 'modified')
+            ->where('table.contents.parent in ?', $cid)
+            ->where('table.contents.type = ?', 'revision');
+        $revisions = $this->db->fetchAll($select);
+        $revisions = array_column($revisions, 'modified', 'parent');
+
+        /* 批量获取分类 */
+        $select = $this->select('table.relationships.cid,table.metas.*')
+            ->from('table.relationships')
+            ->join('table.metas', 'table.relationships.mid = table.metas.mid')
+            ->where('table.metas.type = ?', 'category')
+            ->where('table.relationships.cid IN ?', $cid);
+        $categories = $this->db->fetchAll($select);
+        $contentCategories = [];
+        foreach ($categories as $item) {
+            $contentCategories[$item['cid']][] = $item;
+        }
+
+        /* 补全分类、修订版 */
+        foreach ($result as &$item) {
+            $item['#categories'] = $contentCategories[$item['cid']] ?? [];
+            if (isset($revisions[$item['cid']])) {
+                $item['#revision'] = ['cid' => $item['cid'], 'modified' => $revisions[$item['cid']]];
+            } else {
+                $item['#revision'] = null;
+            }
+        }
+        unset($item);
+
+        array_map([$this, 'push'], $result);
     }
 }
