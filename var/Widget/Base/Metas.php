@@ -210,7 +210,23 @@ class Metas extends Base implements QueryInterface, RowFilterInterface, PrimaryK
      */
     protected function ___directory(): array
     {
-        return [];
+        $directory = [];
+        $parent = $this->parent;
+        // 递归向上查找所有父分类
+        while ($parent > 0) {
+            $parentCategory = $this->db->fetchRow($this->db->select()
+                ->from('table.metas')
+                ->where('mid = ?', $parent)
+                ->where('type = ?', $this->type)); // 确保是同类型（category/tag）
+            if ($parentCategory) {
+                array_unshift($directory, $parentCategory['slug']);
+                $parent = $parentCategory['parent'];
+            } else {
+                break;
+            }
+        }
+        $directory[] = $this->slug;
+        return $directory;
     }
 
     /**
