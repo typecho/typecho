@@ -175,6 +175,7 @@ class Response
 
         $this->response->setStatus($isPermanently ? 301 : 302)
             ->setHeader('Location', $location)
+            ->setHeader('Clear-Site-Data','"prefetchCache", "prerenderCache"')
             ->respond();
     }
 
