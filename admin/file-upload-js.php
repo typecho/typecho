@@ -69,7 +69,7 @@ $(document).ready(function() {
 
     const btn = $('.upload-file');
     const fileInput = $('<input type="file" name="file" multiple />').hide().insertAfter(btn);
-    var completeFile = false;
+    let completeFile = false;
 
     btn.click(function () {
         fileInput.click();
@@ -80,7 +80,7 @@ $(document).ready(function() {
         if (this.files.length === 0) {
             return;
         }
-        for (var i = 0; i < this.files.length; i ++) {
+        for (let i = 0; i < this.files.length; i ++) {
             Typecho.uploadFile(this.files[i]);
         }
         completeFile = false;
