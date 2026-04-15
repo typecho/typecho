@@ -43,7 +43,7 @@ class Plugin implements PluginInterface
      */
     public static function config(Form $form)
     {
-        /** 分类名称 */
+        /** 创建文本输入框配置项，用于自定义显示文本 */
         $name = new Text('word', null, 'Hello World', _t('说点什么'));
         $form->addInput($name);
     }
