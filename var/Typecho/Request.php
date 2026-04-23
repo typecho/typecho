@@ -638,10 +638,10 @@ class Request
 
         if (isset($_SERVER['SCRIPT_NAME']) && basename($_SERVER['SCRIPT_NAME']) === $filename) {
             $baseUrl = $_SERVER['SCRIPT_NAME'];
-        } elseif (isset($_SERVER['PHP_SELF']) && basename($_SERVER['PHP_SELF']) === $filename) {
-            $baseUrl = $_SERVER['PHP_SELF'];
         } elseif (isset($_SERVER['ORIG_SCRIPT_NAME']) && basename($_SERVER['ORIG_SCRIPT_NAME']) === $filename) {
             $baseUrl = $_SERVER['ORIG_SCRIPT_NAME']; // 1and1 shared hosting compatibility
+        } elseif (isset($_SERVER['PHP_SELF']) && basename($_SERVER['PHP_SELF']) === $filename) {
+            $baseUrl = $_SERVER['PHP_SELF'];
         } else {
             // Backtrack up the script_filename to find the portion matching
             // php_self
