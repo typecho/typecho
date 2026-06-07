@@ -297,6 +297,7 @@ function install_get_default_options(): array
             'commentsOrder' => 'ASC',
             'commentsCheckReferer' => 1,
             'commentsAutoClose' => 0,
+            'commentsAutoCloseApplyToPage' => 0,
             'commentsPostIntervalEnable' => 1,
             'commentsPostInterval' => 60,
             'commentsShowCommentOnly' => 0,
