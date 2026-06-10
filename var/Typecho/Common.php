@@ -465,6 +465,9 @@ EOF;
 
                     foreach ($attrs as $key => $val) {
                         if (in_array($key, $allowableAttributes[$tag])) {
+                            if ('href' === $key && preg_match('/^\s*["\']?(javascript|vbscript|data|about|chrome|mocha):/i', $val)) {
+                                continue;
+                            }
                             $parsedAttrs[] = " {$key}" . (empty($val) ? '' : "={$val}");
                         }
                     }
