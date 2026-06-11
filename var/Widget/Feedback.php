@@ -199,7 +199,7 @@ class Feedback extends Comments implements ActionInterface
 
         $validator->addRule('text', 'required', _t('必须填写评论内容'));
 
-        $comment['text'] = $this->request->get('text');
+        $comment['text'] = Common::removeXSS($this->request->get('text'));
 
         /** 对一般匿名访问者,将用户数据保存一个月 */
         if (!$this->user->hasLogin()) {
@@ -310,7 +310,7 @@ class Feedback extends Comments implements ActionInterface
 
         $trackback['author'] = $this->request->filter('trim')->get('blog_name');
         $trackback['url'] = $this->request->filter('trim', 'url')->get('url');
-        $trackback['text'] = Common::removeXSS(strip_tags($this->request->get('excerpt')));
+        $trackback['text'] = Common::removeXSS($this->request->get('excerpt'));
 
         //检验格式
         $validator = new Validate();
