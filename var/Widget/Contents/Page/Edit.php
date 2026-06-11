@@ -57,6 +57,12 @@ class Edit extends Contents implements ActionInterface
             'visibility'
         );
 
+        // 校验 template 必须属于合法模板集合，防止目录穿越
+        $templates = array_keys($this->getTemplates());
+        if (empty($contents['template']) || !in_array($contents['template'], $templates, true)) {
+            $contents['template'] = null;
+        }
+
         $contents['title'] = $this->request->get('title', _t('未命名页面'));
         $contents['created'] = $this->getCreated();
         $contents['visibility'] = ('hidden' == $contents['visibility'] ? 'hidden' : 'publish');
