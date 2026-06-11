@@ -189,6 +189,11 @@ class Response
         //获取来源
         $referer = $this->request->getReferer();
 
+        // 验证来源主机必须与当前请求主机一致, 防止开放重定向 (CWE-601)
+        if (!empty($referer) && !$this->isSameOriginReferer($referer)) {
+            $referer = null;
+        }
+
         //判断来源
         if (!empty($referer)) {
             // ~ fix Issue 38
@@ -218,6 +223,49 @@ class Response
         } else {
             $this->redirect($default ?: '/');
         }
+    }
+
+    /**
+     * 判断 Referer 是否与当前请求同源.
+     *
+     * Referer 必须是绝对 URL, 且其 host 与当前请求 host 完全一致.
+     * 没有 host 的相对路径也视为同源.
+     *
+     * @param string $referer
+     * @return bool
+     */
+    private function isSameOriginReferer(string $referer): bool
+    {
+        $refererParts = @parse_url($referer);
+
+        // parse_url 失败 -> 视为不可信
+        if (!is_array($refererParts)) {
+            return false;
+        }
+
+        // 相对路径 (没有 host) -> 同源
+        if (empty($refererParts['host'])) {
+            return true;
+        }
+
+        $currentParts = @parse_url($this->request->getUrlPrefix() ?? '');
+        if (!is_array($currentParts) || empty($currentParts['host'])) {
+            return false;
+        }
+
+        // host 必须严格相等 (大小写不敏感)
+        if (strcasecmp($refererParts['host'], $currentParts['host']) !== 0) {
+            return false;
+        }
+
+        // 端口必须一致 (未指定端口按协议默认)
+        $refererPort = $refererParts['port'] ?? ($refererParts['scheme'] === 'https' ? 443 : 80);
+        $currentPort = $currentParts['port'] ?? (($currentParts['scheme'] ?? 'http') === 'https' ? 443 : 80);
+        if ($refererPort !== $currentPort) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
