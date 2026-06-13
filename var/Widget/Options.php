@@ -424,7 +424,9 @@ class Options extends Base
         if (defined('__TYPECHO_ADMIN__')) {
             /** 识别在admin目录中的情况 */
             $adminDir = '/' . trim(defined('__TYPECHO_ADMIN_DIR__') ? __TYPECHO_ADMIN_DIR__ : '/admin/', '/');
-            $rootUrl = substr($rootUrl, 0, - strlen($adminDir));
+            if (strpos($rootUrl, $adminDir) !== false) {
+                $rootUrl = substr($rootUrl, 0, -strlen($adminDir));
+            }
         }
 
         return $rootUrl;
