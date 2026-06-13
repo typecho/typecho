@@ -187,7 +187,7 @@ class Request
             }
         } else {
             $exists = false;
-            return $default;
+            return $value ?? $default;
         }
     }
 
@@ -545,7 +545,7 @@ class Request
             $validated = true;
             foreach ($params as $key => $val) {
                 $param = $this->get($key, null, $exists);
-                $validated = empty($val) ? $exists : ($val == $param);
+                $validated = $val === '' ? $exists : ($val === $param);
 
                 if (!$validated) {
                     break;

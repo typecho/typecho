@@ -316,7 +316,7 @@ class Upload extends Contents implements ActionInterface
                         'allowFeed' => 1
                     ];
 
-                    if (isset($this->request->cid)) {
+                    if ($this->request->is('cid')) {
                         $cid = $this->request->filter('int')->get('cid');
 
                         if ($this->isWriteable($this->db->sql()->where('cid = ?', $cid))) {
