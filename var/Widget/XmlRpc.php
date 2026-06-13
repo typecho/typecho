@@ -1886,6 +1886,11 @@ EOF;
                 unset($api['pingback.ping']);
             }
 
+            /** 自定义拓展API接口 */
+            $api = self::pluginHandle()->call(
+                'api', $api, $this
+            );
+
             /** 直接把初始化放到这里 */
             $server = new Server($api);
             $server->setHook($this);
