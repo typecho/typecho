@@ -1386,6 +1386,13 @@ EOF;
         /** 挂接插件 */
         self::pluginHandle()->call('beforeRender', $this);
 
+        /** 校验模板路径是否在主题目录内, 防止历史脏数据导致的本地文件包含 */
+        $realThemeDir = realpath($this->themeDir);
+        $realPath = realpath($this->themeDir . $this->themeFile);
+        if ($realPath && strpos($realPath, $realThemeDir . DIRECTORY_SEPARATOR) !== 0) {
+            throw new WidgetException(_t('非法的模板路径'), 500);
+        }
+
         /** 输出模板 */
         require_once $this->themeDir . $this->themeFile;
 

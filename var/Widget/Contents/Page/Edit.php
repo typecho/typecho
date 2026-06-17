@@ -62,6 +62,14 @@ class Edit extends Contents implements ActionInterface
         $contents['visibility'] = ('hidden' == $contents['visibility'] ? 'hidden' : 'publish');
         $contents['parent'] = $this->getParent();
 
+        /** 白名单校验自定义模板字段, 防止目录穿越导致的本地文件包含 */
+        if (!empty($contents['template'])) {
+            $validTemplates = array_keys($this->getTemplates());
+            if (!in_array($contents['template'], $validTemplates, true)) {
+                $contents['template'] = null;
+            }
+        }
+
         if ($this->request->is('markdown=1') && $this->options->markdown) {
             $contents['text'] = '<!--markdown-->' . $contents['text'];
         }
