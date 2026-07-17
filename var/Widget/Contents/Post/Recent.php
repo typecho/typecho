@@ -10,7 +10,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
 }
 
 /**
- * 最新评论组件
+ * 最新文章组件
  *
  * @category typecho
  * @package Widget
