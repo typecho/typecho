@@ -393,6 +393,21 @@ function scrollableEditor(el, preview) {
             }
 
             check.prop('checked', !checked);
+            syncSelectAllState();
+        }
+
+        function syncSelectAllState () {
+            const selectAll = $(s.selectAllEl),
+                checks = $(s.checkEl, $(s.rowEl, table)),
+                checkedCount = checks.filter(':checked').length,
+                totalCount = checks.length;
+
+            if (!selectAll.length) {
+                return;
+            }
+
+            selectAll.prop('checked', totalCount > 0 && checkedCount === totalCount);
+            selectAll.prop('indeterminate', checkedCount > 0 && checkedCount < totalCount);
         }
 
         $(s.rowEl, this).each(function () {
@@ -417,6 +432,8 @@ function scrollableEditor(el, preview) {
             $(s.rowEl, table).each(function () {
                 $(s.checkEl, this).prop('checked', !!checked);
             });
+
+            syncSelectAllState();
         });
 
         $(s.actionEl).click(function () {
@@ -428,6 +445,8 @@ function scrollableEditor(el, preview) {
 
             return false;
         });
+
+        syncSelectAllState();
     };
 })($);
 
