@@ -173,7 +173,7 @@ class Feedback extends Comments implements ActionInterface
             ) {
                 $comment['parent'] = $parentId;
             } else {
-                throw new Exception(_t('父级评论不存在'));
+                throw new Exception(_t('父级评论不存在或后台评论设置未启用评论回复功能'));
             }
         }
 
