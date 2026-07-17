@@ -197,7 +197,7 @@ class Edit extends Contents implements ActionInterface
      * @return string
      * @throws \Typecho\Db\Exception|Exception
      */
-    protected function getPageOffsetQuery(int $cid, string $status = null): string
+    protected function getPageOffsetQuery(int $cid, ?string $status = null): string
     {
         return 'page=' . $this->getPageOffset(
             'cid',
