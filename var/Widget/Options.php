@@ -87,6 +87,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property bool $commentsCheckReferer
  * @property bool $commentsAntiSpam
  * @property bool $commentsAutoClose
+ * @property bool $commentsAutoCloseApplyToPage
  * @property bool $commentsPostIntervalEnable
  * @property int $commentsMaxNestingLevels
  * @property int $commentsPostTimeout
