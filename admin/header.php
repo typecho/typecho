@@ -16,7 +16,7 @@ $header = \Typecho\Plugin::factory('admin/header.php')->filter('header', $header
         <meta charset="<?php $options->charset(); ?>">
         <meta name="renderer" content="webkit">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-        <title><?php _e('%s - %s - Powered by Typecho', $menu->title, $options->title); ?></title>
+        <title><?php _e('%s - %s - Powered by Typecho', empty($menu->title) ? '网站概要' : $menu->title, $options->title); ?></title>
         <meta name="robots" content="noindex, nofollow">
         <?php echo $header; ?>
     </head>
