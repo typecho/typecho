@@ -66,6 +66,11 @@ class Edit extends Options implements ActionInterface
                         ]);
                     }
                 }
+
+                if (function_exists('themeSetup')) {
+                    /** 实现主题的初始化配置，数据表建立等操作 */
+                    themeSetup($this);
+                }
             }
 
             Notice::alloc()->highlight('theme-' . $theme);
