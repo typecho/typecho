@@ -324,102 +324,9 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      */
     public function mwNewPost(int $blogId, string $userName, string $password, array $content, bool $publish): int
     {
-        /** 取得content内容 */
-        $input = [];
-        $type = isset($content['post_type']) && 'page' == $content['post_type'] ? 'page' : 'post';
-
-        $input['title'] = trim($content['title']) == null ? _t('未命名文档') : $content['title'];
-
-        if (isset($content['slug'])) {
-            $input['slug'] = $content['slug'];
-        } elseif (isset($content['wp_slug'])) {
-            //fix issue 338, wlw只发送这个
-            $input['slug'] = $content['wp_slug'];
-        }
-
-        $input['text'] = !empty($content['mt_text_more']) ? $content['description']
-            . "\n<!--more-->\n" . $content['mt_text_more'] : $content['description'];
-        $input['text'] = self::pluginHandle()->filter('textFilter', $input['text'], $this);
-
-        $input['password'] = $content["wp_password"] ?? null;
-        $input['order'] = $content["wp_page_order"] ?? null;
-
-        $input['tags'] = $content['mt_keywords'] ?? null;
-        $input['category'] = [];
-
-        if (isset($content['postId'])) {
-            $input['cid'] = $content['postId'];
-        }
-
-        if ('page' == $type && isset($content['wp_page_template'])) {
-            $input['template'] = $content['wp_page_template'];
-        }
-
-        if (isset($content['dateCreated'])) {
-            /** 解决客户端与服务器端时间偏移 */
-            $input['created'] = $content['dateCreated']->getTimestamp()
-                - $this->options->timezone + $this->options->serverTimezone;
-        }
-
-        if (!empty($content['categories']) && is_array($content['categories'])) {
-            foreach ($content['categories'] as $category) {
-                if (
-                    !$this->db->fetchRow($this->db->select('mid')
-                        ->from('table.metas')->where('type = ? AND name = ?', 'category', $category))
-                ) {
-                    $this->wpNewCategory($blogId, $userName, $password, ['name' => $category]);
-                }
-
-                $input['category'][] = $this->db->fetchObject($this->db->select('mid')
-                    ->from('table.metas')->where('type = ? AND name = ?', 'category', $category)
-                    ->limit(1))->mid;
-            }
-        }
-
-        $input['allowComment'] = (isset($content['mt_allow_comments']) && (1 == $content['mt_allow_comments']
-                || 'open' == $content['mt_allow_comments']))
-            ? 1 : ((isset($content['mt_allow_comments']) && (0 == $content['mt_allow_comments']
-                    || 'closed' == $content['mt_allow_comments']))
-                ? 0 : $this->options->defaultAllowComment);
-
-        $input['allowPing'] = (isset($content['mt_allow_pings']) && (1 == $content['mt_allow_pings']
-                || 'open' == $content['mt_allow_pings']))
-            ? 1 : ((isset($content['mt_allow_pings']) && (0 == $content['mt_allow_pings']
-                    || 'closed' == $content['mt_allow_pings'])) ? 0 : $this->options->defaultAllowPing);
-
-        $input['allowFeed'] = $this->options->defaultAllowFeed;
-        $input['do'] = $publish ? 'publish' : 'save';
-        $input['markdown'] = $this->options->xmlrpcMarkdown;
-
-        /** 调整状态 */
-        if (isset($content["{$type}_status"])) {
-            $status = $this->wordpressToTypechoStatus($content["{$type}_status"], $type);
-            $input['visibility'] = $content["visibility"] ?? $status;
-            if ('publish' == $status || 'waiting' == $status || 'private' == $status) {
-                $input['do'] = 'publish';
-
-                if ('private' == $status) {
-                    $input['private'] = 1;
-                }
-            } else {
-                $input['do'] = 'save';
-            }
-        }
-
-        /** 对未归档附件进行归档 */
-        $unattached = Unattached::alloc();
-
-        if ($unattached->have()) {
-            while ($unattached->next()) {
-                if (false !== strpos($input['text'], $unattached->attachment->url)) {
-                    if (!isset($input['attachment'])) {
-                        $input['attachment'] = [];
-                    }
-
-                    $input['attachment'][] = $unattached->cid;
-                }
-            }
-        }
+        $data = $this->normalizeXmlRpcContent($blogId, $userName, $password, $content, $publish);
+        $type = $data['type'];
+        $input = $data['input'];
 
         /** 调用已有组件 */
         if ('page' == $type) {
@@ -503,8 +410,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
         bool $publish
     ): bool {
         $content['post_type'] = 'page';
-        $this->mwEditPost($pageId, $userName, $password, $content, $publish);
-        return true;
+        return $this->mwEditPost($pageId, $userName, $password, $content, $publish);
     }
 
     /**
@@ -515,7 +421,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      * @param string $password
      * @param array $content
      * @param bool $publish
-     * @return int
+     * @return bool
      * @throws \Typecho\Db\Exception
      */
     public function mwEditPost(
@@ -524,9 +430,34 @@ class XmlRpc extends Contents implements ActionInterface, Hook
         string $password,
         array $content,
         bool $publish = true
-    ): int {
-        $content['postId'] = $postId;
-        return $this->mwNewPost(1, $userName, $password, $content, $publish);
+    ): bool {
+        $data = $this->normalizeXmlRpcContent(1, $userName, $password, $content, $publish);
+        $type = $data['type'];
+        $input = $data['input'];
+        $target = Archive::alloc('type=single', ['cid' => $postId], false);
+
+        if (
+            !$target->have()
+            || ('page' == $type && 'page' != $target->type)
+            || ('page' != $type && 'post' != $target->type && 'post_draft' != $target->type)
+        ) {
+            throw new Exception('page' == $type ? _t('页面不存在') : _t('文章不存在'), 404);
+        }
+
+        $input['cid'] = $postId;
+        unset($input['created']);
+
+        if ('page' == $type) {
+            PageEdit::alloc(null, $input, function (PageEdit $page) {
+                $page->prepare()->writePage();
+            });
+        } else {
+            PostEdit::alloc(null, $input, function (PostEdit $post) {
+                $post->prepare()->writePost();
+            });
+        }
+
+        return true;
     }
 
     /**
@@ -557,7 +488,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
             return $updateRows > 0;
         }
 
-        return $this->mwEditPost($postId, $userName, $password, $content) > 0;
+        return $this->mwEditPost($postId, $userName, $password, $content);
     }
 
     /**
@@ -1891,6 +1822,122 @@ EOF;
             $server->setHook($this);
             $server->serve();
         }
+    }
+
+    /**
+     * 标准化 XML-RPC 文章/页面负载为编辑器请求参数
+     *
+     * @param int $blogId
+     * @param string $userName
+     * @param string $password
+     * @param array $content
+     * @param bool $publish
+     * @return array{type: string, input: array}
+     * @throws \Typecho\Db\Exception
+     */
+    private function normalizeXmlRpcContent(
+        int $blogId,
+        string $userName,
+        string $password,
+        array $content,
+        bool $publish
+    ): array {
+        $input = [];
+        $type = isset($content['post_type']) && 'page' == $content['post_type'] ? 'page' : 'post';
+
+        $input['title'] = trim($content['title']) == null ? _t('未命名文档') : $content['title'];
+
+        if (isset($content['slug'])) {
+            $input['slug'] = $content['slug'];
+        } elseif (isset($content['wp_slug'])) {
+            //fix issue 338, wlw只发送这个
+            $input['slug'] = $content['wp_slug'];
+        }
+
+        $input['text'] = !empty($content['mt_text_more']) ? $content['description']
+            . "\n<!--more-->\n" . $content['mt_text_more'] : $content['description'];
+        $input['text'] = self::pluginHandle()->filter('textFilter', $input['text'], $this);
+
+        $input['password'] = $content["wp_password"] ?? null;
+        $input['order'] = $content["wp_page_order"] ?? null;
+
+        $input['tags'] = $content['mt_keywords'] ?? null;
+        $input['category'] = [];
+
+        if ('page' == $type && isset($content['wp_page_template'])) {
+            $input['template'] = $content['wp_page_template'];
+        }
+
+        if (isset($content['dateCreated'])) {
+            /** 解决客户端与服务器端时间偏移 */
+            $input['created'] = $content['dateCreated']->getTimestamp()
+                - $this->options->timezone + $this->options->serverTimezone;
+        }
+
+        if (!empty($content['categories']) && is_array($content['categories'])) {
+            foreach ($content['categories'] as $category) {
+                if (
+                    !$this->db->fetchRow($this->db->select('mid')
+                        ->from('table.metas')->where('type = ? AND name = ?', 'category', $category))
+                ) {
+                    $this->wpNewCategory($blogId, $userName, $password, ['name' => $category]);
+                }
+
+                $input['category'][] = $this->db->fetchObject($this->db->select('mid')
+                    ->from('table.metas')->where('type = ? AND name = ?', 'category', $category)
+                    ->limit(1))->mid;
+            }
+        }
+
+        $input['allowComment'] = (isset($content['mt_allow_comments']) && (1 == $content['mt_allow_comments']
+                || 'open' == $content['mt_allow_comments']))
+            ? 1 : ((isset($content['mt_allow_comments']) && (0 == $content['mt_allow_comments']
+                    || 'closed' == $content['mt_allow_comments']))
+                ? 0 : $this->options->defaultAllowComment);
+
+        $input['allowPing'] = (isset($content['mt_allow_pings']) && (1 == $content['mt_allow_pings']
+                || 'open' == $content['mt_allow_pings']))
+            ? 1 : ((isset($content['mt_allow_pings']) && (0 == $content['mt_allow_pings']
+                    || 'closed' == $content['mt_allow_pings'])) ? 0 : $this->options->defaultAllowPing);
+
+        $input['allowFeed'] = $this->options->defaultAllowFeed;
+        $input['do'] = $publish ? 'publish' : 'save';
+        $input['markdown'] = $this->options->xmlrpcMarkdown;
+
+        /** 调整状态 */
+        if (isset($content["{$type}_status"])) {
+            $status = $this->wordpressToTypechoStatus($content["{$type}_status"], $type);
+            $input['visibility'] = $content["visibility"] ?? $status;
+            if ('publish' == $status || 'waiting' == $status || 'private' == $status) {
+                $input['do'] = 'publish';
+
+                if ('private' == $status) {
+                    $input['private'] = 1;
+                }
+            } else {
+                $input['do'] = 'save';
+            }
+        }
+
+        /** 对未归档附件进行归档 */
+        $unattached = Unattached::alloc();
+
+        if ($unattached->have()) {
+            while ($unattached->next()) {
+                if (false !== strpos($input['text'], $unattached->attachment->url)) {
+                    if (!isset($input['attachment'])) {
+                        $input['attachment'] = [];
+                    }
+
+                    $input['attachment'][] = $unattached->cid;
+                }
+            }
+        }
+
+        return [
+            'type'  => $type,
+            'input' => $input,
+        ];
     }
 
     /**

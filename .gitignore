@@ -35,3 +35,7 @@ usr/themes/*
 !usr/themes/classic-22
 node_modules/
 tools/tmp/
+.codex
+openspec
+tests
+package-lock.json
