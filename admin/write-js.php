@@ -187,7 +187,11 @@ $(document).ready(function() {
             cid = o.cid;
             draftId = o.draftId;
             idInput.val(cid);
-            autoSave.text('<?php _e('已保存'); ?>' + ' (' + o.time + ')').effect('highlight', 1000);
+            autoSave.text('<?php _e('已保存'); ?>' + ' (' + o.time + ')');
+
+            if (!$(document.body).hasClass('preview')) {
+                autoSave.effect('highlight', 1000);
+            }
 
             cb && cb();
         };
