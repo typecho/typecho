@@ -51,8 +51,8 @@
             </li>
             <?php endwhile; ?>
             <li>
-                <form method="post" action="<?php $this->options->siteUrl(); ?>">
-                    <input type="search" id="s" name="s">
+                <form method="post" action="<?php $this->options->siteUrl(); ?>" role="search">
+                    <input type="search" id="s" name="s" aria-label="<?php _e('搜索关键字'); ?>">
                 </form>
             </li>
         </ul>
