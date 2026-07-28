@@ -16,6 +16,15 @@ include 'menu.php';
                             alt="<?php $attachment->attachment->name(); ?>" class="typecho-attachment-photo"/></p>
                 <?php endif; ?>
 
+                <?php if ($attachment->attachment->mime == "video/mp4"): ?>
+                            <video src="<?php $attachment->attachment->url(); ?>" controls="true" height="320" ></video>
+                <?php endif; ?>
+ 
+                <?php if ($attachment->attachment->mime === "text/plain" || $attachment->attachment->mime === "application/pdf"): ?>
+                            <iframe src="<?php $attachment->attachment->url(); ?>" controls="true" width="100%" ></iframe>
+                <?php endif; ?>
+
+
                 <p>
                     <?php $mime = \Typecho\Common::mimeIconType($attachment->attachment->mime); ?>
                     <i class="mime-<?php echo $mime; ?>"></i>
