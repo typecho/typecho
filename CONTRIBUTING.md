@@ -14,7 +14,7 @@ If you would like to contribute code to Typecho, please read the following guide
 
 * [Code of Conduct](CODE_OF_CONDUCT.md)
 * [Contributing Guide](CONTRIBUTING.md)
-* [Coding Style Guide](CODING_STYLE.md)
+* [Coding Style Guide](https://docs.typecho.org/phpcoding)
 
 ## Translations
 
@@ -22,16 +22,16 @@ Please see [TRANSLATION](https://github.com/typecho/languages) for details.
 
 ## Plugin Development
 
-Please see [Plugin Development](http://docs.typecho.org/plugins) for details.
+Please see [Plugin Development](https://docs.typecho.org/plugins) for details.
 
 ## Theme Development
 
-Please see [Theme Development](http://docs.typecho.org/themes) for details.
+Please see [Theme Development](https://docs.typecho.org/themes) for details.
 
 ## Community
 
 * [Telegram Channel](https://t.me/typechodev)
-* [Homepage](http://typecho.org/)
-* [Documents](http://docs.typecho.org/)
-* [Community](http://forum.typecho.org/)
-* [Download](http://typecho.org/download)
+* [Homepage](https://typecho.org/)
+* [Documents](https://docs.typecho.org/)
+* [Community](https://forum.typecho.org/)
+* [Download](https://typecho.org/download)
