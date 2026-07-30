@@ -14,7 +14,7 @@ If you would like to contribute code to Typecho, please read the following guide
 
 * [Code of Conduct](CODE_OF_CONDUCT.md)
 * [Contributing Guide](CONTRIBUTING.md)
-* [Coding Style Guide](CODING_STYLE.md)
+* [Coding Style Guide](https://docs.typecho.org/phpcoding)
 
 ## Translations
 
