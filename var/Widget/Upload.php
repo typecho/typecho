@@ -202,28 +202,35 @@ class Upload extends Contents implements ActionInterface
             }
         }
 
+        if (!isset($file['tmp_name']) && !isset($file['bytes']) && !isset($file['bits'])) {
+            return false;
+        }
+
+        $tempPath = tempnam($dir, 'typecho_');
+        if ($tempPath === false) {
+            return false;
+        }
+
         if (isset($file['tmp_name'])) {
-            @unlink($path);
-
             //移动上传文件
-            if (!@move_uploaded_file($file['tmp_name'], $path)) {
-                return false;
-            }
-        } elseif (isset($file['bytes'])) {
-            @unlink($path);
-
-            //直接写入文件
-            if (!file_put_contents($path, $file['bytes'])) {
-                return false;
-            }
-        } elseif (isset($file['bits'])) {
-            @unlink($path);
-
-            //直接写入文件
-            if (!file_put_contents($path, $file['bits'])) {
-                return false;
-            }
+            $written = @move_uploaded_file($file['tmp_name'], $tempPath);
         } else {
+            //直接写入文件
+            $written = file_put_contents($tempPath, $file['bytes'] ?? $file['bits']) !== false;
+        }
+
+        if (!$written) {
+            @unlink($tempPath);
+            return false;
+        }
+
+        $permissions = @fileperms($path);
+        if ($permissions !== false) {
+            @chmod($tempPath, $permissions & 0777);
+        }
+
+        if (!@rename($tempPath, $path)) {
+            @unlink($tempPath);
             return false;
         }
 

@@ -374,13 +374,43 @@ class Edit extends Contents implements ActionInterface
                     ->where('table.contents.type = ? OR table.contents.type = ?', 'page', 'page_draft')
                     ->where('table.contents.cid = ?', $parent));
 
-                if (!empty($parentPage)) {
+                if (!empty($parentPage) && !$this->hasParentCycle($parent)) {
                     return $parent;
                 }
             }
         }
 
         return 0;
+    }
+
+    /**
+     * 检查父页面链是否形成循环
+     *
+     * @param int $parent
+     * @return bool
+     */
+    private function hasParentCycle(int $parent): bool
+    {
+        $visited = [];
+
+        while ($parent > 0) {
+            if (($this->have() && $parent == $this->cid) || isset($visited[$parent])) {
+                return true;
+            }
+
+            $visited[$parent] = true;
+            $page = $this->db->fetchRow($this->select('table.contents.parent')
+                ->where('table.contents.type = ? OR table.contents.type = ?', 'page', 'page_draft')
+                ->where('table.contents.cid = ?', $parent));
+
+            if (empty($page)) {
+                break;
+            }
+
+            $parent = intval($page['parent']);
+        }
+
+        return false;
     }
 
     /**
