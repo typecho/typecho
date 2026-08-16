@@ -491,10 +491,10 @@ class HyperDown
                 $escaped = htmlspecialchars($this->escapeBracket($matches[1]));
                 $url = $this->escapeBracket($matches[2]);
                 [$url, $title] = $this->cleanUrl($url, true);
-                $title = empty($title) ? $escaped : " title=\"{$title}\"";
+                $title = empty($title) ? '' : " title=\"{$title}\"";
 
                 return $this->makeHolder(
-                    "<img src=\"{$url}\" alt=\"{$title}\" title=\"{$title}\">"
+                    "<img src=\"{$url}\" alt=\"{$escaped}\"{$title}>"
                 );
             },
             $text

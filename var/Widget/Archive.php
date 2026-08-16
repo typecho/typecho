@@ -2116,7 +2116,7 @@ EOF;
         $this->archiveFeedUrl = Router::url('search', $this->pageRow, $this->options->feedUrl);
 
         /** RSS 1.0 */
-        $this->archiveFeedRssUrl = Router::url('search', $this->pageRow, $this->options->feedAtomUrl);
+        $this->archiveFeedRssUrl = Router::url('search', $this->pageRow, $this->options->feedRssUrl);
 
         /** ATOM 1.0 */
         $this->archiveFeedAtomUrl = Router::url('search', $this->pageRow, $this->options->feedAtomUrl);

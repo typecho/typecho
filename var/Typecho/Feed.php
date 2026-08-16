@@ -195,6 +195,17 @@ class Feed
     }
 
     /**
+     * 转义 CDATA 结束标记
+     *
+     * @param string $content 内容
+     * @return string
+     */
+    private function escapeCdata(string $content): string
+    {
+        return str_replace(']]>', ']]]]><![CDATA[>', $content);
+    }
+
+    /**
      * 输出字符串
      *
      * @return string
@@ -269,19 +280,20 @@ xmlns:atom="http://www.w3.org/2005/Atom">
 
                 if (!empty($item['category']) && is_array($item['category'])) {
                     foreach ($item['category'] as $category) {
-                        $content .= '<category><![CDATA[' . $category['name'] . ']]></category>' . self::EOL;
+                        $content .= '<category><![CDATA[' . $this->escapeCdata($category['name'])
+                            . ']]></category>' . self::EOL;
                     }
                 }
 
                 if (!empty($item['excerpt'])) {
-                    $content .= '<description><![CDATA[' . strip_tags($item['excerpt'])
+                    $content .= '<description><![CDATA[' . $this->escapeCdata(strip_tags($item['excerpt']))
                         . ']]></description>' . self::EOL;
                 }
 
                 if (!empty($item['content'])) {
                     $content .= '<content:encoded xml:lang="' . $this->lang . '"><![CDATA['
                         . self::EOL .
-                        $item['content'] . self::EOL .
+                        $this->escapeCdata($item['content']) . self::EOL .
                         ']]></content:encoded>' . self::EOL;
                 }
 
@@ -324,7 +336,8 @@ xml:base="' . $this->baseUrl . '"
 
             foreach ($this->items as $item) {
                 $content .= '<entry>' . self::EOL;
-                $content .= '<title type="html"><![CDATA[' . $item['title'] . ']]></title>' . self::EOL;
+                $content .= '<title type="html"><![CDATA[' . $this->escapeCdata($item['title'])
+                    . ']]></title>' . self::EOL;
                 $content .= '<link rel="alternate" type="text/html" href="' . $item['link'] . '" />' . self::EOL;
                 $content .= '<id>' . $item['link'] . '</id>' . self::EOL;
                 $content .= '<updated>' . $this->dateFormat($item['date']) . '</updated>' . self::EOL;
@@ -342,7 +355,8 @@ xml:base="' . $this->baseUrl . '"
                 }
 
                 if (!empty($item['excerpt'])) {
-                    $content .= '<summary type="html"><![CDATA[' . htmlspecialchars($item['excerpt'])
+                    $content .= '<summary type="html"><![CDATA['
+                        . $this->escapeCdata(htmlspecialchars($item['excerpt']))
                         . ']]></summary>' . self::EOL;
                 }
 
@@ -350,7 +364,7 @@ xml:base="' . $this->baseUrl . '"
                     $content .= '<content type="html" xml:base="' . $item['link']
                         . '" xml:lang="' . $this->lang . '"><![CDATA['
                         . self::EOL .
-                        $item['content'] . self::EOL .
+                        $this->escapeCdata($item['content']) . self::EOL .
                         ']]></content>' . self::EOL;
                 }
 
