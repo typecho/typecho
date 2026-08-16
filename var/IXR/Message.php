@@ -56,7 +56,16 @@ class Message
     public function parse(): bool
     {
         // first remove the XML declaration
-        $this->message = preg_replace('/<\?xml(.*)?\?' . '>/', '', $this->message);
+        $message = ltrim($this->message);
+        if (strncmp($message, '<?xml', 5) === 0) {
+            $declarationEnd = strpos($message, '?>');
+            if ($declarationEnd === false) {
+                return false;
+            }
+
+            $this->message = substr($message, $declarationEnd + 2);
+        }
+
         if (trim($this->message) == '') {
             return false;
         }
@@ -83,7 +92,6 @@ class Message
         // Set XML parser to take the case of tags in to account
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, false);
         // Set XML parser callback functions
-        xml_set_object($parser, $this);
         xml_set_element_handler($parser, [$this, 'tagOpen'], [$this, 'tagClose']);
         xml_set_character_data_handler($parser, [$this, 'cdata']);
         if (!xml_parse($parser, $this->message)) {
@@ -92,7 +100,11 @@ class Message
                 xml_get_current_line_number($this->parser))); */
             return false;
         }
-        xml_parser_free($parser);
+
+        if (!isset($this->messageType)) {
+            return false;
+        }
+
         // Grab the error messages, if any
         if ($this->messageType == 'fault') {
             $this->faultCode = intval($this->params[0]['faultCode']);
@@ -148,7 +160,7 @@ class Message
                 $this->currentTagContents = '';
                 break;
             case 'double':
-                $value = (double) trim($this->currentTagContents);
+                $value = (float) trim($this->currentTagContents);
                 $this->currentTagContents = '';
                 break;
             case 'string':
