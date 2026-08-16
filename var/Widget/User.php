@@ -202,8 +202,7 @@ class User extends Users
      */
     public function commitLogin(&$user, int $expire = 0)
     {
-        $authCode = function_exists('openssl_random_pseudo_bytes') ?
-            bin2hex(openssl_random_pseudo_bytes(16)) : sha1(Common::randString(20));
+        $authCode = self::generateAuthCode();
         $user['authCode'] = $authCode;
 
         Cookie::set('__typecho_uid', $user['uid'], $expire);
@@ -215,6 +214,17 @@ class User extends Users
             ->expression('logged', 'activated')
             ->rows(['authCode' => $authCode])
             ->where('uid = ?', $user['uid']));
+    }
+
+    /**
+     * 生成认证码
+     *
+     * @return string
+     */
+    public static function generateAuthCode(): string
+    {
+        return function_exists('openssl_random_pseudo_bytes') ?
+            bin2hex(openssl_random_pseudo_bytes(16)) : sha1(Common::randString(20));
     }
 
     /**
