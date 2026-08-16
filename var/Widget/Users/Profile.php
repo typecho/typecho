@@ -3,6 +3,7 @@
 namespace Widget\Users;
 
 use Typecho\Common;
+use Typecho\Cookie;
 use Typecho\Db\Exception;
 use Typecho\Plugin;
 use Typecho\Widget\Helper\Form;
@@ -12,6 +13,7 @@ use Widget\Base\Options;
 use Widget\Base\Users;
 use Widget\Notice;
 use Widget\Plugins\Rows;
+use Widget\User;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -191,7 +193,7 @@ class Profile extends Users implements ActionInterface
 
         /** 取出数据 */
         $user = $this->request->from('mail', 'screenName', 'url');
-        $user['screenName'] = empty($user['screenName']) ? $user['name'] : $user['screenName'];
+        $user['screenName'] = empty($user['screenName']) ? $this->user->name : $user['screenName'];
 
         /** 更新数据 */
         $this->update($user, $this->db->sql()->where('uid = ?', $this->user->uid));
@@ -307,12 +309,14 @@ class Profile extends Users implements ActionInterface
 
         $hasher = new PasswordHash(8, true);
         $password = $hasher->hashPassword($this->request->password);
+        $authCode = User::generateAuthCode();
 
         /** 更新数据 */
         $this->update(
-            ['password' => $password],
+            ['password' => $password, 'authCode' => $authCode],
             $this->db->sql()->where('uid = ?', $this->user->uid)
         );
+        Cookie::set('__typecho_authCode', Common::hash($authCode));
 
         /** 设置高亮 */
         Notice::alloc()->highlight('user-' . $this->user->uid);

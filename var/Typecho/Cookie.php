@@ -70,6 +70,7 @@ class Cookie
         $parsed = parse_url($url);
 
         self::$domain = $parsed['host'];
+        self::$secure = isset($parsed['scheme']) && strtolower($parsed['scheme']) === 'https';
         /** 在路径后面强制加上斜杠 */
         self::$path = empty($parsed['path']) ? '/' : Common::url(null, $parsed['path']);
     }
@@ -139,6 +140,7 @@ class Cookie
      */
     public static function set(string $key, $value, int $expire = 0)
     {
+        $httponly = self::$httponly || self::isAuthCookie($key);
         $key = self::$prefix . $key;
         $_COOKIE[$key] = $value;
         Response::getInstance()->setCookie(
@@ -148,7 +150,7 @@ class Cookie
             self::$path,
             self::$domain,
             self::$secure,
-            self::$httponly
+            $httponly
         );
     }
 
@@ -159,12 +161,24 @@ class Cookie
      */
     public static function delete(string $key)
     {
+        $httponly = self::$httponly || self::isAuthCookie($key);
         $key = self::$prefix . $key;
         if (!isset($_COOKIE[$key])) {
             return;
         }
 
-        Response::getInstance()->setCookie($key, '', -1, self::$path, self::$domain, self::$secure, self::$httponly);
+        Response::getInstance()->setCookie($key, '', -1, self::$path, self::$domain, self::$secure, $httponly);
         unset($_COOKIE[$key]);
+    }
+
+    /**
+     * 判断是否为认证 Cookie
+     *
+     * @param string $key
+     * @return bool
+     */
+    private static function isAuthCookie(string $key): bool
+    {
+        return in_array($key, ['__typecho_uid', '__typecho_authCode'], true);
     }
 }

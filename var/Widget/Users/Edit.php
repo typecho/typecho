@@ -9,6 +9,7 @@ use Utils\PasswordHash;
 use Widget\ActionInterface;
 use Widget\Base\Users;
 use Widget\Notice;
+use Widget\User;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -237,12 +238,13 @@ class Edit extends Users implements ActionInterface
 
         /** 取出数据 */
         $user = $this->request->from('mail', 'screenName', 'password', 'url', 'group');
-        $user['screenName'] = empty($user['screenName']) ? $user['name'] : $user['screenName'];
+        $user['screenName'] = empty($user['screenName']) ? $this->name : $user['screenName'];
         if (empty($user['password'])) {
             unset($user['password']);
         } else {
             $hasher = new PasswordHash(8, true);
             $user['password'] = $hasher->hashPassword($user['password']);
+            $user['authCode'] = User::generateAuthCode();
         }
 
         /** 更新数据 */
