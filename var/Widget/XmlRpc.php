@@ -151,7 +151,10 @@ class XmlRpc extends Contents implements ActionInterface, Hook
     public function wpGetPage(int $blogId, int $pageId, string $userName, string $password): array
     {
         /** 获取页面 */
-        $page = PageEdit::alloc(null, ['cid' => $pageId], false);
+        $page = PageEdit::alloc(null, ['cid' => $pageId], function (PageEdit $page) {
+            $page->prepare();
+        });
+        $this->checkContentPermission($page, _t('页面不存在'));
 
         /** 对文章内容做截取处理，以获得description和text_more*/
         [$excerpt, $more] = $this->getPostExtended($page);
@@ -237,6 +240,24 @@ class XmlRpc extends Contents implements ActionInterface, Hook
     public function afterRpcCall(string $methodName, &$result): void
     {
         Widget::destroy();
+    }
+
+    /**
+     * 检查当前用户是否可以访问指定内容
+     *
+     * @param Contents $content
+     * @param string $notFoundMessage
+     * @throws Exception
+     */
+    private function checkContentPermission(Contents $content, string $notFoundMessage): void
+    {
+        if (!$content->have()) {
+            throw new Exception($notFoundMessage, 404);
+        }
+
+        if (!$this->user->pass('editor', true) && $content->authorId != $this->user->uid) {
+            throw new Exception(_t('没有操作权限'), 403);
+        }
     }
 
     /**
@@ -477,9 +498,15 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      */
     public function wpDeletePage(int $blogId, string $userName, string $password, int $pageId): bool
     {
+        $page = PageEdit::alloc(null, ['cid' => $pageId], function (PageEdit $page) {
+            $page->prepare();
+        });
+        $this->checkContentPermission($page, _t('页面不存在'));
+
         PageEdit::alloc(null, ['cid' => $pageId], function (PageEdit $page) {
             $page->deletePage();
         });
+
         return true;
     }
 
@@ -746,6 +773,11 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      */
     public function wpDeleteCategory(int $blogId, string $userName, string $password, int $categoryId): bool
     {
+        $category = CategoryEdit::alloc(null, ['mid' => $categoryId], false);
+        if (!$category->categoryExists($categoryId)) {
+            throw new Exception(_t('分类不存在'), 404);
+        }
+
         CategoryEdit::alloc(null, ['mid' => $categoryId], function (CategoryEdit $category) {
             $category->deleteCategory();
         });
@@ -1031,9 +1063,22 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      */
     public function wpDeleteComment(int $blogId, string $userName, string $password, int $commentId): bool
     {
+        $comment = CommentsEdit::alloc(null, ['coid' => $commentId], function (CommentsEdit $comment) {
+            $comment->getComment();
+        });
+
+        if (!$comment->have()) {
+            throw new Exception(_t('评论不存在'), 404);
+        }
+
+        if (!$this->user->pass('editor', true) && $comment->ownerId != $this->user->uid) {
+            throw new Exception(_t('没有删除评论的权限'), 403);
+        }
+
         CommentsEdit::alloc(null, ['coid' => $commentId], function (CommentsEdit $comment) {
             $comment->deleteComment();
         });
+
         return true;
     }
 
@@ -1201,7 +1246,10 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      */
     public function wpGetMediaItem(int $blogId, string $userName, string $password, int $attachmentId): array
     {
-        $attachment = AttachmentEdit::alloc(null, ['cid' => $attachmentId]);
+        $attachment = AttachmentEdit::alloc(null, ['cid' => $attachmentId], function (AttachmentEdit $attachment) {
+            $attachment->prepare();
+        });
+        $this->checkContentPermission($attachment, _t('文件不存在'));
 
         return [
             'attachment_id'    => $attachment->cid,
@@ -1229,7 +1277,10 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      */
     public function mwGetPost(int $postId, string $userName, string $password): array
     {
-        $post = PostEdit::alloc(null, ['cid' => $postId], false);
+        $post = PostEdit::alloc(null, ['cid' => $postId], function (PostEdit $post) {
+            $post->prepare();
+        });
+        $this->checkContentPermission($post, _t('文章不存在'));
 
         /** 对文章内容做截取处理，以获得description和text_more*/
         [$excerpt, $more] = $this->getPostExtended($post);
@@ -1457,7 +1508,10 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      */
     public function mtGetPostCategories(int $postId, string $userName, string $password): array
     {
-        $post = PostEdit::alloc(null, ['cid' => $postId], false);
+        $post = PostEdit::alloc(null, ['cid' => $postId], function (PostEdit $post) {
+            $post->prepare();
+        });
+        $this->checkContentPermission($post, _t('文章不存在'));
 
         /** 格式化categories*/
         $categories = [];
@@ -1484,6 +1538,11 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      */
     public function mtSetPostCategories(int $postId, string $userName, string $password, array $categories): bool
     {
+        $post = PostEdit::alloc(null, ['cid' => $postId], function (PostEdit $post) {
+            $post->prepare();
+        });
+        $this->checkContentPermission($post, _t('文章不存在'));
+
         PostEdit::alloc(null, ['cid' => $postId], function (PostEdit $post) use ($postId, $categories) {
             $post->setCategories($postId, array_column($categories, 'categoryId'), 'publish' == $post->status);
         });
@@ -1501,6 +1560,11 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      */
     public function mtPublishPost(int $postId, string $userName, string $password): bool
     {
+        $post = PostEdit::alloc(null, ['cid' => $postId], function (PostEdit $post) {
+            $post->prepare();
+        });
+        $this->checkContentPermission($post, _t('文章不存在'));
+
         PostEdit::alloc(null, ['cid' => $postId, 'status' => 'publish'], function (PostEdit $post) {
             $post->markPost();
         });
@@ -1560,7 +1624,10 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      */
     public function bloggerGetPost(int $blogId, int $postId, string $userName, string $password): array
     {
-        $post = PostEdit::alloc(null, ['cid' => $postId]);
+        $post = PostEdit::alloc(null, ['cid' => $postId], function (PostEdit $post) {
+            $post->prepare();
+        });
+        $this->checkContentPermission($post, _t('文章不存在'));
         $categories = array_column($post->categories, 'name');
 
         $content = '<title>' . $post->title . '</title>';
@@ -1588,9 +1655,15 @@ class XmlRpc extends Contents implements ActionInterface, Hook
      */
     public function bloggerDeletePost(int $blogId, int $postId, string $userName, string $password, $publish): bool
     {
+        $post = PostEdit::alloc(null, ['cid' => $postId], function (PostEdit $post) {
+            $post->prepare();
+        });
+        $this->checkContentPermission($post, _t('文章不存在'));
+
         PostEdit::alloc(null, ['cid' => $postId], function (PostEdit $post) {
             $post->deletePost();
         });
+
         return true;
     }
 
