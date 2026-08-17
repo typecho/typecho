@@ -335,7 +335,7 @@ class Edit extends Comments implements ActionInterface
         $commentSelect = $this->db->fetchRow($this->select()
             ->where('coid = ?', $coid)->limit(1), [$this, 'push']);
 
-        if ($commentSelect && $this->commentIsWriteable()) {
+        if ($commentSelect && $this->commentIsWriteable() && $this->parentContent->have()) {
             $comment = [
                 'cid'      => $commentSelect['cid'],
                 'created'  => $this->options->time,

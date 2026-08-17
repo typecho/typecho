@@ -54,17 +54,16 @@ class Admin extends Comments
      * 获取菜单标题
      *
      * @return string
-     * @throws Exception
      */
     public function getMenuTitle(): string
     {
         $content = $this->parentContent;
 
-        if ($content) {
+        if ($content->have()) {
             return _t('%s的评论', $content->title);
         }
 
-        throw new Exception(_t('内容不存在'), 404);
+        return _t('已删除内容的评论');
     }
 
     /**
