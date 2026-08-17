@@ -23,6 +23,17 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
 class Reading extends Permalink
 {
     /**
+     * 判断是否为正整数
+     *
+     * @param mixed $value
+     * @return bool
+     */
+    public function isPositiveInteger($value): bool
+    {
+        return filter_var($value, FILTER_VALIDATE_INT) !== false && (int) $value > 0;
+    }
+
+    /**
      * 执行更新动作
      *
      * @throws Exception
@@ -214,7 +225,8 @@ class Reading extends Permalink
             _t('此数目用于指定文章归档输出时每页显示的文章数目.')
         );
         $pageSize->input->setAttribute('class', 'w-20');
-        $form->addInput($pageSize->addRule('isInteger', _t('请填入一个数字')));
+        $pageSize->input->setAttribute('min', 1);
+        $form->addInput($pageSize->addRule([$this, 'isPositiveInteger'], _t('请填入一个大于 0 的整数')));
 
         /** FEED全文输出 */
         $feedFullText = new Form\Element\Radio(
