@@ -44,6 +44,14 @@
 
     <ul class="typecho-option">
         <li>
+            <label class="typecho-label" for="dbSslCa"><?php _e('数据库 SSL CA 证书'); ?></label>
+            <input type="text" class="text" name="dbSslCa" id="dbSslCa" value="" />
+            <p class="description"><?php _e('填写用于验证数据库服务端证书的 CA 文件绝对路径'); ?></p>
+        </li>
+    </ul>
+
+    <ul class="typecho-option">
+        <li>
             <label class="typecho-label" for="dbSslVerify"><?php _e('启用数据库 SSL 服务端证书验证'); ?></label>
             <select name="dbSslVerify" id="dbSslVerify">
                 <option value="off"><?php _e('不启用'); ?></option>

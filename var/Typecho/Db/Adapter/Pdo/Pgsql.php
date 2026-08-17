@@ -62,11 +62,7 @@ class Pgsql extends Pdo
      */
     public function init(Config $config): \PDO
     {
-        $dsn = "pgsql:dbname={$config->database};host={$config->host};port={$config->port}";
-
-        if ($config->sslVerify) {
-            $dsn .= ';sslmode=require';
-        }
+        $dsn = $this->buildDsn($config);
 
         $pdo = new \PDO(
             $dsn,
@@ -79,5 +75,25 @@ class Pgsql extends Pdo
         }
 
         return $pdo;
+    }
+
+    /**
+     * 构造 PDO PostgreSQL DSN。
+     *
+     * @param Config $config
+     * @return string
+     */
+    private function buildDsn(Config $config): string
+    {
+        $dsn = "pgsql:dbname={$config->database};host={$config->host};port={$config->port}";
+
+        if ($config->sslVerify) {
+            $dsn .= ';sslmode=verify-full';
+            if (!empty($config->sslCa)) {
+                $dsn .= ';sslrootcert=' . $config->sslCa;
+            }
+        }
+
+        return $dsn;
     }
 }

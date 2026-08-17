@@ -39,16 +39,7 @@ class Pgsql implements Adapter
      */
     public function connect(Config $config)
     {
-        $dsn = "host={$config->host} port={$config->port}"
-            . " dbname={$config->database} user={$config->user} password={$config->password}";
-
-        if ($config->sslVerify) {
-            $dsn .= ' sslmode=require';
-        }
-
-        if ($config->charset) {
-            $dsn .= " options='--client_encoding={$config->charset}'";
-        }
+        $dsn = $this->buildConnectionString($config);
 
         if ($dbLink = @pg_connect($dsn)) {
             return $dbLink;
@@ -56,6 +47,56 @@ class Pgsql implements Adapter
 
         /** 数据库异常 */
         throw new ConnectionException("Couldn't connect to database.");
+    }
+
+    /**
+     * 构造 libpq 连接字符串。
+     *
+     * @param Config $config
+     * @return string
+     */
+    private function buildConnectionString(Config $config): string
+    {
+        $parameters = [
+            'host' => $config->host,
+            'port' => $config->port,
+            'dbname' => $config->database,
+            'user' => $config->user,
+            'password' => $config->password
+        ];
+
+        if ($config->sslVerify) {
+            $parameters['sslmode'] = 'verify-full';
+            if (!empty($config->sslCa)) {
+                $parameters['sslrootcert'] = $config->sslCa;
+            }
+        }
+
+        if ($config->charset) {
+            $parameters['options'] = '--client_encoding=' . $config->charset;
+        }
+
+        $parts = [];
+        foreach ($parameters as $key => $value) {
+            $parts[] = $key . '=' . $this->quoteConnectionValue($value);
+        }
+
+        return implode(' ', $parts);
+    }
+
+    /**
+     * 按 libpq conninfo 规则引用连接参数。
+     *
+     * @param mixed $value
+     * @return string
+     */
+    private function quoteConnectionValue($value): string
+    {
+        return '\'' . str_replace(
+            ['\\', '\''],
+            ['\\\\', '\\\''],
+            (string) $value
+        ) . '\'';
     }
 
     /**
@@ -84,15 +125,44 @@ class Pgsql implements Adapter
     public function query(string $query, $handle, int $op = Db::READ, ?string $action = null, ?string $table = null)
     {
         $this->prepareQuery($query, $handle, $action, $table);
-        if ($resource = pg_query($handle, $query)) {
-            return $resource;
+        if (!@pg_send_query($handle, $query)) {
+            throw new SQLException(@pg_last_error($handle));
         }
 
-        /** 数据库异常 */
-        throw new SQLException(
-            @pg_last_error($handle),
-            pg_result_error_field(pg_get_result($handle), PGSQL_DIAG_SQLSTATE)
-        );
+        $resource = false;
+        $error = null;
+        while (false !== ($result = pg_get_result($handle))) {
+            $status = pg_result_status($result);
+            if (
+                null === $error
+                && in_array(
+                    $status,
+                    [PGSQL_BAD_RESPONSE, PGSQL_NONFATAL_ERROR, PGSQL_FATAL_ERROR],
+                    true
+                )
+            ) {
+                $error = [
+                    pg_result_error($result) ?: @pg_last_error($handle),
+                    pg_result_error_field($result, PGSQL_DIAG_SQLSTATE) ?: 0
+                ];
+            }
+            if (false !== $resource) {
+                pg_free_result($resource);
+            }
+            $resource = $result;
+        }
+
+        if (null !== $error) {
+            if (false !== $resource) {
+                pg_free_result($resource);
+            }
+            throw new SQLException($error[0], $error[1]);
+        }
+        if (false === $resource) {
+            throw new SQLException(@pg_last_error($handle));
+        }
+
+        return $resource;
     }
 
     /**
