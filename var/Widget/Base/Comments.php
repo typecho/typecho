@@ -243,6 +243,12 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
         $row['agent'] = $row['agent'] ?? '';
         $row['text'] = $row['text'] ?? '';
 
+        /** 对历史Trackback数据进行输出前净化 */
+        if ('trackback' == ($row['type'] ?? null)) {
+            $row['author'] = Common::removeXSS(strip_tags($row['author']));
+            $row['text'] = Common::removeXSS(strip_tags($row['text']));
+        }
+
         $row['date'] = new Date($row['created']);
         return Comments::pluginHandle()->filter('filter', $row, $this);
     }
