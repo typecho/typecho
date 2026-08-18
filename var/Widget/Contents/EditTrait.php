@@ -540,11 +540,18 @@ trait EditTrait
         $attachments = $this->request->getArray('attachment');
         if (!empty($attachments)) {
             foreach ($attachments as $key => $attachment) {
-                $this->db->query($this->db->update('table.contents')->rows([
+                $condition = $this->db->update('table.contents')->rows([
                     'parent' => $cid,
                     'status' => 'publish',
                     'order'  => $key + 1
-                ])->where('cid = ? AND type = ?', $attachment, 'attachment'));
+                ])->where('cid = ? AND type = ?', $attachment, 'attachment')
+                    ->where('(parent = 0 OR parent IS NULL OR parent = ?)', $cid);
+
+                if (!$this->user->pass('editor', true)) {
+                    $condition->where('authorId = ?', $this->user->uid);
+                }
+
+                $this->db->query($condition);
             }
         }
     }
