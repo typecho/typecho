@@ -62,8 +62,12 @@ class Security extends Base
      */
     public function protect()
     {
-        if ($this->enabled && $this->request->get('_') != $this->getToken($this->request->getReferer())) {
-            $this->response->goBack();
+        if ($this->enabled) {
+            $referer = $this->request->getReferer();
+            $expectedToken = $this->getToken($referer ?: $this->request->getRequestUrl());
+            if ($this->request->get('_') != $expectedToken) {
+                $this->response->goBack();
+            }
         }
     }
 

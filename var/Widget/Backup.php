@@ -206,10 +206,18 @@ class Backup extends BaseOptions implements ActionInterface
                 $this->response->goBack();
             }
 
-            $path = __TYPECHO_BACKUP_DIR__ . '/' . $this->request->get('file');
+            $file = basename($this->request->get('file'));
+            $path = __TYPECHO_BACKUP_DIR__ . '/' . $file;
 
             if (!file_exists($path)) {
                 Notice::alloc()->set(_t('备份文件不存在'), 'error');
+                $this->response->goBack();
+            }
+
+            $realPath = realpath($path);
+            $realBackupDir = realpath(__TYPECHO_BACKUP_DIR__);
+            if ($realPath === false || $realBackupDir === false || strpos($realPath, $realBackupDir) !== 0) {
+                Notice::alloc()->set(_t('备份文件路径非法'), 'error');
                 $this->response->goBack();
             }
         }
@@ -277,8 +285,8 @@ class Backup extends BaseOptions implements ActionInterface
         // 针对PGSQL重置计数
         if (false !== strpos(strtolower($this->db->getAdapterName()), 'pgsql')) {
             foreach ($this->lastIds as $table => $id) {
-                $seq = $this->db->getPrefix() . $table . '_seq';
-                $this->db->query('ALTER SEQUENCE ' . $seq . ' RESTART WITH ' . ($id + 1));
+                $seq = preg_replace('/[^a-zA-Z0-9_]/', '', $this->db->getPrefix() . $table) . '_seq';
+                $this->db->query('ALTER SEQUENCE "' . $seq . '" RESTART WITH ' . (intval($id) + 1));
             }
         }
 

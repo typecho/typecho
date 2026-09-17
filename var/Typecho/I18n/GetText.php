@@ -361,6 +361,11 @@ class GetText
     private function selectString(int $n): int
     {
         $string = $this->getPluralForms();
+
+        if (!preg_match('/^[npluras0-9\s\+\-\*\/\%\(\)\?:,=;!<>&|]+$/', $string)) {
+            return 0;
+        }
+
         $string = str_replace('nplurals', "\$total", $string);
         $string = str_replace("n", $n, $string);
         $string = str_replace('plural', "\$plural", $string);

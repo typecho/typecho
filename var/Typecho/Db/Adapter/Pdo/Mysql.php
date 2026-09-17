@@ -83,7 +83,7 @@ class Mysql extends Pdo
         }
 
         if ($config->charset) {
-            $pdo->exec("SET NAMES '{$config->charset}'");
+            $pdo->exec("SET NAMES " . $pdo->quote($config->charset));
         }
 
         return $pdo;

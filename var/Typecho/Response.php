@@ -191,6 +191,17 @@ class Response
 
         header('HTTP/1.1 ' . $this->status . ' ' . self::HTTP_CODE[$this->status], true, $this->status);
 
+        $securityHeaders = [
+            'x-frame-options' => 'SAMEORIGIN',
+            'x-content-type-options' => 'nosniff',
+        ];
+
+        foreach ($securityHeaders as $name => $value) {
+            if (!in_array($name, $sentHeaders)) {
+                header($name . ': ' . $value);
+            }
+        }
+
         // set header
         foreach ($this->headers as $name => $value) {
             if (!in_array(strtolower($name), $sentHeaders)) {
@@ -209,7 +220,16 @@ class Response
                 $timeout = 1;
             }
 
-            setrawcookie($key, rawurlencode($value), $timeout, $path, $domain, $secure, $httponly);
+            $options = [
+                'expires' => $timeout,
+                'path' => $path,
+                'domain' => $domain,
+                'secure' => $secure,
+                'httponly' => $httponly,
+                'samesite' => 'Lax'
+            ];
+
+            setrawcookie($key, rawurlencode($value), $options);
         }
     }
 

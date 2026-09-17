@@ -437,7 +437,7 @@ function scrollableEditor(el, preview) {
         });
 
         $(s.actionEl).click(function () {
-            const t = $(this), lang = t.attr('lang');
+            const t = $(this), lang = t.attr('data-lang');
 
             if (!lang || confirm(lang)) {
                 table.parents('form').attr('action', t.attr('href')).submit();

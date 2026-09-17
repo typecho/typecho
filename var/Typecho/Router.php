@@ -53,11 +53,16 @@ class Router
 
         foreach (self::route($pathInfo) as $result) {
             [$route, $params] = $result;
+            $widgetClass = ltrim($route['widget'], '\\');
+            [$pureClass] = explode('@', $widgetClass, 2);
+            if (!is_subclass_of($pureClass, Widget::class)) {
+                continue;
+            }
             try {
-                return Widget::widget($route['widget'], $parameter, $params);
+                return Widget::widget($widgetClass, $parameter, $params);
             } catch (\Exception $e) {
                 if (404 == $e->getCode()) {
-                    Widget::destroy($route['widget']);
+                    Widget::destroy($widgetClass);
                     continue;
                 }
 
@@ -81,8 +86,14 @@ class Router
         foreach (self::route($pathInfo) as $result) {
             [$route, $params] = $result;
 
+            $widgetClass = ltrim($route['widget'], '\\');
+            [$pureClass] = explode('@', $widgetClass, 2);
+            if (!is_subclass_of($pureClass, Widget::class)) {
+                continue;
+            }
+
             try {
-                $widget = Widget::widget($route['widget'], null, $params);
+                $widget = Widget::widget($widgetClass, null, $params);
 
                 if (isset($route['action'])) {
                     $widget->{$route['action']}();
@@ -91,7 +102,7 @@ class Router
                 return;
             } catch (\Exception $e) {
                 if (404 == $e->getCode()) {
-                    Widget::destroy($route['widget']);
+                    Widget::destroy($widgetClass);
                     continue;
                 }
 

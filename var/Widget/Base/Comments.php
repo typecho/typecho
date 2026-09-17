@@ -270,9 +270,9 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
 
         if ($this->url && $autoLink) {
             echo '<a href="' . Common::safeUrl($this->url) . '"'
-                . ($noFollow ? ' rel="external nofollow"' : null) . '>' . $this->author . '</a>';
+                . ($noFollow ? ' rel="external nofollow"' : null) . '>' . htmlspecialchars($this->author, ENT_QUOTES, 'UTF-8') . '</a>';
         } else {
-            echo $this->author;
+            echo htmlspecialchars($this->author, ENT_QUOTES, 'UTF-8');
         }
     }
 
@@ -299,7 +299,7 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
                 }
 
                 echo '<img class="avatar" loading="lazy" src="' . $url . '"' . $srcset . ' alt="' .
-                    $this->author . '" width="' . $size . '" height="' . $size . '" />';
+                    htmlspecialchars($this->author, ENT_QUOTES, 'UTF-8') . '" width="' . $size . '" height="' . $size . '" />';
             }
         }
     }

@@ -214,11 +214,11 @@ xmlns:dc="http://purl.org/dc/elements/1.1/">' . self::EOL;
             $lastUpdate = 0;
 
             foreach ($this->items as $item) {
-                $content .= '<item rdf:about="' . $item['link'] . '">' . self::EOL;
-                $content .= '<title>' . htmlspecialchars($item['title']) . '</title>' . self::EOL;
-                $content .= '<link>' . $item['link'] . '</link>' . self::EOL;
+                $content .= '<item rdf:about="' . htmlspecialchars($item['link'], ENT_QUOTES, 'UTF-8') . '">' . self::EOL;
+                $content .= '<title>' . htmlspecialchars($item['title'], ENT_QUOTES, 'UTF-8') . '</title>' . self::EOL;
+                $content .= '<link>' . htmlspecialchars($item['link'], ENT_QUOTES, 'UTF-8') . '</link>' . self::EOL;
                 $content .= '<dc:date>' . $this->dateFormat($item['date']) . '</dc:date>' . self::EOL;
-                $content .= '<description>' . strip_tags($item['content']) . '</description>' . self::EOL;
+                $content .= '<description>' . htmlspecialchars(strip_tags($item['content']), ENT_QUOTES, 'UTF-8') . '</description>' . self::EOL;
                 if (!empty($item['suffix'])) {
                     $content .= $item['suffix'];
                 }
@@ -231,15 +231,15 @@ xmlns:dc="http://purl.org/dc/elements/1.1/">' . self::EOL;
                 }
             }
 
-            $result .= '<channel rdf:about="' . $this->feedUrl . '">
-<title>' . htmlspecialchars($this->title) . '</title>
-<link>' . $this->baseUrl . '</link>
-<description>' . htmlspecialchars($this->subTitle ?? '') . '</description>
+            $result .= '<channel rdf:about="' . htmlspecialchars($this->feedUrl, ENT_QUOTES, 'UTF-8') . '">
+<title>' . htmlspecialchars($this->title, ENT_QUOTES, 'UTF-8') . '</title>
+<link>' . htmlspecialchars($this->baseUrl, ENT_QUOTES, 'UTF-8') . '</link>
+<description>' . htmlspecialchars($this->subTitle ?? '', ENT_QUOTES, 'UTF-8') . '</description>
 <items>
 <rdf:Seq>' . self::EOL;
 
             foreach ($links as $link) {
-                $result .= '<rdf:li resource="' . $link . '"/>' . self::EOL;
+                $result .= '<rdf:li resource="' . htmlspecialchars($link, ENT_QUOTES, 'UTF-8') . '"/>' . self::EOL;
             }
 
             $result .= '</rdf:Seq>
@@ -260,36 +260,36 @@ xmlns:atom="http://www.w3.org/2005/Atom">
 
             foreach ($this->items as $item) {
                 $content .= '<item>' . self::EOL;
-                $content .= '<title>' . htmlspecialchars($item['title']) . '</title>' . self::EOL;
-                $content .= '<link>' . $item['link'] . '</link>' . self::EOL;
-                $content .= '<guid>' . $item['link'] . '</guid>' . self::EOL;
+                $content .= '<title>' . htmlspecialchars($item['title'], ENT_QUOTES, 'UTF-8') . '</title>' . self::EOL;
+                $content .= '<link>' . htmlspecialchars($item['link'], ENT_QUOTES, 'UTF-8') . '</link>' . self::EOL;
+                $content .= '<guid>' . htmlspecialchars($item['link'], ENT_QUOTES, 'UTF-8') . '</guid>' . self::EOL;
                 $content .= '<pubDate>' . $this->dateFormat($item['date']) . '</pubDate>' . self::EOL;
-                $content .= '<dc:creator>' . htmlspecialchars($item['author']->screenName)
+                $content .= '<dc:creator>' . htmlspecialchars($item['author']->screenName, ENT_QUOTES, 'UTF-8')
                     . '</dc:creator>' . self::EOL;
 
                 if (!empty($item['category']) && is_array($item['category'])) {
                     foreach ($item['category'] as $category) {
-                        $content .= '<category><![CDATA[' . $category['name'] . ']]></category>' . self::EOL;
+                        $content .= '<category>' . htmlspecialchars($category['name'], ENT_QUOTES, 'UTF-8') . '</category>' . self::EOL;
                     }
                 }
 
                 if (!empty($item['excerpt'])) {
-                    $content .= '<description><![CDATA[' . strip_tags($item['excerpt'])
-                        . ']]></description>' . self::EOL;
+                    $content .= '<description>' . htmlspecialchars(strip_tags($item['excerpt']), ENT_QUOTES, 'UTF-8')
+                        . '</description>' . self::EOL;
                 }
 
                 if (!empty($item['content'])) {
-                    $content .= '<content:encoded xml:lang="' . $this->lang . '"><![CDATA['
+                    $content .= '<content:encoded xml:lang="' . htmlspecialchars($this->lang, ENT_QUOTES, 'UTF-8') . '"><![CDATA['
                         . self::EOL .
-                        $item['content'] . self::EOL .
+                        self::cdataEscape($item['content']) . self::EOL .
                         ']]></content:encoded>' . self::EOL;
                 }
 
                 if (isset($item['comments']) && strlen($item['comments']) > 0) {
-                    $content .= '<slash:comments>' . $item['comments'] . '</slash:comments>' . self::EOL;
+                    $content .= '<slash:comments>' . intval($item['comments']) . '</slash:comments>' . self::EOL;
                 }
 
-                $content .= '<comments>' . $item['link'] . '#comments</comments>' . self::EOL;
+                $content .= '<comments>' . htmlspecialchars($item['link'], ENT_QUOTES, 'UTF-8') . '#comments</comments>' . self::EOL;
 
                 if (!empty($item['suffix'])) {
                     $content .= $item['suffix'];
@@ -302,11 +302,11 @@ xmlns:atom="http://www.w3.org/2005/Atom">
                 }
             }
 
-            $result .= '<title>' . htmlspecialchars($this->title) . '</title>
-<link>' . $this->baseUrl . '</link>
-<atom:link href="' . $this->feedUrl . '" rel="self" type="application/rss+xml" />
-<language>' . $this->lang . '</language>
-<description>' . htmlspecialchars($this->subTitle ?? '') . '</description>
+            $result .= '<title>' . htmlspecialchars($this->title, ENT_QUOTES, 'UTF-8') . '</title>
+<link>' . htmlspecialchars($this->baseUrl, ENT_QUOTES, 'UTF-8') . '</link>
+<atom:link href="' . htmlspecialchars($this->feedUrl, ENT_QUOTES, 'UTF-8') . '" rel="self" type="application/rss+xml" />
+<language>' . htmlspecialchars($this->lang, ENT_QUOTES, 'UTF-8') . '</language>
+<description>' . htmlspecialchars($this->subTitle ?? '', ENT_QUOTES, 'UTF-8') . '</description>
 <lastBuildDate>' . $this->dateFormat($lastUpdate) . '</lastBuildDate>
 <pubDate>' . $this->dateFormat($lastUpdate) . '</pubDate>' . self::EOL;
 
@@ -315,8 +315,8 @@ xmlns:atom="http://www.w3.org/2005/Atom">
         } elseif (self::ATOM1 == $this->type) {
             $result .= '<feed xmlns="http://www.w3.org/2005/Atom"
 xmlns:thr="http://purl.org/syndication/thread/1.0"
-xml:lang="' . $this->lang . '"
-xml:base="' . $this->baseUrl . '"
+xml:lang="' . htmlspecialchars($this->lang, ENT_QUOTES, 'UTF-8') . '"
+xml:base="' . htmlspecialchars($this->baseUrl, ENT_QUOTES, 'UTF-8') . '"
 >' . self::EOL;
 
             $content = '';
@@ -324,43 +324,43 @@ xml:base="' . $this->baseUrl . '"
 
             foreach ($this->items as $item) {
                 $content .= '<entry>' . self::EOL;
-                $content .= '<title type="html"><![CDATA[' . $item['title'] . ']]></title>' . self::EOL;
-                $content .= '<link rel="alternate" type="text/html" href="' . $item['link'] . '" />' . self::EOL;
-                $content .= '<id>' . $item['link'] . '</id>' . self::EOL;
+                $content .= '<title type="html">' . htmlspecialchars($item['title'], ENT_QUOTES, 'UTF-8') . '</title>' . self::EOL;
+                $content .= '<link rel="alternate" type="text/html" href="' . htmlspecialchars($item['link'], ENT_QUOTES, 'UTF-8') . '" />' . self::EOL;
+                $content .= '<id>' . htmlspecialchars($item['link'], ENT_QUOTES, 'UTF-8') . '</id>' . self::EOL;
                 $content .= '<updated>' . $this->dateFormat($item['date']) . '</updated>' . self::EOL;
                 $content .= '<published>' . $this->dateFormat($item['date']) . '</published>' . self::EOL;
                 $content .= '<author>
-    <name>' . $item['author']->screenName . '</name>
-    <uri>' . $item['author']->url . '</uri>
+    <name>' . htmlspecialchars($item['author']->screenName, ENT_QUOTES, 'UTF-8') . '</name>
+    <uri>' . htmlspecialchars($item['author']->url, ENT_QUOTES, 'UTF-8') . '</uri>
 </author>' . self::EOL;
 
                 if (!empty($item['category']) && is_array($item['category'])) {
                     foreach ($item['category'] as $category) {
-                        $content .= '<category scheme="' . $category['permalink'] . '" term="'
-                            . $category['name'] . '" />' . self::EOL;
+                        $content .= '<category scheme="' . htmlspecialchars($category['permalink'], ENT_QUOTES, 'UTF-8') . '" term="'
+                            . htmlspecialchars($category['name'], ENT_QUOTES, 'UTF-8') . '" />' . self::EOL;
                     }
                 }
 
                 if (!empty($item['excerpt'])) {
-                    $content .= '<summary type="html"><![CDATA[' . htmlspecialchars($item['excerpt'])
-                        . ']]></summary>' . self::EOL;
+                    $content .= '<summary type="html">' . htmlspecialchars($item['excerpt'], ENT_QUOTES, 'UTF-8')
+                        . '</summary>' . self::EOL;
                 }
 
                 if (!empty($item['content'])) {
-                    $content .= '<content type="html" xml:base="' . $item['link']
-                        . '" xml:lang="' . $this->lang . '"><![CDATA['
+                    $content .= '<content type="html" xml:base="' . htmlspecialchars($item['link'], ENT_QUOTES, 'UTF-8')
+                        . '" xml:lang="' . htmlspecialchars($this->lang, ENT_QUOTES, 'UTF-8') . '"><![CDATA['
                         . self::EOL .
-                        $item['content'] . self::EOL .
+                        self::cdataEscape($item['content']) . self::EOL .
                         ']]></content>' . self::EOL;
                 }
 
                 if (isset($item['comments']) && strlen($item['comments']) > 0) {
-                    $content .= '<link rel="replies" type="text/html" href="' . $item['link']
-                        . '#comments" thr:count="' . $item['comments'] . '" />' . self::EOL;
+                    $content .= '<link rel="replies" type="text/html" href="' . htmlspecialchars($item['link'], ENT_QUOTES, 'UTF-8')
+                        . '#comments" thr:count="' . intval($item['comments']) . '" />' . self::EOL;
 
                     if (!empty($item['commentsFeedUrl'])) {
                         $content .= '<link rel="replies" type="application/atom+xml" href="'
-                            . $item['commentsFeedUrl'] . '" thr:count="' . $item['comments'] . '"/>' . self::EOL;
+                            . htmlspecialchars($item['commentsFeedUrl'], ENT_QUOTES, 'UTF-8') . '" thr:count="' . intval($item['comments']) . '"/>' . self::EOL;
                     }
                 }
 
@@ -375,18 +375,23 @@ xml:base="' . $this->baseUrl . '"
                 }
             }
 
-            $result .= '<title type="text">' . htmlspecialchars($this->title) . '</title>
-<subtitle type="text">' . htmlspecialchars($this->subTitle ?? '') . '</subtitle>
+            $result .= '<title type="text">' . htmlspecialchars($this->title, ENT_QUOTES, 'UTF-8') . '</title>
+<subtitle type="text">' . htmlspecialchars($this->subTitle ?? '', ENT_QUOTES, 'UTF-8') . '</subtitle>
 <updated>' . $this->dateFormat($lastUpdate) . '</updated>
-<generator uri="https://typecho.org/" version="' . $this->version . '">Typecho</generator>
-<link rel="alternate" type="text/html" href="' . $this->baseUrl . '" />
-<id>' . $this->feedUrl . '</id>
-<link rel="self" type="application/atom+xml" href="' . $this->feedUrl . '" />
+<generator uri="https://typecho.org/" version="' . htmlspecialchars($this->version, ENT_QUOTES, 'UTF-8') . '">Typecho</generator>
+<link rel="alternate" type="text/html" href="' . htmlspecialchars($this->baseUrl, ENT_QUOTES, 'UTF-8') . '" />
+<id>' . htmlspecialchars($this->feedUrl, ENT_QUOTES, 'UTF-8') . '</id>
+<link rel="self" type="application/atom+xml" href="' . htmlspecialchars($this->feedUrl, ENT_QUOTES, 'UTF-8') . '" />
 ';
             $result .= $content . '</feed>';
         }
 
         return $result;
+    }
+
+    private static function cdataEscape(string $content): string
+    {
+        return str_replace(']]>', ']]]]><![CDATA[>', $content);
     }
 
     /**

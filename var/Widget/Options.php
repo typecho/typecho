@@ -190,7 +190,25 @@ class Options extends Base
      */
     public function themeFile(string $theme, string $file = ''): string
     {
-        return __TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . '/' . trim($theme, './') . '/' . trim($file, './');
+        $theme = preg_replace('/[\/\\\\]/', '', $theme);
+
+        $prev = null;
+        while ($prev !== $file) {
+            $prev = $file;
+            $file = str_replace(['../', '..\\'], '', $file);
+        }
+
+        $path = __TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . '/' . $theme . '/' . $file;
+
+        if (file_exists($path)) {
+            $realPath = realpath($path);
+            $realThemeDir = realpath(__TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . '/' . $theme);
+            if ($realPath !== false && $realThemeDir !== false && strpos($realPath, $realThemeDir) !== 0) {
+                return __TYPECHO_ROOT_DIR__ . __TYPECHO_THEME_DIR__ . '/' . $theme;
+            }
+        }
+
+        return $path;
     }
 
     /**
@@ -766,6 +784,6 @@ class Options extends Base
     private function tryDeserialize(string $value)
     {
         $isSerialized = strpos($value, 'a:') === 0 || $value === 'b:0;';
-        return $isSerialized ? @unserialize($value) : json_decode($value, true);
+        return $isSerialized ? @unserialize($value, ['allowed_classes' => false]) : json_decode($value, true);
     }
 }

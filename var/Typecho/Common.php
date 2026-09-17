@@ -237,7 +237,7 @@ namespace Typecho {
                     $message = 'Database Query Error';
                 }
             } elseif ($exception instanceof \Typecho\Widget\Exception) {
-                $message = $exception->getMessage();
+                $message = htmlspecialchars($exception->getMessage(), ENT_QUOTES, 'UTF-8');
             } else {
                 $message = 'Server Error';
             }
@@ -547,6 +547,10 @@ EOF;
                 }
             }
 
+            if (!isset($params['scheme']) && isset($params['host']) && strpos($url, '//') === 0) {
+                return '/';
+            }
+
             $params = array_map(function ($string) {
                 $string = str_replace(['%0d', '%0a'], '', strip_tags($string));
                 $string = preg_replace([
@@ -794,7 +798,7 @@ EOF;
             $result = '';
             $max = strlen($chars) - 1;
             for ($i = 0; $i < $length; $i++) {
-                $result .= $chars[rand(0, $max)];
+                $result .= $chars[random_int(0, $max)];
             }
             return $result;
         }
@@ -824,7 +828,7 @@ EOF;
             $from = $now - $timeout;
 
             for ($i = $now; $i >= $from; $i--) {
-                if (sha1($secret . '&' . $i) == $token) {
+                if (sha1($secret . '&' . $i) === $token) {
                     return true;
                 }
             }

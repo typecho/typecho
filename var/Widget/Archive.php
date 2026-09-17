@@ -1283,7 +1283,7 @@ EOF;
                 $define = $defines[$this->archiveType];
             }
 
-            echo $before . sprintf($define, $this->archiveTitle) . $end;
+            echo $before . sprintf($define, htmlspecialchars($this->archiveTitle, ENT_QUOTES, 'UTF-8')) . $end;
         }
     }
 

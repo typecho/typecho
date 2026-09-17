@@ -406,7 +406,7 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
     {
         $title = Contents::pluginHandle()->trigger($plugged)->filter('title', $this->title, $this);
         if (!$plugged) {
-            echo $length > 0 ? Common::subStr($this->title, 0, $length, $trim) : $this->title;
+            echo $length > 0 ? htmlspecialchars(Common::subStr($this->title, 0, $length, $trim), ENT_QUOTES, 'UTF-8') : htmlspecialchars($this->title, ENT_QUOTES, 'UTF-8');
         } else {
             echo $title;
         }

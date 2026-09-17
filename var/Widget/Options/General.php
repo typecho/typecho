@@ -71,7 +71,7 @@ class General extends Options implements ActionInterface
      */
     public function removeShell(string $ext): bool
     {
-        return !preg_match("/^(php|php4|php5|sh|asp|jsp|rb|py|pl|dll|exe|bat)$/i", $ext);
+        return !preg_match("/^(php|php3|php4|php5|php7|php8|phtml|pht|phps|sh|asp|aspx|jsp|cgi|fcgi|shtml|rb|py|pl|dll|exe|bat|inc|htaccess)$/i", $ext);
     }
 
     /**

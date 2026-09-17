@@ -31,6 +31,15 @@ class Upload extends Contents implements ActionInterface
      * @param array $content 文件相关信息
      * @return bool
      */
+    private static function isPathInUploadDir(string $path): bool
+    {
+        $uploadRoot = defined('__TYPECHO_UPLOAD_ROOT_DIR__') ? __TYPECHO_UPLOAD_ROOT_DIR__ : __TYPECHO_ROOT_DIR__;
+        $uploadDir = $uploadRoot . self::UPLOAD_DIR;
+        $realPath = realpath($path);
+        $realUploadDir = realpath($uploadDir);
+        return $realPath !== false && $realUploadDir !== false && strpos($realPath, $realUploadDir) === 0;
+    }
+
     public static function deleteHandle(array $content): bool
     {
         $result = Plugin::factory(Upload::class)->trigger($hasDeleted)->call('deleteHandle', $content);
@@ -38,7 +47,11 @@ class Upload extends Contents implements ActionInterface
             return $result;
         }
 
-        return @unlink(__TYPECHO_ROOT_DIR__ . '/' . $content['attachment']->path);
+        $fullPath = __TYPECHO_ROOT_DIR__ . '/' . $content['attachment']->path;
+        if (!self::isPathInUploadDir($fullPath)) {
+            return false;
+        }
+        return @unlink($fullPath);
     }
 
     /**
@@ -74,12 +87,12 @@ class Upload extends Contents implements ActionInterface
             return $result;
         }
 
-        return file_get_contents(
-            Common::url(
-                $content['attachment']->path,
-                defined('__TYPECHO_UPLOAD_ROOT_DIR__') ? __TYPECHO_UPLOAD_ROOT_DIR__ : __TYPECHO_ROOT_DIR__
-            )
-        );
+        $uploadRoot = defined('__TYPECHO_UPLOAD_ROOT_DIR__') ? __TYPECHO_UPLOAD_ROOT_DIR__ : __TYPECHO_ROOT_DIR__;
+        $fullPath = Common::url($content['attachment']->path, $uploadRoot);
+        if (!self::isPathInUploadDir($fullPath)) {
+            return '';
+        }
+        return file_get_contents($fullPath);
     }
 
     /**

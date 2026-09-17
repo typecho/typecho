@@ -356,8 +356,10 @@ class Request
             $pathInfo = '/';
         }
 
-        // fix issue 456
-        return ($this->pathInfo = '/' . ltrim(urldecode($pathInfo), '/'));
+        // fix issue 456 - decode once but prevent double-decode path traversal
+        $pathInfo = urldecode($pathInfo);
+        $pathInfo = preg_replace('#/\.\.(/|$)#', '/', $pathInfo);
+        return ($this->pathInfo = '/' . ltrim($pathInfo, '/'));
     }
 
     /**
@@ -390,8 +392,12 @@ class Request
     public function getIp(): string
     {
         if (null === $this->ip) {
-            $header = defined('__TYPECHO_IP_SOURCE__') ? __TYPECHO_IP_SOURCE__ : 'X-Forwarded-For';
-            $ip = $this->getHeader($header, $this->getHeader('Client-Ip', $this->getServer('REMOTE_ADDR')));
+            $header = defined('__TYPECHO_IP_SOURCE__') ? __TYPECHO_IP_SOURCE__ : 'REMOTE_ADDR';
+            if ($header === 'REMOTE_ADDR') {
+                $ip = $this->getServer('REMOTE_ADDR');
+            } else {
+                $ip = $this->getHeader($header, $this->getServer('REMOTE_ADDR'));
+            }
 
             if (!empty($ip)) {
                 [$ip] = array_map('trim', explode(',', $ip));
@@ -614,8 +620,11 @@ class Request
             if (defined('__TYPECHO_URL_PREFIX__')) {
                 $this->urlPrefix = __TYPECHO_URL_PREFIX__;
             } elseif (php_sapi_name() != 'cli') {
-                $this->urlPrefix = ($this->isSecure() ? 'https' : 'http') . '://'
-                    . ($_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME']);
+                $host = $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'];
+                if (preg_match('/^[\x21-\x7e]+$/', $host) === 0) {
+                    $host = $_SERVER['SERVER_NAME'];
+                }
+                $this->urlPrefix = ($this->isSecure() ? 'https' : 'http') . '://' . $host;
             }
         }
 

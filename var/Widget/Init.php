@@ -94,8 +94,13 @@ class Init extends Widget
 
         /** cookie初始化 */
         Cookie::setPrefix($options->rootUrl);
-        if (defined('__TYPECHO_COOKIE_OPTIONS__')) {
+        if (defined('__TYPECHO_COOKIE_OPTIONS__') && is_array(__TYPECHO_COOKIE_OPTIONS__)) {
             Cookie::setOptions(__TYPECHO_COOKIE_OPTIONS__);
+        } else {
+            Cookie::setOptions([
+                'secure' => $this->request->isSecure(),
+                'httponly' => true
+            ]);
         }
 
         /** 初始化路由器 */
@@ -113,6 +118,14 @@ class Init extends Widget
 
         /** 开始会话, 减小负载只针对后台打开session支持 */
         if ($options->installed && User::alloc()->hasLogin()) {
+            $secure = $this->request->isSecure();
+            session_set_cookie_params([
+                'lifetime' => 0,
+                'path' => '/',
+                'secure' => $secure,
+                'httponly' => true,
+                'samesite' => 'Lax'
+            ]);
             @session_start();
         }
     }

@@ -63,7 +63,7 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                                     class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i
                                     class="i-caret-down"></i></button>
                             <ul class="dropdown-menu">
-                                <li><a lang="<?php _e('你确认要删除这些文章吗?'); ?>"
+                                <li><a data-lang="<?php _e('你确认要删除这些文章吗?'); ?>"
                                        href="<?php $security->index('/action/contents-post-edit?do=delete'); ?>"><?php _e('删除'); ?></a>
                                 </li>
                                 <?php if ($user->pass('editor', true)): ?>
@@ -212,7 +212,7 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == \Typecho\
                                     class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i
                                     class="i-caret-down"></i></button>
                             <ul class="dropdown-menu">
-                                <li><a lang="<?php _e('你确认要删除这些文章吗?'); ?>"
+                                <li><a data-lang="<?php _e('你确认要删除这些文章吗?'); ?>"
                                        href="<?php $security->index('/action/contents-post-edit?do=delete'); ?>"><?php _e('删除'); ?></a>
                                 </li>
                                 <?php if ($user->pass('editor', true)): ?>

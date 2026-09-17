@@ -43,7 +43,7 @@ class Cookie
      * @var bool
      * @access private
      */
-    private static bool $httponly = false;
+    private static bool $httponly = true;
 
     /**
      * 获取前缀
@@ -111,9 +111,9 @@ class Cookie
      */
     public static function setOptions(array $options)
     {
-        self::$domain = $options['domain'] ?: self::$domain;
-        self::$secure = !!$options['secure'];
-        self::$httponly = !!$options['httponly'];
+        self::$domain = isset($options['domain']) && $options['domain'] ? $options['domain'] : self::$domain;
+        self::$secure = isset($options['secure']) ? !!$options['secure'] : self::$secure;
+        self::$httponly = isset($options['httponly']) ? !!$options['httponly'] : self::$httponly;
     }
 
     /**

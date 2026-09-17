@@ -134,6 +134,7 @@
 
       .field {
         display: flex;
+        align-items: flex-start;
         padding-bottom: 10px;
         border-bottom: 1px solid #F0F0EC;
         margin-bottom: 10px;
@@ -144,6 +145,9 @@
 
         .field-name {
           display: flex;
+          align-items: center;
+          flex-shrink: 0;
+          min-height: 32px;
 
           input[name="fieldNames[]"] {
             height: 27px;
@@ -156,9 +160,38 @@
           margin-left: 10px;
           flex: 1;
           display: flex;
+          align-items: flex-start;
+          min-width: 0;
+
+          > div {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            flex-wrap: wrap;
+            min-width: 0;
+          }
+
+          > div > input[type="text"],
+          > div > input[type="url"],
+          > div > input[type="password"],
+          > div > input[type="email"],
+          > div > input[type="number"],
+          > div > textarea {
+            flex: 1 1 auto;
+            min-width: 0;
+            width: auto;
+          }
+
+          > div > .description {
+            flex: 0 0 100%;
+            margin: 6px 0 0;
+            line-height: 1.4;
+          }
 
           textarea[name="fieldValues[]"] {
-            flex: 1;
+            flex: 1 1 auto;
+            min-width: 0;
+            width: auto;
             margin-right: 10px;
             resize: none;
           }

@@ -19,7 +19,7 @@ $users = \Widget\Users\Admin::alloc();
                                     class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i
                                     class="i-caret-down"></i></button>
                             <ul class="dropdown-menu">
-                                <li><a lang="<?php _e('你确认要删除这些用户吗?'); ?>"
+                                <li><a data-lang="<?php _e('你确认要删除这些用户吗?'); ?>"
                                        href="<?php $security->index('/action/users-edit?do=delete'); ?>"><?php _e('删除'); ?></a>
                                 </li>
                             </ul>
@@ -108,7 +108,7 @@ $users = \Widget\Users\Admin::alloc();
                                     class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i
                                     class="i-caret-down"></i></button>
                             <ul class="dropdown-menu">
-                                <li><a lang="<?php _e('你确认要删除这些用户吗?'); ?>"
+                                <li><a data-lang="<?php _e('你确认要删除这些用户吗?'); ?>"
                                        href="<?php $security->index('/action/users-edit?do=delete'); ?>"><?php _e('删除'); ?></a>
                                 </li>
                             </ul>

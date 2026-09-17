@@ -47,7 +47,7 @@ include 'menu.php';
                                             <a href="<?php $options->adminUrl('options-plugin.php?config=' . $activatedPlugins->name); ?>"><?php _e('设置'); ?></a>
                                             &bull;
                                         <?php endif; ?>
-                                        <a lang="<?php _e('你确认要禁用插件 %s 吗?', $activatedPlugins->name); ?>"
+                                        <a data-lang="<?php _e('你确认要禁用插件 %s 吗?', $activatedPlugins->name); ?>"
                                            href="<?php $security->index('/action/plugins-edit?deactivate=' . $activatedPlugins->name); ?>"><?php _e('禁用'); ?></a>
                                     <?php else: ?>
                                         <span class="important"><?php _e('即插即用'); ?></span>
@@ -62,7 +62,7 @@ include 'menu.php';
                                     <td><?php echo $key; ?></td>
                                     <td colspan="3"><span
                                             class="warning"><?php _e('此插件文件已经损坏或者被不安全移除, 强烈建议你禁用它'); ?></span></td>
-                                    <td><a lang="<?php _e('你确认要禁用插件 %s 吗?', $key); ?>"
+                                    <td><a data-lang="<?php _e('你确认要禁用插件 %s 吗?', $key); ?>"
                                            href="<?php $security->index('/action/plugins-edit?deactivate=' . $key); ?>"><?php _e('禁用'); ?></a>
                                     </td>
                                 </tr>

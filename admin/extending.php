@@ -11,4 +11,8 @@ if (!isset($panelTable['file']) || !in_array(urlencode($panel), $panelTable['fil
 
 [$pluginName, $file] = explode('/', trim($panel, '/'), 2);
 
+if (strpos($file, '..') !== false) {
+    throw new \Typecho\Plugin\Exception(_t('页面不存在'), 404);
+}
+
 require_once $options->pluginDir($pluginName) . '/' . $file;

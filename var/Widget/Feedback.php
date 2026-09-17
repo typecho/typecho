@@ -318,6 +318,7 @@ class Feedback extends Comments implements ActionInterface
             ->addRule('url', 'url', 'Your url is not valid.')
             ->addRule('url', 'maxLength', 'Your url is not valid.', 255)
             ->addRule('text', 'required', 'We require all Trackbacks to provide an excerption.')
+            ->addRule('text', 'xssCheck', 'Your excerpt is not valid.')
             ->addRule('author', 'required', 'We require all Trackbacks to provide an blog name.')
             ->addRule('author', 'xssCheck', 'Your blog name is not valid.')
             ->addRule('author', 'maxLength', 'Your blog name is not valid.', 150);

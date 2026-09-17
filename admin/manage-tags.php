@@ -23,10 +23,10 @@ include 'menu.php';
                                         class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i
                                         class="i-caret-down"></i></button>
                                 <ul class="dropdown-menu">
-                                    <li><a lang="<?php _e('你确认要删除这些标签吗?'); ?>"
+                                    <li><a data-lang="<?php _e('你确认要删除这些标签吗?'); ?>"
                                            href="<?php $security->index('/action/metas-tag-edit?do=delete'); ?>"><?php _e('删除'); ?></a>
                                     </li>
-                                    <li><a lang="<?php _e('刷新标签可能需要等待较长时间, 你确认要刷新这些标签吗?'); ?>"
+                                    <li><a data-lang="<?php _e('刷新标签可能需要等待较长时间, 你确认要刷新这些标签吗?'); ?>"
                                            href="<?php $security->index('/action/metas-tag-edit?do=refresh'); ?>"><?php _e('刷新'); ?></a>
                                     </li>
                                     <li class="multiline">

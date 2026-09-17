@@ -31,7 +31,9 @@ class Related extends Contents
         $this->parameter->setDefault('limit=5');
 
         if ($this->parameter->tags) {
-            $tagsGroup = implode(',', array_column($this->parameter->tags, 'mid'));
+            $mids = array_column($this->parameter->tags, 'mid');
+            $mids = array_map('intval', $mids);
+            $tagsGroup = implode(',', $mids);
             $this->db->fetchAll($this->select(
                 'DISTINCT table.contents.cid',
                 'table.contents.title',

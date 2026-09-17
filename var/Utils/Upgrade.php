@@ -72,7 +72,7 @@ class Upgrade
                     continue;
                 }
 
-                $value = @unserialize($row['text']);
+                $value = @unserialize($row['text'], ['allowed_classes' => false]);
                 if ($value !== false) {
                     $db->query($db->update('table.contents')
                         ->rows(['text' => json_encode($value)])
