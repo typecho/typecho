@@ -1010,30 +1010,74 @@ EOF;
          */
         public static function checkSafeHost(string $host): bool
         {
-            if ('localhost' == $host) {
-                return false;
+            return null !== self::resolveSafeHost($host);
+        }
+
+        /**
+         * 解析主机名并返回一个可以安全连接的公网地址
+         * 主机名解析出的所有地址都必须是公网地址, 否则返回 null
+         * 调用者应该直接连接返回的地址, 而不是再次解析主机名
+         *
+         * @param string $host 主机名或 IP, IPv6 可以带方括号
+         * @return string|null
+         */
+        public static function resolveSafeHost(string $host): ?string
+        {
+            $host = strtolower(trim($host, '[]'));
+
+            if ('' === $host || 'localhost' == $host || '.localhost' == substr($host, -10)) {
+                return null;
             }
 
-            $address = gethostbyname($host);
-            $inet = inet_pton($address);
-
-            if (false === $inet) {
-                // 有可能是ipv6的地址
-                $records = dns_get_record($host, DNS_AAAA);
-
-                if (empty($records)) {
-                    return false;
+            if (false !== filter_var($host, FILTER_VALIDATE_IP)) {
+                $addresses = [$host];
+            } else {
+                /** 末段为数字的主机名会被当作非规范的 IPv4 地址, 如 2130706433、0x7f.1 */
+                $labels = explode('.', rtrim($host, '.'));
+                if (preg_match("/^(0x[0-9a-f]*|[0-9]+)$/", end($labels))) {
+                    return null;
                 }
 
-                $address = $records[0]['ipv6'];
-                $inet = inet_pton($address);
+                $addresses = gethostbynamel($host) ?: [];
+                $records = @dns_get_record($host, DNS_AAAA);
+
+                if (!empty($records)) {
+                    foreach ($records as $record) {
+                        if (isset($record['ipv6'])) {
+                            $addresses[] = $record['ipv6'];
+                        }
+                    }
+                }
             }
 
-            return filter_var(
-                $address,
-                FILTER_VALIDATE_IP,
-                FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
-            ) !== false;
+            if (empty($addresses)) {
+                return null;
+            }
+
+            foreach ($addresses as $address) {
+                $inet = inet_pton($address);
+
+                /** IPv4 映射或兼容的 IPv6 地址按其中的 IPv4 地址检查 */
+                if (
+                    false !== $inet && 16 == strlen($inet)
+                    && (substr($inet, 0, 12) === str_repeat("\0", 10) . "\xff\xff"
+                        || substr($inet, 0, 12) === str_repeat("\0", 12))
+                ) {
+                    $address = inet_ntop(substr($inet, 12));
+                }
+
+                if (
+                    false === filter_var(
+                        $address,
+                        FILTER_VALIDATE_IP,
+                        FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
+                    )
+                ) {
+                    return null;
+                }
+            }
+
+            return $addresses[0];
         }
 
         /**

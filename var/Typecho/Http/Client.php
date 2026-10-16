@@ -86,6 +86,13 @@ class Client
     private array $options = [];
 
     /**
+     * 是否只允许连接公网地址
+     *
+     * @var bool
+     */
+    private bool $safeMode = false;
+
+    /**
      * 回执头部信息
      *
      * @var array
@@ -245,6 +252,19 @@ class Client
     }
 
     /**
+     * 只允许连接公网地址, 用于请求不可信的 URL
+     * 发送时只解析一次主机名, 校验全部地址后把连接固定到校验过的地址
+     *
+     * @param bool $safeMode
+     * @return $this
+     */
+    public function setSafeMode(bool $safeMode = true): Client
+    {
+        $this->safeMode = $safeMode;
+        return $this;
+    }
+
+    /**
      * 设置头信息参数
      *
      * @param string $key 参数名称
@@ -273,6 +293,17 @@ class Client
     public function send(string $url)
     {
         $params = parse_url($url);
+
+        if (false === $params) {
+            throw new Exception('Invalid request url', 400);
+        }
+
+        $scheme = strtolower($params['scheme'] ?? 'http');
+
+        if ('http' != $scheme && 'https' != $scheme) {
+            throw new Exception('Unsupported request scheme', 400);
+        }
+
         $query = empty($params['query']) ? '' : $params['query'];
 
         if (!empty($this->query)) {
@@ -334,9 +365,25 @@ class Client
             curl_setopt($ch, $key, $val);
         }
 
+        /** 只允许 http 协议, 避免 curl 根据主机名猜测其它协议 */
+        curl_setopt($ch, CURLOPT_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
+
+        if ($this->safeMode) {
+            $address = $this->pinSafeAddress($ch, $params, $scheme);
+        }
+
         $response = curl_exec($ch);
+
+        if (
+            false !== $response && isset($address)
+            && inet_pton(curl_getinfo($ch, CURLINFO_PRIMARY_IP)) !== inet_pton($address)
+        ) {
+            $response = false;
+            $error = 'Unsafe request host';
+        }
+
         if (false === $response) {
-            $error = curl_error($ch);
+            $error = $error ?? curl_error($ch);
             if (PHP_VERSION_ID >= 80000) {
                 unset($ch);
             } else {
@@ -352,6 +399,44 @@ class Client
         } else {
             curl_close($ch);
         }
+    }
+
+    /**
+     * 解析并校验请求的主机, 将连接固定到校验过的地址
+     * URL 中的主机名保持不变, 用于 Host 头与 TLS 证书校验
+     *
+     * @param resource|\CurlHandle $ch
+     * @param array $params
+     * @param string $scheme
+     * @return string
+     * @throws Exception
+     */
+    private function pinSafeAddress($ch, array $params, string $scheme): string
+    {
+        $host = $params['host'] ?? '';
+        $address = '.' == substr($host, -1) ? null : Common::resolveSafeHost($host);
+
+        if (null === $address) {
+            throw new Exception('Unsafe request host', 403);
+        }
+
+        /** IP 地址不需要解析, 主机名则固定到校验过的地址 */
+        if (false === filter_var(trim($host, '[]'), FILTER_VALIDATE_IP)) {
+            $port = $params['port'] ?? ('https' == $scheme ? 443 : 80);
+            $resolve = [];
+
+            foreach (array_unique([$host, strtolower($host)]) as $name) {
+                $resolve[] = $name . ':' . $port . ':' . $address;
+            }
+
+            curl_setopt($ch, CURLOPT_RESOLVE, $resolve);
+        }
+
+        /** 不使用代理, 否则由代理再次解析主机名 */
+        curl_setopt($ch, CURLOPT_PROXY, '');
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
+
+        return $address;
     }
 
     /**
