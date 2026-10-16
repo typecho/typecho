@@ -1678,6 +1678,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
             throw new Exception(_t('源地址服务器错误'), 16);
         }
 
+        /** 直接指向私网的源地址在这里返回 16; 抓取阶段用同一规则固定连接地址, 失败时返回 50 */
         if (!Common::checkSafeHost($params['host'] ?? '')) {
             throw new Exception(_t('源地址服务器错误'), 16);
         }

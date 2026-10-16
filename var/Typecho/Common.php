@@ -1067,16 +1067,10 @@ EOF;
                     return null;
                 }
 
-                $addresses = gethostbynamel($host) ?: [];
-                $records = @dns_get_record($host, DNS_AAAA);
-
-                if (!empty($records)) {
-                    foreach ($records as $record) {
-                        if (isset($record['ipv6'])) {
-                            $addresses[] = $record['ipv6'];
-                        }
-                    }
-                }
+                $addresses = array_merge(
+                    gethostbynamel($host) ?: [],
+                    array_column(@dns_get_record($host, DNS_AAAA) ?: [], 'ipv6')
+                );
             }
 
             if (empty($addresses)) {
@@ -1107,18 +1101,16 @@ EOF;
                 $embedded = null;
 
                 if (
-                    substr($inet, 0, 12) === str_repeat("\0", 10) . "\xff\xff"
-                    || substr($inet, 0, 12) === str_repeat("\0", 8) . "\xff\xff\0\0"
-                    || substr($inet, 0, 12) === str_repeat("\0", 12)
-                    || substr($inet, 0, 12) === "\0\x64\xff\x9b" . str_repeat("\0", 8)
+                    self::inRange($inet, '::ffff:0:0/96') || self::inRange($inet, '::ffff:0:0:0/96')
+                    || self::inRange($inet, '::/96') || self::inRange($inet, '64:ff9b::/96')
                 ) {
-                    /** IPv4 映射、转换、兼容地址与 NAT64 64:ff9b::/96 */
+                    /** IPv4 映射、转换、兼容地址与 NAT64 */
                     $embedded = [substr($inet, 12)];
-                } elseif ("\x20\x02" === substr($inet, 0, 2)) {
-                    /** 6to4 2002::/16 */
+                } elseif (self::inRange($inet, '2002::/16')) {
+                    /** 6to4 */
                     $embedded = [substr($inet, 2, 4)];
-                } elseif ("\x20\x01\0\0" === substr($inet, 0, 4)) {
-                    /** Teredo 2001::/32, 服务器地址与取反后的客户端地址 */
+                } elseif (self::inRange($inet, '2001::/32')) {
+                    /** Teredo, 服务器地址与取反后的客户端地址 */
                     $embedded = [substr($inet, 4, 4), ~substr($inet, 12)];
                 }
 
@@ -1132,12 +1124,12 @@ EOF;
                     return true;
                 }
 
-                $ranges = self::UNSAFE_IPV6_RANGES;
-
                 /** 只允许全球单播地址 2000::/3 */
-                if ("\x20" !== (chr(ord($inet[0]) & 0xe0))) {
+                if (!self::inRange($inet, '2000::/3')) {
                     return false;
                 }
+
+                $ranges = self::UNSAFE_IPV6_RANGES;
             } elseif (4 == strlen($inet)) {
                 $ranges = self::UNSAFE_IPV4_RANGES;
             } else {
@@ -1145,25 +1137,37 @@ EOF;
             }
 
             foreach ($ranges as $range) {
-                [$subnet, $bits] = explode('/', $range);
-                $subnet = inet_pton($subnet);
-                $bits = (int) $bits;
-                $bytes = intdiv($bits, 8);
-                $mask = (0xff << (8 - $bits % 8)) & 0xff;
-
-                if (
-                    substr($inet, 0, $bytes) === substr($subnet, 0, $bytes)
-                    && ($bits % 8 == 0 || (ord($inet[$bytes]) & $mask) == (ord($subnet[$bytes]) & $mask))
-                ) {
+                if (self::inRange($inet, $range)) {
                     return false;
                 }
             }
 
+            /** 再叠加 PHP 自带的过滤规则兜底, 只会多拒绝, PHP 将来新增的保留段也能自动跟进 */
             return false !== filter_var(
                 inet_ntop($inet),
                 FILTER_VALIDATE_IP,
                 FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
             );
+        }
+
+        /**
+         * 判断二进制形式的地址是否落在 CIDR 地址段内
+         *
+         * @param string $inet inet_pton() 的结果
+         * @param string $range 地址段, 如 10.0.0.0/8、2002::/16
+         * @return bool
+         */
+        private static function inRange(string $inet, string $range): bool
+        {
+            [$subnet, $bits] = explode('/', $range);
+            $subnet = inet_pton($subnet);
+            $bits = (int) $bits;
+            $bytes = intdiv($bits, 8);
+            $mask = (0xff << (8 - $bits % 8)) & 0xff;
+
+            return strlen($inet) == strlen($subnet)
+                && substr($inet, 0, $bytes) === substr($subnet, 0, $bytes)
+                && ($bits % 8 == 0 || (ord($inet[$bytes]) & $mask) == (ord($subnet[$bytes]) & $mask));
         }
 
         /**

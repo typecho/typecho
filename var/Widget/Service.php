@@ -108,6 +108,7 @@ class Service extends BaseOptions implements ActionInterface
                         $response['pingback'][] = $url;
 
                         try {
+                            /** 发现的 XML-RPC 地址同样不可信, 只连接校验过的公网地址 */
                             $xmlrpc = new \IXR\Client($xmlrpcUrl, null, true);
                             $xmlrpc->pingback->ping($permalink, $url);
                             unset($xmlrpc);

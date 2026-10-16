@@ -160,9 +160,7 @@ class Edit extends Contents implements ActionInterface
         }
 
         /** 只有编辑以上权限可以直接改变文章状态, 贡献者只能通过写稿提交审核 */
-        if (!$this->user->pass('editor', true)) {
-            throw new Exception(_t('禁止访问'), 403);
-        }
+        $this->user->pass('editor');
 
         $posts = $this->request->filter('int')->getArray('cid');
         $markCount = 0;

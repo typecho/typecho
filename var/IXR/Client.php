@@ -53,7 +53,7 @@ class Client
      *
      * @var bool
      */
-    private bool $safeMode;
+    private bool $safeMode = false;
 
     /**
      * 客户端构造函数

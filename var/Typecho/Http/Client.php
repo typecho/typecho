@@ -368,22 +368,18 @@ class Client
         /** 只允许 http 协议, 避免 curl 根据主机名猜测其它协议 */
         curl_setopt($ch, CURLOPT_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
 
-        if ($this->safeMode) {
-            $address = $this->pinSafeAddress($ch, $url, $params, $scheme);
-        }
-
+        $address = $this->safeMode ? $this->pinSafeAddress($ch, $url, $params, $scheme) : null;
         $response = curl_exec($ch);
+        $error = null;
 
-        if (
-            false !== $response && isset($address)
-            && inet_pton(curl_getinfo($ch, CURLINFO_PRIMARY_IP)) !== inet_pton($address)
-        ) {
-            $response = false;
+        if (false === $response) {
+            $error = curl_error($ch);
+        } elseif (isset($address) && inet_pton(curl_getinfo($ch, CURLINFO_PRIMARY_IP)) !== inet_pton($address)) {
+            /** 连接落在校验地址之外, 请求已经发出, 这里只是检测并丢弃响应, 拦不住请求本身 */
             $error = 'Unsafe request host';
         }
 
-        if (false === $response) {
-            $error = $error ?? curl_error($ch);
+        if (isset($error)) {
             if (PHP_VERSION_ID >= 80000) {
                 unset($ch);
             } else {
@@ -435,7 +431,10 @@ class Client
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_PORT, $port);
 
-        /** IP 地址也会查询解析缓存, 因此总是重设解析列表, 主机名则固定到校验过的地址 */
+        /**
+         * IP 地址也会查询解析缓存, 因此总是重设解析列表 (IP 直连时为空)
+         * 主机名按 URL 中的原始大小写与小写两种形式固定, 以免解析缓存按原样匹配时漏掉
+         */
         $resolve = [];
 
         if (false === filter_var(trim($host, '[]'), FILTER_VALIDATE_IP)) {
@@ -454,7 +453,7 @@ class Client
         /** 不使用 Unix socket, 普通路径与 abstract socket 共用这一个设置 */
         curl_setopt($ch, CURLOPT_UNIX_SOCKET_PATH, null);
 
-        /** 不复用连接, 不跟随跳转 */
+        /** 连接缓存按主机名复用, 可能命中未经校验的地址; 跳转目标同样未经校验 */
         curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
         curl_setopt($ch, CURLOPT_FORBID_REUSE, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
