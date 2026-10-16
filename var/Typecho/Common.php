@@ -820,11 +820,16 @@ EOF;
          */
         public static function timeTokenValidate($token, $secret, int $timeout = 5): bool
         {
+            /** token 可能来自 JSON 等保留类型的输入, 只接受字符串并严格比较 */
+            if (!is_string($token) || '' === $token) {
+                return false;
+            }
+
             $now = time();
             $from = $now - $timeout;
 
             for ($i = $now; $i >= $from; $i--) {
-                if (sha1($secret . '&' . $i) == $token) {
+                if (hash_equals(sha1($secret . '&' . $i), $token)) {
                     return true;
                 }
             }
