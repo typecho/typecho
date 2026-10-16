@@ -416,7 +416,7 @@ class Client
     private function pinSafeAddress($ch, string $url, array $params, string $scheme): string
     {
         $host = $params['host'] ?? '';
-        $address = '.' == substr($host, -1) ? null : Common::resolveSafeHost($host);
+        $address = Common::resolveSafeHost($host);
 
         if (null === $address) {
             throw new Exception('Unsafe request host', 403);

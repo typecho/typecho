@@ -1035,7 +1035,16 @@ EOF;
          */
         public static function resolveSafeHost(string $host): ?string
         {
-            $host = strtolower(trim($host, '[]'));
+            $host = strtolower($host);
+
+            /** 方括号只能用于 IPv6 地址 */
+            if ('[' == substr($host, 0, 1) && ']' == substr($host, -1)) {
+                $host = substr($host, 1, -1);
+
+                if (false === filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+                    return null;
+                }
+            }
 
             if ('' === $host || 'localhost' == $host || '.localhost' == substr($host, -10)) {
                 return null;
@@ -1044,8 +1053,16 @@ EOF;
             if (false !== filter_var($host, FILTER_VALIDATE_IP)) {
                 $addresses = [$host];
             } else {
+                /**
+                 * 只接受 ASCII 字母、数字、连字符与下划线组成的主机名
+                 * 末尾的点、百分号编码与非 ASCII 字符会让解析器与 curl 看到不同的名字, 一律拒绝
+                 */
+                if (!preg_match("/^[a-z0-9_-]+(\\.[a-z0-9_-]+)*$/", $host)) {
+                    return null;
+                }
+
                 /** 末段为数字的主机名会被当作非规范的 IPv4 地址, 如 2130706433、0x7f.1 */
-                $labels = explode('.', rtrim($host, '.'));
+                $labels = explode('.', $host);
                 if (preg_match("/^(0x[0-9a-f]*|[0-9]+)$/", end($labels))) {
                     return null;
                 }
