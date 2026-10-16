@@ -369,7 +369,7 @@ class Client
         curl_setopt($ch, CURLOPT_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
 
         if ($this->safeMode) {
-            $address = $this->pinSafeAddress($ch, $params, $scheme);
+            $address = $this->pinSafeAddress($ch, $url, $params, $scheme);
         }
 
         $response = curl_exec($ch);
@@ -404,14 +404,16 @@ class Client
     /**
      * 解析并校验请求的主机, 将连接固定到校验过的地址
      * URL 中的主机名保持不变, 用于 Host 头与 TLS 证书校验
+     * 在调用者的选项之后执行, 收回所有能改变连接目标或传输通道的选项
      *
      * @param resource|\CurlHandle $ch
+     * @param string $url
      * @param array $params
      * @param string $scheme
      * @return string
      * @throws Exception
      */
-    private function pinSafeAddress($ch, array $params, string $scheme): string
+    private function pinSafeAddress($ch, string $url, array $params, string $scheme): string
     {
         $host = $params['host'] ?? '';
         $address = '.' == substr($host, -1) ? null : Common::resolveSafeHost($host);
@@ -420,20 +422,41 @@ class Client
             throw new Exception('Unsafe request host', 403);
         }
 
-        /** IP 地址不需要解析, 主机名则固定到校验过的地址 */
-        if (false === filter_var(trim($host, '[]'), FILTER_VALIDATE_IP)) {
-            $port = $params['port'] ?? ('https' == $scheme ? 443 : 80);
-            $resolve = [];
+        /** alt-svc 与 HSTS 缓存会把连接切换到其它主机或端口, 且无法收回, 直接拒绝 */
+        foreach (['CURLOPT_ALTSVC', 'CURLOPT_ALTSVC_CTRL', 'CURLOPT_HSTS', 'CURLOPT_HSTS_CTRL'] as $name) {
+            if (defined($name) && isset($this->options[constant($name)])) {
+                throw new Exception('Unsafe request option', 403);
+            }
+        }
 
+        $port = (int) ($params['port'] ?? ('https' == $scheme ? 443 : 80));
+
+        /** 请求地址与端口必须是校验过的 */
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_PORT, $port);
+
+        /** IP 地址也会查询解析缓存, 因此总是重设解析列表, 主机名则固定到校验过的地址 */
+        $resolve = [];
+
+        if (false === filter_var(trim($host, '[]'), FILTER_VALIDATE_IP)) {
             foreach (array_unique([$host, strtolower($host)]) as $name) {
                 $resolve[] = $name . ':' . $port . ':' . $address;
             }
-
-            curl_setopt($ch, CURLOPT_RESOLVE, $resolve);
         }
+
+        curl_setopt($ch, CURLOPT_RESOLVE, $resolve);
+        curl_setopt($ch, CURLOPT_CONNECT_TO, []);
 
         /** 不使用代理, 否则由代理再次解析主机名 */
         curl_setopt($ch, CURLOPT_PROXY, '');
+        curl_setopt($ch, CURLOPT_PRE_PROXY, '');
+
+        /** 不使用 Unix socket, 普通路径与 abstract socket 共用这一个设置 */
+        curl_setopt($ch, CURLOPT_UNIX_SOCKET_PATH, null);
+
+        /** 不复用连接, 不跟随跳转 */
+        curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
+        curl_setopt($ch, CURLOPT_FORBID_REUSE, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
 
         return $address;
