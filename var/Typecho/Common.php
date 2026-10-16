@@ -170,6 +170,18 @@ namespace Typecho {
         /** 程序版本 */
         public const VERSION = '1.3.0';
 
+        /** 不能作为外部请求目标的 IPv4 地址段, 不依赖 PHP 版本的过滤规则 */
+        private const UNSAFE_IPV4_RANGES = [
+            '0.0.0.0/8', '10.0.0.0/8', '100.64.0.0/10', '127.0.0.0/8', '169.254.0.0/16',
+            '172.16.0.0/12', '192.0.0.0/24', '192.0.2.0/24', '192.88.99.0/24', '192.168.0.0/16',
+            '198.18.0.0/15', '198.51.100.0/24', '203.0.113.0/24', '224.0.0.0/4', '240.0.0.0/4'
+        ];
+
+        /** 全球单播 2000::/3 中不能作为外部请求目标的 IPv6 地址段 */
+        private const UNSAFE_IPV6_RANGES = [
+            '2001:2::/48', '2001:10::/28', '2001:20::/28', '2001:db8::/32', '3fff::/20'
+        ];
+
         /**
          * 将路径转化为链接
          *
@@ -1055,29 +1067,86 @@ EOF;
             }
 
             foreach ($addresses as $address) {
-                $inet = inet_pton($address);
+                $inet = @inet_pton($address);
 
-                /** IPv4 映射或兼容的 IPv6 地址按其中的 IPv4 地址检查 */
-                if (
-                    false !== $inet && 16 == strlen($inet)
-                    && (substr($inet, 0, 12) === str_repeat("\0", 10) . "\xff\xff"
-                        || substr($inet, 0, 12) === str_repeat("\0", 12))
-                ) {
-                    $address = inet_ntop(substr($inet, 12));
-                }
-
-                if (
-                    false === filter_var(
-                        $address,
-                        FILTER_VALIDATE_IP,
-                        FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
-                    )
-                ) {
+                if (false === $inet || !self::isPublicAddress($inet)) {
                     return null;
                 }
             }
 
             return $addresses[0];
+        }
+
+        /**
+         * 判断一个二进制形式的 IP 地址是否是公网地址
+         * 内嵌 IPv4 的 IPv6 地址按其中的 IPv4 地址检查
+         *
+         * @param string $inet inet_pton() 的结果
+         * @return bool
+         */
+        private static function isPublicAddress(string $inet): bool
+        {
+            if (16 == strlen($inet)) {
+                $embedded = null;
+
+                if (
+                    substr($inet, 0, 12) === str_repeat("\0", 10) . "\xff\xff"
+                    || substr($inet, 0, 12) === str_repeat("\0", 8) . "\xff\xff\0\0"
+                    || substr($inet, 0, 12) === str_repeat("\0", 12)
+                    || substr($inet, 0, 12) === "\0\x64\xff\x9b" . str_repeat("\0", 8)
+                ) {
+                    /** IPv4 映射、转换、兼容地址与 NAT64 64:ff9b::/96 */
+                    $embedded = [substr($inet, 12)];
+                } elseif ("\x20\x02" === substr($inet, 0, 2)) {
+                    /** 6to4 2002::/16 */
+                    $embedded = [substr($inet, 2, 4)];
+                } elseif ("\x20\x01\0\0" === substr($inet, 0, 4)) {
+                    /** Teredo 2001::/32, 服务器地址与取反后的客户端地址 */
+                    $embedded = [substr($inet, 4, 4), ~substr($inet, 12)];
+                }
+
+                if (isset($embedded)) {
+                    foreach ($embedded as $ipv4) {
+                        if (!self::isPublicAddress($ipv4)) {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                }
+
+                $ranges = self::UNSAFE_IPV6_RANGES;
+
+                /** 只允许全球单播地址 2000::/3 */
+                if ("\x20" !== (chr(ord($inet[0]) & 0xe0))) {
+                    return false;
+                }
+            } elseif (4 == strlen($inet)) {
+                $ranges = self::UNSAFE_IPV4_RANGES;
+            } else {
+                return false;
+            }
+
+            foreach ($ranges as $range) {
+                [$subnet, $bits] = explode('/', $range);
+                $subnet = inet_pton($subnet);
+                $bits = (int) $bits;
+                $bytes = intdiv($bits, 8);
+                $mask = (0xff << (8 - $bits % 8)) & 0xff;
+
+                if (
+                    substr($inet, 0, $bytes) === substr($subnet, 0, $bytes)
+                    && ($bits % 8 == 0 || (ord($inet[$bytes]) & $mask) == (ord($subnet[$bytes]) & $mask))
+                ) {
+                    return false;
+                }
+            }
+
+            return false !== filter_var(
+                inet_ntop($inet),
+                FILTER_VALIDATE_IP,
+                FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
+            );
         }
 
         /**
