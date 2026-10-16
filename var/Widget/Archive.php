@@ -1676,8 +1676,8 @@ EOF;
             throw new WidgetException(_t('对不起,您输入的密码错误'), 403);
         }
 
-        /** 设置模板 */
-        if ($this->template) {
+        /** 设置模板, 存量数据同样只接受当前主题的自定义模板 */
+        if ($this->template && $this->isValidTemplate($this->template)) {
             /** 应用自定义模板 */
             $this->themeFile = $this->template;
         }
