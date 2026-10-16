@@ -57,8 +57,8 @@ class Edit extends Contents implements ActionInterface
             'visibility'
         );
 
-        /** 自定义模板只能从当前主题的模板中选择 */
-        if (!empty($contents['template']) && !$this->isValidTemplate((string) $contents['template'])) {
+        /** 未提交模板表示使用默认模板, 提交了则只能从当前主题的模板中选择 */
+        if (isset($contents['template']) && !$this->isValidTemplate($contents['template'])) {
             throw new Exception(_t('页面模板不存在'), 403);
         }
 

@@ -340,7 +340,7 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
      */
     protected function isValidTemplate(string $template): bool
     {
-        return '' !== $template && array_key_exists($template, $this->getTemplates());
+        return array_key_exists($template, $this->getTemplates());
     }
 
     /**
