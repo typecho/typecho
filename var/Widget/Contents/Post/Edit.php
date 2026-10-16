@@ -159,6 +159,11 @@ class Edit extends Contents implements ActionInterface
             $this->response->goBack();
         }
 
+        /** 与写稿时的规则一致, 非编辑只能将文章标记为待审核 */
+        $contents = ['visibility' => $status];
+        $this->checkStatus($contents);
+        $status = $contents['status'];
+
         $posts = $this->request->filter('int')->getArray('cid');
         $markCount = 0;
 
