@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.6/phpunit.xsd"
+         bootstrap="tests/bootstrap.php"
+         colors="true"
+         cacheResult="false"
+         convertDeprecationsToExceptions="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         failOnWarning="true"
+         failOnRisky="true"
+         beStrictAboutOutputDuringTests="true">
+    <php>
+        <!-- PHP 7.4's built-in default hides E_DEPRECATED; report everything on every version -->
+        <ini name="error_reporting" value="-1"/>
+    </php>
+    <testsuites>
+        <testsuite name="unit">
+            <directory>tests/Unit</directory>
+        </testsuite>
+        <testsuite name="security">
+            <directory>tests/Security</directory>
+        </testsuite>
+        <testsuite name="db">
+            <directory>tests/Db</directory>
+        </testsuite>
+    </testsuites>
+    <groups>
+        <exclude>
+            <group>network</group>
+        </exclude>
+    </groups>
+</phpunit>

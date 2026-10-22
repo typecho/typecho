@@ -88,6 +88,8 @@ test:
 	for i in `find ../var/ -name '*.php'`; do php -l $$i || exit 1; done;
 	for i in `find ../usr/ -name '*.php'`; do php -l $$i || exit 1; done;
 	for i in `find ../admin/ -name '*.php'`; do php -l $$i || exit 1; done;
+	for i in `find ../tests/ -name '*.php'`; do php -l $$i || exit 1; done;
+	./phpunit.sh --testsuite unit,security,db
 
 
 all:
