@@ -165,6 +165,11 @@ class Server
             }
 
             foreach ($ref->getParameters() as $key => $parameter) {
+                // Leave omitted optional arguments to their defaults, required ones are counted above
+                if (!array_key_exists($key, $args)) {
+                    continue;
+                }
+
                 if ($parameter->hasType() && !settype($args[$key], $parameter->getType()->getName())) {
                     return new Error(
                         -32602,

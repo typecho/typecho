@@ -8,10 +8,6 @@ use PHPUnit\Framework\TestCase;
  * Each client-*.xml fixture is dispatched to XmlRpcSignatureStub, whose methods mirror the
  * signatures of Widget\XmlRpc and echo their arguments back; the response must match
  * <name>.dispatch.json. Regenerate with IXR_GOLDEN_UPDATE=1, like XmlRpcCodecTest.
- *
- * Known bugs recorded as-is:
- * - client-metaweblog-editpost-no-publish: the omitted optional $publish is settype()'d from
- *   null into false and passed on, so the post is saved as a draft instead of published
  */
 final class XmlRpcDispatchTest extends TestCase
 {
