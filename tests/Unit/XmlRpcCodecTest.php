@@ -17,7 +17,6 @@ use PHPUnit\Framework\TestCase;
  * invalid UTF-8), so where PHP 7.4 encodes differently it gets <name>.golden.php7.json.
  *
  * Known bugs recorded as-is (to be fixed in stage two, together with their goldens):
- * - type-datetime-extended: "2026-10-22T08:30:15Z" is sliced by fixed offsets into garbage
  * - type-base64-binary: binary strings encode as <string>, mangled by htmlspecialchars()
  * - client-system-multicall: multiCall() tests is_a($result, 'Error'), i.e. the global
  *   \Error, so faults are wrapped and encoded as a struct instead of faultCode/faultString

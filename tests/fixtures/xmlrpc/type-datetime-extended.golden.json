@@ -18,22 +18,22 @@
                         "string": "2026"
                     },
                     "month": {
-                        "string": "-1"
+                        "string": "10"
                     },
                     "day": {
-                        "string": "0-"
+                        "string": "22"
                     },
                     "hour": {
-                        "string": "2T"
+                        "string": "08"
                     },
                     "minute": {
-                        "string": "8:"
+                        "string": "30"
                     },
                     "second": {
-                        "string": "0:"
+                        "string": "15"
                     },
                     "timezone": {
-                        "string": "15Z"
+                        "string": "Z"
                     }
                 }
             },
@@ -73,7 +73,7 @@
             "<methodCall>",
             "<methodName>test.date</methodName>",
             "<params>",
-            "<param><value><dateTime.iso8601>2026-10-T2T:8::0:15Z</dateTime.iso8601></value></param>",
+            "<param><value><dateTime.iso8601>20261022T08:30:15Z</dateTime.iso8601></value></param>",
             "<param><value><dateTime.iso8601>20261022T08:30:15+08:00</dateTime.iso8601></value></param>",
             "</params></methodCall>"
         ],
