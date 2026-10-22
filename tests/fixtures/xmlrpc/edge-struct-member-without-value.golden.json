@@ -18,6 +18,12 @@
                         {
                             "int": 1
                         }
+                    ],
+                    [
+                        "empty",
+                        {
+                            "string": ""
+                        }
                     ]
                 ]
             }
@@ -33,6 +39,7 @@
             "<params>",
             "<param><value><struct>",
             "  <member><name>present</name><value><int>1</int></value></member>",
+            "  <member><name>empty</name><value><string></string></value></member>",
             "</struct></value></param>",
             "</params></methodCall>"
         ],

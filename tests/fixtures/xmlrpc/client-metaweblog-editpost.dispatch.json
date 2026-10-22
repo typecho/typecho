@@ -1,0 +1,22 @@
+[
+    "<methodResponse>",
+    "  <params>",
+    "    <param>",
+    "      <value>",
+    "        <array><data>",
+    "  <value><int>42</int></value>",
+    "  <value><string>admin</string></value>",
+    "  <value><string>s3cret</string></value>",
+    "  <value><struct>",
+    "  <member><name>title</name><value><string>Edited title</string></value></member>",
+    "  <member><name>description</name><value><string>Edited body</string></value></member>",
+    "  <member><name>post_status</name><value><string>publish</string></value></member>",
+    "</struct></value>",
+    "  <value><boolean>1</boolean></value>",
+    "</data></array>",
+    "      </value>",
+    "    </param>",
+    "  </params>",
+    "</methodResponse>",
+    ""
+]

@@ -1,0 +1,17 @@
+[
+    "<methodResponse>",
+    "  <params>",
+    "    <param>",
+    "      <value>",
+    "        <array><data>",
+    "  <value><int>1</int></value>",
+    "  <value><string>admin</string></value>",
+    "  <value><string>s3cret</string></value>",
+    "  <value><int>10</int></value>",
+    "</data></array>",
+    "      </value>",
+    "    </param>",
+    "  </params>",
+    "</methodResponse>",
+    ""
+]

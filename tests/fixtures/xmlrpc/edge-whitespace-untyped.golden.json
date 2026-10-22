@@ -12,7 +12,10 @@
     "params": {
         "list": [
             {
-                "string": "\n\n   \nnext"
+                "string": "   "
+            },
+            {
+                "string": "next"
             }
         ]
     },
@@ -24,10 +27,8 @@
             "<methodCall>",
             "<methodName>test.ws</methodName>",
             "<params>",
-            "<param><value><string>",
-            "",
-            "   ",
-            "next</string></value></param>",
+            "<param><value><string>   </string></value></param>",
+            "<param><value><string>next</string></value></param>",
             "</params></methodCall>"
         ],
         "php_errors": 0

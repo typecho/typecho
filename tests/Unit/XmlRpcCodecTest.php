@@ -17,12 +17,6 @@ use PHPUnit\Framework\TestCase;
  * invalid UTF-8), so where PHP 7.4 encodes differently it gets <name>.golden.php7.json.
  *
  * Known bugs recorded as-is (to be fixed in stage two, together with their goldens):
- * - type-boolean-false: <boolean>false</boolean> parses as true ((bool) "false")
- * - edge-empty-value: <value></value> and <value/> are dropped instead of becoming ''
- * - edge-whitespace-untyped, type-untyped-value, edge-text-between-tags: untyped values
- *   keep whitespace and stray text from previous markup, because the character buffer is
- *   only reset by some closing tags
- * - edge-nil, edge-i8: <nil/> is dropped and <i8> falls back to an untyped string
  * - type-datetime-extended: "2026-10-22T08:30:15Z" is sliced by fixed offsets into garbage
  * - type-base64-binary: binary strings encode as <string>, mangled by htmlspecialchars()
  * - client-system-multicall: multiCall() tests is_a($result, 'Error'), i.e. the global

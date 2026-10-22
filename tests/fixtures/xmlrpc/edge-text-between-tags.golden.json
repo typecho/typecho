@@ -12,10 +12,10 @@
     "params": {
         "list": [
             {
-                "string": "strayx"
+                "string": "x"
             },
             {
-                "string": "\nstray untyped"
+                "string": "untyped"
             }
         ]
     },
@@ -27,9 +27,8 @@
             "<methodCall>",
             "<methodName>test.text</methodName>",
             "<params>",
-            "<param><value><string>strayx</string></value></param>",
-            "<param><value><string>",
-            "stray untyped</string></value></param>",
+            "<param><value><string>x</string></value></param>",
+            "<param><value><string>untyped</string></value></param>",
             "</params></methodCall>"
         ],
         "php_errors": 0

@@ -11,6 +11,7 @@
     },
     "params": {
         "list": [
+            null,
             {
                 "string": "after nil"
             }
@@ -24,6 +25,7 @@
             "<methodCall>",
             "<methodName>test.nil</methodName>",
             "<params>",
+            "<param><value><string></string></value></param>",
             "<param><value><string>after nil</string></value></param>",
             "</params></methodCall>"
         ],
