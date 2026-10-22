@@ -18,6 +18,12 @@ jobs:
         rm -rf build/admin/src
         rm -rf build/usr/themes/classic-22/static/scss
         cd build && zip -q -r typecho.zip * && mv typecho.zip ../ && cd -
+    - name: Check build artifact
+      run: |
+        if unzip -l typecho.zip | grep -E '(^|[ /])tests/|phpunit'; then
+          echo "typecho.zip must not contain test files" >&2
+          exit 1
+        fi
     - name: Upload Release Asset
       uses: shogo82148/actions-upload-release-asset@v1
       with:

@@ -31,12 +31,30 @@ jobs:
     - name: Test
       run: |
         find . -type f -name '*.php' -print0 | xargs -0 -n1 -P4 php -l -n | (! grep -v "No syntax errors detected" )
+  test:
+    name: PHP ${{ matrix.php }} PHPUnit
+    runs-on: ubuntu-latest
+    if: ${{ !contains(github.event.head_commit.message, 'skip ci') }}
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['7.4', '8.2', '8.3', '8.4', '8.5']
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php }}
+        extensions: pdo_sqlite, sqlite3, curl
+        coverage: none
+    - name: PHPUnit
+      run: tools/phpunit.sh --testsuite unit,security,db
   build:
     name: Typecho Build
     runs-on: ubuntu-latest
     if: ${{ !contains(github.event.head_commit.message, 'skip ci') && github.event_name != 'pull_request' && github.repository == 'typecho/typecho' }}
-    needs:
-        - php
+    needs: [php, test]
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -49,6 +67,12 @@ jobs:
         rm -rf build/admin/src
         rm -rf build/usr/themes/classic-22/static/scss
         cd build && zip -q -r typecho.zip * && mv typecho.zip ../ && cd -
+    - name: Check build artifact
+      run: |
+        if unzip -l typecho.zip | grep -E '(^|[ /])tests/|phpunit'; then
+          echo "typecho.zip must not contain test files" >&2
+          exit 1
+        fi
     - name: Upload a Build Artifact
       uses: WebFreak001/deploy-nightly@v1.1.0
       env:
