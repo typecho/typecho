@@ -16,7 +16,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ['7.4', '8.0', '8.1', '8.2']
+        php: ['7.4', '8.5']
+        include:
+          - php: '8.6'
+            experimental: true
+    continue-on-error: ${{ matrix.experimental == true }}
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
