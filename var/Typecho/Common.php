@@ -1195,19 +1195,6 @@ EOF;
                 return mime_content_type($fileName);
             }
 
-            if (function_exists('finfo_open')) {
-                $fInfo = @finfo_open(FILEINFO_MIME_TYPE);
-
-                if (false !== $fInfo) {
-                    $mimeType = finfo_file($fInfo, $fileName);
-                    // a no-op since PHP 8.1 (finfo is an object), deprecated in 8.5
-                    if (PHP_VERSION_ID < 80100) {
-                        finfo_close($fInfo);
-                    }
-                    return $mimeType;
-                }
-            }
-
             $mimeTypes = [
                 'ez'       => 'application/andrew-inset',
                 'csm'      => 'application/cu-seeme',

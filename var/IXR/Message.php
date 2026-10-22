@@ -83,7 +83,6 @@ class Message
         // Set XML parser to take the case of tags in to account
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, false);
         // Set XML parser callback functions
-        xml_set_object($parser, $this);
         xml_set_element_handler($parser, [$this, 'tagOpen'], [$this, 'tagClose']);
         xml_set_character_data_handler($parser, [$this, 'cdata']);
         if (!xml_parse($parser, $this->message)) {
@@ -91,10 +90,6 @@ class Message
                 xml_error_string(xml_get_error_code($this->parser)),
                 xml_get_current_line_number($this->parser))); */
             return false;
-        }
-        // no effect since PHP 8.0 (XMLParser objects are freed automatically), deprecated in 8.5
-        if (PHP_VERSION_ID < 80000) {
-            xml_parser_free($parser);
         }
         // Grab the error messages, if any
         if ($this->messageType == 'fault') {
