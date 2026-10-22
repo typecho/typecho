@@ -150,6 +150,8 @@ abstract class Widget
             $requestObject = new WidgetRequest(Request::getInstance(), isset($request) ? new Config($request) : null);
             $responseObject = new WidgetResponse(Request::getInstance(), Response::getInstance());
 
+            $widget = null;
+
             try {
                 $widget = new $className($requestObject, $responseObject, $params);
                 $widget->execute();
@@ -158,14 +160,21 @@ abstract class Widget
                     call_user_func($disableSandboxOrCallback, $widget);
                 }
             } catch (Terminal $e) {
-                $widget = $widget ?? null;
+                // Terminal ends a widget early on purpose, keep the instance
+            } catch (\Throwable $e) {
+                // sandbox calls have always swallowed errors and returned what was built
+                if (!$sandbox) {
+                    throw $e;
+                }
             } finally {
                 if ($sandbox) {
                     Response::getInstance()->endSandbox();
                     Request::getInstance()->endSandbox();
-
-                    return $widget;
                 }
+            }
+
+            if ($sandbox) {
+                return $widget;
             }
 
             self::$widgetPool[$key] = $widget;
