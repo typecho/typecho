@@ -148,7 +148,7 @@ class Message
                 $this->currentTagContents = '';
                 break;
             case 'double':
-                $value = (double) trim($this->currentTagContents);
+                $value = (float) trim($this->currentTagContents);
                 $this->currentTagContents = '';
                 break;
             case 'string':
