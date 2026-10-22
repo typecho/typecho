@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<methodCall>
+<methodName>test.&lt;escape&gt;&amp;"quote"</methodName>
+<params>
+<param><value><struct>
+<member><name>a&lt;b&amp;c</name><value><string>it's &lt;fine&gt;</string></value></member>
+</struct></value></param>
+</params>
+</methodCall>

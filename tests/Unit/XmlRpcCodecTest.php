@@ -13,14 +13,6 @@ use PHPUnit\Framework\TestCase;
  * These record what the code does today, bugs included, so a parser rewrite can prove it
  * changed nothing. Regenerate deliberately with IXR_GOLDEN_UPDATE=1 tools/phpunit.sh.
  *
- * Value escapes with htmlspecialchars() defaults, which changed in PHP 8.1 (quotes and
- * invalid UTF-8), so where PHP 7.4 encodes differently it gets <name>.golden.php7.json.
- *
- * Known bugs recorded as-is (to be fixed in stage two, together with their goldens):
- * - type-base64-binary: binary strings encode as <string>, mangled by htmlspecialchars()
- * - client-system-multicall: multiCall() tests is_a($result, 'Error'), i.e. the global
- *   \Error, so faults are wrapped and encoded as a struct instead of faultCode/faultString
- *
  * Goldens changed by the switch from ext/xml to DOM, accepted on purpose:
  * - edge-truncated (intentional fix, not a regression): ext/xml called xml_parse() without
  *   is_final, so a truncated request parsed as a success and Server actually executed the
@@ -58,16 +50,8 @@ final class XmlRpcCodecTest extends TestCase
         ) . "\n";
 
         $golden = self::FIXTURES . '/' . $name . '.golden.json';
-        $legacy = self::FIXTURES . '/' . $name . '.golden.php7.json';
         if (getenv('IXR_GOLDEN_UPDATE')) {
-            if (PHP_VERSION_ID >= 80100) {
-                file_put_contents($golden, $actual);
-            } elseif (file_get_contents($golden) !== $actual) {
-                file_put_contents($legacy, $actual);
-            }
-        }
-        if (PHP_VERSION_ID < 80100 && file_exists($legacy)) {
-            $golden = $legacy;
+            file_put_contents($golden, $actual);
         }
 
         $this->assertFileExists($golden);

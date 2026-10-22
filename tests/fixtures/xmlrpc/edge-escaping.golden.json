@@ -7,12 +7,19 @@
         "string": "methodCall"
     },
     "methodName": {
-        "string": "test.base64"
+        "string": "test.<escape>&\"quote\""
     },
     "params": {
         "list": [
             {
-                "bytes": "AAH/gA=="
+                "map": [
+                    [
+                        "a<b&c",
+                        {
+                            "string": "it's <fine>"
+                        }
+                    ]
+                ]
             }
         ]
     },
@@ -22,9 +29,11 @@
         "result": [
             "<?xml version=\"1.0\"?>",
             "<methodCall>",
-            "<methodName>test.base64</methodName>",
+            "<methodName>test.&lt;escape&gt;&amp;&quot;quote&quot;</methodName>",
             "<params>",
-            "<param><value><string></string></value></param>",
+            "<param><value><struct>",
+            "  <member><name>a&lt;b&amp;c</name><value><string>it&#039;s &lt;fine&gt;</string></value></member>",
+            "</struct></value></param>",
             "</params></methodCall>"
         ],
         "php_errors": 0
@@ -41,7 +50,7 @@
             "        </member>",
             "        <member>",
             "          <name>faultString</name>",
-            "          <value><string>server error. requested method test.base64 does not exist.</string></value>",
+            "          <value><string>server error. requested method test.&lt;escape&gt;&amp;&quot;quote&quot; does not exist.</string></value>",
             "        </member>",
             "      </struct>",
             "    </value>",

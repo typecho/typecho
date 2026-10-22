@@ -44,6 +44,8 @@ class Error
      */
     public function getXml(): string
     {
+        $message = Value::escape((string) $this->message);
+
         return <<<EOD
 <methodResponse>
   <fault>
@@ -55,7 +57,7 @@ class Error
         </member>
         <member>
           <name>faultString</name>
-          <value><string>{$this->message}</string></value>
+          <value><string>{$message}</string></value>
         </member>
       </struct>
     </value>

@@ -24,7 +24,7 @@
             "<methodCall>",
             "<methodName>test.base64</methodName>",
             "<params>",
-            "<param><value><string>\u0000\u0001��</string></value></param>",
+            "<param><value><base64>AAH/gA==</base64></value></param>",
             "</params></methodCall>"
         ],
         "php_errors": 0

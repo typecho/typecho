@@ -48,7 +48,7 @@ class Value
             case 'double':
                 return '<double>' . $this->data . '</double>';
             case 'string':
-                return '<string>' . htmlspecialchars((string) $this->data) . '</string>';
+                return '<string>' . self::escape((string) $this->data) . '</string>';
             case 'array':
                 $return = '<array><data>' . "\n";
                 foreach ($this->data as $item) {
@@ -59,7 +59,7 @@ class Value
             case 'struct':
                 $return = '<struct>' . "\n";
                 foreach ($this->data as $name => $value) {
-                    $return .= "  <member><name>$name</name><value>";
+                    $return .= '  <member><name>' . self::escape((string) $name) . '</name><value>';
                     $return .= $value->getXml() . "</value></member>\n";
                 }
                 $return .= '</struct>';
@@ -69,6 +69,17 @@ class Value
                 return $this->data->getXml();
         }
         return false;
+    }
+
+    /**
+     * 转义xml文本, 不依赖随PHP版本变化的htmlspecialchars默认参数
+     *
+     * @param string $text
+     * @return string
+     */
+    public static function escape(string $text): string
+    {
+        return htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     }
 
     /**
@@ -96,6 +107,11 @@ class Value
         if (is_object($this->data)) {
             $this->data = get_object_vars($this->data);
             return 'struct';
+        }
+        // Bytes that are not UTF-8 cannot travel as <string>
+        if (is_string($this->data) && !preg_match('//u', $this->data)) {
+            $this->data = new Base64($this->data);
+            return 'base64';
         }
         if (!is_array($this->data)) {
             return 'string';

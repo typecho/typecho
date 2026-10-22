@@ -89,7 +89,7 @@ class Server
             } else {
                 $result = $this->call($method, $params);
             }
-            if (is_a($result, 'Error')) {
+            if ($result instanceof Error) {
                 $return[] = [
                     'faultCode'   => $result->code,
                     'faultString' => $result->message
