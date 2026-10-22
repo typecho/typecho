@@ -806,7 +806,7 @@ EOF;
             $result = '';
             $max = strlen($chars) - 1;
             for ($i = 0; $i < $length; $i++) {
-                $result .= $chars[rand(0, $max)];
+                $result .= $chars[random_int(0, $max)];
             }
             return $result;
         }
