@@ -1195,16 +1195,6 @@ EOF;
                 return mime_content_type($fileName);
             }
 
-            if (function_exists('finfo_open')) {
-                $fInfo = @finfo_open(FILEINFO_MIME_TYPE);
-
-                if (false !== $fInfo) {
-                    $mimeType = finfo_file($fInfo, $fileName);
-                    finfo_close($fInfo);
-                    return $mimeType;
-                }
-            }
-
             $mimeTypes = [
                 'ez'       => 'application/andrew-inset',
                 'csm'      => 'application/cu-seeme',

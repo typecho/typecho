@@ -83,7 +83,6 @@ class Message
         // Set XML parser to take the case of tags in to account
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, false);
         // Set XML parser callback functions
-        xml_set_object($parser, $this);
         xml_set_element_handler($parser, [$this, 'tagOpen'], [$this, 'tagClose']);
         xml_set_character_data_handler($parser, [$this, 'cdata']);
         if (!xml_parse($parser, $this->message)) {
@@ -92,7 +91,6 @@ class Message
                 xml_get_current_line_number($this->parser))); */
             return false;
         }
-        xml_parser_free($parser);
         // Grab the error messages, if any
         if ($this->messageType == 'fault') {
             $this->faultCode = intval($this->params[0]['faultCode']);
