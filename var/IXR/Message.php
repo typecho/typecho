@@ -61,31 +61,18 @@ class Message
             return false;
         }
 
-        // remove the DOCTYPE, avoid using a regexp, so we can save memory
-        $count = 0;
-        while (true) {
-            // Fail if there is an endless loop
-            if ($count >= 10) {
-                return false;
-            }
-
-            $pos = strpos($this->message, '<!DOCTYPE');
-            if ($pos !== false) {
-                $this->message = substr($this->message, 0, $pos)
-                    . substr($this->message, strpos($this->message, '>', $pos) + 1);
-                $count ++;
-            } else {
-                break;
-            }
-        }
-
         $document = new \DOMDocument();
         $useErrors = libxml_use_internal_errors(true);
         $loaded = $document->loadXML($this->message, LIBXML_NONET);
         libxml_clear_errors();
         libxml_use_internal_errors($useErrors);
 
-        if (!$loaded) {
+        // XML-RPC has no DTDs, and anything but a call or a response is not XML-RPC
+        if (
+            !$loaded
+            || $document->doctype !== null
+            || !in_array($document->documentElement->nodeName, ['methodCall', 'methodResponse'])
+        ) {
             return false;
         }
 

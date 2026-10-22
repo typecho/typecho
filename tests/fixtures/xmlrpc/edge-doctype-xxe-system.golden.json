@@ -1,34 +1,16 @@
 {
     "parse": {
-        "result": true,
+        "result": false,
         "php_errors": 0
     },
-    "messageType": {
-        "string": "methodCall"
-    },
-    "methodName": {
-        "string": "test.xxe"
-    },
+    "messageType": "<uninitialized>",
+    "methodName": "<uninitialized>",
     "params": {
-        "list": [
-            {
-                "string": "x"
-            }
-        ]
+        "list": []
     },
     "faultCode": "<uninitialized>",
     "faultString": "<uninitialized>",
-    "encoded": {
-        "result": [
-            "<?xml version=\"1.0\"?>",
-            "<methodCall>",
-            "<methodName>test.xxe</methodName>",
-            "<params>",
-            "<param><value><string>x</string></value></param>",
-            "</params></methodCall>"
-        ],
-        "php_errors": 0
-    },
+    "encoded": null,
     "response": {
         "result": [
             "<methodResponse>",
@@ -37,11 +19,11 @@
             "      <struct>",
             "        <member>",
             "          <name>faultCode</name>",
-            "          <value><int>-32601</int></value>",
+            "          <value><int>-32700</int></value>",
             "        </member>",
             "        <member>",
             "          <name>faultString</name>",
-            "          <value><string>server error. requested method test.xxe does not exist.</string></value>",
+            "          <value><string>parse error. not well formed</string></value>",
             "        </member>",
             "      </struct>",
             "    </value>",

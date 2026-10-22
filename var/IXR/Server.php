@@ -12,6 +12,11 @@ use Typecho\Widget\Exception as WidgetException;
 class Server
 {
     /**
+     * 请求体大小上限, 需容纳 metaWeblog.newMediaObject 的 base64 附件
+     */
+    public const MAX_REQUEST_SIZE = 8 * 1024 * 1024;
+
+    /**
      * 回调函数
      *
      * @var array
@@ -302,6 +307,10 @@ class Server
      */
     public function handle(string $xml): string
     {
+        if (strlen($xml) > self::MAX_REQUEST_SIZE) {
+            return $this->error(-32700, 'parse error. request too large');
+        }
+
         $message = new Message($xml);
 
         if (!$message->parse()) {
@@ -343,6 +352,8 @@ EOD;
      */
     public function serve()
     {
-        $this->output($this->handle(file_get_contents('php://input') ?: ''));
+        // Read one byte past the limit so handle() can tell an oversized body apart
+        $xml = file_get_contents('php://input', false, null, 0, self::MAX_REQUEST_SIZE + 1);
+        $this->output($this->handle($xml ?: ''));
     }
 }

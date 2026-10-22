@@ -23,9 +23,6 @@ use PHPUnit\Framework\TestCase;
  *   keep whitespace and stray text from previous markup, because the character buffer is
  *   only reset by some closing tags
  * - edge-nil, edge-i8: <nil/> is dropped and <i8> falls back to an untyped string
- * - edge-doctype-*: DOCTYPE is stripped by string surgery rather than rejected
- * - edge-unknown-root: a well-formed non XML-RPC document throws from parse() because
- *   $messageType is read before it is ever assigned
  * - type-datetime-extended: "2026-10-22T08:30:15Z" is sliced by fixed offsets into garbage
  * - type-base64-binary: binary strings encode as <string>, mangled by htmlspecialchars()
  * - client-system-multicall: multiCall() tests is_a($result, 'Error'), i.e. the global

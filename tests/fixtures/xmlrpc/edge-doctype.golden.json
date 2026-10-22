@@ -1,44 +1,33 @@
 {
     "parse": {
-        "result": true,
+        "result": false,
         "php_errors": 0
     },
-    "messageType": {
-        "string": "methodCall"
-    },
-    "methodName": {
-        "string": "system.listMethods"
-    },
+    "messageType": "<uninitialized>",
+    "methodName": "<uninitialized>",
     "params": {
         "list": []
     },
     "faultCode": "<uninitialized>",
     "faultString": "<uninitialized>",
-    "encoded": {
-        "result": [
-            "<?xml version=\"1.0\"?>",
-            "<methodCall>",
-            "<methodName>system.listMethods</methodName>",
-            "<params>",
-            "</params></methodCall>"
-        ],
-        "php_errors": 0
-    },
+    "encoded": null,
     "response": {
         "result": [
             "<methodResponse>",
-            "  <params>",
-            "    <param>",
-            "      <value>",
-            "        <array><data>",
-            "  <value><string>system.methodHelp</string></value>",
-            "  <value><string>system.multicall</string></value>",
-            "  <value><string>system.listMethods</string></value>",
-            "  <value><string>system.getCapabilities</string></value>",
-            "</data></array>",
-            "      </value>",
-            "    </param>",
-            "  </params>",
+            "  <fault>",
+            "    <value>",
+            "      <struct>",
+            "        <member>",
+            "          <name>faultCode</name>",
+            "          <value><int>-32700</int></value>",
+            "        </member>",
+            "        <member>",
+            "          <name>faultString</name>",
+            "          <value><string>parse error. not well formed</string></value>",
+            "        </member>",
+            "      </struct>",
+            "    </value>",
+            "  </fault>",
             "</methodResponse>",
             ""
         ],
