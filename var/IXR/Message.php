@@ -92,7 +92,10 @@ class Message
                 xml_get_current_line_number($this->parser))); */
             return false;
         }
-        xml_parser_free($parser);
+        // no effect since PHP 8.0 (XMLParser objects are freed automatically), deprecated in 8.5
+        if (PHP_VERSION_ID < 80000) {
+            xml_parser_free($parser);
+        }
         // Grab the error messages, if any
         if ($this->messageType == 'fault') {
             $this->faultCode = intval($this->params[0]['faultCode']);

@@ -1200,7 +1200,10 @@ EOF;
 
                 if (false !== $fInfo) {
                     $mimeType = finfo_file($fInfo, $fileName);
-                    finfo_close($fInfo);
+                    // a no-op since PHP 8.1 (finfo is an object), deprecated in 8.5
+                    if (PHP_VERSION_ID < 80100) {
+                        finfo_close($fInfo);
+                    }
                     return $mimeType;
                 }
             }
