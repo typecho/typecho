@@ -208,21 +208,21 @@ class Server
     }
 
     /**
-     * 抛出错误
+     * 生成错误响应
      *
      * @access private
      * @param integer|Error $error 错误代码
      * @param string|null $message 错误消息
-     * @return void
+     * @return string
      */
-    private function error($error, ?string $message = null)
+    private function error($error, ?string $message = null): string
     {
         // Accepts either an error object or an error code and message
         if (!$error instanceof Error) {
             $error = new Error($error, $message);
         }
 
-        $this->output($error->getXml());
+        return $error->getXml();
     }
 
     /**
@@ -295,22 +295,28 @@ class Server
     }
 
     /**
-     * 服务入口
+     * 处理一次请求, 返回响应xml (不含xml声明), 不输出也不退出
+     *
+     * @param string $xml 原始请求xml
+     * @return string
      */
-    public function serve()
+    public function handle(string $xml): string
     {
-        $message = new Message(file_get_contents('php://input') ?: '');
+        $message = new Message($xml);
 
         if (!$message->parse()) {
-            $this->error(-32700, 'parse error. not well formed');
+            return $this->error(-32700, 'parse error. not well formed');
         } elseif ($message->messageType != 'methodCall') {
-            $this->error(-32600, 'server error. invalid xml-rpc. not conforming to spec. Request must be a methodCall');
+            return $this->error(
+                -32600,
+                'server error. invalid xml-rpc. not conforming to spec. Request must be a methodCall'
+            );
         }
 
         $result = $this->call($message->methodName, $message->params);
         // Is the result an error?
         if ($result instanceof Error) {
-            $this->error($result);
+            return $this->error($result);
         }
 
         // Encode the result
@@ -318,7 +324,7 @@ class Server
         $resultXml = $r->getXml();
 
         // Create the XML
-        $xml = <<<EOD
+        return <<<EOD
 <methodResponse>
   <params>
     <param>
@@ -330,8 +336,13 @@ class Server
 </methodResponse>
 
 EOD;
+    }
 
-        // Send it
-        $this->output($xml);
+    /**
+     * 服务入口
+     */
+    public function serve()
+    {
+        $this->output($this->handle(file_get_contents('php://input') ?: ''));
     }
 }
