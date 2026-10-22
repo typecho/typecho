@@ -333,6 +333,17 @@ class Contents extends Base implements QueryInterface, RowFilterInterface, Prima
     }
 
     /**
+     * 判断是否为当前主题提供的自定义模板
+     *
+     * @param string $template 模板文件名
+     * @return bool
+     */
+    protected function isValidTemplate(string $template): bool
+    {
+        return array_key_exists($template, $this->getTemplates());
+    }
+
+    /**
      * 将每行的值压入堆栈
      *
      * @param array $value 每行的值

@@ -86,6 +86,13 @@ class Client
     private array $options = [];
 
     /**
+     * 是否只允许连接公网地址
+     *
+     * @var bool
+     */
+    private bool $safeMode = false;
+
+    /**
      * 回执头部信息
      *
      * @var array
@@ -245,6 +252,19 @@ class Client
     }
 
     /**
+     * 只允许连接公网地址, 用于请求不可信的 URL
+     * 发送时只解析一次主机名, 校验全部地址后把连接固定到校验过的地址
+     *
+     * @param bool $safeMode
+     * @return $this
+     */
+    public function setSafeMode(bool $safeMode = true): Client
+    {
+        $this->safeMode = $safeMode;
+        return $this;
+    }
+
+    /**
      * 设置头信息参数
      *
      * @param string $key 参数名称
@@ -273,6 +293,17 @@ class Client
     public function send(string $url)
     {
         $params = parse_url($url);
+
+        if (false === $params) {
+            throw new Exception('Invalid request url', 400);
+        }
+
+        $scheme = strtolower($params['scheme'] ?? 'http');
+
+        if ('http' != $scheme && 'https' != $scheme) {
+            throw new Exception('Unsupported request scheme', 400);
+        }
+
         $query = empty($params['query']) ? '' : $params['query'];
 
         if (!empty($this->query)) {
@@ -334,9 +365,21 @@ class Client
             curl_setopt($ch, $key, $val);
         }
 
+        /** 只允许 http 协议, 避免 curl 根据主机名猜测其它协议 */
+        curl_setopt($ch, CURLOPT_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
+
+        $address = $this->safeMode ? $this->pinSafeAddress($ch, $url, $params, $scheme) : null;
         $response = curl_exec($ch);
+        $error = null;
+
         if (false === $response) {
             $error = curl_error($ch);
+        } elseif (isset($address) && inet_pton(curl_getinfo($ch, CURLINFO_PRIMARY_IP)) !== inet_pton($address)) {
+            /** 连接落在校验地址之外, 请求已经发出, 这里只是检测并丢弃响应, 拦不住请求本身 */
+            $error = 'Unsafe request host';
+        }
+
+        if (isset($error)) {
             if (PHP_VERSION_ID >= 80000) {
                 unset($ch);
             } else {
@@ -352,6 +395,70 @@ class Client
         } else {
             curl_close($ch);
         }
+    }
+
+    /**
+     * 解析并校验请求的主机, 将连接固定到校验过的地址
+     * URL 中的主机名保持不变, 用于 Host 头与 TLS 证书校验
+     * 在调用者的选项之后执行, 收回所有能改变连接目标或传输通道的选项
+     *
+     * @param resource|\CurlHandle $ch
+     * @param string $url
+     * @param array $params
+     * @param string $scheme
+     * @return string
+     * @throws Exception
+     */
+    private function pinSafeAddress($ch, string $url, array $params, string $scheme): string
+    {
+        $host = $params['host'] ?? '';
+        $address = Common::resolveSafeHost($host);
+
+        if (null === $address) {
+            throw new Exception('Unsafe request host', 403);
+        }
+
+        /** alt-svc 与 HSTS 缓存会把连接切换到其它主机或端口, 且无法收回, 直接拒绝 */
+        foreach (['CURLOPT_ALTSVC', 'CURLOPT_ALTSVC_CTRL', 'CURLOPT_HSTS', 'CURLOPT_HSTS_CTRL'] as $name) {
+            if (defined($name) && isset($this->options[constant($name)])) {
+                throw new Exception('Unsafe request option', 403);
+            }
+        }
+
+        $port = (int) ($params['port'] ?? ('https' == $scheme ? 443 : 80));
+
+        /** 请求地址与端口必须是校验过的 */
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_PORT, $port);
+
+        /**
+         * IP 地址也会查询解析缓存, 因此总是重设解析列表 (IP 直连时为空)
+         * 主机名按 URL 中的原始大小写与小写两种形式固定, 以免解析缓存按原样匹配时漏掉
+         */
+        $resolve = [];
+
+        if (false === filter_var(trim($host, '[]'), FILTER_VALIDATE_IP)) {
+            foreach (array_unique([$host, strtolower($host)]) as $name) {
+                $resolve[] = $name . ':' . $port . ':' . $address;
+            }
+        }
+
+        curl_setopt($ch, CURLOPT_RESOLVE, $resolve);
+        curl_setopt($ch, CURLOPT_CONNECT_TO, []);
+
+        /** 不使用代理, 否则由代理再次解析主机名 */
+        curl_setopt($ch, CURLOPT_PROXY, '');
+        curl_setopt($ch, CURLOPT_PRE_PROXY, '');
+
+        /** 不使用 Unix socket, 普通路径与 abstract socket 共用这一个设置 */
+        curl_setopt($ch, CURLOPT_UNIX_SOCKET_PATH, null);
+
+        /** 连接缓存按主机名复用, 可能命中未经校验的地址; 跳转目标同样未经校验 */
+        curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
+        curl_setopt($ch, CURLOPT_FORBID_REUSE, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
+
+        return $address;
     }
 
     /**

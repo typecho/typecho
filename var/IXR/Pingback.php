@@ -36,7 +36,9 @@ class Pingback
         }
 
         try {
+            /** 源地址不可信, 只连接校验过的公网地址, 避免两次解析之间的 DNS rebinding */
             $client->setTimeout(5)
+                ->setSafeMode()
                 ->send($url);
         } catch (HttpException $e) {
             throw new Exception('Pingback http error', 50);

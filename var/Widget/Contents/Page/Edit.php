@@ -57,6 +57,11 @@ class Edit extends Contents implements ActionInterface
             'visibility'
         );
 
+        /** 未提交模板表示使用默认模板, 提交了则只能从当前主题的模板中选择 */
+        if (isset($contents['template']) && !$this->isValidTemplate($contents['template'])) {
+            throw new Exception(_t('页面模板不存在'), 403);
+        }
+
         $contents['title'] = $this->request->get('title', _t('未命名页面'));
         $contents['created'] = $this->getCreated();
         $contents['visibility'] = ('hidden' == $contents['visibility'] ? 'hidden' : 'publish');

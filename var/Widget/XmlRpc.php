@@ -1674,11 +1674,12 @@ class XmlRpc extends Contents implements ActionInterface, Hook
 
         /** 检查源地址是否合法 */
         $params = parse_url($source);
-        if (false === $params || !in_array($params['scheme'], ['http', 'https'])) {
+        if (false === $params || !in_array($params['scheme'] ?? '', ['http', 'https'])) {
             throw new Exception(_t('源地址服务器错误'), 16);
         }
 
-        if (!Common::checkSafeHost($params['host'])) {
+        /** 直接指向私网的源地址在这里返回 16; 抓取阶段用同一规则固定连接地址, 失败时返回 50 */
+        if (!Common::checkSafeHost($params['host'] ?? '')) {
             throw new Exception(_t('源地址服务器错误'), 16);
         }
 

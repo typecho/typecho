@@ -159,6 +159,9 @@ class Edit extends Contents implements ActionInterface
             $this->response->goBack();
         }
 
+        /** 只有编辑以上权限可以直接改变文章状态, 贡献者只能通过写稿提交审核 */
+        $this->user->pass('editor');
+
         $posts = $this->request->filter('int')->getArray('cid');
         $markCount = 0;
 
