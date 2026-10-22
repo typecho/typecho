@@ -24,15 +24,22 @@ use PHPUnit\Framework\TestCase;
  *   only reset by some closing tags
  * - edge-nil, edge-i8: <nil/> is dropped and <i8> falls back to an untyped string
  * - edge-doctype-*: DOCTYPE is stripped by string surgery rather than rejected
- * - edge-truncated: an unclosed document still parses (xml_parse() runs without is_final)
  * - edge-unknown-root: a well-formed non XML-RPC document throws from parse() because
  *   $messageType is read before it is ever assigned
- * - edge-mismatched-tags, edge-invalid-utf8, edge-undefined-entity: a failed parse leaves
- *   whatever was collected before the error in $methodName/$params
  * - type-datetime-extended: "2026-10-22T08:30:15Z" is sliced by fixed offsets into garbage
  * - type-base64-binary: binary strings encode as <string>, mangled by htmlspecialchars()
  * - client-system-multicall: multiCall() tests is_a($result, 'Error'), i.e. the global
  *   \Error, so faults are wrapped and encoded as a struct instead of faultCode/faultString
+ *
+ * Goldens changed by the switch from ext/xml to DOM, accepted on purpose:
+ * - edge-truncated (intentional fix, not a regression): ext/xml called xml_parse() without
+ *   is_final, so a truncated request parsed as a success and Server actually executed the
+ *   method. DOM reports it as not well formed: -32700 instead of -32601.
+ * - edge-invalid-utf8, edge-latin1-declared, edge-mismatched-tags, edge-undefined-entity:
+ *   parse() still returns false, and the handle() response and re-encoded output are
+ *   byte-identical. Only the public properties left behind after a failed parse differ
+ *   (ext/xml filled them while parsing, DOM fills nothing on failure). Server and Client
+ *   discard the message when parse() is false, so this is not observable.
  */
 final class XmlRpcCodecTest extends TestCase
 {

@@ -3,18 +3,10 @@
         "result": false,
         "php_errors": 0
     },
-    "messageType": {
-        "string": "methodCall"
-    },
-    "methodName": {
-        "string": "test.mismatch"
-    },
+    "messageType": "<uninitialized>",
+    "methodName": "<uninitialized>",
     "params": {
-        "list": [
-            {
-                "string": "ok"
-            }
-        ]
+        "list": []
     },
     "faultCode": "<uninitialized>",
     "faultString": "<uninitialized>",

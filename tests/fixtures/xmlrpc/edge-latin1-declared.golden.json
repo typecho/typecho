@@ -3,12 +3,8 @@
         "result": false,
         "php_errors": 0
     },
-    "messageType": {
-        "string": "methodCall"
-    },
-    "methodName": {
-        "string": "test.latin1"
-    },
+    "messageType": "<uninitialized>",
+    "methodName": "<uninitialized>",
     "params": {
         "list": []
     },
