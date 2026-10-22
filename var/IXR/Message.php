@@ -79,18 +79,18 @@ class Message
             }
         }
 
-        $parser = xml_parser_create();
-        // Set XML parser to take the case of tags in to account
-        xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, false);
-        // Set XML parser callback functions
-        xml_set_element_handler($parser, [$this, 'tagOpen'], [$this, 'tagClose']);
-        xml_set_character_data_handler($parser, [$this, 'cdata']);
-        if (!xml_parse($parser, $this->message)) {
-            /* die(sprintf('XML error: %s at line %d',
-                xml_error_string(xml_get_error_code($this->parser)),
-                xml_get_current_line_number($this->parser))); */
+        $document = new \DOMDocument();
+        $useErrors = libxml_use_internal_errors(true);
+        $loaded = $document->loadXML($this->message, LIBXML_NONET);
+        libxml_clear_errors();
+        libxml_use_internal_errors($useErrors);
+
+        if (!$loaded) {
             return false;
         }
+
+        $this->walk($document->documentElement);
+
         // Grab the error messages, if any
         if ($this->messageType == 'fault') {
             $this->faultCode = intval($this->params[0]['faultCode']);
@@ -100,11 +100,30 @@ class Message
     }
 
     /**
-     * @param $parser
-     * @param string $tag
-     * @param $attr
+     * Replay the tree as the open/cdata/close events the old SAX handlers consumed
+     *
+     * @param \DOMElement $element
      */
-    private function tagOpen($parser, string $tag, $attr)
+    private function walk(\DOMElement $element)
+    {
+        $this->tagOpen($element->nodeName);
+
+        foreach ($element->childNodes as $child) {
+            if ($child instanceof \DOMElement) {
+                $this->walk($child);
+            } elseif ($child instanceof \DOMText) {
+                // DOMCdataSection is a DOMText too
+                $this->cdata($child->data);
+            }
+        }
+
+        $this->tagClose($element->nodeName);
+    }
+
+    /**
+     * @param string $tag
+     */
+    private function tagOpen(string $tag)
     {
         switch ($tag) {
             case 'methodCall':
@@ -125,19 +144,17 @@ class Message
     }
 
     /**
-     * @param $parser
      * @param string $cdata
      */
-    private function cdata($parser, string $cdata)
+    private function cdata(string $cdata)
     {
         $this->currentTagContents .= $cdata;
     }
 
     /**
-     * @param $parser
      * @param string $tag
      */
-    private function tagClose($parser, string $tag)
+    private function tagClose(string $tag)
     {
         switch ($tag) {
             case 'int':
