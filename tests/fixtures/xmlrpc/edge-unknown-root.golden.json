@@ -1,0 +1,18 @@
+{
+    "parse": {
+        "throws": "Error",
+        "php_errors": 0
+    },
+    "messageType": "<uninitialized>",
+    "methodName": "<uninitialized>",
+    "params": {
+        "list": []
+    },
+    "faultCode": "<uninitialized>",
+    "faultString": "<uninitialized>",
+    "encoded": null,
+    "response": {
+        "throws": "Error",
+        "php_errors": 0
+    }
+}

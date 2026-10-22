@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<methodCall>
+  <methodName>system.multicall</methodName>
+  <params>
+    <param><value><array><data>
+      <value><struct>
+        <member><name>methodName</name><value><string>system.listMethods</string></value></member>
+        <member><name>params</name><value><array><data></data></array></value></member>
+      </struct></value>
+      <value><struct>
+        <member><name>methodName</name><value><string>system.multicall</string></value></member>
+        <member><name>params</name><value><array><data></data></array></value></member>
+      </struct></value>
+      <value><struct>
+        <member><name>methodName</name><value><string>blogger.getUsersBlogs</string></value></member>
+        <member><name>params</name><value><array><data>
+          <value><string>key</string></value>
+          <value><string>admin</string></value>
+          <value><string>s3cret</string></value>
+        </data></array></value></member>
+      </struct></value>
+    </data></array></value></param>
+  </params>
+</methodCall>

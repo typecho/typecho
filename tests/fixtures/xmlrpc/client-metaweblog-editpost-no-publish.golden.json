@@ -1,0 +1,82 @@
+{
+    "parse": {
+        "result": true,
+        "php_errors": 0
+    },
+    "messageType": {
+        "string": "methodCall"
+    },
+    "methodName": {
+        "string": "metaWeblog.editPost"
+    },
+    "params": {
+        "list": [
+            {
+                "string": "42"
+            },
+            {
+                "string": "admin"
+            },
+            {
+                "string": "s3cret"
+            },
+            {
+                "map": [
+                    [
+                        "title",
+                        {
+                            "string": "Edited without publish flag"
+                        }
+                    ],
+                    [
+                        "description",
+                        {
+                            "string": "Body"
+                        }
+                    ]
+                ]
+            }
+        ]
+    },
+    "faultCode": "<uninitialized>",
+    "faultString": "<uninitialized>",
+    "encoded": {
+        "result": [
+            "<?xml version=\"1.0\"?>",
+            "<methodCall>",
+            "<methodName>metaWeblog.editPost</methodName>",
+            "<params>",
+            "<param><value><string>42</string></value></param>",
+            "<param><value><string>admin</string></value></param>",
+            "<param><value><string>s3cret</string></value></param>",
+            "<param><value><struct>",
+            "  <member><name>title</name><value><string>Edited without publish flag</string></value></member>",
+            "  <member><name>description</name><value><string>Body</string></value></member>",
+            "</struct></value></param>",
+            "</params></methodCall>"
+        ],
+        "php_errors": 0
+    },
+    "response": {
+        "result": [
+            "<methodResponse>",
+            "  <fault>",
+            "    <value>",
+            "      <struct>",
+            "        <member>",
+            "          <name>faultCode</name>",
+            "          <value><int>-32601</int></value>",
+            "        </member>",
+            "        <member>",
+            "          <name>faultString</name>",
+            "          <value><string>server error. requested method metaWeblog.editPost does not exist.</string></value>",
+            "        </member>",
+            "      </struct>",
+            "    </value>",
+            "  </fault>",
+            "</methodResponse>",
+            ""
+        ],
+        "php_errors": 0
+    }
+}

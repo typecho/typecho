@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<methodCall>
+<methodName>test.date</methodName>
+<params>
+<param><value><dateTime.iso8601>2026-10-22T08:30:15Z</dateTime.iso8601></value></param>
+<param><value><dateTime.iso8601>20261022T08:30:15+08:00</dateTime.iso8601></value></param>
+</params>
+</methodCall>

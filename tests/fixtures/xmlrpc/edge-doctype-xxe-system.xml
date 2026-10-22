@@ -1,0 +1,3 @@
+<?xml version="1.0"?>
+<!DOCTYPE methodCall SYSTEM "file:///etc/passwd">
+<methodCall><methodName>test.xxe</methodName><params><param><value><string>x</string></value></param></params></methodCall>

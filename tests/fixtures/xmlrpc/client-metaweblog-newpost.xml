@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<methodCall>
+  <methodName>metaWeblog.newPost</methodName>
+  <params>
+    <param><value><string>1</string></value></param>
+    <param><value><string>admin</string></value></param>
+    <param><value><string>s3cret</string></value></param>
+    <param>
+      <value>
+        <struct>
+          <member><name>title</name><value><string>Hello Typecho</string></value></member>
+          <member><name>description</name><value><string>&lt;p&gt;First post &amp; more&lt;/p&gt;</string></value></member>
+          <member><name>mt_text_more</name><value><string></string></value></member>
+          <member><name>mt_keywords</name><value><string>php,blog</string></value></member>
+          <member><name>wp_slug</name><value><string>hello-typecho</string></value></member>
+          <member><name>mt_allow_comments</name><value><int>1</int></value></member>
+          <member><name>dateCreated</name><value><dateTime.iso8601>20261022T08:30:00</dateTime.iso8601></value></member>
+          <member>
+            <name>categories</name>
+            <value><array><data>
+              <value><string>Default</string></value>
+              <value><string>News</string></value>
+            </data></array></value>
+          </member>
+        </struct>
+      </value>
+    </param>
+    <param><value><boolean>1</boolean></value></param>
+  </params>
+</methodCall>

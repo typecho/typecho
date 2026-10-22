@@ -1,0 +1,63 @@
+{
+    "parse": {
+        "result": true,
+        "php_errors": 0
+    },
+    "messageType": {
+        "string": "methodCall"
+    },
+    "methodName": {
+        "string": "test.member"
+    },
+    "params": {
+        "list": [
+            {
+                "map": [
+                    [
+                        "present",
+                        {
+                            "int": 1
+                        }
+                    ]
+                ]
+            }
+        ]
+    },
+    "faultCode": "<uninitialized>",
+    "faultString": "<uninitialized>",
+    "encoded": {
+        "result": [
+            "<?xml version=\"1.0\"?>",
+            "<methodCall>",
+            "<methodName>test.member</methodName>",
+            "<params>",
+            "<param><value><struct>",
+            "  <member><name>present</name><value><int>1</int></value></member>",
+            "</struct></value></param>",
+            "</params></methodCall>"
+        ],
+        "php_errors": 0
+    },
+    "response": {
+        "result": [
+            "<methodResponse>",
+            "  <fault>",
+            "    <value>",
+            "      <struct>",
+            "        <member>",
+            "          <name>faultCode</name>",
+            "          <value><int>-32601</int></value>",
+            "        </member>",
+            "        <member>",
+            "          <name>faultString</name>",
+            "          <value><string>server error. requested method test.member does not exist.</string></value>",
+            "        </member>",
+            "      </struct>",
+            "    </value>",
+            "  </fault>",
+            "</methodResponse>",
+            ""
+        ],
+        "php_errors": 0
+    }
+}

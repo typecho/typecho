@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<methodCall>
+<methodName>test.utf8</methodName>
+<params>
+<param><value><string>bad Ã( bytes ÿ</string></value></param>
+</params>
+</methodCall>

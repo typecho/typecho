@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<methodCall>
+  <methodName>blogger.getUsersBlogs</methodName>
+  <params>
+    <param><value><string>0123456789ABCDEF</string></value></param>
+    <param><value><string>admin</string></value></param>
+    <param><value><string>s3cret</string></value></param>
+  </params>
+</methodCall>

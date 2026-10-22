@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<methodCall>
+  <methodName>mt.getRecentPostTitles</methodName>
+  <params>
+    <param><value><string>1</string></value></param>
+    <param><value><string>admin</string></value></param>
+    <param><value><string>s3cret</string></value></param>
+    <param><value><i4>10</i4></value></param>
+  </params>
+</methodCall>

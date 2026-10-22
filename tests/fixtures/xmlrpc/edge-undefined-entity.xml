@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<methodCall><methodName>test.entity</methodName><params><param><value><string>&nbsp;</string></value></param></params></methodCall>

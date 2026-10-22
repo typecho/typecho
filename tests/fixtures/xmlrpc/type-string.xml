@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<methodCall>
+<methodName>test.string</methodName>
+<params>
+<param><value><string>plain</string></value></param>
+<param><value><string>a &lt;b&gt; &amp; &quot;c&quot; &#39;d&#39; &#x4E2D;</string></value></param>
+<param><value><string><![CDATA[<raw> & cdata]]></string></value></param>
+</params>
+</methodCall>

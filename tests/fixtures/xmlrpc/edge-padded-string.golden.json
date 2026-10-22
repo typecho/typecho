@@ -1,0 +1,58 @@
+{
+    "parse": {
+        "result": true,
+        "php_errors": 0
+    },
+    "messageType": {
+        "string": "methodCall"
+    },
+    "methodName": {
+        "string": "test.padded"
+    },
+    "params": {
+        "list": [
+            {
+                "string": "leading and trailing"
+            },
+            {
+                "string": "indented code block"
+            }
+        ]
+    },
+    "faultCode": "<uninitialized>",
+    "faultString": "<uninitialized>",
+    "encoded": {
+        "result": [
+            "<?xml version=\"1.0\"?>",
+            "<methodCall>",
+            "<methodName>test.padded</methodName>",
+            "<params>",
+            "<param><value><string>leading and trailing</string></value></param>",
+            "<param><value><string>indented code block</string></value></param>",
+            "</params></methodCall>"
+        ],
+        "php_errors": 0
+    },
+    "response": {
+        "result": [
+            "<methodResponse>",
+            "  <fault>",
+            "    <value>",
+            "      <struct>",
+            "        <member>",
+            "          <name>faultCode</name>",
+            "          <value><int>-32601</int></value>",
+            "        </member>",
+            "        <member>",
+            "          <name>faultString</name>",
+            "          <value><string>server error. requested method test.padded does not exist.</string></value>",
+            "        </member>",
+            "      </struct>",
+            "    </value>",
+            "  </fault>",
+            "</methodResponse>",
+            ""
+        ],
+        "php_errors": 0
+    }
+}

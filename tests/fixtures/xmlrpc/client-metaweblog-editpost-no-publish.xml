@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<methodCall>
+  <methodName>metaWeblog.editPost</methodName>
+  <params>
+    <param><value><string>42</string></value></param>
+    <param><value><string>admin</string></value></param>
+    <param><value><string>s3cret</string></value></param>
+    <param><value><struct>
+      <member><name>title</name><value><string>Edited without publish flag</string></value></member>
+      <member><name>description</name><value><string>Body</string></value></member>
+    </struct></value></param>
+  </params>
+</methodCall>

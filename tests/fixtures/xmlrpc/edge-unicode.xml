@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<methodCall>
+<methodName>test.unicode</methodName>
+<params>
+<param><value><string>中文标题 🎉 Ünïcødé</string></value></param>
+</params>
+</methodCall>

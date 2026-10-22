@@ -1,0 +1,40 @@
+{
+    "parse": {
+        "result": false,
+        "php_errors": 0
+    },
+    "messageType": {
+        "string": "methodCall"
+    },
+    "methodName": {
+        "string": "test.latin1"
+    },
+    "params": {
+        "list": []
+    },
+    "faultCode": "<uninitialized>",
+    "faultString": "<uninitialized>",
+    "encoded": null,
+    "response": {
+        "result": [
+            "<methodResponse>",
+            "  <fault>",
+            "    <value>",
+            "      <struct>",
+            "        <member>",
+            "          <name>faultCode</name>",
+            "          <value><int>-32700</int></value>",
+            "        </member>",
+            "        <member>",
+            "          <name>faultString</name>",
+            "          <value><string>parse error. not well formed</string></value>",
+            "        </member>",
+            "      </struct>",
+            "    </value>",
+            "  </fault>",
+            "</methodResponse>",
+            ""
+        ],
+        "php_errors": 0
+    }
+}

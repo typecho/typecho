@@ -1,0 +1,99 @@
+{
+    "parse": {
+        "result": true,
+        "php_errors": 0
+    },
+    "messageType": {
+        "string": "methodCall"
+    },
+    "methodName": {
+        "string": "test.struct"
+    },
+    "params": {
+        "list": [
+            {
+                "map": [
+                    [
+                        "outer",
+                        {
+                            "map": [
+                                [
+                                    "inner",
+                                    {
+                                        "int": 1
+                                    }
+                                ],
+                                [
+                                    "list",
+                                    {
+                                        "list": [
+                                            {
+                                                "int": 2
+                                            }
+                                        ]
+                                    }
+                                ]
+                            ]
+                        }
+                    ],
+                    [
+                        "spaced name",
+                        {
+                            "string": "x"
+                        }
+                    ],
+                    [
+                        7,
+                        {
+                            "string": "numeric key"
+                        }
+                    ]
+                ]
+            }
+        ]
+    },
+    "faultCode": "<uninitialized>",
+    "faultString": "<uninitialized>",
+    "encoded": {
+        "result": [
+            "<?xml version=\"1.0\"?>",
+            "<methodCall>",
+            "<methodName>test.struct</methodName>",
+            "<params>",
+            "<param><value><struct>",
+            "  <member><name>outer</name><value><struct>",
+            "  <member><name>inner</name><value><int>1</int></value></member>",
+            "  <member><name>list</name><value><array><data>",
+            "  <value><int>2</int></value>",
+            "</data></array></value></member>",
+            "</struct></value></member>",
+            "  <member><name>spaced name</name><value><string>x</string></value></member>",
+            "  <member><name>7</name><value><string>numeric key</string></value></member>",
+            "</struct></value></param>",
+            "</params></methodCall>"
+        ],
+        "php_errors": 0
+    },
+    "response": {
+        "result": [
+            "<methodResponse>",
+            "  <fault>",
+            "    <value>",
+            "      <struct>",
+            "        <member>",
+            "          <name>faultCode</name>",
+            "          <value><int>-32601</int></value>",
+            "        </member>",
+            "        <member>",
+            "          <name>faultString</name>",
+            "          <value><string>server error. requested method test.struct does not exist.</string></value>",
+            "        </member>",
+            "      </struct>",
+            "    </value>",
+            "  </fault>",
+            "</methodResponse>",
+            ""
+        ],
+        "php_errors": 0
+    }
+}

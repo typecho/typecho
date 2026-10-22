@@ -1,0 +1,47 @@
+{
+    "parse": {
+        "result": true,
+        "php_errors": 0
+    },
+    "messageType": {
+        "string": "methodCall"
+    },
+    "methodName": {
+        "string": "system.listMethods"
+    },
+    "params": {
+        "list": []
+    },
+    "faultCode": "<uninitialized>",
+    "faultString": "<uninitialized>",
+    "encoded": {
+        "result": [
+            "<?xml version=\"1.0\"?>",
+            "<methodCall>",
+            "<methodName>system.listMethods</methodName>",
+            "<params>",
+            "</params></methodCall>"
+        ],
+        "php_errors": 0
+    },
+    "response": {
+        "result": [
+            "<methodResponse>",
+            "  <params>",
+            "    <param>",
+            "      <value>",
+            "        <array><data>",
+            "  <value><string>system.methodHelp</string></value>",
+            "  <value><string>system.multicall</string></value>",
+            "  <value><string>system.listMethods</string></value>",
+            "  <value><string>system.getCapabilities</string></value>",
+            "</data></array>",
+            "      </value>",
+            "    </param>",
+            "  </params>",
+            "</methodResponse>",
+            ""
+        ],
+        "php_errors": 0
+    }
+}

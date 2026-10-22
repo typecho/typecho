@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<methodCall>
+  <methodName>metaWeblog.getRecentPosts</methodName>
+  <params>
+    <param><value><string>1</string></value></param>
+    <param><value><string>admin</string></value></param>
+    <param><value><string>s3cret</string></value></param>
+    <param><value><int>20</int></value></param>
+  </params>
+</methodCall>

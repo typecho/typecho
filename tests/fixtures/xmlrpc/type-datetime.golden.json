@@ -1,0 +1,77 @@
+{
+    "parse": {
+        "result": true,
+        "php_errors": 0
+    },
+    "messageType": {
+        "string": "methodCall"
+    },
+    "methodName": {
+        "string": "test.date"
+    },
+    "params": {
+        "list": [
+            {
+                "object": "IXR\\Date",
+                "props": {
+                    "year": {
+                        "string": "2026"
+                    },
+                    "month": {
+                        "string": "10"
+                    },
+                    "day": {
+                        "string": "22"
+                    },
+                    "hour": {
+                        "string": "08"
+                    },
+                    "minute": {
+                        "string": "30"
+                    },
+                    "second": {
+                        "string": "15"
+                    },
+                    "timezone": {
+                        "string": ""
+                    }
+                }
+            }
+        ]
+    },
+    "faultCode": "<uninitialized>",
+    "faultString": "<uninitialized>",
+    "encoded": {
+        "result": [
+            "<?xml version=\"1.0\"?>",
+            "<methodCall>",
+            "<methodName>test.date</methodName>",
+            "<params>",
+            "<param><value><dateTime.iso8601>20261022T08:30:15</dateTime.iso8601></value></param>",
+            "</params></methodCall>"
+        ],
+        "php_errors": 0
+    },
+    "response": {
+        "result": [
+            "<methodResponse>",
+            "  <fault>",
+            "    <value>",
+            "      <struct>",
+            "        <member>",
+            "          <name>faultCode</name>",
+            "          <value><int>-32601</int></value>",
+            "        </member>",
+            "        <member>",
+            "          <name>faultString</name>",
+            "          <value><string>server error. requested method test.date does not exist.</string></value>",
+            "        </member>",
+            "      </struct>",
+            "    </value>",
+            "  </fault>",
+            "</methodResponse>",
+            ""
+        ],
+        "php_errors": 0
+    }
+}

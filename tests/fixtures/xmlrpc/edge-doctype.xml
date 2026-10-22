@@ -1,0 +1,3 @@
+<?xml version="1.0"?>
+<!DOCTYPE methodCall>
+<methodCall><methodName>system.listMethods</methodName><params></params></methodCall>
