@@ -196,6 +196,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
         $auth = [];
 
         $accesses = [
+            'wp.getPages'           => 'editor',
             'wp.newPage'           => 'editor',
             'wp.deletePage'        => 'editor',
             'wp.getPageList'       => 'editor',
