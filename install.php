@@ -1297,11 +1297,10 @@ function install_step_3_perform()
 
     try {
         // write user
-        $hasher = new \Utils\PasswordHash(8, true);
         $installDb->query(
             $installDb->insert('table.users')->rows([
                 'name' => $config['userName'],
-                'password' => $hasher->hashPassword($config['userPassword']),
+                'password' => \Typecho\Common::hashPassword($config['userPassword']),
                 'mail' => $config['userMail'],
                 'url' => $config['userUrl'],
                 'screenName' => $config['userName'],

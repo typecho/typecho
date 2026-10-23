@@ -6,7 +6,6 @@ use Typecho\Common;
 use Typecho\Cookie;
 use Typecho\Db\Exception;
 use Typecho\Validate;
-use Utils\PasswordHash;
 use Widget\Base\Users;
 use Widget\Users\EditTrait;
 
@@ -71,14 +70,13 @@ class Register extends Users implements ActionInterface
             $this->response->goBack();
         }
 
-        $hasher = new PasswordHash(8, true);
         $generatedPassword = Common::randString(7);
 
         $dataStruct = [
             'name' => $this->request->get('name'),
             'mail' => $this->request->get('mail'),
             'screenName' => $this->request->get('name'),
-            'password' => $hasher->hashPassword($generatedPassword),
+            'password' => Common::hashPassword($generatedPassword),
             'created' => $this->options->time,
             'group' => 'subscriber'
         ];

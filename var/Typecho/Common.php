@@ -721,6 +721,8 @@ EOF;
         /**
          * 判断hash值是否相等
          *
+         * 依次尝试 hashPassword() 生成的格式, phpass 的 $P$ 格式, 旧 Typecho 的 $T$ 格式和裸 md5
+         *
          * @access public
          *
          * @param string|null $from 源字符串
@@ -734,12 +736,63 @@ EOF;
                 return false;
             }
 
-            if ('$T$' == substr($to, 0, 3)) {
-                $salt = substr($to, 3, 9);
-                return self::hash($from, $salt) === $to;
-            } else {
-                return md5($from) === $to;
+            if (password_verify($from, $to)) {
+                return true;
             }
+
+            $prefix = substr($to, 0, 3);
+
+            if ('$P$' == $prefix) {
+                // 畸形的 portable 哈希不进 phpass：它会把整串当 DES salt 交给 crypt()，
+                // PHP 7.4 会报 "Supplied salt is not valid for DES"
+                if (!self::isPortableHash($to)) {
+                    return false;
+                }
+
+                $hasher = new \Utils\PasswordHash(8, true);
+                return $hasher->checkPassword($from, $to);
+            } elseif ('$T$' == $prefix) {
+                $salt = substr($to, 3, 9);
+                return hash_equals($to, self::hash($from, $salt));
+            } else {
+                return hash_equals($to, md5($from));
+            }
+        }
+
+        /**
+         * 判断是否为 phpass 能直接处理的 portable 哈希
+         *
+         * "$P$" + cost + 8 位 salt + 22 位校验和, 共 34 位; cost 限定为 phpass 接受的 2^7 ~ 2^30
+         * (itoa64 下标 7 ~ 30, 即 "5" ~ "S"), 否则 phpass 同样会回落到 crypt()
+         *
+         * @param string $hash
+         * @return bool
+         */
+        private static function isPortableHash(string $hash): bool
+        {
+            return strlen($hash) === 34 && preg_match('/^\$P\$[5-9A-S][.\/0-9A-Za-z]{30}$/', $hash) === 1;
+        }
+
+        /**
+         * 生成密码hash, 核心与插件都应通过此方法生成密码, 并用 hashValidate() 校验
+         *
+         * @param string $password 明文密码
+         * @return string
+         */
+        public static function hashPassword(string $password): string
+        {
+            return password_hash($password, PASSWORD_DEFAULT);
+        }
+
+        /**
+         * 判断一个已存储的哈希是否需要按当前默认算法重算
+         *
+         * @param string $hash 已存储的密码hash
+         * @return bool
+         */
+        public static function passwordNeedsRehash(string $hash): bool
+        {
+            return password_needs_rehash($hash, PASSWORD_DEFAULT);
         }
 
         /**
