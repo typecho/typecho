@@ -315,6 +315,13 @@ class Edit extends Contents implements ActionInterface
         $deleteCount = 0;
 
         foreach ($posts as $post) {
+            $condition = $this->db->sql()
+                ->where('cid = ? AND (type = ? OR type = ?)', $post, 'post', 'post_draft');
+
+            if (!$this->isWriteable($condition)) {
+                continue;
+            }
+
             /** 删除草稿 */
             $draft = $this->db->fetchRow($this->db->select('cid')
                 ->from('table.contents')
