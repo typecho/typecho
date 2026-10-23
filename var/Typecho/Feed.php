@@ -218,7 +218,9 @@ xmlns:dc="http://purl.org/dc/elements/1.1/">' . self::EOL;
                 $content .= '<title>' . htmlspecialchars($item['title']) . '</title>' . self::EOL;
                 $content .= '<link>' . $item['link'] . '</link>' . self::EOL;
                 $content .= '<dc:date>' . $this->dateFormat($item['date']) . '</dc:date>' . self::EOL;
-                $content .= '<description>' . strip_tags($item['content']) . '</description>' . self::EOL;
+                // ]]> is forbidden in character data too, &gt; keeps the parsed text identical
+                $content .= '<description>' . str_replace(']]>', ']]&gt;', strip_tags($item['content']))
+                    . '</description>' . self::EOL;
                 if (!empty($item['suffix'])) {
                     $content .= $item['suffix'];
                 }
@@ -269,20 +271,19 @@ xmlns:atom="http://www.w3.org/2005/Atom">
 
                 if (!empty($item['category']) && is_array($item['category'])) {
                     foreach ($item['category'] as $category) {
-                        $content .= '<category><![CDATA[' . $category['name'] . ']]></category>' . self::EOL;
+                        $content .= '<category>' . $this->cdata($category['name']) . '</category>' . self::EOL;
                     }
                 }
 
                 if (!empty($item['excerpt'])) {
-                    $content .= '<description><![CDATA[' . strip_tags($item['excerpt'])
-                        . ']]></description>' . self::EOL;
+                    $content .= '<description>' . $this->cdata(strip_tags($item['excerpt']))
+                        . '</description>' . self::EOL;
                 }
 
                 if (!empty($item['content'])) {
-                    $content .= '<content:encoded xml:lang="' . $this->lang . '"><![CDATA['
-                        . self::EOL .
-                        $item['content'] . self::EOL .
-                        ']]></content:encoded>' . self::EOL;
+                    $content .= '<content:encoded xml:lang="' . $this->lang . '">'
+                        . $this->cdata(self::EOL . $item['content'] . self::EOL)
+                        . '</content:encoded>' . self::EOL;
                 }
 
                 if (isset($item['comments']) && strlen($item['comments']) > 0) {
@@ -324,7 +325,7 @@ xml:base="' . $this->baseUrl . '"
 
             foreach ($this->items as $item) {
                 $content .= '<entry>' . self::EOL;
-                $content .= '<title type="html"><![CDATA[' . $item['title'] . ']]></title>' . self::EOL;
+                $content .= '<title type="html">' . $this->cdata($item['title']) . '</title>' . self::EOL;
                 $content .= '<link rel="alternate" type="text/html" href="' . $item['link'] . '" />' . self::EOL;
                 $content .= '<id>' . $item['link'] . '</id>' . self::EOL;
                 $content .= '<updated>' . $this->dateFormat($item['date']) . '</updated>' . self::EOL;
@@ -342,16 +343,15 @@ xml:base="' . $this->baseUrl . '"
                 }
 
                 if (!empty($item['excerpt'])) {
-                    $content .= '<summary type="html"><![CDATA[' . htmlspecialchars($item['excerpt'])
-                        . ']]></summary>' . self::EOL;
+                    $content .= '<summary type="html">' . $this->cdata(htmlspecialchars($item['excerpt']))
+                        . '</summary>' . self::EOL;
                 }
 
                 if (!empty($item['content'])) {
                     $content .= '<content type="html" xml:base="' . $item['link']
-                        . '" xml:lang="' . $this->lang . '"><![CDATA['
-                        . self::EOL .
-                        $item['content'] . self::EOL .
-                        ']]></content>' . self::EOL;
+                        . '" xml:lang="' . $this->lang . '">'
+                        . $this->cdata(self::EOL . $item['content'] . self::EOL)
+                        . '</content>' . self::EOL;
                 }
 
                 if (isset($item['comments']) && strlen($item['comments']) > 0) {
@@ -404,5 +404,16 @@ xml:base="' . $this->baseUrl . '"
         }
 
         return '';
+    }
+
+    /**
+     * 包裹为CDATA段, 拆分内容中的 ]]> 以免提前闭合
+     *
+     * @param string|null $value 原始内容, null 视为空串以保持旧的拼接行为
+     * @return string
+     */
+    private function cdata(?string $value): string
+    {
+        return '<![CDATA[' . str_replace(']]>', ']]]]><![CDATA[>', (string) $value) . ']]>';
     }
 }
