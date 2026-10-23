@@ -12,10 +12,10 @@
     "params": {
         "list": [
             {
-                "string": "leading and trailing"
+                "string": "  leading and trailing  "
             },
             {
-                "string": "indented code block"
+                "string": "\n\n    indented code block\n"
             }
         ]
     },
@@ -27,8 +27,11 @@
             "<methodCall>",
             "<methodName>test.padded</methodName>",
             "<params>",
-            "<param><value><string>leading and trailing</string></value></param>",
-            "<param><value><string>indented code block</string></value></param>",
+            "<param><value><string>  leading and trailing  </string></value></param>",
+            "<param><value><string>",
+            "",
+            "    indented code block",
+            "</string></value></param>",
             "</params></methodCall>"
         ],
         "php_errors": 0

@@ -25,13 +25,13 @@
                     [
                         "title",
                         {
-                            "string": "Markdown post"
+                            "string": "  Markdown post  "
                         }
                     ],
                     [
                         "description",
                         {
-                            "string": "$ composer install\n    $ php -S localhost:8000\n\nRegular paragraph."
+                            "string": "\n    $ composer install\n    $ php -S localhost:8000\n\nRegular paragraph.\n"
                         }
                     ]
                 ]
@@ -51,11 +51,13 @@
             "<param><value><string>admin</string></value></param>",
             "<param><value><string>s3cret</string></value></param>",
             "<param><value><struct>",
-            "  <member><name>title</name><value><string>Markdown post</string></value></member>",
-            "  <member><name>description</name><value><string>$ composer install",
+            "  <member><name>title</name><value><string>  Markdown post  </string></value></member>",
+            "  <member><name>description</name><value><string>",
+            "    $ composer install",
             "    $ php -S localhost:8000",
             "",
-            "Regular paragraph.</string></value></member>",
+            "Regular paragraph.",
+            "</string></value></member>",
             "</struct></value></param>",
             "<param><value><boolean>0</boolean></value></param>",
             "</params></methodCall>"
