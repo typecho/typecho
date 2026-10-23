@@ -11,8 +11,27 @@ final class CookieTest extends TestCase
 {
     private const NOW = 1700000000;
 
+    /** Cookie's static configuration, which setPrefix() / setOptions() leak into later tests */
+    private const STATICS = ['prefix', 'path', 'domain', 'secure', 'httponly', 'sameSite'];
+
+    private array $statics = [];
+
+    private static function cookieProperty(string $name): \ReflectionProperty
+    {
+        $property = new \ReflectionProperty(Cookie::class, $name);
+        if (PHP_VERSION_ID < 80100) {
+            $property->setAccessible(true);
+        }
+
+        return $property;
+    }
+
     protected function setUp(): void
     {
+        foreach (self::STATICS as $name) {
+            $this->statics[$name] = self::cookieProperty($name)->getValue();
+        }
+
         Response::getInstance()->clean();
         Cookie::setPrefix('https://example.com/blog');
         Cookie::setOptions(['domain' => '', 'secure' => false, 'httponly' => false, 'samesite' => 'Lax']);
@@ -21,8 +40,11 @@ final class CookieTest extends TestCase
     protected function tearDown(): void
     {
         Response::getInstance()->clean();
-        Cookie::setOptions(['domain' => '', 'secure' => false, 'httponly' => false, 'samesite' => 'Lax']);
         $_COOKIE = [];
+
+        foreach ($this->statics as $name => $value) {
+            self::cookieProperty($name)->setValue(null, $value);
+        }
     }
 
     /**
