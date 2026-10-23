@@ -35,6 +35,9 @@ include 'menu.php';
                                         <input type="text" name="merge" class="text-s"/>
                                     </li>
                                 </ul>
+                                <button type="button" class="btn btn-s btn-warn clean-unused"
+                                        rel="<?php $security->index('/action/metas-tag-edit?do=clear'); ?>"
+                                        lang="<?php _e('您确认要清理未使用的标签吗?'); ?>"><?php _e('清理未使用标签'); ?></button>
                             </div>
                         </div>
                     </div>
@@ -92,6 +95,13 @@ include 'common-js.php';
             $('.dropdown-menu button.merge').click(function () {
                 var btn = $(this);
                 btn.parents('form').attr('action', btn.attr('rel')).submit();
+            });
+
+            $('button.clean-unused').click(function () {
+                var btn = $(this);
+                if (confirm(btn.attr('lang'))) {
+                    btn.parents('form').attr('action', btn.attr('rel')).submit();
+                }
             });
 
             <?php if (isset($request->mid)): ?>
