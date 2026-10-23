@@ -130,7 +130,7 @@ class Message
             case 'double':
                 return (float) trim($text);
             case 'string':
-                return trim($text);
+                return $text;
             case 'dateTime.iso8601':
                 return new Date(trim($text));
             case 'boolean':

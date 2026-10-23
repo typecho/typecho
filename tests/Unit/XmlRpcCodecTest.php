@@ -22,6 +22,11 @@ use PHPUnit\Framework\TestCase;
  *   byte-identical. Only the public properties left behind after a failed parse differ
  *   (ext/xml filled them while parsing, DOM fills nothing on failure). Server and Client
  *   discard the message when parse() is false, so this is not observable.
+ *
+ * Goldens changed by keeping <string> content verbatim instead of trimming it:
+ * - edge-padded-string, edge-whitespace-string, client-metaweblog-newpost-markdown (and its
+ *   .dispatch.json): the parsed strings now keep their leading/trailing whitespace exactly as
+ *   written in the fixture, and the re-encoded output carries it too. Nothing else changed.
  */
 final class XmlRpcCodecTest extends TestCase
 {
