@@ -199,18 +199,37 @@ class Response
         }
 
         // set cookie
+        $now = time();
         foreach ($this->cookies as $cookie) {
-            [$key, $value, $timeout, $path, $domain, $secure, $httponly] = $cookie;
-
-            if ($timeout > 0) {
-                $now = time();
-                $timeout += $timeout > $now - 86400 ? 0 : $now;
-            } elseif ($timeout < 0) {
-                $timeout = 1;
-            }
-
-            setrawcookie($key, rawurlencode($value), $timeout, $path, $domain, $secure, $httponly);
+            setrawcookie(...self::buildCookie($cookie, $now));
         }
+    }
+
+    /**
+     * 把队列中的 cookie 转换为 setrawcookie 的参数
+     *
+     * @param array $cookie [key, value, timeout, path, domain, secure, httponly, samesite]
+     * @param int $now 当前时间戳
+     * @return array [name, rawValue, options]
+     */
+    public static function buildCookie(array $cookie, int $now): array
+    {
+        [$key, $value, $timeout, $path, $domain, $secure, $httponly, $sameSite] = $cookie;
+
+        if ($timeout > 0) {
+            $timeout += $timeout > $now - 86400 ? 0 : $now;
+        } elseif ($timeout < 0) {
+            $timeout = 1;
+        }
+
+        return [$key, rawurlencode($value), [
+            'expires'  => $timeout,
+            'path'     => $path,
+            'domain'   => $domain,
+            'secure'   => $secure,
+            'httponly' => $httponly,
+            'samesite' => $sameSite
+        ]];
     }
 
     /**
@@ -277,6 +296,7 @@ class Response
      * @param string|null $domain 域名信息
      * @param bool $secure 是否仅可通过安全的 HTTPS 连接传给客户端
      * @param bool $httponly 是否仅可通过 HTTP 协议访问
+     * @param string $sameSite SameSite 属性(Lax/Strict/None),空字符串表示不发送
      * @return $this
      */
     public function setCookie(
@@ -286,10 +306,11 @@ class Response
         string $path = '/',
         string $domain = '',
         bool $secure = false,
-        bool $httponly = false
+        bool $httponly = false,
+        string $sameSite = 'Lax'
     ): Response {
         if (!$this->sandbox) {
-            $this->cookies[] = [$key, $value, $timeout, $path, $domain, $secure, $httponly];
+            $this->cookies[] = [$key, $value, $timeout, $path, $domain, $secure, $httponly, $sameSite];
         }
 
         return $this;

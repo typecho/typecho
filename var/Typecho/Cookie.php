@@ -46,6 +46,12 @@ class Cookie
     private static bool $httponly = false;
 
     /**
+     * @var string
+     * @access private
+     */
+    private static string $sameSite = 'Lax';
+
+    /**
      * 获取前缀
      *
      * @access public
@@ -114,6 +120,7 @@ class Cookie
         self::$domain = $options['domain'] ?: self::$domain;
         self::$secure = !!$options['secure'];
         self::$httponly = !!$options['httponly'];
+        self::$sameSite = $options['samesite'] ?? self::$sameSite;
     }
 
     /**
@@ -136,8 +143,9 @@ class Cookie
      * @param string $key 指定的参数
      * @param mixed $value 设置的值
      * @param integer $expire 过期时间,默认为0,表示随会话时间结束
+     * @param string|null $sameSite SameSite 属性,默认使用全局设置(Lax)
      */
-    public static function set(string $key, $value, int $expire = 0)
+    public static function set(string $key, $value, int $expire = 0, ?string $sameSite = null)
     {
         $key = self::$prefix . $key;
         $_COOKIE[$key] = $value;
@@ -148,7 +156,8 @@ class Cookie
             self::$path,
             self::$domain,
             self::$secure,
-            self::$httponly
+            self::$httponly,
+            $sameSite ?? self::$sameSite
         );
     }
 
@@ -164,7 +173,7 @@ class Cookie
             return;
         }
 
-        Response::getInstance()->setCookie($key, '', -1, self::$path, self::$domain, self::$secure, self::$httponly);
+        Response::getInstance()->setCookie($key, '', -1, self::$path, self::$domain, self::$secure, self::$httponly, self::$sameSite);
         unset($_COOKIE[$key]);
     }
 }
