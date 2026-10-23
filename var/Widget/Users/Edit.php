@@ -5,7 +5,6 @@ namespace Widget\Users;
 use Typecho\Common;
 use Typecho\Widget\Exception;
 use Typecho\Widget\Helper\Form;
-use Utils\PasswordHash;
 use Widget\ActionInterface;
 use Widget\Base\Users;
 use Widget\Notice;
@@ -85,12 +84,10 @@ class Edit extends Users implements ActionInterface
             $this->response->goBack();
         }
 
-        $hasher = new PasswordHash(8, true);
-
         /** 取出数据 */
         $user = $this->request->from('name', 'mail', 'screenName', 'password', 'url', 'group');
         $user['screenName'] = empty($user['screenName']) ? $user['name'] : $user['screenName'];
-        $user['password'] = $hasher->hashPassword($user['password']);
+        $user['password'] = Common::hashPassword($user['password']);
         $user['created'] = $this->options->time;
 
         /** 插入数据 */
@@ -241,8 +238,7 @@ class Edit extends Users implements ActionInterface
         if (empty($user['password'])) {
             unset($user['password']);
         } else {
-            $hasher = new PasswordHash(8, true);
-            $user['password'] = $hasher->hashPassword($user['password']);
+            $user['password'] = Common::hashPassword($user['password']);
         }
 
         /** 更新数据 */

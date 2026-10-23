@@ -6,7 +6,6 @@ use Typecho\Common;
 use Typecho\Cookie;
 use Typecho\Db\Exception as DbException;
 use Typecho\Widget;
-use Utils\PasswordHash;
 use Widget\Base\Users;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
@@ -101,8 +100,13 @@ class User extends Users
                     ->where('uid = ?', intval($cookieUid))
                     ->limit(1));
 
+                // the cookie is client-controlled: only accept the $T$ format commitLogin() issues,
+                // so a forged bcrypt / phpass cost cannot make hashValidate() burn CPU
                 $cookieAuthCode = Cookie::get('__typecho_authCode');
-                if ($user && Common::hashValidate($user['authCode'], $cookieAuthCode)) {
+                if (
+                    $user && null !== $cookieAuthCode && '$T$' == substr($cookieAuthCode, 0, 3)
+                    && Common::hashValidate($user['authCode'], $cookieAuthCode)
+                ) {
                     $this->currentUser = $user;
                     return ($this->hasLogin = true);
                 }
@@ -169,11 +173,16 @@ class User extends Users
 
         $hashValidate = self::pluginHandle()->trigger($hashPluggable)->call('hashValidate', $password, $user['password']);
         if (!$hashPluggable) {
-            if ('$P$' == substr($user['password'], 0, 3)) {
-                $hasher = new PasswordHash(8, true);
-                $hashValidate = $hasher->checkPassword($password, $user['password']);
-            } else {
-                $hashValidate = Common::hashValidate($password, $user['password']);
+            $hashValidate = Common::hashValidate($password, $user['password']);
+
+            // transparently upgrade phpass / legacy hashes to the current default algorithm
+            if ($hashValidate && Common::passwordNeedsRehash($user['password'])) {
+                $user['password'] = Common::hashPassword($password);
+
+                $this->db->query($this->db
+                    ->update('table.users')
+                    ->rows(['password' => $user['password']])
+                    ->where('uid = ?', $user['uid']));
             }
         }
 
