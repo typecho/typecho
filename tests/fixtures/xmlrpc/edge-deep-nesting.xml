@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<methodCall>
+<methodName>test.deep</methodName>
+<params>
+<param><value><struct>
+<member><name>level1</name><value><array><data>
+<value><struct>
+<member><name>level3</name><value><array><data><value><int>3</int></value></data></array></value></member>
+</struct></value>
+</data></array></value></member>
+</struct></value></param>
+</params>
+</methodCall>

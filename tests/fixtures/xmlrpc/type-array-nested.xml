@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<methodCall>
+<methodName>test.array</methodName>
+<params>
+<param><value><array><data>
+<value><int>1</int></value>
+<value><array><data>
+<value><string>a</string></value>
+<value><array><data></data></array></value>
+</data></array></value>
+<value><struct></struct></value>
+</data></array></value></param>
+</params>
+</methodCall>

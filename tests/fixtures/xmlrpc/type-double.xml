@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<methodCall>
+<methodName>test.double</methodName>
+<params>
+<param><value><double>3.14159</double></value></param>
+<param><value><double>-0.5</double></value></param>
+<param><value><double>1e3</double></value></param>
+</params>
+</methodCall>

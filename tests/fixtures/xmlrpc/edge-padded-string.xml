@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<methodCall>
+<methodName>test.padded</methodName>
+<params>
+<param><value><string>  leading and trailing  </string></value></param>
+<param><value><string>
+
+    indented code block
+</string></value></param>
+</params>
+</methodCall>

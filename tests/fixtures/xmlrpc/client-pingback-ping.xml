@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<methodCall>
+<methodName>pingback.ping</methodName>
+<params>
+ <param><value><string>https://example.org/2026/10/a-reply/</string></value></param>
+ <param><value><string>https://blog.example.com/archives/42/?a=1&amp;b=2</string></value></param>
+</params>
+</methodCall>

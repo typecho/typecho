@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<methodCall>
+<methodName>test.base64</methodName>
+<params>
+<param><value><base64>SGVsbG8sIFR5cGVjaG8h</base64></value></param>
+<param><value><base64>
+SGVsbG8s
+IFR5cGVjaG8h
+</base64></value></param>
+</params>
+</methodCall>

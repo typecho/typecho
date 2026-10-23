@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<methodCall>
+<methodName>test.untyped</methodName>
+<params>
+<param><value>hello world</value></param>
+<param><value>  padded  </value></param>
+</params>
+</methodCall>

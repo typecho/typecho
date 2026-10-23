@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<methodCall>
+<methodName>test.truncated</methodName>
+<params>
+<param><value><string>cut</string></value></param>

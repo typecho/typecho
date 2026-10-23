@@ -1,0 +1,69 @@
+{
+    "parse": {
+        "result": true,
+        "php_errors": 0
+    },
+    "messageType": {
+        "string": "fault"
+    },
+    "methodName": "<uninitialized>",
+    "params": {
+        "list": [
+            {
+                "map": [
+                    [
+                        "faultCode",
+                        {
+                            "int": 403
+                        }
+                    ],
+                    [
+                        "faultString",
+                        {
+                            "string": "Access denied"
+                        }
+                    ]
+                ]
+            }
+        ]
+    },
+    "faultCode": {
+        "int": 403
+    },
+    "faultString": {
+        "string": "Access denied"
+    },
+    "encoded": {
+        "result": [
+            "<array><data>",
+            "  <value><struct>",
+            "  <member><name>faultCode</name><value><int>403</int></value></member>",
+            "  <member><name>faultString</name><value><string>Access denied</string></value></member>",
+            "</struct></value>",
+            "</data></array>"
+        ],
+        "php_errors": 0
+    },
+    "response": {
+        "result": [
+            "<methodResponse>",
+            "  <fault>",
+            "    <value>",
+            "      <struct>",
+            "        <member>",
+            "          <name>faultCode</name>",
+            "          <value><int>-32600</int></value>",
+            "        </member>",
+            "        <member>",
+            "          <name>faultString</name>",
+            "          <value><string>server error. invalid xml-rpc. not conforming to spec. Request must be a methodCall</string></value>",
+            "        </member>",
+            "      </struct>",
+            "    </value>",
+            "  </fault>",
+            "</methodResponse>",
+            ""
+        ],
+        "php_errors": 0
+    }
+}

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!-- leading comment -->
+<methodCall>
+<methodName>test.<!-- inside -->comment</methodName>
+<params>
+<?php echo 1; ?>
+<param><value><string>a<!-- c -->b</string></value></param>
+</params>
+</methodCall>

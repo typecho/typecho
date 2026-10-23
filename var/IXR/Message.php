@@ -33,15 +33,6 @@ class Message
      */
     public array $params = [];
 
-    // Current variable stacks
-    private array $arrayStructs = [];   // The stack used to keep track of the current array/struct
-
-    private array $arrayStructsTypes = []; // Stack keeping track of if things are structs or array
-
-    private array $currentStructName = [];  // A stack as well
-
-    private string $currentTagContents = '';
-
     /**
      * @param string $message
      */
@@ -61,36 +52,41 @@ class Message
             return false;
         }
 
-        // remove the DOCTYPE, avoid using a regexp, so we can save memory
-        $count = 0;
-        while (true) {
-            // Fail if there is an endless loop
-            if ($count >= 10) {
-                return false;
-            }
+        $document = new \DOMDocument();
+        $useErrors = libxml_use_internal_errors(true);
+        $loaded = $document->loadXML($this->message, LIBXML_NONET);
+        libxml_clear_errors();
+        libxml_use_internal_errors($useErrors);
 
-            $pos = strpos($this->message, '<!DOCTYPE');
-            if ($pos !== false) {
-                $this->message = substr($this->message, 0, $pos)
-                    . substr($this->message, strpos($this->message, '>', $pos) + 1);
-                $count ++;
-            } else {
-                break;
-            }
-        }
-
-        $parser = xml_parser_create();
-        // Set XML parser to take the case of tags in to account
-        xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, false);
-        // Set XML parser callback functions
-        xml_set_element_handler($parser, [$this, 'tagOpen'], [$this, 'tagClose']);
-        xml_set_character_data_handler($parser, [$this, 'cdata']);
-        if (!xml_parse($parser, $this->message)) {
-            /* die(sprintf('XML error: %s at line %d',
-                xml_error_string(xml_get_error_code($this->parser)),
-                xml_get_current_line_number($this->parser))); */
+        // XML-RPC has no DTDs, and anything but a call or a response is not XML-RPC
+        if (
+            !$loaded
+            || $document->doctype !== null
+            || !in_array($document->documentElement->nodeName, ['methodCall', 'methodResponse'])
+        ) {
             return false;
         }
+
+        $root = $document->documentElement;
+        $this->messageType = $root->nodeName;
+
+        foreach ($this->children($root) as $child) {
+            switch ($child->nodeName) {
+                case 'methodName':
+                    $this->methodName = trim($child->textContent);
+                    break;
+                case 'params':
+                    foreach ($this->children($child, 'param') as $param) {
+                        $this->addParam($param);
+                    }
+                    break;
+                case 'fault':
+                    $this->messageType = 'fault';
+                    $this->addParam($child);
+                    break;
+            }
+        }
+
         // Grab the error messages, if any
         if ($this->messageType == 'fault') {
             $this->faultCode = intval($this->params[0]['faultCode']);
@@ -100,117 +96,87 @@ class Message
     }
 
     /**
-     * @param $parser
-     * @param string $tag
-     * @param $attr
+     * @param \DOMElement $element <param> or <fault>
      */
-    private function tagOpen($parser, string $tag, $attr)
+    private function addParam(\DOMElement $element)
     {
-        switch ($tag) {
-            case 'methodCall':
-            case 'methodResponse':
-            case 'fault':
-                $this->messageType = $tag;
-                break;
-            /* Deal with stacks of arrays and structs */
-            case 'data':    // data is to all intents and puposes more interesting than array
-                $this->arrayStructsTypes[] = 'array';
-                $this->arrayStructs[] = [];
-                break;
-            case 'struct':
-                $this->arrayStructsTypes[] = 'struct';
-                $this->arrayStructs[] = [];
-                break;
+        $value = $this->children($element, 'value')[0] ?? null;
+        if (isset($value)) {
+            $this->params[] = $this->parseValue($value);
         }
     }
 
     /**
-     * @param $parser
-     * @param string $cdata
+     * @param \DOMElement $value
+     * @return mixed
      */
-    private function cdata($parser, string $cdata)
+    private function parseValue(\DOMElement $value)
     {
-        $this->currentTagContents .= $cdata;
-    }
+        $typed = $this->children($value)[0] ?? null;
 
-    /**
-     * @param $parser
-     * @param string $tag
-     */
-    private function tagClose($parser, string $tag)
-    {
-        switch ($tag) {
+        // "If no type is indicated, the type is string."
+        if (!isset($typed)) {
+            return $value->textContent;
+        }
+
+        $text = $typed->textContent;
+
+        // localName also accepts prefixed extensions such as <ex:i8> and <ex:nil>
+        switch ($typed->localName) {
             case 'int':
             case 'i4':
-                $value = (int) trim($this->currentTagContents);
-                $this->currentTagContents = '';
-                break;
+            case 'i8':
+                return (int) trim($text);
             case 'double':
-                $value = (float) trim($this->currentTagContents);
-                $this->currentTagContents = '';
-                break;
+                return (float) trim($text);
             case 'string':
-                $value = trim($this->currentTagContents);
-                $this->currentTagContents = '';
-                break;
+                return trim($text);
             case 'dateTime.iso8601':
-                $value = new Date(trim($this->currentTagContents));
-                // $value = $iso->getTimestamp();
-                $this->currentTagContents = '';
-                break;
-            case 'value':
-                // "If no type is indicated, the type is string."
-                if (trim($this->currentTagContents) != '') {
-                    $value = $this->currentTagContents;
-                    $this->currentTagContents = '';
-                }
-                break;
+                return new Date(trim($text));
             case 'boolean':
-                $value = (bool) trim($this->currentTagContents);
-                $this->currentTagContents = '';
-                break;
+                $text = trim($text);
+                return strtolower($text) == 'false' ? false : (bool) $text;
             case 'base64':
-                $value = base64_decode($this->currentTagContents);
-                $this->currentTagContents = '';
-                break;
-            /* Deal with stacks of arrays and structs */
-            case 'data':
+                return base64_decode($text);
+            case 'nil':
+                return null;
             case 'struct':
-                $value = array_pop($this->arrayStructs);
-                array_pop($this->arrayStructsTypes);
-                break;
-            case 'member':
-                array_pop($this->currentStructName);
-                break;
-            case 'name':
-                $this->currentStructName[] = trim($this->currentTagContents);
-                $this->currentTagContents = '';
-                break;
-            case 'methodName':
-                $this->methodName = trim($this->currentTagContents);
-                $this->currentTagContents = '';
-                break;
-        }
-        if (isset($value)) {
-            /*
-            if (!is_array($value) && !is_object($value)) {
-                $value = trim($value);
-            }
-            */
-            if (count($this->arrayStructs) > 0) {
-                // Add value to struct or array
-                if ($this->arrayStructsTypes[count($this->arrayStructsTypes) - 1] == 'struct') {
-                    // Add to struct
-                    $this->arrayStructs[count($this->arrayStructs) - 1]
-                        [$this->currentStructName[count($this->currentStructName) - 1]] = $value;
-                } else {
-                    // Add to array
-                    $this->arrayStructs[count($this->arrayStructs) - 1][] = $value;
+                $struct = [];
+                foreach ($this->children($typed, 'member') as $member) {
+                    $name = $this->children($member, 'name')[0] ?? null;
+                    $memberValue = $this->children($member, 'value')[0] ?? null;
+                    if (isset($name, $memberValue)) {
+                        $struct[trim($name->textContent)] = $this->parseValue($memberValue);
+                    }
                 }
-            } else {
-                // Just add as a paramater
-                $this->params[] = $value;
+                return $struct;
+            case 'array':
+                $array = [];
+                foreach ($this->children($typed, 'data') as $data) {
+                    foreach ($this->children($data, 'value') as $item) {
+                        $array[] = $this->parseValue($item);
+                    }
+                }
+                return $array;
+            default:
+                return $text;
+        }
+    }
+
+    /**
+     * @param \DOMElement $element
+     * @param string|null $name only return children with this name
+     * @return \DOMElement[]
+     */
+    private function children(\DOMElement $element, ?string $name = null): array
+    {
+        $children = [];
+        foreach ($element->childNodes as $child) {
+            if ($child instanceof \DOMElement && (!isset($name) || $child->nodeName == $name)) {
+                $children[] = $child;
             }
         }
+
+        return $children;
     }
 }

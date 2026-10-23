@@ -1,0 +1,15 @@
+[
+    "<methodResponse>",
+    "  <params>",
+    "    <param>",
+    "      <value>",
+    "        <array><data>",
+    "  <value><string>https://example.org/2026/10/a-reply/</string></value>",
+    "  <value><string>https://blog.example.com/archives/42/?a=1&amp;b=2</string></value>",
+    "</data></array>",
+    "      </value>",
+    "    </param>",
+    "  </params>",
+    "</methodResponse>",
+    ""
+]

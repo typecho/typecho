@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<methodCall>
+<methodName>test.boolean</methodName>
+<params>
+<param><value><boolean>1</boolean></value></param>
+</params>
+</methodCall>

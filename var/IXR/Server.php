@@ -12,6 +12,11 @@ use Typecho\Widget\Exception as WidgetException;
 class Server
 {
     /**
+     * 请求体大小上限, 需容纳 metaWeblog.newMediaObject 的 base64 附件
+     */
+    public const MAX_REQUEST_SIZE = 8 * 1024 * 1024;
+
+    /**
      * 回调函数
      *
      * @var array
@@ -84,7 +89,7 @@ class Server
             } else {
                 $result = $this->call($method, $params);
             }
-            if (is_a($result, 'Error')) {
+            if ($result instanceof Error) {
                 $return[] = [
                     'faultCode'   => $result->code,
                     'faultString' => $result->message
@@ -160,6 +165,11 @@ class Server
             }
 
             foreach ($ref->getParameters() as $key => $parameter) {
+                // Leave omitted optional arguments to their defaults, required ones are counted above
+                if (!array_key_exists($key, $args)) {
+                    continue;
+                }
+
                 if ($parameter->hasType() && !settype($args[$key], $parameter->getType()->getName())) {
                     return new Error(
                         -32602,
@@ -208,21 +218,21 @@ class Server
     }
 
     /**
-     * 抛出错误
+     * 生成错误响应
      *
      * @access private
      * @param integer|Error $error 错误代码
      * @param string|null $message 错误消息
-     * @return void
+     * @return string
      */
-    private function error($error, ?string $message = null)
+    private function error($error, ?string $message = null): string
     {
         // Accepts either an error object or an error code and message
         if (!$error instanceof Error) {
             $error = new Error($error, $message);
         }
 
-        $this->output($error->getXml());
+        return $error->getXml();
     }
 
     /**
@@ -295,22 +305,32 @@ class Server
     }
 
     /**
-     * 服务入口
+     * 处理一次请求, 返回响应xml (不含xml声明), 不输出也不退出
+     *
+     * @param string $xml 原始请求xml
+     * @return string
      */
-    public function serve()
+    public function handle(string $xml): string
     {
-        $message = new Message(file_get_contents('php://input') ?: '');
+        if (strlen($xml) > self::MAX_REQUEST_SIZE) {
+            return $this->error(-32700, 'parse error. request too large');
+        }
+
+        $message = new Message($xml);
 
         if (!$message->parse()) {
-            $this->error(-32700, 'parse error. not well formed');
+            return $this->error(-32700, 'parse error. not well formed');
         } elseif ($message->messageType != 'methodCall') {
-            $this->error(-32600, 'server error. invalid xml-rpc. not conforming to spec. Request must be a methodCall');
+            return $this->error(
+                -32600,
+                'server error. invalid xml-rpc. not conforming to spec. Request must be a methodCall'
+            );
         }
 
         $result = $this->call($message->methodName, $message->params);
         // Is the result an error?
         if ($result instanceof Error) {
-            $this->error($result);
+            return $this->error($result);
         }
 
         // Encode the result
@@ -318,7 +338,7 @@ class Server
         $resultXml = $r->getXml();
 
         // Create the XML
-        $xml = <<<EOD
+        return <<<EOD
 <methodResponse>
   <params>
     <param>
@@ -330,8 +350,15 @@ class Server
 </methodResponse>
 
 EOD;
+    }
 
-        // Send it
-        $this->output($xml);
+    /**
+     * 服务入口
+     */
+    public function serve()
+    {
+        // Read one byte past the limit so handle() can tell an oversized body apart
+        $xml = file_get_contents('php://input', false, null, 0, self::MAX_REQUEST_SIZE + 1);
+        $this->output($this->handle($xml ?: ''));
     }
 }

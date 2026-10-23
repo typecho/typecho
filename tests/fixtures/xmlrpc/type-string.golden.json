@@ -1,0 +1,62 @@
+{
+    "parse": {
+        "result": true,
+        "php_errors": 0
+    },
+    "messageType": {
+        "string": "methodCall"
+    },
+    "methodName": {
+        "string": "test.string"
+    },
+    "params": {
+        "list": [
+            {
+                "string": "plain"
+            },
+            {
+                "string": "a <b> & \"c\" 'd' 中"
+            },
+            {
+                "string": "<raw> & cdata"
+            }
+        ]
+    },
+    "faultCode": "<uninitialized>",
+    "faultString": "<uninitialized>",
+    "encoded": {
+        "result": [
+            "<?xml version=\"1.0\"?>",
+            "<methodCall>",
+            "<methodName>test.string</methodName>",
+            "<params>",
+            "<param><value><string>plain</string></value></param>",
+            "<param><value><string>a &lt;b&gt; &amp; &quot;c&quot; &#039;d&#039; 中</string></value></param>",
+            "<param><value><string>&lt;raw&gt; &amp; cdata</string></value></param>",
+            "</params></methodCall>"
+        ],
+        "php_errors": 0
+    },
+    "response": {
+        "result": [
+            "<methodResponse>",
+            "  <fault>",
+            "    <value>",
+            "      <struct>",
+            "        <member>",
+            "          <name>faultCode</name>",
+            "          <value><int>-32601</int></value>",
+            "        </member>",
+            "        <member>",
+            "          <name>faultString</name>",
+            "          <value><string>server error. requested method test.string does not exist.</string></value>",
+            "        </member>",
+            "      </struct>",
+            "    </value>",
+            "  </fault>",
+            "</methodResponse>",
+            ""
+        ],
+        "php_errors": 0
+    }
+}

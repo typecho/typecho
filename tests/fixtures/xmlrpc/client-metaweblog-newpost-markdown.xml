@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<methodCall>
+<methodName>metaWeblog.newPost</methodName>
+<params>
+<param><value><string>1</string></value></param>
+<param><value><string>admin</string></value></param>
+<param><value><string>s3cret</string></value></param>
+<param><value><struct>
+<member><name>title</name><value><string>  Markdown post  </string></value></member>
+<member><name>description</name><value><string>
+    $ composer install
+    $ php -S localhost:8000
+
+Regular paragraph.
+</string></value></member>
+</struct></value></param>
+<param><value><boolean>0</boolean></value></param>
+</params>
+</methodCall>

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<methodCall>
+<methodName>test.empty</methodName>
+<params>
+<param><value></value></param>
+<param><value/></param>
+<param><value><string></string></value></param>
+<param><value><string>after</string></value></param>
+</params>
+</methodCall>

@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<methodCall><methodName>wp.getUsersBlogs</methodName><params><param><value>admin</value></param><param><value>s3cret</value></param></params></methodCall>

@@ -1,0 +1,20 @@
+[
+    "<methodResponse>",
+    "  <params>",
+    "    <param>",
+    "      <value>",
+    "        <array><data>",
+    "  <value><int>42</int></value>",
+    "  <value><string>admin</string></value>",
+    "  <value><string>s3cret</string></value>",
+    "  <value><struct>",
+    "  <member><name>title</name><value><string>Edited without publish flag</string></value></member>",
+    "  <member><name>description</name><value><string>Body</string></value></member>",
+    "</struct></value>",
+    "</data></array>",
+    "      </value>",
+    "    </param>",
+    "  </params>",
+    "</methodResponse>",
+    ""
+]
