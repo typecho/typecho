@@ -207,6 +207,7 @@ $(document).ready(function() {
             data: data,
             success: callback,
             error: function () {
+                form.trigger('datachange');
                 autoSave.text('<?php _e('保存失败, 请重试'); ?>');
             },
             complete: function () {

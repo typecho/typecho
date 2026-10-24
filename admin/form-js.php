@@ -34,6 +34,7 @@
 
             function setInput() {
                 const url = self.val();
+                input.val(url);
 
                 try {
                     const urlObj = new URL(url);

@@ -184,6 +184,7 @@ class Archive extends Contents
             'preview'        => false,
             'commentPage'    => 0
         ]);
+        $parameter->pageSize = max(1, (int) $parameter->pageSize);
 
         /** 用于判断是路由调用还是外部调用 */
         if (null == $parameter->type) {
