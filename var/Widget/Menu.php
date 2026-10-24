@@ -31,7 +31,7 @@ class Menu extends Base
      * 当前菜单标题
      * @var string
      */
-    public string $title;
+    public string $title = '';
 
     /**
      * 当前增加项目链接
