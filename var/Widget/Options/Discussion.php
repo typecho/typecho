@@ -93,6 +93,7 @@ class Discussion extends Options implements ActionInterface
         );
         $settings['commentsAntiSpam'] = $this->isEnableByCheckbox($settings['commentsPost'], 'commentsAntiSpam');
         $settings['commentsAutoClose'] = $this->isEnableByCheckbox($settings['commentsPost'], 'commentsAutoClose');
+        $settings['commentsAutoCloseApplyToPage'] = $this->isEnableByCheckbox($settings['commentsPost'], 'commentsAutoCloseApplyToPage');
         $settings['commentsPostIntervalEnable'] = $this->isEnableByCheckbox(
             $settings['commentsPost'],
             'commentsPostIntervalEnable'
@@ -105,7 +106,23 @@ class Discussion extends Options implements ActionInterface
         unset($settings['commentsPost']);
 
         foreach ($settings as $name => $value) {
-            $this->update(['value' => $value], $this->db->sql()->where('name = ?', $name));
+            $exists = $this->db->fetchRow(
+                $this->db->select('name')
+                    ->from('table.options')
+                    ->where('name = ?', $name)
+                    ->where('user = ?', 0)
+                    ->limit(1)
+            );
+
+            if ($exists) {
+                $this->update(
+                    ['value' => $value],
+                    $this->db->sql()->where('name = ?', $name)->where('user = ?', 0)
+                );
+                continue;
+            }
+
+            $this->insert(['name' => $name, 'user' => 0, 'value' => $value]);
         }
 
         Notice::alloc()->set(_t("设置已经保存"), 'success');
@@ -220,6 +237,7 @@ class Discussion extends Options implements ActionInterface
             'commentsAutoClose'          => _t('在文章发布 %s 天以后自动关闭评论',
                 '</label><input name="commentsPostTimeout" type="number" class="text num text-s" value="' . intval($this->options->commentsPostTimeout / (24 * 3600)) . '" id="commentsPost-commentsPostTimeout" />
             <label for="commentsPost-commentsPostTimeout">'),
+            'commentsAutoCloseApplyToPage' => _t('自动关闭评论是否适用于独立页面'),
             'commentsPostIntervalEnable' => _t('同一 IP 发布评论的时间间隔限制为 %s 分钟',
                 '</label><input name="commentsPostInterval" type="number" class="text num text-s" value="' . round($this->options->commentsPostInterval / (60), 1) . '" id="commentsPost-commentsPostInterval" />
             <label for="commentsPost-commentsPostInterval">')
@@ -252,6 +270,10 @@ class Discussion extends Options implements ActionInterface
 
         if ($this->options->commentsAutoClose) {
             $commentsPostOptionsValue[] = 'commentsAutoClose';
+        }
+
+        if ($this->options->commentsAutoCloseApplyToPage) {
+            $commentsPostOptionsValue[] = 'commentsAutoCloseApplyToPage';
         }
 
         if ($this->options->commentsPostIntervalEnable) {
