@@ -26,7 +26,17 @@ class Admin extends Cloud
      */
     public function execute()
     {
-        $select = $this->select()->where('type = ?', 'tag')->order('mid', Db::SORT_DESC);
+        $sorts = [
+            'mid'   => ['mid', Db::SORT_DESC],
+            'count' => ['count', Db::SORT_DESC],
+            'name'  => ['name', Db::SORT_ASC],
+        ];
+
+        $sort = $this->request->get('sort', 'mid');
+        $order = $sorts[is_string($sort) ? $sort : 'mid'] ?? $sorts['mid'];
+
+        $select = $this->select()->where('type = ?', 'tag')
+            ->order($order[0], $order[1])->order('mid', Db::SORT_DESC);
         $this->db->fetchAll($select, [$this, 'push']);
     }
 
