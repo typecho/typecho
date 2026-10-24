@@ -447,6 +447,41 @@ function install_remove_config_file()
 }
 
 /**
+ * get core database tables
+ *
+ * @param string $prefix
+ * @return array
+ */
+function install_get_db_tables(string $prefix): array
+{
+    return [
+        $prefix . 'comments',
+        $prefix . 'contents',
+        $prefix . 'fields',
+        $prefix . 'metas',
+        $prefix . 'options',
+        $prefix . 'relationships',
+        $prefix . 'users'
+    ];
+}
+
+/**
+ * get PostgreSQL database sequences
+ *
+ * @param string $prefix
+ * @return array
+ */
+function install_get_pgsql_sequences(string $prefix): array
+{
+    return [
+        $prefix . 'comments_seq',
+        $prefix . 'contents_seq',
+        $prefix . 'metas_seq',
+        $prefix . 'users_seq'
+    ];
+}
+
+/**
  * check install
  *
  * @param string $type
@@ -466,16 +501,34 @@ function install_check(string $type): bool
             }
 
             try {
+                if ($type == 'db_structure') {
+                    $tables = install_get_db_tables($installDb->getPrefix());
+                    if ($installDb->getAdapter()->getDriver() == 'pgsql') {
+                        $tables = array_merge(
+                            $tables,
+                            install_get_pgsql_sequences($installDb->getPrefix())
+                        );
+                    }
+
+                    foreach ($tables as $table) {
+                        $installDb->query(
+                            'SELECT 1 FROM ' . $installDb->getAdapter()->quoteColumn($table) . ' LIMIT 1'
+                        );
+                    }
+
+                    return true;
+                }
+
                 // check if table exists
                 $installed = $installDb->fetchRow($installDb->select()->from('table.options')
                     ->where('user = 0 AND name = ?', 'installed'));
 
-                if ($type == 'db_data' && empty($installed['value'])) {
+                if (empty($installed['value'])) {
                     return false;
                 }
             } catch (\Typecho\Db\Adapter\ConnectionException $e) {
                 return true;
-            } catch (\Typecho\Db\Adapter\SQLException $e) {
+            } catch (\Throwable $e) {
                 return false;
             }
 
@@ -1114,37 +1167,34 @@ function install_step_2_perform()
         }
     }
 
-    // delete exists db
-    if ($config['dbNext'] == 'delete') {
-        $tables = [
-            $config['dbPrefix'] . 'comments',
-            $config['dbPrefix'] . 'contents',
-            $config['dbPrefix'] . 'fields',
-            $config['dbPrefix'] . 'metas',
-            $config['dbPrefix'] . 'options',
-            $config['dbPrefix'] . 'relationships',
-            $config['dbPrefix'] . 'users'
-        ];
+    $tables = install_get_db_tables($config['dbPrefix']);
+    $sequences = $type == 'Pgsql' ? install_get_pgsql_sequences($config['dbPrefix']) : [];
+    $transaction = false;
 
-        try {
-            foreach ($tables as $table) {
-                switch ($type) {
-                    case 'Mysql':
-                        $installDb->query("DROP TABLE IF EXISTS `{$table}`");
-                        break;
-                    case 'Pgsql':
-                    case 'SQLite':
-                        $installDb->query("DROP TABLE {$table}");
-                        break;
-                }
-            }
-        } catch (\Typecho\Db\Exception $e) {
-            install_raise_error(_t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.', $e->getMessage()));
-        }
-    }
-
-    // init db structure
     try {
+        if (in_array($type, ['Pgsql', 'SQLite'])) {
+            $installDb->query('BEGIN', \Typecho\Db::WRITE);
+            $transaction = true;
+        }
+
+        // delete exists db
+        if ($config['dbNext'] == 'delete') {
+            foreach ($tables as $table) {
+                $installDb->query(
+                    'DROP TABLE IF EXISTS ' . $installDb->getAdapter()->quoteColumn($table),
+                    \Typecho\Db::WRITE
+                );
+            }
+
+            foreach ($sequences as $sequence) {
+                $installDb->query(
+                    'DROP SEQUENCE IF EXISTS ' . $installDb->getAdapter()->quoteColumn($sequence),
+                    \Typecho\Db::WRITE
+                );
+            }
+        }
+
+        // init db structure
         $scripts = file_get_contents(__TYPECHO_ROOT_DIR__ . '/install/' . $type . '.sql');
         $scripts = str_replace('typecho_', $config['dbPrefix'], $scripts);
 
@@ -1163,15 +1213,42 @@ function install_step_2_perform()
                 $installDb->query($script, \Typecho\Db::WRITE);
             }
         }
-    } catch (\Typecho\Db\Exception $e) {
-        $code = $e->getCode();
 
-        if (
+        foreach (array_merge($tables, $sequences) as $table) {
+            $installDb->query(
+                'SELECT 1 FROM ' . $installDb->getAdapter()->quoteColumn($table) . ' LIMIT 1',
+                \Typecho\Db::WRITE
+            );
+        }
+
+        if ($transaction) {
+            $installDb->query('COMMIT', \Typecho\Db::WRITE);
+            $transaction = false;
+        }
+    } catch (\Throwable $e) {
+        if ($transaction) {
+            try {
+                $installDb->query('ROLLBACK', \Typecho\Db::WRITE);
+            } catch (\Throwable $rollbackException) {
+                // 保留导致安装失败的原始异常
+            }
+            $transaction = false;
+        }
+
+        $code = $e->getCode();
+        $exists = (
             ('Mysql' == $type && (1050 == $code || '42S01' == $code)) ||
             ('SQLite' == $type && ('HY000' == $code || 1 == $code)) ||
             ('Pgsql' == $type && '42P07' == $code)
-        ) {
+        );
+
+        if ($exists) {
             if ($config['dbNext'] == 'keep') {
+                if (!install_check('db_structure')) {
+                    install_remove_config_file();
+                    install_raise_error(_t('安装程序检测到原有数据库结构不完整，无法继续使用原有数据.'));
+                }
+
                 if (install_check('db_data')) {
                     install_success(0);
                 } else {
@@ -1185,11 +1262,10 @@ function install_step_2_perform()
                     'keep' => _t('使用原有数据')
                 ]);
             }
-        } else {
-            install_remove_config_file();
-
-            install_raise_error(_t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.', $e->getMessage()));
         }
+
+        install_remove_config_file();
+        install_raise_error(_t('安装程序捕捉到以下错误: "%s". 程序被终止, 请检查您的配置信息.', $e->getMessage()));
     }
 
     install_success(3);
