@@ -669,17 +669,13 @@ class Request
         } elseif (0 === strpos($requestUri, dirname($baseUrl))) {
             // directory portion of $baseUrl matches
             $finalBaseUrl = rtrim(dirname($baseUrl), '/');
-        } elseif (!strpos($requestUri, basename($baseUrl))) {
-            // no match whatsoever; set it blank
-            $finalBaseUrl = '';
-        } elseif (
-            (strlen($requestUri) >= strlen($baseUrl))
-            && ((false !== ($pos = strpos($requestUri, $baseUrl))) && ($pos !== 0))
-        ) {
-            // If using mod_rewrite or ISAPI_Rewrite strip the script filename
-            // out of baseUrl. $pos !== 0 makes sure it is not matching a value
-            // from PATH_INFO or QUERY_STRING
-            $baseUrl = substr($requestUri, 0, $pos + strlen($baseUrl));
+        } else {
+            // when using url rewrite, the starting positions of $baseUrl and $requestUri may not match.
+            // In this case, find the common part of both as $finalBaseUrl.
+            $arr1 = array_filter(explode("/", $baseUrl));
+            $arr2 = array_filter(explode("/", $requestUri));
+            $commonArr = array_intersect($arr1, $arr2);
+            $finalBaseUrl = empty($commonArr) ? "" : '/' . reset($commonArr);
         }
 
         return ($this->baseUrl = (null === $finalBaseUrl) ? rtrim($baseUrl, '/') : $finalBaseUrl);
