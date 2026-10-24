@@ -30,20 +30,28 @@ if (!file_exists(dirname(__FILE__) . '/config.inc.php')) {
  */
 function install_get_lang(): string
 {
-    $serverLang = \Typecho\Request::getInstance()->getServer('TYPECHO_LANG');
+    $request = \Typecho\Request::getInstance();
+    $serverLang = $request->getServer('TYPECHO_LANG');
 
-    if (!empty($serverLang)) {
-        return $serverLang;
+    /** Language identifiers may only consist of letters, numbers, 
+     *  underscores, and hyphens to prevent path traversal. */
+    if (!empty($serverLang) && is_string($serverLang)) {
+        return \Typecho\I18n::filterLang($serverLang) ?? 'zh_CN';
     } else {
         $lang = 'zh_CN';
-        $request = \Typecho\Request::getInstance();
 
         if ($request->is('lang')) {
-            $lang = $request->get('lang');
-            \Typecho\Cookie::set('lang', $lang);
+            $requestLang = $request->get('lang');
+
+            if (is_string($requestLang)) {
+                $lang = \Typecho\I18n::filterLang($requestLang) ?? 'zh_CN';
+                \Typecho\Cookie::set('lang', $lang);
+            }
         }
 
-        return \Typecho\Cookie::get('lang', $lang);
+        $cookieLang = \Typecho\Cookie::get('lang', $lang);
+
+        return is_string($cookieLang) ? (\Typecho\I18n::filterLang($cookieLang) ?? 'zh_CN') : $lang;
     }
 }
 

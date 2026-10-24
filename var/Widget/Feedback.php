@@ -308,9 +308,9 @@ class Feedback extends Comments implements ActionInterface
             'status' => $this->options->commentsRequireModeration ? 'waiting' : 'approved'
         ];
 
-        $trackback['author'] = $this->request->filter('trim')->get('blog_name');
+        $trackback['author'] = Common::removeXSS($this->request->filter('trim')->get('blog_name'));
         $trackback['url'] = $this->request->filter('trim', 'url')->get('url');
-        $trackback['text'] = $this->request->get('excerpt');
+        $trackback['text'] = Common::removeXSS(strip_tags($this->request->get('excerpt')));
 
         //检验格式
         $validator = new Validate();

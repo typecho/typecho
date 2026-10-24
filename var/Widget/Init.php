@@ -84,7 +84,12 @@ class Init extends Widget
         /** 语言包初始化 */
         if ($options->lang && $options->lang != 'zh_CN') {
             $dir = defined('__TYPECHO_LANG_DIR__') ? __TYPECHO_LANG_DIR__ : __TYPECHO_ROOT_DIR__ . '/usr/langs';
-            I18n::setLang($dir . '/' . $options->lang . '.mo');
+            $lang = I18n::filterLang($options->lang);
+
+            /** 只有合法的语言标识才能拼进语言文件路径 */
+            if (null !== $lang) {
+                I18n::setLang($dir . '/' . $lang . '.mo');
+            }
         }
 
         /** 备份文件目录初始化 */

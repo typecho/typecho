@@ -53,10 +53,12 @@ class GetTextMulti
      */
     public function translate(string $string): string
     {
+        $count = - 1;
+
         foreach ($this->handlers as $handle) {
-            $string = $handle->translate($string, $count);
+            $result = $handle->translate($string, $count);
             if (- 1 != $count) {
-                break;
+                return $result;
             }
         }
 
@@ -77,13 +79,13 @@ class GetTextMulti
         $count = - 1;
 
         foreach ($this->handlers as $handler) {
-            $string = $handler->ngettext($single, $plural, $number, $count);
+            $result = $handler->ngettext($single, $plural, $number, $count);
             if (- 1 != $count) {
-                break;
+                return $result;
             }
         }
 
-        return $string;
+        return ($number != 1) ? $plural : $single;
     }
 
     /**

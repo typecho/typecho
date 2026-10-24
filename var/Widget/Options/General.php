@@ -3,6 +3,7 @@
 namespace Widget\Options;
 
 use Typecho\Db\Exception;
+use Typecho\I18n;
 use Typecho\I18n\GetText;
 use Typecho\Widget\Helper\Form;
 use Widget\ActionInterface;
@@ -96,6 +97,12 @@ class General extends Options implements ActionInterface
             'timezone'
         );
         $settings['attachmentTypes'] = $this->request->getArray('attachmentTypes');
+
+        /** 语言项只能使用合法的语言标识, 避免其中出现路径分隔符 */
+        if (array_key_exists('lang', $settings)) {
+            $lang = I18n::filterLang(is_string($settings['lang']) ? $settings['lang'] : null);
+            $settings['lang'] = $lang ?? $this->options->lang;
+        }
 
         if (!defined('__TYPECHO_SITE_URL__')) {
             $settings['siteUrl'] = rtrim($this->request->get('siteUrl'), '/');

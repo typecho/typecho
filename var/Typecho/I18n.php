@@ -139,6 +139,17 @@ class I18n
      */
     public static function addLang(string $lang)
     {
+        self::init();
+
+        if (!isset(self::$loaded)) {
+            /** 主语言文件不存在时, 以第一个可用的语言文件作为基础 */
+            if (file_exists($lang)) {
+                self::$loaded = new GetTextMulti($lang);
+            }
+
+            return;
+        }
+
         self::$loaded->addFile($lang);
     }
 
@@ -165,5 +176,25 @@ class I18n
     public static function setLang(string $lang)
     {
         self::$lang = $lang;
+    }
+
+    /**
+     * 过滤语言标识
+     *
+     * 语言标识只允许包含字母, 数字, 下划线与连字符, 避免其中出现路径分隔符
+     *
+     * @access public
+     * @param string|null $lang 语言名称
+     * @return string|null 不合法时返回 null
+     */
+    public static function filterLang(?string $lang): ?string
+    {
+        if (null === $lang || '' === $lang) {
+            return null;
+        }
+
+        $lang = basename(str_replace("\0", '', $lang));
+
+        return preg_match('/^[a-zA-Z0-9_-]+$/', $lang) ? $lang : null;
     }
 }
