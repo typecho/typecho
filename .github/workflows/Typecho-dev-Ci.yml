@@ -50,6 +50,23 @@ jobs:
         coverage: none
     - name: PHPUnit
       run: tools/phpunit.sh --testsuite unit,security,db
+  editor:
+    name: Editor clock callbacks
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        coverage: none
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+    - name: Editor callback integration tests
+      run: node tests/Unit/editor-now.test.js
   build:
     name: Typecho Build
     runs-on: ubuntu-latest

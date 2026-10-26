@@ -2,9 +2,150 @@
 <?php \Typecho\Plugin::factory('admin/write-js.php')->call('write'); ?>
 <?php \Widget\Metas\Tag\Cloud::alloc('sort=count&desc=1&limit=200')->to($tags); ?>
 
+<?php
+// 站点的 PHP 时区规则是唯一依据，避免浏览器 ICU 与服务端规则不同。
+$editorNowServerNow = \Typecho\Date::time();
+$editorNowZone = $options->timezoneName;
+$editorNowOffset = $options->timezoneOffsetAt($editorNowServerNow);
+$editorNowTransitions = [[$editorNowServerNow - 86400, $editorNowOffset]];
+if (\Typecho\Timezone::isName($editorNowZone)) {
+    $zone = new \DateTimeZone($editorNowZone);
+    $transitions = $zone->getTransitions($editorNowServerNow - 86400, $editorNowServerNow + 157680000);
+    if (is_array($transitions)) {
+        $editorNowTransitions = array_map(function ($transition) {
+            return [$transition['ts'], $transition['offset']];
+        }, $transitions);
+    }
+}
+$editorNowConfig = [
+    'serverAnchor' => $editorNowServerNow,
+    'transitions' => $editorNowTransitions,
+    'hour' => (int) gmdate('G', $editorNowServerNow + $editorNowOffset),
+    'minute' => (int) gmdate('i', $editorNowServerNow + $editorNowOffset)
+];
+$editorNowConfigJson = json_encode($editorNowConfig,
+    JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+?>
 <script src="<?php $options->adminStaticUrl('js', 'timepicker.js'); ?>"></script>
 <script src="<?php $options->adminStaticUrl('js', 'tokeninput.js'); ?>"></script>
 <script>
+// >>> typecho-editor-now begin
+(function (root) {
+    'use strict';
+
+    // 表内每项从指定的 UTC 秒起生效，规则由 PHP 提供。
+    function wallClockOf(instant, config) {
+        var transitions = config.transitions || [[0, 0]];
+        var offset = transitions[0][1];
+        for (var i = 0; i < transitions.length; i++) {
+            if (transitions[i][0] > instant) {
+                break;
+            }
+            offset = transitions[i][1];
+        }
+        var date = new Date((instant + offset) * 1000);
+        return {year: date.getUTCFullYear(), month: date.getUTCMonth() + 1,
+            day: date.getUTCDate(), hour: date.getUTCHours(),
+            minute: date.getUTCMinutes(), second: date.getUTCSeconds()};
+    }
+
+    function formatWallClock(parts) {
+        function pad(value, width) {
+            return ('0000' + value).slice(-width);
+        }
+        return pad(parts.year, 4) + '-' + pad(parts.month, 2) + '-' + pad(parts.day, 2)
+            + ' ' + pad(parts.hour, 2) + ':' + pad(parts.minute, 2);
+    }
+
+    function createEditorNow(deps) {
+        var jquery = deps.jquery;
+        var datepicker = deps.datepicker;
+        var input = deps.input;
+        var created = deps.document.createElement('input');
+        created.type = 'hidden';
+        created.name = 'created';
+        created.disabled = true;
+        deps.form.appendChild(created);
+        var writing = false;
+        var nowText = null;
+
+        // 单调计时不依赖作者电脑的绝对时钟。
+        function nowUtcSeconds() {
+            var elapsed = Math.floor((deps.performanceNow() - deps.anchorPerf) / 1000);
+            return deps.config.serverAnchor + Math.max(0, isFinite(elapsed) ? elapsed : 0);
+        }
+
+        function clearCreated() {
+            created.disabled = true;
+            created.value = '';
+            nowText = null;
+        }
+
+        function applyNow() {
+            var instant = nowUtcSeconds();
+            var parts = wallClockOf(instant, deps.config);
+            writing = true;
+            try {
+                // 先写新值，库刷新时会重新解析 input，自动保存也会同步读取。
+                nowText = formatWallClock(parts);
+                input.value = nowText;
+                created.value = String(instant);
+                created.disabled = false;
+                var inst = datepicker._getInst(input);
+                inst.selectedDay = inst.currentDay = parts.day;
+                inst.drawMonth = inst.selectedMonth = inst.currentMonth = parts.month - 1;
+                inst.drawYear = inst.selectedYear = inst.currentYear = parts.year;
+                var timepicker = datepicker._get(inst, 'timepicker');
+                if (timepicker) {
+                    timepicker.hour = parts.hour;
+                    timepicker.minute = parts.minute;
+                    timepicker.second = parts.second;
+                    timepicker.millisec = timepicker.microsec = 0;
+                    timepicker.timeDefined = true;
+                }
+                datepicker._updateDatepicker(inst);
+                input.value = nowText;
+                jquery(input).trigger('change');
+            } finally {
+                writing = false;
+            }
+            return instant;
+        }
+
+        function validateCreated() {
+            // 仅移动光标不改变文字，不应丢失秋季第二次同名小时的 UTC 值。
+            if (!writing && nowText !== null && input.value !== nowText) {
+                clearCreated();
+            }
+        }
+
+        function install() {
+            var original = datepicker._gotoToday;
+            datepicker._gotoToday = function (id) {
+                if (jquery(id)[0] !== input) {
+                    return original.apply(this, arguments);
+                }
+                return applyNow();
+            };
+            jquery(input).on('input change keyup', validateCreated);
+            jquery(deps.form).on('submit', validateCreated);
+        }
+
+        return {install: install, applyNow: applyNow, clearCreated: clearCreated,
+            prepareSubmit: validateCreated,
+            nowUtcSeconds: nowUtcSeconds, createdElement: created};
+    }
+
+    root.TypechoEditorNow = {create: createEditorNow, wallClockOf: wallClockOf,
+        formatWallClock: formatWallClock};
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+// <<< typecho-editor-now end
+
+/**
+ * 服务端给的时间基准与站点时区
+ */
+window.typechoEditorNowConfig = <?php echo $editorNowConfigJson ?>;
+
 $(document).ready(function() {
     // 日期时间控件
     $('#date').mask('9999-99-99 99:99').datetimepicker({
@@ -30,10 +171,36 @@ $(document).ready(function() {
         secondText      :   '<?php _e('秒'); ?>',
 
         dateFormat      :   'yy-mm-dd',
-        timezone        :   <?php $options->timezone(); ?> / 60,
-        hour            :   (new Date()).getHours(),
-        minute          :   (new Date()).getMinutes()
+        // 输入框始终表示站点墙钟，不使用选择器的浏览器时区平移。
+        timezone        :   null,
+        hour            :   window.typechoEditorNowConfig.hour,
+        minute          :   window.typechoEditorNowConfig.minute
     });
+
+    /**
+     * 接管 "现在" 按钮
+     *
+     * 只在 #date 上接管, 别的日期控件仍走 jQuery UI 原有的 _gotoToday。
+     */
+    if (window.TypechoEditorNow && $('#date').length > 0) {
+        const editorNow = window.TypechoEditorNow.create({
+            jquery         :   $,
+            datepicker     :   $.datepicker,
+            config         :   window.typechoEditorNowConfig,
+            document       :   document,
+            input          :   document.getElementById('date'),
+            form           :   document.querySelector('form[name=write_post],form[name=write_page]'),
+            performanceNow :   function () {
+                return (window.performance && window.performance.now) ?
+                    window.performance.now() : Date.now();
+            },
+            anchorPerf     :   (window.performance && window.performance.now) ?
+                window.performance.now() : Date.now()
+        });
+
+        editorNow.install();
+        window.typechoEditorNow = editorNow;
+    }
 
     // 聚焦
     $('#title').select();
@@ -195,6 +362,9 @@ $(document).ready(function() {
         changed = false;
         autoSave.text('<?php _e('正在保存'); ?>');
 
+        if (window.typechoEditorNow) {
+            window.typechoEditorNow.prepareSubmit();
+        }
         const data = new FormData(form.get(0));
         data.append('do', 'save');
         form.triggerHandler('submit');
@@ -242,22 +412,15 @@ $(document).ready(function() {
     });
     <?php endif; ?>
 
-    // 计算夏令时偏移
-    const dstOffset = (function () {
-        const d = new Date(),
-            jan = new Date(d.getFullYear(), 0, 1),
-            jul = new Date(d.getFullYear(), 6, 1),
-            stdOffset = Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
-
-        return stdOffset - d.getTimezoneOffset();
-    })();
-    
-    if (dstOffset > 0) {
-        $('<input name="dst" type="hidden" />').appendTo(form).val(dstOffset);
-    }
-
-    // 时区
-    $('<input name="timezone" type="hidden" />').appendTo(form).val(- (new Date).getTimezoneOffset() * 60);
+    /**
+     * 这里不再提交浏览器时区。
+     *
+     * 以前这里提交过一个名为 timezone 的隐藏域, 值是浏览器偏移, 而服务端
+     * 却按**站点**时区解释那个墙钟时间, 两者不一致时会算错。留着一个没人
+     * 读、又像是"时区"的字段很危险 —— 以后有人读了它, 同一类问题就会
+     * 再来一次。
+     * 站点时区由服务端自己知道, 不需要客户端告诉它。
+     */
 
     // 预览功能
     let isFullScreen = false;
