@@ -70,21 +70,21 @@ class I18n
     }
 
     /**
-     * 词义化时间
+     * 两参数调用沿用服务器日历；传 elapsed 时两个日期值为站点墙钟。
+     * 真实秒差用于小时、分钟与过去/未来判断，日历差用于“昨天”“N 天前”。
      *
-     * @access public
-     *
-     * @param int $from 起始时间
-     * @param int $now 终止时间
-     *
-     * @return string
+     * @param int $from 起始日期值
+     * @param int $now 参考日期值
+     * @param int|null $elapsed 两个真实 UTC 瞬间的秒差
      */
-    public static function dateWord(int $from, int $now): string
+    public static function dateWord(int $from, int $now, ?int $elapsed = null): string
     {
-        $between = $now - $from;
+        $format = $elapsed === null ? 'date' : 'gmdate';
+        $wallBetween = $now - $from;
+        $between = $elapsed ?? $wallBetween;
 
         /** 如果是一天 */
-        if ($between >= 0 && $between < 86400 && date('d', $from) == date('d', $now)) {
+        if ($between >= 0 && $wallBetween < 86400 && $format('d', $from) == $format('d', $now)) {
             /** 如果是一小时 */
             if ($between < 3600) {
                 /** 如果是一分钟 */
@@ -107,25 +107,40 @@ class I18n
         /** 如果是昨天 */
         if (
             $between > 0
-            && $between < 172800
-            && (date('z', $from) + 1 == date('z', $now)                             // 在同一年的情况
-                || date('z', $from) + 1 == date('L') + 365 + date('z', $now))
+            && $wallBetween > 0
+            && $wallBetween < 172800
+            && ($elapsed !== null
+                ? gmdate('Y-m-d', $from + 86400) === gmdate('Y-m-d', $now)
+                : ($format('z', $from) + 1 == $format('z', $now)
+                    || $format('z', $from) + 1 == $format('L') + 365 + $format('z', $now)))
         ) {    // 跨年的情况
-            return _t('昨天 %s', date('H:i', $from));
+            return _t('昨天 %s', $format('H:i', $from));
         }
 
-        /** 如果是一个星期 */
-        if ($between > 0 && $between < 604800) {
-            $day = floor($between / 86400);
+        /**
+         * 如果是一个星期
+         *
+         * 【为什么这里用墙钟差而不是 $between】"N 天前"是**日历**概念,
+         * 数的是跨了几个日历年边界, 不是过了多少个 24 小时。
+         *
+         * 夏令时切换日有 23 或 25 小时。真实经过 2.96 天而墙钟上是 3 天
+         * 整 (春季跳过一小时) 时, floor(elapsed / 86400) 会报 2 天, 而
+         * 日历上明明是 3 天前。反过来秋季重复的那一小时 (钟往回拨), 真实
+         * 过了 2 天零 1 小时, 而墙钟上只走了 2 天整, 会报 1 天。
+         *
+         * 上面"同一天"/"昨天"已经用墙钟判断了, 这里保持一致。
+         */
+        if ($between > 0 && $wallBetween > 0 && $wallBetween < 604800) {
+            $day = (int) floor($wallBetween / 86400);
             return str_replace('%d', $day, _n('一天前', '%d天前', $day));
         }
 
         /** 如果是 */
-        if (date('Y', $from) == date('Y', $now)) {
-            return date(_t('n月j日'), $from);
+        if ($format('Y', $from) == $format('Y', $now)) {
+            return $format(_t('n月j日'), $from);
         }
 
-        return date(_t('Y年m月d日'), $from);
+        return $format(_t('Y年m月d日'), $from);
     }
 
     /**

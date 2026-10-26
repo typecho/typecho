@@ -10,6 +10,7 @@ use IXR\Server;
 use ReflectionMethod;
 use Typecho\Common;
 use Typecho\Router;
+use Typecho\Timezone;
 use Typecho\Widget;
 use Typecho\Widget\Exception as WidgetException;
 use Widget\Base\Comments;
@@ -157,7 +158,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
         [$excerpt, $more] = $this->getPostExtended($page);
 
         return [
-            'dateCreated'            => new Date($this->options->timezone + $page->created),
+            'dateCreated'            => new Date($page->created + $this->options->timezoneOffsetAt($page->created)),
             'userid'                 => $page->authorId,
             'page_id'                => $page->cid,
             'page_status'            => $this->typechoToWordpressStatus($page->status, 'page'),
@@ -260,7 +261,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
             /** 对文章内容做截取处理，以获得description和text_more*/
             [$excerpt, $more] = $this->getPostExtended($pages);
             $pageStructs[] = [
-                'dateCreated'            => new Date($this->options->timezone + $pages->created),
+                'dateCreated'            => new Date($pages->created + $this->options->timezoneOffsetAt($pages->created)),
                 'userid'                 => $pages->authorId,
                 'page_id'                => intval($pages->cid),
                 'page_status'            => $this->typechoToWordpressStatus(
@@ -355,10 +356,40 @@ class XmlRpc extends Contents implements ActionInterface, Hook
             $input['template'] = $content['wp_page_template'];
         }
 
-        if (isset($content['dateCreated'])) {
-            /** 解决客户端与服务器端时间偏移 */
-            $input['created'] = $content['dateCreated']->getTimestamp()
-                - $this->options->timezone + $this->options->serverTimezone;
+        if (isset($content['dateCreated']) && $content['dateCreated'] instanceof Date) {
+            /**
+             * dateCreated 的内容是**站点本地**时间字面。
+             *
+             * 【为什么不能走 getTimestamp()】那个方法用 mktime() 解释字面,
+             * 而 mktime() 构造的是**服务器本地**时刻。字面落在服务器自己的
+             * 夏令时缺口里时 (比如柏林 2021-03-28 02:00-02:59), mktime()
+             * 会把它向前归一化一小时 —— 客户端要的 02:30 变成 03:30, 那一
+             * 小时 60 分钟全部偏一小时。
+             *
+             * 字面是站点墙钟，不该经过服务器时区。秋季重复小时可能
+             * 对应两个瞬间；既有文章的原值保留由后续编辑日期路径判断。
+             */
+            $created = Timezone::wallLiteralToTimestamp(
+                $content['dateCreated']->getIso(),
+                $this->options->timezoneName
+            );
+
+            if ($created === null) {
+                /**
+                 * 字面解析不出来 —— 不写时间戳, 而不是写 0 (那是 1970 年)。
+                 * 下游会退回用当前时间, 与形状非法时一致。
+                 */
+                unset($input['created']);
+            } elseif (isset($input['cid'])) {
+                // 相同本地时间可能属于秋季重复小时的两个瞬间。编辑时交给
+                // 原有日期路径比较已存墙钟，保留原UTC秒数；新建仍使用解析值。
+                $input['date'] = gmdate('Y-m-d H:i:s', Timezone::wallTimestamp(
+                    $created,
+                    $this->options->timezoneName
+                ));
+            } else {
+                $input['created'] = $created;
+            }
         }
 
         if (!empty($content['categories']) && is_array($content['categories'])) {
@@ -575,7 +606,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
 
         while ($pages->next()) {
             $pageStructs[] = [
-                'dateCreated'      => new Date($this->options->timezone + $pages->created),
+                'dateCreated'      => new Date($pages->created + $this->options->timezoneOffsetAt($pages->created)),
                 'date_created_gmt' => new Date($pages->created),
                 'page_id'          => $pages->cid,
                 'page_title'       => $pages->title,
@@ -698,7 +729,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
             'username'     => $this->user->name,
             'first_name'   => '',
             'last_name'    => '',
-            'registered'   => new Date($this->options->timezone + $this->user->created),
+            'registered'   => new Date($this->user->created + $this->options->timezoneOffsetAt($this->user->created)),
             'bio'          => '',
             'email'        => $this->user->mail,
             'nickname'     => $this->user->screenName,
@@ -906,11 +937,43 @@ class XmlRpc extends Contents implements ActionInterface, Hook
                 }
 
                 if (!$this->wpOptions[$option]['readonly'] && isset($this->wpOptions[$option]['option'])) {
-                    if (
-                        $this->db->query($this->db->update('table.options')
-                            ->rows(['value' => $value])
-                            ->where('name = ?', $this->wpOptions[$option]['option'])) > 0
-                    ) {
+                    $optionName = $this->wpOptions[$option]['option'];
+
+                    if ($optionName === 'timezone') {
+                        $timezone = is_scalar($value) ? trim((string) $value) : '';
+
+                        if ($timezone === '') {
+                            continue;
+                        }
+
+                        if (Timezone::isName($timezone)) {
+                            $value = $timezone;
+                        } elseif (preg_match('/^[+-]?\d+(\.\d+)?$/', $timezone)
+                            && Timezone::isValidLegacyOffset((int) $timezone)) {
+                            // 数字写入明确选择固定偏移，不替客户端猜一个地区。
+                            $value = (string) (int) $timezone;
+                        } else {
+                            continue;
+                        }
+                    }
+
+                    // 只写站点级选项，不改插件按用户存储的同名行。
+                    $updated = $this->db->query($this->db->update('table.options')
+                        ->rows(['value' => $value])
+                        ->where('name = ?', $optionName)
+                        ->where('user = ?', 0));
+
+                    $timezoneSaved = $optionName === 'timezone' && $updated > 0;
+                    if ($optionName === 'timezone' && $updated === 0) {
+                        $stored = $this->db->fetchRow($this->db->select('value')->from('table.options')
+                            ->where('name = ? AND user = ?', 'timezone', 0)->limit(1));
+                        $timezoneSaved = $stored !== null && (string) $stored['value'] === (string) $value;
+                    }
+                    if ($timezoneSaved) {
+                        // 保存相同值时也同步缓存；没有对应数据库行时不伪造成功。
+                        $this->options->setTimezone((string) $value);
+                        $struct[$option]['value'] = $this->options->timezone;
+                    } elseif ($updated > 0) {
                         $struct[$option]['value'] = $value;
                     }
                 }
@@ -1053,8 +1116,55 @@ class XmlRpc extends Contents implements ActionInterface, Hook
         $input = [];
 
         if (isset($struct['date_created_gmt']) && $struct['date_created_gmt'] instanceof Date) {
-            $input['created'] = $struct['date_created_gmt']->getTimestamp()
-                - $this->options->timezone + $this->options->serverTimezone;
+            /**
+             * date_created_gmt 的内容是 GMT 字面。
+             *
+             * 【为什么不能加服务器偏移】IXR\Date::getTimestamp() 用 mktime()
+             * 解释这个字面, 而 mktime() 内嵌的是**被解析日期**当时的服务器
+             * 偏移。$this->options->serverTimezone 却是请求时刻的偏移 ——
+             * 服务器自身实行夏令时时, 跨季提交就差 3600 秒。
+             *
+             * 【怎么解决】这个字段按约定已经是 GMT, 所以直接按 UTC 解释
+             * 字面, 完全绕开服务器本地那一层。
+             */
+            $literal = $struct['date_created_gmt']->getIso();
+
+            /**
+             * IXR\Date::getIso() 保留客户端给的后缀 ('Z' 或 '+08:00'),
+             * 所以不能简单地拼一个 ' UTC' 上去 —— 那会得到两个时区,
+             * strtotime() 解析失败返回 false, (int) false 就成了 0,
+             * 文章会被存成 1970 年。
+             *
+             * 【怎么解析】拆成两部分:
+             * - 核心 (YYYYMMDDTHH:MM:SS) 还原成可读格式
+             * - 后缀: 'Z' 或没有 -> 按 GMT 解释 (这个字段的约定);
+             *   明确的数字偏移 -> 尊重它, 不要把偏移吃掉
+             */
+            /**
+             * 用形状匹配取字段, 而不是按固定字符位置切。
+             *
+             * 【为什么】IXR\Date::getIso() 返回的是紧凑格式
+             * (YYYYMMDDTHH:MM:SS + 后缀), 但字面本身可能是扩展 ISO
+             * (带连字符) 或带空格。按固定位置切, 扩展格式会在第 17 个
+             * 字符处把秒切掉, 拼出一个不存在的时刻, strtotime() 返回
+             * false —— 发布时间就被静默改成了"现在"。
+             */
+            $timestamp = Timezone::gmtLiteralToTimestamp($literal);
+
+            if ($timestamp === null) {
+                /**
+                 * 形状不认识或解析失败 -> **不设置** created。
+                 *
+                 * (int) false 是 0, 那样文章会被存成 1970 年; 而写成
+                 * options->time 同样不对 —— editPost 会把已有文章的
+                 * 发布时间悄悄改成"现在", newPost 则变成立即发布。
+                 *
+                 * 干脆不碰这个字段: 让别的地方决定发布时间, 至少不会
+                 * 静默改掉作者填过的时间。
+                 */
+            } else {
+                $input['created'] = $timestamp;
+            }
         }
 
         if (isset($struct['status'])) {
@@ -1238,7 +1348,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
         $tags = array_column($post->tags, 'name');
 
         return [
-            'dateCreated'            => new Date($this->options->timezone + $post->created),
+            'dateCreated'            => new Date($post->created + $this->options->timezoneOffsetAt($post->created)),
             'userid'                 => $post->authorId,
             'postid'                 => $post->cid,
             'description'            => $excerpt,
@@ -1288,7 +1398,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
             $tags = array_column($posts->tags, 'name');
 
             $postStructs[] = [
-                'dateCreated'            => new Date($this->options->timezone + $posts->created),
+                'dateCreated'            => new Date($posts->created + $this->options->timezoneOffsetAt($posts->created)),
                 'userid'                 => $posts->authorId,
                 'postid'                 => $posts->cid,
                 'description'            => $excerpt,
@@ -1314,7 +1424,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
                 ),
                 'custom_fields'          => [],
                 'wp_post_format'         => 'standard',
-                'date_modified'          => new Date($this->options->timezone + $posts->modified),
+                'date_modified'          => new Date($posts->modified + $this->options->timezoneOffsetAt($posts->modified)),
                 'date_modified_gmt'      => new Date($posts->modified),
                 'wp_post_thumbnail'      => '',
                 'sticky'                 => 0
@@ -1413,7 +1523,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
         $postTitleStructs = [];
         while ($posts->next()) {
             $postTitleStructs[] = [
-                'dateCreated'      => new Date($this->options->timezone + $posts->created),
+                'dateCreated'      => new Date($posts->created + $this->options->timezoneOffsetAt($posts->created)),
                 'userid'           => $posts->authorId,
                 'postid'           => $posts->cid,
                 'title'            => $posts->title,
@@ -1569,7 +1679,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
 
         return [
             'userid'      => $post->authorId,
-            'dateCreated' => new Date($this->options->timezone + $post->created),
+            'dateCreated' => new Date($post->created + $this->options->timezoneOffsetAt($post->created)),
             'content'     => $content,
             'postid'      => $post->cid
         ];
@@ -1617,7 +1727,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
 
             $struct = [
                 'userid'      => $posts->authorId,
-                'dateCreated' => new Date($this->options->timezone + $posts->created),
+                'dateCreated' => new Date($posts->created + $this->options->timezoneOffsetAt($posts->created)),
                 'content'     => $content,
                 'postid'      => $posts->cid,
             ];

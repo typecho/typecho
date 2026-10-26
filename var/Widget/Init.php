@@ -10,6 +10,7 @@ use Typecho\I18n;
 use Typecho\Plugin;
 use Typecho\Response;
 use Typecho\Router;
+use Typecho\Timezone;
 use Typecho\Widget;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
@@ -108,12 +109,19 @@ class Init extends Widget
         $this->response->setCharset($options->charset);
         $this->response->setContentType($options->contentType);
 
-        /** 初始化时区 */
-        Date::setTimezoneOffset($options->timezone);
+        /** 数字配置保留固定偏移；只有管理员选择名称后才启用地区规则。 */
+        $timezone = $options->timezoneName;
+
+        if (Timezone::isName($timezone)) {
+            Date::setTimezone($timezone);
+        } else {
+            Date::setTimezoneOffset($options->timezone);
+        }
 
         /** 开始会话, 减小负载只针对后台打开session支持 */
         if ($options->installed && User::alloc()->hasLogin()) {
             @session_start();
         }
     }
+
 }
