@@ -46,8 +46,6 @@ class Message
      */
     public function parse(): bool
     {
-        // first remove the XML declaration
-        $this->message = preg_replace('/<\?xml(.*)?\?' . '>/', '', $this->message);
         if (trim($this->message) == '') {
             return false;
         }

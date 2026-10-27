@@ -310,7 +310,7 @@ class Feedback extends Comments implements ActionInterface
 
         $trackback['author'] = $this->request->filter('trim')->get('blog_name');
         $trackback['url'] = $this->request->filter('trim', 'url')->get('url');
-        $trackback['text'] = $this->request->get('excerpt');
+        $trackback['text'] = $this->request->filter('strip_tags', 'trim', 'xss')->get('excerpt');
 
         //检验格式
         $validator = new Validate();
@@ -329,7 +329,7 @@ class Feedback extends Comments implements ActionInterface
         }
 
         /** 截取长度 */
-        $trackback['text'] = Common::subStr($trackback['text'], 0, 100, '[...]');
+        $trackback['text'] = Common::subStr($trackback['text'], 0, 150, '...');
 
         /** 如果库中已经存在重复url则直接拒绝 */
         if (

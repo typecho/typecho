@@ -1,16 +1,34 @@
 {
     "parse": {
-        "result": false,
+        "result": true,
         "php_errors": 0
     },
-    "messageType": "<uninitialized>",
-    "methodName": "<uninitialized>",
+    "messageType": {
+        "string": "methodCall"
+    },
+    "methodName": {
+        "string": "test.latin1"
+    },
     "params": {
-        "list": []
+        "list": [
+            {
+                "string": "café"
+            }
+        ]
     },
     "faultCode": "<uninitialized>",
     "faultString": "<uninitialized>",
-    "encoded": null,
+    "encoded": {
+        "result": [
+            "<?xml version=\"1.0\"?>",
+            "<methodCall>",
+            "<methodName>test.latin1</methodName>",
+            "<params>",
+            "<param><value><string>café</string></value></param>",
+            "</params></methodCall>"
+        ],
+        "php_errors": 0
+    },
     "response": {
         "result": [
             "<methodResponse>",
@@ -19,11 +37,11 @@
             "      <struct>",
             "        <member>",
             "          <name>faultCode</name>",
-            "          <value><int>-32700</int></value>",
+            "          <value><int>-32601</int></value>",
             "        </member>",
             "        <member>",
             "          <name>faultString</name>",
-            "          <value><string>parse error. not well formed</string></value>",
+            "          <value><string>server error. requested method test.latin1 does not exist.</string></value>",
             "        </member>",
             "      </struct>",
             "    </value>",
