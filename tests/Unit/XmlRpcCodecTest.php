@@ -27,6 +27,11 @@ use PHPUnit\Framework\TestCase;
  * - edge-padded-string, edge-whitespace-string, client-metaweblog-newpost-markdown (and its
  *   .dispatch.json): the parsed strings now keep their leading/trailing whitespace exactly as
  *   written in the fixture, and the re-encoded output carries it too. Nothing else changed.
+ *
+ * Goldens changed by no longer stripping the XML declaration with a regex before parsing:
+ * - edge-latin1-declared: the declared ISO-8859-1 encoding is now honoured by DOM, so the
+ *   request parses and "café" comes out as UTF-8. Before, the declaration was cut off and the
+ *   latin1 bytes failed as invalid UTF-8 (-32700); now the method is dispatched (-32601).
  */
 final class XmlRpcCodecTest extends TestCase
 {
