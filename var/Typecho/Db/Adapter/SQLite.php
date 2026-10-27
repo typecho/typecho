@@ -41,6 +41,7 @@ class SQLite implements Adapter
     {
         try {
             $dbHandle = new \SQLite3($config->file);
+            $dbHandle->busyTimeout(5000);
             $this->isSQLite2 = version_compare(\SQLite3::version()['versionString'], '3.0.0', '<');
         } catch (\Exception $e) {
             throw new ConnectionException($e->getMessage(), $e->getCode());
