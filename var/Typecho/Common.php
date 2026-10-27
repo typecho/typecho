@@ -168,7 +168,7 @@ namespace Typecho {
     class Common
     {
         /** 程序版本 */
-        public const VERSION = '1.3.0';
+        public const VERSION = '1.3.1-rc';
 
         /** 不能作为外部请求目标的 IPv4 地址段, 不依赖 PHP 版本的过滤规则 */
         private const UNSAFE_IPV4_RANGES = [
