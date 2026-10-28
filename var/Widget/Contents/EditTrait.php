@@ -4,6 +4,7 @@ namespace Widget\Contents;
 
 use Typecho\Config;
 use Typecho\Db\Exception as DbException;
+use Typecho\Timezone;
 use Typecho\Validate;
 use Typecho\Widget\Exception;
 use Typecho\Widget\Helper\Form\Element;
@@ -349,6 +350,22 @@ trait EditTrait
     }
 
     /**
+     * 墙钟时间不合法时的兜底发布时间
+     *
+     * 【为什么统一放一处】"改文章时保留原发布时间, 新建时用当前时间"
+     * 这条策略在三个调用点各写了一遍, 每次改都要记得改三处 —— 上一轮
+     * 就漏了一处, 结果是 null 进了声明返回 int 的方法, 后台 500。
+     *
+     * @return integer
+     */
+    private function fallbackCreated(): int
+    {
+        return $this->have() && $this->created > 0
+            ? $this->created
+            : $this->options->time;
+    }
+
+    /**
      * 根据提交值获取created字段值
      *
      * @return integer
@@ -359,13 +376,7 @@ trait EditTrait
         if ($this->request->is('created')) {
             $created = $this->request->get('created');
         } elseif ($this->request->is('date')) {
-            $dstOffset = $this->request->get('dst', 0);
-            $timezoneSymbol = $this->options->timezone >= 0 ? '+' : '-';
-            $timezoneOffset = abs($this->options->timezone);
-            $timezone = $timezoneSymbol . str_pad($timezoneOffset / 3600, 2, '0', STR_PAD_LEFT) . ':00';
-            [$date, $time] = explode(' ', $this->request->get('date'));
-
-            $created = strtotime("{$date}T{$time}{$timezone}") - $dstOffset;
+            $created = $this->getCreatedFromDate();
         } elseif ($this->request->is('year&month&day')) {
             $second = $this->request->filter('int')->get('sec', date('s'));
             $min = $this->request->filter('int')->get('min', date('i'));
@@ -375,8 +386,39 @@ trait EditTrait
             $month = $this->request->filter('int')->get('month');
             $day = $this->request->filter('int')->get('day');
 
-            $created = mktime($hour, $min, $second, $month, $day, $year)
-                - $this->options->timezone + $this->options->serverTimezone;
+            /**
+             * 和 date 字段路径走同一条路: 拼成墙钟文本, 按站点时区解释。
+             *
+             * 【为什么不走 mktime()】mktime() 把时分秒当作**服务器本地**
+             * 时刻来构造, 服务器自己的墙上时间跳过一小时时 (纽约
+             * 2021-03-14 02:00-02:59) 它会把结果归一化到 03:00, 于是这条
+             * 路径和 date 路径给出的不是同一个瞬间。
+             *
+             * 作者填的本来就是**站点时区**的墙上时间, 两条路径应该
+             * 解释得一样。
+             */
+            $wall = sprintf(
+                '%04d-%02d-%02d %02d:%02d:%02d',
+                $year,
+                $month,
+                $day,
+                $hour,
+                $min,
+                $second
+            );
+
+            $created = Timezone::wallToTimestamp(
+                $wall,
+                $this->options->timezoneName
+            );
+
+            if ($created === null) {
+                /**
+                 * 形状不合法 (比如 00:99:00)。不写 0 —— 那会把文章存成
+                 * 1970 年。
+                 */
+                $created = $this->fallbackCreated();
+            }
         } elseif ($this->have() && $this->created > 0) {
             //如果是修改文章
             $created = $this->created;
@@ -386,6 +428,113 @@ trait EditTrait
         }
 
         return $created;
+    }
+
+    /**
+     * 根据发布日期计算 created
+     *
+     * 表单里填写的是**站点时区**下的墙上时间: 后台的日期输入框预填的是站点
+     * 墙钟时间, 时间选择器用的也是站点偏移。所以这里一律按站点时区解释,
+     * 与改动前的设计保持一致。
+     *
+     * 站点时区本身也可能是固定偏移秒数 (旧版本), 此时退回到原有的固定偏移
+     * 解释方式, 保证升级前后行为一致。
+     *
+     * @return integer
+     */
+    protected function getCreatedFromDate(): int
+    {
+        $raw = $this->request->get('date');
+
+        /**
+         * 防数组。
+         *
+         * 【为什么】客户端可以提交 date[]=x, 于是 Request::get() 返回数组。
+         * 直接 (string) 转换会触发 "Array to string conversion" 警告 ——
+         * phpunit.xml.dist 开了 failOnWarning, 生产环境也会进日志。
+         * 数组不是合法的日期形状, 按形状非法处理。
+         */
+        $date = is_array($raw) ? '' : (string) $raw;
+
+        /**
+         * 【按空白切, 不是按单个空格】
+         *
+         * explode(' ', ...) 对多个空格会切出空段: '2021-07-01  12:00'
+         * 变成 ['2021-07-01', '', '12:00'], 于是取到的"时间"是空串。
+         * 而 strtotime() 对多个空格是宽容的 —— 作者在输入框里多打一个
+         * 空格是完全正常的, 不该因此把文章的发布时间改掉。
+         *
+         * 所以按连续的空白切, 并且只取前两段 (后面还有内容的话, 那
+         * 属于形状不合法, 由下面的正则去判)。
+         */
+        $parts = preg_split('/\s+/', trim($date));
+        $day = $parts[0] ?? '';
+        $time = $parts[1] ?? '00:00';
+
+        /**
+         * 【月和日允许不补零】
+         *
+         * 改之前这里走的是 strtotime(), 它对 '2021-7-1' 是宽容的。而
+         * 日期输入框是自由文本, 填 '2021-7-1' 完全正常。收严成
+         * '\d{4}-\d{2}-\d{2}' 之后, 这种输入会被当成形状不合法 ——
+         * 用户的日期被静默忽略, 文章保留原来的发布时间。
+         *
+         * 所以只要求**能分辨出年-月-日**, 不要求补零。真正的不合法
+         * (比如 '2021-13-45') 交给 wallToTimestamp() 去判, 那里按日期
+         * 规则检查, 比这里的正则准。
+         */
+        if ($day === '' || !preg_match('/^\d{4}-\d{1,2}-\d{1,2}$/', $day)) {
+            /**
+             * 形状不对 -> **不**把发布时间改成"现在"。
+             *
+             * 改文章时, 这个分支会把已有文章的发布时间悄悄改成当前时间 ——
+             * 正是 XML-RPC 侧已经明确否决的那种做法。修改文章时应该
+             * 保留原有的发布时间; 只有新建 (本来就没有原值) 才用当前时间。
+             */
+            return $this->fallbackCreated();
+        }
+
+        /**
+         * 【时间形状不对, 跟日期形状不对一样处理】
+         *
+         * 之前这里把不合法的时间改成 '00:00' —— 于是作者把时间打错
+         * (比如 '2021-07-01 12:0' 或 '2021-07-01 9.30'), 文章的发布
+         * 时间被**静默地移到午夜**。那与上面几行写明的政策直接相反:
+         * 形状不对要**保留原有的发布时间**, 不是替作者换一个时间。
+         *
+         * 所以这里也走 fallbackCreated()。
+         */
+        if (!preg_match('/^\d{1,2}:\d{2}(:\d{2})?$/', $time)) {
+            return $this->fallbackCreated();
+        }
+
+        $wall = $day . ' ' . $time;
+        $siteTimezone = $this->options->timezoneName;
+        $created = Timezone::wallToTimestamp($wall, $siteTimezone);
+        if ($created === null) {
+            return $this->fallbackCreated();
+        }
+
+        // 未改发布日期时，保留原有秒数及秋季重复小时所属的真实瞬间。
+        if ($this->have() && $this->created > 0) {
+            $format = substr_count($time, ':') === 2 ? 'Y-m-d H:i:s' : 'Y-m-d H:i';
+            $previousWall = gmdate($format, Timezone::wallTimestamp($this->created, $siteTimezone));
+            $submittedWall = gmdate($format, Timezone::wallTimestamp($created, $siteTimezone));
+            if ($previousWall === $submittedWall) {
+                return (int) $this->created;
+            }
+        }
+
+        if (Timezone::isName($siteTimezone)) {
+            return $created;
+        }
+
+        // 旧前端提交 dst 的单位为分钟；地区配置已由服务端规则处理。
+        $dstOffset = (int) $this->request->get('dst', 0);
+        if ($dstOffset < -1440 || $dstOffset > 1440) {
+            $dstOffset = 0;
+        }
+        return $created - $dstOffset * 60;
     }
 
     /**

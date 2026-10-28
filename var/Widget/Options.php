@@ -11,6 +11,7 @@ use Typecho\Widget;
 use Typecho\Plugin\Exception as PluginException;
 use Typecho\Db\Exception as DbException;
 use Typecho\Date;
+use Typecho\Timezone;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -50,7 +51,8 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  * @property string|null $missingTheme
  * @property int $pageSize
  * @property int $serverTimezone
- * @property int $timezone
+ * @property int $timezone 当前 UTC 偏移秒数，保留主题和插件的数字接口
+ * @property string $timezoneName 保存的时区标识或旧固定偏移
  * @property string $charset
  * @property string $contentType
  * @property string $generator
@@ -669,6 +671,89 @@ class Options extends Base
     protected function ___serverTimezone(): int
     {
         return Date::$serverTimezoneOffset;
+    }
+
+    /**
+     * 读取保存的时区标识。数字仍表示固定偏移，不推测所属地区。
+     */
+    protected function ___timezoneName(): string
+    {
+        $value = $this->row['timezone'] ?? '0';
+        return is_scalar($value) ? trim((string) $value) : '0';
+    }
+
+    /**
+     * 保留旧的数字接口；按具体日期换算的核心路径使用 timezoneName。
+     */
+    protected function ___timezone(): int
+    {
+        return Timezone::offsetAt($this->timezoneName, Date::time());
+    }
+
+    /**
+     * 魔术属性赋值也走同一入口，避免只更新 #timezone 缓存。
+     */
+    public function __set(string $name, $value)
+    {
+        if ($name === 'timezone' || $name === 'timezoneName') {
+            if (!is_scalar($value) && $value !== null) {
+                throw new \InvalidArgumentException('Timezone must be a scalar value');
+            }
+            $this->setTimezone((string) $value);
+            return;
+        }
+
+        parent::__set($name, $value);
+    }
+
+    /**
+     * 更新当前请求的配置与日期服务；数据库写入仍由设置入口负责。
+     *
+     * row 与 stack 都要清除派生缓存，否则 next() 会恢复旧值。
+     */
+    public function setTimezone(string $timezone): void
+    {
+        $timezone = trim($timezone);
+        $this->row['timezone'] = $timezone;
+        unset($this->row['#timezone'], $this->row['#timezoneName']);
+
+        foreach ($this->stack as &$row) {
+            if (is_array($row)) {
+                $row['timezone'] = $timezone;
+                unset($row['#timezone'], $row['#timezoneName']);
+            }
+        }
+        unset($row);
+
+        if (Timezone::isName($timezone)) {
+            Date::setTimezone($timezone);
+        } else {
+            Date::setTimezoneOffset(Timezone::offsetAt($timezone, Date::time()));
+        }
+    }
+
+    /** 服务器本地墙钟时间戳转换为站点时区下的真实瞬间。 */
+    public function timezoneToTimestamp(int $timestamp): int
+    {
+        return Timezone::fromLocalTimestamp($timestamp, $this->timezoneName, $this->serverTimezone);
+    }
+
+    /** 返回供服务器 date() 读取的站点墙钟时间戳。 */
+    public function timestampToTimezone(int $timestamp): int
+    {
+        return Timezone::toLocalTimestamp($timestamp, $this->timezoneName, $this->serverTimezone);
+    }
+
+    /** 返回供 gmdate() 读取的站点墙钟，不依赖服务器时区。 */
+    public function wallTimestamp(int $timestamp): int
+    {
+        return Timezone::wallTimestamp($timestamp, $this->timezoneName);
+    }
+
+    /** 返回站点时区在指定瞬间的 UTC 偏移秒数。 */
+    public function timezoneOffsetAt(int $timestamp): int
+    {
+        return Timezone::offsetAt($this->timezoneName, $timestamp);
     }
 
     /**
