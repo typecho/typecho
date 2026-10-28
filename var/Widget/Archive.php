@@ -851,9 +851,9 @@ class Archive extends Contents
      */
     public function pings(): Ping
     {
-        return Ping::alloc([
+        return Ping::allocWithAlias($this->cid, [
             'parentId'      => $this->hidden ? 0 : $this->cid,
-            'parentContent' => $this->row,
+            'parentContent' => $this,
             'allowPing'     => $this->allow('ping')
         ]);
     }

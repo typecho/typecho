@@ -5,6 +5,7 @@ namespace Widget\Comments;
 use Typecho\Config;
 use Typecho\Db\Exception;
 use Widget\Base\Comments;
+use Widget\Base\Contents;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -109,9 +110,9 @@ class Ping extends Comments
     /**
      * 回响回调函数
      *
-     * @param string $singlePingOptions 单个回响自定义选项
+     * @param Config $singlePingOptions 单个回响自定义选项
      */
-    private function singlePingCallback(string $singlePingOptions): void
+    private function singlePingCallback(Config $singlePingOptions): void
     {
         if ($this->customSinglePingCallback) {
             singlePing($this, $singlePingOptions);
@@ -140,9 +141,9 @@ class Ping extends Comments
     /**
      * 重载内容获取
      *
-     * @return array|null
+     * @return Contents
      */
-    protected function ___parentContent(): ?array
+    protected function ___parentContent(): Contents
     {
         return $this->parameter->parentContent;
     }
