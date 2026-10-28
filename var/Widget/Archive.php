@@ -841,7 +841,7 @@ class Archive extends Contents
             'allowComment'  => $this->allow('comment')
         ];
 
-        return \Widget\Comments\Archive::alloc($parameter);
+        return \Widget\Comments\Archive::allocWithAlias($this->cid, $parameter);
     }
 
     /**
@@ -965,16 +965,19 @@ class Archive extends Contents
     public function related(int $limit = 5, ?string $type = null): Contents
     {
         $type = strtolower($type ?? '');
+        $alias = $this->cid . '-' . $limit;
 
         switch ($type) {
             case 'author':
                 /** 如果访问权限被设置为禁止,则tag会被置为空 */
-                return AuthorRelated::alloc(
+                return AuthorRelated::allocWithAlias(
+                    $alias,
                     ['cid' => $this->cid, 'type' => $this->type, 'author' => $this->author->uid, 'limit' => $limit]
                 );
             default:
                 /** 如果访问权限被设置为禁止,则tag会被置为空 */
-                return ContentsRelated::alloc(
+                return ContentsRelated::allocWithAlias(
+                    $alias,
                     ['cid' => $this->cid, 'type' => $this->type, 'tags' => $this->tags, 'limit' => $limit]
                 );
         }
