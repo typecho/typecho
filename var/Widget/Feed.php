@@ -183,7 +183,8 @@ class Feed extends Contents
                     'excerpt'         => $archive->plainExcerpt,
                     'category'        => $archive->categories,
                     'comments'        => $archive->commentsNum,
-                    'commentsFeedUrl' => Common::url($archive->path, $feed->getFeedUrl()),
+                    'commentsFeedUrl' => FeedGenerator::ATOM1 == $feed->getType()
+                        ? $archive->feedAtomUrl : $archive->feedUrl,
                     'suffix'          => $suffix
                 ]);
             }
