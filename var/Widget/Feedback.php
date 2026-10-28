@@ -25,6 +25,12 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
 class Feedback extends Comments implements ActionInterface
 {
     /**
+     * 被拒评论的内容编码后超过这个字节数就不写入 cookie，
+     * 否则会超过浏览器 4KB 的 cookie 上限，nginx 默认 4k 的响应头缓冲也会返回 502
+     */
+    private const REMEMBER_TEXT_MAX_BYTES = 2048;
+
+    /**
      * 内容对象
      *
      * @access private
@@ -53,6 +59,20 @@ class Feedback extends Comments implements ActionInterface
         }
 
         return true;
+    }
+
+    /**
+     * 记住被拒评论的内容
+     *
+     * @param string|null $text
+     */
+    private function rememberText(?string $text)
+    {
+        if (strlen(rawurlencode($text ?? '')) <= self::REMEMBER_TEXT_MAX_BYTES) {
+            Cookie::set('__typecho_remember_text', $text);
+        } else {
+            Cookie::delete('__typecho_remember_text');
+        }
     }
 
     /**
@@ -249,7 +269,7 @@ class Feedback extends Comments implements ActionInterface
 
         if ($error = $validator->run($comment)) {
             /** 记录文字 */
-            Cookie::set('__typecho_remember_text', $comment['text']);
+            $this->rememberText($comment['text']);
             throw new Exception(implode("\n", $error));
         }
 
@@ -257,7 +277,7 @@ class Feedback extends Comments implements ActionInterface
         try {
             $comment = self::pluginHandle()->filter('comment', $comment, $this->content);
         } catch (\Typecho\Exception $e) {
-            Cookie::set('__typecho_remember_text', $comment['text']);
+            $this->rememberText($comment['text']);
             throw $e;
         }
 
