@@ -56,6 +56,31 @@ class Feedback extends Comments implements ActionInterface
     }
 
     /**
+     * 检查评论净化后是否仍有可见内容
+     *
+     * @param string|null $text
+     * @return bool
+     */
+    private function isCommentContentEmpty(?string $text): bool
+    {
+        $html = $this->options->commentsMarkdown ? $this->markdown($text) : $this->autoP($text);
+        $html = Common::stripTags($html, '<p><br>' . $this->options->commentsHTMLTagAllowed);
+
+        if (preg_match('/<(?:img|audio|video|iframe|object|embed|svg|canvas|hr)\b/i', $html)) {
+            return false;
+        }
+
+        $plainText = html_entity_decode(
+            strip_tags($html),
+            ENT_QUOTES | ENT_HTML5,
+            $this->options->charset
+        );
+        $visibleText = preg_replace('/[\p{Z}\p{C}\s]+/u', '', $plainText);
+
+        return null === $visibleText ? '' === trim($plainText) : '' === $visibleText;
+    }
+
+    /**
      * 初始化函数
      *
      * @throws \Exception
@@ -259,6 +284,11 @@ class Feedback extends Comments implements ActionInterface
         } catch (\Typecho\Exception $e) {
             Cookie::set('__typecho_remember_text', $comment['text']);
             throw $e;
+        }
+
+        if ($this->isCommentContentEmpty($comment['text'] ?? null)) {
+            Cookie::set('__typecho_remember_text', $comment['text'] ?? '');
+            throw new Exception(_t('必须填写评论内容'));
         }
 
         /** 添加评论 */
