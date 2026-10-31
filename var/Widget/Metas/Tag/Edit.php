@@ -372,8 +372,9 @@ class Edit extends Metas implements ActionInterface
     {
         // 取出count为0的标签
         $tags = array_column($this->db->fetchAll($this->select('mid')
-            ->where('type = ? AND count = ?', 'tags', 0)), 'mid');
+            ->where('type = ? AND count = ?', 'tag', 0)), 'mid');
 
+        $count = 0;
         foreach ($tags as $tag) {
             // 确认是否已经没有关联了
             $content = $this->db->fetchRow($this->db->select('cid')
@@ -383,8 +384,23 @@ class Edit extends Metas implements ActionInterface
             if (empty($content)) {
                 $this->db->query($this->db->delete('table.metas')
                     ->where('mid = ?', $tag));
+                $count++;
             }
         }
+
+        return $count;
+    }
+
+    public function clearUnusedTags()
+    {
+        $count = $this->clearTags();
+
+        Notice::alloc()->set(
+            $count > 0 ? _t('已经清理 %d 个未使用的标签', $count) : _t('没有未使用的标签'),
+            $count > 0 ? 'success' : 'notice'
+        );
+
+        $this->response->goBack();
     }
 
     /**
@@ -402,6 +418,7 @@ class Edit extends Metas implements ActionInterface
         $this->on($this->request->is('do=delete'))->deleteTag();
         $this->on($this->request->is('do=merge'))->mergeTag();
         $this->on($this->request->is('do=refresh'))->refreshTag();
+        $this->on($this->request->is('do=clear'))->clearUnusedTags();
         $this->response->redirect($this->options->adminUrl);
     }
 }
