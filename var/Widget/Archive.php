@@ -8,6 +8,7 @@ use Typecho\Cookie;
 use Typecho\Db;
 use Typecho\Db\Query;
 use Typecho\Router;
+use Typecho\Timezone;
 use Typecho\Widget\Exception as WidgetException;
 use Typecho\Widget\Helper\PageNavigator\Classic;
 use Typecho\Widget\Helper\PageNavigator\Box;
@@ -1632,12 +1633,32 @@ EOF;
                 }
             }
 
-            /** 获取起始GMT时间的unix时间戳 */
-            $from = mktime(0, 0, 0, $fromMonth, $fromDay, $year)
-                - $this->options->timezone + $this->options->serverTimezone;
-            $to = mktime(23, 59, 59, $toMonth, $toDay, $year)
-                - $this->options->timezone + $this->options->serverTimezone;
-            $select->where('table.contents.created >= ? AND table.contents.created < ?', $from, $to);
+            /**
+             * 获取起始GMT时间的unix时间戳
+             *
+             * 【为什么不走 mktime()】mktime() 把时分秒当作**服务器本地**
+             * 时刻来构造, 服务器自己的墙上时间在午夜跳过一小时时 (圣地亚哥
+             * 2021-09-05 00:00-00:59) 它会把 00:00 归一化成 01:00, 窗口
+             * 就少一小时, 那一小时里发布的文章掉出当天归档。
+             *
+             * 归档边界是**站点当地**的日期, 所以直接拼站点墙钟文本, 由
+             * Timezone::wallToTimestamp() 按站点时区解释。
+             *
+             * 【为什么上界是下一期起点】原来上界是 23:59:59 而查询用
+             * 'created < $to' —— 恰好 23:59:59 发布的文章被这一期排除,
+             * 下一期从次日 00:00 起, 它也不在其中, 于是从归档彻底消失。
+             * 上界改成下一期起点, '<' 保持不变: 窗口完整, 且与年度归档
+             * 的 'created <= $to' 语义一致 (都是闭区间到最后一秒)。
+             */
+            [$from, $to] = self::periodWindow(
+                (int) $year,
+                (int) $fromMonth,
+                (int) $fromDay,
+                (int) $toMonth,
+                (int) $toDay,
+                $this->options->timezoneName
+            );
+            $select->where(self::periodPredicate(), $from, $to);
         }
 
         /** 保存密码至cookie */
@@ -1953,6 +1974,225 @@ EOF;
     }
 
     /**
+     * 下一期起点的墙钟文本
+     *
+     * 【为什么不能直接拼 '$month + 1'】12 月的下一点是 13 月, 而
+     * '2021-13-01' 不是合法日期, 解析会失败, 整个归档查询就废了。
+     * 这里做真实的日期进位。
+     *
+     * @param integer $year 年
+     * @param integer $month 月
+     * @param integer $day 日
+     * @return string
+     */
+    private static function nextPeriodWall(int $year, int $month, int $day): string
+    {
+        return self::normalizeWall($year, $month, $day, 1);
+    }
+
+    /**
+     * 把年/月/日归一化成墙钟文本
+     *
+     * 【为什么不能直接拼字符串】'2021-13-01' 不是合法日期, 解析会失败。
+     * 请求里的 month/day 是外部输入, /2021/13/ 这种路径能走到这里。
+     *
+     * 【为什么用 gmmktime 而不是 mktime】gmmktime 在 UTC 域里做进位,
+     * 不依赖服务器时区 —— 归档边界是站点当地的日期, 不该被服务器
+     * 的时区影响。它的进位规则与上游 mktime 相同: 13 月进到下一年
+     * 1 月, 32 号进到下个月 2 号, 2 月 30 号进到 3 月 2 号。
+     */
+    private static function normalizeWall(int $year, int $month, int $day, int $addDays): string
+    {
+        $timestamp = gmmktime(0, 0, 0, $month, $day + $addDays, $year);
+
+        if ($timestamp === false) {
+            /**
+             * 到不了这里: gmmktime 的参数是整数, 任何整数都能归一化成
+             * 一个日期。但如果真的失败了, 返回一个能被解析的文本好过抛异常
+             * —— 归档页面不该因为一个奇怪的路径参数整个挂掉。
+             */
+            return '1970-01-01 00:00:00';
+        }
+
+        return gmdate('Y-m-d H:i:s', $timestamp);
+    }
+
+    /**
+     * 归档窗口的 SQL 谓词
+     *
+     * 窗口是**左闭右开**的: [起始, 下一期起点)。
+     *
+     * 【为什么右开】窗口的右端是**下一期的起点**, 所以右端这一秒属于
+     * 下一期, 不属于这一期。用 '<=' 的话, 恰好在下一期起点发布的文章
+     * 会同时出现在两期里。
+     *
+     * @param string $column 时间列
+     * @return string
+     */
+    public static function periodPredicate(string $column = 'table.contents.created'): string
+    {
+        return $column . ' >= ? AND ' . $column . ' < ?';
+    }
+
+    /**
+     * 归档窗口的两端 (UTC 时间戳)
+     *
+     * 窗口是**站点当地**的一段日期, 所以两端都按站点墙钟构造, 再按
+     * 站点时区解释成 UTC 时间戳。
+     *
+     * 上界是下一期的起点, 查询用 'created < $to'。原来上界是"这一期的
+     * 最后一秒" (23:59:59), 谓词是 'created <= $to - ...' —— 两者覆盖
+     * 的是同一批文章 (整数时间戳下 <= 23:59:59 与 < 次日 00:00 等价),
+     * 但下一期起点是**整点**, 不用再拿请求时刻的时区偏移去换算那一秒。
+     *
+     * 【别把这个说成"23:59:59 的文章被排除过"】基线用的是 <=, 那一秒
+     * 一直是在窗口里的。真正的问题只是边界算错, 不是那一秒被漏掉。
+     *
+     * @param integer $year 年
+     * @param integer $fromMonth 起始月
+     * @param integer $fromDay 起始日
+     * @param integer $toMonth 结束月
+     * @param integer $toDay 结束日
+     * @param string $timezone 站点时区
+     * @return array{0: integer, 1: integer}
+     */
+    public static function periodWindow(
+        int $year,
+        int $fromMonth,
+        int $fromDay,
+        int $toMonth,
+        int $toDay,
+        string $timezone
+    ): array {
+        $fromWall = self::normalizeWall($year, $fromMonth, $fromDay, 0);
+
+        /**
+         * 结束日 + 1 天 = 下一期起点。这里做真实的日期进位, 不能直接拼
+         * '$toDay + 1': 31 号会拼出 32 号, 12 月 31 日还会拼出 13 月。
+         */
+        $toWall = self::nextPeriodWall($year, $toMonth, $toDay);
+
+        $from = Timezone::wallToTimestamp($fromWall, $timezone);
+        $to = Timezone::wallToTimestamp($toWall, $timezone);
+
+        /**
+         * 【为什么这里降级而不是抛异常】
+         *
+         * wallToTimestamp() 交回 null 有两种原因: 墙钟文本本身不合法,
+         * 或者站点时区不可用 (比如数据库里躺着一行越界的旧偏移)。
+         *
+         * 而这里的墙钟文本是 normalizeWall() / nextPeriodWall() 用
+         * gmdate() 生成的, **一定是合法的** —— 所以 null 只可能来自
+         * "时区不可用"。那不是一个请求错误, 而是站点数据的问题, 抛出去
+         * 会让整个归档页 500。
+         *
+         * 而同一个坏值在 Date::siteZone()、Timezone::offsetAt()、
+         * Timezone::wallTimestamp() 上都是降级而不是抛异常。所以这里也
+         * 降级: 按 UTC 读这个墙钟, 也就是"不调整"。
+         */
+        if ($from === null) {
+            $from = self::wallToTimestampAsUtc($fromWall);
+        }
+
+        if ($to === null) {
+            $to = self::wallToTimestampAsUtc($toWall);
+        }
+
+        return [$from, $to];
+    }
+
+    /**
+     * 按 UTC 读一个墙钟文本 (即"不调整")
+     *
+     * @param string $wall 墙钟时间 (Y-m-d H:i:s)
+     * @return integer
+     */
+    private static function wallToTimestampAsUtc(string $wall): int
+    {
+        $parsed = strtotime($wall . ' UTC');
+
+        if ($parsed !== false) {
+            return $parsed;
+        }
+
+        /**
+         * 【只有五位年走到这里】
+         *
+         * strtotime() 解析不了 '10000-01-01' 这样的五位年, 而归档窗口的
+         * 上界是"下一期起点" —— 9999-12-31 加一天正好是 10000-01-01。
+         *
+         * gmmktime() 没有这个限制, 所以这里从文本里把各个字段抠出来重新
+         * 构造。返回 0 是错的: 0 是 1970-01-01, 一个**日期**, 不是
+         * "这个时间不存在" —— 而窗口的下界比上界还大, 查询会什么都不返回。
+         */
+        if (preg_match('/^(\\d{4,})-(\\d{2})-(\\d{2}) (\\d{2}):(\\d{2}):(\\d{2})$/', $wall, $m)) {
+            $rebuilt = gmmktime(
+                (int) $m[4],
+                (int) $m[5],
+                (int) $m[6],
+                (int) $m[2],
+                (int) $m[3],
+                (int) $m[1]
+            );
+
+            if ($rebuilt !== false) {
+                return $rebuilt;
+            }
+        }
+
+        /**
+         * 真的连字段都抠不出来 —— 那就退到 0, 至少不抛。
+         */
+        return 0;
+    }
+
+    /** 0..100 会被 mktime 改写到其它世纪；上界保留四位年。 */
+    public static function isValidArchiveYear(int $year): bool
+    {
+        return $year >= 101 && $year <= 9999;
+    }
+
+    /**
+     * 算出这一期归档的边界
+     *
+     * 返回 [起始月, 起始日, 结束月, 结束日], 或者 null 表示这个请求
+     * 不该做日期归档。
+     *
+     * 【为什么单独抽出来】年份来自请求, /0000/ 会得到整数 0, 而归档窗口
+     * 的上界是"下一期起点" —— 9999 年的最后一天加一天是 10000-01-01,
+     * 那是五位年, 墙钟文本没法按它解释。这两种请求都不能建出窗口,
+     * 所以边界算不出来, 调用方就不做日期归档。
+     *
+     * @param int $year 年份
+     * @param int $month 月份 (0 表示没有)
+     * @param int $day 日期 (0 表示没有)
+     * @return array|null
+     */
+    public static function archiveBounds(int $year, int $month, int $day): ?array
+    {
+        if (!self::isValidArchiveYear($year)) {
+            return null;
+        }
+
+        if ($month > 0 && $day > 0) {
+            /** 按日归档 */
+            return [$month, $day, $month, $day];
+        }
+
+        if ($month > 0) {
+            /**
+             * 按月归档 —— 结束日是那个月最后一天。
+             *
+             * date('t', ...) 给的是那个月的天数, 与时区无关。
+             */
+            return [$month, 1, $month, (int) date('t', mktime(0, 0, 0, $month, 1, $year))];
+        }
+
+        /** 按年归档 */
+        return [1, 1, 12, 31];
+    }
+
+    /**
      * 处理日期
      *
      * @access private
@@ -1966,33 +2206,70 @@ EOF;
         $month = $this->request->filter('int')->get('month');
         $day = $this->request->filter('int')->get('day');
 
-        if (!empty($year) && !empty($month) && !empty($day)) {
+        /**
+         * 【年份必须是合法年份】
+         *
+         * 归档 URL 里的年份来自请求。0 和负数不是年份, 必须排除。
+         *
+         * 9999 是合法年份, 可以做归档: 窗口的上界是"下一期起点", 也就是
+         * 9999-12-31 加一天 = 10000-01-01, 那是**五位年** —— strtotime()
+         * 解析不了, 但窗口的换算已经改用 gmmktime() 重建, 所以建得出来。
+         */
+        $yearNumber = (int) $year;
 
-            /** 如果按日归档 */
-            $from = mktime(0, 0, 0, $month, $day, $year);
-            $to = mktime(23, 59, 59, $month, $day, $year);
+        if (!self::isValidArchiveYear($yearNumber)) {
+            return;
+        }
+
+        /**
+         * 归档边界是**站点当地**的日期, 直接拼站点墙钟文本再按站点时区
+         * 解释 —— 不经 mktime(), 因为 mktime() 用服务器本地时刻构造,
+         * 服务器自己的墙上时间在午夜跳过一小时时会把 00:00 归一化成
+         * 01:00, 窗口少一小时。
+         *
+         * 上界统一为"下一期起点"配 '<'。原来上界是 23:59:59 配 '<', 恰好
+         * 23:59:59 发布的文章被这一期排除, 下一期从次日 00:00 起, 它也不在
+         * 其中 —— 从归档彻底消失。
+         */
+        $bounds = self::archiveBounds($yearNumber, (int) $month, (int) $day);
+
+        /**
+         * 【"只列文章"这个条件要加在提前返回之前】
+         *
+         * 年份不可用时这个方法提前返回, 归档类型保持默认的 'index' ——
+         * 页面回到默认列表。但如果 'type = post' 这个条件也一起被跳过,
+         * 那么这个列表里就会混进页面、草稿之类的东西: 归档页少了日期
+         * 过滤, 少了类型过滤, 就不是"默认列表"而是"没过滤的列表"。
+         *
+         * 所以类型条件先加上, 日期窗口条件在能用的时候才加。
+         */
+        $select->where('table.contents.type = ?', 'post');
+
+        /**
+         * 年份不合法 (或者压根没给) 时不做日期归档, 页面回到默认列表 ——
+         * 归档类型保持默认的 'index'。
+         */
+        if ($bounds === null) {
+            return;
+        }
+
+        [$fromMonth, $fromDay, $toMonth, $toDay] = $bounds;
+
+        if (!empty($month) && !empty($day)) {
 
             /** 归档缩略名 */
             $this->archiveSlug = 'day';
 
             /** 设置标题 */
             $this->archiveTitle = _t('%d年%d月%d日', $year, $month, $day);
-        } elseif (!empty($year) && !empty($month)) {
-
-            /** 如果按月归档 */
-            $from = mktime(0, 0, 0, $month, 1, $year);
-            $to = mktime(23, 59, 59, $month, date('t', $from), $year);
+        } elseif (!empty($month)) {
 
             /** 归档缩略名 */
             $this->archiveSlug = 'month';
 
             /** 设置标题 */
             $this->archiveTitle = _t('%d年%d月', $year, $month);
-        } elseif (!empty($year)) {
-
-            /** 如果按年归档 */
-            $from = mktime(0, 0, 0, 1, 1, $year);
-            $to = mktime(23, 59, 59, 12, 31, $year);
+        } else {
 
             /** 归档缩略名 */
             $this->archiveSlug = 'year';
@@ -2001,9 +2278,16 @@ EOF;
             $this->archiveTitle = _t('%d年', $year);
         }
 
-        $select->where('table.contents.created >= ?', $from - $this->options->timezone + $this->options->serverTimezone)
-            ->where('table.contents.created <= ?', $to - $this->options->timezone + $this->options->serverTimezone)
-            ->where('table.contents.type = ?', 'post');
+        [$from, $to] = self::periodWindow(
+            $yearNumber,
+            $fromMonth,
+            $fromDay,
+            $toMonth,
+            $toDay,
+            $this->options->timezoneName
+        );
+
+        $select->where(self::periodPredicate(), $from, $to);
 
         /** 设置归档类型 */
         $this->archiveType = 'date';

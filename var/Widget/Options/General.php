@@ -4,6 +4,7 @@ namespace Widget\Options;
 
 use Typecho\Db\Exception;
 use Typecho\I18n\GetText;
+use Typecho\Timezone;
 use Typecho\Widget\Helper\Form;
 use Widget\ActionInterface;
 use Widget\Base\Options;
@@ -61,6 +62,166 @@ class General extends Options implements ActionInterface
         }
 
         return $langs;
+    }
+
+    /**
+     * 获取时区列表
+     *
+     * 时区以 IANA 名称 (如 America/Los_Angeles) 保存，或保留原有的固定偏移。地区名称按具体日期处理夏令时。
+     * 列表按当前 UTC 偏移排序，并附上偏移量便于挑选。
+     *
+     * 旧版本保存的是固定偏移秒数 (如 -28800)，这些值仍然有效。
+     * 若列表里没有对应项, 设置页的 <select> 会没有选中项,
+     * 保存时就会把站点时区悄悄改成列表的第一项。因此旧取值必须保留在
+     * 列表里，不自动选择地区。
+     *
+     * @return array
+     */
+    public static function getTimezoneList(?string $current = null): array
+    {
+        $list = [];
+        $offsets = [];
+        $now = new \DateTime('now', new \DateTimeZone('UTC'));
+
+        /**
+         * 用 ALL_WITH_BC 拿**全部**标识符, 而不只是默认列表。
+         *
+         * 默认的 timezone_identifiers_list() 不含 Etc/GMT* 这样的退化名,
+         * 已有站点也可能明确选择过这些合法标识。列表里少了这些项,
+         * 站点就没有对应的 <option>, 管理员一保存设置, 时区就会被静默
+         * 改成列表的第一项。
+         */
+        foreach (\DateTimeZone::listIdentifiers(\DateTimeZone::ALL_WITH_BC) as $identifier) {
+            try {
+                $zone = new \DateTimeZone($identifier);
+            } catch (\Throwable $e) {
+                continue;
+            }
+
+            $offset = $zone->getOffset($now);
+            $list[$identifier] = self::formatTimezoneLabel($offset, $identifier);
+            $offsets[$identifier] = $offset;
+        }
+
+        /** 旧版的固定偏移取值, 保留以免未升级的站点丢设置 */
+        foreach (self::getLegacyTimezoneList() as $offset => $label) {
+            if (!isset($list[$offset])) {
+                $list[$offset] = $label;
+                $offsets[$offset] = (int) $offset;
+            }
+        }
+
+        // 保存过的合法别名和显式偏移也必须可选，避免浏览器改选第一项。
+        if ($current !== null && $current !== '' && !isset($list[$current])) {
+            $value = trim($current);
+            if (Timezone::isName($value)) {
+                $offset = Timezone::offsetAt($value, $now->getTimestamp());
+                $list[$current] = preg_match('/^[+-]\d/', $value)
+                    ? 'UTC' . self::formatOffsetLabel($offset)
+                    : self::formatTimezoneLabel($offset, $value);
+                $offsets[$current] = $offset;
+            } elseif (preg_match('/^[+-]?\d+(\.\d+)?$/', $value)
+                && Timezone::isValidLegacyOffset((int) $value)) {
+                $offset = Timezone::normalizeLegacyOffset((int) $value);
+                $list[$current] = 'UTC' . self::formatOffsetLabel($offset);
+                $offsets[$current] = $offset;
+            }
+        }
+
+        /** 按 UTC 偏移排序, 同一偏移内按名称排序 */
+        uksort($list, function ($a, $b) use ($offsets) {
+            if ($offsets[$a] !== $offsets[$b]) {
+                return $offsets[$a] <=> $offsets[$b];
+            }
+
+            return strcmp((string) $a, (string) $b);
+        });
+
+        return $list;
+    }
+
+    /**
+     * 把偏移量格式化成 +HH:MM 或 -HH:MM
+     *
+     * @param integer $offset UTC 偏移 (秒)
+     * @return string
+     */
+    private static function formatOffsetLabel(int $offset): string
+    {
+        $sign = $offset >= 0 ? '+' : '-';
+        $absolute = abs($offset);
+        $hours = intdiv($absolute, 3600);
+        $minutes = intdiv($absolute % 3600, 60);
+
+        $text = $sign . str_pad((string) $hours, 2, '0', STR_PAD_LEFT);
+
+        if ($minutes !== 0) {
+            $text .= ':' . str_pad((string) $minutes, 2, '0', STR_PAD_LEFT);
+        }
+
+        return $text;
+    }
+
+    /**
+     * 格式化时区标签
+     *
+     * 偏移量含 30/45 分钟的部分不能被截断成整点, 否则 Asia/Kolkata 之类的
+     * 时区会显示成 UTC+05。
+     *
+     * @param integer $offset UTC 偏移 (秒)
+     * @param string $name 时区名
+     * @return string
+     */
+    private static function formatTimezoneLabel(int $offset, string $name): string
+    {
+        $sign = $offset >= 0 ? '+' : '-';
+        $absolute = abs($offset);
+        $hours = intdiv($absolute, 3600);
+        $minutes = intdiv($absolute % 3600, 60);
+
+        $time = 'UTC' . $sign . str_pad((string) $hours, 2, '0', STR_PAD_LEFT);
+
+        if ($minutes !== 0) {
+            $time .= ':' . str_pad((string) $minutes, 2, '0', STR_PAD_LEFT);
+        }
+
+        return $time . ' ' . $name;
+    }
+
+    /**
+     * 旧版的固定偏移时区列表
+     *
+     * @return array
+     */
+    private static function getLegacyTimezoneList(): array
+    {
+        return [
+            "0"      => _t('格林威治(子午线)标准时间 (GMT)'),
+            "3600"   => _t('中欧标准时间 阿姆斯特丹,荷兰,法国 (GMT +1)'),
+            "7200"   => _t('东欧标准时间 布加勒斯特,塞浦路斯,希腊 (GMT +2)'),
+            "10800"  => _t('莫斯科时间 伊拉克,埃塞俄比亚,马达加斯加 (GMT +3)'),
+            "14400"  => _t('第比利斯时间 阿曼,毛里塔尼亚,留尼汪岛 (GMT +4)'),
+            "18000"  => _t('新德里时间 巴基斯坦,马尔代夫 (GMT +5)'),
+            "21600"  => _t('科伦坡时间 孟加拉 (GMT +6)'),
+            "25200"  => _t('曼谷雅加达 柬埔寨,苏门答腊,老挝 (GMT +7)'),
+            "28800"  => _t('北京时间 香港,新加坡,越南 (GMT +8)'),
+            "32400"  => _t('东京平壤时间 西伊里安,摩鹿加群岛 (GMT +9)'),
+            "36000"  => _t('悉尼关岛时间 塔斯马尼亚岛,新几内亚 (GMT +10)'),
+            "39600"  => _t('所罗门群岛 库页岛 (GMT +11)'),
+            "43200"  => _t('惠灵顿时间 新西兰,斐济群岛 (GMT +12)'),
+            "-3600"  => _t('佛德尔群岛 亚速尔群岛,葡属几内亚 (GMT -1)'),
+            "-7200"  => _t('大西洋中部时间 格陵兰 (GMT -2)'),
+            "-10800" => _t('布宜诺斯艾利斯 乌拉圭,法属圭亚那 (GMT -3)'),
+            "-14400" => _t('智利巴西 委内瑞拉,玻利维亚 (GMT -4)'),
+            "-18000" => _t('纽约渥太华 古巴,哥伦比亚,牙买加 (GMT -5)'),
+            "-21600" => _t('墨西哥城时间 洪都拉斯,危地马拉,哥斯达黎加 (GMT -6)'),
+            "-25200" => _t('美国丹佛时间 (GMT -7)'),
+            "-28800" => _t('美国旧金山时间 (GMT -8)'),
+            "-32400" => _t('阿拉斯加时间 (GMT -9)'),
+            "-36000" => _t('夏威夷群岛 (GMT -10)'),
+            "-39600" => _t('东萨摩亚群岛 (GMT -11)'),
+            "-43200" => _t('艾尼威托克岛 (GMT -12)'),
+        ];
     }
 
     /**
@@ -127,11 +288,48 @@ class General extends Options implements ActionInterface
         }
 
         $settings['attachmentTypes'] = implode(',', $attachmentTypes);
-        foreach ($settings as $name => $value) {
-            $this->update(['value' => $value], $this->db->sql()->where('name = ?', $name));
+
+        // 固定偏移不能确定地区，只有明确选择名称才启用地区夏令时规则。
+        $timezoneRejected = false;
+        if (array_key_exists('timezone', $settings)) {
+            $raw = $settings['timezone'];
+            $timezone = is_scalar($raw) ? trim((string) $raw) : '';
+            if ($timezone !== '' && Timezone::isName($timezone)) {
+                $settings['timezone'] = $timezone;
+            } elseif (preg_match('/^[+-]?\d+(\.\d+)?$/', $timezone)
+                && Timezone::isValidLegacyOffset((int) $timezone)) {
+                $settings['timezone'] = (string) (int) $timezone;
+            } else {
+                unset($settings['timezone']);
+                $timezoneRejected = true;
+            }
         }
 
-        Notice::alloc()->set(_t("设置已经保存"), 'success');
+        foreach ($settings as $name => $value) {
+            /**
+             * user = 0 是站点级作用域。
+             *
+             * 不限定作用域的话, 插件按用户存的同名行会一起被改写 ——
+             * 那个值本来是给某个用户用的, 被站点设置覆盖就坏了。
+             */
+            $updated = $this->update(
+                ['value' => $value],
+                $this->db->sql()->where('user = ? AND name = ?', 0, $name)
+            );
+            if ($name === 'timezone' && $updated > 0) {
+                $this->options->setTimezone((string) $value);
+            }
+        }
+
+        if ($timezoneRejected) {
+            Notice::alloc()->set(
+                _t('时区设置无法识别，已保留原设置'),
+                'warning'
+            );
+        } else {
+            Notice::alloc()->set(_t("设置已经保存"), 'success');
+        }
+
         $this->response->goBack();
     }
 
@@ -218,35 +416,10 @@ class General extends Options implements ActionInterface
         }
 
         /** 时区 */
-        $timezoneList = [
-            "0"      => _t('格林威治(子午线)标准时间 (GMT)'),
-            "3600"   => _t('中欧标准时间 阿姆斯特丹,荷兰,法国 (GMT +1)'),
-            "7200"   => _t('东欧标准时间 布加勒斯特,塞浦路斯,希腊 (GMT +2)'),
-            "10800"  => _t('莫斯科时间 伊拉克,埃塞俄比亚,马达加斯加 (GMT +3)'),
-            "14400"  => _t('第比利斯时间 阿曼,毛里塔尼亚,留尼汪岛 (GMT +4)'),
-            "18000"  => _t('新德里时间 巴基斯坦,马尔代夫 (GMT +5)'),
-            "21600"  => _t('科伦坡时间 孟加拉 (GMT +6)'),
-            "25200"  => _t('曼谷雅加达 柬埔寨,苏门答腊,老挝 (GMT +7)'),
-            "28800"  => _t('北京时间 香港,新加坡,越南 (GMT +8)'),
-            "32400"  => _t('东京平壤时间 西伊里安,摩鹿加群岛 (GMT +9)'),
-            "36000"  => _t('悉尼关岛时间 塔斯马尼亚岛,新几内亚 (GMT +10)'),
-            "39600"  => _t('所罗门群岛 库页岛 (GMT +11)'),
-            "43200"  => _t('惠灵顿时间 新西兰,斐济群岛 (GMT +12)'),
-            "-3600"  => _t('佛德尔群岛 亚速尔群岛,葡属几内亚 (GMT -1)'),
-            "-7200"  => _t('大西洋中部时间 格陵兰 (GMT -2)'),
-            "-10800" => _t('布宜诺斯艾利斯 乌拉圭,法属圭亚那 (GMT -3)'),
-            "-14400" => _t('智利巴西 委内瑞拉,玻利维亚 (GMT -4)'),
-            "-18000" => _t('纽约渥太华 古巴,哥伦比亚,牙买加 (GMT -5)'),
-            "-21600" => _t('墨西哥城时间 洪都拉斯,危地马拉,哥斯达黎加 (GMT -6)'),
-            "-25200" => _t('美国丹佛时间 (GMT -7)'),
-            "-28800" => _t('美国旧金山时间 (GMT -8)'),
-            "-32400" => _t('阿拉斯加时间 (GMT -9)'),
-            "-36000" => _t('夏威夷群岛 (GMT -10)'),
-            "-39600" => _t('东萨摩亚群岛 (GMT -11)'),
-            "-43200" => _t('艾尼威托克岛 (GMT -12)')
-        ];
+        $timezoneList = self::getTimezoneList($this->options->timezoneName);
 
-        $timezone = new Form\Element\Select('timezone', $timezoneList, $this->options->timezone, _t('时区'));
+        $timezone = new Form\Element\Select('timezone', $timezoneList, $this->options->timezoneName, _t('时区'));
+        $timezone->description(_t('选择地区名称可自动调整夏令时；原有数字选项保持固定偏移。'));
         $form->addInput($timezone);
 
         /** 扩展名 */
