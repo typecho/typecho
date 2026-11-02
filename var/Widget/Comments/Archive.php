@@ -395,7 +395,8 @@ class Archive extends Comments
      */
     public function alt(...$args)
     {
-        $sequence = $this->levels <= 0 ? $this->sequence : $this->order;
+        /** 未开启多级评论时不会计算同层顺序, 此时回退到评论的输出序号 */
+        $sequence = $this->levels <= 0 ? $this->sequence : ($this->order ?? $this->sequence);
         $this->altBy($sequence, ...$args);
     }
 
