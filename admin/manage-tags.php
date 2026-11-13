@@ -46,6 +46,8 @@ include 'menu.php';
                                     <input type="checkbox" value="<?php $tags->mid(); ?>" name="mid[]"/>
                                     <span
                                         rel="<?php echo $request->makeUriByRequest('mid=' . $tags->mid); ?>"><?php $tags->name(); ?></span>
+                                    <span class="balloon"
+                                          title="<?php _e('使用次数'); ?>"><?php $tags->count(); ?></span>
                                     <a class="tag-edit-link"
                                        href="<?php echo $request->makeUriByRequest('mid=' . $tags->mid); ?>"><i
                                             class="i-edit"></i></a>
