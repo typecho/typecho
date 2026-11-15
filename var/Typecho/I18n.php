@@ -139,7 +139,10 @@ class I18n
      */
     public static function addLang(string $lang)
     {
-        self::$loaded->addFile($lang);
+        self::init();
+        if (self::$loaded) {
+            self::$loaded->addFile($lang);
+        }
     }
 
     /**

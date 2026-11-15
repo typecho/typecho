@@ -74,8 +74,6 @@ class GetTextMulti
      */
     public function ngettext(string $single, string $plural, int $number): string
     {
-        $count = - 1;
-
         foreach ($this->handlers as $handler) {
             $string = $handler->ngettext($single, $plural, $number, $count);
             if (- 1 != $count) {

@@ -110,6 +110,7 @@ class GetText
     public function translate($string, ?int &$num): string
     {
         if ($this->short_circuit) {
+            $num = -1;
             return $string;
         }
         $this->loadTables();
@@ -117,8 +118,10 @@ class GetText
         if ($this->enable_cache) {
             // Caching enabled, get translated string from cache
             if (array_key_exists($string, $this->cache_translations)) {
+                $num = 0;
                 return $this->cache_translations[$string];
             } else {
+                $num = -1;
                 return $string;
             }
         } else {
@@ -147,6 +150,7 @@ class GetText
         $number = intval($number);
 
         if ($this->short_circuit) {
+            $num = -1;
             if ($number != 1) {
                 return $plural;
             } else {
@@ -160,11 +164,12 @@ class GetText
         // this should contains all strings separated by NULLs
         $key = $single . chr(0) . $plural;
 
-
         if ($this->enable_cache) {
             if (!array_key_exists($key, $this->cache_translations)) {
+                $num = -1;
                 return ($number != 1) ? $plural : $single;
             } else {
+                $num = 0;
                 $result = $this->cache_translations[$key];
                 $list = explode(chr(0), $result);
                 return $list[$select] ?? '';
