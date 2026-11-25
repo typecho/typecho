@@ -20,3 +20,4 @@ require_once $root . '/var/Typecho/Common.php';
 date_default_timezone_set('UTC');
 
 require_once __DIR__ . '/Db/SqliteTestCase.php';
+require_once __DIR__ . '/Db/ServerDbTestCase.php';
