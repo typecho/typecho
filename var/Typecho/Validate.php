@@ -281,8 +281,8 @@ class Validate
         // Cycle through the rules and test for errors
         foreach ($rules as $key => $rule) {
             $this->key = $key;
-            $data[$key] = (is_array($data[$key]) ? 0 == count($data[$key])
-                : 0 == strlen($data[$key] ?? '')) ? null : $data[$key];
+            $value = $data[$key] ?? null;
+            $data[$key] = (is_array($value) ? 0 == count($value) : 0 == strlen($value ?? '')) ? null : $value;
 
             foreach ($rule as $params) {
                 $method = $params[0];
