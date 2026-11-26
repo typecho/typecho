@@ -7,6 +7,7 @@ use Typecho\Config;
 use Typecho\Cookie;
 use Typecho\Db;
 use Typecho\Db\Query;
+use Typecho\Plugin;
 use Typecho\Router;
 use Typecho\Widget\Exception as WidgetException;
 use Typecho\Widget\Helper\PageNavigator\Classic;
@@ -526,6 +527,44 @@ class Archive extends Contents
     }
 
     /**
+     * 获取内容组件插件钩子
+     *
+     * @return array
+     */
+    private function getContentHooks(): array
+    {
+        $plugins = Plugin::export();
+        $result = [];
+        $components = ['content', 'contentEx', 'excerpt', 'excerptEx', 'markdown', 'autoP'];
+
+        foreach ($plugins['handles'] ?? [] as $key => $handles) {
+            [$handle, $component] = explode(':', $key, 2);
+            if (
+                in_array($handle, ['Widget_Abstract_Contents', 'Widget_Base_Contents'], true)
+                && in_array($component, $components, true)
+            ) {
+                $result[$key] = $handles;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * 清除 themeInit 调用前生成且未被主题改写的内容缓存
+     *
+     * @param array $cache
+     */
+    private function clearContentCache(array $cache)
+    {
+        foreach ($cache as $key => $value) {
+            if (array_key_exists($key, $this->row) && $this->row[$key] === $value) {
+                unset($this->row[$key]);
+            }
+        }
+    }
+
+    /**
      * 执行函数
      */
     public function execute()
@@ -658,6 +697,15 @@ class Archive extends Contents
         $this->archiveDescription = $this->options->description;
         $this->archiveUrl = $this->options->siteUrl;
 
+        /** 提前加载皮肤函数, 确保内容钩子在归档处理前完成注册 */
+        $functionsFile = $this->themeDir . 'functions.php';
+        $hasFunctionsFile = (
+            !$this->invokeFromOutside || $this->parameter->type == 404 || $this->parameter->preview
+        ) && file_exists($functionsFile);
+        if ($hasFunctionsFile) {
+            require_once $functionsFile;
+        }
+
         if (isset($handles[$this->parameter->type])) {
             $handle = $handles[$this->parameter->type];
             $this->{$handle}($select, $hasPushed);
@@ -666,14 +714,26 @@ class Archive extends Contents
         }
 
         /** 初始化皮肤函数 */
-        $functionsFile = $this->themeDir . 'functions.php';
-        if (
-            (!$this->invokeFromOutside || $this->parameter->type == 404 || $this->parameter->preview)
-            && file_exists($functionsFile)
-        ) {
-            require_once $functionsFile;
-            if (function_exists('themeInit')) {
-                themeInit($this);
+        if ($hasFunctionsFile && function_exists('themeInit')) {
+            $contentHooks = $this->getContentHooks();
+            $contentCache = array_intersect_key($this->row, array_flip([
+                '#content',
+                '#excerpt',
+                '#plainExcerpt',
+                '#summary'
+            ]));
+            $archiveDescription = $this->archiveDescription;
+            themeInit($this);
+
+            if ($contentHooks !== $this->getContentHooks()) {
+                $this->clearContentCache($contentCache);
+                if (
+                    $this->archiveSingle
+                    && !$this->makeSinglePageAsFrontPage
+                    && $archiveDescription === $this->archiveDescription
+                ) {
+                    $this->archiveDescription = $this->plainExcerpt;
+                }
             }
         }
 
