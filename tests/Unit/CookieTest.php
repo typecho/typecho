@@ -159,4 +159,48 @@ final class CookieTest extends TestCase
 
         $this->assertSame([], $this->queuedCookies());
     }
+
+    public function testGetReturnsDefaultForMissingAndArrayValues(): void
+    {
+        $this->assertSame('fallback', Cookie::get('absent', 'fallback'));
+        $this->assertNull(Cookie::get('absent'));
+
+        // a crafted array cookie must fall back instead of leaking the array
+        $_COOKIE[Cookie::getPrefix() . 'arr'] = ['a' => 'b'];
+        $this->assertSame('fallback', Cookie::get('arr', 'fallback'));
+
+        $_COOKIE[Cookie::getPrefix() . 'scalar'] = 'v';
+        $this->assertSame('v', Cookie::get('scalar'));
+    }
+
+    public function testDeleteOfAMissingCookieQueuesNothing(): void
+    {
+        Cookie::delete('never-set');
+
+        $this->assertSame([], $this->queuedCookies());
+    }
+
+    public function testSetPrefixWithoutPathFallsBackToRoot(): void
+    {
+        Cookie::setPrefix('https://example.com');
+
+        $this->assertSame('/', Cookie::getPath());
+        $this->assertSame('example.com', Cookie::getDomain());
+        $this->assertSame(md5('https://example.com'), Cookie::getPrefix());
+    }
+
+    public function testSetPrefixForcesATrailingSlashOnThePath(): void
+    {
+        Cookie::setPrefix('https://example.com/blog');
+
+        $this->assertSame('/blog/', Cookie::getPath());
+    }
+
+    public function testGetSecureReflectsTheOptions(): void
+    {
+        $this->assertFalse(Cookie::getSecure());
+
+        Cookie::setOptions(['domain' => '', 'secure' => true, 'httponly' => false]);
+        $this->assertTrue(Cookie::getSecure());
+    }
 }
