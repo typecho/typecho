@@ -3,6 +3,7 @@
 namespace Typecho\Db;
 
 use Typecho\Db;
+use Typecho\Widget\Exception as WidgetException;
 
 /**
  * Typecho数据库查询语句构建类
@@ -319,15 +320,25 @@ class Query
     /**
      * 分页查询
      *
-     * @param mixed $page 页数
+     * @param mixed $page     页数
      * @param mixed $pageSize 每页行数
      * @return Query
+     * @throws WidgetException
      */
     public function page($page, $pageSize): Query
     {
+        $page = max(intval($page), 1);
         $pageSize = intval($pageSize);
+
+        if (
+            $page > 1 &&
+            ($page - 1) > intdiv(PHP_INT_MAX, $pageSize)
+        ) {
+            throw new WidgetException('Pagination offset is too large');
+        }
+
         $this->sqlPreBuild['limit'] = $pageSize;
-        $this->sqlPreBuild['offset'] = (max(intval($page), 1) - 1) * $pageSize;
+        $this->sqlPreBuild['offset'] = ($page - 1) * $pageSize;
         return $this;
     }
 
