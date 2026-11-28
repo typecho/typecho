@@ -452,6 +452,31 @@ class Plugin
     }
 
     /**
+     * 调用全部回调并返回各自的结果
+     *
+     * @param string $component 当前组件
+     * @param array $args 参数
+     * @return array
+     */
+    public function callAll(string $component, ...$args): array
+    {
+        $componentKey = $this->handle . ':' . $component;
+
+        if (!isset(self::$plugin['handles'][$componentKey])) {
+            return [];
+        }
+
+        $result = [];
+        $this->signal = true;
+
+        foreach (self::$plugin['handles'][$componentKey] as $callback) {
+            $result[] = call_user_func_array($callback, $args);
+        }
+
+        return $result;
+    }
+
+    /**
      * 过滤处理函数
      *
      * @param string $component 当前组件

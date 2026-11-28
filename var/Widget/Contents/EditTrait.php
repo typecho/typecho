@@ -41,6 +41,14 @@ trait EditTrait
     {
         $exists = array_flip(array_column($this->db->fetchAll($this->db->select('name')
             ->from('table.fields')->where('cid = ?', $cid)), 'name'));
+        $readOnlyFields = [];
+
+        foreach (array_keys($exists) as $name) {
+            $readOnlyFields[$name] = $this->isFieldReadOnly($name);
+            if ($readOnlyFields[$name]) {
+                unset($exists[$name]);
+            }
+        }
 
         foreach ($fields as $name => $value) {
             $type = 'str';
@@ -56,8 +64,11 @@ trait EditTrait
                 continue;
             }
 
-            $isFieldReadOnly = Contents::pluginHandle()->trigger($plugged)->call('isFieldReadOnly', $name);
-            if ($plugged && $isFieldReadOnly) {
+            if (!array_key_exists($name, $readOnlyFields)) {
+                $readOnlyFields[$name] = $this->isFieldReadOnly($name);
+            }
+
+            if ($readOnlyFields[$name]) {
                 continue;
             }
 
@@ -72,6 +83,28 @@ trait EditTrait
             $this->db->query($this->db->delete('table.fields')
                 ->where('cid = ? AND name = ?', $cid, $name));
         }
+    }
+
+    /**
+     * 检查字段是否由插件标记为只读
+     *
+     * @param string $name
+     * @return bool
+     */
+    private function isFieldReadOnly(string $name): bool
+    {
+        $results = array_merge(
+            Contents::pluginHandle()->callAll('isFieldReadOnly', $name),
+            static::pluginHandle()->callAll('isFieldReadOnly', $name)
+        );
+
+        foreach ($results as $result) {
+            if ($result) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -190,17 +223,7 @@ trait EditTrait
                 ->where('cid = ?', isset($this->draft) ? $this->draft['cid'] : $this->cid));
 
             foreach ($rows as $row) {
-                $isFieldReadOnly = Contents::pluginHandle()
-                    ->trigger($plugged)->call('isFieldReadOnly', $row['name']);
-
-                if ($plugged && $isFieldReadOnly) {
-                    continue;
-                }
-
-                $isFieldReadOnly = static::pluginHandle()
-                    ->trigger($plugged)->call('isFieldReadOnly', $row['name']);
-
-                if ($plugged && $isFieldReadOnly) {
+                if ($this->isFieldReadOnly($row['name'])) {
                     continue;
                 }
 
@@ -248,9 +271,7 @@ trait EditTrait
             if ($item instanceof Element) {
                 $name = $item->input->getAttribute('name');
 
-                $isFieldReadOnly = Contents::pluginHandle()
-                    ->trigger($plugged)->call('isFieldReadOnly', $name);
-                if ($plugged && $isFieldReadOnly) {
+                if ($this->isFieldReadOnly($name)) {
                     continue;
                 }
 
