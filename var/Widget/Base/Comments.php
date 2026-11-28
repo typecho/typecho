@@ -61,7 +61,8 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
     {
         switch ($key) {
             case 'permalink':
-                return $this->parentContent->path;
+                $content = $this->parentContent;
+                return $content->have() ? $content->path : '';
             case 'commentPage':
                 return $this->commentPage;
             default:
@@ -395,7 +396,8 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
      */
     protected function ___title(): ?string
     {
-        return $this->parentContent->title;
+        $content = $this->parentContent;
+        return $content->have() ? $content->title : _t('内容已删除');
     }
 
     /**
@@ -463,6 +465,11 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
      */
     protected function ___permalink(): string
     {
+        $content = $this->parentContent;
+        if (!$content->have()) {
+            return '#' . $this->theId;
+        }
+
         if ($this->options->commentsPageBreak) {
             return Router::url(
                 'comment_page',
@@ -471,7 +478,7 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
             ) . '#' . $this->theId;
         }
 
-        return $this->parentContent->permalink . '#' . $this->theId;
+        return $content->permalink . '#' . $this->theId;
     }
 
     /**
@@ -481,7 +488,8 @@ class Comments extends Base implements QueryInterface, RowFilterInterface, Prima
      */
     protected function ___content(): ?string
     {
-        $text = $this->parentContent->hidden ? _t('内容被隐藏') : $this->text;
+        $content = $this->parentContent;
+        $text = $content->have() && $content->hidden ? _t('内容被隐藏') : $this->text;
 
         $text = Comments::pluginHandle()->trigger($plugged)->filter('content', $text, $this);
         if (!$plugged) {

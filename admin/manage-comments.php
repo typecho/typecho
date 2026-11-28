@@ -162,7 +162,11 @@ $isAllComments = ('on' == $request->get('__typecho_all_comments') || 'on' == \Ty
                                     
                                     <a href="#<?php $comments->theId(); ?>" rel="<?php $security->index('/action/comments-edit?do=edit&coid=' . $comments->coid); ?>" class="operate-edit"><?php _e('编辑'); ?></a>
 
-                                    <?php if('approved' == $comments->status && 'comment' == $comments->type): ?>
+                                    <?php if(
+                                        'approved' == $comments->status
+                                        && 'comment' == $comments->type
+                                        && $comments->parentContent->have()
+                                    ): ?>
                                     <a href="#<?php $comments->theId(); ?>" rel="<?php $security->index('/action/comments-edit?do=reply&coid=' . $comments->coid); ?>" class="operate-reply"><?php _e('回复'); ?></a>
                                     <?php endif; ?>
                                     
