@@ -444,8 +444,101 @@ class Plugin
         $return = null;
         $this->signal = true;
 
-        foreach (self::$plugin['handles'][$componentKey] as $callback) {
-            $return = call_user_func_array($callback, $args);
+        foreach (self::$plugin['handles'][$componentKey] as $callbackKey => $callback) {
+            try {
+                $return = call_user_func_array($callback, $args);
+            } catch (\Error|\Exception $e) {
+                $errorMessage = $e->getMessage();
+                $pluginName = '';
+                
+                // 检查错误类型并提取插件名称
+                if (strpos($errorMessage, 'must be a valid callback') !== false) {
+                    // 处理类不存在的错误
+                    if (strpos($errorMessage, 'class "TypechoPlugin') !== false && 
+                        strpos($errorMessage, 'not found') !== false) {
+                        // 类不存在的情况
+                        if (preg_match('/class "TypechoPlugin\\\\([^\\\\]+)\\\\/', $errorMessage, $matches)) {
+                            $pluginName = $matches[1];
+                        }
+                    } 
+                    // 处理方法不存在的错误
+                    elseif (strpos($errorMessage, 'does not have a method') !== false) {
+                        if (preg_match('/class "TypechoPlugin\\\\([^\\\\]+)\\\\/', $errorMessage, $matches)) {
+                            $pluginName = $matches[1];
+                        }
+                    }
+                    // 处理无效回调的错误
+                    elseif (strpos($errorMessage, 'not a valid class name or object') !== false) {
+                        // 通过回调分析插件名称
+                        if (is_array($callback) && isset($callback[0])) {
+                            $cbClass = is_object($callback[0]) ? get_class($callback[0]) : $callback[0];
+                            if (preg_match('/TypechoPlugin\\\\([^\\\\]+)/', $cbClass, $matches)) {
+                                $pluginName = $matches[1];
+                            }
+                        }
+                    }
+                }
+                // 处理参数不足的错误
+                elseif ($e instanceof \ArgumentCountError || strpos($errorMessage, 'Too few arguments') !== false) {
+                    if (is_array($callback) && isset($callback[0])) {
+                        $cbClass = is_object($callback[0]) ? get_class($callback[0]) : $callback[0];
+                        if (preg_match('/TypechoPlugin\\\\([^\\\\]+)/', $cbClass, $matches)) {
+                            $pluginName = $matches[1];
+                        }
+                    }
+                }
+                // 处理类型错误
+                elseif ($e instanceof \TypeError) {
+                    if (is_array($callback) && isset($callback[0])) {
+                        $cbClass = is_object($callback[0]) ? get_class($callback[0]) : $callback[0];
+                        if (preg_match('/TypechoPlugin\\\\([^\\\\]+)/', $cbClass, $matches)) {
+                            $pluginName = $matches[1];
+                        }
+                    }
+                }
+                
+                // 如果确定了插件名称，则禁用该插件
+                if (!empty($pluginName)) {
+                    try {
+                        // 从激活列表中移除插件
+                        if (isset(self::$plugin['activated'][$pluginName])) {
+                            // 禁用出错的插件
+                            unset(self::$plugin['activated'][$pluginName]);
+                            
+                            // 从当前组件的回调列表中移除该回调
+                            unset(self::$plugin['handles'][$componentKey][$callbackKey]);
+                            
+                            // 清理其他相关钩子
+                            foreach (self::$plugin['handles'] as $hook => $callbacks) {
+                                foreach ($callbacks as $idx => $cb) {
+                                    if (is_array($cb) && isset($cb[0])) {
+                                        $cbClass = is_object($cb[0]) ? get_class($cb[0]) : $cb[0];
+                                        if (strpos($cbClass, $pluginName) !== false) {
+                                            unset(self::$plugin['handles'][$hook][$idx]);
+                                        }
+                                    }
+                                }
+                                
+                                // 如果钩子没有回调函数了，移除整个钩子
+                                if (empty(self::$plugin['handles'][$hook])) {
+                                    unset(self::$plugin['handles'][$hook]);
+                                }
+                            }
+                            
+                            // 更新数据库
+                            $db = \Typecho\Db::get();
+                            $db->query($db->update('table.options')
+                                ->rows(['value' => serialize(self::$plugin)])
+                                ->where('name = ?', 'plugins'));
+                        }
+                    } catch (\Exception $e) {
+                        // 简化错误处理，不记录日志
+                    }
+                }
+                
+                // 继续处理其他回调，不中断执行
+                continue;
+            }
         }
 
         return $return;
