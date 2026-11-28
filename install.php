@@ -944,6 +944,7 @@ function install_step_2_perform()
             'dbPassword' => null,
             'dbCharset' => 'utf8',
             'dbDatabase' => null,
+            'dbSslCa' => null,
             'dbSslVerify' => 'off',
         ],
         'SQLite' => [
@@ -1034,6 +1035,7 @@ function install_step_2_perform()
                 ->addRule('dbCharset', 'required', _t('确认您的配置'))
                 ->addRule('dbCharset', 'enum', _t('确认您的配置'), ['utf8'])
                 ->addRule('dbDatabase', 'required', _t('确认您的配置'))
+                ->addRule('dbSslCa', 'file_exists', _t('确认您的配置'))
                 ->addRule('dbSslVerify', 'enum', _t('确认您的配置'), ['on', 'off'])
                 ->run($config);
             break;

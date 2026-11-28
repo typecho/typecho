@@ -3,7 +3,7 @@
 --
 CREATE SEQUENCE "typecho_comments_seq";
 
-CREATE TABLE "typecho_comments" (  "coid" INT NOT NULL DEFAULT nextval('typecho_comments_seq'),
+CREATE TABLE "typecho_comments" (  "coid" INT NOT NULL DEFAULT nextval('"typecho_comments_seq"'::regclass),
   "cid" INT NULL DEFAULT '0',
   "created" INT NULL DEFAULT '0',
   "author" VARCHAR(150) NULL DEFAULT NULL,
@@ -30,7 +30,7 @@ CREATE INDEX "typecho_comments_created" ON "typecho_comments" ("created");
 
 CREATE SEQUENCE "typecho_contents_seq";
 
-CREATE TABLE "typecho_contents" (  "cid" INT NOT NULL DEFAULT nextval('typecho_contents_seq'),
+CREATE TABLE "typecho_contents" (  "cid" INT NOT NULL DEFAULT nextval('"typecho_contents_seq"'::regclass),
   "title" VARCHAR(150) NULL DEFAULT NULL,
   "slug" VARCHAR(150) NULL DEFAULT NULL,
   "created" INT NULL DEFAULT '0',
@@ -75,7 +75,7 @@ CREATE INDEX "typecho_fields_float_value" ON "typecho_fields" ("float_value");
 
 CREATE SEQUENCE "typecho_metas_seq";
 
-CREATE TABLE "typecho_metas" (  "mid" INT NOT NULL DEFAULT nextval('typecho_metas_seq'),
+CREATE TABLE "typecho_metas" (  "mid" INT NOT NULL DEFAULT nextval('"typecho_metas_seq"'::regclass),
   "name" VARCHAR(150) NULL DEFAULT NULL,
   "slug" VARCHAR(150) NULL DEFAULT NULL,
   "type" VARCHAR(16) NOT NULL DEFAULT '',
@@ -113,7 +113,7 @@ CREATE TABLE "typecho_relationships" (  "cid" INT NOT NULL DEFAULT '0',
 --
 CREATE SEQUENCE "typecho_users_seq";
 
-CREATE TABLE "typecho_users" (  "uid" INT NOT NULL DEFAULT nextval('typecho_users_seq') ,
+CREATE TABLE "typecho_users" (  "uid" INT NOT NULL DEFAULT nextval('"typecho_users_seq"'::regclass) ,
   "name" VARCHAR(32) NULL DEFAULT NULL,
   "password" VARCHAR(64) NULL DEFAULT NULL,
   "mail" VARCHAR(150) NULL DEFAULT NULL,

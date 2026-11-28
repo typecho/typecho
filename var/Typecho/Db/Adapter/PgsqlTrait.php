@@ -56,7 +56,7 @@ trait PgsqlTrait
      */
     public function quoteColumn(string $string): string
     {
-        return '"' . $string . '"';
+        return '"' . str_replace('"', '""', $string) . '"';
     }
 
     /**
@@ -69,6 +69,7 @@ trait PgsqlTrait
     protected function prepareQuery(string &$query, $handle, ?string $action = null, ?string $table = null)
     {
         if (Db::INSERT == $action && !empty($table)) {
+            $table = $this->normalizeIdentifier($table);
             $this->compatibleInsert = false;
 
             if (!isset($this->pk[$table])) {
@@ -77,7 +78,7 @@ trait PgsqlTrait
   format_type(pg_attribute.atttypid, pg_attribute.atttypmod) 
 FROM pg_index, pg_class, pg_attribute, pg_namespace 
 WHERE 
-  pg_class.oid = " . $this->quoteValue($table) . "::regclass AND 
+  pg_class.oid = " . $this->quoteValue($this->quoteColumn($table)) . "::regclass AND
   indrelid = pg_class.oid AND 
   nspname = 'public' AND 
   pg_class.relnamespace = pg_namespace.oid AND 
@@ -104,6 +105,21 @@ WHERE
     }
 
     /**
+     * 将 Query 中已引用的表名还原为标识符文本。
+     *
+     * @param string $identifier
+     * @return string
+     */
+    private function normalizeIdentifier(string $identifier): string
+    {
+        if ('"' === substr($identifier, 0, 1) && '"' === substr($identifier, -1)) {
+            return str_replace('""', '"', substr($identifier, 1, -1));
+        }
+
+        return $identifier;
+    }
+
+    /**
      * 取出最后一次插入返回的主键值
      *
      * @param resource $resource 查询的资源数据
@@ -123,9 +139,11 @@ WHERE
                 return (int) $result[$pk];
             }
         } else {
+            $sequence = $this->quoteValue(
+                $this->quoteColumn($lastTable . '_seq')
+            );
             $resource = $this->query(
-                'SELECT oid FROM pg_class WHERE relname = '
-                    . $this->quoteValue($lastTable . '_seq'),
+                'SELECT TO_REGCLASS(' . $sequence . ') AS sequence_name',
                 $handle,
                 Db::READ,
                 Db::SELECT,
@@ -134,9 +152,9 @@ WHERE
 
             $result = $this->fetch($resource);
 
-            if (!empty($result)) {
+            if (!empty($result['sequence_name'])) {
                 $resource = $this->query(
-                    'SELECT CURRVAL(' . $this->quoteValue($lastTable . '_seq') . ') AS last_insert_id',
+                    'SELECT CURRVAL(' . $sequence . ') AS last_insert_id',
                     $handle,
                     Db::READ,
                     Db::SELECT,

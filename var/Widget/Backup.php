@@ -278,7 +278,13 @@ class Backup extends BaseOptions implements ActionInterface
         if (false !== strpos(strtolower($this->db->getAdapterName()), 'pgsql')) {
             foreach ($this->lastIds as $table => $id) {
                 $seq = $this->db->getPrefix() . $table . '_seq';
-                $this->db->query('ALTER SEQUENCE ' . $seq . ' RESTART WITH ' . ($id + 1));
+                $sequence = $this->db->getAdapter()->quoteValue(
+                    $this->db->getAdapter()->quoteColumn($seq)
+                );
+                $this->db->query(
+                    'SELECT SETVAL(' . $sequence . '::regclass, '
+                        . ((int) $id + 1) . ', false)'
+                );
             }
         }
 

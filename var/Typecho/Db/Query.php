@@ -153,7 +153,16 @@ class Query
      */
     private function filterPrefix(string $string): string
     {
-        return (0 === strpos($string, 'table.')) ? substr_replace($string, $this->prefix, 0, 6) : $string;
+        if (!preg_match('/^table\.([a-z0-9_]+)(.*)$/is', $string, $matches)) {
+            return $string;
+        }
+
+        $table = $this->prefix . $matches[1];
+        $table = 'pgsql' === $this->adapter->getDriver()
+            ? $this->adapter->quoteColumn($table)
+            : $table;
+
+        return $table . $matches[2];
     }
 
     /**
@@ -165,6 +174,21 @@ class Query
      */
     private function filterColumn(string $str): string
     {
+        $tableReferences = [];
+        if ('pgsql' === $this->adapter->getDriver()) {
+            $str = preg_replace_callback(
+                '/\btable\.([a-z0-9_]+)/i',
+                function ($matches) use (&$tableReferences) {
+                    $placeholder = 'TYPECHOTABLEREF' . count($tableReferences);
+                    $tableReferences[$placeholder] = $this->adapter->quoteColumn(
+                        $this->prefix . $matches[1]
+                    );
+                    return $placeholder;
+                },
+                $str
+            );
+        }
+
         $str = $str . ' 0';
         $length = strlen($str);
         $lastIsAlnum = false;
@@ -213,7 +237,7 @@ class Query
             }
         }
 
-        return $result;
+        return $tableReferences ? strtr($result, $tableReferences) : $result;
     }
 
     /**
