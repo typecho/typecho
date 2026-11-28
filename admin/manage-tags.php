@@ -4,6 +4,10 @@ include 'header.php';
 include 'menu.php';
 
 \Widget\Metas\Tag\Admin::alloc()->to($tags);
+
+$sortLabels = ['mid' => _t('按创建时间'), 'count' => _t('按使用次数'), 'name' => _t('按名称')];
+$sort = $request->get('sort');
+$currentSort = is_string($sort) && isset($sortLabels[$sort]) ? $sort : 'mid';
 ?>
 
 <main class="main">
@@ -33,6 +37,24 @@ include 'menu.php';
                                         <button type="button" class="btn btn-s merge"
                                                 rel="<?php $security->index('/action/metas-tag-edit?do=merge'); ?>"><?php _e('合并到'); ?></button>
                                         <input type="text" name="merge" class="text-s"/>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="search">
+                            <div class="btn-group btn-drop">
+                                <button class="btn dropdown-toggle btn-s"
+                                        type="button"><?php _e('排序'); ?>：<?php echo $sortLabels[$currentSort]; ?> <i
+                                        class="i-caret-down"></i></button>
+                                <ul class="dropdown-menu">
+                                    <li><a
+                                            href="<?php echo $request->makeUriByRequest('sort=mid'); ?>"><?php echo $sortLabels['mid']; ?></a>
+                                    </li>
+                                    <li><a
+                                            href="<?php echo $request->makeUriByRequest('sort=count'); ?>"><?php echo $sortLabels['count']; ?></a>
+                                    </li>
+                                    <li><a
+                                            href="<?php echo $request->makeUriByRequest('sort=name'); ?>"><?php echo $sortLabels['name']; ?></a>
                                     </li>
                                 </ul>
                             </div>
@@ -81,7 +103,7 @@ include 'common-js.php';
                 checkEl: 'input[type=checkbox]',
                 rowEl: 'li',
                 selectAllEl: '.typecho-table-select-all',
-                actionEl: '.dropdown-menu a'
+                actionEl: '.operate .dropdown-menu a'
             });
 
             $('.btn-drop').dropdownMenu({
