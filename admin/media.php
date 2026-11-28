@@ -12,7 +12,7 @@ include 'menu.php';
         <div class="row typecho-page-main">
             <div class="col-mb-12 col-tb-8" role="main">
                 <?php if ($attachment->attachment->isImage): ?>
-                    <p><img src="<?php $attachment->attachment->url(); ?>"
+                    <p><img src="<?php $attachment->attachment->url(); ?>?<?php $attachment->modified(); ?>"
                             alt="<?php $attachment->attachment->name(); ?>" class="typecho-attachment-photo"/></p>
                 <?php endif; ?>
 
